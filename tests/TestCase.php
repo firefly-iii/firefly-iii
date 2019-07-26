@@ -286,6 +286,47 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
+
+    /**
+     * @return array
+     */
+    public function getRandomTransferAsArray(): array
+    {
+        $transfer = $this->getRandomTransfer();
+        $euro     = $this->getEuro();
+        $category = $this->getRandomCategory();
+        $source   = $this->getRandomAsset();
+        $dest     = $this->getRandomAsset($source->id);
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        return [
+            'transaction_group_id'     => $transfer->transaction_group_id,
+            'transaction_journal_id'   => $transfer->id,
+            'transaction_type_type'    => 'Transfer',
+            'currency_id'              => $euro->id,
+            'foreign_currency_id'      => null,
+            'date'                     => $date,
+            'description'              => sprintf('I am descr #%d', $this->randomInt()),
+            'source_account_id'        => $source->id,
+            'source_account_name'      => $source->name,
+            'foreign_amount'           => null,
+            'destination_account_id'   => $dest->id,
+            'destination_account_name' => $dest->name,
+            'currency_name'            => $euro->name,
+            'currency_code'            => $euro->code,
+            'currency_symbol'          => $euro->symbol,
+
+            'currency_decimal_places' => $euro->decimal_places,
+            'amount'                  => '-30',
+            'category_id'             => $category->id,
+            'category_name'           => $category->name,
+        ];
+    }
+
     /**
      * @return array
      * @throws Exception
@@ -416,9 +457,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function demoUser(): User
     {
-        throw new FireflyException('demoUser()-method is obsolete.');
-
-        return User::find(4);
+        return User::where('email', 'demo@firefly')->first();
     }
 
     /**
@@ -556,6 +595,14 @@ abstract class TestCase extends BaseTestCase
     protected function getRandomWithdrawalGroup(): TransactionGroup
     {
         return $this->getRandomGroup(TransactionType::WITHDRAWAL);
+    }
+
+    /**
+     * @return TransactionGroup
+     */
+    protected function getRandomTransferGroup(): TransactionGroup
+    {
+        return $this->getRandomGroup(TransactionType::TRANSFER);
     }
 
     /**

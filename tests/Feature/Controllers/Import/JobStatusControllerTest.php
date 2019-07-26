@@ -115,7 +115,7 @@ class JobStatusControllerTest extends TestCase
     {
         $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
         $userRepos         = $this->mock(UserRepositoryInterface::class);
-        $tag               = $this->user()->tags()->first();
+        $tag               = $this->getRandomTag();
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'Cfake_job_' . $this->randomInt();
@@ -127,7 +127,6 @@ class JobStatusControllerTest extends TestCase
         $job->save();
 
         $this->mockDefaultSession();
-
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
 
         // call thing.

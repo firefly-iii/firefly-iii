@@ -71,4 +71,18 @@ class SandstormTest extends TestCase
 
         putenv('SANDSTORM=0');
     }
+
+
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Sandstorm
+     */
+    public function testMiddlewareNotSandstorm(): void
+    {
+        putenv('SANDSTORM=0');
+
+        $response = $this->get('/_test/sandstorm');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('sandstorm-anon: false');
+    }
 }

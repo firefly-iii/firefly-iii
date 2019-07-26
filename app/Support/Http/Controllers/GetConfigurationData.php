@@ -204,32 +204,6 @@ trait GetConfigurationData
 
         return $steps;
     }
-
-    /**
-     * Check if forbidden functions are set.
-     *
-     * @return bool
-     */
-    protected function hasForbiddenFunctions(): bool // validate system config
-    {
-        $list      = ['proc_close'];
-        $forbidden = explode(',', ini_get('disable_functions'));
-        $trimmed   = array_map(
-            function (string $value) {
-                return trim($value);
-            }, $forbidden
-        );
-        foreach ($list as $entry) {
-            if (in_array($entry, $trimmed, true)) {
-                Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      *
      */

@@ -56,7 +56,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brY_' . random_int(1, 10000);
+        $job->key           = 'brY_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'bunq';
@@ -96,7 +96,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brY_' . random_int(1, 10000);
+        $job->key           = 'brY_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'bunq';
@@ -140,7 +140,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brX_' . random_int(1, 10000);
+        $job->key           = 'brX_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'bunq';

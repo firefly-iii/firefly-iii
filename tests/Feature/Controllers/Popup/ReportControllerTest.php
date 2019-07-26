@@ -25,7 +25,6 @@ namespace Tests\Feature\Controllers\Popup;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\PopupReportInterface;
-use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -76,6 +75,8 @@ class ReportControllerTest extends TestCase
         $response  = $this->get($uri);
         $response->assertStatus(200);
         $response->assertSee('Firefly III cannot handle');
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+
     }
 
     /**
@@ -103,6 +104,7 @@ class ReportControllerTest extends TestCase
         $response  = $this->get($uri);
         $response->assertStatus(200);
         $response->assertSee('Firefly III cannot handle');
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -110,18 +112,17 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDefaultNoBudget(): void
     {
+        $this->mockDefaultSession();
         $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
         $account      = $this->getRandomAsset();
 
-        $this->mockDefaultSession();
-
         $popupHelper->shouldReceive('balanceForNoBudget')->andReturn([]);
-        $budgetRepos->shouldReceive('findNull')->andReturn(new Budget)->once()->withArgs([0]);
+        $budgetRepos->shouldReceive('findNull')->andReturn(null)->once()->withArgs([0]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn([]);
+        //$popupHelper->shouldReceive('balanceForBudget')->once()->andReturn([]);
 
         Amount::shouldReceive('formatAnything')->andReturn('-100');
 
@@ -142,6 +143,7 @@ class ReportControllerTest extends TestCase
         $response  = $this->get($uri);
         $response->assertStatus(200);
         $response->assertSee($account->name);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -157,6 +159,7 @@ class ReportControllerTest extends TestCase
         $budget       = $this->getRandomBudget();
         $this->mockDefaultSession();
 
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
 
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
@@ -178,6 +181,7 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -213,6 +217,7 @@ class ReportControllerTest extends TestCase
         $uri      = route('popup.general') . '?' . http_build_query($arguments);
         $response = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -220,14 +225,50 @@ class ReportControllerTest extends TestCase
      */
     public function testBudgetSpentAmount(): void
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CategoryRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $budget        = $this->getRandomBudget();
 
         $this->mockDefaultSession();
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
+        $popupHelper->shouldReceive('byBudget')->andReturn([]);
+
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'budget-spent-amount',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $response  = $this->get($uri);
+        $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
+     */
+    public function testBudgetSpentAmountNoBudget(): void
+    {
+        $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CategoryRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $popupHelper = $this->mock(PopupReportInterface::class);
+
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
+
+        $this->mockDefaultSession();
+        $budgetRepos->shouldReceive('findNull')->andReturnNull()->once()->withArgs([1]);
         $popupHelper->shouldReceive('byBudget')->andReturn([]);
 
         $this->be($this->user());
@@ -245,6 +286,7 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -260,6 +302,40 @@ class ReportControllerTest extends TestCase
 
         $this->mockDefaultSession();
         $categoryRepos->shouldReceive('findNull')->andReturn($category)->once()->withArgs([1]);
+        $popupHelper->shouldReceive('byCategory')->andReturn([]);
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'category-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $response  = $this->get($uri);
+        $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
+     */
+    public function testCategoryEntryUnknown(): void
+    {
+        $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $popupHelper   = $this->mock(PopupReportInterface::class);
+
+        $this->mockDefaultSession();
+        $categoryRepos->shouldReceive('findNull')->andReturn(null)->once()->withArgs([1]);
         $popupHelper->shouldReceive('byCategory')->andReturn([]);
 
         $this->be($this->user());
@@ -277,6 +353,8 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+        $response->assertSee('This is an unknown category. Apologies.');
     }
 
     /**
@@ -290,6 +368,8 @@ class ReportControllerTest extends TestCase
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $account       = $this->getRandomAsset();
+
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
 
         $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
@@ -310,6 +390,42 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
+     */
+    public function testExpenseEntryUnknown(): void
+    {
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $popupHelper   = $this->mock(PopupReportInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn(null)->once();
+        $popupHelper->shouldReceive('byExpenses')->andReturn([]);
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'expense-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $response  = $this->get($uri);
+        $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+        $response->assertSee('This is an unknown account. Apologies.');
     }
 
     /**
@@ -327,6 +443,7 @@ class ReportControllerTest extends TestCase
         $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
         $popupHelper->shouldReceive('byIncome')->andReturn([]);
+        Amount::shouldReceive('formatAnything')->andReturn('-100')->atLeast()->once();
 
         $this->be($this->user());
         $arguments = [
@@ -343,6 +460,41 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
+     */
+    public function testIncomeEntryUnknown(): void
+    {
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $popupHelper   = $this->mock(PopupReportInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn(null)->once();
+        $popupHelper->shouldReceive('byIncome')->andReturn([]);
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'income-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $response  = $this->get($uri);
+        $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 
     /**
@@ -369,5 +521,6 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertDontSee('Firefly III could not render the view. Please see the log files.');
     }
 }

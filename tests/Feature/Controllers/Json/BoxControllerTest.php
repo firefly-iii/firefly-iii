@@ -252,6 +252,43 @@ class BoxControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
+     */
+    public function testNetWorthPast(): void
+    {
+        $this->mockDefaultSession();
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
+
+        $start = new Carbon;
+        $start->subMonths(6)->startOfMonth();
+        $end = clone $start;
+        $end->endOfMonth();
+        $this->session(['start' => $start, 'end' => $end]);
+        $this->be($this->user());
+        $response = $this->get(route('json.box.net-worth'));
+        $response->assertStatus(200);
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */

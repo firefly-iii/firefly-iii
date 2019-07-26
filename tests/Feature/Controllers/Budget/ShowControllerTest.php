@@ -172,6 +172,8 @@ class ShowControllerTest extends TestCase
         $collector    = $this->mock(GroupCollectorInterface::class);
 
         $this->mockDefaultSession();
+        
+        
 
         // mock calls
         $pref       = new Preference;

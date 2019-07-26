@@ -95,6 +95,7 @@ trait UserNavigation
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @codeCoverageIgnore
      */
     protected function redirectToAccount(TransactionJournal $journal)
     {
@@ -118,6 +119,7 @@ trait UserNavigation
      * @param Account $account
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @codeCoverageIgnore
      */
     protected function redirectToOriginalAccount(Account $account)
     {

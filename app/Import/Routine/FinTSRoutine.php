@@ -67,8 +67,6 @@ class FinTSRoutine implements RoutineInterface
                     $this->repository->setTransactions($this->importJob, $transactions);
                     $this->repository->setStatus($this->importJob, 'provider_finished');
                     $this->repository->setStage($this->importJob, 'final');
-
-                    return;
             }
         }
     }

@@ -165,7 +165,7 @@ class AbnAmroDescription implements SpecificInterface
                         case 'IBAN':
                             $this->row[9] = $value;
                             break;
-                        default:
+                        default: // @codeCoverageIgnore
                             // Ignore the rest
                     }
                 }
@@ -224,7 +224,7 @@ class AbnAmroDescription implements SpecificInterface
                         case 'TRTP':
                             $type = $value;
                             break;
-                        default:
+                        default: // @codeCoverageIgnore
                             // Ignore the rest
                     }
                 }

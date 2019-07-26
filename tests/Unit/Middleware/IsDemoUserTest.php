@@ -43,7 +43,7 @@ class IsDemoUserTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
         Route::middleware([StartFireflySession::class, IsDemoUser::class])->any(
-            '/_test/is-demo', function () {
+            '/_test/is-demo', static function () {
             return 'OK';
         }
         );
@@ -68,6 +68,7 @@ class IsDemoUserTest extends TestCase
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertSessionHas('info');
+
     }
 
     /**

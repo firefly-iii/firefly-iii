@@ -57,7 +57,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_7_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_7_' . $this->randomInt();
         $job->status        = 'not_ready_to_run';
         $job->stage         = 'bad_state';
         $job->provider      = 'ynab';
@@ -88,7 +88,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_6_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_6_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'bad_state';
         $job->provider      = 'ynab';
@@ -119,7 +119,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_1_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_1_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'get_access_token';
         $job->provider      = 'ynab';
@@ -158,7 +158,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_4_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_4_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'get_accounts';
         $job->provider      = 'ynab';
@@ -198,7 +198,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_5_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_5_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'ynab';
@@ -239,7 +239,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_2_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_2_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'get_budgets';
         $job->provider      = 'ynab';
@@ -281,7 +281,7 @@ class YnabRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_r_3_' . random_int(1, 10000);
+        $job->key           = 'ynab_r_3_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'get_budgets';
         $job->provider      = 'ynab';

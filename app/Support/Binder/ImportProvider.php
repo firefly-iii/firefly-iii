@@ -72,10 +72,6 @@ class ImportProvider implements BinderInterface
                 continue;
             }
 
-//            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
-//                continue;
-//            }
-
             $providers[$providerName] = [
                 'has_prereq'       => (bool)config('import.has_prereq.' . $providerName),
                 'allowed_for_demo' => (bool)config(sprintf('import.allowed_for_demo.%s', $providerName)),
@@ -91,7 +87,7 @@ class ImportProvider implements BinderInterface
             }
             $providers[$providerName]['prereq_complete'] = $result;
         }
-        Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
+        //Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
 
         return $providers;
     }

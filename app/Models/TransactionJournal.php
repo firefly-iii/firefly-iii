@@ -142,6 +142,7 @@ class TransactionJournal extends Model
 
     /**
      * Checks if tables are joined.
+     * @codeCoverageIgnore
      *
      * @param Builder $query
      * @param string  $table
@@ -225,6 +226,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isDeposit(): bool

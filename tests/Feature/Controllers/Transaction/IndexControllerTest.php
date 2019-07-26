@@ -58,7 +58,11 @@ class IndexControllerTest extends TestCase
         $collector = $this->mock(GroupCollectorInterface::class);
 
         // generic set for the info blocks:
-        $groupArray = [$this->getRandomWithdrawalAsArray()];
+        $groupArray = [
+            $this->getRandomWithdrawalAsArray(),
+            $this->getRandomDepositAsArray(),
+            $this->getRandomTransferAsArray(),
+        ];
 
         // role?
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true);
@@ -85,6 +89,96 @@ class IndexControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['withdrawal']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\IndexController
+     */
+    public function testIndexDeposit(): void
+    {
+        $this->mockDefaultSession();
+        $group     = $this->getRandomWithdrawalGroup();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
+
+        // generic set for the info blocks:
+        $groupArray = [
+            $this->getRandomWithdrawalAsArray(),
+            $this->getRandomDepositAsArray(),
+            $this->getRandomTransferAsArray(),
+        ];
+
+        // role?
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true);
+
+        // make paginator.
+        $paginator = new LengthAwarePaginator([$group], 1, 40, 1);
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('10');
+
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getPaginatedGroups')->atLeast()->once()->andReturn($paginator);
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($groupArray);
+
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.index', ['deposit']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\IndexController
+     */
+    public function testIndexTransfers(): void
+    {
+        $this->mockDefaultSession();
+        $group     = $this->getRandomWithdrawalGroup();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
+
+        // generic set for the info blocks:
+        $groupArray = [
+            $this->getRandomWithdrawalAsArray(),
+            $this->getRandomDepositAsArray(),
+            $this->getRandomTransferAsArray(),
+        ];
+
+        // role?
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true);
+
+        // make paginator.
+        $paginator = new LengthAwarePaginator([$group], 1, 40, 1);
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('10');
+
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getPaginatedGroups')->atLeast()->once()->andReturn($paginator);
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($groupArray);
+
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.index', ['transfers']));
         $response->assertStatus(200);
     }
 

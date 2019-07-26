@@ -490,45 +490,6 @@ trait PeriodOverview
     }
 
     /**
-     * Collect the sum per currency.
-     *
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    protected function sumPerCurrency(Collection $collection): array // helper for transactions (math, calculations)
-    {
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $currencyId = (int)$transaction->transaction_currency_id;
-
-            // save currency information:
-            if (!isset($return[$currencyId])) {
-                $currencySymbol      = $transaction->transaction_currency_symbol;
-                $decimalPlaces       = $transaction->transaction_currency_dp;
-                $currencyCode        = $transaction->transaction_currency_code;
-                $return[$currencyId] = [
-                    'currency' => [
-                        'id'     => $currencyId,
-                        'code'   => $currencyCode,
-                        'symbol' => $currencySymbol,
-                        'dp'     => $decimalPlaces,
-                    ],
-                    'sum'      => '0',
-                    'count'    => 0,
-                ];
-            }
-            // save amount:
-            $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
-            ++$return[$currencyId]['count'];
-        }
-        asort($return);
-
-        return $return;
-    }
-
-    /**
      * Return only transactions where $account is the source.
      * @param Account $account
      * @param array $journals
@@ -552,6 +513,7 @@ trait PeriodOverview
      * @param Account $account
      * @param array $journals
      * @return array
+     * @codeCoverageIgnore
      */
     private function filterTransferredIn(Account $account, array $journals): array
     {
@@ -591,6 +553,7 @@ trait PeriodOverview
      * @param array $journals
      *
      * @return array
+     * @codeCoverageIgnore
      */
     private function groupByCurrency(array $journals): array
     {
@@ -635,53 +598,4 @@ trait PeriodOverview
 
         return $return;
     }
-
-    /**
-     * @param array $journals
-     * @return array
-     */
-    private function getJournalsSum(array $journals): array
-    {
-        $return = [
-            'count' => 0,
-            'sums'  => [],
-        ];
-        if (0 === count($journals)) {
-            return $return;
-        }
-
-        foreach ($journals as $row) {
-            $return['count']++;
-            $currencyId = (int)$row['currency_id'];
-            if (!isset($return['sums'][$currencyId])) {
-                $return['sums'][$currencyId] = [
-                    'sum'                     => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_code'           => $row['currency_code'],
-                    'currency_symbol'         => $row['currency_symbol'],
-                    'currency_name'           => $row['currency_name'],
-                    'currency_decimal_places' => (int)$row['currency_decimal_places'],
-                ];
-            }
-            // add amounts:
-            $return['sums'][$currencyId]['sum'] = bcadd($return['sums'][$currencyId]['sum'], (string)$row['amount']);
-
-            // same but for foreign amounts:
-            if (null !== $row['foreign_currency_id'] && 0 !== $row['foreign_currency_id']) {
-                $foreignCurrencyId                         = (int)$row['foreign_currency_id'];
-                $return['sums'][$foreignCurrencyId]        = [
-                    'sum'                     => '0',
-                    'currency_id'             => $foreignCurrencyId,
-                    'currency_code'           => $row['foreign_currency_code'],
-                    'currency_symbol'         => $row['foreign_currency_symbol'],
-                    'currency_name'           => $row['foreign_currency_name'],
-                    'currency_decimal_places' => (int)$row['foreign_currency_decimal_places'],
-                ];
-                $return['sums'][$foreignCurrencyId]['sum'] = bcadd($return['sums'][$foreignCurrencyId]['sum'], (string)$row['foreign_amount']);
-            }
-        }
-
-        return $return;
-    }
-
 }

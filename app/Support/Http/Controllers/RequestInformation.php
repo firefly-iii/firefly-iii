@@ -117,7 +117,7 @@ trait RequestInformation
             return $content;
         }
 
-        return '<p>' . trans('firefly.route_has_no_help') . '</p>';
+        return '<p>' . trans('firefly.route_has_no_help') . '</p>'; // @codeCoverageIgnore
     }
 
     /**
@@ -181,7 +181,7 @@ trait RequestInformation
             //Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %s', $key, var_export($shownDemo, true)));
         }
         if (!is_bool($shownDemo)) {
-            $shownDemo = true;
+            $shownDemo = true; // @codeCoverageIgnore
         }
 
         return $shownDemo;
@@ -291,6 +291,7 @@ trait RequestInformation
      * @param array $data
      *
      * @return ValidatorContract
+     * @codeCoverageIgnore
      */
     protected function validator(array $data): ValidatorContract
     {

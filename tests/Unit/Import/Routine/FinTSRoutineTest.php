@@ -1,7 +1,7 @@
 <?php
 /**
- * FileRoutineTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * FinTSRoutineTest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -19,26 +19,22 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tests\Unit\Import\Routine;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Routine\BunqRoutine;
-use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\FinTSRoutine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
-use FireflyIII\Support\Import\Routine\File\CSVProcessor;
+use FireflyIII\Support\Import\Routine\FinTS\StageImportDataHandler;
 use Log;
 use Mockery;
 use Tests\TestCase;
 
 /**
- * Class FileRoutineTest
+ * Class FinTSRoutineTest
  */
-class FileRoutineTest extends TestCase
+class FinTSRoutineTest extends TestCase
 {
     /**
      *
@@ -49,43 +45,43 @@ class FileRoutineTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-
     /**
-     * @covers \FireflyIII\Import\Routine\FileRoutine
+     * @covers \FireflyIII\Import\Routine\FinTSRoutine
      */
     public function testRunDefault(): void
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brY_' . $this->randomInt();
+        $job->key           = 'a_fin_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
-        $job->provider      = 'bunq';
+        $job->provider      = 'fints';
         $job->file_type     = '';
         $job->configuration = [];
         $job->save();
 
-        // mock stuff:
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        // mock
         $handler    = $this->mock(StageImportDataHandler::class);
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        // calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running'])->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished'])->once();
+        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
+        $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), ['a' => 'b']])->once();
+
+        $handler->shouldReceive('setImportJob')->atLeast()->once();
+        $handler->shouldReceive('run')->once()->atLeast()->once();
+        $handler->shouldReceive('getTransactions')->atLeast()->once()->andReturn(['a' => 'b']);
 
 
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running']);
-        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished']);
-        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final']);
-        $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
-
-        $handler->shouldReceive('setImportJob')->once();
-        $handler->shouldReceive('run')->once();
-        $handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
-        $handler->shouldReceive('isStillRunning')->andReturn(false);
-        $routine = new BunqRoutine;
+        $routine = new FinTSRoutine;
         $routine->setImportJob($job);
         try {
             $routine->run();
         } catch (FireflyException $e) {
-            $this->assertFalse(true, $e->getMessage());
+            $this->assertTrue(false, $e->getMessage());
         }
     }
 }

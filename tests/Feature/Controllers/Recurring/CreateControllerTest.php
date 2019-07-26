@@ -166,6 +166,127 @@ class CreateControllerTest extends TestCase
         $response->assertSessionHas('success');
     }
 
+
+    /**
+     * Stores a withdrawal, but destination is invalid
+     *
+     * @covers \FireflyIII\Http\Controllers\Recurring\CreateController
+     * @covers \FireflyIII\Http\Requests\RecurrenceFormRequest
+     */
+    public function testStoreWithdrawalInvalidDest(): void
+    {
+        // mock repositories, even if not used.
+        $this->mock(BudgetRepositoryInterface::class);
+
+        $this->mock(RecurringRepositoryInterface::class);
+        $validator      = $this->mock(AccountValidator::class);
+        $source         = $this->getRandomAsset();
+        $destination    = $this->getRandomExpense();
+        $tomorrow       = Carbon::now()->addDays(2);
+
+        $this->mockDefaultSession();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(false);
+
+
+        $data = [
+            'title'                     => sprintf('hello %d', $this->randomInt()),
+            'first_date'                => $tomorrow->format('Y-m-d'),
+            'repetition_type'           => 'daily',
+            'skip'                      => 0,
+            'recurring_description'     => sprintf('Some descr %d', $this->randomInt()),
+            'active'                    => '1',
+            'apply_rules'               => '1',
+            'foreign_amount'            => '1',
+            'foreign_currency_id'       => '2',
+
+            // mandatory for transaction:
+            'transaction_description'   => 'Some descr',
+            'transaction_type'          => 'withdrawal',
+            'transaction_currency_id'   => '1',
+            'amount'                    => '30',
+
+            // mandatory account info:
+            'source_id'                 => $source->id,
+            'withdrawal_destination_id' => $destination->id,
+
+            // optional fields:
+            'budget_id'                 => '1',
+            'category'                  => 'CategoryA',
+            'tags'                      => 'A,B,C',
+            'create_another'            => '1',
+            'repetition_end'            => 'times',
+            'repetitions'               => 3,
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('recurring.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('errors');
+    }
+
+    /**
+     * Try to store withdrawal, but the source account is invalid.
+     *
+     * @covers \FireflyIII\Http\Controllers\Recurring\CreateController
+     * @covers \FireflyIII\Http\Requests\RecurrenceFormRequest
+     */
+    public function testStoreWithdrawalInvalidSource(): void
+    {
+        $this->mockDefaultSession();
+        // mock repositories, even if not used.
+        $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(RecurringRepositoryInterface::class);
+        $validator      = $this->mock(AccountValidator::class);
+        $source         = $this->getRandomAsset();
+        $destination    = $this->getRandomExpense();
+        $tomorrow       = Carbon::now()->addDays(2);
+
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        // source account is invalid.
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(false);
+
+        $data = [
+            'title'                     => sprintf('hello %d', $this->randomInt()),
+            'first_date'                => $tomorrow->format('Y-m-d'),
+            'repetition_type'           => 'daily',
+            'skip'                      => 0,
+            'recurring_description'     => sprintf('Some descr %d', $this->randomInt()),
+            'active'                    => '1',
+            'apply_rules'               => '1',
+            'foreign_amount'            => '1',
+            'foreign_currency_id'       => '2',
+
+            // mandatory for transaction:
+            'transaction_description'   => 'Some descr',
+            'transaction_type'          => 'withdrawal',
+            'transaction_currency_id'   => '1',
+            'amount'                    => '30',
+
+            // mandatory account info:
+            'source_id'                 => $source->id,
+            'withdrawal_destination_id' => $destination->id,
+
+            // optional fields:
+            'budget_id'                 => '1',
+            'category'                  => 'CategoryA',
+            'tags'                      => 'A,B,C',
+            'create_another'            => '1',
+            'repetition_end'            => 'times',
+            'repetitions'               => 3,
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('recurring.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('errors');
+    }
+
     /**
      * Stores a withdrawal. But throw error.
      *

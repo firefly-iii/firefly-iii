@@ -23,7 +23,6 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -287,7 +286,10 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, Attachment $attachment) {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
-                $breadcrumbs->parent('transactions.show', $object->transactionGroup);
+                $group = $object->transactionGroup;
+                if (null !== $group) {
+                    $breadcrumbs->parent('transactions.show', [$object->transactionGroup]);
+                }
                 $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
             }
         }

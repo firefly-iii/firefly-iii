@@ -103,6 +103,62 @@ class IndexControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+    /**
+     * The last time the recurring job fired it was a long time ago.
+     *
+     * @covers \FireflyIII\Http\Controllers\Recurring\IndexController
+     */
+    public function testIndexLongAgo(): void
+    {
+
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        $this->mockDefaultSession();
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id'           => 5,
+                'first_date'   => '2018-01-01',
+                'repeat_until' => null,
+                'latest_date'  => null,
+            ]
+        );
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $config       = new Configuration;
+        $config->data = 1;
+
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+
+        $collection = $this->user()->recurrences()->take(2)->get();
+
+        // mock cron job config:
+        FireflyConfig::shouldReceive('get')->withArgs(['last_rt_job', 0])->once()->andReturn($config);
+
+        $repository->shouldReceive('get')->andReturn($collection)->once();
+
+
+        $this->be($this->user());
+        $response = $this->get(route('recurring.index'));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSessionHas('warning');
+    }
+
+
     /**
      * @covers \FireflyIII\Http\Controllers\Recurring\IndexController
      */

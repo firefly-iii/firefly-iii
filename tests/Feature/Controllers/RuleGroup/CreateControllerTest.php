@@ -78,6 +78,7 @@ class CreateControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn(new RuleGroup);
         $data = [
             'title'       => 'A',
+            'active'      => '1',
             'description' => 'No description',
         ];
 
