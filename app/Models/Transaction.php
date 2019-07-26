@@ -64,6 +64,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $transaction_category_name
  * @property int                 $transaction_journal_category_id
  * @property string              $transaction_journal_category_name
+ * @property int                 $transaction_cost_center_id
+ * @property string              $transaction_cost_center_name
+ * @property int                 $transaction_journal_cost_center_id
+ * @property string              $transaction_journal_cost_center_name
  * @property int                 $bill_id
  * @property string              $bill_name
  * @property string              $bill_name_encrypted
@@ -210,6 +214,17 @@ class Transaction extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Get the cost center(s) this object belongs to.
+     *
+     * @codeCoverageIgnore
+     * @return BelongsToMany
+     */
+    public function costCenters(): BelongsToMany
+    {
+        return $this->belongsToMany(CostCenter::class);
     }
 
     /**

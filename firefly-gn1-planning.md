@@ -52,10 +52,10 @@ Planejamento de revisão do Firefly
 
 #### Quais as dependências para serem criadas?
 
+*   `/app/Models/`: definição dos campos;
 *   `/app/Repositories`: interface e repositório;
 *   `/app/Providers`: Classe para atribuir instância para `$user`; 
 *   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
-*   `/app/Models/`: definição dos campos;
 *   `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
 *   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
 *   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório listas em dropdown?);
@@ -106,6 +106,15 @@ A função está declarada no `helper.php` que chama o `Container->getInstance()
 #### Onde está o `Helper` para elementos da view, como ExpandedForm?
 
 A classe `ExpandedForm.php` fornecer métodos de helper para renderizar componentes, cujo HTML fica em `/resources/views/v1/form` .
+
+### Inicializar o banco
+
+```
+php artisan migrate --seed
+php artisan firefly:upgrade-database
+php artisan firefly:verify
+php artisan cache:clear
+```
 
 ## Segunda etapa
 
