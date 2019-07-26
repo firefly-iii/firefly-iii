@@ -26,7 +26,29 @@ Planejamento de revisão do Firefly
 ### Perguntas
 
 *   O que a termo `journal`?
-*   Quais locais o item `category` tem vínculo no model?
+*   Quais locais o item `category` tem vínculo no model?    
+*   Qual o local em que o Orçamento é vinculado a uma transação?
+*   Onde o centro de custo poderá ser implementado no sistema?
+*   Quais as dependências para serem criadas?
+*   Como funciona o mecanismo de view/template?
+*   Como utilizar o `artsan` para atualizar o banco de dados?
+
+#### O que é o termo `journal`?
+
+*   A exemplo do `Odoo`, um journal pode ser classificado como um `diário`. O Firefly III armazena cada transação financeira em "journals". Cada diário contém duas "transações". Um recebe dinheiro (-250 da sua conta bancária) e o outro o coloca em outra conta (+250 para a Amazon.com). https://docs.firefly-iii.org/en/latest/concepts/transactions.html
+
+#### Quais locais o item `category` tem vínculo no model?
+
+*   Tabelas:
+    *   `categories`, `category_transaction` e `category_transaction_journal`.
+
+#### Qual o local em que o Orçamento é vinculado a uma transação?
+
+*   O orçamento é vinculado a uma transação-filha, pois ela pode ser dividida em cada item separadamente e não no valor total.
+
+#### Onde o centro de custo poderá ser implementado no sistema?
+
+*   Ele pode ser implementado semelhantemente a um orçamento, vinculado a uma transação-filha. 
 
 #### Quais as dependências para serem criadas?
 
@@ -51,7 +73,7 @@ Planejamento de revisão do Firefly
 
 #### Como funciona o mecanismo de view/template?
 
-/resources/views/V1
+/resources/views/V1 
 
 #### Como utilizar o `artsan` para atualizar o banco de dados?
 
