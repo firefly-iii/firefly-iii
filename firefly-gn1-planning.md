@@ -55,7 +55,7 @@ Planejamento de revisão do Firefly
 *   `/app/Repositories`: interface e repositório;
 *   `/app/Providers`: Classe para atribuir instância para `$user`; 
 *   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
-*   `/app/Models/`: Modelo;
+*   `/app/Models/`: definição dos campos;
 *   `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
 *   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
 *   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório listas em dropdown?);
@@ -68,6 +68,7 @@ Planejamento de revisão do Firefly
 *   `/app/Support/Search/Search.php`: Resultado de busca;
 *   `/app/Transformers`: Transforma o resultado do banco em array, recupera os campos do contexto;
 *   `/tests/`: Todos os testes de unidade resultantes das mudanças realizadas no código;
+*   `/public/v1/js/ff/categories/*`: definições de funções categorias;
 *   `/public/v1/js/ff/common/autocomplete.js`: funções para definir onde obter a lista de itens para autocomplete; 
 *   `/public/v1/js/ff/transacions/single/common.js`: chama a função de autocomplete para inicializar o componente; 
 
