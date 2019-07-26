@@ -113,6 +113,8 @@ class TransactionCollector implements TransactionCollectorInterface
     /** @var bool */
     private $joinedCategory = false;
     /** @var bool */
+    private $joinedCostCenter = false;
+    /** @var bool */
     private $joinedOpposing = false;
     /** @var bool */
     private $joinedTag = false;
@@ -513,6 +515,47 @@ class TransactionCollector implements TransactionCollectorInterface
     }
 
     /**
+     * @param Collection $costCenters
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCostCenters(Collection $costCenter): TransactionCollectorInterface
+    {
+        $costCenterIds = $costCenters->pluck('id')->toArray();
+        if (0 !== \count($costCenterIds)) {
+            $this->joinCategoryTables();
+
+            $this->query->where(
+                function (EloquentBuilder $q) use ($costCenterIds) {
+                    $q->whereIn('cost_center_transaction.cost_center_id', $costCenterIds);
+                    $q->orWhereIn('cost_center_transaction_journal.cost_center_id', $costCenterIds);
+                }
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CostCenter $costCenter
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCostCenter(CostCenter $costCenter): TransactionCollectorInterface
+    {
+        $this->joinCategoryTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($costCenter) {
+                $q->where('cost_center_transaction.cost_center_id', $costCenter->id);
+                $q->orWhere('cost_center_transaction_journal.cost_center_id', $costCenter->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * Set the required currency (local or foreign)
      *
      * @param TransactionCurrency $currency
@@ -787,6 +830,16 @@ class TransactionCollector implements TransactionCollectorInterface
     /**
      * @return TransactionCollectorInterface
      */
+    public function withCostCenterInformation(): TransactionCollectorInterface
+    {
+        $this->joinCostCenterTables();
+
+        return $this;
+    }
+
+    /**
+     * @return TransactionCollectorInterface
+     */
     public function withOpposingAccount(): TransactionCollectorInterface
     {
         $this->joinOpposingTables();
@@ -822,6 +875,23 @@ class TransactionCollector implements TransactionCollectorInterface
             function (EloquentBuilder $q) {
                 $q->whereNull('category_transaction.category_id');
                 $q->whereNull('category_transaction_journal.category_id');
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return TransactionCollectorInterface
+     */
+    public function withoutCostCenter(): TransactionCollectorInterface
+    {
+        $this->joinCostCenterTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) {
+                $q->whereNull('cost_center_transaction.cost_center_id');
+                $q->whereNull('cost_center_transaction_journal.cost_center_id');
             }
         );
 
@@ -912,6 +982,33 @@ class TransactionCollector implements TransactionCollectorInterface
             $this->fields[] = 'category_transaction.category_id as transaction_category_id';
             $this->fields[] = 'transaction_categories.encrypted as transaction_category_encrypted';
             $this->fields[] = 'transaction_categories.name as transaction_category_name';
+        }
+    }
+
+    private function joinCostCenterTables(): void
+    {
+        if (!$this->joinedCostCenter) {
+            // join some extra tables:
+            $this->joinedCostCenter = true;
+            $this->query->leftJoin('cost_center_transaction_journal', 'cost_center_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin(
+                'categories as transaction_journal_categories',
+                'transaction_journal_categories.id',
+                '=',
+                'cost_center_transaction_journal.cost_center_id'
+            );
+
+            $this->query->leftJoin('cost_center_transaction', 'cost_center_transaction.transaction_id', '=', 'transactions.id');
+            $this->query->leftJoin('categories as transaction_categories', 'transaction_categories.id', '=', 'cost_center_transaction.cost_center_id');
+            $this->query->whereNull('transaction_journal_categories.deleted_at');
+            $this->query->whereNull('transaction_categories.deleted_at');
+            $this->fields[] = 'cost_center_transaction_journal.cost_center_id as transaction_journal_cost_center_id';
+            $this->fields[] = 'transaction_journal_categories.encrypted as transaction_journal_cost_center_encrypted';
+            $this->fields[] = 'transaction_journal_categories.name as transaction_journal_cost_center_name';
+
+            $this->fields[] = 'cost_center_transaction.cost_center_id as transaction_cost_center_id';
+            $this->fields[] = 'transaction_categories.encrypted as transaction_cost_center_encrypted';
+            $this->fields[] = 'transaction_categories.name as transaction_cost_center_name';
         }
     }
 

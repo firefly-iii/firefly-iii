@@ -26,6 +26,7 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -200,6 +201,24 @@ interface TransactionCollectorInterface
     public function setCategory(Category $category): TransactionCollectorInterface;
 
     /**
+     * Set the cost centers to filter on.
+     *
+     * @param Collection $costCenter
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCostCenters(Collection $costCenter): TransactionCollectorInterface;
+
+    /**
+     * Set the cost center to filter on.
+     * 
+     * @param CostCenter $costCenter
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCostCenter(CostCenter $costCenter): TransactionCollectorInterface;
+
+    /**
      * Set the required currency (local or foreign)
      *
      * @param TransactionCurrency $currency
@@ -337,6 +356,13 @@ interface TransactionCollectorInterface
     public function withCategoryInformation(): TransactionCollectorInterface;
 
     /**
+     * Include cost center information.
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function withCostCenterInformation(): TransactionCollectorInterface;
+
+    /**
      * Include opposing account information.
      *
      * @return TransactionCollectorInterface
@@ -356,4 +382,11 @@ interface TransactionCollectorInterface
      * @return TransactionCollectorInterface
      */
     public function withoutCategory(): TransactionCollectorInterface;
+
+    /**
+     * Include transactions without a cost center.
+     * 
+     * @return TransactionCollectorInterface
+     */
+    public function withoutCostCenter(): TransactionCollectorInterface;
 }
