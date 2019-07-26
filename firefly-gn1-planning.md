@@ -34,9 +34,20 @@ Planejamento de revisão do Firefly
 *   `/app/Providers`: Classe para atribuir instância para `$user`; 
 *   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
 *   `/app/Models/`: Modelo;
-*   `/app/Import/Mapper/`: Mapeamento entre modelo e banco;
+*   `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
 *   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
-*   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório?);
+*   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório listas em dropdown?);
+*   `/app/Support/Http/Controllers/AugumentData.php`: Não está claro o uso;
+*   `/app/Support/Http/Controllers/AutoCompleteCollector.php`: Autocomplete de campos;
+*   `/app/Support/Http/Controllers/ChartGeneration.php`: Geração de gráfico; 
+*   `/app/Support/Http/Controllers/PeriodOverview.php`: Relatório por período;
+*   `/app/Support/Http/Controllers/RenderPartialViews.php`: renderiza views parciais;
+*   `/app/Support/Import/Routine/File/MappedValuesValidator.php`: Cria objetos pelo Container para job de importação;
+*   `/app/Support/Search/Search.php`: Resultado de busca;
+*   `/app/Transformers`: Transforma o resultado do banco em array, recupera os campos do contexto;
+*   `/tests/`: Todos os testes de unidade resultantes das mudanças realizadas no código;
+*   `/public/v1/js/ff/common/autocomplete.js`: funções para definir onde obter a lista de itens para autocomplete; 
+*   `/public/v1/js/ff/transacions/single/common.js`: chama a função de autocomplete para inicializar o componente; 
 
 #### Como funciona o mecanismo de view/template?
 
@@ -68,6 +79,10 @@ $repository = app(CategoryRepositoryInterface::class);
 ```
 
 A função está declarada no `helper.php` que chama o `Container->getInstance()->make()` para contruir uma nova instância. 
+
+#### Onde está o `Helper` para elementos da view, como ExpandedForm?
+
+A classe `ExpandedForm.php` fornecer métodos de helper para renderizar componentes, cujo HTML fica em `/resources/views/v1/form` .
 
 ## Segunda etapa
 
