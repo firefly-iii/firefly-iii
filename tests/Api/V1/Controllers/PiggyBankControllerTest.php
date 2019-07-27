@@ -154,7 +154,7 @@ class PiggyBankControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
 
         $currencyRepos->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::first());
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro());
 
         $data = [
             'name'          => 'new pigy bank ' . $this->randomInt(),

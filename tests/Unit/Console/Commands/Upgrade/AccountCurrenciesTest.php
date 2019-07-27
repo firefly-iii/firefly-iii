@@ -27,7 +27,6 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -133,18 +132,24 @@ class AccountCurrenciesTest extends TestCase
      * Perfect run with opening balance.
      *
      * TODO this method crashes some times but not sure why.
+     * 2019-07-27 should be fixed.
      *
      * @covers \FireflyIII\Console\Commands\Upgrade\AccountCurrencies
      */
     public function testHandleOpeningBalance(): void
     {
-        $false        = new Configuration;
-        $false->data  = false;
-        $pref         = new Preference;
-        $pref->data   = 'EUR';
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journal      = $this->getRandomWithdrawal();
+        $false                            = new Configuration;
+        $false->data                      = false;
+        $pref                             = new Preference;
+        $pref->data                       = 'EUR';
+        $accountRepos                     = $this->mock(AccountRepositoryInterface::class);
+        $userRepos                        = $this->mock(UserRepositoryInterface::class);
+        $journal                          = $this->getRandomWithdrawal();
+        $euro                             = $this->getEuro();
+        $journal->transaction_currency_id = $euro->id;
+        $journal->save();
+        $journal->refresh();
+
         $account      = $this->getRandomAsset();
         // mock calls
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -227,7 +232,7 @@ class AccountCurrenciesTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::where('code', 'EUR')->first();
+        $euro         = $this->getEuro();
         // mock calls
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->andReturn('0');

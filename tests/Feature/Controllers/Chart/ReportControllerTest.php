@@ -71,7 +71,7 @@ class ReportControllerTest extends TestCase
         $netWorth->shouldReceive('getNetWorthByCurrency')->andReturn(
             [
                 [
-                    'currency' => TransactionCurrency::first(),
+                    'currency' => $this->getEuro(),
                     'balance'  => '123',
                 ],
             ]

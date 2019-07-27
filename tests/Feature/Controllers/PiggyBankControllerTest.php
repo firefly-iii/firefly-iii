@@ -130,7 +130,7 @@ class PiggyBankControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // new account list thing.
-        $currency = TransactionCurrency::first();
+        $currency = $this->getEuro();
         $currencyRepos->shouldReceive('findNull')->andReturn($currency);
 
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
@@ -207,7 +207,7 @@ class PiggyBankControllerTest extends TestCase
 
 
         // mock stuff for new account list thing.
-        $currency = TransactionCurrency::first();
+        $currency = $this->getEuro();
         $account  = $this->getRandomAsset();
 
         $currencyRepos->shouldReceive('findNull')->andReturn($currency);

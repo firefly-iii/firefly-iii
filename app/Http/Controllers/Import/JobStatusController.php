@@ -106,7 +106,7 @@ class JobStatusController extends Controller
 
         // if count is zero:
         if (null !== $importJob->tag_id) {
-            $count = $importJob->tag->transactionJournals->count();
+            $count = $this->repository->countByTag($importJob);
         }
         if (0 === $count) {
             $json['report_txt'] = (string)trans('import.result_no_transactions');

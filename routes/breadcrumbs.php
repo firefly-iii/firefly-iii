@@ -287,8 +287,8 @@ try {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
                 $group = $object->transactionGroup;
-                if (null !== $group) {
-                    $breadcrumbs->parent('transactions.show', [$object->transactionGroup]);
+                if (null !== $group && $group instanceof TransactionGroup) {
+                    $breadcrumbs->parent('transactions.show', $object->transactionGroup);
                 }
                 $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
             }

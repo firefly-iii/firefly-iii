@@ -128,6 +128,7 @@ class JobStatusControllerTest extends TestCase
 
         $this->mockDefaultSession();
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(0);
 
         // call thing.
         $this->be($this->user());
@@ -155,6 +156,7 @@ class JobStatusControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(2);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(2);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -191,6 +193,7 @@ class JobStatusControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(1);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(1);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;

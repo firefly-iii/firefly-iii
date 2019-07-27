@@ -119,7 +119,7 @@ class OtherCurrenciesCorrections extends Command
             return null; // @codeCoverageIgnore
         }
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId];
+            return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);

@@ -288,8 +288,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * @param array $data
      *
      * @return TransactionGroup
-     *
-     * @throws FireflyException
      */
     public function store(array $data): TransactionGroup
     {

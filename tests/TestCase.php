@@ -41,6 +41,7 @@ use FireflyIII\Models\Configuration;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
@@ -64,6 +65,15 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+
+    /**
+     * @return Recurrence
+     */
+    public function getRandomRecurrence(): Recurrence
+    {
+        return $this->user()->recurrences()->inRandomOrder()->first();
+    }
+
     /**
      * @return CurrencyExchangeRate
      */

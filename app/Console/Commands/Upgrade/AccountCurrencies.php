@@ -64,6 +64,7 @@ class AccountCurrencies extends Command
      */
     public function handle(): int
     {
+        Log::debug('Now in handle()');
         $this->stupidLaravel();
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
@@ -71,7 +72,6 @@ class AccountCurrencies extends Command
 
             return 0;
         }
-        Log::debug('Now in updateAccountCurrencies()');
         $this->updateAccountCurrencies();
 
         if (0 === $this->count) {
@@ -130,17 +130,23 @@ class AccountCurrencies extends Command
      */
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
+        Log::debug(sprintf('Now in updateAccount(%d, %s)', $account->id, $currency->code));
         $this->accountRepos->setUser($account->user);
 
         $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        Log::debug(sprintf('Account currency is #%d', $accountCurrency));
+
         $openingBalance  = $this->accountRepos->getOpeningBalance($account);
         $obCurrency      = 0;
         if (null !== $openingBalance) {
             $obCurrency = (int)$openingBalance->transaction_currency_id;
+            Log::debug('Account has opening balance.');
         }
+        Log::debug(sprintf('Account OB currency is #%d.', $obCurrency));
 
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
+            Log::debug(sprintf('Both currencies are 0, so reset to #%d (%s)', $currency->id, $currency->code));
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
             $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
@@ -151,6 +157,7 @@ class AccountCurrencies extends Command
 
         // account is set to 0, opening balance is not?
         if (0 === $accountCurrency && $obCurrency > 0) {
+            Log::debug(sprintf('Account is #0, OB is #%d, so set account to OB as well', $obCurrency));
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
             $this->line(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
             $this->count++;
@@ -161,6 +168,7 @@ class AccountCurrencies extends Command
 
         // do not match and opening balance id is not null.
         if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
+            Log::debug(sprintf('Account (#%d) and OB currency (#%d) are different. Overrule OB, set to account currency.', $accountCurrency, $obCurrency));
             // update opening balance:
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();
@@ -174,6 +182,7 @@ class AccountCurrencies extends Command
 
             return;
         }
+        Log::debug('No changes necessary for this account.');
     }
 
     /**
@@ -181,8 +190,10 @@ class AccountCurrencies extends Command
      */
     private function updateAccountCurrencies(): void
     {
+        Log::debug('Now in updateAccountCurrencies()');
         $users               = $this->userRepos->all();
         $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
+        Log::debug(sprintf('Default currency is %s', $defaultCurrencyCode));
         foreach ($users as $user) {
             $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
         }
@@ -194,6 +205,7 @@ class AccountCurrencies extends Command
      */
     private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
     {
+        Log::debug(sprintf('Now in updateCurrenciesForUser(%s, %s)', $user->email, $systemCurrencyCode));
         $this->accountRepos->setUser($user);
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
@@ -202,10 +214,13 @@ class AccountCurrencies extends Command
         if (!is_string($defaultCurrencyCode)) {
             $defaultCurrencyCode = $systemCurrencyCode;
         }
+        Log::debug(sprintf('Users currency pref is %s', $defaultCurrencyCode));
+
         /** @var TransactionCurrency $defaultCurrency */
         $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
 
         if (null === $defaultCurrency) {
+            Log::error(sprintf('Users currency pref "%s" does not exist!', $defaultCurrencyCode));
             $this->error(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
 
             return;

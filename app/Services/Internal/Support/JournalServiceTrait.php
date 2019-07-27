@@ -87,7 +87,6 @@ trait JournalServiceTrait
      * @param string|null $accountName
      *
      * @return Account
-     * @throws FireflyException
      */
     protected function getAccount(string $transactionType, string $direction, ?int $accountId, ?string $accountName): Account
     {

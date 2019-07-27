@@ -216,7 +216,7 @@ class AvailableBudgetControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('updateAvailableBudget')->once()->andReturn($availableBudget);
-        $currencyRepository->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepository->shouldReceive('findNull')->andReturn($this->getEuro());
 
         // data to submit
         $data = [

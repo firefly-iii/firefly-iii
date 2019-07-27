@@ -69,7 +69,7 @@ class SummaryControllerTest extends TestCase
         $netWorth      = $this->mock(NetWorthInterface::class);
 
         // data
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $budget       = $this->user()->budgets()->inRandomOrder()->first();
         $account      = $this->getRandomAsset();
         $journals     = [
@@ -162,7 +162,7 @@ class SummaryControllerTest extends TestCase
         $date->addWeek();
 
         // data
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $budget       = $this->user()->budgets()->inRandomOrder()->first();
         $account      = $this->getRandomAsset();
         $journals     = [

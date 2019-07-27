@@ -469,8 +469,8 @@ class ChooseAccountsHandlerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setUser')->once();
 
-        $euro   = TransactionCurrency::where('code', 'EUR')->first();
-        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $euro   = $this->getEuro();
+        $usd    = $this->getDollar();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])
@@ -622,8 +622,8 @@ class ChooseAccountsHandlerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setUser')->once();
 
-        $euro   = TransactionCurrency::where('code', 'EUR')->first();
-        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $euro   = $this->getEuro();
+        $usd    = $this->getDollar();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])

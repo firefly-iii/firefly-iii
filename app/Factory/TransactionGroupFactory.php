@@ -53,7 +53,6 @@ class TransactionGroupFactory
      * @param array $data
      *
      * @return TransactionGroup
-     * @throws FireflyException
      */
     public function create(array $data): TransactionGroup
     {

@@ -352,7 +352,7 @@ class ChooseAccountsHandlerTest extends TestCase
 
         $collection = new Collection;
         $account    = $this->user()->accounts()->first();
-        $euro       = TransactionCurrency::first();
+        $euro       = $this->getEuro();
         $collection->push($account);
 
 
@@ -415,7 +415,7 @@ class ChooseAccountsHandlerTest extends TestCase
 
         $collection = new Collection;
         $account    = $this->user()->accounts()->first();
-        $euro       = TransactionCurrency::first();
+        $euro       = $this->getEuro();
         $collection->push($account);
 
 

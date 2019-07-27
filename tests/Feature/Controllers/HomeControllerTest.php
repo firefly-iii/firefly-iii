@@ -111,8 +111,6 @@ class HomeControllerTest extends TestCase
         $pref       = new Preference;
         $pref->data = [$account->id];
         Preferences::shouldReceive('get')->withArgs(['frontPageAccounts', [$account->id]])->atLeast()->once()->andReturn($pref);
-        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-        //FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         Steam::shouldReceive('balance')->atLeast()->once()->andReturn('5');
         // mock stuff
@@ -123,9 +121,6 @@ class HomeControllerTest extends TestCase
         $euro         = $this->getEuro();
 
 
-//        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-//
-//
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $accountRepos->shouldReceive('count')->andReturn(1)->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');

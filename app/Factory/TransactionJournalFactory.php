@@ -119,7 +119,6 @@ class TransactionJournalFactory
      * @param array $data
      *
      * @return Collection
-     * @throws FireflyException
      */
     public function create(array $data): Collection
     {
@@ -217,7 +216,6 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return TransactionJournal|null
-     * @throws FireflyException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -239,12 +237,19 @@ class TransactionJournalFactory
         /** Get source + destination account */
         Log::debug(sprintf('Source info: ID #%d, name "%s"', $row['source_id'], $row['source_name']));
         Log::debug(sprintf('Destination info: ID #%d, name "%s"', $row['destination_id'], $row['destination_name']));
-        // validate source and destination using a new Validator.
-        $this->validateAccounts($row);
 
-        /** create or get source and destination accounts  */
-        $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
-        $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+
+        try {
+            // validate source and destination using a new Validator.
+            $this->validateAccounts($row);
+            /** create or get source and destination accounts  */
+            $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
+            $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+
+            return null;
+        }
 
         // TODO After 4.8.0 better handling below:
 

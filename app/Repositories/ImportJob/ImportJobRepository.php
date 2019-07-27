@@ -467,4 +467,14 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         return $size > $this->maxUploadSize;
     }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return int
+     */
+    public function countByTag(ImportJob $job): int
+    {
+        return $job->tag->transactionJournals->count();
+    }
 }

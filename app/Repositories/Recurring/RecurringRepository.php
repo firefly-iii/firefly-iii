@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
@@ -206,6 +207,24 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         return '';
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     * @return PiggyBank|null
+     */
+    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank
+    {
+        $meta = $recurrence->recurrenceMeta;
+        /** @var RecurrenceMeta $metaEntry */
+        foreach ($meta as $metaEntry) {
+            if ('piggy_bank_id' === $metaEntry->name) {
+                $piggyId = (int)$metaEntry->value;
+                return $this->user->piggyBanks()->where('id', $piggyId)->first(['piggy_banks.*']);
+            }
+        }
+
+        return null;
     }
 
     /**
