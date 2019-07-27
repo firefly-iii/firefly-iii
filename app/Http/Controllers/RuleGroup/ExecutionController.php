@@ -23,13 +23,16 @@ namespace FireflyIII\Http\Controllers\RuleGroup;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
-use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\User;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Illuminate\Http\RedirectResponse;
+use Log;
 
 /**
  * Class ExecutionController
@@ -38,6 +41,9 @@ class ExecutionController extends Controller
 {
     /** @var AccountRepositoryInterface */
     private $repository;
+
+    /** @var RuleGroupRepositoryInterface */
+    private $ruleGroupRepository;
 
     /**
      * ExecutionController constructor.
@@ -52,7 +58,8 @@ class ExecutionController extends Controller
                 app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->repository = app(AccountRepositoryInterface::class);
+                $this->repository          = app(AccountRepositoryInterface::class);
+                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -72,23 +79,36 @@ class ExecutionController extends Controller
     public function execute(SelectTransactionsRequest $request, RuleGroup $ruleGroup): RedirectResponse
     {
         // Get parameters specified by the user
-        /** @var User $user */
-        $user      = auth()->user();
         $accounts  = $this->repository->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
 
-        // Create a job to do the work asynchronously
-        $job = new ExecuteRuleGroupOnExistingTransactions($ruleGroup);
+        // start looping.
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser(auth()->user());
 
-        // Apply parameters to the job
-        $job->setUser($user);
-        $job->setAccounts($accounts);
-        $job->setStartDate($startDate);
-        $job->setEndDate($endDate);
+        $rules = [];
+        /** @var Rule $rule */
+        foreach ($this->ruleGroupRepository->getActiveRules($ruleGroup) as $rule) {
+            $rules[] = $rule->id;
+        }
 
-        // Dispatch a new job to execute it in a queue
-        $this->dispatch($job);
+        $ruleEngine->setRulesToApply($rules);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($accounts);
+        $collector->setRange($startDate, $endDate);
+        $journals = $collector->getExtractedJournals();
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            Log::debug('Start of new journal.');
+            $ruleEngine->processJournalArray($journal);
+            Log::debug('Done with all rules for this group + done with journal.');
+        }
 
         // Tell the user that the job is queued
         session()->flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));

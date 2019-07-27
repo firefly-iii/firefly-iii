@@ -27,10 +27,11 @@ use FireflyIII\Api\V1\Requests\RuleRequest;
 use FireflyIII\Api\V1\Requests\RuleTestRequest;
 use FireflyIII\Api\V1\Requests\RuleTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -239,19 +240,27 @@ class RuleController extends Controller
         // Get parameters specified by the user
         $parameters = $request->getTriggerParameters();
 
-        // Create a job to do the work asynchronously
-        $job = new ExecuteRuleOnExistingTransactions($rule);
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser(auth()->user());
 
-        // Apply parameters to the job
-        /** @var User $user */
-        $user = auth()->user();
-        $job->setUser($user);
-        $job->setAccounts($parameters['accounts']);
-        $job->setStartDate($parameters['start_date']);
-        $job->setEndDate($parameters['end_date']);
+        $rules = [$rule->id];
 
-        // Dispatch a new job to execute it in a queue
-        $this->dispatch($job);
+        $ruleEngine->setRulesToApply($rules);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($parameters['accounts']);
+        $collector->setRange($parameters['start_date'], $parameters['end_date']);
+        $journals = $collector->getExtractedJournals();
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            Log::debug('Start of new journal.');
+            $ruleEngine->processJournalArray($journal);
+            Log::debug('Done with all rules for this group + done with journal.');
+        }
 
         return response()->json([], 204);
     }

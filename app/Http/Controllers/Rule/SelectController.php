@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Rule;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -34,6 +35,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -88,18 +90,26 @@ class SelectController extends Controller
         $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
+        $rules = [$rule->id];
 
-        // Create a job to do the work asynchronously
-        $job = new ExecuteRuleOnExistingTransactions($rule);
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser(auth()->user());
+        $ruleEngine->setRulesToApply($rules);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
 
-        // Apply parameters to the job
-        $job->setUser($user);
-        $job->setAccounts($accounts);
-        $job->setStartDate($startDate);
-        $job->setEndDate($endDate);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($accounts);
+        $collector->setRange($startDate, $endDate);
+        $journals = $collector->getExtractedJournals();
 
-        // Dispatch a new job to execute it in a queue
-        $this->dispatch($job);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            Log::debug('Start of new journal.');
+            $ruleEngine->processJournalArray($journal);
+            Log::debug('Done with all rules for this group + done with journal.');
+        }
 
         // Tell the user that the job is queued
         session()->flash('success', (string)trans('firefly.applied_rule_selection', ['title' => $rule->title]));

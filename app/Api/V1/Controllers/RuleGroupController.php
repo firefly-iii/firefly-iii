@@ -28,11 +28,12 @@ use FireflyIII\Api\V1\Requests\RuleGroupRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTestRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\Transformers\RuleTransformer;
@@ -296,25 +297,34 @@ class RuleGroupController extends Controller
      */
     public function triggerGroup(RuleGroupTriggerRequest $request, RuleGroup $group): JsonResponse
     {
-        // Get parameters specified by the user
-        /** @var User $user */
-        $user       = auth()->user();
         $parameters = $request->getTriggerParameters();
 
-        /** @var Collection $rules */
-        $rules = $this->ruleGroupRepository->getActiveRules($group);
-        foreach ($rules as $rule) {
-            // Create a job to do the work asynchronously
-            $job = new ExecuteRuleOnExistingTransactions($rule);
+        /** @var Collection $collection */
+        $collection = $this->ruleGroupRepository->getActiveRules($group);
+        $rules      = [];
+        /** @var Rule $item */
+        foreach ($collection as $item) {
+            $rules[] = $item->id;
+        }
 
-            // Apply parameters to the job
-            $job->setUser($user);
-            $job->setAccounts($parameters['accounts']);
-            $job->setStartDate($parameters['start_date']);
-            $job->setEndDate($parameters['end_date']);
+        // start looping.
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser(auth()->user());
+        $ruleEngine->setRulesToApply($rules);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
 
-            // Dispatch a new job to execute it in a queue
-            $this->dispatch($job);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($parameters['accounts']);
+        $collector->setRange($parameters['start_date'], $parameters['end_date']);
+        $journals = $collector->getExtractedJournals();
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            Log::debug('Start of new journal.');
+            $ruleEngine->processJournalArray($journal);
+            Log::debug('Done with all rules for this group + done with journal.');
         }
 
         return response()->json([], 204);

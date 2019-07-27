@@ -85,7 +85,7 @@
         </div>
     </div>
     {% if paginator.count == 0 and inactive.count == 0 and page == 1 %}
-        {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% endif %}

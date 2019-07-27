@@ -165,7 +165,8 @@ class RuleEngine
      */
     public function processJournalArray(array $journal): void
     {
-        Log::debug(sprintf('Will process transaction journal #%d ("%s")', $journal['id'], $journal['description']));
+        $journalId = $journal['id'] ?? $journal['transaction_journal_id'];
+        Log::debug(sprintf('Will process transaction journal #%d ("%s")', $journalId, $journal['description']));
         /** @var RuleGroup $group */
         foreach ($this->ruleGroups as $group) {
             Log::debug(sprintf('Now at rule group #%d', $group->id));
