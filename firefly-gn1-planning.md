@@ -60,11 +60,11 @@ Planejamento de revisão do Firefly
 *   OK `/app/Helpers/Collector/TransactionCollector.php`: Métodos helper para manipulação de coleções;
 *   OK `/resources/lang/`: traduções de texto para centro de custo;
 *   OK `/app/Repositories`: interface e repositório;
-*   `/app/Providers`: Classe para atribuir instância para `$user`; 
-*   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
-*   `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
+*   OK `/app/Providers`: Classe para atribuir instância para `$user`; 
+*   OK `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
 *   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
 *   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório listas em dropdown?);
+*   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
 *   `/app/Support/Http/Controllers/AugumentData.php`: Não está claro o uso;
 *   `/app/Support/Http/Controllers/AutoCompleteCollector.php`: Autocomplete de campos;
 *   `/app/Support/Http/Controllers/ChartGeneration.php`: Geração de gráfico; 
