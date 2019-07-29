@@ -28,12 +28,13 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\CostCenter\CostCenterRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class CategoryFormRequest.
+ * Class ReportFormRequest.
  */
 class ReportFormRequest extends Request
 {
@@ -111,6 +112,29 @@ class ReportFormRequest extends Request
                 $category = $repository->findNull((int)$categoryId);
                 if (null !== $category) {
                     $collection->push($category);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Validate list of cost centers.
+     *
+     * @return Collection
+     */
+    public function getCostCenterList(): Collection
+    {
+        /** @var CostCenterRepositoryInterface $repository */
+        $repository = app(CostCenterRepositoryInterface::class);
+        $set        = $this->get('cost_center');
+        $collection = new Collection;
+        if (\is_array($set)) {
+            foreach ($set as $costCenterId) {
+                $costCenter = $repository->findNull((int)$costCenterId);
+                if (null !== $costCenter) {
+                    $collection->push($costCenter);
                 }
             }
         }

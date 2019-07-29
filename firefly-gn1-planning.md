@@ -62,8 +62,8 @@ Planejamento de revisão do Firefly
 *   OK `/app/Repositories`: interface e repositório;
 *   OK `/app/Providers`: Classe para atribuir instância para `$user`; 
 *   OK `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;
-*   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
 *   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório listas em dropdown?);
+*   `/app/Http/Request/CenterCostFormRequest.php`: Regra de validação dos campos;
 *   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
 *   `/app/Support/Http/Controllers/AugumentData.php`: Não está claro o uso;
 *   `/app/Support/Http/Controllers/AutoCompleteCollector.php`: Autocomplete de campos;
@@ -77,6 +77,7 @@ Planejamento de revisão do Firefly
 *   `/public/v1/js/ff/categories/*`: definições de funções categorias;
 *   `/public/v1/js/ff/common/autocomplete.js`: funções para definir onde obter a lista de itens para autocomplete; 
 *   `/public/v1/js/ff/transacions/single/common.js`: chama a função de autocomplete para inicializar o componente; 
+*   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
 
 #### Como funciona o mecanismo de view/template?
 
