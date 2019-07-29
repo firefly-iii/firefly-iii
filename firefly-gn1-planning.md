@@ -52,8 +52,14 @@ Planejamento de revisão do Firefly
 
 #### Quais as dependências para serem criadas?
 
-*   `/app/Models/`: definição dos campos;
-*   `/app/Repositories`: interface e repositório;
+*   OK `/app/Models/`: definição dos campos;
+*   OK `/database/`: utilizar o artisan para fazer a migração do banco de dados;
+*   OK `/app/Services/Destroy`: Serviço que define ação de remoção;
+*   OK `/app/Services/Update`: Serviço que define ação de atualização (campos salvos);
+*   OK `/app/Factory`: Métodos de criação de objetos durante listagem;
+*   OK `/app/Helpers/Collector/TransactionCollector.php`: Métodos helper para manipulação de coleções;
+*   OK `/resources/lang/`: traduções de texto para centro de custo;
+*   OK `/app/Repositories`: interface e repositório;
 *   `/app/Providers`: Classe para atribuir instância para `$user`; 
 *   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
 *   `/app/Import/Mapper/`: popula um dicionário de dados pelo ID;

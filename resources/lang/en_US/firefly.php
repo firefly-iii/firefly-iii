@@ -1389,4 +1389,20 @@ return [
     'will_jump_monday'                   => 'Will be created on Monday instead of the weekends.',
     'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
+
+    // Cost Center:
+    'new_cost_center'                    => 'New cost center',
+    'create_new_cost_center'             => 'Create a new cost center',
+    'without_cost_center'                => 'Without a cost center',
+    'update_cost_center'                 => 'Update cost center',
+    'updated_cost_center'                => 'Updated cost center ":name"',
+    'cost_centers'                       => 'Cost Centers',
+    'edit_cost_center'                   => 'Edit cost center ":name"',
+    'no_cost_center'                     => '(no cost center)',
+    'cost_center'                        => 'Cost center',
+    'delete_cost_center'                 => 'Delete cost center ":name"',
+    'deleted_cost_center'                => 'Deleted cost center ":name"',
+    'store_cost_center'                  => 'Store new cost center',
+    'stored_cost_center'                 => 'Stored new cost center ":name"',
+    'without_cost_center_between'        => 'Without cost center between :start and :end',
 ];

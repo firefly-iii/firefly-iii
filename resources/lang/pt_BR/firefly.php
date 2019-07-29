@@ -1389,4 +1389,20 @@ return [
     'will_jump_monday'                   => 'Será criada na segunda-feira em vez de nos finais de semana.',
     'except_weekends'                    => 'Exceto nos fins de semana',
     'recurrence_deleted'                 => 'Transação recorrente ":title" apagada',
+
+    // Cost Center:
+    'new_cost_center'                    => 'Novo centro de custo',
+    'create_new_cost_center'             => 'Criar uma novo centro de custo',
+    'without_cost_center'                => 'Sem um centro de custo',
+    'update_cost_center'                 => 'Atualizar Centro de custo',
+    'updated_cost_center'                => 'Atualizado centro de custo ":name"',
+    'cost_centers'                       => 'Centros de Custo',
+    'edit_cost_center'                   => 'Editar centro de custo ":name"',
+    'no_cost_center'                     => '(sem centro de custo)',
+    'cost_center'                        => 'Centro de custo',
+    'delete_cost_center'                 => 'Excluir centro de custo ":name"',
+    'deleted_cost_center'                => 'Centro de custo ":name" excluída',
+    'store_cost_center'                  => 'Armazenar novo centro de custo',
+    'stored_cost_center'                 => 'Armazenado novo centro de custo ":name"',
+    'without_cost_center_between'        => 'Sem centro de custo entre :start e :end',
 ];
