@@ -616,6 +616,7 @@ opt/app/app/Import/Routine/RoutineInterface.php
 opt/app/app/Import/Routine/SpectreRoutine.php
 opt/app/app/Import/Routine/YnabRoutine.php
 opt/app/app/Import/Specifics/AbnAmroDescription.php
+opt/app/app/Import/Specifics/AppendHash.php
 opt/app/app/Import/Specifics/IngDescription.php
 opt/app/app/Import/Specifics/PresidentsChoice.php
 opt/app/app/Import/Specifics/RabobankDescription.php

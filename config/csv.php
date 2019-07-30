@@ -26,8 +26,12 @@ use FireflyIII\Import\Specifics\AbnAmroDescription;
 use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Import\Specifics\PresidentsChoice;
 use FireflyIII\Import\Specifics\SnsDescription;
+<<<<<<< HEAD
 use FireflyIII\Import\Specifics\Belfius;
 use FireflyIII\Import\Specifics\IngBelgium;
+=======
+use FireflyIII\Import\Specifics\AppendHash;
+>>>>>>> c476be9b4... Wire it in
 
 return [
 
@@ -39,8 +43,12 @@ return [
         'AbnAmroDescription' => AbnAmroDescription::class,
         'SnsDescription'     => SnsDescription::class,
         'PresidentsChoice'   => PresidentsChoice::class,
+<<<<<<< HEAD
         'Belfius'            => Belfius::class,
         'IngBelgium'         => IngBelgium::class
+=======
+        'AppendHash'         => AppendHash::class,
+>>>>>>> c476be9b4... Wire it in
     ],
 
     /*
