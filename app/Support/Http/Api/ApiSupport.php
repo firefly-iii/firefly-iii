@@ -26,6 +26,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Trait ApiSupport
+ * @codeCoverageIgnore
  */
 trait ApiSupport
 {

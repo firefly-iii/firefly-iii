@@ -91,40 +91,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param int $attachmentId
-     *
-     * @return Attachment|null
-     */
-    public function findWithoutUser(int $attachmentId): ?Attachment
-    {
-
-        return Attachment::find($attachmentId);
-    }
-
-    /**
      * @return Collection
      */
     public function get(): Collection
     {
         return $this->user->attachments()->get();
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBetween(Carbon $start, Carbon $end): Collection
-    {
-        $query = $this->user
-            ->attachments()
-            ->leftJoin('transaction_journals', 'attachments.attachable_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->get(['attachments.*']);
-
-        return $query;
     }
 
     /**

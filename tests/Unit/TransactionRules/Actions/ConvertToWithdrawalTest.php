@@ -59,7 +59,7 @@ class ConvertToWithdrawalTest extends TestCase
 
         return;
         $expense = $this->getRandomExpense();
-        $name    = 'Random expense #' . random_int(1, 10000);
+        $name    = 'Random expense #' . $this->randomInt();
         $deposit = $this->getRandomDeposit();
 
         // journal is a deposit:
@@ -98,7 +98,7 @@ class ConvertToWithdrawalTest extends TestCase
 
         return;
         $expense  = $this->getRandomExpense();
-        $name     = 'Random expense #' . random_int(1, 10000);
+        $name     = 'Random expense #' . $this->randomInt();
         $transfer = $this->getRandomTransfer();
 
         // journal is a transfer:

@@ -290,8 +290,8 @@ try {
                 if (null !== $group && $group instanceof TransactionGroup) {
                     $breadcrumbs->parent('transactions.show', $object->transactionGroup);
                 }
-                $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
             }
+            $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
         }
     );
     Breadcrumbs::register(

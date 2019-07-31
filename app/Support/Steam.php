@@ -33,6 +33,7 @@ use stdClass;
 
 /**
  * Class Steam.
+ * @codeCoverageIgnore
  */
 class Steam
 {

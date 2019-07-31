@@ -53,7 +53,7 @@ class ConfigureUploadHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'upload-B' . random_int(1, 10000);
+        $job->key           = 'upload-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -102,7 +102,7 @@ class ConfigureUploadHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'upload-B' . random_int(1, 10000);
+        $job->key           = 'upload-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -150,7 +150,7 @@ class ConfigureUploadHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'upload-A' . random_int(1, 10000);
+        $job->key           = 'upload-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

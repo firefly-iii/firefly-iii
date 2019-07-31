@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class GroupUpdateService
+ * TODO test.
  */
 class GroupUpdateService
 {

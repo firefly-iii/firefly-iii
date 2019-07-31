@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class CurrencyUpdateService
+ * @codeCoverageIgnore
  */
 class CurrencyUpdateService
 {

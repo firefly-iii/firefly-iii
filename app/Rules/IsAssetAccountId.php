@@ -36,6 +36,7 @@ class IsAssetAccountId implements Rule
      * Get the validation error message. This is not translated because only the API uses it.
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function message(): string
     {

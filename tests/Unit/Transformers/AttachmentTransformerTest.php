@@ -53,7 +53,7 @@ class AttachmentTransformerTest extends TestCase
     public function testBasic(): void
     {
         $repository = $this->mock(AttachmentRepositoryInterface::class);
-        $md5        = md5('hello' . random_int(1, 10000));
+        $md5        = md5('hello' . $this->randomInt());
         $attachment = Attachment::create(
             [
                 'user_id'         => $this->user()->id,

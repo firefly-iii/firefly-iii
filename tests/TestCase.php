@@ -39,6 +39,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\CurrencyExchangeRate;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -66,6 +67,13 @@ use RuntimeException;
 abstract class TestCase extends BaseTestCase
 {
 
+    /**
+     * @return ImportJob
+     */
+    public function getRandomImportJob(): ImportJob
+    {
+        return $this->user()->importJobs()->inRandomOrder()->first();
+    }
     /**
      * @return Recurrence
      */

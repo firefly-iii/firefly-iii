@@ -245,11 +245,13 @@ class TransactionJournalFactory
             /** create or get source and destination accounts  */
             $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
             $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+            // @codeCoverageIgnoreStart
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
 
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
         // TODO After 4.8.0 better handling below:
 

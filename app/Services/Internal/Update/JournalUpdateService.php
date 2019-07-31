@@ -48,6 +48,7 @@ use Log;
  * Class to centralise code that updates a journal given the input by system.
  *
  * Class JournalUpdateService
+ * TODO test me
  */
 class JournalUpdateService
 {

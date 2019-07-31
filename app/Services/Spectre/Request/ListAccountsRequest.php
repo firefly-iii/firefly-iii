@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class ListAccountsRequest
+ * @codeCoverageIgnore
  */
 class ListAccountsRequest extends SpectreRequest
 {

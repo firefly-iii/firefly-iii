@@ -30,6 +30,7 @@ use RuntimeException;
 
 /**
  * Class PwndVerifierV2.
+ * @codeCoverageIgnore
  */
 class PwndVerifierV2 implements Verifier
 {

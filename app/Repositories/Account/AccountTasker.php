@@ -152,6 +152,47 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // get all expenses for the given accounts in the given period!
+        // also transfers!
+        // get all transactions:
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->withAccountInformation();
+        $income = $this->groupByDestination($collector->getExtractedJournals());
+
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($income as $accountId => $row) {
+            $sum[$accountId] = (float)$row['sum'];
+        }
+
+        array_multisort($sum, SORT_DESC, $income);
+
+        return $income;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param array $array
      *
      * @return array
@@ -207,46 +248,5 @@ class AccountTasker implements AccountTaskerInterface
         }
 
         return $expenses;
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        // get all expenses for the given accounts in the given period!
-        // also transfers!
-        // get all transactions:
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($accounts)->setRange($start, $end);
-        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withAccountInformation();
-        $income = $this->groupByDestination($collector->getExtractedJournals());
-
-        // sort the result
-        // Obtain a list of columns
-        $sum = [];
-        foreach ($income as $accountId => $row) {
-            $sum[$accountId] = (float)$row['sum'];
-        }
-
-        array_multisort($sum, SORT_DESC, $income);
-
-        return $income;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 }

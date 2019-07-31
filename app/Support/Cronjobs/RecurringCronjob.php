@@ -99,13 +99,7 @@ class RecurringCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        try {
-            $this->fireRecurring();
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Could not run recurring transaction cron job: %s', $e->getMessage()));
-        }
+        $this->fireRecurring();
 
         app('preferences')->mark();
 
@@ -114,12 +108,13 @@ class RecurringCronjob extends AbstractCronjob
 
     /**
      *
-     * @throws FireflyException
      */
     private function fireRecurring(): void
     {
         Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d')));
-        $job = new CreateRecurringTransactions($this->date);
+        /** @var CreateRecurringTransactions $job */
+        $job = app(CreateRecurringTransactions::class);
+        $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
         app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));

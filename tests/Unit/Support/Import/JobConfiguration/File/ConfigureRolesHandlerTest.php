@@ -134,7 +134,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-B' . random_int(1, 10000);
+        $job->key           = 'role-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -215,7 +215,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -297,7 +297,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -368,7 +368,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -543,7 +543,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-A' . random_int(1, 10000);
+        $job->key           = 'role-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

@@ -75,7 +75,7 @@ class AddTagTest extends TestCase
      */
     public function testActNoTag(): void
     {
-        $newTagName               = 'TestTag-' . random_int(1, 10000);
+        $newTagName               = 'TestTag-' . $th;
         $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $newTagName;

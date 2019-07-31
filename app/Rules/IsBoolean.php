@@ -33,7 +33,7 @@ class IsBoolean implements Rule
 {
     /**
      * Get the validation error message.
-     *
+     * @codeCoverageIgnore
      * @return string
      */
     public function message(): string
@@ -51,25 +51,16 @@ class IsBoolean implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        if (\is_bool($value)) {
+        if (is_bool($value)) {
             return true;
         }
-        if (\is_int($value) && 0 === $value) {
+        if (is_int($value) && 0 === $value) {
             return true;
         }
-        if (\is_int($value) && 1 === $value) {
+        if (is_int($value) && 1 === $value) {
             return true;
         }
-        if (\is_string($value) && '1' === $value) {
-            return true;
-        }
-        if (\is_string($value) && '0' === $value) {
-            return true;
-        }
-        if (\is_string($value) && 'true' === $value) {
-            return true;
-        }
-        if (\is_string($value) && 'false' === $value) {
+        if (is_string($value) && in_array($value, ['0', '1', 'true', 'false', 'on', 'off', 'yes', 'no', 'y', 'n'])) {
             return true;
         }
 

@@ -24,17 +24,18 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Jobs\Job;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Laravel\Passport\Passport;
 use Log;
-use Queue;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -117,6 +118,7 @@ class RuleControllerTest extends TestCase
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleTransformer::class);
+        Preferences::shouldReceive('mark');
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -250,8 +252,23 @@ class RuleControllerTest extends TestCase
         $rule       = $this->user()->rules()->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
         $ruleRepos  = $this->mock(RuleRepositoryInterface::class);
-        $asset      = $this->getRandomAsset();
-        $expense    = $this->getRandomExpense();
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $ruleEngine = $this->mock(RuleEngine::class);
+        Preferences::shouldReceive('mark');
+
+        // new mocks for ruleEngine
+        $ruleEngine->shouldReceive('setUser')->atLeast()->once();
+        $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once();
+        $ruleEngine->shouldReceive('processJournalArray')->atLeast()->once();
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once();
+        $collector->shouldReceive('setRange')->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([['x']]);
+
+
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
 
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -259,16 +276,8 @@ class RuleControllerTest extends TestCase
         $repository->shouldReceive('findNull')->withArgs([2])->andReturn($expense);
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
 
-        Queue::fake();
-
         $response = $this->post(route('api.v1.rules.trigger', [$rule->id]) . '?accounts=1,2,3&start_date=2019-01-01&end_date=2019-01-02');
         $response->assertStatus(204);
-
-        Queue::assertPushed(
-            ExecuteRuleOnExistingTransactions::class, function (Job $job) use ($rule) {
-            return $job->getRule()->id === $rule->id;
-        }
-        );
     }
 
     /**

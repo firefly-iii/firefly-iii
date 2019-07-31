@@ -26,6 +26,10 @@ namespace FireflyIII\Support;
 
 use ArrayObject;
 
+/**
+ * Class NullArrayObject
+ * @codeCoverageIgnore
+ */
 class NullArrayObject extends ArrayObject
 {
     public $default = null;

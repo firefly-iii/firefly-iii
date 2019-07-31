@@ -173,17 +173,6 @@ interface BudgetRepositoryInterface
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
 
     /**
-     * Calculate the average amount in the budgets available in this period.
-     * Grouped by day.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getAverageAvailable(Carbon $start, Carbon $end): string;
-
-    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end

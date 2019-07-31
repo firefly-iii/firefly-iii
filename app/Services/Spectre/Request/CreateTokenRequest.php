@@ -29,6 +29,7 @@ use FireflyIII\Services\Spectre\Object\Token;
 
 /**
  * Class CreateTokenRequest
+ * @codeCoverageIgnore
  */
 class CreateTokenRequest extends SpectreRequest
 {

@@ -26,16 +26,16 @@ namespace FireflyIII\Services\Internal\Update;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
-use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 
 /**
  * Class RecurrenceUpdateService
+ * @codeCoverageIgnore
  */
 class RecurrenceUpdateService
 {
-    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait, RecurringTransactionTrait;
 
     /** @var User */
     private $user;
@@ -51,7 +51,6 @@ class RecurrenceUpdateService
      */
     public function update(Recurrence $recurrence, array $data): Recurrence
     {
-        // is expected by TransactionServiceTrait
         $this->user      = $recurrence->user;
         $transactionType = $this->findTransactionType(ucfirst($data['recurrence']['type']));
         // update basic fields first:

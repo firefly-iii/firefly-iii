@@ -29,6 +29,7 @@ use Illuminate\Contracts\Validation\Rule;
 /**
  *
  * Class ZeroOrMore
+ * @codeCoverageIgnore
  */
 class ZeroOrMore implements Rule
 {

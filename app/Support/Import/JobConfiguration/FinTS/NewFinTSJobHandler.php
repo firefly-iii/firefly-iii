@@ -32,8 +32,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\MessageBag;
 
 /**
- *
  * Class NewFinTSJobHandler
+ * @codeCoverageIgnore
  */
 class NewFinTSJobHandler implements FinTSConfigurationInterface
 {
@@ -61,7 +61,6 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['apply-rules']     = 1 === (int)$data['apply_rules'];
 
         $this->repository->setConfiguration($this->importJob, $config);
-
 
         $incomplete = false;
         foreach ($config as $value) {

@@ -43,8 +43,12 @@
             <directory suffix="Test.php">./tests/Unit/Generator</directory>
             <directory suffix="Test.php">./tests/Unit/Handlers</directory>
             <directory suffix="Test.php">./tests/Unit/Helpers</directory>
-            <directory suffix="Test.php">./tests/Unit/Middleware</directory>
             <directory suffix="Test.php">./tests/Unit/Import</directory>
+            <directory suffix="Test.php">./tests/Unit/Jobs</directory>
+            <directory suffix="Test.php">./tests/Unit/Middleware</directory>
+            <directory suffix="Test.php">./tests/Unit/Rules</directory>
+            <directory suffix="Test.php">./tests/Unit/Services</directory>
+            <directory suffix="Test.php">./tests/Unit/Support</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>

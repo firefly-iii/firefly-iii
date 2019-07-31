@@ -33,6 +33,7 @@ use Log;
 
 /**
  * Class RatesApiIOv1.
+ * @codeCoverageIgnore
  */
 class RatesApiIOv1 implements ExchangeRateInterface
 {

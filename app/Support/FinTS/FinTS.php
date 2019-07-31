@@ -27,7 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Crypt;
 
 /**
- *
+ * @codeCoverageIgnore
  * Class FinTS
  */
 class FinTS

@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class FireflyConfig.
+ * @codeCoverageIgnore
  */
 class FireflyConfig
 {

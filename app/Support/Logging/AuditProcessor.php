@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Logging;
 
 /**
  * Class AuditProcessor
+ * @codeCoverageIgnore
  */
 class AuditProcessor
 {

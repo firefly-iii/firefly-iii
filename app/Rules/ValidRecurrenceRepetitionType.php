@@ -27,6 +27,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 /**
  * Class ValidRecurrenceRepetitionType
+ * @codeCoverageIgnore
  */
 class ValidRecurrenceRepetitionType implements Rule
 {

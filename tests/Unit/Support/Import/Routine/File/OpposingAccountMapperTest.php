@@ -72,16 +72,16 @@ class OpposingAccountMapperTest extends TestCase
      */
     public function testAccountIdBadType(): void
     {
-        $expected       = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
+        $expected       = $this->getRandomRevenue();
         $expected->iban = null;
         $expected->save();
         $amount       = '-12.34';
         $expectedArgs = [
             'name'            => $expected->name,
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -116,9 +116,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => $expected->name,
             'iban'            => $expected->iban,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -152,9 +152,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => '(no name)',
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -184,9 +184,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => '(no name)',
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::REVENUE,
+            'account_type'     => AccountType::REVENUE,
             'active'          => true,
             'BIC'             => null,
         ];

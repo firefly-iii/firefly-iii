@@ -59,7 +59,7 @@ class ConvertToDepositTest extends TestCase
 
         return;
         $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
+        $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomTransfer();
 
         // journal is a transfer:
@@ -98,7 +98,7 @@ class ConvertToDepositTest extends TestCase
 
         return;
         $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
+        $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomWithdrawal();
 
         // journal is a withdrawal:

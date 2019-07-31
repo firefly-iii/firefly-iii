@@ -27,6 +27,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class CacheProperties.
+ * @codeCoverageIgnore
  */
 class CacheProperties
 {

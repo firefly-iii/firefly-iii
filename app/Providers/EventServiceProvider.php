@@ -46,11 +46,11 @@ use Session;
 
 /**
  * Class EventServiceProvider.
+ * @codeCoverageIgnore
  */
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * @codeCoverageIgnore
      * The event listener mappings for the application.
      *
      * @var array
@@ -103,7 +103,6 @@ class EventServiceProvider extends ServiceProvider
         ];
 
     /**
-     * @codeCoverageIgnore
      * Register any events for your application.
      */
     public function boot(): void
@@ -119,7 +118,7 @@ class EventServiceProvider extends ServiceProvider
     {
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
-            function (PiggyBank $piggyBank) {
+            static function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = $piggyBank->startdate;
@@ -129,7 +128,7 @@ class EventServiceProvider extends ServiceProvider
             }
         );
         Client::created(
-            function (Client $oauthClient) {
+            static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
                 $user       = $repository->findNull((int)$oauthClient->user_id);

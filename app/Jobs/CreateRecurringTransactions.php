@@ -49,9 +49,7 @@ use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Factory\PiggyBankEventFactory;
-use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionGroup;
@@ -95,15 +93,25 @@ class CreateRecurringTransactions implements ShouldQueue
     public $created;
 
     /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
      * Create a new job instance.
      * @codeCoverageIgnore
      *
      * @param Carbon $date
      */
-    public function __construct(Carbon $date)
+    public function __construct(?Carbon $date)
     {
-        $date->startOfDay();
-        $this->date              = $date;
+        if (null !== $date) {
+            $date->startOfDay();
+            $this->date = $date;
+        }
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->groupRepository   = app(TransactionGroupRepositoryInterface::class);

@@ -25,12 +25,13 @@ namespace Tests\Unit\Import\Routine;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Routine\BunqRoutine;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
+use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Tests\TestCase;
@@ -60,7 +61,7 @@ class FileRoutineTest extends TestCase
         $job->key           = 'brY_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
-        $job->provider      = 'bunq';
+        $job->provider      = 'file';
         $job->file_type     = '';
         $job->configuration = [];
         $job->save();
@@ -68,19 +69,27 @@ class FileRoutineTest extends TestCase
         // mock stuff:
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $handler    = $this->mock(StageImportDataHandler::class);
+        $this->mock(AttachmentHelperInterface::class);
+        $csv = $this->mock(CSVProcessor::class);
+
+        $csv->shouldReceive('setImportJob')->atLeast()->once();
+        $csv->shouldReceive('run')->atLeast()->once();
 
 
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished']);
         $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final']);
-        $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
+        $repository->shouldReceive('getConfiguration')->atLeast()->once()->andReturn([]);
+        //$repository->shouldReceive('getAttachments')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('setTransactions')->atLeast()->once();
+        //$repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
 
-        $handler->shouldReceive('setImportJob')->once();
-        $handler->shouldReceive('run')->once();
-        $handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
+        //$handler->shouldReceive('setImportJob')->once();
+        //$handler->shouldReceive('run')->once();
+        //$handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
         $handler->shouldReceive('isStillRunning')->andReturn(false);
-        $routine = new BunqRoutine;
+        $routine = new FileRoutine;
         $routine->setImportJob($job);
         try {
             $routine->run();

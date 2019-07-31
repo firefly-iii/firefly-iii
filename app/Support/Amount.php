@@ -33,6 +33,7 @@ use Preferences as Prefs;
 
 /**
  * Class Amount.
+ * @codeCoverageIgnore
  */
 class Amount
 {

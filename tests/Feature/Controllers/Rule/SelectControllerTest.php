@@ -24,16 +24,16 @@ declare(strict_types=1);
 namespace tests\Feature\Controllers\Rule;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Jobs\Job;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
-use Queue;
 use Tests\TestCase;
 
 
@@ -61,10 +61,23 @@ class SelectControllerTest extends TestCase
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $this->mockDefaultSession();
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $ruleEngine = $this->mock(RuleEngine::class);
+
 
         $this->session(['first' => new Carbon('2010-01-01')]);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        Queue::fake();
+
+        // new mocks for ruleEngine
+        $ruleEngine->shouldReceive('setUser')->atLeast()->once();
+        $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once();
+        $ruleEngine->shouldReceive('processJournalArray')->atLeast()->once();
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once();
+        $collector->shouldReceive('setRange')->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([['x']]);
+
 
         $data = [
             'accounts'   => [1],
@@ -77,11 +90,6 @@ class SelectControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
-        Queue::assertPushed(
-            ExecuteRuleOnExistingTransactions::class, function (Job $job) {
-            return 1 === $job->getRule()->id;
-        }
-        );
     }
 
     /**

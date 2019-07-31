@@ -57,6 +57,7 @@ trait JournalServiceTrait
      * @param string|null $amount
      *
      * @return string
+     * @codeCoverageIgnore
      */
     protected function getForeignAmount(?string $amount): ?string
     {
@@ -87,6 +88,7 @@ trait JournalServiceTrait
      * @param string|null $accountName
      *
      * @return Account
+     * @codeCoverageIgnore
      */
     protected function getAccount(string $transactionType, string $direction, ?int $accountId, ?string $accountName): Account
     {
@@ -166,6 +168,7 @@ trait JournalServiceTrait
      *
      * @return string
      * @throws FireflyException
+     * @codeCoverageIgnore
      */
     protected function getAmount(string $amount): string
     {
@@ -182,6 +185,8 @@ trait JournalServiceTrait
     /**
      * @param TransactionJournal $journal
      * @param NullArrayObject    $data
+     *
+     * @codeCoverageIgnore
      */
     protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -204,6 +209,8 @@ trait JournalServiceTrait
     /**
      * @param TransactionJournal $journal
      * @param NullArrayObject    $data
+     *
+     * @codeCoverageIgnore
      */
     protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -221,6 +228,8 @@ trait JournalServiceTrait
     /**
      * @param TransactionJournal $journal
      * @param string             $notes
+     *
+     * @codeCoverageIgnore
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
@@ -255,6 +264,8 @@ trait JournalServiceTrait
      * @param TransactionJournal $journal
      * @param array              $tags
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * @codeCoverageIgnore
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void
     {
@@ -276,147 +287,4 @@ trait JournalServiceTrait
     }
 
 
-
-    //
-    //    /**
-    //     * Link tags to journal.
-    //     *
-    //     * @param TransactionJournal $journal
-    //     * @param array              $data
-    //     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-    //     */
-    //    public function connectTags(TransactionJournal $journal, array $data): void
-    //    {
-    //        /** @var TagFactory $factory */
-    //        $factory = app(TagFactory::class);
-    //        $factory->setUser($journal->user);
-    //        $set = [];
-    //        if (!is_array($data['tags'])) {
-    //            return; // @codeCoverageIgnore
-    //        }
-    //        foreach ($data['tags'] as $string) {
-    //            if ('' !== $string) {
-    //                $tag = $factory->findOrCreate($string);
-    //                if (null !== $tag) {
-    //                    $set[] = $tag->id;
-    //                }
-    //            }
-    //        }
-    //        $journal->tags()->sync($set);
-    //    }
-    //
-    //
-    //    /**
-    //     * @param int|null    $budgetId
-    //     * @param null|string $budgetName
-    //     *
-    //     * @return Budget|null
-    //     */
-    //    protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
-    //    {
-    //        /** @var BudgetFactory $factory */
-    //        $factory = app(BudgetFactory::class);
-    //        $factory->setUser($this->user);
-    //
-    //        return $factory->find($budgetId, $budgetName);
-    //    }
-    //
-    //    /**
-    //     * @param int|null    $categoryId
-    //     * @param null|string $categoryName
-    //     *
-    //     * @return Category|null
-    //     */
-    //    protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
-    //    {
-    //        Log::debug(sprintf('Going to find or create category #%d, with name "%s"', $categoryId, $categoryName));
-    //        /** @var CategoryFactory $factory */
-    //        $factory = app(CategoryFactory::class);
-    //        $factory->setUser($this->user);
-    //
-    //        return $factory->findOrCreate($categoryId, $categoryName);
-    //    }
-    //
-    //
-    //    /**
-    //     * @param TransactionJournal $journal
-    //     * @param Budget|null        $budget
-    //     */
-    //    protected function setBudget(TransactionJournal $journal, ?Budget $budget): void
-    //    {
-    //        if (null === $budget) {
-    //            $journal->budgets()->sync([]);
-    //
-    //            return;
-    //        }
-    //        $journal->budgets()->sync([$budget->id]);
-    //
-    //    }
-    //
-    //
-    //    /**
-    //     * @param TransactionJournal $journal
-    //     * @param Category|null      $category
-    //     */
-    //    protected function setCategory(TransactionJournal $journal, ?Category $category): void
-    //    {
-    //        if (null === $category) {
-    //            $journal->categories()->sync([]);
-    //
-    //            return;
-    //        }
-    //        $journal->categories()->sync([$category->id]);
-    //
-    //    }
-    //
-    //
-    //    /**
-    //     * @param TransactionJournal $journal
-    //     * @param array              $data
-    //     * @param string             $field
-    //     */
-    //    protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
-    //    {
-    //        $set = [
-    //            'journal' => $journal,
-    //            'name'    => $field,
-    //            'data'    => (string)($data[$field] ?? ''),
-    //        ];
-    //
-    //        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
-    //
-    //        /** @var TransactionJournalMetaFactory $factory */
-    //        $factory = app(TransactionJournalMetaFactory::class);
-    //        $factory->updateOrCreate($set);
-    //    }
-    //
-    //    /**
-    //     * @param TransactionJournal $journal
-    //     * @param string             $notes
-    //     */
-    //    protected function storeNote(TransactionJournal $journal, ?string $notes): void
-    //    {
-    //        $notes = (string)$notes;
-    //        if ('' !== $notes) {
-    //            $note = $journal->notes()->first();
-    //            if (null === $note) {
-    //                $note = new Note;
-    //                $note->noteable()->associate($journal);
-    //            }
-    //            $note->text = $notes;
-    //            $note->save();
-    //
-    //            return;
-    //        }
-    //        $note = $journal->notes()->first();
-    //        if (null !== $note) {
-    //            try {
-    //                $note->delete();
-    //            } catch (Exception $e) {
-    //                Log::debug(sprintf('Journal service trait could not delete note: %s', $e->getMessage()));
-    //            }
-    //        }
-    //
-    //
-    //    }
 }

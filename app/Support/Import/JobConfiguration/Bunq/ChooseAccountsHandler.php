@@ -119,7 +119,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
 
             Log::debug(sprintf('IBAN for bunq account #%d is "%s"', $bunqId, $bunqIban));
             if (null !== $bunqIban) {
-                $ibanToAsset[$bunqIban] = $accountId;
+                $ibanToAsset[$bunqIban] = $accountId; // @codeCoverageIgnore
             }
             $final[$bunqId] = $accountId;
         }

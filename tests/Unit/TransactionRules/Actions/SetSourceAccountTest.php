@@ -93,7 +93,7 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new revenue #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new revenue #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($deposit);
         $this->assertTrue($result);
@@ -155,7 +155,7 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new account #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new account #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($withdrawal);
         $this->assertFalse($result);
@@ -181,7 +181,7 @@ class SetSourceAccountTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new asset ' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);

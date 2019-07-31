@@ -55,7 +55,7 @@ class LineReaderTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'linerA' . random_int(1, 10000);
+        $job->key           = 'linerA' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

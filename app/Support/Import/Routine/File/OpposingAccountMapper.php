@@ -114,9 +114,9 @@ class OpposingAccountMapper
         $creation = [
             'name'            => $data['name'] ?? '(no name)',
             'iban'            => $data['iban'] ?? null,
-            'accountNumber'   => $data['number'] ?? null,
+            'account_number'  => $data['number'] ?? null,
             'account_type_id' => null,
-            'account_type'     => $expectedType,
+            'account_type'    => $expectedType,
             'active'          => true,
             'BIC'             => $data['bic'] ?? null,
         ];

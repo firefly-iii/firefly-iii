@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class GetBudgetsRequest
+ * @codeCoverageIgnore
  */
 class GetBudgetsRequest extends YnabRequest
 {

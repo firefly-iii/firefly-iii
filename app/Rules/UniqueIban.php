@@ -26,7 +26,6 @@ namespace FireflyIII\Rules;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -43,6 +42,8 @@ class UniqueIban implements Rule
     /**
      * Create a new rule instance.
      *
+     * @codeCoverageIgnore
+     *
      * @param Account|null $account
      * @param string|null  $expectedType
      */
@@ -54,6 +55,8 @@ class UniqueIban implements Rule
 
     /**
      * Get the validation error message.
+     *
+     * @codeCoverageIgnore
      *
      * @return string
      */
@@ -78,13 +81,13 @@ class UniqueIban implements Rule
             return true; // @codeCoverageIgnore
         }
         if (null === $this->expectedType) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
         $maxCounts = $this->getMaxOccurrences();
 
         foreach ($maxCounts as $type => $max) {
             $count = $this->countHits($type, $value);
-
+            Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {
                 Log::debug(
                     sprintf(
@@ -108,24 +111,18 @@ class UniqueIban implements Rule
      */
     private function countHits(string $type, string $iban): int
     {
-        $count = 0;
-        /** @noinspection NullPointerExceptionInspection */
-        $query = auth()->user()
-                       ->accounts()
-                       ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                       ->where('account_types.type', $type);
+        $query
+            = auth()->user()
+                    ->accounts()
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->where('accounts.iban', $iban)
+                    ->where('account_types.type', $type);
+
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);
         }
-        /** @var Collection $result */
-        $result = $query->get(['accounts.*']);
-        foreach ($result as $account) {
-            if ($account->iban === $iban) {
-                $count++;
-            }
-        }
 
-        return $count;
+        return $query->count();
     }
 
     /**

@@ -23,14 +23,19 @@ namespace Tests\Feature\Controllers\RuleGroup;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Tests\TestCase;
 
+/**
+ * Class ExecutionControllerTest
+ */
 class ExecutionControllerTest extends TestCase
 {
     /**
@@ -50,9 +55,21 @@ class ExecutionControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $ruleEngine = $this->mock(RuleEngine::class);
+
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
 
-        $this->expectsJobs(ExecuteRuleGroupOnExistingTransactions::class);
+        // new mocks for ruleEngine
+        $ruleEngine->shouldReceive('setUser')->atLeast()->once();
+        $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once();
+        $ruleEngine->shouldReceive('processJournalArray')->atLeast()->once();
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once();
+        $collector->shouldReceive('setRange')->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([['x']]);
 
         $this->session(['first' => new Carbon('2010-01-01')]);
         $data = [

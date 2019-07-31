@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class ValidRecurrenceRepetitionValue
+ * @codeCoverageIgnore
  */
 class ValidRecurrenceRepetitionValue implements Rule
 {
