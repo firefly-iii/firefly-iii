@@ -92,6 +92,12 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
         }
 
+        if($exception instanceof NotFoundHttpException) {
+            $handler = app(GracefulNotFoundHandler::class);
+            return $handler->render($request, $exception);
+        }
+
+
         if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
             $isDebug = config('app.debug');
 

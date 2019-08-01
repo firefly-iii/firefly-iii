@@ -50,42 +50,46 @@ trait UserNavigation
      */
     protected function getPreviousUri(string $identifier): string
     {
-        // Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        // "forbidden" words for specific identifiers:
-        // if these are in the previous URI, don't refer back there.
-        $array     = [
-            'accounts.delete.uri'          => '/accounts/show/',
-            'transactions.delete.uri'      => '/transactions/show/',
-            'attachments.delete.uri'       => '/attachments/show/',
-            'bills.delete.uri'             => '/bills/show/',
-            'budgets.delete.uri'           => '/budgets/show/',
-            'categories.delete.uri'        => '/categories/show/',
-            'currencies.delete.uri'        => '/currencies/show/',
-            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
-            'tags.delete.uri'              => '/tags/show/',
-            'rules.delete.uri'             => '/rules/edit/',
-            'transactions.mass-delete.uri' => '/transactions/show/',
-        ];
-        $forbidden = $array[$identifier] ?? '/show/';
-        //Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
-
+        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $uri = (string)session($identifier);
-        //Log::debug(sprintf('The URI is %s', $uri));
-        if (
-            !(false === strpos($identifier, 'delete'))
-            && !(false === strpos($uri, $forbidden))) {
-            $uri = $this->redirectUri;
-            //Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
-        }
+        Log::debug(sprintf('The URI is %s', $uri));
+
         if (!(false === strpos($uri, 'jscript'))) {
             $uri = $this->redirectUri; // @codeCoverageIgnore
-            //Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
+            Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
+
+        // "forbidden" words for specific identifiers:
+        // if these are in the previous URI, don't refer back there.
+        //        $array     = [
+        //            'accounts.delete.uri'          => '/accounts/show/',
+        //            'transactions.delete.uri'      => '/transactions/show/',
+        //            'attachments.delete.uri'       => '/attachments/show/',
+        //            'bills.delete.uri'             => '/bills/show/',
+        //            'budgets.delete.uri'           => '/budgets/show/',
+        //            'categories.delete.uri'        => '/categories/show/',
+        //            'currencies.delete.uri'        => '/currencies/show/',
+        //            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
+        //            'tags.delete.uri'              => '/tags/show/',
+        //            'rules.delete.uri'             => '/rules/edit/',
+        //            'transactions.mass-delete.uri' => '/transactions/show/',
+        //        ];
+        //$forbidden = $array[$identifier] ?? '/show/';
+        //Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
+
+
+        //        if (
+        //            !(false === strpos($identifier, 'delete'))
+        //            && !(false === strpos($uri, $forbidden))) {
+        //            $uri = $this->redirectUri;
+        //            //Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
+        //        }
+
 
         // more debug notes:
         //Log::debug(sprintf('strpos($identifier, "delete"): %s', var_export(strpos($identifier, 'delete'), true)));
         //Log::debug(sprintf('strpos($uri, $forbidden): %s', var_export(strpos($uri, $forbidden), true)));
-
+        Log::debug(sprintf('Return direct link %s', $uri));
         return $uri;
     }
 

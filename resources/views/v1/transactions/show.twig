@@ -71,6 +71,8 @@
                     <div class="btn-group btn-group-xs">
                         <a href="{{ route('transactions.edit', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-pencil"></i> {{ 'edit'|_ }}
                         </a>
+                        <a href="{{ route('transactions.delete', [transactionGroup.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> {{ 'delete'|_ }}
+                        </a>
 
                         {% if groupArray.transactions[0].type != 'withdrawal' %}
                             <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}" class="btn btn-default"><i

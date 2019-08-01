@@ -1055,10 +1055,13 @@ try {
 
     Breadcrumbs::register(
         'transactions.delete',
-        function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $breadcrumbs->parent('transactions.show', $journal);
+        static function (BreadcrumbsGenerator $breadcrumbs, TransactionGroup $group) {
+            $breadcrumbs->parent('transactions.show', $group);
+
+            $journal  = $group->transactionJournals->first();
             $breadcrumbs->push(
-                trans('breadcrumbs.delete_journal', ['description' => limitStringLength($journal->description)]), route('transactions.delete', [$journal->id])
+                trans('breadcrumbs.delete_group', ['description' => limitStringLength($group->title ?? $journal->description)]),
+                route('transactions.delete', [$group->id])
             );
         }
     );

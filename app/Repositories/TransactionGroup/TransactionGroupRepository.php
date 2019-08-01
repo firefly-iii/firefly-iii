@@ -39,6 +39,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,7 +47,7 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * Class TransactionGroupRepository
  */
-class TransactionGroupRepository implements TransactionGroupRepositoryInterface
+class   TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
     private $user;
 
@@ -363,5 +364,15 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @param TransactionGroup $group
+     */
+    public function destroy(TransactionGroup $group): void
+    {
+        /** @var TransactionGroupDestroyService $service */
+        $service = new TransactionGroupDestroyService;
+        $service->destroy($group);
     }
 }
