@@ -83,6 +83,21 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
                 return redirect(route('budgets.index'));
                 break;
+            case 'piggy-banks.show':
+                $request->session()->reflash();
+
+                return redirect(route('piggy-banks.index'));
+                break;
+            case 'recurring.show':
+                $request->session()->reflash();
+
+                return redirect(route('recurring.index'));
+                break;
+            case 'tags.show':
+                $request->session()->reflash();
+
+                return redirect(route('tags.index'));
+                break;
             case 'categories.show':
                 $request->session()->reflash();
 
