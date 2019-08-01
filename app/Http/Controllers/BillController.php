@@ -39,7 +39,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use URL;
 
 /**
  * Class BillController.
@@ -263,7 +262,7 @@ class BillController extends Controller
             app('preferences')->mark();
         }
 
-        return redirect(URL::previous());
+        return redirect(route('bills.show', [$bill->id]));
     }
 
     /**
