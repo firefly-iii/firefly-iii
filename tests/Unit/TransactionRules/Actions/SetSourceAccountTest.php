@@ -43,9 +43,6 @@ class SetSourceAccountTest extends TestCase
      */
     public function testActDepositExistingUpdated(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $deposit      = $this->getRandomDeposit();
         $sourceTr     = $deposit->transactions()->where('amount', '<', 0)->first();
@@ -80,11 +77,8 @@ class SetSourceAccountTest extends TestCase
      */
     public function testActDepositRevenue(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 5)->first();
+        $account      = $this->getRandomRevenue();
         $deposit      = $this->getRandomDeposit();
 
         $accountRepos->shouldReceive('setUser');
@@ -106,9 +100,6 @@ class SetSourceAccountTest extends TestCase
      */
     public function testActWithdrawalExistingUpdated(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $withdrawal   = $this->getRandomWithdrawal();
 
@@ -144,9 +135,6 @@ class SetSourceAccountTest extends TestCase
      */
     public function testActWithdrawalNotExisting(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $withdrawal   = $this->getRandomWithdrawal();
 
@@ -158,32 +146,6 @@ class SetSourceAccountTest extends TestCase
         $ruleAction->action_value = 'Some new account #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($withdrawal);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * Test this on a split journal.
-     *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
-     */
-    public function testSplitJournal(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                   ->first();
-        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
-
-        // mock
-        $accountRepos->shouldReceive('setUser');
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . $this->randomInt();
-        $action                   = new SetSourceAccount($ruleAction);
-        $result                   = $action->act($journal);
         $this->assertFalse($result);
     }
 }

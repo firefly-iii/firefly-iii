@@ -36,7 +36,7 @@ class HasNoTagTest extends TestCase
      */
     public function testTriggeredNoTag(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->tags()->detach();
         $this->assertEquals(0, $journal->tags()->count());
 
@@ -50,7 +50,7 @@ class HasNoTagTest extends TestCase
      */
     public function testTriggeredTag(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $tag     = $journal->user->tags()->first();
         $journal->tags()->detach();
         $journal->tags()->save($tag);

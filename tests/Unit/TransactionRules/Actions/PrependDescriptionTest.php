@@ -39,8 +39,8 @@ class PrependDescriptionTest extends TestCase
     {
         // get journal, give fixed description
         $description          = 'text' . $this->randomInt();
-        $prepend              = 'prepend' . random_int(1, 1234);
-        $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $prepend              = 'prepend' . $this->randomInt();
+        $journal              = $this->getRandomWithdrawal();
         $journal->description = $description;
         $journal->save();
 

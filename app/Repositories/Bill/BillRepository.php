@@ -576,12 +576,12 @@ class BillRepository implements BillRepositoryInterface
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
-        Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
 
         while ($start < $date) {
-            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
+            //Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-            Log::debug('Start is now ' . $start->format('Y-m-d'));
+            //Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);

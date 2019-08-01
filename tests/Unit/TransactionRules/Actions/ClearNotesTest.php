@@ -51,7 +51,7 @@ class ClearNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal a note:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $note    = $journal->notes()->first();
         if (null === $note) {
             $note = new Note;

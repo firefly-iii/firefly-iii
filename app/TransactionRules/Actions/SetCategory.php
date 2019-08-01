@@ -64,18 +64,11 @@ class SetCategory implements ActionInterface
         if (null === $category) {
             Log::error(sprintf('Action SetCategory did not fire because "%s" did not result in a valid category.', $name));
 
-            return true;
+            return false;
         }
-        $journal->categories()->detach();
-        // set category on transactions:
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->categories()->sync([$category->id]);
-        }
-        $journal->touch();
 
+        $journal->categories()->sync([$category->id]);
 
-        $journal->touch();
         Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal->id, $category->id, $category->name));
 
         return true;

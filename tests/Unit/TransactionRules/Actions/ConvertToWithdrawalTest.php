@@ -55,9 +55,6 @@ class ConvertToWithdrawalTest extends TestCase
      */
     public function testActDeposit()
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $expense = $this->getRandomExpense();
         $name    = 'Random expense #' . $this->randomInt();
         $deposit = $this->getRandomDeposit();
@@ -94,15 +91,9 @@ class ConvertToWithdrawalTest extends TestCase
      */
     public function testActTransfer()
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $expense  = $this->getRandomExpense();
         $name     = 'Random expense #' . $this->randomInt();
         $transfer = $this->getRandomTransfer();
-
-        // journal is a transfer:
-        $this->assertEquals(TransactionType::TRANSFER, $transfer->transactionType->type);
 
         // mock used stuff:
         $factory = $this->mock(AccountFactory::class);

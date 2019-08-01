@@ -37,8 +37,8 @@ class HasAnyCategoryTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $category = $journal->user->categories()->first();
+        $journal  = $this->getRandomWithdrawal();
+        $category = $this->getRandomCategory();;
         $journal->categories()->detach();
         $journal->categories()->save($category);
 
@@ -53,7 +53,7 @@ class HasAnyCategoryTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->categories()->detach();
 
         // also detach transactions:

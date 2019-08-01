@@ -60,21 +60,20 @@ class RemoveTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag()
      * @covers \FireflyIII\TransactionRules\Actions\RemoveTag
      */
     public function testActNoTag(): void
     {
         // get journal, link al tags:
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $tags    = $journal->user->tags()->get();
         $journal->tags()->sync($tags->pluck('id')->toArray());
         $this->assertEquals($tags->count(), $journal->tags()->get()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = random_int(1, 1234) . 'nosuchtag';
+        $ruleAction->action_value = $this->randomInt() . 'nosuchtag';
         $action                   = new RemoveTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

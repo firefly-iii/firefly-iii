@@ -39,7 +39,7 @@ class SetNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal a note:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $note    = $journal->notes()->first();
         if (null === $note) {
             $note = new Note;
@@ -51,7 +51,7 @@ class SetNotesTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'These are new notes ' . random_int(1, 1234);
+        $ruleAction->action_value = 'These are new notes ' . $this->randomInt();
         $action                   = new SetNotes($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
@@ -68,13 +68,13 @@ class SetNotesTest extends TestCase
     public function testActNoNotes(): void
     {
         // give journal a note:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->forceDelete();
         $this->assertEquals(0, $journal->notes()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'These are new notes ' . random_int(1, 1234);
+        $ruleAction->action_value = 'These are new notes ' . $this->randomInt();
         $action                   = new SetNotes($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

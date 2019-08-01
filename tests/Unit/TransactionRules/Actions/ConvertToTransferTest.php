@@ -27,6 +27,7 @@ namespace Tests\Unit\TransactionRules\Actions;
 use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -56,24 +57,21 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActDeposit(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $deposit = $this->getRandomDeposit();
         /** @var Account $asset */
-        $asset = $this->user()->accounts()->where('name', 'Bitcoin Account')->first();
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::DEPOSIT, $deposit->transactionType->type);
+        $asset = $this->getRandomAsset();
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])
-                     ->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
 
         // fire the action:
+        $rule                     = new Rule;
+        $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $asset->name;
+        $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {
@@ -95,24 +93,21 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActWithdrawal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $withdrawal = $this->getRandomWithdrawal();
         /** @var Account $asset */
-        $asset = $this->user()->accounts()->where('name', 'Bitcoin Account')->first();
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::WITHDRAWAL, $withdrawal->transactionType->type);
+        $asset = $this->getRandomAsset();
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])
-                     ->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
 
         // fire the action:
+        $rule                     = new Rule;
+        $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $asset->name;
+        $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {

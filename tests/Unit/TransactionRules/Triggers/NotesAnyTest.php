@@ -37,7 +37,7 @@ class NotesAnyTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -53,7 +53,7 @@ class NotesAnyTest extends TestCase
      */
     public function testTriggeredEmpty(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -69,7 +69,7 @@ class NotesAnyTest extends TestCase
      */
     public function testTriggeredNone(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $trigger = NotesAny::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);

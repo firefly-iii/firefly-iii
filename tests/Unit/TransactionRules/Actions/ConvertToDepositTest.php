@@ -53,11 +53,8 @@ class ConvertToDepositTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActTransfer()
+    public function testActTransfer(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $revenue = $this->getRandomRevenue();
         $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomTransfer();
@@ -92,11 +89,8 @@ class ConvertToDepositTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActWithdrawal()
+    public function testActWithdrawal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $revenue = $this->getRandomRevenue();
         $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomWithdrawal();
