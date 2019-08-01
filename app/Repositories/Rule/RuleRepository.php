@@ -277,7 +277,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
     {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+        $ruleGroup->rules()->withTrashed()->whereNotNull('deleted_at')->update(['order' => 0]);
 
         $set   = $ruleGroup->rules()
                            ->orderBy('order', 'ASC')
