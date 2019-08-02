@@ -22,12 +22,12 @@
 
                         {# in case of withdrawal #}
                         {% if sourceType.type == "Withdrawal" %}
-                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {# if destination is cash, show (cash) #}
                             {% if destinationAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.staticText('destination_account_expense', '<span class="text-success">(cash)</a>') }}
                             {% else %}
-                                {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                                {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                             {% endif %}
 
                         {% endif %}
@@ -38,15 +38,15 @@
                             {% if sourceAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.staticText('source_account_revenue', '<span class="text-success">(cash)</a>') }}
                             {% else %}
-                                {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                                {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {% endif %}
-                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
 
                         {# in case of transfer #}
                         {% if sourceType.type == "Transfer" %}
-                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
-                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
 
                         {# ONE #}
@@ -56,9 +56,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em>
                             </p>
@@ -69,7 +69,7 @@
                             {% if destinationAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.text('source_account_revenue', '') }}
                             {% else %}
-                                {{ ExpandedForm.text('source_account_revenue', destinationAccount.name) }}
+                                {{ ExpandedForm.text('source_account_revenue', destinationAccount.name|escape) }}
                             {% endif %}
                         {% endif %}
 
@@ -80,9 +80,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em></p>
 
@@ -104,9 +104,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em>
                             </p>
@@ -119,7 +119,7 @@
                             {% if sourceAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.text('destination_account_expense', '') }}
                             {% else %}
-                                {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+                                {{ ExpandedForm.text('destination_account_expense', destinationAccount.name|escape) }}
                             {% endif %}
 
                         {% endif %}
@@ -133,9 +133,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em>
                             </p>
@@ -157,9 +157,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em>
                             </p>
@@ -170,7 +170,7 @@
                                 </em>
                             </p>
 
-                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name|escape) }}
 
                         {% endif %}
 
@@ -184,9 +184,9 @@
                                         {
                                             amount: positiveAmount|formatAmount,
                                             sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
+                                            sourceName: sourceAccount.name|escape,
                                             destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
+                                            destinationName: destinationAccount.name|escape,
                                         })|raw }}
                                 </em>
                             </p>
@@ -197,7 +197,7 @@
                                 </em>
                             </p>
 
-                            {{ ExpandedForm.text('source_account_revenue', sourceAccount.name) }}
+                            {{ ExpandedForm.text('source_account_revenue', sourceAccount.name|escape) }}
 
                         {% endif %}
 
