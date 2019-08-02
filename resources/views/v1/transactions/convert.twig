@@ -17,7 +17,7 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.staticText('type', sourceType.type|_) }}
-                        {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', journal.id)~'">'~journal.description~'</a>') }}
+                        {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', journal.id)~'">'~journal.description|escape~'</a>') }}
                         {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
 
                         {# in case of withdrawal #}

@@ -1,6 +1,10 @@
+# 4.7.17.5 (API 0.9.2)
+
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
+
 # 4.7.17.4 (API 0.9.2)
 
-- Several XSS issues, found by [@dayn1ne](https://github.com/dayn1ne).
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
 
 # 4.7.17.3 (API 0.9.2)
 
