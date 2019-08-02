@@ -168,13 +168,12 @@ class Search implements SearchInterface
 
         $collector->setLimit($pageSize)->setPage($page)->withAccountInformation();
         $collector->withCategoryInformation()->withBudgetInformation();
-
         $collector->setSearchWords($this->words);
 
         // Most modifiers can be applied to the collector directly.
         $collector = $this->applyModifiers($collector);
 
-        return $collector->getPaginatedTransactions();
+        return $collector->getPaginatedGroups();
 
     }
 
