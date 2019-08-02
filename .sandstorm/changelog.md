@@ -1,3 +1,7 @@
+# 4.7.17.4 (API 0.9.2)
+
+- Several XSS issues, found by [@dayn1ne](https://github.com/dayn1ne).
+
 # 4.7.17.3 (API 0.9.2)
 
 - XSS bug in file uploads (x2), found by [@dayn1ne](https://github.com/dayn1ne).

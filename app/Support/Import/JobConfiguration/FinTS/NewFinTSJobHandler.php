@@ -60,6 +60,9 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
         $config['apply-rules']     = 1 === (int)$data['apply_rules'];
 
+        // sanitize FinTS URL.
+        $config['fints_url'] = $this->validURI($config['fints_url']) ? $config['fints_url'] : '';
+
         $this->repository->setConfiguration($this->importJob, $config);
 
         $incomplete = false;
@@ -106,5 +109,22 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }
+
+    /**
+     * @param string $fints_url
+     *
+     * @return bool
+     */
+    private function validURI(string $fintsUri): bool
+    {
+        $res = filter_var($fintsUri, FILTER_VALIDATE_URL);
+        if (false === $res) {
+            return false;
+        }
+        $scheme = parse_url($fintsUri, PHP_URL_SCHEME);
+
+        return 'https' === $scheme;
+    }
+
 
 }
