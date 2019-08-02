@@ -53,7 +53,6 @@ trait BasicDataSupport
                 unset($data[$entryId]);
             }
         }
-
         return $data;
     }
 

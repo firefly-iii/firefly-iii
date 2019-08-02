@@ -94,7 +94,7 @@
             this.target = this.$refs.input;
             let types = this.allowedTypes.join(',');
             this.name = this.accountName;
-            this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&query=";
+            this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             this.triggerTransactionType();
         },
 
@@ -104,7 +104,7 @@
             },
             accountTypeFilters() {
                 let types = this.accountTypeFilters.join(',');
-                this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&query=";
+                this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             }
         },
         methods:

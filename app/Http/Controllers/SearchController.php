@@ -83,7 +83,7 @@ class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $fullQuery    = (string)$request->get('query');
+        $fullQuery    = (string)$request->get('search');
 
         $searcher->parseQuery($fullQuery);
         $searcher->setLimit((int)config('firefly.search_result_limit'));

@@ -82,17 +82,12 @@ class TagFactory
     public function findOrCreate(string $tag): ?Tag
     {
         $tag = trim($tag);
-        if (null === $this->tags) {
-            $this->tags = $this->user->tags()->get();
-        }
 
-        /** @var Tag $object */
-        foreach ($this->tags as $object) {
-            if (strtolower($object->tag) === strtolower($tag)) {
-                return $object;
-            }
+        /** @var Tag $dbTag */
+        $dbTag = $this->user->tags()->where('tag', $tag)->first();
+        if (null !== $tag) {
+            return $dbTag;
         }
-
         $newTag = $this->create(
             [
                 'tag'         => $tag,
@@ -103,7 +98,6 @@ class TagFactory
                 'zoom_level'  => null,
             ]
         );
-        $this->tags->push($newTag);
 
         return $newTag;
     }

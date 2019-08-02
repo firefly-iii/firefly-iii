@@ -25,7 +25,6 @@ namespace FireflyIII\Support;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use Log;
 
 /**
  * Class Navigation.
@@ -307,16 +306,15 @@ class Navigation
             $displayFormat = (string)trans('config.year');
         }
 
+
         $begin   = clone $start;
         $entries = [];
         while ($begin < $end) {
             $formatted           = $begin->format($format);
             $displayed           = $begin->formatLocalized($displayFormat);
             $entries[$formatted] = $displayed;
-
             $begin->$increment();
         }
-
         return $entries;
     }
 

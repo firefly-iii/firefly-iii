@@ -77,7 +77,7 @@ class Category
     public function getCategories(): Collection
     {
         $set = $this->categories->sortBy(
-            function (CategoryModel $category) {
+            static function (CategoryModel $category) {
                 return $category->spent;
             }
         );

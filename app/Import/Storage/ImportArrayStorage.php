@@ -34,6 +34,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -568,22 +569,29 @@ class ImportArrayStorage
         $tag  = $repository->store($data);
 
         Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
-        Log::debug('Looping journals...');
-        $journalIds = $collection->pluck('id')->toArray();
-        $tagId      = $tag->id;
-        foreach ($journalIds as $journalId) {
-            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
-            // @codeCoverageIgnoreStart
-            try {
-                DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
-            } catch (QueryException $e) {
-                Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
-                Log::error($e->getTraceAsString());
-            }
-            // @codeCoverageIgnoreEnd
-        }
-        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
+        Log::debug('Looping groups...');
 
+        // TODO double loop.
+
+        /** @var TransactionGroup $group */
+        foreach ($collection as $group) {
+            Log::debug(sprintf('Looping journals in group #%d', $group->id));
+            /** @var TransactionJournal $journal */
+            $journalIds = $group->transactionJournals->pluck('id')->toArray();
+            $tagId      = $tag->id;
+            foreach ($journalIds as $journalId) {
+                Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
+                // @codeCoverageIgnoreStart
+                try {
+                    DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+                } catch (QueryException $e) {
+                    Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
+                    Log::error($e->getTraceAsString());
+                }
+                // @codeCoverageIgnoreEnd
+            }
+            Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
+        }
         $this->repository->setTag($this->importJob, $tag);
 
     }

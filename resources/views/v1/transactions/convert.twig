@@ -99,6 +99,7 @@
 
                                         {# TWO: WITHDRAWAL TO TRANSFER #}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+
                                             <a href="{{ route('accounts.show', [transaction.source_id]) }}"
                                                title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
                                             {# hide source in hidden input #}

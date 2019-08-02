@@ -503,6 +503,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+
         $data         = [];
         // prep data array:
         /** @var Budget $budget */
@@ -517,7 +518,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
         $journals = $collector->getExtractedJournals();
@@ -529,7 +529,6 @@ class BudgetRepository implements BudgetRepositoryInterface
             $date                              = $journal['date']->format($carbonFormat);
             $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
         }
-
         return $data;
     }
 

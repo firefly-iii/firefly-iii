@@ -228,19 +228,12 @@ class ImportableConverter
     {
         $type = 'unknown';
 
-        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $type = 'transfer';
-        }
-        if ($source === AccountType::REVENUE) {
-            Log::debug('Source is a revenue account. This is a deposit.');
-            $type = 'deposit';
-        }
-        if ($destination === AccountType::EXPENSE) {
-            Log::debug('Destination is an expense account. This is a withdrawal.');
-            $type = 'withdrawal';
-        }
+        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
+        if (null !== $newType) {
+            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
 
+            return (string)$newType;
+        }
         return $type;
     }
 

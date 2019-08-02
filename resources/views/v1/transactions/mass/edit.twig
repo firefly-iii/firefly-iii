@@ -17,7 +17,9 @@
                     <div class="box-body">
                         <p>
                             {{ 'cannot_edit_other_fields'|_ }}
+                            <span class="text-danger">{{ 'cannot_change_amount_reconciled'|_ }}</span>
                         </p>
+
                         <table class="table table-striped table-condensed">
                             <tr>
                                 <th class="">&nbsp;</th>
@@ -45,25 +47,47 @@
                                     </td>
                                     {# AMOUNT #}
                                     <td>
-                                        <div class="input-group input-group-sm">
-
-
-                                            <span class="input-group-addon">{{ journal.currency_symbol }}</span>
-                                            <input name="amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
-                                                   step="any" type="number" value="{{ journal.amount }}">
-                                            <input type="hidden" name="transaction_currency_id[{{ journal.transaction_journal_id }}]"
-                                                   value="{{ journal.currency_id }}">
-                                        </div>
-                                        {% if journal.foreign_amount %}
-                                            {# insert foreign data #}
+                                        {% if journal.reconciled == false %}
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-addon">{{ journal.foreign_currency_symbol }}</span>
-                                                <input name="foreign_amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
-                                                       step="any" type="number" value="{{ journal.foreign_amount }}">
-                                                <input type="hidden" name="foreign_currency_id[{{ journal.transaction_journal_id }}]"
-                                                       value="{{ journal.foreign_currency_id }}">
+                                                <span class="input-group-addon">{{ journal.currency_symbol }}</span>
+                                                <input name="amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
+                                                       step="any" type="number" value="{{ journal.amount }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ journal.transaction_journal_id }}]"
+                                                       value="{{ journal.currency_id }}">
                                             </div>
+                                            {% if journal.foreign_amount %}
+                                                {# insert foreign data #}
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-addon">{{ journal.foreign_currency_symbol }}</span>
+                                                    <input name="foreign_amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
+                                                           step="any" type="number" value="{{ journal.foreign_amount }}">
+                                                    <input type="hidden" name="foreign_currency_id[{{ journal.transaction_journal_id }}]"
+                                                           value="{{ journal.foreign_currency_id }}">
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
+                                        <span class="text-sm">
+                                        {% if journal.reconciled != false %}
+                                            {% if journal.transaction_type_type == 'Deposit' %}
+                                                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                                {% if null != journal.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                {% endif %}
+                                            {% elseif journal.transaction_type_type == 'Transfer' %}
+                                                <span class="text-info">
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places, false) }}
+                                                    {% if null != journal.foreign_amount %}
+                                                        ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places, false) }})
+                                                    {% endif %}
+                                                </span>
+                                            {% else %}
+                                                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                                {% if null != journal.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                            </span>
                                     </td>
                                     <td>
                                         {# DATE #}

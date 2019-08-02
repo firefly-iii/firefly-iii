@@ -68,7 +68,7 @@ class AutoCompleteController extends Controller
                 $filteredAccountTypes[] = $type;
             }
         }
-        Log::debug('Now in accounts(). Filtering results.', $filteredAccountTypes);
+        Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
 
         $return          = [];
         $result          = $repository->searchAccount((string)$search, $filteredAccountTypes);
@@ -107,7 +107,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes = [AccountType::REVENUE];
-        Log::debug('Now in accounts(). Filtering results.', $allowedAccountTypes);
+        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
 
         $return = [];
         $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
@@ -138,7 +138,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes = [AccountType::EXPENSE];
-        Log::debug('Now in accounts(). Filtering results.', $allowedAccountTypes);
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
 
         $return = [];
         $result = $repository->searchAccount((string)$search, $allowedAccountTypes);

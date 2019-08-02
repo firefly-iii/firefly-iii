@@ -82,7 +82,7 @@
         },
         mounted() {
             this.target = this.$refs.input;
-            this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/categories?query=";
+            this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/categories?search=";
         },
         methods: {
             hasError: function () {

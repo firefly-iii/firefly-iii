@@ -387,6 +387,10 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $data = $request->getCurrencyData();
+
+        if (false === $data['enabled'] && $this->repository->currencyInUse($currency)) {
+            $data['enabled'] = true;
+        }
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
             $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
