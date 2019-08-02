@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.17.5 (API 0.9.2)] - 2019-08-02
+
+### Security
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
+
 ## [4.7.17.4 (API 0.9.2)] - 2019-08-02
 
 ### Security
-- Several XSS issues, found by [@dayn1ne](https://github.com/dayn1ne).
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
 
 ## [4.7.17.3 (API 0.9.2)] - 2019-07-16
 
