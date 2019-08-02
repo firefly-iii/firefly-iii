@@ -22,6 +22,14 @@
         <th class="hide-create_date">{{ trans('list.create_date') }}</th>
         <th class="hide-update_date">{{ trans('list.update_date') }}</th>
 
+        {# even more optional fields #}
+        <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
+        <th class="hide-book_date">{{ trans('list.book_date') }}</th>
+        <th class="hide-process_date">{{ trans('list.process_date') }}</th>
+        <th class="hide-due_date">{{ trans('list.due_date') }}</th>
+        <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
+        <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>
+
     </tr>
     </thead>
     <tbody>
@@ -105,6 +113,38 @@
 
             <td class="hide-update_date">
                 {{ journal.updated_at.formatLocalized(dateTimeFormat) }}
+            </td>
+
+            <!-- more new dates -->
+            <td class="hide-interest_date">
+                {% if null != journal.interest_date %}
+                    {{ journal.interest_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-book_date">
+                {% if null != journal.book_date %}
+                    {{ journal.book_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-process_date">
+                {% if null != journal.process_date %}
+                    {{ journal.process_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-due_date">
+                {% if null != journal.due_date %}
+                    {{ journal.due_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-payment_date">
+                {% if null != journal.payment_date %}
+                    {{ journal.payment_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
+            </td>
+            <td class="hide-invoice_date">
+                {% if null != journal.invoice_date %}
+                    {{ journal.invoice_date.formatLocalized(monthAndDayFormat) }}
+                {% endif %}
             </td>
         </tr>
 

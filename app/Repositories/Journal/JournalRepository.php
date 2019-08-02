@@ -867,4 +867,33 @@ class JournalRepository implements JournalRepositoryInterface
                           ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
                           ->get(['transaction_journals.*']);
     }
+
+    /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param int    $journalId
+     * @param string $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDateById(int $journalId, string $field): ?Carbon
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('journal-meta-updated');
+        $cache->addProperty($journalId);
+        $cache->addProperty($field);
+
+        if ($cache->has()) {
+            return new Carbon($cache->get()); // @codeCoverageIgnore
+        }
+        $entry = TransactionJournalMeta::where('transaction_journal_id', $journalId)
+                                       ->where('name', $field)->first();
+        if (null === $entry) {
+            return null;
+        }
+        $value = new Carbon($entry->data);
+        $cache->store($entry->data);
+
+        return $value;
+    }
 }

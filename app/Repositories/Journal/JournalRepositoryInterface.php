@@ -239,6 +239,16 @@ interface JournalRepositoryInterface
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
 
     /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param int $journalId
+     * @param string             $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDateById(int $journalId, string $field): ?Carbon;
+
+    /**
      * Return string value of a meta date (or NULL).
      *
      * @param TransactionJournal $journal
