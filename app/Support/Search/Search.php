@@ -195,6 +195,7 @@ class Search implements SearchInterface
             switch ($modifier['type']) {
                 default:
                     die(sprintf('unsupported modifier: "%s"', $modifier['type']));
+                case 'from':
                 case 'source':
                     // source can only be asset, liability or revenue account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
@@ -203,6 +204,7 @@ class Search implements SearchInterface
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
                     break;
+                case 'to':
                 case 'destination':
                     // source can only be asset, liability or expense account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
