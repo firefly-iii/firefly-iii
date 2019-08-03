@@ -12,7 +12,7 @@
                         {% else %}
                             {{ Form.checkbox(name~'[]', id, false, options) }}
                         {% endif %}
-                        {{ account }}
+                        {{ account|escape }}
                     </label>
                 </div>
             {% endfor %}

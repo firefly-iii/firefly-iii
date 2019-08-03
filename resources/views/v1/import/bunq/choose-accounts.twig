@@ -64,7 +64,7 @@
                                                     {% endif %}
                                                 {% endfor %}
                                                 {% if account.status != 'ACTIVE' %}
-                                                    <li>{{ trans('import.bunq_account_status_'~account.status) }}</li>
+                                                    <li>{{ trans('import.bunq_account_status_'~account.status|escape) }}</li>
                                                 {% endif %}
                                                 {% if account.type == 'MonetaryAccountSavings' %}
                                                     <li>{{ trans('import.bunq_savings_goal', {'amount': account.savingsGoal.currency ~' '~account.savingsGoal.value,'percentage' : account.savingsGoal.percentage}) }}</li>
