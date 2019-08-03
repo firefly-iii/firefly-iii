@@ -486,7 +486,7 @@ return [
     'pref_two_factor_auth_code_help'   => 'Scan the QR code with an application on your phone such as Authy or Google Authenticator and enter the generated code.',
     'pref_two_factor_auth_reset_code'  => 'Reset verification code',
     'pref_two_factor_auth_disable_2fa' => 'Disable 2FA',
-    '2fa_use_secret_instead'           => 'If you cannot scan the QR code, feel free to use the secret instead: :secret.',
+    '2fa_use_secret_instead'           => 'If you cannot scan the QR code, feel free to use the secret instead: <code>:secret</code>.',
     '2fa_backup_codes'                 => 'Store these backup codes for access in case you lose your device.',
     '2fa_already_enabled'              => '2-step verification is already enabled.',
     'pref_save_settings'               => 'Save settings',

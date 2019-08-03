@@ -45,6 +45,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Laravel\Passport\ClientRepository;
 use Log;
+use PragmaRX\Recovery\Recovery;
+use Preferences;
 
 /**
  * Class ProfileController.
@@ -140,9 +142,20 @@ class ProfileController extends Controller
         $secret = Google2FA::generateSecretKey();
         session()->flash('two-factor-secret', $secret);
 
+        // generate recovery codes:
+        $recovery = app( Recovery::class);
+        $recoveryCodes =$recovery->lowercase()
+            ->setCount(8)     // Generate 8 codes
+            ->setBlocks(2)    // Every code must have 7 blocks
+            ->setChars(6)    // Each block must have 16 chars
+            ->toArray();
+        $codes = implode("\r\n", $recoveryCodes);
+
+        Preferences::set('mfa_recovery', $recoveryCodes);
+
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
-        return view('profile.code', compact('image', 'secret'));
+        return view('profile.code', compact('image', 'secret','codes'));
     }
 
     /**
@@ -234,18 +247,18 @@ class ProfileController extends Controller
      */
     public function enable2FA()
     {
-        die('this method is deprecated.');
-        $hasSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
+        /** @var User $user */
+        $user       = auth()->user();
+        $enabledMFA = null !== $user->mfa_secret;
 
         // if we don't have a valid secret yet, redirect to the code page to get one.
-        if (!$hasSecret) {
+        if (!$enabledMFA) {
             return redirect(route('profile.code'));
         }
 
         // If FF3 already has a secret, just set the two factor auth enabled to 1,
         // and let the user continue with the existing secret.
-
-        app('preferences')->set('twoFactorAuthEnabled', 1);
+        session()->flash('info', (string)trans('firefly.2fa_already_enabled'));
 
         return redirect(route('profile.index'));
     }
@@ -388,9 +401,14 @@ class ProfileController extends Controller
      */
     public function postCode(TokenFormRequest $request)
     {
-        die('this method is deprecated');
-        app('preferences')->set('twoFactorAuthEnabled', 1);
-        app('preferences')->set('twoFactorAuthSecret', session()->get('two-factor-secret'));
+        /** @var User $user */
+        $user = auth()->user();
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        /** @var string $secret */
+        $secret = session()->get('two-factor-secret');
+
+        $repository->setMFACode($user, $secret);
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
