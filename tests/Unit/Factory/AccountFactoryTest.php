@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -60,9 +62,11 @@ class AccountFactoryTest extends TestCase
      */
     public function testCreate(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
+        $euro = $this->getEuro();
         $data = [
             'account_type_id' => null,
             'account_type'    => 'asset',
@@ -80,6 +84,8 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -87,6 +93,8 @@ class AccountFactoryTest extends TestCase
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -110,9 +118,12 @@ class AccountFactoryTest extends TestCase
      */
     public function testCreateCC(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
+
+
         $data = [
             'account_type_id'         => null,
             'account_type'            => 'asset',
@@ -133,6 +144,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'cc_monthly_payment_date', '2018-01-01'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'cc_type', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -140,6 +152,8 @@ class AccountFactoryTest extends TestCase
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -163,8 +177,10 @@ class AccountFactoryTest extends TestCase
      */
     public function testCreateEmptyVb(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
         $this->mock(TransactionGroupFactory::class);
         $data = [
             'account_type_id' => null,
@@ -183,6 +199,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -190,6 +207,8 @@ class AccountFactoryTest extends TestCase
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -216,6 +235,8 @@ class AccountFactoryTest extends TestCase
     {
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(TransactionGroupFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
         $metaFactory = $this->mock(AccountMetaFactory::class);
         $data        = [
             'account_type_id' => null,
@@ -233,6 +254,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -240,6 +262,8 @@ class AccountFactoryTest extends TestCase
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -270,8 +294,9 @@ class AccountFactoryTest extends TestCase
     {
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(TransactionGroupFactory::class);
-        $metaFactory = $this->mock(AccountMetaFactory::class);
-        $data        = [
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $data            = [
             'account_type_id' => null,
             'account_type'    => 'Expense account',
             'iban'            => null,
@@ -291,10 +316,13 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -322,10 +350,12 @@ class AccountFactoryTest extends TestCase
      */
     public function testCreateOB(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $groupFactory = $this->mock(TransactionGroupFactory::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
-        $data         = [
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $groupFactory    = $this->mock(TransactionGroupFactory::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $euro            = $this->getEuro();
+        $data            = [
             'account_type_id'      => null,
             'account_type'         => 'asset',
             'iban'                 => null,
@@ -348,6 +378,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -378,10 +409,12 @@ class AccountFactoryTest extends TestCase
     public function testCreateOBZero(): void
     {
         // mock repositories:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $groupFactory = $this->mock(TransactionGroupFactory::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
-        $data         = [
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $groupFactory    = $this->mock(TransactionGroupFactory::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $euro            = $this->getEuro();
+        $data            = [
             'account_type_id'      => null,
             'account_type'         => 'asset',
             'iban'                 => null,
@@ -404,6 +437,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -438,6 +472,7 @@ class AccountFactoryTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
         $data = [
             'account_type_id' => null,
@@ -457,6 +492,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -490,6 +526,7 @@ class AccountFactoryTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
         $data = [
             'account_type_id' => null,
@@ -509,7 +546,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -543,6 +580,8 @@ class AccountFactoryTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $groupFactory = $this->mock(TransactionGroupFactory::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $euro = $this->getEuro();
         $data         = [
             'account_type_id'      => null,
             'account_type'         => 'asset',
@@ -566,6 +605,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
 
 
         /** @var AccountFactory $factory */
@@ -600,6 +640,7 @@ class AccountFactoryTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
         $data = [
             'account_type_id' => null,
@@ -624,7 +665,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         try {
             $account = $factory->create($data);
@@ -656,6 +697,8 @@ class AccountFactoryTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
         $this->mock(TransactionGroupFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
         $currency = $this->getDollar();
         $data     = [
             'account_type_id' => null,
@@ -676,7 +719,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', $currency->id])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-
+        $currencyFactory->shouldReceive('find')->withArgs([0, 'USD'])->atLeast()->once()->andReturn($currency);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -710,6 +753,7 @@ class AccountFactoryTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $metaFactory  = $this->mock(AccountMetaFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $this->mock(TransactionGroupFactory::class);
         $currency = $this->getDollar();
         $data     = [
@@ -731,7 +775,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', $currency->id])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-
+        $currencyFactory->shouldReceive('find')->withArgs([7, ''])->atLeast()->once()->andReturn($currency);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -858,6 +902,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory = $this->mock(AccountMetaFactory::class);
         /** @var Account $account */
         $account = $this->getRandomRevenue();
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
 
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
@@ -865,6 +910,7 @@ class AccountFactoryTest extends TestCase
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
+        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
 
         $name = sprintf('New %s', $account->name);
 

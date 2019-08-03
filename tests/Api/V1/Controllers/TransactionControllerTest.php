@@ -639,6 +639,8 @@ class TransactionControllerTest extends TestCase
         try {
             $this->expectsEvents(StoredTransactionGroup::class);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
 
@@ -856,6 +858,8 @@ class TransactionControllerTest extends TestCase
         try {
             $this->expectsEvents(UpdatedTransactionGroup::class);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
 

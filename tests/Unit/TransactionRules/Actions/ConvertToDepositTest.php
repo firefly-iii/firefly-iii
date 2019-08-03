@@ -75,6 +75,8 @@ class ConvertToDepositTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -111,6 +113,8 @@ class ConvertToDepositTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

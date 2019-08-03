@@ -75,6 +75,8 @@ class ConvertToWithdrawalTest extends TestCase
         try {
             $result = $action->act($deposit);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -108,6 +110,8 @@ class ConvertToWithdrawalTest extends TestCase
         try {
             $result = $action->act($transfer);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

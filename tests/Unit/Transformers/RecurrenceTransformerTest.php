@@ -25,8 +25,6 @@ namespace Tests\Unit\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -81,9 +79,9 @@ class RecurrenceTransformerTest extends TestCase
         $recurrenceRepos->shouldReceive('repetitionDescription')->once()->andReturn('Rep descr');
         $recurrenceRepos->shouldReceive('getXOccurrences')->andReturn($ranges)->atLeast()->once();
         $factory->shouldReceive('findOrCreate')->atLeast()->once()->withArgs([null,Mockery::any()])->andReturn($category);
-        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withArgs([2])->andReturn($budget);
-        $piggyRepos->shouldReceive('findNull')->atLeast()->once()->withArgs([1])->andReturn($piggy);
-        $billRepos->shouldReceive('find')->atLeast()->once()->withArgs([1])->andReturn($bill);
+        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($budget);
+        $piggyRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($piggy);
+        $billRepos->shouldReceive('find')->andReturn($bill);
 
         // basic transformation:
 

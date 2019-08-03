@@ -22,6 +22,7 @@
 namespace Tests\Unit\Console\Commands\Upgrade;
 
 
+use Amount;
 use FireflyConfig;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Configuration;
@@ -49,6 +50,11 @@ class BudgetLimitCurrencyTest extends TestCase
     {
         BudgetLimit::whereNull('transaction_currency_id')->forceDelete();
 
+        $false       = new Configuration;
+        $false->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
+
         $this->artisan('firefly-iii:bl-currency')
              ->expectsOutput('All budget limits are correct.')
              ->assertExitCode(0);
@@ -73,6 +79,9 @@ class BudgetLimitCurrencyTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
         FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
+
+        $currency = $this->getEuro();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
 
         $this->artisan('firefly-iii:bl-currency')
              ->expectsOutput(

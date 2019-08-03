@@ -64,7 +64,10 @@ class ConvertToTransferTest extends TestCase
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs(
+            [$asset->name,
+             [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]]
+        )->andReturn($asset);
 
         // fire the action:
         $rule                     = new Rule;
@@ -77,6 +80,8 @@ class ConvertToTransferTest extends TestCase
         try {
             $result = $action->act($deposit);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -94,8 +99,10 @@ class ConvertToTransferTest extends TestCase
     public function testActWithdrawal(): void
     {
         $withdrawal = $this->getRandomWithdrawal();
-        /** @var Account $asset */
-        $asset = $this->getRandomAsset();
+
+        // make sure that $asset is not the source account of $withdrawal:
+        $forbiddenId = (int)$withdrawal->transactions()->where('amount', '<', 0)->first()->account_id;
+        $asset       = $this->getRandomAsset($forbiddenId);
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -113,6 +120,8 @@ class ConvertToTransferTest extends TestCase
         try {
             $result = $action->act($withdrawal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

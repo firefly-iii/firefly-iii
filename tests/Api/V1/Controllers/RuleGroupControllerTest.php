@@ -27,6 +27,7 @@ namespace Tests\Api\V1\Controllers;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -38,6 +39,8 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
+use Preferences;
 use Queue;
 use Tests\TestCase;
 
@@ -89,6 +92,8 @@ class RuleGroupControllerTest extends TestCase
 
         $ruleGroupRepos->shouldReceive('store')->once()->andReturn($ruleGroup);
 
+
+
         // test API
         $response = $this->post(route('api.v1.rule_groups.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
@@ -133,6 +138,13 @@ class RuleGroupControllerTest extends TestCase
         $matcher->shouldReceive('setAccounts')->once();
         $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn([]);
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 50;
+
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+
         // call API
         $response = $this->get(route('api.v1.rule_groups.test', [$group->id]) . '?accounts=1,2,3');
         $response->assertStatus(200);
@@ -150,6 +162,13 @@ class RuleGroupControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection);
+
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 50;
+
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         // call API
         $group    = $this->user()->ruleGroups()->first();
@@ -197,6 +216,8 @@ class RuleGroupControllerTest extends TestCase
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
         $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
         $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
+
+
 
         $response = $this->post(route('api.v1.rule_groups.trigger', [$group->id]) . '?accounts=1,2,3&start_date=2019-01-01&end_date=2019-01-02');
         $response->assertStatus(204);

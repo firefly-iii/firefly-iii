@@ -304,10 +304,13 @@ try {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
                 $breadcrumbs->parent('transactions.show', $object->transactionGroup);
-                $breadcrumbs->push(
-                    trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
-                );
             }
+            if ($object instanceof Bill) {
+                $breadcrumbs->parent('bills.show', $object);
+            }
+            $breadcrumbs->push(
+                trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
+            );
         }
     );
 

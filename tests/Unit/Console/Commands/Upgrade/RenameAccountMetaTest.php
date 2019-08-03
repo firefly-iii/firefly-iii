@@ -49,6 +49,12 @@ class RenameAccountMetaTest extends TestCase
      */
     public function testHandle(): void
     {
+        $false        = new Configuration;
+        $false->data  = false;
+        // check config
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_rename_account_meta', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_rename_account_meta', true]);
+
         // assume all is well.
         $this->artisan('firefly-iii:rename-account-meta')
              ->expectsOutput('All account meta is OK.')

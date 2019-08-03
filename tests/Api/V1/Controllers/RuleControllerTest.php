@@ -25,7 +25,7 @@ namespace Tests\Api\V1\Controllers;
 
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -37,6 +37,7 @@ use Laravel\Passport\Passport;
 use Log;
 use Preferences;
 use Tests\TestCase;
+use Mockery;
 
 /**
  *
@@ -237,6 +238,12 @@ class RuleControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 50;
+
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
 
         $response = $this->get(route('api.v1.rules.test', [$rule->id]) . '?accounts=1,2,3');

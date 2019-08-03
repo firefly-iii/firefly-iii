@@ -243,7 +243,8 @@ abstract class TestCase extends BaseTestCase
         try {
             $date = new Carbon;
         } catch (Exception $e) {
-            $e->getMessage();
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
 
         return [
@@ -286,7 +287,8 @@ abstract class TestCase extends BaseTestCase
         try {
             $date = new Carbon;
         } catch (Exception $e) {
-            $e->getMessage();
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
 
         return [
@@ -327,7 +329,8 @@ abstract class TestCase extends BaseTestCase
         try {
             $date = new Carbon;
         } catch (Exception $e) {
-            $e->getMessage();
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
 
         return [
