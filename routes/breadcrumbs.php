@@ -291,6 +291,10 @@ try {
                     $breadcrumbs->parent('transactions.show', $object->transactionGroup);
                 }
             }
+
+            if ($object instanceof Bill) {
+                $breadcrumbs->parent('bills.show', $object);
+            }
             $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
         }
     );
