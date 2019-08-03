@@ -70,7 +70,6 @@ class TagFactory
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
         ];
-
         return Tag::create($array);
     }
 
@@ -85,7 +84,7 @@ class TagFactory
 
         /** @var Tag $dbTag */
         $dbTag = $this->user->tags()->where('tag', $tag)->first();
-        if (null !== $tag) {
+        if (null !== $dbTag) {
             return $dbTag;
         }
         $newTag = $this->create(

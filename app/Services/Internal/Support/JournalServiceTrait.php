@@ -269,6 +269,7 @@ trait JournalServiceTrait
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void
     {
+
         $this->tagFactory->setUser($journal->user);
         $set = [];
         if (!is_array($tags)) {

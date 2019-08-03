@@ -205,11 +205,11 @@ class ReconcileController extends Controller
                 $inverse = true;
             }
 
-            // reconciliation into account? then positive amount:
-            if (TransactionType::RECONCILIATION === $journal['transaction_type_type']) {
+            // opening balance into account? then positive amount:
+            if (TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                && $account->id === $journal['destination_account_id']) {
                 $inverse = true;
             }
-
 
             if (true === $inverse) {
                 $journal['amount'] = app('steam')->positive($journal['amount']);

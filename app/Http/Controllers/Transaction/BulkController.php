@@ -73,6 +73,8 @@ class BulkController extends Controller
     {
         $subTitle = (string)trans('firefly.mass_bulk_journals');
 
+        $this->rememberPreviousUri('transactions.bulk-edit.uri');
+
         // make amounts positive.
 
         // get list of budgets:
@@ -127,8 +129,9 @@ class BulkController extends Controller
      * @param array $tags
      * @return bool
      */
-    public function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
+    private function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
     {
+
         if (true === $ignoreUpdate) {
             return false;
         }

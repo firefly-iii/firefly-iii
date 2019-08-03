@@ -24,6 +24,8 @@ namespace FireflyIII\Exceptions;
 
 use Exception;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
@@ -66,7 +68,9 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return $this->handleGroup($request, $exception);
                 break;
             case 'attachments.show':
-                return redirect(route('index'));
+            case 'attachments.edit':
+                // redirect to original attachment holder.
+                return $this->handleAttachment($request, $exception);
                 break;
             case 'bills.show':
                 $request->session()->reflash();
@@ -143,6 +147,44 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $request->session()->reflash();
 
         return redirect(route('accounts.index', [$shortType]));
+    }
+
+    private function handleAttachment(Request $request, Exception $exception)
+    {
+        Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
+        /** @var User $user */
+        $user         = auth()->user();
+        $route        = $request->route();
+        $attachmentId = (int)$route->parameter('attachment');
+        /** @var Attachment $attachment */
+        $attachment = $user->attachments()->withTrashed()->find($attachmentId);
+        if (null === $attachment) {
+            Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
+
+            return parent::render($request, $exception);
+        }
+        // get bindable.
+        if (TransactionJournal::class === $attachment->attachable_type) {
+            // is linked to journal, get group of journal (if not also deleted)
+            /** @var TransactionJournal $journal */
+            $journal = $user->transactionJournals()->withTrashed()->find($attachment->attachable_id);
+            if (null !== $journal) {
+                return redirect(route('transactions.show', [$journal->transaction_group_id]));
+            }
+
+        }
+        if (Bill::class === $attachment->attachable_type) {
+            // is linked to bill.
+            /** @var Bill $bill */
+            $bill = $user->bills()->withTrashed()->find($attachment->attachable_id);
+            if (null !== $bill) {
+                return redirect(route('bills.show', [$bill->id]));
+            }
+        }
+
+        Log::error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
+
+        return parent::render($request, $exception);
     }
 
     /**

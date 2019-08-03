@@ -354,6 +354,7 @@
             },
             processIncomingGroupRow(transaction) {
                 console.log(transaction);
+                this.setTransactionType(transaction.type);
                 this.transactions.push({
                     description: transaction.description,
                     date: transaction.date.substr(0, 10),

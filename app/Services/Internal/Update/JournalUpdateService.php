@@ -165,6 +165,7 @@ class JournalUpdateService
             $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
         }
         // update tags
+
         if ($this->hasFields(['tags'])) {
             Log::debug('Will update tags.');
             $tags = $this->data['tags'] ?? null;
