@@ -248,8 +248,7 @@ class TransactionUpdateRequest extends Request
                 // The currency info must match the accounts involved.
                 // Instead will ignore currency info as much as possible.
 
-                // TODO if the transaction_journal_id is empty, some fields are mandatory.
-                // TODO like the amount!
+                // TODO if the transaction_journal_id is empty, some fields are mandatory, like the amount!
 
                 // all journals must have a description
                 //$this->validateDescriptions($validator);

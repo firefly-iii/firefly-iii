@@ -92,6 +92,7 @@ class BudgetFactory
     {
         /** @var Collection $collection */
         $collection = $this->user->budgets()->get();
+        // TODO no longer need to loop like this
         /** @var Budget $budget */
         foreach ($collection as $budget) {
             if ($budget->name === $name) {

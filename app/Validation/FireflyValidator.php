@@ -269,6 +269,7 @@ class FireflyValidator extends Validator
             $repository = app(BudgetRepositoryInterface::class);
             $budgets    = $repository->getBudgets();
             // count budgets, should have at least one
+            // TODO no longer need to loop like this
             $count = $budgets->filter(
                 function (Budget $budget) use ($value) {
                     return $budget->name === $value;
@@ -540,6 +541,7 @@ class FireflyValidator extends Validator
         $value = $this->data['name'];
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -565,6 +567,7 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -588,6 +591,7 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             // TODO no longer need to loop like this.
@@ -621,6 +625,7 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
         $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {

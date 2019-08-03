@@ -63,6 +63,9 @@ class SetBudget implements ActionInterface
         $repository->setUser($journal->user);
         $search  = $this->action->action_value;
         $budgets = $repository->getActiveBudgets();
+
+        // TODO no longer need to loop like this
+
         $budget  = $budgets->filter(
             static function (Budget $current) use ($search) {
                 return $current->name === $search;

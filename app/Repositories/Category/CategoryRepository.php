@@ -272,6 +272,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function findByName(string $name): ?Category
     {
         $categories = $this->user->categories()->get(['categories.*']);
+
+        // TODO no longer need to loop like this
+
         foreach ($categories as $category) {
             if ($category->name === $name) {
                 return $category;

@@ -199,6 +199,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function findByName(string $name): ?PiggyBank
     {
         $set = $this->user->piggyBanks()->get(['piggy_banks.*']);
+
+        // TODO no longer need to loop like this
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             if ($piggy->name === $name) {

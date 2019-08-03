@@ -157,6 +157,9 @@ class AccountRepository implements AccountRepositoryInterface
         Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $accounts = $query->get(['accounts.*']);
+
+        // TODO no longer need to loop like this
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name) {
@@ -308,6 +311,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getMetaValue(Account $account, string $field): ?string
     {
+        // TODO no longer need to loop like this
+
         foreach ($account->accountMeta as $meta) {
             if ($meta->name === $field) {
                 return (string)$meta->data;
@@ -406,6 +411,9 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var AccountType $type */
         $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
+
+        // TODO no longer need to loop like this
+
         /** @var Account $current */
         foreach ($accounts as $current) {
             if ($current->name === $name) {

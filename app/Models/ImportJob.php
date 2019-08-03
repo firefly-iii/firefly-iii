@@ -48,8 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property int $id
- * @property array|null $extended_status
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newQuery()
