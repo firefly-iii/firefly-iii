@@ -47,9 +47,15 @@ class ChangesForV480 extends Migration
                 $table->dropColumn('transaction_group_id');
             }
         );
-        Schema::table('rule_groups', function (Blueprint $table) {
+        Schema::table('rule_groups', static function (Blueprint $table) {
             $table->dropColumn('stop_processing');
         });
+
+        Schema::table(
+            'users', static function (Blueprint $table) {
+            $table->dropColumn('mfa_secret');
+        }
+        );
     }
 
     /**
@@ -62,7 +68,7 @@ class ChangesForV480 extends Migration
 
         Schema::table(
             'transaction_journals',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
 
                 $table->integer('transaction_currency_id', false, true)->nullable()->change();
 
@@ -74,8 +80,13 @@ class ChangesForV480 extends Migration
                 $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
             }
         );
-        Schema::table('rule_groups', function (Blueprint $table) {
+        Schema::table('rule_groups', static function (Blueprint $table) {
             $table->boolean('stop_processing')->default(false);
         });
+        Schema::table(
+            'users', static function (Blueprint $table) {
+            $table->string('mfa_secret', 50)->nullable();
+        }
+        );
     }
 }

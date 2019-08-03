@@ -285,6 +285,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function hasRole(User $user, string $role): bool
     {
+        // TODO no longer need to loop like this
+
         /** @var Role $userRole */
         foreach ($user->roles as $userRole) {
             if ($userRole->name === $role) {
@@ -370,5 +372,17 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return true;
+    }
+
+    /**
+     * Set MFA code.
+     *
+     * @param User   $user
+     * @param string $code
+     */
+    public function setMFACode(User $user, string $code): void
+    {
+        $user->mfa_secret = $code;
+        $user->save();
     }
 }
