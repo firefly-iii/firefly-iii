@@ -56,9 +56,6 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -70,7 +67,7 @@ class PiggyBankEventTransformerTest extends TestCase
 
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($this->getEuro());
         $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
 
         $event       = PiggyBankEvent::first();
@@ -91,9 +88,6 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testNoCurrency(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -108,7 +102,7 @@ class PiggyBankEventTransformerTest extends TestCase
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
         $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
 
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->atLeast()->once();
 
         $event       = PiggyBankEvent::first();
         $transformer = app(PiggyBankEventTransformer::class);

@@ -596,7 +596,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getEuro(): TransactionCurrency
     {
-        return TransactionCurrency::find(1);
+        return TransactionCurrency::where('code', 'EUR')->first();
     }
 
     /**

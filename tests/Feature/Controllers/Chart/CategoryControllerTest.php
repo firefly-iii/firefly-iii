@@ -164,7 +164,7 @@ class CategoryControllerTest extends TestCase
         $repository->shouldReceive('spentInPeriodPerCurrency')->times(2)->andReturn($spentData);
         $repository->shouldReceive('spentInPeriodPcWoCategory')->once()->andReturn($spentNoCategory);
 
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn($this->getEuro());
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());

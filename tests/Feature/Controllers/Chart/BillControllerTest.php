@@ -66,7 +66,7 @@ class BillControllerTest extends TestCase
             2 => '100',
         ];
 
-        $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1))->withArgs([1]);
+        $currencyRepos->shouldReceive('findNull')->once()->andReturn($this->getEuro())->withArgs([1]);
         $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(2))->withArgs([2]);
 
         $repository->shouldReceive('getBillsPaidInRangePerCurrency')->once()->andReturn($amounts);

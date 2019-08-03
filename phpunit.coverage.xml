@@ -50,6 +50,7 @@
             <directory suffix="Test.php">./tests/Unit/Services</directory>
             <directory suffix="Test.php">./tests/Unit/Support</directory>
             <directory suffix="Test.php">./tests/Unit/TransactionRules</directory>
+            <directory suffix="Test.php">./tests/Unit/Transformers</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>

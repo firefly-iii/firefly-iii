@@ -68,7 +68,7 @@ class PiggyBankTransformerTest extends TestCase
 
         // return a currency
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($this->getEuro());
 
         // get a note
         $piggyRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('I am a note.');
@@ -109,7 +109,7 @@ class PiggyBankTransformerTest extends TestCase
         // return a currency
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn(TransactionCurrency::find(1));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($this->getEuro());
 
         // get a note
         $piggyRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('I am a note.');

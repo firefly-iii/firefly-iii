@@ -106,7 +106,7 @@ class EditControllerTest extends TestCase
 
 
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
-        //\Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(1));
+        //\Amount::shouldReceive('getDefaultCurrency')->andReturn($this->getEuro());
 
 
         $this->be($this->user());

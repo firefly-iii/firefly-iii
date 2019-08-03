@@ -42,9 +42,6 @@ class TransactionLinkTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $repository = $this->mock(JournalRepositoryInterface::class);
 
         $repository->shouldReceive('getLinkNoteText')->atLeast()->once()->andReturn('abc');

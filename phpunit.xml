@@ -38,6 +38,7 @@
         </testsuite>
         <!-- unit tests, splitted: -->
         <testsuite name="Unit">
+            <!--
             <directory suffix="Test.php">./tests/Unit/Console</directory>
             <directory suffix="Test.php">./tests/Unit/Factory</directory>
             <directory suffix="Test.php">./tests/Unit/Generator</directory>
@@ -50,6 +51,8 @@
             <directory suffix="Test.php">./tests/Unit/Services</directory>
             <directory suffix="Test.php">./tests/Unit/Support</directory>
             <directory suffix="Test.php">./tests/Unit/TransactionRules</directory>
+            -->
+            <directory suffix="Test.php">./tests/Unit/Transformers</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
