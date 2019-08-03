@@ -257,12 +257,11 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        die('remove or refactor references to 2FA before continuing.');
+        /** @var User $user */
+        $user          = auth()->user();
         $loginProvider = config('firefly.login_provider');
         // check if client token thing exists (default one)
-        $count = DB::table('oauth_clients')
-                   ->where('personal_access_client', 1)
-                   ->whereNull('user_id')->count();
+        $count = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
 
         $this->createOAuthKeys();
 
@@ -271,11 +270,9 @@ class ProfileController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
-        $subTitle   = auth()->user()->email;
-        $userId     = auth()->user()->id;
-        $enabled2FA = 1 === (int)app('preferences')->get('twoFactorAuthEnabled', 0)->data;
-        /** @var User $user */
-        $user = auth()->user();
+        $subTitle   = $user->email;
+        $userId     = $user->id;
+        $enabled2FA = null !== $user->mfa_secret;
 
         // get access token or create one.
         $accessToken = app('preferences')->get('access_token', null);
