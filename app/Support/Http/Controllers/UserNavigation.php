@@ -124,7 +124,7 @@ trait UserNavigation
         /** @var Transaction $transaction */
         $transaction = $account->transactions()->first();
         if (null === $transaction) {
-            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => $account->name, 'id' => $account->id]));
+            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
             Log::error(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id));
 
             return redirect(route('index'));
@@ -135,7 +135,7 @@ trait UserNavigation
         $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
 
         if (null === $opposingTransaction) {
-            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => $account->name, 'id' => $account->id]));
+            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
             Log::error(sprintf('Expected an opposing transaction. Account #%d has none. BEEP, error.', $account->id));
         }
 
