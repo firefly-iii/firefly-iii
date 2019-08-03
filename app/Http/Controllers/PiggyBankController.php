@@ -321,7 +321,7 @@ class PiggyBankController extends Controller
             'error',
             (string)trans(
                 'firefly.cannot_add_amount_piggy',
-                ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
+                ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )
         );
 
@@ -364,7 +364,7 @@ class PiggyBankController extends Controller
             'error',
             (string)trans(
                 'firefly.cannot_remove_from_piggy',
-                ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
+                ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )
         );
 

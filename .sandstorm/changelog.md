@@ -1,3 +1,7 @@
+# 4.7.17.6 (API 0.9.2)
+
+- XSS issue in liability account redirect, found by [@0x2500](https://github.com/0x2500).
+
 # 4.7.17.5 (API 0.9.2)
 
 - Several XSS issues, found by [@0x2500](https://github.com/0x2500).
