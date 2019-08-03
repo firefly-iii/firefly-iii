@@ -116,7 +116,7 @@ class BinderTest extends TestCase
     public function testAccountListEmpty(): void
     {
         Route::middleware(Binder::class)->any(
-            '/_test/binder/{accountList}', function (Collection $accounts) {
+            '/_test/binder/{accountList}', static function (Collection $accounts) {
             return 'count: ' . $accounts->count();
         }
         );

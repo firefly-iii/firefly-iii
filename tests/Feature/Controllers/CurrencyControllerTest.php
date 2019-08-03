@@ -509,6 +509,7 @@ class CurrencyControllerTest extends TestCase
 
         $repository->shouldReceive('update')->andReturn(new TransactionCurrency);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $repository->shouldReceive('currencyInUse')->atLeast()->once()->andReturn(true);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['currencies.edit.uri' => 'http://localhost']);

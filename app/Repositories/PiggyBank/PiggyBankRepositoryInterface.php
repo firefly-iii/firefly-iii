@@ -200,13 +200,6 @@ interface PiggyBankRepositoryInterface
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
 
     /**
-     * @param PiggyBankEvent $event
-     *
-     * @return int|null
-     */
-    public function getTransactionWithEvent(PiggyBankEvent $event): ?int;
-
-    /**
      * Get for piggy account what is left to put in piggies.
      *
      * @param PiggyBank $piggyBank

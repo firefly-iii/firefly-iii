@@ -81,6 +81,7 @@ class StageImportDataHandler
         }
         $totalSet = array_merge(...$totalSet);
         Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
+
         $this->repository->setTransactions($this->importJob, $totalSet);
     }
 

@@ -432,31 +432,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBankEvent $event
-     *
-     * @return int|null
-     */
-    public function getTransactionWithEvent(PiggyBankEvent $event): ?int
-    {
-        $journal = $event->transactionJournal;
-        if (null === $journal) {
-            return null;
-        }
-        if ((float)$event->amount < 0) {
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-
-            return $transaction->id ?? null;
-        }
-        if ((float)$event->amount > 0) {
-            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-
-            return $transaction->id ?? null;
-        }
-
-        return null;
-    }
-
-    /**
      * Get for piggy account what is left to put in piggies.
      *
      * @param PiggyBank $piggyBank

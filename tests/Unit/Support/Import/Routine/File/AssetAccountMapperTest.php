@@ -144,7 +144,8 @@ class AssetAccountMapperTest extends TestCase
         // mock repository:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findByIbanNull')->once()->withArgs([$searchValue, [AccountType::ASSET]])->andReturn($expected);
+        $repository->shouldReceive('findByIbanNull')->once()
+                   ->withArgs([$searchValue, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($expected);
 
         $mapper = new AssetAccountMapper;
         $mapper->setUser($this->user());
@@ -164,7 +165,8 @@ class AssetAccountMapperTest extends TestCase
         // mock repository:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findByName')->once()->withArgs([$searchValue, [AccountType::ASSET]])->andReturn($expected);
+        $repository->shouldReceive('findByName')->once()
+                   ->withArgs([$searchValue, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($expected);
 
         $mapper = new AssetAccountMapper;
         $mapper->setUser($this->user());
@@ -184,7 +186,8 @@ class AssetAccountMapperTest extends TestCase
         // mock repository:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findByAccountNumber')->once()->withArgs([$searchValue, [AccountType::ASSET]])->andReturn($expected);
+        $repository->shouldReceive('findByAccountNumber')->once()
+                   ->withArgs([$searchValue, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($expected);
 
         $mapper = new AssetAccountMapper;
         $mapper->setUser($this->user());

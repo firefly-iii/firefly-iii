@@ -65,22 +65,23 @@ class MonthReportGeneratorTest extends TestCase
         $dollar     = $this->getDollar();
         $return     = [
             [
-                'description'         => 'Hello',
-                'amount'              => '10',
-                'foreign_currency_id' => null,
-                'currency_id'         => $euro->id,
-                'source_id'           => $asset->id,
-                'source_name'         => $asset->name,
-
+                'description'            => 'Hello',
+                'amount'                 => '10',
+                'foreign_currency_id'    => null,
+                'currency_id'            => $euro->id,
+                'source_id'              => $asset->id,
+                'source_name'            => $asset->name,
+                'transaction_journal_id' => 1,
             ],
             [
-                'description'         => 'Hello2',
-                'amount'              => '10',
-                'foreign_amount'      => '10',
-                'foreign_currency_id' => $euro->id,
-                'currency_id'         => $dollar->id,
-                'source_id'           => $asset->id,
-                'source_name'         => $asset->name,
+                'description'            => 'Hello2',
+                'amount'                 => '10',
+                'foreign_amount'         => '10',
+                'foreign_currency_id'    => $euro->id,
+                'currency_id'            => $dollar->id,
+                'source_id'              => $asset->id,
+                'source_name'            => $asset->name,
+                'transaction_journal_id' => 1,
 
             ],
         ];
@@ -100,14 +101,15 @@ class MonthReportGeneratorTest extends TestCase
         // mock calls
         Steam::shouldReceive('balance')->times(2)->andReturn('100');
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->once();
+        //$accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
         // mock collector:
         $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($return);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->once();
+        //$currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->once();
 
         try {
             $result = $generator->getAuditReport($asset, $date);

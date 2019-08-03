@@ -82,8 +82,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
         }
 
         // get associated journal and transaction, if any:
-        $journalId     = $event->transaction_journal_id;
-        $transactionId = $this->piggyRepos->getTransactionWithEvent($event);
+        $journalId = (int)$event->transaction_journal_id;
 
         $data = [
             'id'                      => (int)$event->id,
@@ -94,8 +93,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
-            'journal_id'              => $journalId,
-            'transaction_id'          => $transactionId,
+            'transaction_journal_id'  => $journalId,
             'links'                   => [
                 [
                     'rel' => 'self',

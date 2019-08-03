@@ -90,6 +90,9 @@ class OpposingAccountMapperTest extends TestCase
         $repository->shouldReceive('findNull')->andReturn($expected)->once();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::LOAN]])->andReturnNull();
         $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
                    ->andReturn(new Account);
 
@@ -127,8 +130,15 @@ class OpposingAccountMapperTest extends TestCase
         $repository->shouldReceive('findNull')->andReturn($expected)->once();
         $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::LOAN]])->andReturnNull();
+
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::LOAN]])->andReturnNull();
         $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
                    ->andReturn(new Account);
 

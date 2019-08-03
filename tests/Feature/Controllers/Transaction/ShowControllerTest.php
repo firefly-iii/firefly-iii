@@ -55,9 +55,9 @@ class ShowControllerTest extends TestCase
         $withdrawal = $this->getRandomWithdrawalGroup();
         $array      = $this->getRandomWithdrawalGroupAsArray();
 
-        $array[0]['transactions'][0]['foreign_amount']                  = '10';
-        $array[0]['transactions'][0]['foreign_currency_symbol']         = 'x';
-        $array[0]['transactions'][0]['foreign_currency_decimal_places'] = 2;
+        $array['transactions'][0]['foreign_amount']                  = '10';
+        $array['transactions'][0]['foreign_currency_symbol']         = 'x';
+        $array['transactions'][0]['foreign_currency_decimal_places'] = 2;
 
         $groupRepository = $this->mock(TransactionGroupRepositoryInterface::class);
         $userRepos       = $this->mock(UserRepositoryInterface::class);
@@ -65,7 +65,7 @@ class ShowControllerTest extends TestCase
 
         // mock for transformer:
         $transformer->shouldReceive('setParameters')->atLeast()->once();
-        $transformer->shouldReceive('transformObject')->atLeast()->once()->andReturn($array[0]);
+        $transformer->shouldReceive('transformObject')->atLeast()->once()->andReturn($array);
 
         // mock for repos
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);

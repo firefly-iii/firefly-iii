@@ -32,39 +32,15 @@
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
     </listeners>
     <testsuites>
-        <!-- test suites -->
         <testsuite name="Api">
             <directory suffix="Test.php">./tests/Api</directory>
-        </testsuite>
-        <!-- unit tests, splitted: -->
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit/Console</directory>
-            <directory suffix="Test.php">./tests/Unit/Factory</directory>
-            <directory suffix="Test.php">./tests/Unit/Generator</directory>
-            <directory suffix="Test.php">./tests/Unit/Handlers</directory>
-            <directory suffix="Test.php">./tests/Unit/Helpers</directory>
-            <directory suffix="Test.php">./tests/Unit/Import</directory>
-            <directory suffix="Test.php">./tests/Unit/Jobs</directory>
-            <directory suffix="Test.php">./tests/Unit/Middleware</directory>
-            <directory suffix="Test.php">./tests/Unit/Rules</directory>
-            <directory suffix="Test.php">./tests/Unit/Services</directory>
-            <directory suffix="Test.php">./tests/Unit/Support</directory>
-            <directory suffix="Test.php">./tests/Unit/TransactionRules</directory>
-            <directory suffix="Test.php">./tests/Unit/Transformers</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-
-
-        <!--
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
-        -->
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

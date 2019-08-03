@@ -156,7 +156,7 @@ class ImportableConverter
             'transactions' => [
                 [
                     'user'  => $this->importJob->user_id,
-                    'type'  => $transactionType,
+                    'type'  => strtolower($transactionType),
                     'date'  => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
                     'order' => 0,
 
