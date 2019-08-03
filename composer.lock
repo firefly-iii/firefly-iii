@@ -4,31 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "574b38ec48f5e9c1400138b63f0a3d7d",
+    "content-hash": "6f0659be8b94240ba32a05fb5f693a01",
     "packages": [
         {
             "name": "adldap2/adldap2",
-            "version": "v9.1.6",
+            "version": "v10.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Adldap2/Adldap2.git",
-                "reference": "d50204d3eff587957b4bb9d7382d2eda5009ed16"
+                "reference": "beb3c9cc28de752d6c3b0221605035659eccc42e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/d50204d3eff587957b4bb9d7382d2eda5009ed16",
-                "reference": "d50204d3eff587957b4bb9d7382d2eda5009ed16",
+                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/beb3c9cc28de752d6c3b0221605035659eccc42e",
+                "reference": "beb3c9cc28de752d6c3b0221605035659eccc42e",
                 "shasum": ""
             },
             "require": {
                 "ext-ldap": "*",
                 "illuminate/contracts": "~5.0",
                 "php": ">=7.0",
+                "psr/log": "~1.0",
                 "tightenco/collect": "~5.0"
             },
             "require-dev": {
                 "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~6.0"
+            },
+            "suggest": {
+                "ext-fileinfo": "fileinfo is required when retrieving user encoded thumbnails"
             },
             "type": "library",
             "autoload": {
@@ -43,8 +47,8 @@
             "authors": [
                 {
                     "name": "Steve Bauman",
-                    "email": "steven_bauman@outlook.com",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "steven_bauman@outlook.com"
                 }
             ],
             "description": "A PHP LDAP Package for humans.",
@@ -57,24 +61,25 @@
                 "ldap",
                 "windows"
             ],
-            "time": "2019-04-03T19:41:38+00:00"
+            "time": "2019-05-24T14:15:58+00:00"
         },
         {
             "name": "adldap2/adldap2-laravel",
-            "version": "v5.1.3",
+            "version": "v6.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Adldap2/Adldap2-Laravel.git",
-                "reference": "1a8843b07b389ce26f6d122d19f9443224926d82"
+                "reference": "e7e60f0f10ff845bf8e8c965258c86a33c9ab266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Adldap2/Adldap2-Laravel/zipball/1a8843b07b389ce26f6d122d19f9443224926d82",
-                "reference": "1a8843b07b389ce26f6d122d19f9443224926d82",
+                "url": "https://api.github.com/repos/Adldap2/Adldap2-Laravel/zipball/e7e60f0f10ff845bf8e8c965258c86a33c9ab266",
+                "reference": "e7e60f0f10ff845bf8e8c965258c86a33c9ab266",
                 "shasum": ""
             },
             "require": {
-                "adldap2/adldap2": "^9.0",
+                "adldap2/adldap2": "^10.0",
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
                 "php": ">=7.1"
             },
             "require-dev": {
@@ -110,7 +115,7 @@
                 "laravel",
                 "ldap"
             ],
-            "time": "2019-04-02T23:04:08+00:00"
+            "time": "2019-06-28T17:34:46+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -1662,16 +1667,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "0.19.3",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "c6ecea928b432ae417fa9942840bbfd8c332448c"
+                "reference": "7a40f2b0931602c504c2a9692d9f1e33635fd5ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/c6ecea928b432ae417fa9942840bbfd8c332448c",
-                "reference": "c6ecea928b432ae417fa9942840bbfd8c332448c",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/7a40f2b0931602c504c2a9692d9f1e33635fd5ef",
+                "reference": "7a40f2b0931602c504c2a9692d9f1e33635fd5ef",
                 "shasum": ""
             },
             "require": {
@@ -1701,7 +1706,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.20-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -1728,7 +1733,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2019-06-18T18:29:15+00:00"
+            "time": "2019-06-29T11:19:01+00:00"
         },
         {
             "name": "league/csv",
@@ -2751,26 +2756,26 @@
         },
         {
             "name": "pragmarx/google2fa-laravel",
-            "version": "v0.3.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/google2fa-laravel.git",
-                "reference": "048026cd55af7d4b019d18f83e5bbf92d4c8b071"
+                "reference": "b5f5bc71dcc52c48720441bc01c701023bd82882"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/google2fa-laravel/zipball/048026cd55af7d4b019d18f83e5bbf92d4c8b071",
-                "reference": "048026cd55af7d4b019d18f83e5bbf92d4c8b071",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa-laravel/zipball/b5f5bc71dcc52c48720441bc01c701023bd82882",
+                "reference": "b5f5bc71dcc52c48720441bc01c701023bd82882",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": ">=5.2",
-                "php": ">=5.4",
-                "pragmarx/google2fa": ">=5.0"
+                "laravel/framework": ">=5.4.36",
+                "php": ">=7.0",
+                "pragmarx/google2fa-qrcode": "^1.0"
             },
             "require-dev": {
-                "orchestra/testbench-browser-kit": ">=3.4",
-                "phpunit/phpunit": ">=5.0"
+                "orchestra/testbench": "3.4.*|3.5.*|3.6.*|3.7.*",
+                "phpunit/phpunit": "~5|~6|~7"
             },
             "suggest": {
                 "bacon/bacon-qr-code": "Required to generate inline QR Codes.",
@@ -2818,7 +2823,192 @@
                 "google2fa",
                 "laravel"
             ],
-            "time": "2019-03-19T23:20:01+00:00"
+            "time": "2019-03-22T19:54:51+00:00"
+        },
+        {
+            "name": "pragmarx/google2fa-qrcode",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/google2fa-qrcode.git",
+                "reference": "fd5ff0531a48b193a659309cc5fb882c14dbd03f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa-qrcode/zipball/fd5ff0531a48b193a659309cc5fb882c14dbd03f",
+                "reference": "fd5ff0531a48b193a659309cc5fb882c14dbd03f",
+                "shasum": ""
+            },
+            "require": {
+                "bacon/bacon-qr-code": "~1.0|~2.0",
+                "php": ">=5.4",
+                "pragmarx/google2fa": ">=4.0"
+            },
+            "require-dev": {
+                "khanamiryan/qrcode-detector-decoder": "^1.0",
+                "phpunit/phpunit": "~4|~5|~6|~7"
+            },
+            "type": "library",
+            "extra": {
+                "component": "package",
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PragmaRX\\Google2FAQRCode\\": "src/",
+                    "PragmaRX\\Google2FAQRCode\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "role": "Creator & Designer",
+                    "email": "acr@antoniocarlosribeiro.com"
+                }
+            ],
+            "description": "QR Code package for Google2FA",
+            "keywords": [
+                "2fa",
+                "Authentication",
+                "Two Factor Authentication",
+                "google2fa",
+                "qr code",
+                "qrcode"
+            ],
+            "time": "2019-03-20T16:42:58+00:00"
+        },
+        {
+            "name": "pragmarx/random",
+            "version": "v0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/random.git",
+                "reference": "daf08a189c5d2d40d1a827db46364d3a741a51b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/random/zipball/daf08a189c5d2d40d1a827db46364d3a741a51b7",
+                "reference": "daf08a189c5d2d40d1a827db46364d3a741a51b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.7",
+                "phpunit/phpunit": "~6.4",
+                "pragmarx/trivia": "~0.1",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "suggest": {
+                "fzaninotto/faker": "Allows you to get dozens of randomized types",
+                "pragmarx/trivia": "For the trivia database"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PragmaRX\\Random\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "role": "Developer",
+                    "email": "acr@antoniocarlosribeiro.com",
+                    "homepage": "https://antoniocarlosribeiro.com"
+                }
+            ],
+            "description": "Create random chars, numbers, strings",
+            "homepage": "https://github.com/antonioribeiro/random",
+            "keywords": [
+                "Randomize",
+                "faker",
+                "pragmarx",
+                "random",
+                "random number",
+                "random pattern",
+                "random string"
+            ],
+            "time": "2017-11-21T05:26:22+00:00"
+        },
+        {
+            "name": "pragmarx/recovery",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/recovery.git",
+                "reference": "e16573a1ae5345cc3b100eec6d0296a1a15a90fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/recovery/zipball/e16573a1ae5345cc3b100eec6d0296a1a15a90fe",
+                "reference": "e16573a1ae5345cc3b100eec6d0296a1a15a90fe",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.0",
+                "pragmarx/random": "~0.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.4.3",
+                "squizlabs/php_codesniffer": "^2.3",
+                "tightenco/collect": "^5"
+            },
+            "suggest": {
+                "tightenco/collect": "Allows to generate recovery codes as collections"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PragmaRX\\Recovery\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "role": "Developer",
+                    "email": "acr@antoniocarlosribeiro.com",
+                    "homepage": "https://antoniocarlosribeiro.com"
+                }
+            ],
+            "description": "Create recovery codes for two factor auth",
+            "homepage": "https://github.com/antonioribeiro/recovery",
+            "keywords": [
+                "2fa",
+                "account recovery",
+                "auth",
+                "backup codes",
+                "google2fa",
+                "pragmarx",
+                "recovery",
+                "recovery codes",
+                "two factor auth"
+            ],
+            "time": "2017-09-19T16:58:00+00:00"
         },
         {
             "name": "psr/container",
@@ -6526,16 +6716,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.3.2",
+            "version": "8.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e77a49b6da82240f40ddd4be536d30d7dae5c168"
+                "reference": "c319d08ebd31e137034c84ad7339054709491485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e77a49b6da82240f40ddd4be536d30d7dae5c168",
-                "reference": "e77a49b6da82240f40ddd4be536d30d7dae5c168",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c319d08ebd31e137034c84ad7339054709491485",
+                "reference": "c319d08ebd31e137034c84ad7339054709491485",
                 "shasum": ""
             },
             "require": {
@@ -6605,7 +6795,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-08-02T13:42:49+00:00"
+            "time": "2019-08-03T15:41:47+00:00"
         },
         {
             "name": "roave/security-advisories",
