@@ -73,6 +73,7 @@ class AuthenticateTwoFactorTest extends TestCase
      */
     public function testMiddlewareNoTwoFA(): void
     {
+        die('this test references old 2FA code.');
         $this->withoutExceptionHandling();
         $user          = $this->user();
         $user->blocked = 0;
@@ -104,6 +105,7 @@ class AuthenticateTwoFactorTest extends TestCase
      */
     public function testMiddlewareTwoFAAuthed(): void
     {
+        die('this test references old 2FA code.');
         $this->withoutExceptionHandling();
         $user          = $this->user();
         $user->blocked = 0;
@@ -137,6 +139,7 @@ class AuthenticateTwoFactorTest extends TestCase
      */
     public function testMiddlewareTwoFANoSecret(): void
     {
+        die('this test references old 2FA code.');
         $this->withoutExceptionHandling();
         $user          = $this->user();
         $user->blocked = 0;
@@ -168,6 +171,7 @@ class AuthenticateTwoFactorTest extends TestCase
      */
     public function testMiddlewareTwoFASecret(): void
     {
+        die('this test references old 2FA code.');
         $this->withoutExceptionHandling();
         $user          = $this->user();
         $user->blocked = 0;

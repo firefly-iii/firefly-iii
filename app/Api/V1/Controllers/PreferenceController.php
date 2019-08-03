@@ -88,7 +88,7 @@ class PreferenceController extends Controller
         $available = [
             'language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference',
             'transaction_journal_optional_fields', 'frontPageAccounts', 'viewRange',
-            'listPageSize, twoFactorAuthEnabled',
+            'listPageSize',
         ];
 
         $preferences = new Collection;
@@ -166,7 +166,6 @@ class PreferenceController extends Controller
                 $newValue = (int)$data['data'];
                 break;
             case 'customFiscalYear':
-            case 'twoFactorAuthEnabled':
                 $newValue = 1 === (int)$data['data'];
                 break;
         }

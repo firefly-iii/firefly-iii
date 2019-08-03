@@ -218,6 +218,7 @@ class ProfileController extends Controller
      */
     public function deleteCode()
     {
+        die('this method is deprecated.');
         app('preferences')->delete('twoFactorAuthEnabled');
         app('preferences')->delete('twoFactorAuthSecret');
         session()->flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
@@ -233,6 +234,7 @@ class ProfileController extends Controller
      */
     public function enable2FA()
     {
+        die('this method is deprecated.');
         $hasSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
 
         // if we don't have a valid secret yet, redirect to the code page to get one.
@@ -255,6 +257,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        die('remove or refactor references to 2FA before continuing.');
         $loginProvider = config('firefly.login_provider');
         // check if client token thing exists (default one)
         $count = DB::table('oauth_clients')
@@ -388,6 +391,7 @@ class ProfileController extends Controller
      */
     public function postCode(TokenFormRequest $request)
     {
+        die('this method is deprecated');
         app('preferences')->set('twoFactorAuthEnabled', 1);
         app('preferences')->set('twoFactorAuthSecret', session()->get('two-factor-secret'));
 

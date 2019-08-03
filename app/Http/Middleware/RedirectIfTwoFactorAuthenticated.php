@@ -43,6 +43,7 @@ class RedirectIfTwoFactorAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        die('this middleware is deprecated.');
         if (Auth::guard($guard)->check()) {
             $is2faEnabled = app('preferences')->get('twoFactorAuthEnabled', false)->data;
             $has2faSecret = null !== app('preferences')->get('twoFactorAuthSecret');

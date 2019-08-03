@@ -64,6 +64,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
      */
     public function testMiddlewareAuthenticated(): void
     {
+        die('this test references old 2FA code.');
         // pref for has 2fa is true
         $preference       = new Preference;
         $preference->data = true;

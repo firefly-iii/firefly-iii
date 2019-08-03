@@ -66,6 +66,7 @@ class AuthenticateTwoFactor
      */
     public function handle($request, Closure $next)
     {
+        die('this middleware is deprecated.');
         /** @noinspection PhpUndefinedMethodInspection */
         if ($this->auth->guest()) {
             return response()->redirectTo(route('login'));

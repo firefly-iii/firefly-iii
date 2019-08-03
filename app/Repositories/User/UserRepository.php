@@ -245,6 +245,7 @@ class UserRepository implements UserRepositoryInterface
         $return = [];
 
         // two factor:
+        die('this method references 2FA and must be refactored.');
         $is2faEnabled      = app('preferences')->getForUser($user, 'twoFactorAuthEnabled', false)->data;
         $has2faSecret      = null !== app('preferences')->getForUser($user, 'twoFactorAuthSecret');
         $return['has_2fa'] = false;

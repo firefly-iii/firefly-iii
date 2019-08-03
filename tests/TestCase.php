@@ -451,6 +451,7 @@ abstract class TestCase extends BaseTestCase
         $list        = new Preference;
         $list->data  = 50;
 
+        die('the references in this test to 2FA preferences must be refactored.');
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($false);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturnNull();
         Preferences::shouldReceive('get')->withArgs(['viewRange', Mockery::any()])->andReturn($view);

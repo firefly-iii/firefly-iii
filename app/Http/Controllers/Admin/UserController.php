@@ -125,6 +125,7 @@ class UserController extends Controller
         $users        = $this->repository->all();
 
         // add meta stuff.
+        die('the 2FA references here should be refactored.');
         $users->each(
             function (User $user) {
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];

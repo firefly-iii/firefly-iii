@@ -47,6 +47,7 @@ class TwoFactorController extends Controller
      */
     public function index(Request $request)
     {
+        die('this auth controller must be refactored.');
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session

@@ -47,6 +47,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        die('this test references old 2FA code.');
         $this->mockDefaultConfiguration();
         $this->be($this->user());
 
@@ -72,6 +73,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testIndexNo2FA(): void
     {
+        die('this test references old 2FA code.');
         $this->be($this->user());
 
         $falsePreference       = new Preference;
@@ -94,6 +96,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testIndexNoSecret(): void
     {
+        die('this test references old 2FA code.');
         $this->be($this->user());
 
         $truePref               = new Preference;
@@ -117,6 +120,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testLostTwoFactor(): void
     {
+        die('this test references old 2FA code.');
         $this->be($this->user());
 
         $truePreference         = new Preference;
