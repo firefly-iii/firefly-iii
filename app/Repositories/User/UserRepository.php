@@ -379,9 +379,9 @@ class UserRepository implements UserRepositoryInterface
      * Set MFA code.
      *
      * @param User   $user
-     * @param string $code
+     * @param string|null $code
      */
-    public function setMFACode(User $user, string $code): void
+    public function setMFACode(User $user, ?string $code): void
     {
         $user->mfa_secret = $code;
         $user->save();
