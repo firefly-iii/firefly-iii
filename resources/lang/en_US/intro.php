@@ -30,6 +30,7 @@ return [
     'index_help'                            => 'If you ever need help with a page or a form, press this button.',
     'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
     'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_cash_account'                    => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
 
     // create account:
     'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
