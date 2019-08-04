@@ -58,8 +58,10 @@ class ConvertToTransferTest extends TestCase
     public function testActDeposit(): void
     {
         $deposit = $this->getRandomDeposit();
-        /** @var Account $asset */
-        $asset = $this->getRandomAsset();
+
+        // make sure that $asset is not the destination account of $deposit:
+        $forbiddenId = (int)$deposit->transactions()->where('amount', '>', 0)->first()->account_id;
+        $asset       = $this->getRandomAsset($forbiddenId);
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);

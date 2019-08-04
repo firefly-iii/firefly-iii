@@ -438,7 +438,9 @@ class ProfileController extends Controller
         app('preferences')->mark();
 
         // make sure MFA is logged out.
-        Google2FA::logout();
+        if ('testing' !== config('app.env')) {
+            Google2FA::logout();
+        }
 
         return redirect(route('profile.index'));
     }

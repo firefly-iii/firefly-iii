@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use Amount;
 use FireflyIII\Models\Preference;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Google2FA;
@@ -97,6 +98,8 @@ class ProfileControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
+        // set recovery codes.
+        Preferences::shouldReceive('set')->withArgs(['mfa_recovery', Mockery::any()])->atLeast()->once();
 
         Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
         Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
@@ -168,6 +171,9 @@ class ProfileControllerTest extends TestCase
         // mock stuff
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+        $userRepos->shouldReceive('setMFACode')->withArgs([Mockery::any(), null])->atLeast()->once();
+
+
         $this->be($this->user());
         $response = $this->get(route('profile.delete-code'));
         $response->assertStatus(302);
@@ -199,11 +205,13 @@ class ProfileControllerTest extends TestCase
         //$this->mockDefaultSession(); // DISABLED ON PURPOSE
         $this->mockDefaultConfiguration();
         $repository = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('firstNull')->andReturnNull();
+
         $euro       = $this->getEuro();
 
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
-
-        Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
 
         $view       = new Preference;
         $view->data = '1M';
@@ -224,7 +232,7 @@ class ProfileControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('profile.enable2FA'));
         $response->assertStatus(302);
-        $response->assertRedirect(route('profile.index'));
+        $response->assertRedirect(route('profile.code'));
     }
 
     /**
@@ -241,8 +249,14 @@ class ProfileControllerTest extends TestCase
 
         $pref       = new Preference;
         $pref->data = 'token';
+
+
+
         Preferences::shouldReceive('get')->withArgs(['access_token', null])->atLeast()->once()->andReturn($pref);
 
+        $arrayPref = new Preference;
+        $arrayPref->data = [];
+        Preferences::shouldReceive('get')->withArgs(['mfa_recovery', []])->atLeast()->once()->andReturn($arrayPref);
         Preferences::shouldReceive('getForUser')->withArgs(['xxx'])->andReturn($pref);
 
         $this->be($this->user());
@@ -267,6 +281,10 @@ class ProfileControllerTest extends TestCase
 
         Preferences::shouldReceive('get')->withArgs(['access_token', null])->atLeast()->once()->andReturnNull();
         Preferences::shouldReceive('set')->withArgs(['access_token', Mockery::any()])->atLeast()->once()->andReturn($pref);
+
+        $arrayPref = new Preference;
+        $arrayPref->data = [];
+        Preferences::shouldReceive('get')->withArgs(['mfa_recovery', []])->atLeast()->once()->andReturn($arrayPref);
 
         Preferences::shouldReceive('getForUser')->withArgs(['xxx'])->andReturn($pref);
 
@@ -417,7 +435,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostCode(): void
     {
-        $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mockDefaultSession();
 
@@ -427,6 +445,8 @@ class ProfileControllerTest extends TestCase
 
         $this->withoutMiddleware();
         $this->session(['two-factor-secret' => $secret]);
+
+        $userRepos->shouldReceive('setMFACode')->withArgs([Mockery::any(), $secret])->atLeast()->once();
 
         Preferences::shouldReceive('mark')->once();
         Google2FA::shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
