@@ -162,9 +162,6 @@ class AccountValidator
             case TransactionType::RECONCILIATION:
                 $result = $this->validateReconciliationSource($accountId);
                 break;
-            //case TransactionType::OPENING_BALANCE:
-            //case TransactionType::RECONCILIATION:
-            //    die(sprintf('Cannot handle type "%s"', $this->transactionType));
         }
 
         return $result;

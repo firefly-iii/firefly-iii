@@ -39,6 +39,8 @@ class TwoFactorController extends Controller
 {
     /**
      * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function submitMFA(Request $request)
     {
@@ -120,40 +122,6 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * Show 2FA screen.
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     *
-     * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    public function index(Request $request)
-    {
-        die('this auth controller must be refactored.');
-        $user = auth()->user();
-
-        // to make sure the validator in the next step gets the secret, we push it in session
-        $secretPreference = app('preferences')->get('twoFactorAuthSecret', null);
-        $secret           = null === $secretPreference ? null : $secretPreference->data;
-        $title            = (string)trans('firefly.two_factor_title');
-
-        // make sure the user has two factor configured:
-        $has2FA = app('preferences')->get('twoFactorAuthEnabled', false)->data;
-        if (null === $has2FA || false === $has2FA) {
-            return redirect(route('index'));
-        }
-
-        if ('' === (string)$secret) {
-            throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
-        }
-        $request->session()->flash('two-factor-secret', $secret);
-
-        return view('auth.two-factor', compact('user', 'title'));
-    }
-
-    /**
      * What to do if 2FA lost?
      *
      * @return mixed
@@ -172,34 +140,6 @@ class TwoFactorController extends Controller
         );
 
         return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
-    }
-
-    /**
-     * Submit 2FA code.
-     *
-     * @param TokenFormRequest $request
-     * @param CookieJar        $cookieJar
-     *
-     * @return mixed
-     */
-    public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
-    {
-        // wants to remember session?
-        $remember = $request->session()->get('remember_login') ?? false;
-
-        $minutes = config('session.lifetime');
-        if (true === $remember) {
-            // set cookie with a long lifetime (30 days)
-            $minutes = 43200;
-        }
-        $cookie = $cookieJar->make(
-            'twoFactorAuthenticated', 'true', $minutes, config('session.path'), config('session.domain'), config('session.secure'), config('session.http_only')
-        );
-
-        // whatever the case, forget about it:
-        $request->session()->forget('remember_login');
-
-        return redirect(route('home'))->withCookie($cookie);
     }
 
     /**

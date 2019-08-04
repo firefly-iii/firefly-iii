@@ -45,111 +45,15 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
      */
-    public function testIndex(): void
-    {
-        die('this test references old 2FA code.');
-        $this->mockDefaultConfiguration();
-        $this->be($this->user());
-
-
-        $truePref               = new Preference;
-        $truePref->data         = true;
-        $secretPreference       = new Preference;
-        $secretPreference->data = 'JZMES376Z6YXY4QZ';
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
-
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference)->once();
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference);
-
-        $response = $this->get(route('two-factor.index'));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
-     */
-    public function testIndexNo2FA(): void
-    {
-        die('this test references old 2FA code.');
-        $this->be($this->user());
-
-        $falsePreference       = new Preference;
-        $falsePreference->data = false;
-        $langPreference        = new Preference;
-        $langPreference->data  = 'en_US';
-
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference)->twice();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn(null)->once();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null)->once();
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference);
-
-        $response = $this->get(route('two-factor.index'));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('index'));
-    }
-
-    /**
-     * @covers                   \FireflyIII\Http\Controllers\Auth\TwoFactorController
-     */
-    public function testIndexNoSecret(): void
-    {
-        die('this test references old 2FA code.');
-        $this->be($this->user());
-
-        $truePref               = new Preference;
-        $truePref->data         = true;
-        $secretPreference       = new Preference;
-        $secretPreference->data = '';
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
-
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference)->once();
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference);
-
-        $response = $this->get(route('two-factor.index'));
-        $response->assertStatus(500);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
-     */
     public function testLostTwoFactor(): void
     {
-        die('this test references old 2FA code.');
         $this->be($this->user());
-
-        $truePreference         = new Preference;
-        $truePreference->data   = true;
-        $secretPreference       = new Preference;
-        $secretPreference->data = 'JZMES376Z6YXY4QZ';
         $langPreference         = new Preference;
         $langPreference->data   = 'en_US';
 
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
         Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference);
 
         $response = $this->get(route('two-factor.lost'));
         $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController
-     */
-    public function testPostIndex(): void
-    {
-        $data = ['code' => '123456'];
-        Google2FA::shouldReceive('verifyKey')->andReturn(true)->once();
-        $this->session(['remember_login' => true]);
-
-        $this->be($this->user());
-        $response = $this->post(route('two-factor.post'), $data);
-        $response->assertStatus(302);
     }
 }

@@ -167,14 +167,7 @@ class ProfileControllerTest extends TestCase
         $this->mockDefaultSession();
         // mock stuff
         $userRepos = $this->mock(UserRepositoryInterface::class);
-
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
-
-        die('the references in this test to 2FA preferences must be refactored.');
-        Preferences::shouldReceive('delete')->withArgs(['twoFactorAuthEnabled'])->atLeast()->once();
-        Preferences::shouldReceive('delete')->withArgs(['twoFactorAuthSecret'])->atLeast()->once();
-
-
         $this->be($this->user());
         $response = $this->get(route('profile.delete-code'));
         $response->assertStatus(302);
@@ -211,17 +204,6 @@ class ProfileControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
         Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
-        //Preferences::shouldReceive('lastActivity')->once();
-
-        die('the references in this test to 2FA preferences must be refactored.');
-        $pref       = new Preference;
-        $pref->data = false;
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->atLeast()->once()->andReturn($pref);
-
-        $pref       = new Preference;
-        $pref->data = 'super-secret';
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->atLeast()->once()->andReturn($pref);
-
 
         $view       = new Preference;
         $view->data = '1M';
@@ -230,10 +212,6 @@ class ProfileControllerTest extends TestCase
         $lang       = new Preference;
         $lang->data = 'en_US';
         Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($lang)->atLeast()->once();
-
-//        $pref       = new Preference;
-//        $pref->data = 'EUR';
-//        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->atLeast()->once()->andReturn($pref);
 
         $list       = new Preference;
         $list->data = 50;
@@ -439,6 +417,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostCode(): void
     {
+        $this->mock(UserRepositoryInterface::class);
         Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mockDefaultSession();
 
@@ -449,11 +428,7 @@ class ProfileControllerTest extends TestCase
         $this->withoutMiddleware();
         $this->session(['two-factor-secret' => $secret]);
 
-        die('the references in this test to 2FA preferences must be refactored.');
-        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthEnabled', 1])->once();
-        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthSecret', $secret])->once();
         Preferences::shouldReceive('mark')->once();
-
         Google2FA::shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
 
         $data = [

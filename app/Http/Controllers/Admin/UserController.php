@@ -125,16 +125,10 @@ class UserController extends Controller
         $users        = $this->repository->all();
 
         // add meta stuff.
-        die('the 2FA references here should be refactored.');
         $users->each(
             function (User $user) {
-                $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
-                $preferences   = app('preferences')->getArrayForUser($user, $list);
                 $user->isAdmin = $this->repository->hasRole($user, 'owner');
-                $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
-                $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
-                $user->has2FA  = ($is2faEnabled && $has2faSecret);
-                $user->prefs   = $preferences;
+                $user->has2FA  = null !== $user->mfa_secret;
             }
         );
 
