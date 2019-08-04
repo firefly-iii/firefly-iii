@@ -2,7 +2,7 @@
 TODO: reconcile
 TODO: hide and show columns
 -->
-<table class="table">
+<table class="table table-condensed table-hover">
     <thead>
     <tr>
         <td colspan="7" class="no-margin-pagination">{{ groups.render|raw }}</td>
@@ -80,7 +80,13 @@ TODO: hide and show columns
                     {% if transaction.reconciled %}
                         <i class="fa fa-check"></i>
                     {% endif %}
-                    <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">{{ transaction.description }}</a>
+                    {% if group.count == 1 %}
+                        <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
+                    {% endif %}
+                    {{ transaction.description }}
+                    {% if group.count == 1 %}
+                        </a>
+                    {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
                     {% if transaction.transaction_type_type == 'Deposit' %}

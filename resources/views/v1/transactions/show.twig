@@ -91,7 +91,7 @@
 
 
                         {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
-                            CLONE
+                            <!--CLONE-->
                             {#<a href="{{ route('transactions.clone', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a>#}
                         {% endif %}
                         {#
@@ -148,10 +148,10 @@
                             <td>
                                 {% for amount in amounts %}
                                     {% if type == 'Withdrawal' or type == 'Deposit' %}
-                                        {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }},
+                                        {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     {% elseif type == 'Transfer' %}
                                         <span class="text-info">
-                                        {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }},
+                                        {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
                                     {% endif %}
                                 {% endfor %}
