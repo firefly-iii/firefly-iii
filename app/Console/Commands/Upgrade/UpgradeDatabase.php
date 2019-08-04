@@ -65,7 +65,29 @@ class UpgradeDatabase extends Command
             'firefly-iii:bl-currency',
             'firefly-iii:cc-liabilities',
             'firefly-iii:back-to-journals',
-            'firefly-iii:rename-account-meta'
+            'firefly-iii:rename-account-meta',
+
+            // there are 13 verify commands.
+            'firefly-iii:fix-piggies',
+            'firefly-iii:create-link-types',
+            'firefly-iii:create-access-tokens',
+            'firefly-iii:remove-bills',
+            'firefly-iii:enable-currencies',
+            'firefly-iii:fix-transfer-budgets',
+            'firefly-iii:fix-uneven-amount',
+            'firefly-iii:delete-zero-amount',
+            'firefly-iii:delete-orphaned-transactions',
+            'firefly-iii:delete-empty-journals',
+            'firefly-iii:delete-empty-groups',
+            'firefly-iii:fix-account-types',
+            'firefly-iii:rename-meta-fields',
+
+            // two report commands
+            'firefly-iii:report-empty-objects',
+            'firefly-iii:report-sum',
+
+            // instructions
+            'firefly:instructions update',
         ];
         $args     = [];
         if ($this->option('force')) {
