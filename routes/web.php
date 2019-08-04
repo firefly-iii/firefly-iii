@@ -644,6 +644,7 @@ Route::group(
     Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
     Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+    Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
 
 }
 );

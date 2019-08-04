@@ -287,9 +287,10 @@ class ProfileController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
-        $subTitle   = $user->email;
-        $userId     = $user->id;
-        $enabled2FA = null !== $user->mfa_secret;
+        $subTitle       = $user->email;
+        $userId         = $user->id;
+        $enabled2FA     = null !== $user->mfa_secret;
+        $mfaBackupCount = count(Preferences::get('mfa_recovery', [])->data);
 
         // get access token or create one.
         $accessToken = app('preferences')->get('access_token', null);
@@ -298,7 +299,26 @@ class ProfileController extends Controller
             $accessToken = app('preferences')->set('access_token', $token);
         }
 
-        return view('profile.index', compact('subTitle', 'userId', 'accessToken', 'enabled2FA', 'loginProvider'));
+        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'loginProvider'));
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function newBackupCodes()
+    {
+        // generate recovery codes:
+        $recovery      = app(Recovery::class);
+        $recoveryCodes = $recovery->lowercase()
+                                  ->setCount(8)     // Generate 8 codes
+                                  ->setBlocks(2)    // Every code must have 7 blocks
+                                  ->setChars(6)    // Each block must have 16 chars
+                                  ->toArray();
+        $codes         = implode("\r\n", $recoveryCodes);
+
+        Preferences::set('mfa_recovery', $recoveryCodes);
+
+        return view('profile.new-backup-codes', compact('codes'));
     }
 
     /**

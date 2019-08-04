@@ -669,6 +669,14 @@ try {
         }
     );
 
+    Breadcrumbs::register(
+        'profile.new-backup-codes',
+        function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile.index'));
+        }
+    );
+
     // PROFILE
     Breadcrumbs::register(
         'profile.index',
