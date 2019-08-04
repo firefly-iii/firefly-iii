@@ -231,9 +231,13 @@ class ProfileController extends Controller
      */
     public function deleteCode()
     {
-        die('this method is deprecated.');
-        app('preferences')->delete('twoFactorAuthEnabled');
-        app('preferences')->delete('twoFactorAuthSecret');
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        $repository->setMFACode($user, null);
         session()->flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
         session()->flash('info', (string)trans('firefly.pref_two_factor_auth_remove_it'));
 
@@ -412,6 +416,9 @@ class ProfileController extends Controller
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
+
+        // make sure MFA is logged out.
+        Google2FA::logout();
 
         return redirect(route('profile.index'));
     }
