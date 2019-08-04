@@ -317,7 +317,7 @@ class ProfileController extends Controller
         $codes         = implode("\r\n", $recoveryCodes);
 
         Preferences::set('mfa_recovery', $recoveryCodes);
-
+        Preferences::mark();
         return view('profile.new-backup-codes', compact('codes'));
     }
 
