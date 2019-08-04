@@ -45,6 +45,7 @@ Route::group(
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Auth\LoginController@login');
 
+
     // Registration Routes...
     Route::get('register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
     Route::post('register', 'Auth\RegisterController@register');
@@ -75,16 +76,17 @@ Route::group(
 }
 );
 
-/**
- * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
- *
- */
+
+///**
+// * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+// *
+// */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'], function () {
-    Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
+    Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
     Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-
+    //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
+    //
 }
 );
 

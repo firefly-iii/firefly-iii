@@ -29,12 +29,85 @@ use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
+use PragmaRX\Google2FALaravel\Support\Authenticator;
+use Preferences;
 
 /**
  * Class TwoFactorController.
  */
 class TwoFactorController extends Controller
 {
+    /**
+     * @param Request $request
+     */
+    public function submitMFA(Request $request)
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaCode    = $request->get('one_time_password');
+
+        // is in history? then refuse to use it.
+        if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
+            $this->filterMFAHistory();
+            session()->flash('error', trans('firefly.wrong_mfa_code'));
+
+            return redirect(route('home'));
+        }
+
+        /** @var Authenticator $authenticator */
+        $authenticator = app(Authenticator::class)->boot($request);
+
+        if ($authenticator->isAuthenticated()) {
+            // save MFA in preferences
+            $this->addToMFAHistory($mfaCode);
+
+            // otp auth success!
+            return redirect(route('home'));
+        }
+        session()->flash('error', trans('firefly.wrong_mfa_code'));
+
+        return redirect(route('home'));
+    }
+
+    /**
+     * @param string $mfaCode
+     */
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
+
+        Preferences::set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
+    }
+
+    /**
+     * Remove old entries from the preferences array.
+     */
+    private function filterMFAHistory(): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $newHistory = [];
+        $now        = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($now - $time <= 300) {
+                $newHistory[] = [
+                    'time' => $time,
+                    'code' => $code,
+                ];
+            }
+        }
+        Preferences::set('mfa_history', $newHistory);
+    }
+
     /**
      * Show 2FA screen.
      *
@@ -116,5 +189,28 @@ class TwoFactorController extends Controller
         $request->session()->forget('remember_login');
 
         return redirect(route('home'))->withCookie($cookie);
+    }
+
+    /**
+     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
+     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
+     *
+     * @param string $mfaCode
+     * @param array  $mfaHistory
+     *
+     * @return bool
+     */
+    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
+    {
+        $now = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($code === $mfaCode && $now - $time <= 300) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
