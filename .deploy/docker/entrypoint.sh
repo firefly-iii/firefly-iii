@@ -2,8 +2,6 @@
 
 echo "Now in entrypoint.sh for Firefly III"
 
-lscpu
-
 # make sure the correct directories exists (suggested by @chrif):
 echo "Making directories..."
 mkdir -p $FIREFLY_PATH/storage/app/public
@@ -37,15 +35,12 @@ chmod -R 775 $FIREFLY_PATH/storage
 echo "Remove log file..."
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 
-#echo "Map environment variables on .env file..."
-#cat $FIREFLY_PATH/.deploy/docker/.env.docker | envsubst > $FIREFLY_PATH/.env
 echo "Dump auto load..."
 composer dump-autoload
 echo "Discover packages..."
 php artisan package:discover
 
 echo "Run various artisan commands..."
-#. $FIREFLY_PATH/.env
 if [[ -z "$DB_PORT" ]]; then
   if [[ $DB_CONNECTION == "pgsql" ]]; then
     DB_PORT=5432
