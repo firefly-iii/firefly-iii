@@ -64,6 +64,17 @@ class TwoFactorController extends Controller
             // otp auth success!
             return redirect(route('home'));
         }
+
+        // could be user has a backup code.
+        if ($this->isBackupCode($mfaCode)) {
+            $this->removeFromBackupCodes($mfaCode);
+            $authenticator->login();
+
+            session()->flash('info', trans('firefly.mfa_backup_code'));
+
+            return redirect(route('home'));
+        }
+
         session()->flash('error', trans('firefly.wrong_mfa_code'));
 
         return redirect(route('home'));
@@ -212,5 +223,34 @@ class TwoFactorController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * Checks if code is in users backup codes.
+     *
+     * @param string $mfaCode
+     *
+     * @return bool
+     */
+    private function isBackupCode(string $mfaCode): bool
+    {
+        $list = Preferences::get('mfa_recovery', [])->data;
+        if (in_array($mfaCode, $list, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove the used code from the list of backup codes.
+     *
+     * @param string $mfaCode
+     */
+    private function removeFromBackupCodes(string $mfaCode): void
+    {
+        $list    = Preferences::get('mfa_recovery', [])->data;
+        $newList = array_values(array_diff($list, [$mfaCode]));
+        Preferences::set('mfa_recovery', $newList);
     }
 }
