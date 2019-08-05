@@ -25,7 +25,7 @@ class CreateCostCenterTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cost_center_tables');
+        Schema::dropIfExists('cost_centers');
         Schema::dropIfExists('cost_center_transaction');
         Schema::dropIfExists('cost_center_transaction_journal');        
     }
