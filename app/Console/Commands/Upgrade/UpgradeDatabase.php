@@ -52,6 +52,9 @@ class UpgradeDatabase extends Command
      */
     public function handle(): int
     {
+        $this->callInitialCommands();
+
+
         $commands = [
             // there are 12 upgrade commands.
             'firefly-iii:transaction-identifiers',
@@ -100,6 +103,17 @@ class UpgradeDatabase extends Command
             echo $result;
         }
 
+        // set new DB version.
+        // index will set FF3 version.
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
+
         return 0;
+    }
+
+    private function callInitialCommands(): void
+    {
+        Artisan::call('migrate', ['--seed' => true]);
+        Artisan::call('firefly-iii:decrypt-all');
+        Artisan::call('generate-keys');
     }
 }
