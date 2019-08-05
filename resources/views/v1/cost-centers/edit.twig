@@ -1,10 +1,8 @@
 {% extends "./layout/default" %}
-
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, costCenter) }}
 {% endblock %}
-
-{% block content %}
+{% block content %}    
     {{ Form.model(costCenter, {'class' : 'form-horizontal','id' : 'update','url' : route('cost-centers.update',costCenter.id)}) }}
     <input type="hidden" name="id" value="{{ costCenter.id }}"/>
     <div class="row">

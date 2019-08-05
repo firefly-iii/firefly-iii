@@ -322,6 +322,7 @@ return [
         'budget'            => \FireflyIII\Models\Budget::class,
         'budgetLimit'       => \FireflyIII\Models\BudgetLimit::class,
         'category'          => \FireflyIII\Models\Category::class,
+        'costCenter'        => \FireflyIII\Models\CostCenter::class,
         'linkType'          => \FireflyIII\Models\LinkType::class,
         'transactionType'   => \FireflyIII\Models\TransactionType::class,
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,

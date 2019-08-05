@@ -51,7 +51,7 @@ class CostCenterServiceProvider extends ServiceProvider
                 /** @var CostCenterRepository $repository */
                 $repository = app(CostCenterRepository::class);
                 if ($app->auth->check()) {
-                    $repository->setUser(auth()->user());
+                    $repository->setUser(auth()->user());                    
                 }
 
                 return $repository;
