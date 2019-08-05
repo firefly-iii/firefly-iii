@@ -28,12 +28,14 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\CostCenter\CostCenterRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -191,6 +193,75 @@ trait PeriodOverview
                     'earned'       => $earned,
                     'transferred'  => $transferred,
                     'route'        => route('categories.show', [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                ]
+            );
+        }
+        $cache->store($entries);
+
+        return $entries;
+    }
+
+    /**
+     * Overview for single cost center. Has been refactored recently.
+     *
+     * @param CostCenter $costCenter
+     * @param Carbon   $date
+     *
+     * @return Collection
+     */
+    protected function getCostCenterPeriodOverview(CostCenter $costCenter, Carbon $date): Collection
+    {
+        /** @var JournalRepositoryInterface $journalRepository */
+        $journalRepository = app(JournalRepositoryInterface::class);
+        $range             = app('preferences')->get('viewRange', '1M')->data;
+        $first             = $journalRepository->firstNull();
+        $end               = null === $first ? new Carbon : $first->date;
+        $start             = clone $date;
+
+        if ($end < $start) {
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+        }
+
+        // properties for entries with their amounts.
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($range);
+        $cache->addProperty('cost-center-show-period-entries');
+        $cache->addProperty($costCenter->id);
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        /** @var array $dates */
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
+        /** @var CostCenterRepositoryInterface $costCenterRepository */
+        $costCenterRepository = app(CostCenterRepositoryInterface::class);
+
+        foreach ($dates as $currentDate) {
+            $spent  = $costCenterRepository->spentInPeriodCollection(new Collection([$costCenter]), new Collection, $currentDate['start'], $currentDate['end']);
+            $earned = $costCenterRepository->earnedInPeriodCollection(new Collection([$costCenter]), new Collection, $currentDate['start'], $currentDate['end']);
+            $spent  = $this->groupByCurrency($spent);
+            $earned = $this->groupByCurrency($earned);
+
+            // amount transferred
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCostCenter($costCenter)
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
+            $transferred = $this->groupByCurrency($collector->getTransactions());
+
+            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $entries->push(
+                [
+                    'transactions' => 0,
+                    'title'        => $title,
+                    'spent'        => $spent,
+                    'earned'       => $earned,
+                    'transferred'  => $transferred,
+                    'route'        => route('cost-centers.show', [$costCenter->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
                 ]
             );
         }

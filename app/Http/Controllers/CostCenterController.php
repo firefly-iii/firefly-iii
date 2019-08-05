@@ -120,8 +120,6 @@ class CostCenterController extends Controller
      */
     public function edit(Request $request, CostCenter $costCenter)
     {
-        //$costCenter = $this->repository->getByIds([$request->route()->parameter('costCenter')])[0];
-
         $subTitle = (string)trans('firefly.edit_cost_center', ['name' => $costCenter->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

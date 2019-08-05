@@ -28,6 +28,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\CostCenter\CostCenterRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -114,11 +115,11 @@ trait AutoCompleteCollector
     /**
      * @return array
      */
-    protected function getCategories(): array
+    protected function getCostCenters(): array
     {
-        $repository = app(CategoryRepositoryInterface::class);
-
-        return array_unique($repository->getCategories()->pluck('name')->toArray());
+        $repository = app(CostCenterRepositoryInterface::class);
+        
+        return array_unique($repository->getCostCenters()->pluck('name')->toArray());
     }
 
     /**

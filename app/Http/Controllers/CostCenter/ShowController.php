@@ -56,7 +56,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.cost_centers'));
-                app('view')->share('mainTitleIcon', 'fa-bar-chart');
+                app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository = app(CostCenterRepositoryInterface::class);
 
                 return $next($request);
@@ -83,11 +83,11 @@ class ShowController extends Controller
         $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
-        $subTitleIcon = 'fa-bar-chart';
+        $subTitleIcon = 'fa-pie-chart';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $periods      = $this->getNoCostCenterPeriodOverview($costCenter, $end);
-        $path         = route('cost-center.show', [$costCenter->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $periods      = $this->getCostCenterPeriodOverview($costCenter, $end);
+        $path         = route('cost-centers.show', [$costCenter->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
             'firefly.journals_in_period_for_cost_center',
             ['name' => $costCenter->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
@@ -104,7 +104,7 @@ class ShowController extends Controller
 
         Log::debug('End of show()');
 
-        return view('cost-center.show', compact('costCenter', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('cost-centers.show', compact('costCenter', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -118,7 +118,7 @@ class ShowController extends Controller
     public function showAll(Request $request, CostCenter $costCenter)
     {
         // default values:
-        $subTitleIcon = 'fa-bar-chart';
+        $subTitleIcon = 'fa-pie-chart';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $start        = null;
@@ -130,7 +130,7 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start = $first ?? new Carbon;
         $end   = new Carbon;
-        $path  = route('cost-center.show.all', [$costCenter->id]);
+        $path  = route('cost-centers.show.all', [$costCenter->id]);
 
 
         /** @var TransactionCollectorInterface $collector */
@@ -141,6 +141,6 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
-        return view('cost-center.show', compact('costCenter', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('cost-centers.show', compact('costCenter', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 }

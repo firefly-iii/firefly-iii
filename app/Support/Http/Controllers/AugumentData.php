@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\CostCenter\CostCenterRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
@@ -131,6 +132,69 @@ trait AugumentData
                 $sum[$categoryId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
             );
             $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $transaction->transaction_amount);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Group by cost center (earnings).
+     *
+     * @param Collection $assets
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    protected function earnedByCostCenter(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
+        $collector->setOpposingAccounts($opposing)->withCostCenterInformation();
+        $set = $collector->getTransactions();
+        $sum = [];
+        // loop to support multi currency
+        foreach ($set as $transaction) {
+            $currencyId     = $transaction->transaction_currency_id;
+            $costCenterName = $transaction->transaction_cost_center_name;
+            $costCenterId   = (int)$transaction->transaction_cost_center_id;
+            // if null, grab from journal:
+            if (0 === $costCenterId) {
+                $costCenterName = $transaction->transaction_journal_cost_center_name;
+                $costCenterId   = (int)$transaction->transaction_journal_cost_center_id;
+            }
+
+            // if not set, set to zero:
+            if (!isset($sum[$costCenterId][$currencyId])) {
+                $sum[$costCenterId] = [
+                    'grand_total'  => '0',
+                    'name'         => $costCenterName,
+                    'per_currency' => [
+                        $currencyId => [
+                            'sum'      => '0',
+                            'cost_center' => [
+                                'id'   => $costCenterId,
+                                'name' => $costCenterName,
+                            ],
+                            'currency' => [
+                                'symbol' => $transaction->transaction_currency_symbol,
+                                'dp'     => $transaction->transaction_currency_dp,
+                            ],
+                        ],
+                    ],
+                ];
+            }
+
+            // add amount
+            $sum[$costCenterId]['per_currency'][$currencyId]['sum'] = bcadd(
+                $sum[$costCenterId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+            );
+            $sum[$costCenterId]['grand_total'] = bcadd($sum[$costCenterId]['grand_total'], $transaction->transaction_amount);
         }
 
         return $sum;
@@ -344,6 +408,30 @@ trait AugumentData
             }
         }
         $return[0] = (string)trans('firefly.no_category');
+
+        return $return;
+    }
+
+    /**
+     * Get the cost center names from a set of cost center ID's. Small helper function for some of the charts.
+     *
+     * @param array $costCenterIds
+     *
+     * @return array
+     */
+    protected function getCostCenterNames(array $costCenterIds): array // extract info from array.
+    {
+        /** @var CostCenterRepositoryInterface $repository */
+        $repository  = app(CostCenterRepositoryInterface::class);
+        $costCenters = $repository->getCostCenters();
+        $grouped     = $costCenters->groupBy('id')->toArray();
+        $return      = [];
+        foreach ($costCenterIds as $costCenterId) {
+            if (isset($grouped[$costCenterId])) {
+                $return[$costCenterId] = $grouped[$costCenterId][0]['name'];
+            }
+        }
+        $return[0] = (string)trans('firefly.no_cost_center');
 
         return $return;
     }

@@ -520,7 +520,7 @@ class TransactionCollector implements TransactionCollectorInterface
      *
      * @return TransactionCollectorInterface
      */
-    public function setCostCenters(Collection $costCenter): TransactionCollectorInterface
+    public function setCostCenters(Collection $costCenters): TransactionCollectorInterface
     {
         $costCenterIds = $costCenters->pluck('id')->toArray();
         if (0 !== \count($costCenterIds)) {

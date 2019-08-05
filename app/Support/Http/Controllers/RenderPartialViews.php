@@ -226,6 +226,57 @@ trait RenderPartialViews
     }
 
     /**
+     * View for transactions in a costCenter.
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    protected function costCenterEntry(array $attributes): string // generate view for report.
+    {
+        /** @var PopupReportInterface $popupHelper */
+        $popupHelper = app(PopupReportInterface::class);
+
+        /** @var CostCenterRepositoryInterface $CostCenterRepository */
+        $costCenterRepository = app(CostCenterRepositoryInterface::class);
+        $costCenter           = $costCenterRepository->findNull((int)$attributes['costCenterId']);
+
+        if (null === $costCenter) {
+            return 'This is an unknown cost center. Apologies.';
+        }
+
+        $journals = $popupHelper->byCategory($costCenter, $attributes);
+        try {
+            $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
+
+        return $view;
+    }
+
+    /**
+     * Get options for cost center report.
+     *
+     * @return string
+     */
+    protected function costCenterReportOptions(): string // render a view
+    {
+        /** @var CostCenterRepositoryInterface $repository */
+        $repository  = app(CostCenterRepositoryInterface::class);
+        $costCenters = $repository->getCostCenters();
+        try {
+            $result = view('reports.options.cost-center', compact('costCenters'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.costCenter: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns all the expenses that went to the given expense account.
      *
      * @param array $attributes
