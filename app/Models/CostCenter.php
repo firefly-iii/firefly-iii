@@ -47,7 +47,7 @@ class CostCenter extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'cost_center';
+    protected $table = 'cost_centers';
 
     /**
      * The attributes that should be casted to native types.
