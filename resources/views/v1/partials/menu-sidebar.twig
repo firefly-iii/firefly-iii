@@ -45,6 +45,12 @@
             <i class="fa fa-bar-chart fa-fw"></i>
             <span>{{ 'categories'|_ }}</span>
         </a>
+    </li>    
+    <li class="{{ activeRoutePartial('cost-centers') }}">
+        <a href="{{ route('cost-centers.index') }}">
+            <i class="fa fa-pie-chart fa-fw"></i>
+            <span>{{ 'cost_centers'|_ }}</span>
+        </a>
     </li>
     <li class="{{ activeRoutePartial('tags') }}">
         <a href="{{ route('tags.index') }}">

@@ -1,0 +1,44 @@
+<div style="padding-left:8px;">
+    {{ costCenters.render|raw }}
+</div>
+<table class="table table-hover sortable">
+    <thead>
+        <tr>
+            <th data-defaultsort="disabled">&nbsp;</th>
+            <th data-defaultsign="az">{{ trans('list.name') }}</th>
+            <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>&nbsp;</td>
+        <td><a href="{{ route('cost-centers.no-cost-center') }}"><em>{{ 'without_cost_center'|_ }}</em></a></td>
+        <td class="hidden-sm hidden-xs">&nbsp;</td>
+    </tr>
+    {% for costCenter in costCenters %}
+        <tr>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('cost-centers.edit', costCenter.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('cost-centers.delete', costCenter.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
+            </td>
+            <td data-value="{{ costCenter.name }}">
+                <a href="{{ route('cost-centers.show', costCenter.id) }}" title="{{ costCenter.name }}">{{ costCenter.name }}</a>
+            </td>
+            {% if costCenter.lastActivity %}
+                <td class="hidden-sm hidden-xs" data-value="{{ costCenter.lastActivity.format('Y-m-d H-i-s') }}">
+                    {{ costCenter.lastActivity.formatLocalized(monthAndDayFormat) }}
+                </td>
+            {% else %}
+                <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">
+                    <em>{{ 'never'|_ }}</em>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div style="padding-left:8px;">
+    {{ costCenters.render|raw }}
+</div>

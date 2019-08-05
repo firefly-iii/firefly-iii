@@ -1,0 +1,49 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    {% if costCenters.count > 0 %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'cost_centers'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <div class="btn-group">
+                        <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ route('cost-centers.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_cost_center'|_ }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="box-body no-padding">
+                <div style="padding:8px;">
+                    <a class="btn btn-success" href="{{ route('cost-centers.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_cost_center'|_ }}</a>
+                </div>
+                {% include 'list/cost-centers' %}
+            </div>
+            <div class="box-footer">
+                <a class="btn btn-success" href="{{ route('cost-centers.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_cost_center'|_ }}</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% else %}
+        {% include 'partials.empty' with {what: 'default', type: 'cost-centers',route: route('cost-centers.create')} %}
+    {% endif %}
+{% endblock %}
+
+{% block styles %}
+    <link href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/categories/index.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
