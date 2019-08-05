@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Http\Request;
 
 /**
  * Class CreateController
@@ -75,21 +74,19 @@ class CreateController extends Controller
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $defaultCurrency      = app('amount')->getDefaultCurrency();
+        $accountToTypes = config('firefly.account_to_transaction');
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $previousUri = $this->rememberPreviousUri('transactions.create.uri');
+
         session()->put('preFilled', $preFilled);
 
-        // put previous url in session if not redirect from store (not "create another").
-        if (true !== session('transactions.create.fromStore')) {
-            $this->rememberPreviousUri('transactions.create.uri');
-        }
-        session()->forget('transactions.create.fromStore');
 
         return view(
-            'transactions.create',
-            compact('subTitleIcon', 'cash',
-                    'objectType', 'subTitle', 'defaultCurrency',
-                    'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes')
+            'transactions.create', compact(
+                                     'subTitleIcon', 'cash', 'objectType', 'subTitle', 'defaultCurrency', 'previousUri', 'optionalFields', 'preFilled',
+                                     'allowedOpposingTypes',
+                                     'accountToTypes'
+                                 )
         );
     }
 }

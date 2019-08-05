@@ -27,6 +27,7 @@ use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Installer;
+use FireflyIII\Http\Middleware\InterestingMessage;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
@@ -155,11 +156,11 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
-                //AuthenticateTwoFactor::class,
                 MFAMiddleware::class,
                 Range::class,
                 Binder::class,
                 CreateFreshApiToken::class,
+                InterestingMessage::class,
             ],
             // MUST be logged in
             // MUST have 2fa

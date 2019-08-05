@@ -149,20 +149,25 @@ trait UserNavigation
     }
 
     /**
-     * Remember previous URL.
-     *
      * @param string $identifier
+     *
+     * @return string|null
      */
-    protected function rememberPreviousUri(string $identifier): void
+    protected function rememberPreviousUri(string $identifier): ?string
     {
+        $return = null;
         /** @var ViewErrorBag $errors */
         $errors = session()->get('errors');
         if (null === $errors || (null !== $errors && 0 === $errors->count())) {
-            $url = app('url')->previous();
-            session()->put($identifier, $url);
+            $return = app('url')->previous();
+
+            // TODO URL might not be one we *want* to remember.
+
+            session()->put($identifier, $return);
             //Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
             //return;
         }
         //Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
+        return $return;
     }
 }

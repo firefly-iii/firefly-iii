@@ -411,8 +411,9 @@
                         button.prop("disabled", false);
                     }
                 } else {
-                    console.log('Will redirect to transaction.');
-                    window.location.href = 'transactions/show/' + groupId + '?message=created';
+                    console.log('Will redirect to previous URL. (' + previousUri + ')');
+                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=created';
+                    //window.location.href = 'transactions/show/' + groupId + '?message=created';
                 }
             },
 

@@ -72,11 +72,9 @@ class EditController extends Controller
         $accountToTypes       = config('firefly.account_to_transaction');
         $defaultCurrency      = app('amount')->getDefaultCurrency();
         $cash                 = $repository->getCashAccount();
+        $previousUri          = $this->rememberPreviousUri('transactions.edit.uri');
 
-        return view('transactions.edit', compact('cash', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency'
-
-        ));
-
+        return view('transactions.edit', compact('cash', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency', 'previousUri'));
     }
 
 }

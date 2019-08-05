@@ -627,7 +627,7 @@
                     this.error_message = '';
                     button.prop("disabled", false);
                 } else {
-                    window.location.href = 'transactions/show/' + groupId + '?message=updated';
+                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=updated';
                 }
             },
 
