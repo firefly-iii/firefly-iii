@@ -40,6 +40,7 @@ use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -523,7 +524,7 @@ class TransactionCollector implements TransactionCollectorInterface
     {
         $costCenterIds = $costCenters->pluck('id')->toArray();
         if (0 !== \count($costCenterIds)) {
-            $this->joinCategoryTables();
+            $this->joinCostCenterTables();
 
             $this->query->where(
                 function (EloquentBuilder $q) use ($costCenterIds) {
@@ -542,8 +543,8 @@ class TransactionCollector implements TransactionCollectorInterface
      * @return TransactionCollectorInterface
      */
     public function setCostCenter(CostCenter $costCenter): TransactionCollectorInterface
-    {
-        $this->joinCategoryTables();
+    {        
+        $this->joinCostCenterTables();
 
         $this->query->where(
             function (EloquentBuilder $q) use ($costCenter) {

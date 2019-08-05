@@ -30,6 +30,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
@@ -502,13 +503,93 @@ try {
         }
     );
 
-
     Breadcrumbs::register(
         'categories.no-category.all',
         function (BreadcrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('categories.index');
             $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
             $breadcrumbs->push(trans('firefly.everything'), route('categories.no-category.all'));
+        }
+    );
+
+    // COST CENTERS
+    Breadcrumbs::register(
+        'cost-centers.index',
+        function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('firefly.cost_centers'), route('cost-centers.index'));
+        }
+    );
+    Breadcrumbs::register(
+        'cost-centers.create',
+        function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('cost-centers.index');
+            $breadcrumbs->push(trans('firefly.new_cost_center'), route('cost-centers.create'));
+        }
+    );
+
+    Breadcrumbs::register(
+        'cost-centers.edit',
+        function (BreadcrumbsGenerator $breadcrumbs, CostCenter $costCenter) {
+            $breadcrumbs->parent('cost-centers.show.all', $costCenter);
+            $breadcrumbs->push(trans('firefly.edit_cost_center', ['name' => limitStringLength($costCenter->name)]), route('cost-centers.edit', [$costCenter->id]));
+        }
+    );
+    Breadcrumbs::register(
+        'cost-centers.delete',
+        function (BreadcrumbsGenerator $breadcrumbs, CostCenter $costCenter) {
+            $breadcrumbs->parent('cost-centers.show', $costCenter);
+            $breadcrumbs->push(trans('firefly.delete_cost_center', ['name' => limitStringLength($costCenter->name)]), route('cost-centers.delete', [$costCenter->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'cost-centers.show',
+        function (BreadcrumbsGenerator $breadcrumbs, CostCenter $costCenter, Carbon $start = null, Carbon $end = null) {
+            $breadcrumbs->parent('cost-centers.index');
+            $breadcrumbs->push(limitStringLength($costCenter->name), route('cost-centers.show', [$costCenter->id]));
+            if (null !== $start && null !== $end) {
+                $title = trans(
+                    'firefly.between_dates_breadcrumb',
+                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+                );
+                $breadcrumbs->push($title, route('cost-centers.show', [$costCenter->id]));
+            }
+        }
+    );
+
+    Breadcrumbs::register(
+        'cost-centers.show.all',
+        function (BreadcrumbsGenerator $breadcrumbs, CostCenter $costCenter) {
+            $breadcrumbs->parent('cost-centers.index');
+            $breadcrumbs->push(limitStringLength($costCenter->name), route('cost-centers.show', [$costCenter->id]));
+            $breadcrumbs->push(trans('firefly.everything'), route('cost-centers.show.all', [$costCenter->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'cost-centers.no-cost-center',
+        function (BreadcrumbsGenerator $breadcrumbs, Carbon $start = null, Carbon $end = null) {
+            $breadcrumbs->parent('cost-centers.index');
+            $breadcrumbs->push(trans('firefly.journals_without_cost_center'), route('cost-centers.no-cost-center'));
+            if (null !== $start && null !== $end) {
+                $title = trans(
+                    'firefly.between_dates_breadcrumb',
+                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+                );
+                $breadcrumbs->push($title, route('cost-centers.no-cost-center'));
+            }
+        }
+    );
+
+    Breadcrumbs::register(
+        'cost-centers.no-cost-center.all',
+        function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('cost-centers.index');
+            $breadcrumbs->push(trans('firefly.journals_without_cost_center'), route('cost-centers.no-cost-center'));
+            $breadcrumbs->push(trans('firefly.everything'), route('cost-centers.no-cost-center.all'));
         }
     );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * CenterCostFormRequest.php
+ * CostCenterFormRequest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -25,9 +25,9 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\CostCenter;
 
 /**
- * Class CenterCostFormRequest.
+ * Class CostCenterFormRequest.
  */
-class CenterCostFormRequest extends Request
+class CostCenterFormRequest extends Request
 {
     /**
      * Verify the request.
@@ -45,7 +45,7 @@ class CenterCostFormRequest extends Request
      *
      * @return array
      */
-    public function getCenterCostData(): array
+    public function getCostCenterData(): array
     {
         return [
             'name' => $this->string('name'),
@@ -60,8 +60,8 @@ class CenterCostFormRequest extends Request
     public function rules(): array
     {
         $nameRule = 'required|between:1,100|uniqueObjectForUser:cost_centers,name';
-        /** @var CenterCost $centerCost */
-        $costCenter = $this->route()->parameter('center_cost');
+        /** @var CostCenter $costCenter */
+        $costCenter = $this->route()->parameter('costCenter');
 
         if (null !== $costCenter) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:cost_centers,name,' . $costCenter->id;
