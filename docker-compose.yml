@@ -11,7 +11,7 @@ services:
       - firefly_iii_net
     ports: 
       - "80:80"
-    env_file: docker-variables.txt
+    env_file: .env
     volumes: 
       - 
         source: firefly_iii_export
