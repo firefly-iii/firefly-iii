@@ -96,12 +96,13 @@ class BulkController extends Controller
      */
     public function update(BulkEditJournalRequest $request)
     {
-        $journalIds     = $request->get('journals');
-        $journalIds     = \is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int)$request->get('ignore_category');
-        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
-        $ignoreTags     = 1 === (int)$request->get('ignore_tags');
-        $count          = 0;
+        $journalIds         = $request->get('journals');
+        $journalIds         = \is_array($journalIds) ? $journalIds : [];
+        $ignoreCategory     = 1 === (int)$request->get('ignore_category');
+        $ignoreCostCenter   = 1 === (int)$request->get('ignore_cost_center');
+        $ignoreBudget       = 1 === (int)$request->get('ignore_budget');
+        $ignoreTags         = 1 === (int)$request->get('ignore_tags');
+        $count              = 0;
 
         foreach ($journalIds as $journalId) {
             $journal = $this->repository->findNull((int)$journalId);
@@ -117,6 +118,13 @@ class BulkController extends Controller
                 Log::debug(sprintf('Set category to %s', $request->string('category')));
 
                 $this->repository->updateCategory($journal, $request->string('category'));
+            }
+
+            // update cost center if not told to ignore
+            if (false === $ignoreCostCenter) {
+                Log::debug(sprintf('Set cost center to %s', $request->string('cost_center')));
+
+                $this->repository->updateCostCenter($journal, $request->string('cost_center'));
             }
 
             // update budget if not told to ignore (and is withdrawal)

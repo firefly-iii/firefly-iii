@@ -108,6 +108,7 @@ return [
     'book_date'                   => 'Data reserva',
     'process_date'                => 'Data de processamento',
     'category'                    => 'Categoria',
+    'cost_center'                 => 'Centro de custo',
     'tags'                        => 'Etiquetas',
     'deletePermanently'           => 'Apagar permanentemente',
     'cancel'                      => 'Cancelar',

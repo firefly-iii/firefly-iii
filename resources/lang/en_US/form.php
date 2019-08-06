@@ -108,6 +108,7 @@ return [
     'book_date'                   => 'Book date',
     'process_date'                => 'Processing date',
     'category'                    => 'Category',
+    'cost_center'                 => 'Cost center',
     'tags'                        => 'Tags',
     'deletePermanently'           => 'Delete permanently',
     'cancel'                      => 'Cancel',

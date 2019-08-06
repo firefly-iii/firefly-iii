@@ -88,6 +88,8 @@ class JournalFormRequest extends Request
                     'budget_name'           => null,
                     'category_id'           => null,
                     'category_name'         => $this->string('category'),
+                    'cost_center_id'        => null,
+                    'cost_center_name'      => $this->string('cost_center'),
                     'source_id'             => $this->integer('source_id'),
                     'source_name'           => $this->string('source_name'),
                     'destination_id'        => $this->integer('destination_id'),

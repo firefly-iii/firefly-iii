@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Twig;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -98,6 +99,7 @@ class Journal extends Twig_Extension
             $this->getDestinationAccount(),
             $this->journalBudgets(),
             $this->journalCategories(),
+            $this->journalCostCenters(),
             new Twig_SimpleFunction('journalGetMetaField', [TransactionJournalExtension::class, 'getMetaField']),
             new Twig_SimpleFunction('journalHasMeta', [TransactionJournalExtension::class, 'hasMetaField']),
             new Twig_SimpleFunction('journalGetMetaDate', [TransactionJournalExtension::class, 'getMetaDate']),
@@ -214,6 +216,48 @@ class Journal extends Twig_Extension
                 }
 
                 $string = implode(', ', array_unique($categories));
+                $cache->store($string);
+
+                return $string;
+            }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalCostCenters(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalCostCenters',
+            function (TransactionJournal $journal): string {
+                $cache = new CacheProperties;
+                $cache->addProperty($journal->id);
+                $cache->addProperty('transaction-journal');
+                $cache->addProperty('cost-center-string');
+                if ($cache->has()) {
+                    return $cache->get(); // @codeCoverageIgnore
+                }
+                $costCenters = [];
+                // get all cost centers for the journal itself (easy):
+                foreach ($journal->costCenters as $costCenter) {
+                    $costCenters[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($costCenter->name), route('cost-centers.show', $costCenter->id));
+                }
+                if (0 === \count($costCenters)) {
+                    $set = CostCenter::distinct()->leftJoin('cost_center_transaction', 'cost_centers.id', '=', 'cost_center_transaction.cost_center_id')
+                                   ->leftJoin('transactions', 'cost_center_transaction.transaction_id', '=', 'transactions.id')
+                                   ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->where('cost_centers.user_id', $journal->user_id)
+                                   ->where('transaction_journals.id', $journal->id)
+                                   ->whereNull('transactions.deleted_at')
+                                   ->get(['cost_centers.*']);
+                    /** @var CostCenter $costCenter */
+                    foreach ($set as $costCenter) {
+                        $costCenters[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($costCenter->name), route('cost-centers.show', $costCenter->id));
+                    }
+                }
+
+                $string = implode(', ', array_unique($costCenters));
                 $cache->store($string);
 
                 return $string;

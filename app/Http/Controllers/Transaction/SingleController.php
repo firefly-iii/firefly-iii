@@ -95,11 +95,12 @@ class SingleController extends Controller
      */
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source       = $this->repository->getJournalSourceAccounts($journal)->first();
-        $destination  = $this->repository->getJournalDestinationAccounts($journal)->first();
-        $budgetId     = $this->repository->getJournalBudgetId($journal);
-        $categoryName = $this->repository->getJournalCategoryName($journal);
-        $tags         = implode(',', $this->repository->getTags($journal));
+        $source         = $this->repository->getJournalSourceAccounts($journal)->first();
+        $destination    = $this->repository->getJournalDestinationAccounts($journal)->first();
+        $budgetId       = $this->repository->getJournalBudgetId($journal);
+        $categoryName   = $this->repository->getJournalCategoryName($journal);
+        $costCenterName = $this->repository->getJournalCostCenter($journal);
+        $tags           = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
@@ -124,6 +125,7 @@ class SingleController extends Controller
             'date'                      => (new Carbon())->format('Y-m-d'),
             'budget_id'                 => $budgetId,
             'category'                  => $categoryName,
+            'cost_center'               => $costCenterName,
             'tags'                      => $tags,
             'interest_date'             => $this->repository->getMetaField($journal, 'interest_date'),
             'book_date'                 => $this->repository->getMetaField($journal, 'book_date'),
@@ -311,6 +313,7 @@ class SingleController extends Controller
             'book_date'            => $repository->getJournalDate($journal, 'book_date'),
             'process_date'         => $repository->getJournalDate($journal, 'process_date'),
             'category'             => $repository->getJournalCategoryName($journal),
+            'cost_center'          => $repository->getJournalCostCenter($journal),
             'budget_id'            => $repository->getJournalBudgetId($journal),
             'tags'                 => implode(',', $repository->getTags($journal)),
             'source_id'            => $sourceAccounts->first()->id,

@@ -140,6 +140,10 @@ class TransactionUpdateService
         $category = $this->findCategory($data['category_id'], $data['category_name']);
         $this->setCategory($transaction, $category);
 
+        // set cost center
+        $costCenter = $this->findCostCenter($data['cost_center_id'], $data['cost_center_name']);
+        $this->setCostCenter($transaction, $costCenter);
+
         return $transaction;
     }
 
@@ -172,6 +176,23 @@ class TransactionUpdateService
     {
         $found = $this->findCategory(0, $category);
         $this->setCategory($transaction, $found);
+
+        return $transaction;
+    }
+    
+
+    /**
+     * Update cost center for a journal.
+     *
+     * @param Transaction $transaction
+     * @param string      $costCenter
+     *
+     * @return Transaction
+     */
+    public function updateCostCenter(Transaction $transaction, string $costCenter): Transaction
+    {
+        $found = $this->findCostCenter(0, $costCenter);
+        $this->setCostCenter($transaction, $found);
 
         return $transaction;
     }

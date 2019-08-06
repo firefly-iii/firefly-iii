@@ -27,11 +27,13 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Factory\CostCenterFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -150,6 +152,22 @@ trait TransactionServiceTrait
     }
 
     /**
+     * @param int|null    $costCenterId
+     * @param null|string $costCenterName
+     *
+     * @return CostCenter|null
+     */
+    protected function findCostCenter(?int $costCenterId, ?string $costCenterName): ?CostCenter
+    {
+        Log::debug(sprintf('Going to find or create cost center #%d, with name "%s"', $costCenterId, $costCenterName));
+        /** @var CostCenterFactory $factory */
+        $factory = app(CostCenterFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->findOrCreate($costCenterId, $costCenterName);
+    }
+
+    /**
      * @param int|null    $currencyId
      * @param null|string $currencyCode
      *
@@ -177,7 +195,6 @@ trait TransactionServiceTrait
 
     }
 
-
     /**
      * @param Transaction   $transaction
      * @param Category|null $category
@@ -193,6 +210,18 @@ trait TransactionServiceTrait
 
     }
 
+    /**
+     * @param Transaction       $transaction
+     * @param CostCenter|null   $costCenter
+     */
+    protected function setCostCenter(Transaction $transaction, ?CostCenter $costCenter): void
+    {
+        if (null === $costCenter) {
+            $transaction->costCenters()->sync([]);
+            return;
+        }
+        $transaction->costCenters()->sync([$costCenter->id]);
+    }
 
     /**
      * @param Transaction $transaction

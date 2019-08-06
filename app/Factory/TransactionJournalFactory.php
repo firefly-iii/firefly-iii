@@ -92,7 +92,7 @@ class TransactionJournalFactory
         if (isset($data['transactions'][0]['amount']) && '' === $data['transactions'][0]['amount']) {
             Log::error('Empty amount in data', $data);
         }
-
+        
         // store basic transactions:
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);

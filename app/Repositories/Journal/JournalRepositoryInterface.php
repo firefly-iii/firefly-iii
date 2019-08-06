@@ -159,6 +159,15 @@ interface JournalRepositoryInterface
     public function getJournalCategoryName(TransactionJournal $journal): string;
 
     /**
+     * Return the name of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalCostCenter(TransactionJournal $journal): string;
+
+    /**
      * Return requested date as string. When it's a NULL return the date of journal,
      * otherwise look for meta field and return that one.
      *
@@ -368,6 +377,16 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal;
+    
+    /**
+     * Update cost center for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $costCenter
+     *
+     * @return TransactionJournal
+     */
+    public function updateCostCenter(TransactionJournal $journal, string $costCenter): TransactionJournal;
 
     /**
      * Update tag(s) for a journal.

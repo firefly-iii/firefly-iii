@@ -123,6 +123,9 @@ class JournalUpdateService
         // remove category from journal:
         $journal->categories()->sync([]);
 
+        // remove cost center from journal:
+        $journal->costCenters()->sync([]);
+
         // remove budgets from journal:
         $journal->budgets()->sync([]);
 
@@ -195,6 +198,30 @@ class JournalUpdateService
         }
         // make journal empty:
         $journal->categories()->sync([]);
+
+        return $journal;
+    }
+
+    /**
+     * Update cost center for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCostCenter(TransactionJournal $journal, string $costCenter): TransactionJournal
+    {
+        /** @var TransactionUpdateService $service */
+        $service = app(TransactionUpdateService::class);
+        $service->setUser($journal->user);
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $service->updateCostCenter($transaction, $costCenter);
+        }
+        // make journal empty:
+        $journal->costCenters()->sync([]);
 
         return $journal;
     }
