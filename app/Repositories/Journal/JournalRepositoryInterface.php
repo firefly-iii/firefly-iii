@@ -165,7 +165,7 @@ interface JournalRepositoryInterface
      *
      * @return string
      */
-    public function getJournalCostCenter(TransactionJournal $journal): string;
+    public function getJournalCostCenterName(TransactionJournal $journal): string;
 
     /**
      * Return requested date as string. When it's a NULL return the date of journal,

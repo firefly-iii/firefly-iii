@@ -66,6 +66,10 @@ class ImportTransaction
     public $categoryId;
     /** @var string */
     public $categoryName;
+    /** @var int */
+    public $costCenterId;
+    /** @var string */
+    public $costCenterName;
     /** @var string */
     public $currencyCode;
     /** @var int */
@@ -122,6 +126,7 @@ class ImportTransaction
         $this->billId            = 0;
         $this->currencyId        = 0;
         $this->categoryId        = 0;
+        $this->costCenterId      = 0;
         $this->foreignCurrencyId = 0;
         $this->opposingId        = 0;
 
@@ -149,6 +154,7 @@ class ImportTransaction
             'bill-name'             => 'billName',
             'budget-name'           => 'budgetName',
             'category-name'         => 'categoryName',
+            'cost-center-name'      => 'costCenterName',
             'currency-name'         => 'currencyName',
             'currency-code'         => 'currencyCode',
             'currency-symbol'       => 'currencySymbol',
@@ -172,6 +178,7 @@ class ImportTransaction
             'bill-id'             => 'billId',
             'budget-id'           => 'budgetId',
             'category-id'         => 'categoryId',
+            'cost-center-id'      => 'costCenterId',
             'currency-id'         => 'currencyId',
             'foreign-currency-id' => 'foreignCurrencyId',
             'opposing-id'         => 'opposingId',

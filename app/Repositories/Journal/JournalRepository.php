@@ -349,13 +349,13 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return string
      */
-    public function getJournalCostCenter(TransactionJournal $journal):string
+    public function getJournalCostCenterName(TransactionJournal $journal): string
     {
         $costCenter = $journal->costCenters()->first();
         if (null !== $costCenter) {
             return $costCenter->name;
         }
-
+        /** @noinspection NullPointerExceptionInspection */
         $costCenter = $journal->transactions()->first()->costCenters()->first();
         if (null !== $costCenter) {
             return $costCenter->name;
@@ -867,7 +867,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Update cost center for a journal.
+     * Update costCenter for a journal.
      *
      * @param TransactionJournal $journal
      * @param string             $costCenter

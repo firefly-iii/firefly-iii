@@ -179,10 +179,16 @@ class TransactionUpdateService
 
         return $transaction;
     }
+<<<<<<< HEAD
     
 
     /**
      * Update cost center for a journal.
+=======
+
+    /**
+     * Update costCenter for a journal.
+>>>>>>> f7a8c2b2e2c660bc1a2ca85414554071a6602710
      *
      * @param Transaction $transaction
      * @param string      $costCenter

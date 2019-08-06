@@ -157,9 +157,9 @@ trait TransactionServiceTrait
      *
      * @return CostCenter|null
      */
-    protected function findCostCenter(?int $costCenterId, ?string $costCenterName): ?CostCenter
+    protected function findCostCenter(?int $costCenterId, ?string $costCenterName): ?costCenter
     {
-        Log::debug(sprintf('Going to find or create cost center #%d, with name "%s"', $costCenterId, $costCenterName));
+        Log::debug(sprintf('Going to find or create costCenter #%d, with name "%s"', $costCenterId, $costCenterName));
         /** @var CostCenterFactory $factory */
         $factory = app(CostCenterFactory::class);
         $factory->setUser($this->user);
@@ -211,17 +211,20 @@ trait TransactionServiceTrait
     }
 
     /**
-     * @param Transaction       $transaction
-     * @param CostCenter|null   $costCenter
+     * @param Transaction   $transaction
+     * @param CostCenter|null $costCenter
      */
-    protected function setCostCenter(Transaction $transaction, ?CostCenter $costCenter): void
+    protected function setCostCenter(Transaction $transaction, ?costCenter $costCenter): void
     {
         if (null === $costCenter) {
             $transaction->costCenters()->sync([]);
+
             return;
         }
         $transaction->costCenters()->sync([$costCenter->id]);
+
     }
+
 
     /**
      * @param Transaction $transaction

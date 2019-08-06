@@ -260,6 +260,8 @@ class ImportableConverter
                     'budget_name'           => $importable->budgetName,
                     'category_id'           => $importable->categoryId,
                     'category_name'         => $importable->categoryName,
+                    'cost_center_id'        => $importable->costCenterId,
+                    'cost_center_name'      => $importable->costCenterName,
                     'source_id'             => $source->id,
                     'source_name'           => null,
                     'destination_id'        => $destination->id,

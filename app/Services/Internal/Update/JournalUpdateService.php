@@ -203,10 +203,10 @@ class JournalUpdateService
     }
 
     /**
-     * Update cost center for a journal.
+     * Update costCenter for a journal.
      *
      * @param TransactionJournal $journal
-     * @param string             $category
+     * @param string             $costCenter
      *
      * @return TransactionJournal
      */

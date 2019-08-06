@@ -99,7 +99,7 @@ class SingleController extends Controller
         $destination    = $this->repository->getJournalDestinationAccounts($journal)->first();
         $budgetId       = $this->repository->getJournalBudgetId($journal);
         $categoryName   = $this->repository->getJournalCategoryName($journal);
-        $costCenterName = $this->repository->getJournalCostCenter($journal);
+        $costCenterName = $this->repository->getJournalCostCenterName($journal);
         $tags           = implode(',', $this->repository->getTags($journal));
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
@@ -313,7 +313,7 @@ class SingleController extends Controller
             'book_date'            => $repository->getJournalDate($journal, 'book_date'),
             'process_date'         => $repository->getJournalDate($journal, 'process_date'),
             'category'             => $repository->getJournalCategoryName($journal),
-            'cost_center'          => $repository->getJournalCostCenter($journal),
+            'cost_center'          => $repository->getJournalCostCenterName($journal),
             'budget_id'            => $repository->getJournalBudgetId($journal),
             'tags'                 => implode(',', $repository->getTags($journal)),
             'source_id'            => $sourceAccounts->first()->id,

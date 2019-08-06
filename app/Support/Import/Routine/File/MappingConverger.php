@@ -150,6 +150,7 @@ class MappingConverger
             'currency-symbol'       => 'currency-id',
             'category-id'           => 'category-id',
             'category-name'         => 'category-id',
+            'cost-center-name'      => 'cost-center-id',
             'foreign-currency-id'   => 'foreign-currency-id',
             'foreign-currency-code' => 'foreign-currency-id',
             'opposing-id'           => 'opposing-id',
