@@ -270,6 +270,8 @@ return [
     'column_budget-name'              => 'Nome do Orçamento',
     'column_category-id'              => 'ID da Categoria (correspondente FF3)',
     'column_category-name'            => 'Nome da Categoria',
+    'column_cost-center-id'           => 'ID do Centro de custo (correspondente FF3)',
+    'column_cost-center-name'         => 'Nome do Centro de custo',
     'column_currency-code'            => 'Código da Moeda (ISO 4217)',
     'column_foreign-currency-code'    => 'Código de moeda estrangeira (ISO 4217)',
     'column_currency-id'              => 'ID da Moeda (correspondente FF3)',

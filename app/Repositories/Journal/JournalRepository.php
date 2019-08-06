@@ -343,6 +343,28 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return the name of the cost center linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalCostCenterName(TransactionJournal $journal): string
+    {
+        $costCenter = $journal->costCenters()->first();
+        if (null !== $costCenter) {
+            return $costCenter->name;
+        }
+        /** @noinspection NullPointerExceptionInspection */
+        $costCenter = $journal->transactions()->first()->costCenters()->first();
+        if (null !== $costCenter) {
+            return $costCenter->name;
+        }
+
+        return '';
+    }
+
+    /**
      * Return requested date as string. When it's a NULL return the date of journal,
      * otherwise look for meta field and return that one.
      *
@@ -843,6 +865,23 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $service->updateCategory($journal, $category);
     }
+
+    /**
+     * Update costCenter for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $costCenter
+     *
+     * @return TransactionJournal
+     */
+    public function updateCostCenter(TransactionJournal $journal, string $costCenter): TransactionJournal
+    {
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+
+        return $service->updateCostCenter($journal, $costCenter);
+    }
+
 
     /**
      * Update tag(s) for a journal.

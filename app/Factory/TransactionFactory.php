@@ -199,6 +199,11 @@ class TransactionFactory
         $this->setCategory($source, $category);
         $this->setCategory($dest, $category);
 
+        // set cost Center
+        $costCenter = $this->findCostCenter($data['cost_center_id'], $data['cost_center_name']);
+        $this->setCostCenter($source, $costCenter);
+        $this->setCostCenter($dest, $costCenter);
+
         return new Collection([$source, $dest]);
     }
 

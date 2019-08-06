@@ -199,4 +199,28 @@ class JournalUpdateService
         return $journal;
     }
 
+    /**
+     * Update costCenter for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $costCenter
+     *
+     * @return TransactionJournal
+     */
+    public function updateCostCenter(TransactionJournal $journal, string $costCenter): TransactionJournal
+    {
+        /** @var TransactionUpdateService $service */
+        $service = app(TransactionUpdateService::class);
+        $service->setUser($journal->user);
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $service->updateCostCenter($transaction, $costCenter);
+        }
+        // make journal empty:
+        $journal->costCenters()->sync([]);
+
+        return $journal;
+    }
+
 }

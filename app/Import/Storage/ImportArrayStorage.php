@@ -99,7 +99,7 @@ class ImportArrayStorage
         $this->setStatus('storing_data');
         $collection = $this->storeArray();
         $this->setStatus('stored_data');
-
+        
         // link tag:
         $this->setStatus('linking_to_tag');
         $this->linkToTag($collection);

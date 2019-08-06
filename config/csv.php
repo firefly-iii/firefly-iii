@@ -242,6 +242,20 @@ return [
             'field'           => 'category',
             'mapper'          => 'Categories',
         ],
+        'cost-center-id'          => [
+            'mappable'        => true,
+            'pre-process-map' => false,
+            'converter'       => 'CostCenterId',
+            'field'           => 'costCenter',
+            'mapper'          => 'cost_centers',
+        ],
+        'cost-center-name'           => [
+            'mappable'           => false,
+            'pre-process-map'    => false,            
+            'converter'          => 'CostCenterName',
+            'field'              => 'costCenter',
+            'mapper'             => 'cost_centers',
+        ],
         'tags-comma'           => [
             'mappable'           => false,
             'pre-process-map'    => true,

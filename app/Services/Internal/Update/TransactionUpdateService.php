@@ -175,4 +175,20 @@ class TransactionUpdateService
 
         return $transaction;
     }
+
+    /**
+     * Update costCenter for a journal.
+     *
+     * @param Transaction $transaction
+     * @param string      $costCenter
+     *
+     * @return Transaction
+     */
+    public function updateCostCenter(Transaction $transaction, string $costCenter): Transaction
+    {
+        $found = $this->findCostCenter(0, $costCenter);
+        $this->setCostCenter($transaction, $found);
+
+        return $transaction;
+    }
 }
