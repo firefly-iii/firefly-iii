@@ -145,7 +145,7 @@ class LinkController extends Controller
         $this->repository->storeLink($linkInfo, $other, $journal);
         session()->flash('success', (string)trans('firefly.journals_linked'));
 
-        return redirect(route('transactions.show', [$journal->id]));
+        return redirect(route('transactions.show', [$journal->transaction_group_id]));
     }
 
     /**
