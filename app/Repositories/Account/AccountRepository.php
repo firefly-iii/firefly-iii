@@ -129,6 +129,8 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
+        // TODO a loop like this is no longer necessary
+
         $accounts = $query->get(['accounts.*']);
         /** @var Account $account */
         foreach ($accounts as $account) {
