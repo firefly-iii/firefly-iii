@@ -115,6 +115,16 @@ trait AutoCompleteCollector
     /**
      * @return array
      */
+    protected function getCategories(): array
+    {
+        $repository = app(CategoryRepositoryInterface::class);
+        
+        return array_unique($repository->getCategories()->pluck('name')->toArray());
+    }
+
+    /**
+     * @return array
+     */
     protected function getCostCenters(): array
     {
         $repository = app(CostCenterRepositoryInterface::class);

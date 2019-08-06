@@ -114,6 +114,9 @@ class AutoCompleteController extends Controller
             case 'categories':
                 $unfiltered = $this->getCategories();
                 break;
+            case 'cost_centers':
+                $unfiltered = $this->getCostCenters();
+                break;
             case 'budgets':
                 $unfiltered = $this->getBudgets();
                 break;
