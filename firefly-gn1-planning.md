@@ -82,6 +82,8 @@ Planejamento de revisão do Firefly
 *   `/public/v1/js/ff/common/autocomplete.js`: funções para definir onde obter a lista de itens para autocomplete; 
 *   `/public/v1/js/ff/transacions/single/common.js`: chama a função de autocomplete para inicializar o componente; 
 *   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
+*   OK `/app/Support/Import/Placeholder/ImportTransaction.php`: Mapeamento dos campos informados no `.csv`; 
+*   OK `/app/Support/Binder/CostCenterList.php`: Binder para o mapeamento da lista; 
 
 #### Como funciona o mecanismo de view/template?
 
@@ -126,6 +128,73 @@ php artisan firefly:upgrade-database
 php artisan firefly:verify
 php artisan cache:clear
 ```
+
+### Importação do MsMoney
+
+#### Manipulação do arquivo .qif
+
+Para este processo é utilizado o arquivo em `/database/import/Convert-QifToCsv.psm1`. A saída esperada é um arquivo `.csv`.
+
+#### Importando dados
+
+A bilioteca `artisan` é utilizada para a importação do arquivo `.csv`.
+
+```bash
+ php artisan firefly:create-import file.csv config.json --start --token=
+```
+
+O token deve ser obtido no perfil do usuário.
+
+#### Configuração dos campos de importação
+
+Para a importação utilizando o command-line, é necessário criar um arquivo de configuração responsável por mapear os campos que serão inseridos em determinadas colunas do banco de dados. Ex.:
+
+```json
+{
+    "file-type": "csv",
+    "date-format": "d\/m\/Y",
+    "has-headers": false,
+    "delimiter": "|",
+    "apply-rules": false,
+    "specifics": [],
+    "import-account": 1,
+    "column-count": 8,
+    "column-roles": [
+        "date-transaction",
+        "amount",
+        "_ignore",
+        "opposing-name",
+        "_ignore",
+        "category-name",
+        "center-cost-name",
+        "description"
+    ],
+    "column-do-mapping": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ]
+}
+```
+
+O item `import-account` corresponde ao identificador no banco de dados para a conta que as transações serão vinculadas, ou seja, cada arquivo `.csv` deve ser obrigatoriamente de uma conta previamente cadastrada no sistema.
+
+#### Arquivos do sistema utilizados na importação
+
+*   `/app/Http/Controllers/Import/JobStatusController.php`
+*   `/app/Support/Import/Routine/File/CSVProcessor.php`
+*   `/app/Support/Import/Routine/File/MappingConverger.php`
+*   `/app/Support/Import/Routine/File/ImportableConverter.php`
+*   `/app/Repositories/Journal/JournalRepository.php`
+*   `/app/Services/Internal/Update/JournalUpdateService.php`
+*   `/app/Services/Internal/Update/TransactionUpdateService.php`
+*   `/app/Services/Internal/Support/TransactionServiceTrait.php`
+*   `/app/Factory/TransactionFactory.php`
 
 ## Segunda etapa
 
