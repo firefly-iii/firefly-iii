@@ -1043,6 +1043,7 @@ return [
     'reports_submit'                          => 'Visualizar relatório',
     'end_after_start_date'                    => 'Data de término do relatório deve ser depois da data de início.',
     'select_category'                         => 'Selecionar categoria(s)',
+    'select_cost_center'                      => 'Selecionar centro(s) de custo',
     'select_budget'                           => 'Selecionar orçamento(s).',
     'select_tag'                              => 'Selecionar tag(s).',
     'income_per_category'                     => 'Receitas por categoria',

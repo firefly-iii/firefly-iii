@@ -1,0 +1,50 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>{{ 'cost_centers'|_ }}</th>
+        <th style="text-align: right;">{{ 'earned'|_ }}</th>
+        <th style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set sumSpent = 0 %}
+    {% set sumEarned = 0 %}
+    {% for index, costCenter in report %}
+        {% set sumSpent = sumSpent + costCenter.spent %}
+        {% set sumEarned = sumEarned + costCenter.earned %}
+        {% if loop.index > listLength %}
+            <tr class="overListLength">
+        {% else %}
+            <tr>
+        {% endif %}
+        <td>
+            <a href="{{ route('categories.show', costCenter.id) }}">{{ costCenter.name }}</a>
+        </td>
+        <td style="text-align: right;">{{ costCenter.earned|formatAmount }}</td>
+        <td style="text-align: right;">{{ costCenter.spent|formatAmount }}</td>
+        <td style="width:20px;">
+            <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
+               data-location="category-entry" data-category-id="{{ costCenter.id }}"
+            ></i>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% if report|length > listLength %}
+        <tr>
+            <td colspan="3" class="active">
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    <tr>
+        <td><em>{{ 'sum'|_ }}</em></td>
+        <td style="text-align: right;">{{ sumEarned|formatAmount }}</td>
+        <td style="text-align: right;">{{ sumSpent|formatAmount }}</td>
+        <td>&nbsp;</td>
+    </tr>
+    </tfoot>
+</table>

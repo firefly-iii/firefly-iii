@@ -332,6 +332,85 @@ class AccountController extends Controller
 
 
     /**
+     * Expenses per cost center for one single account.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return JsonResponse
+     */
+    public function expenseCostCenter(Account $account, Carbon $start, Carbon $end): JsonResponse
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('chart.account.expense-cost-center');
+        if ($cache->has()) {
+            return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCostCenterInformation()->setTypes([TransactionType::WITHDRAWAL]);
+        $transactions   = $collector->getTransactions();
+        $result         = [];
+        $chartData      = [];
+        $costCenterIds  = [];
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $jrnlCatId       = (int)$transaction->transaction_journal_cost_center_id;
+            $transCatId      = (int)$transaction->transaction_cost_center_id;
+            $currencyName    = $transaction->transaction_currency_name;
+            $costCenterId    = max($jrnlCatId, $transCatId);
+            $combi           = $costCenterId . $currencyName;
+            $costCenterIds[] = $costCenterId;
+            if (!isset($result[$combi])) {
+                $result[$combi] = [
+                    'total'           => '0',
+                    'cost_center_id'  => $costCenterId,
+                    'currency'        => $currencyName,
+                    'currency_symbol' => $transaction->transaction_currency_symbol,
+                ];
+            }
+            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
+        }
+
+        $names = $this->getCostCenterNames($costCenterIds);
+
+        foreach ($result as $row) {
+            $costCenterId      = $row['cost_center_id'];
+            $name              = $names[$costCenterId] ?? '(unknown)';
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
+        }
+
+        $data = $this->generator->multiCurrencyPieChart($chartData);
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+    /**
+     * Expenses grouped by cost center for account.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return JsonResponse
+     */
+    public function expenseCostCenterAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
+        $end   = Carbon::now();
+
+        return $this->expenseCostCenter($account, $start, $end);
+    }
+
+
+    /**
      * Shows the balances for all the user's frontpage accounts.
      *
      * @param AccountRepositoryInterface $repository
@@ -433,6 +512,83 @@ class AccountController extends Controller
         $end   = Carbon::now();
 
         return $this->incomeCategory($account, $start, $end);
+    }
+
+
+    /**
+     * Shows all income per account for each cost center.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return JsonResponse
+     */
+    public function incomeCostCenter(Account $account, Carbon $start, Carbon $end): JsonResponse
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('chart.account.income-cost-center');
+        if ($cache->has()) {
+            return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+
+        // grab all journals:
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCostCenterInformation()->setTypes([TransactionType::DEPOSIT]);
+        $transactions  = $collector->getTransactions();
+        $result        = [];
+        $chartData     = [];
+        $costCenterIds = [];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $jrnlCatId       = (int)$transaction->transaction_journal_cost_center_id;
+            $transCatId      = (int)$transaction->transaction_cost_center_id;
+            $costCenterId    = max($jrnlCatId, $transCatId);
+            $currencyName    = $transaction->transaction_currency_name;
+            $combi           = $costCenterId . $currencyName;
+            $costCenterIds[] = $costCenterId;
+            if (!isset($result[$combi])) {
+                $result[$combi] = [
+                    'total'           => '0',
+                    'cost_center_id'  => $costCenterId,
+                    'currency'        => $currencyName,
+                    'currency_symbol' => $transaction->transaction_currency_symbol,
+                ];
+            }
+            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
+        }
+
+        $names = $this->getCostCenterNames($costCenterIds);
+        foreach ($result as $row) {
+            $costCenterId        = $row['cost_center_id'];
+            $name              = $names[$costCenterId] ?? '(unknown)';
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
+        }
+        $data = $this->generator->multiCurrencyPieChart($chartData);
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+    /**
+     * Shows the income grouped by cost center for an account, in all time.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return JsonResponse
+     */
+    public function incomeCostCenterAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
+        $end   = Carbon::now();
+
+        return $this->incomeCostCenter($account, $start, $end);
     }
 
 

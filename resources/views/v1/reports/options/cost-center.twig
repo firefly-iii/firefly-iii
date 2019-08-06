@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="inputCategories" class="col-sm-3 control-label">{{ 'select_cost_center'|_ }}</label>
+    <div class="col-sm-9">
+        <select id="inputCategories" name="costCenter[]" multiple="multiple" class="form-control">
+            {% for costCenter in costCenters %}
+                <option value="{{ costCenter.id }}" label="{{ costCenter.name }}">{{ costCenter.name }}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+</div>

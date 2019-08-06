@@ -278,6 +278,59 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows how much is spent per category.
+     *
+     * TODO this chart is not multi-currency aware.
+     *
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
+     *
+     * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function expenseCostCenter(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
+    {
+        $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
+        $cache         = new CacheProperties;
+        $cache->addProperty($budget->id);
+        $cache->addProperty($budgetLimitId);
+        $cache->addProperty('chart.budget.expense-cost-center');
+        if ($cache->has()) {
+            return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setBudget($budget)->withCostCenterInformation();
+        if (null !== $budgetLimit) {
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+        }
+
+        $transactions = $collector->getTransactions();
+        $result       = [];
+        $chartData    = [];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $jrnlCatId           = (int)$transaction->transaction_journal_cost_center_id;
+            $transCatId          = (int)$transaction->transaction_cost_center_id;
+            $costCenterId        = max($jrnlCatId, $transCatId);
+            $result[$costCenterId] = $result[$costCenterId] ?? '0';
+            $result[$costCenterId] = bcadd($transaction->transaction_amount, $result[$costCenterId]);
+        }
+
+        $names = $this->getCostCenterNames(array_keys($result));
+        foreach ($result as $costCenterId => $amount) {
+            $chartData[$names[$costCenterId]] = $amount;
+        }
+        $data = $this->generator->pieChart($chartData);
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+
+    /**
      * Shows how much is spent per expense account.
      *
      * TODO this chart is not multi-currency aware.
