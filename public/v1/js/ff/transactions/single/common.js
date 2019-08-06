@@ -57,6 +57,9 @@ function setCommonAutocomplete() {
     // do categories auto complete:
     initCategoryAC();
 
+    // do cost centers auto complete:
+    initCostCenterAC();
+
     // do tags auto complete:
     initTagsAC();
 }

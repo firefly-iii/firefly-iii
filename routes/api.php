@@ -159,6 +159,20 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cost_centers', 'as' => 'api.v1.cost_centers.'],
+    function () {
+
+        // CostCenter API routes:
+        Route::get('', ['uses' => 'CostCenterController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'CostCenterController@store', 'as' => 'store']);
+        Route::get('{costCenter}', ['uses' => 'CostCenterController@show', 'as' => 'show']);
+        Route::put('{costCenter}', ['uses' => 'CostCenterController@update', 'as' => 'update']);
+        Route::delete('{costCenter}', ['uses' => 'CostCenterController@delete', 'as' => 'delete']);
+        Route::get('{costCenter}/transactions', ['uses' => 'CostCenterController@transactions', 'as' => 'transactions']);
+    }
+);
+
 /**
  * CHART ROUTES
  */
@@ -197,7 +211,16 @@ Route::group(
     }
 );
 
+// Cost Centers
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/cost_center',
+     'as'         => 'api.v1.chart.cost_center.'],
+    function () {
 
+        // Overview API routes:
+        Route::get('overview', ['uses' => 'CostCenterController@overview', 'as' => 'overview']);
+    }
+);
 
 
 
