@@ -431,7 +431,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment = new Attachment; // create Attachment object.
         $attachment->user()->associate($job->user);
         $attachment->attachable()->associate($job);
-        $attachment->md5      = md5_file("D:\\transferencia\\Sites\\firefly-iii\\database\\import\\test-1.csv");
+        $attachment->md5      = md5_file($file->getRealPath());
         $attachment->filename = $name;
         $attachment->mime     = $file->getMimeType();
         $attachment->size     = $file->getSize();
