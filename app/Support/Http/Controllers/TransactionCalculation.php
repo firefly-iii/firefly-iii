@@ -156,6 +156,55 @@ trait TransactionCalculation
     }
 
     /**
+     * Get all expenses in a period for cost centers.
+     *
+     * @param Collection $accounts
+     * @param Collection $costCenters
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     *
+     *
+     */
+    protected function getExpensesInCostCenters(Collection $accounts, Collection $costCenters, Carbon $start, Carbon $end): Collection // get data + augument
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->setCostCenters($costCenters)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
+
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        return $collector->getTransactions();
+    }
+
+    /**
+     * Get all income for a period and a bunch of cost centers.
+     *
+     * @param Collection $accounts
+     * @param Collection $costCenters
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    protected function getIncomeForCostCenters(Collection $accounts, Collection $costCenters, Carbon $start, Carbon $end): Collection // get data + augument
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->setCostCenters($costCenters)->withOpposingAccount();
+
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
+        return $collector->getTransactions();
+    }
+
+    /**
      * Get the income for a set of accounts.
      *
      * @param Collection $accounts

@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\CostCenter\CostCenterRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -48,10 +49,11 @@ class MetaPieChart implements MetaPieChartInterface
     /** @var array The ways to group transactions, given the type of chart. */
     static protected $grouping
         = [
-            'account'  => ['opposing_account_id'],
-            'budget'   => ['transaction_journal_budget_id', 'transaction_budget_id'],
-            'category' => ['transaction_journal_category_id', 'transaction_category_id'],
-            'tag'      => [],
+            'account'    => ['opposing_account_id'],
+            'budget'     => ['transaction_journal_budget_id', 'transaction_budget_id'],
+            'category'   => ['transaction_journal_category_id', 'transaction_category_id'],
+            'costCenter' => ['transaction_journal_cost_center_id', 'transaction_cost_center_id'],
+            'tag'        => [],
         ];
     /** @var Collection Involved accounts. */
     protected $accounts;
@@ -59,6 +61,8 @@ class MetaPieChart implements MetaPieChartInterface
     protected $budgets;
     /** @var Collection The categories. */
     protected $categories;
+    /** @var Collection The costs centers. */
+    protected $costCenters;
     /** @var bool Collect other objects. */
     protected $collectOtherObjects = false;
     /** @var Carbon The end date./ */
@@ -66,10 +70,11 @@ class MetaPieChart implements MetaPieChartInterface
     /** @var array The repositories. */
     protected $repositories
         = [
-            'account'  => AccountRepositoryInterface::class,
-            'budget'   => BudgetRepositoryInterface::class,
-            'category' => CategoryRepositoryInterface::class,
-            'tag'      => TagRepositoryInterface::class,
+            'account'    => AccountRepositoryInterface::class,
+            'budget'     => BudgetRepositoryInterface::class,
+            'category'   => CategoryRepositoryInterface::class,
+            'costCenter' => CostCenterRepositoryInterface::class,
+            'tag'        => TagRepositoryInterface::class,
         ];
     /** @var Carbon The start date. */
     protected $start;
@@ -85,10 +90,11 @@ class MetaPieChart implements MetaPieChartInterface
      */
     public function __construct()
     {
-        $this->accounts   = new Collection;
-        $this->budgets    = new Collection;
-        $this->categories = new Collection;
-        $this->tags       = new Collection;
+        $this->accounts    = new Collection;
+        $this->budgets     = new Collection;
+        $this->categories  = new Collection;        
+        $this->costCenters = new Collection;
+        $this->tags        = new Collection;
 
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
@@ -184,6 +190,20 @@ class MetaPieChart implements MetaPieChartInterface
     public function setCategories(Collection $categories): MetaPieChartInterface
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * CostCenters setter.
+     *
+     * @param Collection $costCenters
+     *
+     * @return MetaPieChartInterface
+     */
+    public function setCostCenters(Collection $costCenters): MetaPieChartInterface
+    {
+        $this->costCenters = $costCenters;
 
         return $this;
     }
@@ -300,11 +320,13 @@ class MetaPieChart implements MetaPieChartInterface
 
         $collector->setBudgets($this->budgets);
         $collector->setCategories($this->categories);
+        $collector->setCostCenters($this->costCenters);
 
         // @codeCoverageIgnoreStart
         if ($this->tags->count() > 0) {
             $collector->setTags($this->tags);
             $collector->withCategoryInformation();
+            $collector->withCostCenterInformation();
             $collector->withBudgetInformation();
         }
 

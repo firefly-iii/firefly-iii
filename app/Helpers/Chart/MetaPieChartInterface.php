@@ -69,6 +69,15 @@ interface MetaPieChartInterface
     public function setCategories(Collection $categories): MetaPieChartInterface;
 
     /**
+     * CostCenters setter.
+     *
+     * @param Collection $costCenters
+     *
+     * @return MetaPieChartInterface
+     */
+    public function setCostCenters(Collection $costCenters): MetaPieChartInterface;
+
+    /**
      * Set if other objects should be collected.
      *
      * @param bool $collectOtherObjects

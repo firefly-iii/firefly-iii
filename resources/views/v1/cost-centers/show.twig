@@ -95,9 +95,9 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var current = '{{ route('chart.category.current', [costCenter.id]) }}';
-        var everything = '{{ route('chart.category.all', [costCenter.id]) }}';
-        var specific = '{{ route('chart.category.specific', [costCenter.id, start.format('Ymd')]) }}';
+        var current = '{{ route('chart.cost_center.current', [costCenter.id]) }}';
+        var everything = '{{ route('chart.cost_center.all', [costCenter.id]) }}';
+        var specific = '{{ route('chart.cost_center.specific', [costCenter.id, start.format('Ymd')]) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>

@@ -559,6 +559,29 @@ trait AugumentData
 
         return $grouped;
     }
+    
+    /**
+     * Group transactions by cost center.
+     *
+     * @param Collection $set
+     *
+     * @return array
+     */
+    protected function groupByCostCenter(Collection $set): array // filter + group data
+    {
+        // group by cost center ID:
+        $grouped = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $jrnlCatId              = (int)$transaction->transaction_journal_cost_center_id;
+            $transCatId             = (int)$transaction->transaction_cost_center_id;
+            $costCenterId           = max($jrnlCatId, $transCatId);
+            $grouped[$costCenterId] = $grouped[$costCenterId] ?? '0';
+            $grouped[$costCenterId] = bcadd($transaction->transaction_amount, $grouped[$costCenterId]);
+        }
+
+        return $grouped;
+    }
 
     /**
      * Group set of transactions by name of opposing account.

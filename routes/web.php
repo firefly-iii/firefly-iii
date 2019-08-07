@@ -440,6 +440,48 @@ Route::group(
 );
 
 /**
+ * Chart\Cost Center Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/cost_center', 'as' => 'chart.cost_center.'],
+    function () {
+
+        Route::get('frontpage', ['uses' => 'CostCenterController@frontPage', 'as' => 'frontpage']);
+        Route::get('period/{costCenter}', ['uses' => 'CostCenterController@currentPeriod', 'as' => 'current']);
+        Route::get('period/{costCenter}/{date}', ['uses' => 'CostCenterController@specificPeriod', 'as' => 'specific']);
+        Route::get('all/{costCenter}', ['uses' => 'CostCenterController@all', 'as' => 'all']);
+        Route::get(
+            'report-period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'CostCenterController@reportPeriodNoCostCenter', 'as' => 'period.no-cost-center']
+        );
+        Route::get('report-period/{costCenter}/{accountList}/{start_date}/{end_date}', ['uses' => 'CostCenterController@reportPeriod', 'as' => 'period']);
+
+        // these charts are used in reports (costCenter reports):
+        Route::get(
+            'costCenter/income/{accountList}/{costCenterList}/{start_date}/{end_date}/{others}',
+            ['uses' => 'CostCenterReportController@costCenterIncome', 'as' => 'cost-center-income']
+        );
+        Route::get(
+            'costCenter/expense/{accountList}/{costCenterList}/{start_date}/{end_date}/{others}',
+            ['uses' => 'CostCenterReportController@costCenterExpense', 'as' => 'cost-center-expense']
+        );
+        Route::get(
+            'account/income/{accountList}/{costCenterList}/{start_date}/{end_date}/{others}',
+            ['uses' => 'CostCenterReportController@accountIncome', 'as' => 'account-income']
+        );
+        Route::get(
+            'account/expense/{accountList}/{costCenterList}/{start_date}/{end_date}/{others}',
+            ['uses' => 'CostCenterReportController@accountExpense', 'as' => 'account-expense']
+        );
+
+        Route::get(
+            'operations/{accountList}/{costCenterList}/{start_date}/{end_date}',
+            ['uses' => 'CostCenterReportController@mainChart', 'as' => 'main']
+        );
+
+    }
+);
+
+/**
  * Chart\Tag Controller
  */
 Route::group(

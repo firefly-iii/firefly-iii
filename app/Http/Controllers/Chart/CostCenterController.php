@@ -394,7 +394,7 @@ class CostCenterController extends Controller
             [$end, $start] = [$start, $end];
         }
 
-        $data = $this->makePeriodChart($costCenter, $start, $end);
+        $data = $this->makePeriodChartByCostCenter($costCenter, $start, $end);
 
         return response()->json($data);
     }
