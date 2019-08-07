@@ -76,6 +76,12 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-lg-4">
+                                    <transaction-description
+                                            v-model="transaction.description"
+                                            :index="index"
+                                            :error="transaction.errors.description"
+                                    >
+                                    </transaction-description>
                                     <account-select
                                             inputName="source[]"
                                             title="Source account"
@@ -98,12 +104,6 @@
                                             v-on:select:account="selectedDestinationAccount(index, $event)"
                                             :error="transaction.errors.destination_account"
                                     ></account-select>
-                                    <transaction-description
-                                            v-model="transaction.description"
-                                            :index="index"
-                                            :error="transaction.errors.description"
-                                    >
-                                    </transaction-description>
                                     <standard-date
                                             v-model="transaction.date"
                                             :index="index"
