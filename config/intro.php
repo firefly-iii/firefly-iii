@@ -40,15 +40,30 @@ return [
     'accounts_create'        => [
         'iban' => ['element' => '#ffInput_iban'],
     ],
-
     // transactions: create
-    'transactions_create'    => [
+    'transactions_create_withdrawal'    => [
         'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
         'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
         'more_meta'        => ['element' => 'input[name="category[]"]'],
         'split_add'        => ['element' => '.split_add_btn'],
     ],
 
+    'transactions_create_deposit'    => [
+        'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
+        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
+        'more_meta'        => ['element' => 'input[name="category[]"]'],
+        'split_add'        => ['element' => '.split_add_btn'],
+    ],
+
+    'transactions_create_transfer'    => [
+        'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
+        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
+        'more_meta'        => ['element' => 'input[name="category[]"]'],
+        'split_add'        => ['element' => '.split_add_btn'],
+    ],
 
     // extra text for asset account creation.
     'accounts_create_asset'  => [

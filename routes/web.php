@@ -874,7 +874,7 @@ Route::group(
     );
 
     // create group:
-    Route::get('create', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
+    Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
     // edit group

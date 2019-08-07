@@ -63,12 +63,11 @@ class CreateController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(?string $objectType)
     {
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
-        $objectType           = TransactionType::WITHDRAWAL;
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
         $subTitleIcon         = 'fa-plus';
