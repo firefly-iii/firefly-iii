@@ -993,23 +993,23 @@ class TransactionCollector implements TransactionCollectorInterface
             $this->joinedCostCenter = true;
             $this->query->leftJoin('cost_center_transaction_journal', 'cost_center_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin(
-                'categories as transaction_journal_categories',
-                'transaction_journal_categories.id',
+                'cost_centers as transaction_journal_cost_centers',
+                'transaction_journal_cost_centers.id',
                 '=',
                 'cost_center_transaction_journal.cost_center_id'
             );
 
             $this->query->leftJoin('cost_center_transaction', 'cost_center_transaction.transaction_id', '=', 'transactions.id');
-            $this->query->leftJoin('categories as transaction_categories', 'transaction_categories.id', '=', 'cost_center_transaction.cost_center_id');
-            $this->query->whereNull('transaction_journal_categories.deleted_at');
-            $this->query->whereNull('transaction_categories.deleted_at');
+            $this->query->leftJoin('cost_centers as transaction_cost_centers', 'transaction_cost_centers.id', '=', 'cost_center_transaction.cost_center_id');
+            $this->query->whereNull('transaction_journal_cost_centers.deleted_at');
+            $this->query->whereNull('transaction_cost_centers.deleted_at');
             $this->fields[] = 'cost_center_transaction_journal.cost_center_id as transaction_journal_cost_center_id';
-            $this->fields[] = 'transaction_journal_categories.encrypted as transaction_journal_cost_center_encrypted';
-            $this->fields[] = 'transaction_journal_categories.name as transaction_journal_cost_center_name';
+            $this->fields[] = 'transaction_journal_cost_centers.encrypted as transaction_journal_cost_center_encrypted';
+            $this->fields[] = 'transaction_journal_cost_centers.name as transaction_journal_cost_center_name';
 
             $this->fields[] = 'cost_center_transaction.cost_center_id as transaction_cost_center_id';
-            $this->fields[] = 'transaction_categories.encrypted as transaction_cost_center_encrypted';
-            $this->fields[] = 'transaction_categories.name as transaction_cost_center_name';
+            $this->fields[] = 'transaction_cost_centers.encrypted as transaction_cost_center_encrypted';
+            $this->fields[] = 'transaction_cost_centers.name as transaction_cost_center_name';
         }
     }
 

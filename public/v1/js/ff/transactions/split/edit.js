@@ -24,6 +24,7 @@
 var destNames;
 var sourceNames;
 var categories;
+var costCenters;
 var journalNames;
 
 $(document).ready(function () {
@@ -105,6 +106,31 @@ $(document).ready(function () {
                                     });
     categories.initialize();
     $('input[name$="category_name]"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
+
+    // auto complete cost center fields:
+    costCenters = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: 'json/cost_centers?uid=' + uid,
+            filter: function (list) {
+                return $.map(list, function (name) {
+                    return {name: name};
+                });
+            }
+        },
+        remote: {
+            url: 'json/cost_centers?search=%QUERY&uid=' + uid,
+            wildcard: '%QUERY',
+            filter: function (list) {
+                return $.map(list, function (name) {
+                    return {name: name};
+                });
+            }
+        }
+    });
+    costCenters.initialize();
+    $('input[name$="cost_center_name]"]').typeahead({hint: true, highlight: true,}, {source: costCenters, displayKey: 'name', autoSelect: false});
 
     // get transaction journal name things:
     journalNames = new Bloodhound({

@@ -103,6 +103,8 @@ class SplitJournalFormRequest extends Request
                 'budget_name'           => null,
                 'category_id'           => null,
                 'category_name'         => $transaction['category_name'] ?? '',
+                'cost_center_id'           => null,
+                'cost_center_name'         => $transaction['cost_center_name'] ?? '',
             ];
             $data['transactions'][] = $set;
         }
@@ -134,6 +136,7 @@ class SplitJournalFormRequest extends Request
             'transactions.*.amount'                  => 'required|numeric',
             'transactions.*.budget_id'               => 'belongsToUser:budgets,id',
             'transactions.*.category_name'           => 'between:1,255|nullable',
+            'transactions.*.cost_center_name'           => 'between:1,255|nullable',
             'transactions.*.piggy_bank_id'           => 'numeric|nullable',
         ];
     }

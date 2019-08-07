@@ -226,7 +226,10 @@ trait RequestInformation
         // use collector to collect transactions.
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->withOpposingAccount()
+                  ->withCostCenterInformation()
+                  ->withCategoryInformation()                  
+                  ->withBudgetInformation();
         // filter on specific journals.
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();

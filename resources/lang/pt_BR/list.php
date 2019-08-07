@@ -66,6 +66,7 @@ return [
     'to'                      => 'Para',
     'budget'                  => 'Orçamento',
     'category'                => 'Categoria',
+    'cost_center'             => 'Centro de Custo',
     'bill'                    => 'Fatura',
     'withdrawal'              => 'Retirada',
     'deposit'                 => 'Depósito',

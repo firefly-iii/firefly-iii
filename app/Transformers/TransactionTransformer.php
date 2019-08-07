@@ -61,9 +61,10 @@ class TransactionTransformer extends AbstractTransformer
      */
     public function transform(Transaction $transaction): array
     {
-        $journal  = $transaction->transactionJournal;
-        $category = $this->getCategory($transaction);
-        $budget   = $this->getBudget($transaction);
+        $journal    = $transaction->transactionJournal;
+        $category   = $this->getCategory($transaction);
+        $costCenter = $this->getCostCenter($transaction);
+        $budget     = $this->getBudget($transaction);
 
         $this->repository->setUser($journal->user);
 
@@ -96,6 +97,8 @@ class TransactionTransformer extends AbstractTransformer
             'bill_name'                       => $transaction->bill_name,
             'category_id'                     => $category['category_id'],
             'category_name'                   => $category['category_name'],
+            'cost_center_id'                  => $costCenter['cost_center_id'],
+            'cost_center_name'                => $costCenter['cost_center_name'],
             'budget_id'                       => $budget['budget_id'],
             'budget_name'                     => $budget['budget_name'],
             'notes'                           => $notes,
@@ -208,6 +211,19 @@ class TransactionTransformer extends AbstractTransformer
         return [
             'category_id'   => $transaction->transaction_category_id ?? $transaction->transaction_journal_category_id,
             'category_name' => $transaction->transaction_category_name ?? $transaction->transaction_journal_category_name,
+        ];
+    }
+    
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function getCostCenter(Transaction $transaction): array
+    {
+        return [
+            'cost_center_id'   => $transaction->transaction_cost_center_id ?? $transaction->transaction_journal_cost_center_id,
+            'cost_center_name' => $transaction->transaction_cost_center_name ?? $transaction->transaction_journal_cost_center_name,
         ];
     }
 }

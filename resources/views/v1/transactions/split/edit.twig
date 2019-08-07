@@ -197,7 +197,7 @@
                             <div class="row bg-gray-light" style="padding-bottom:3px;">
                                 {# HEADER #}
                                 <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6"><strong>{{ trans('list.split_number') }}</strong></div>
-                                <div class="col-lg-3 col-md-5 col-sm-12 col-xs-12"><strong>{{ trans('list.description') }}</strong></div>
+                                <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12"><strong>{{ trans('list.description') }}</strong></div>
                                 {# withdrawal and deposit have a destination. #}
                                 {% if preFilled.what == 'withdrawal' %}
                                     <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12"><strong>{{ trans('list.destination') }}</strong></div>
@@ -212,6 +212,7 @@
                                     <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12"><strong>{{ trans('list.budget') }}</strong></div>
                                 {% endif %}
                                 <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12"><strong>{{ trans('list.category') }}</strong></div>
+                                <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12"><strong>{{ trans('list.cost_center') }}</strong></div>
                             </div>
 
                             {# ROWS #}
@@ -226,7 +227,7 @@
                                     </div>
 
                                     {# description #}
-                                    <div class="col-lg-3 col-md-5 col-sm-12 col-xs-12">
+                                    <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
                                         <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][transaction_description]"
                                                value="{{ transaction.transaction_description }}"
                                                class="form-control"/>
@@ -252,14 +253,14 @@
                                     {# amount#}
                                     <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
                                         {{ transaction.currency_symbol }}&nbsp;<input class="split_amount_input" type="number"
-                                                                                      name="transactions[{{ loop.index0 }}][amount]"
-                                                                                      value="{{ transaction.amount }}"
-                                                                                      autocomplete="off" step="any">
+                                            name="transactions[{{ loop.index0 }}][amount]"
+                                            value="{{ transaction.amount }}"
+                                            autocomplete="off" step="any">
                                         {% if transaction.foreign_amount != null %}
                                             {{ transaction.foreign_currency_symbol }}&nbsp;<input class="split_amount_input" type="number"
-                                                                                                  name="transactions[{{ loop.index0 }}][foreign_amount]"
-                                                                                                  value="{{ transaction.foreign_amount }}" autocomplete="off"
-                                                                                                  step="any">
+                                            name="transactions[{{ loop.index0 }}][foreign_amount]"
+                                            value="{{ transaction.foreign_amount }}" autocomplete="off"
+                                            step="any">
                                             <input type="hidden" name="transactions[{{ loop.index0 }}][foreign_currency_id]"
                                                    value="{{ transaction.foreign_currency_id }}">
                                         {% endif %}
@@ -282,6 +283,13 @@
                                     <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                                         <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][category_name]"
                                                value="{{ transaction.category_name }}"
+                                               class="form-control"/>
+                                    </div>
+
+                                    {# cost center #}
+                                    <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
+                                        <input autocomplete="off" type="text" name="transactions[{{ loop.index0 }}][cost_center_name]"
+                                               value="{{ transaction.cost_center_name }}"
                                                class="form-control"/>
                                     </div>
                                 </div>
