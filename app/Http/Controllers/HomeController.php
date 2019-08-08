@@ -46,7 +46,7 @@ class HomeController extends Controller
     public function __construct()
     {
         parent::__construct();
-        app('view')->share('title', 'Firefly III');
+        app('view')->share('title', env('APP_NAME'));
         app('view')->share('mainTitleIcon', 'fa-fire');
         $this->middleware(Installer::class);
     }
