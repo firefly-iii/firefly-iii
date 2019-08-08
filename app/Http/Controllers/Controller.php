@@ -65,6 +65,7 @@ class Controller extends BaseController
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
+        app('view')->share('APP_NAME', env('APP_NAME'));
 
         $this->middleware(
             function ($request, $next) {

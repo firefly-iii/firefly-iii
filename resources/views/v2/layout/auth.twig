@@ -10,7 +10,7 @@
     {# favicons #}
     {% include('partials.favicons') %}
 
-    <title>{{ pageTitle|default('Firefly III') }} (v{{ FF_VERSION }})</title>
+    <title>{{ pageTitle|default('{{ APP_NAME }}') }} (v{{ FF_VERSION }})</title>
     <link rel="stylesheet" href="v2/lib/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="v2/assets/css/gf-source.css">
     <link href="v2/assets/css/dashboard.css" rel="stylesheet"/>

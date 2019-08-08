@@ -128,7 +128,7 @@
     {% if SANDSTORM %}
         <script>
             function requestIframeURL() {
-                var template = "You can use the $API_TOKEN key to reach Firefly III at $API_HOST.";
+                var template = "You can use the $API_TOKEN key to reach {{ APP_NAME }} at $API_HOST.";
                 window.parent.postMessage({
                                               renderTemplate: {
                                                   rpcId: "0",

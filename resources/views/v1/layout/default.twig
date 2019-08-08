@@ -12,11 +12,11 @@
         {% if subTitle %}
             {{ subTitle }} »
         {% endif %}
-        {% if title != "Firefly III" %}
+        {% if title != "{{ APP_NAME }}" %}
             {{ title }} »
         {% endif %}
 
-        Firefly III
+        {{ APP_NAME }}
 
     </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -30,7 +30,7 @@
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-    {# Firefly III customisations #}
+    {# {{ APP_NAME }} customisations #}
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     {# Extra CSS for the demo: #}
@@ -63,7 +63,7 @@
             {# mini logo for sidebar mini 50x50 pixels #}
             <span class="logo-mini">FF</span>
             {# logo for regular state and mobile devices #}
-            <span class="logo-lg"><b>Firefly</b>III</span>
+            <span class="logo-lg">{{ APP_NAME }}</span>
         </a>
 
         <nav class="navbar navbar-static-top" role="navigation">
@@ -140,7 +140,7 @@
         <div class="pull-right hidden-xs">
             <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
-        <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
+        <strong><a href="https://github.com/firefly-iii/firefly-iii">{{ APP_NAME }}</a></strong>
     </footer>
 
     {% include('partials.control-bar') %}
@@ -187,7 +187,7 @@
 <script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
 
-{# Firefly III code#}
+{# {{ APP_NAME }} code#}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}"></script>
 <script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}

@@ -1,5 +1,5 @@
 {% include 'emails.header-text' %}
-Firefly III v{{ version }} ran into an error: {{ errorMessage }}.
+{{ APP_NAME }} v{{ version }} ran into an error: {{ errorMessage }}.
 
 The error was of type "{{ class }}".
 
@@ -17,7 +17,7 @@ The IP address related to this error is: {{ ip }}
 URL is: {{ url }}
 User agent: {{ userAgent }}
 
-The full stacktrace is below. If you think this is a bug in Firefly III, you
+The full stacktrace is below. If you think this is a bug in {{ APP_NAME }}, you
 can forward this message to thegrumpydictator@gmail.com. This can help fix
 the bug you just encountered.
 

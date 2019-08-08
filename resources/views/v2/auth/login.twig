@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col col-login mx-auto">
                     <div class="text-center mb-6">
-                        <img src="v2/assets/images/firefly-iii-48.png" class="h-6" alt="Firefly III v{{ FF_VERSION }}" title="Firefly III v{{ FF_VERSION }}">
+                        <img src="v2/assets/images/firefly-iii-48.png" class="h-6" alt="{{ APP_NAME }} v{{ FF_VERSION }}" title="{{ APP_NAME }} v{{ FF_VERSION }}">
                     </div>
                     {# ERROR LOGIN STUFF #}
                     {% if errors.all|length > 0 %}
@@ -28,7 +28,7 @@
                         <div class="card-body p-6">
                             <div class="card-title">
                                 {% if IS_DEMO_SITE %}
-                                    Welcome to the Firefly III demonstration website!
+                                    Welcome to the {{ APP_NAME }} demonstration website!
                                 {% else %}
                                     {{ 'sign_in_to_start'|_ }}
                                 {% endif %}
