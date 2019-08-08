@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Lost mogelijke problemen op met PC bestanden',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Lost mogelijke problemen op met Belfius-bestanden',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Lost mogelijke problemen op met ING België bestanden',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
     'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
@@ -294,7 +296,7 @@ return [
     'column_ing-debit-credit'         => 'ING-specifieke bij/af indicator',
     'column_generic-debit-credit'     => 'Generieke bank debet/credit indicator',
     'column_sepa_ct_id'               => 'SEPA end-to-end identificatie',
-    'column_sepa_ct_op'               => 'SEPA identificatie tegenpartij',
+    'column_sepa_ct_op'               => 'SEPA tegenrekening identificatie',
     'column_sepa_db'                  => 'SEPA mandaatidentificatie',
     'column_sepa_cc'                  => 'SEPA vrijwaringscode',
     'column_sepa_ci'                  => 'SEPA crediteuridentificatie',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Tegenrekening (rekeningnummer)',
     'column_note'                     => 'Opmerking(en)',
     'column_internal-reference'       => 'Interne referentie',
+
+    // error message
+    'duplicate_row'                   => 'Rij #:row (":description) kan niet worden geïmporteerd. Deze bestaat al.',
 
 ];

@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Режим метки',
     'tag_position'                => 'Расположение метки',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Целевая сумма',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -252,5 +252,8 @@ return [
     'calendar'                => 'Календарь',
     'weekend'                 => 'Выходные',
     'client_secret'           => 'Закрытый ключ клиента',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
 
 ];

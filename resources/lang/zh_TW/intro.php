@@ -24,40 +24,62 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => '歡迎來到 Firefly III 首頁。誠邀您花一點時間，看看這介紹，瞭解一下 Firefly III 如何運作。',
-    'index_accounts-chart'                  => '此圖表顯示資產帳戶的目前餘額，哪些帳戶在此顯示，可在偏好設定中選擇。',
-    'index_box_out_holder'                  => '這小方塊 (以及旁邊的) 給您一個財務狀況的快速概覽。',
-    'index_help'                            => '如果您需要有關頁面或表單的説明，請按此按鈕。',
-    'index_outro'                           => 'Firefly III 大部分頁面會以這樣的小介紹開始，如有問題或意見，不妨與我聯繫。祝您使用得心應手！',
-    'index_sidebar-toggle'                  => '若要建立新的交易記錄、帳戶或其他內容，請使用此圖示下的選單。',
+    'index_intro'                                     => '歡迎來到 Firefly III 首頁。誠邀您花一點時間，看看這介紹，瞭解一下 Firefly III 如何運作。',
+    'index_accounts-chart'                            => '此圖表顯示資產帳戶的目前餘額，哪些帳戶在此顯示，可在偏好設定中選擇。',
+    'index_box_out_holder'                            => '這小方塊 (以及旁邊的) 給您一個財務狀況的快速概覽。',
+    'index_help'                                      => '如果您需要有關頁面或表單的説明，請按此按鈕。',
+    'index_outro'                                     => 'Firefly III 大部分頁面會以這樣的小介紹開始，如有問題或意見，不妨與我聯繫。祝您使用得心應手！',
+    'index_sidebar-toggle'                            => '若要建立新的交易記錄、帳戶或其他內容，請使用此圖示下的選單。',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => '帳戶若設定有效的 IBAN，有助日後匯入資料。',
-    'accounts_create_asset_opening_balance' => '資產帳戶可以設定一個 "初始餘額"，表示此帳戶在 Firefly III 中開始時的紀錄。',
-    'accounts_create_asset_currency'        => 'Fireflly III 支援多種貨幣。資產帳戶有一種主要貨幣，須在此設定。',
-    'accounts_create_asset_virtual'         => '有時，您或會想給予帳戶一個虛擬額度：即在實際餘額之上加減一個定額。',
+    'accounts_create_iban'                            => '帳戶若設定有效的 IBAN，有助日後匯入資料。',
+    'accounts_create_asset_opening_balance'           => '資產帳戶可以設定一個 "初始餘額"，表示此帳戶在 Firefly III 中開始時的紀錄。',
+    'accounts_create_asset_currency'                  => 'Fireflly III 支援多種貨幣。資產帳戶有一種主要貨幣，須在此設定。',
+    'accounts_create_asset_virtual'                   => '有時，您或會想給予帳戶一個虛擬額度：即在實際餘額之上加減一個定額。',
 
     // budgets index
-    'budgets_index_intro'                   => '預算用來管理您的財務，是 Firefly III 的
+    'budgets_index_intro'                             => '預算用來管理您的財務，是 Firefly III 的
 核心功能之一。',
-    'budgets_index_set_budget'              => '設定每個時期的總預算，讓 Firefly III 能告訴您，所有可用的錢是否都已設定預算。',
-    'budgets_index_see_expenses_bar'        => '消費金額會慢慢地填滿這個橫條。',
-    'budgets_index_navigate_periods'        => '往前後不同時期，輕鬆預先設定預算。',
-    'budgets_index_new_budget'              => '隨意建立新預算。',
-    'budgets_index_list_of_budgets'         => '在此表上設定每個預算的金額，查看表現如何。',
-    'budgets_index_outro'                   => '要瞭解有關預算的詳細資訊，請查看右上角的説明圖示。',
+    'budgets_index_set_budget'                        => '設定每個時期的總預算，讓 Firefly III 能告訴您，所有可用的錢是否都已設定預算。',
+    'budgets_index_see_expenses_bar'                  => '消費金額會慢慢地填滿這個橫條。',
+    'budgets_index_navigate_periods'                  => '往前後不同時期，輕鬆預先設定預算。',
+    'budgets_index_new_budget'                        => '隨意建立新預算。',
+    'budgets_index_list_of_budgets'                   => '在此表上設定每個預算的金額，查看表現如何。',
+    'budgets_index_outro'                             => '要瞭解有關預算的詳細資訊，請查看右上角的説明圖示。',
 
     // reports (index)
-    'reports_index_intro'                   => '從這些報表洞察您的詳細財務狀況。',
-    'reports_index_inputReportType'         => '挑一種報表。查看說明頁面瞭解各報表展示的內容。',
-    'reports_index_inputAccountsSelect'     => '您可以根據需要排除或包括資產帳戶。',
-    'reports_index_inputDateRange'          => '所選日期範圍完全由您決定：從1天到10年不等。',
-    'reports_index_extra-options-box'       => '根據您選擇的報表，您可以在此處選擇額外的篩選標準和選項。更改報表類型時，請查看此區塊。',
+    'reports_index_intro'                             => '從這些報表洞察您的詳細財務狀況。',
+    'reports_index_inputReportType'                   => '挑一種報表。查看說明頁面瞭解各報表展示的內容。',
+    'reports_index_inputAccountsSelect'               => '您可以根據需要排除或包括資產帳戶。',
+    'reports_index_inputDateRange'                    => '所選日期範圍完全由您決定：從1天到10年不等。',
+    'reports_index_extra-options-box'                 => '根據您選擇的報表，您可以在此處選擇額外的篩選標準和選項。更改報表類型時，請查看此區塊。',
 
     // reports (reports)
-    'reports_report_default_intro'          => '這份報表可快速全面概覽您的個人財務狀況。如有未羅列的項目，歡迎與我聯繫！',
-    'reports_report_audit_intro'            => '這份報表可讓您洞悉資產帳戶的詳細狀況。',
-    'reports_report_audit_optionsBox'       => '在這些選取方塊勾選您感興趣想顯示的欄。',
+    'reports_report_default_intro'                    => '這份報表可快速全面概覽您的個人財務狀況。如有未羅列的項目，歡迎與我聯繫！',
+    'reports_report_audit_intro'                      => '這份報表可讓您洞悉資產帳戶的詳細狀況。',
+    'reports_report_audit_optionsBox'                 => '在這些選取方塊勾選您感興趣想顯示的欄。',
 
     'reports_report_category_intro'                  => '此報表可讓您洞悉一或多個分類的詳細狀況。',
     'reports_report_category_pieCharts'              => '這些圖表可讓您洞悉按分類或帳戶的收支詳細狀況。',

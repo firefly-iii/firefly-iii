@@ -39,6 +39,7 @@ return [
     'reports'                => 'Overzichten',
     'search_result'          => 'Zoekresultaten voor ":query"',
     'withdrawal_list'        => 'Uitgaven',
+    'Withdrawal_list'        => 'Uitgaven',
     'deposit_list'           => 'Inkomsten',
     'transfer_list'          => 'Overschrijvingen',
     'transfers_list'         => 'Overschrijvingen',

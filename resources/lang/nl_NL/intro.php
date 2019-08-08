@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welkom op de homepage van Firefly III. Neem even de tijd voor deze introductie zodat je Firefly III leert kennen.',
-    'index_accounts-chart'                  => 'Deze grafiek toont het saldo van je betaalrekening(en). Welke rekeningen zichtbaar zijn kan je aangeven bij de instellingen.',
-    'index_box_out_holder'                  => 'Dit vakje en de vakjes er naast geven een snel overzicht van je financiële situatie.',
-    'index_help'                            => 'Als je ooit hulp nodig hebt, klik dan hier.',
-    'index_outro'                           => 'De meeste pagina\'s in Firefly III beginnen met een kleine rondleiding zoals deze. Zoek me op als je vragen of commentaar hebt. Veel plezier!',
-    'index_sidebar-toggle'                  => 'Nieuwe transacties, rekeningen en andere dingen maak je met het menu onder deze knop.',
+    'index_intro'                                     => 'Welkom op de homepage van Firefly III. Neem even de tijd voor deze introductie zodat je Firefly III leert kennen.',
+    'index_accounts-chart'                            => 'Deze grafiek toont het saldo van je betaalrekening(en). Welke rekeningen zichtbaar zijn kan je aangeven bij de instellingen.',
+    'index_box_out_holder'                            => 'Dit vakje en de vakjes er naast geven een snel overzicht van je financiële situatie.',
+    'index_help'                                      => 'Als je ooit hulp nodig hebt, klik dan hier.',
+    'index_outro'                                     => 'De meeste pagina\'s in Firefly III beginnen met een kleine rondleiding zoals deze. Zoek me op als je vragen of commentaar hebt. Veel plezier!',
+    'index_sidebar-toggle'                            => 'Nieuwe transacties, rekeningen en andere dingen maak je met het menu onder deze knop.',
+    'index_cash_account'                              => 'Dit zijn de rekeningen die tot nu toe zijn gemaakt. Je kan de cashgeldrekening gebruiken om cash geld te volgen, maar dat hoeft natuurlijk niet.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Kies je lievelingsrekening of passiva uit deze lijst.',
+    'transactions_create_withdrawal_destination'      => 'Kies hier een debiteur. Laat deze leeg als het een cashbetaling is.',
+    'transactions_create_withdrawal_foreign_currency' => 'Gebruik dit veld voor vreemde valuta.',
+    'transactions_create_withdrawal_more_meta'        => 'Alle andere meta-gegevens stop je in deze velden.',
+    'transactions_create_withdrawal_split_add'        => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Selecteer of type de naam van degene die jou betaalt. Laat deze leeg als het om een contante storting gaat.',
+    'transactions_create_deposit_destination'         => 'Kies hier een betaalrekening of passiva.',
+    'transactions_create_deposit_foreign_currency'    => 'Gebruik dit veld voor vreemde valuta.',
+    'transactions_create_deposit_more_meta'           => 'Alle andere meta-gegevens stop je in deze velden.',
+    'transactions_create_deposit_split_add'           => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Selecteer hier de bronbetaalrekening.',
+    'transactions_create_transfer_destination'        => 'Selecteer hier de doelrekening.',
+    'transactions_create_transfer_foreign_currency'   => 'Gebruik dit veld voor vreemde valuta.',
+    'transactions_create_transfer_more_meta'          => 'Alle andere meta-gegevens stop je in deze velden.',
+    'transactions_create_transfer_split_add'          => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
 
     // create account:
-    'accounts_create_iban'                  => 'Geef je rekeningen een geldige IBAN. Dat scheelt met importeren van data.',
-    'accounts_create_asset_opening_balance' => 'Betaalrekeningen kunnen een startsaldo hebben, waarmee het begin van deze rekening in Firefly III wordt aangegeven.',
-    'accounts_create_asset_currency'        => 'Firefly III ondersteunt meerdere valuta. Hier stel je de valuta in van je betaalrekening.',
-    'accounts_create_asset_virtual'         => 'Soms is het handig om je betaalrekening een virtueel saldo te geven: een extra bedrag dat altijd bij het daadwerkelijke saldo wordt opgeteld.',
+    'accounts_create_iban'                            => 'Geef je rekeningen een geldige IBAN. Dat scheelt met importeren van data.',
+    'accounts_create_asset_opening_balance'           => 'Betaalrekeningen kunnen een startsaldo hebben, waarmee het begin van deze rekening in Firefly III wordt aangegeven.',
+    'accounts_create_asset_currency'                  => 'Firefly III ondersteunt meerdere valuta. Hier stel je de valuta in van je betaalrekening.',
+    'accounts_create_asset_virtual'                   => 'Soms is het handig om je betaalrekening een virtueel saldo te geven: een extra bedrag dat altijd bij het daadwerkelijke saldo wordt opgeteld.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgetten worden gebruikt om je financiën te beheren en vormen een van de kernfuncties van Firefly III.',
-    'budgets_index_set_budget'              => 'Stel je totale budget voor elke periode in, zodat Firefly III je kan vertellen of je alle beschikbare geld hebt gebudgetteerd.',
-    'budgets_index_see_expenses_bar'        => 'Het besteden van geld zal deze balk langzaam vullen.',
-    'budgets_index_navigate_periods'        => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
-    'budgets_index_new_budget'              => 'Maak nieuwe budgetten naar wens.',
-    'budgets_index_list_of_budgets'         => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
-    'budgets_index_outro'                   => 'Om meer te leren over budgetteren, klik dan op het help-icoontje rechtsboven.',
+    'budgets_index_intro'                             => 'Budgetten worden gebruikt om je financiën te beheren en vormen een van de kernfuncties van Firefly III.',
+    'budgets_index_set_budget'                        => 'Stel je totale budget voor elke periode in, zodat Firefly III je kan vertellen of je alle beschikbare geld hebt gebudgetteerd.',
+    'budgets_index_see_expenses_bar'                  => 'Het besteden van geld zal deze balk langzaam vullen.',
+    'budgets_index_navigate_periods'                  => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
+    'budgets_index_new_budget'                        => 'Maak nieuwe budgetten naar wens.',
+    'budgets_index_list_of_budgets'                   => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
+    'budgets_index_outro'                             => 'Om meer te leren over budgetteren, klik dan op het help-icoontje rechtsboven.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
-    'reports_index_inputReportType'         => 'Kies een rapporttype. Bekijk de helppagina\'s om te zien wat elk rapport laat zien.',
-    'reports_index_inputAccountsSelect'     => 'Je kunt naar keuze betaalrekeningen meenemen (of niet).',
-    'reports_index_inputDateRange'          => 'Kies zelf een datumbereik: van een dag tot tien jaar.',
-    'reports_index_extra-options-box'       => 'Sommige rapporten bieden extra filters en opties. Kies een rapporttype en kijk of hier iets verandert.',
+    'reports_index_intro'                             => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
+    'reports_index_inputReportType'                   => 'Kies een rapporttype. Bekijk de helppagina\'s om te zien wat elk rapport laat zien.',
+    'reports_index_inputAccountsSelect'               => 'Je kunt naar keuze betaalrekeningen meenemen (of niet).',
+    'reports_index_inputDateRange'                    => 'Kies zelf een datumbereik: van een dag tot tien jaar.',
+    'reports_index_extra-options-box'                 => 'Sommige rapporten bieden extra filters en opties. Kies een rapporttype en kijk of hier iets verandert.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Dit rapport geeft je een snel en uitgebreid overzicht van je financiën. Laat het me weten als je hier dingen mist!',
-    'reports_report_audit_intro'            => 'Dit rapport geeft je gedetailleerde inzichten in je betaalrekeningen.',
-    'reports_report_audit_optionsBox'       => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
+    'reports_report_default_intro'                    => 'Dit rapport geeft je een snel en uitgebreid overzicht van je financiën. Laat het me weten als je hier dingen mist!',
+    'reports_report_audit_intro'                      => 'Dit rapport geeft je gedetailleerde inzichten in je betaalrekeningen.',
+    'reports_report_audit_optionsBox'                 => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
 
     'reports_report_category_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere categorieën.',
     'reports_report_category_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per categorie of per rekening.',

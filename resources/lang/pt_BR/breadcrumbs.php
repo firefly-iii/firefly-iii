@@ -39,6 +39,7 @@ return [
     'reports'                => 'Relatórios',
     'search_result'          => 'Resultados da busca ":query"',
     'withdrawal_list'        => 'Despesas',
+    'Withdrawal_list'        => 'Despesas',
     'deposit_list'           => 'Receitas, renda e depósitos',
     'transfer_list'          => 'Transferências',
     'transfers_list'         => 'Transferências',

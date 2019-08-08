@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Mod de etichetare',
     'tag_position'                => 'Locația etichetei',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Sumă țintă',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -252,5 +252,8 @@ return [
     'calendar'                => 'Calendar',
     'weekend'                 => 'Sfârșit de săptămână',
     'client_secret'           => 'Codul secret al clientului',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
 
 ];

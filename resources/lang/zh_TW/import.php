@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => '修正 PC 檔案中的潛在問題',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => '修正 Belfius 檔案中的潛在問題',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => '匯入設定 (3/4) - 定義每個欄的角色',
     'job_config_roles_text'           => '在您 CSV 檔案中的每個欄均含某些資料，請說明係核種資料供匯入器參照。用以「映射」資料的選項，即您將連結每個欄中的資料至您資料庫的一個值。一個常見的「已映射」的欄，是包含 IBAN 相對帳戶的欄，這便可輕易地媒合至您資料庫既存的 IBAN 帳戶。',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => '相對帳戶 (帳戶號碼)',
     'column_note'                     => '備註',
     'column_internal-reference'       => '內部參照',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

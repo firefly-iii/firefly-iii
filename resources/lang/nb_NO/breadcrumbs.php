@@ -39,6 +39,7 @@ return [
     'reports'                => 'Rapporter',
     'search_result'          => 'Søkeresultater for ":query"',
     'withdrawal_list'        => 'Utgifter',
+    'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Inntekter og innskudd',
     'transfer_list'          => 'Overføringer',
     'transfers_list'         => 'Overføringer',

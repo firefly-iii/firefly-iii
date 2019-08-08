@@ -193,7 +193,7 @@ return [
 
     'job_config_fints_url_help'       => 'E.g. https://banking-dkb.s-fints-pt-dkb.de/fints30',
     'job_config_fints_username_help'  => 'Dla wielu banków jest to numer twojego konta.',
-    'job_config_fints_port_help'      => 'The default port is 443.',
+    'job_config_fints_port_help'      => 'Domyślny port to 443.',
     'job_config_fints_account_help'   => 'Wybierz konto bankowe, dla którego chcesz importować transakcje.',
     'job_config_local_account_help'   => 'Wybierz konto Firefly III odpowiadające wybranemu powyżej kontu bankowemu.',
     // specifics:
@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Fixes potential problems with PC files',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import setup (3/4) - Define each column\'s role',
     'job_config_roles_text'           => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
     'column_note'                     => 'Notatki',
     'column_internal-reference'       => 'Internal reference',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

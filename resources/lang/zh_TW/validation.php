@@ -139,8 +139,8 @@ return [
         'name'                    => '名稱',
         'piggy_bank_id'           => '小豬撲滿 ID',
         'targetamount'            => '目標金額',
-        'opening_balance_date'    => 'opening balance date',
-        'opening_balance'         => 'opening balance',
+        'opening_balance_date'    => '初始餘額日期',
+        'opening_balance'         => '初始餘額',
         'match'                   => '符合',
         'amount_min'              => '最小金額',
         'amount_max'              => '最大金額',
@@ -173,7 +173,7 @@ return [
     'withdrawal_source_need_data'    => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
     'withdrawal_source_bad_data'     => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
     'withdrawal_dest_need_data'      => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
-    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_bad_data'       => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
 
     'deposit_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
     'deposit_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
@@ -184,9 +184,12 @@ return [
     'transfer_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
     'transfer_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
     'transfer_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
-    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+    'need_id_in_edit'           => '每筆拆分須有 transaction_journal_id (為有效的 ID 或是 0)。',
 
-    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
-    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
-    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'ob_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'ob_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'ob_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

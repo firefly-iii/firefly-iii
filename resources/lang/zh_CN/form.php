@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => '标签模式',
     'tag_position'                => '标签位置',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => '目标金额',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -252,5 +252,8 @@ return [
     'calendar'                => '日历',
     'weekend'                 => '周末',
     'client_secret'           => '客户端密钥',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
 
 ];

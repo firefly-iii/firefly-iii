@@ -189,4 +189,7 @@ return [
     'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

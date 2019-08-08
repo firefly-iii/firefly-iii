@@ -139,8 +139,8 @@ return [
         'name'                    => 'nazwa',
         'piggy_bank_id'           => 'identyfikator skarbonki',
         'targetamount'            => 'kwota docelowa',
-        'opening_balance_date'    => 'opening balance date',
-        'opening_balance'         => 'opening balance',
+        'opening_balance_date'    => 'data salda otwarcia',
+        'opening_balance'         => 'saldo otwarcia',
         'match'                   => 'dopasowanie',
         'amount_min'              => 'minimalna kwota',
         'amount_max'              => 'maksymalna kwota',
@@ -173,7 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'withdrawal_source_bad_data'     => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'withdrawal_dest_need_data'      => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
-    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_bad_data'       => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 
     'deposit_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'deposit_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
@@ -184,9 +184,12 @@ return [
     'transfer_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'transfer_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'transfer_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
-    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+    'need_id_in_edit'           => 'Każdy podział musi posiadać transaction_journal_id (poprawny identyfikator lub 0).',
 
-    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
-    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
-    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'ob_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
+    'ob_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
+    'ob_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

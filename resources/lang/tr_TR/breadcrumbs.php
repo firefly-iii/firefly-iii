@@ -39,6 +39,7 @@ return [
     'reports'                => 'Raporlar',
     'search_result'          => '":query" için arama sonuçları',
     'withdrawal_list'        => 'Giderler',
+    'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Varlık, gelir ve mevduatlar',
     'transfer_list'          => 'Transferler',
     'transfers_list'         => 'Transferler',

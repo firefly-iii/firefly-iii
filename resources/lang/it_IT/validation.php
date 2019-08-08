@@ -139,8 +139,8 @@ return [
         'name'                    => 'nome',
         'piggy_bank_id'           => 'ID salvadanaio',
         'targetamount'            => 'importo obiettivo',
-        'opening_balance_date'    => 'opening balance date',
-        'opening_balance'         => 'opening balance',
+        'opening_balance_date'    => 'data saldo di apertura',
+        'opening_balance'         => 'saldo di apertura',
         'match'                   => 'abbinamento',
         'amount_min'              => 'importo minimo',
         'amount_max'              => 'importo massimo',
@@ -173,7 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'withdrawal_source_bad_data'     => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'withdrawal_dest_need_data'      => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
-    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_bad_data'       => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
 
     'deposit_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'deposit_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
@@ -184,9 +184,12 @@ return [
     'transfer_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'transfer_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
     'transfer_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
-    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+    'need_id_in_edit'           => 'Ogni suddivisione deve avere un "transaction_journal_id" (un ID valido oppure 0).',
 
-    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
-    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
-    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'ob_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'ob_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'ob_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];
