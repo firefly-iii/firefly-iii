@@ -36,45 +36,57 @@ By keeping track of your expenses and your income you can budget accordingly and
 You can read more about this in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ### Features
-Most importantly...
+Firefly III is pretty feature packed. Some important stuff first:
 
-* Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
-* You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
-* You can also import from [bunq](https://www.bunq.com/), from **YNAB**, using **FinTS** or simply by uploading **CSV** files.
-* Firefly III features an [JSON REST API](https://api-docs.firefly-iii.org/) with a [Python API client](https://pypi.org/project/Firefly-III-API-Client/) built by [ms32035](https://github.com/ms32035).
-* If you feel you’re missing something you can just ask me and I’ll add it!
+* It is completely self-hosted and isolated, and will never contact external servers until you explicitly tell it to.
+* It features a REST JSON API that covers almost every part of Firefly III.
+* There are many translations available.
+* All pages feature help texts and support popups.
 
-But actually, it features:
+The most exciting features are:
 
-* [A double-entry bookkeeping system](https://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html)
-* You can store, edit and remove [withdrawals, deposits and transfers](https://firefly-iii.readthedocs.io/en/latest/concepts/transactions.html). This allows you full financial management
-* You can manage different types of accounts
-  * [Asset](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) accounts
-  * Shared [asset accounts](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html) ([household accounts](https://firefly-iii.readthedocs.io/en/latest/concepts/accounts.html))
-  * Saving accounts
-  * Credit cards
-* It's possible to create, change and manage money using [budgets](https://firefly-iii.readthedocs.io/en/latest/concepts/budgets.html)
-* Organize transactions using [categories](https://firefly-iii.readthedocs.io/en/latest/concepts/categories.html)
-* Save towards a goal using [piggy banks](https://firefly-iii.readthedocs.io/en/latest/advanced/piggies.html)
-* Predict and anticipate [bills](https://firefly-iii.readthedocs.io/en/latest/advanced/bills.html)
-* View income / expense [reports](https://firefly-iii.readthedocs.io/en/latest/advanced/reports.html)
-* [Rule based](https://firefly-iii.readthedocs.io/en/latest/advanced/rules.html) transaction handling with the ability to create your own rules.
-* The ability to [export data](https://firefly-iii.readthedocs.io/en/latest/import/export.html) so you can move to another system.
-* The ability to [import data](https://firefly-iii.readthedocs.io/en/latest/import/csv.html) so you can move _from_ another system.
-* Organize expenses using [tags](https://firefly-iii.readthedocs.io/en/latest/concepts/tags.html)
+* Create [recurring transactions to manage your money](http://docs.firefly-iii.org/en/latest/advanced/recurring.html)
+* [Rule based transaction handling](http://docs.firefly-iii.org/en/latest/advanced/rules.html) with the ability to create your own rules
+* Import data from external systems
+	* [FinTS](http://docs.firefly-iii.org/en/latest/import/fints.html)
+	* [bunq](http://docs.firefly-iii.org/en/latest/import/bunq.html)
+	* [Spectre](http://docs.firefly-iii.org/en/latest/import/spectre.html) (offering thousands of connected banks)
+	* [CVS files](http://docs.firefly-iii.org/en/latest/import/csv.html) 
+	* [YNAB](http://docs.firefly-iii.org/en/latest/import/ynab.html)
+
+Then the things that make you go "yeah OK, makes sense".
+
+* A [double-entry](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system) bookkeeping system
+* You can store, edit and remove [withdrawals, deposits and transfers](http://docs.firefly-iii.org/en/latest/concepts/transactions.html). This allows you full financial management
+* You can manage [different types of accounts](http://docs.firefly-iii.org/en/latest/concepts/accounts.html)
+    * Asset accounts
+    * Shared asset accounts (household accounts)
+    * Saving accounts
+    * Credit cards
+    * Loans, mortgages
+
+* It's possible to create, change and manage money [using budgets](http://docs.firefly-iii.org/en/latest/concepts/budgets.html)
+* Organize transactions [using categories](http://docs.firefly-iii.org/en/latest/concepts/categories.html)
+* Save towards a goal using [piggy banks](http://docs.firefly-iii.org/en/latest/advanced/piggies.html)
+* Predict and anticipate [bills](http://docs.firefly-iii.org/en/latest/advanced/bills.html)
+* View [income and expense reports](http://docs.firefly-iii.org/en/latest/advanced/reports.html)
+* Organize expenses [using tags](http://docs.firefly-iii.org/en/latest/concepts/tags.html)
+
+
+And the things you would hope for but not expect:
+
 * 2 factor authentication for extra security 🔒
-* Supports any currency you want, including [crypto currencies](https://firefly-iii.readthedocs.io/en/latest/concepts/currencies.html) such as ₿itcoin  and Ξthereum
-* Lots of help text in case you don’t get it
-* Translations into 10(!) languages, proudly powered by [Crowdin](https://crowdin.com/project/firefly-iii).
+* Supports [any currency you want](http://docs.firefly-iii.org/en/latest/concepts/currencies.html), including crypto currencies such as ₿itcoin and Ξthereum
+* There is a [Docker image](http://docs.firefly-iii.org/en/latest/installation/docker.html), a [Sandstorm.io grain](http://docs.firefly-iii.org/en/latest/installation/hosted.html) and an [Heroku script](http://docs.firefly-iii.org/en/latest/installation/hosted.html).
+* Lots of help text in case you don't get it
 
-Everything is organised:
+And to organise everything:
 
 * Clear views that should show you how you're doing
 * Easy navigation through your records
 * Browse back and forth to see previous months or even years
 * Lots of charts because we all love them
-* Financial reporting showing you how well you are doing
-* Lots of math because we all like math!
+* If you feel you’re missing something you [can just ask me](http://docs.firefly-iii.org/en/latest/contact/contact.html) and I’ll add it!
 
 ### Who is it for?
 This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.

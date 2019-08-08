@@ -2,6 +2,64 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.9 (API 0.10.0)] - 2019-08-22
+
+A huge change that introduces significant database and API changes. Read more about it [in this Patreon post](https://www.patreon.com/posts/summer-time-to-28072164).
+
+### Open and known issues
+- The "new transaction"-form isn't translated.
+- You can't drag and drop transactions.
+- You can't clone transactions.
+
+### Added
+- Initial release.
+- Hungarian translation!
+
+### Changed
+- New database model that changes the concept of "split transactions";
+- New installation routine with rewritten database integrity tests and upgrade code;
+- Rewritten screen to create transactions which will now completely rely on the API;
+- Most terminal commands now have the prefix `firefly-iii`.
+- New MFA code that will generate backup codes for you and is more robust. MFA will have to be re-enabled for ALL users.
+
+### Deprecated
+- This will probably be the last Firefly III version to have import routines for files, Bunq and others.
+
+### Removed
+- The export function has been removed.
+
+### Fixed
+- #1652, new strings to use during the import.
+- #1860, fixing the default currency not being on top in a JSON box.
+- #2031, a fix for Triodos imports.
+- #2153, problems with editing credit cards.
+- #2179, consistent and correct redirect behavior.
+- #2180, API issues with foreign amounts.
+- #2187, bulk editing reconciled transactions was broken.
+- #2188, redirect loop in bills
+- #2189, bulk edit could not handle tags.
+- #2203, #2208, #2352, reconciliation fixes
+- #2204, transaction type fix
+- #2211, mass edit fixes.
+- #2212, bug in the API when deleting objects.
+- #2214, could not view attachment.
+- #2219, max amount was a little low.
+- #2239, fixed ordering issue.
+- #2246, could not disable EUR.
+- #2268, could not import into liability accounts.
+- #2293, could not trigger rule on deposits in some circumstances
+- #2314, could not trigger rule on transfers in some circumstances
+- #2325, some balance issues on the frontpage.
+- #2328, some date range issues in reports
+- #2331, some broken fields in reports.
+- #2333, API issues with piggy banks.
+- #2355, configuration issues with LDAP
+- #2361, some ordering issues.
+
+### API
+- Initial release
+
+
 ## [4.7.17.6 (API 0.9.2)] - 2019-08-02
 
 ### Security
