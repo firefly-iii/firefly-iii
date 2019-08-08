@@ -2,8 +2,6 @@
 
 # Firefly III
 
-GN1
-
 [![Packagist](https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square])](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate using Paypal](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) [![OpenCollective](https://opencollective.com/firefly-iii/backers/badge.svg)](https://opencollective.com/firefly-iii) [![OpenCollective](https://opencollective.com/firefly-iii/sponsors/badge.svg)](https://opencollective.com/firefly-iii)
 
 * [Introduction](#introduction)
