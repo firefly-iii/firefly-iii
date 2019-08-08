@@ -89,7 +89,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -115,7 +115,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -200,7 +200,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('warning', trans('firefly.delete_local_info_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('warning', trans('firefly.delete_local_info_only', ['login_provider' => e($loginProvider)]));
             // @codeCoverageIgnoreEnd
         }
         $title        = auth()->user()->email;
@@ -296,7 +296,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -350,7 +350,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd

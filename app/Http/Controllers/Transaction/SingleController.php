@@ -399,7 +399,7 @@ class SingleController extends Controller
         // store the journal only, flash the rest.
         Log::debug(sprintf('Count of error messages is %d', $this->attachments->getErrors()->count()));
         if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
-            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
+            session()->flash('error', e($this->attachments->getErrors()->get('attachments')));
         }
         // flash messages
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -466,7 +466,7 @@ class SingleController extends Controller
 
         // @codeCoverageIgnoreStart
         if (\count($this->attachments->getErrors()->get('attachments')) > 0) {
-            session()->flash('error', $this->attachments->getErrors()->get('attachments'));
+            session()->flash('error', e($this->attachments->getErrors()->get('attachments')));
         }
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
