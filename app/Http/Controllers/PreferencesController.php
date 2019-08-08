@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -134,9 +135,14 @@ class PreferencesController extends Controller
         }
 
         // language:
+        /** @var Preference $currentLang */
+        $currentLang = app('preferences')->get('language', 'en_US');
         $lang = $request->get('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
             app('preferences')->set('language', $lang);
+        }
+        if ($currentLang->data !== $lang) {
+            session()->flash('info', 'All translations are supplied by volunteers. There might be errors and mistakes. I appreciate your feedback.');
         }
 
         // optional fields for transactions:
