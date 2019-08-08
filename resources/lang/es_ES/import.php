@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Soluciona problemas potenciales con archivos de PC',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Corrige los posibles problemas con archivos de Belfius',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configuración de importación (3/4) - Definir el rol de cada columna',
     'job_config_roles_text'           => 'Cada columna en su archivo CSV contiene ciertos datos. Indique qué tipo de datos debe esperar el importador. La opción de "mapear" datos significa que enlazará cada entrada encontrada en la columna con un valor en su base de datos. Una columna a menudo mapeada es la columna que contiene el IBAN de la cuenta de contrapartida. Eso puede enlazarse fácilmente con cuentas IBAN ya presentes en su base de datos.',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Cuenta opuesta (numero de cuenta)',
     'column_note'                     => 'Nota (s)',
     'column_internal-reference'       => 'Referencia interna',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

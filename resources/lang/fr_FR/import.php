@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Corrige d\'éventuels problèmes avec les fichiers PC',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Corrige d\'éventuels problèmes avec les fichiers Belfius',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configuration de l\'importation (3/4) - Définir le rôle de chaque colonne',
     'job_config_roles_text'           => 'Chaque colonne de votre fichier CSV contient des données différentes. Veuillez indiquer quel type de données l’importateur doit attendre. L’option de « mapper » les données signifie que vous allez lier chaque entrée trouvée dans la colonne à une valeur dans votre base de données. Une colonne souvent mappée est celle contenant l\'IBAN du compte opposé. Il est facile de le faire correspondre avec un IBAN déjà présent dans votre base de données.',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Compte opposé (numéro de compte)',
     'column_note'                     => 'Note(s)',
     'column_internal-reference'       => 'Référence interne',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

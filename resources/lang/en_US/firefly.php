@@ -849,7 +849,7 @@ return [
     'mass_delete_journals'                    => 'Delete a number of transactions',
     'mass_edit_journals'                      => 'Edit a number of transactions',
     'mass_bulk_journals'                      => 'Bulk edit a number of transactions',
-    'mass_bulk_journals_explain'              => 'This form allows you to change properties if the transactions listed below in one sweeping update. All the transactions in the table will be updated when you change the parameters you see here.',
+    'mass_bulk_journals_explain'              => 'This form allows you to change properties of the transactions listed below in one sweeping update. All the transactions in the table will be updated when you change the parameters you see here.',
     'part_of_split'                           => 'This transaction is part of a split transaction. If you have not selected all the splits, you may end up with changing only half the transaction.',
     'bulk_set_new_values'                     => 'Use the inputs below to set new values. If you leave them empty, they will be made empty for all. Also, note that only withdrawals will be given a budget.',
     'no_bulk_category'                        => 'Don\'t update category',

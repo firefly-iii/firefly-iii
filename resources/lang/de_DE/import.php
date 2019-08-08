@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Behebt mögliche Probleme mit PC-Dateien',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Behebt mögliche Probleme mit Belfius-Dateien',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Behebt mögliche Probleme mit ING Belgien Dateien',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import einrichten (3/4) • Funktion jeder Spalte festlegen',
     'job_config_roles_text'           => 'Jede Spalte in Ihrer CSV-Datei enthält bestimmte Daten. Bitte geben Sie an, welche Art von Daten enthalten sind. Die Option "Daten zuordnen" bedeutet, dass jeder Eintrag in der Spalte mit einem Wert aus Ihrer der Datenbank ersetzt wird. Eine oft zugeordnete Spalte ist die Spalte, welche die IBAN des fremden Kontos enthält. Diese können leicht mit bereits angelegten IBANs in Ihrer Datenbank verglichen werden.',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Zielkonto (Kontonr.)',
     'column_note'                     => 'Notiz(en)',
     'column_internal-reference'       => 'Interne Referenz',
+
+    // error message
+    'duplicate_row'                   => 'Zeile #:row (":description") konnte nicht importiert werden, da sie bereits existiert.',
 
 ];

@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Modo de etiqueta',
     'tag_position'                => 'Etiquetar ubicación',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Cantidad objetivo',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -125,10 +125,10 @@ return [
     'date_format'                 => 'Formato de fecha',
     'specifix'                    => 'Banco- o archivo de soluciones especificas',
     'attachments[]'               => 'Adjuntos',
-    'store_new_withdrawal'        => 'Guardar rueva retirada de efectivo',
+    'store_new_withdrawal'        => 'Guardar nuevo retiro',
     'store_new_deposit'           => 'Guardar nuevo depósito',
     'store_new_transfer'          => 'Guardar nueva transferencia',
-    'add_new_withdrawal'          => 'Añadir rueva retirada de efectivo',
+    'add_new_withdrawal'          => 'Añadir un nuevo retiro',
     'add_new_deposit'             => 'Añadir nuevo depósito',
     'add_new_transfer'            => 'Añadir nueva transferencia',
     'title'                       => 'Título',
@@ -252,5 +252,8 @@ return [
     'calendar'                => 'Calendario',
     'weekend'                 => 'Fin de semana',
     'client_secret'           => 'Secreto del cliente',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
 
 ];

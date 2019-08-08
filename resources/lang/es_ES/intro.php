@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Bienvenido a la página de índice de Firefly III. Por favor tómate tu tiempo para revisar esta guía y que puedas hacerte una idea de cómo funciona Firefly III.',
-    'index_accounts-chart'                  => 'Este gráfico muestra el saldo actual de tus cuentas. Puedes seleccionar las cuentas que se muestran en él desde tus preferencias.',
-    'index_box_out_holder'                  => 'Esta pequeña caja y las cajas a continuación te darán una visión rápida de tu situación financiera.',
-    'index_help'                            => 'Si alguna vez necesitas ayuda en una página o formulario, pulsa este botón.',
-    'index_outro'                           => 'La mayoría de las páginas de Firefly III comenzarán con una pequeña introducción como ésta. Por favor, ponte en contacto conmigo si tienes preguntas o comentarios. ¡Disfruta!',
-    'index_sidebar-toggle'                  => 'Para crear nuevas transacciones, cuentas u otros elementos, utiliza el menú bajo este icono.',
+    'index_intro'                                     => 'Bienvenido a la página de índice de Firefly III. Por favor tómate tu tiempo para revisar esta guía y que puedas hacerte una idea de cómo funciona Firefly III.',
+    'index_accounts-chart'                            => 'Este gráfico muestra el saldo actual de tus cuentas. Puedes seleccionar las cuentas que se muestran en él desde tus preferencias.',
+    'index_box_out_holder'                            => 'Esta pequeña caja y las cajas a continuación te darán una visión rápida de tu situación financiera.',
+    'index_help'                                      => 'Si alguna vez necesitas ayuda en una página o formulario, pulsa este botón.',
+    'index_outro'                                     => 'La mayoría de las páginas de Firefly III comenzarán con una pequeña introducción como ésta. Por favor, ponte en contacto conmigo si tienes preguntas o comentarios. ¡Disfruta!',
+    'index_sidebar-toggle'                            => 'Para crear nuevas transacciones, cuentas u otros elementos, utiliza el menú bajo este icono.',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => 'Indica un IBAN válido en tus cuentas. Esto facilitará la importación de datos en el futuro.',
-    'accounts_create_asset_opening_balance' => 'Cuentas de ingreso deben tener un "saldo de apertura", indicando el inicio del historial de la cuenta en Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III admite múltiples divisas. Las cuentas tienen una divisa principal, que debes indicar aquí.',
-    'accounts_create_asset_virtual'         => 'A veces puede ayudar el darle a tu cuenta un balance virtual: una cantidad extra que se añade o resta siempre del balance real.',
+    'accounts_create_iban'                            => 'Indica un IBAN válido en tus cuentas. Esto facilitará la importación de datos en el futuro.',
+    'accounts_create_asset_opening_balance'           => 'Cuentas de ingreso deben tener un "saldo de apertura", indicando el inicio del historial de la cuenta en Firefly III.',
+    'accounts_create_asset_currency'                  => 'Firefly III admite múltiples divisas. Las cuentas tienen una divisa principal, que debes indicar aquí.',
+    'accounts_create_asset_virtual'                   => 'A veces puede ayudar el darle a tu cuenta un balance virtual: una cantidad extra que se añade o resta siempre del balance real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Los presupuestos se utilizan para administrar sus finanzas y son una de las funciones básicas de Firefly III.',
-    'budgets_index_set_budget'              => 'Coloque su presupuesto total para cada período y así Firefly III puede decirle si usted ha presupuestado todo el dinero disponible.',
-    'budgets_index_see_expenses_bar'        => 'Gastar dinero irá llenando poco a poco esta barra.',
-    'budgets_index_navigate_periods'        => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
-    'budgets_index_new_budget'              => 'Crea nuevos presupuestos como mejor te parezca.',
-    'budgets_index_list_of_budgets'         => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo lo está haciendo.',
-    'budgets_index_outro'                   => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en el tope de la esquina derecha.',
+    'budgets_index_intro'                             => 'Los presupuestos se utilizan para administrar sus finanzas y son una de las funciones básicas de Firefly III.',
+    'budgets_index_set_budget'                        => 'Coloque su presupuesto total para cada período y así Firefly III puede decirle si usted ha presupuestado todo el dinero disponible.',
+    'budgets_index_see_expenses_bar'                  => 'Gastar dinero irá llenando poco a poco esta barra.',
+    'budgets_index_navigate_periods'                  => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
+    'budgets_index_new_budget'                        => 'Crea nuevos presupuestos como mejor te parezca.',
+    'budgets_index_list_of_budgets'                   => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo lo está haciendo.',
+    'budgets_index_outro'                             => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en el tope de la esquina derecha.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Utilice estos reportes para tener información detallada de sus finanzas.',
-    'reports_index_inputReportType'         => 'Escoja un tipo de reporte. Revise las páginas de ayuda para ver lo que le muestra cada reporte.',
-    'reports_index_inputAccountsSelect'     => 'Usted puede excluir o incluir cuentas de activos como mejor le cuadre.',
-    'reports_index_inputDateRange'          => 'El rango de fecha seleccionada depende completamente de usted: de un día a 10 años.',
-    'reports_index_extra-options-box'       => 'Dependiendo del informe que usted haya seleccionado, puede seleccionar filtros y opciones extras aquí. Mire este recuadro cuando cambie los tipos de informes.',
+    'reports_index_intro'                             => 'Utilice estos reportes para tener información detallada de sus finanzas.',
+    'reports_index_inputReportType'                   => 'Escoja un tipo de reporte. Revise las páginas de ayuda para ver lo que le muestra cada reporte.',
+    'reports_index_inputAccountsSelect'               => 'Usted puede excluir o incluir cuentas de activos como mejor le cuadre.',
+    'reports_index_inputDateRange'                    => 'El rango de fecha seleccionada depende completamente de usted: de un día a 10 años.',
+    'reports_index_extra-options-box'                 => 'Dependiendo del informe que usted haya seleccionado, puede seleccionar filtros y opciones extras aquí. Mire este recuadro cuando cambie los tipos de informes.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Este informe le dará un rápido y comprensivo resumen de sus finanzas. Si usted desea ver algo mas, ¡por favor no dude en ponerse en contacto conmigo!',
-    'reports_report_audit_intro'            => 'Este informe le dará información detallada en sus cuentas de activos.',
-    'reports_report_audit_optionsBox'       => 'Use estos recuadros de verificación para ver u ocultar las columnas que a usted le interesan.',
+    'reports_report_default_intro'                    => 'Este informe le dará un rápido y comprensivo resumen de sus finanzas. Si usted desea ver algo mas, ¡por favor no dude en ponerse en contacto conmigo!',
+    'reports_report_audit_intro'                      => 'Este informe le dará información detallada en sus cuentas de activos.',
+    'reports_report_audit_optionsBox'                 => 'Use estos recuadros de verificación para ver u ocultar las columnas que a usted le interesan.',
 
     'reports_report_category_intro'                  => 'Este informe le dará una idea en una o múltiples categorías.',
     'reports_report_category_pieCharts'              => 'Estos gráficos le darán una idea de sus gastos e ingresos por categoría o por cuenta.',

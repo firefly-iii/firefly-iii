@@ -39,6 +39,7 @@ return [
     'reports'                => 'Rapport',
     'search_result'          => 'Résultats de recherche pour ":query"',
     'withdrawal_list'        => 'Dépenses',
+    'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Revenu, salaire et versements',
     'transfer_list'          => 'Virements',
     'transfers_list'         => 'Virements',
