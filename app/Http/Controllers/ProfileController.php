@@ -46,7 +46,6 @@ use Illuminate\Support\Collection;
 use Laravel\Passport\ClientRepository;
 use Log;
 use PragmaRX\Recovery\Recovery;
-use Preferences;
 
 /**
  * Class ProfileController.
@@ -139,19 +138,38 @@ class ProfileController extends Controller
     public function code()
     {
         $domain = $this->getDomain();
-        $secret = Google2FA::generateSecretKey();
-        session()->flash('two-factor-secret', $secret);
+        $secret = null;
 
-        // generate recovery codes:
-        $recovery = app( Recovery::class);
-        $recoveryCodes =$recovery->lowercase()
-            ->setCount(8)     // Generate 8 codes
-            ->setBlocks(2)    // Every code must have 7 blocks
-            ->setChars(6)    // Each block must have 16 chars
-            ->toArray();
+        // generate secret if not in session
+        if (!session()->has('temp-mfa-secret')) {
+            // generate secret + store + flash
+            $secret = Google2FA::generateSecretKey();
+            session()->put('temp-mfa-secret', $secret);
+            session()->flash('two-factor-secret', $secret);
+        }
+        // re-use secret if in session
+        if (session()->has('temp-mfa-secret')) {
+            // get secret from session and flash
+            $secret = session()->get('temp-mfa-secret');
+            session()->flash('two-factor-secret', $secret);
+        }
+
+        // generate codes if not in session:
+        if (!session()->has('temp-mfa-codes')) {
+            // generate codes + store + flash:
+            $recovery      = app(Recovery::class);
+            $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
+            session()->put('temp-mfa-codes', $recoveryCodes);
+            session()->flash('two-factor-codes', $recoveryCodes);
+        }
+
+        // get codes from session if there already:
+        if (session()->has('temp-mfa-codes')) {
+            $recoveryCodes = session()->get('temp-mfa-codes');
+            session()->flash('two-factor-codes', $recoveryCodes);
+        }
+
         $codes = implode("\r\n", $recoveryCodes);
-
-        Preferences::set('mfa_recovery', $recoveryCodes);
 
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
@@ -290,7 +308,7 @@ class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $mfaBackupCount = count(Preferences::get('mfa_recovery', [])->data);
+        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
 
         // get access token or create one.
         $accessToken = app('preferences')->get('access_token', null);
@@ -316,8 +334,8 @@ class ProfileController extends Controller
                                   ->toArray();
         $codes         = implode("\r\n", $recoveryCodes);
 
-        Preferences::set('mfa_recovery', $recoveryCodes);
-        Preferences::mark();
+        app('preferences')->set('mfa_recovery', $recoveryCodes);
+        app('preferences')->mark();
         return view('profile.new-backup-codes', compact('codes'));
     }
 
@@ -431,16 +449,25 @@ class ProfileController extends Controller
         $repository = app(UserRepositoryInterface::class);
         /** @var string $secret */
         $secret = session()->get('two-factor-secret');
-
         $repository->setMFACode($user, $secret);
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
 
+        // also save the code so replay attack is prevented.
+        $mfaCode = $request->get('code');
+        $this->addToMFAHistory($mfaCode);
+
+        // save backup codes in preferences:
+        app('preferences')->set('mfa_recovery', session()->get('temp-mfa-codes'));
+
         // make sure MFA is logged out.
         if ('testing' !== config('app.env')) {
             Google2FA::logout();
         }
+
+        // drop all info from session:
+        session()->forget(['temp-mfa-secret', 'two-factor-secret', 'temp-mfa-codes', 'two-factor-codes']);
 
         return redirect(route('profile.index'));
     }
@@ -547,5 +574,44 @@ class ProfileController extends Controller
         return redirect(route('login'));
     }
 
+    /**
+     * TODO duplicate code.
+     *
+     * @param string $mfaCode
+     */
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
 
+        app('preferences')->set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
+    }
+
+    /**
+     * Remove old entries from the preferences array.
+     */
+    private function filterMFAHistory(): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
+        $newHistory = [];
+        $now        = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($now - $time <= 300) {
+                $newHistory[] = [
+                    'time' => $time,
+                    'code' => $code,
+                ];
+            }
+        }
+        app('preferences')->set('mfa_history', $newHistory);
+    }
 }
