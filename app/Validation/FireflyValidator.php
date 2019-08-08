@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Carbon\Carbon;
 use Config;
 use DB;
 use FireflyIII\Models\Account;
