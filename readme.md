@@ -64,14 +64,12 @@ Then the things that make you go "yeah OK, makes sense".
     * Saving accounts
     * Credit cards
     * Loans, mortgages
-
 * It's possible to create, change and manage money [using budgets](http://docs.firefly-iii.org/en/latest/concepts/budgets.html)
 * Organize transactions [using categories](http://docs.firefly-iii.org/en/latest/concepts/categories.html)
 * Save towards a goal using [piggy banks](http://docs.firefly-iii.org/en/latest/advanced/piggies.html)
 * Predict and anticipate [bills](http://docs.firefly-iii.org/en/latest/advanced/bills.html)
 * View [income and expense reports](http://docs.firefly-iii.org/en/latest/advanced/reports.html)
 * Organize expenses [using tags](http://docs.firefly-iii.org/en/latest/concepts/tags.html)
-
 
 And the things you would hope for but not expect:
 
@@ -97,11 +95,9 @@ There are many ways to run Firefly III
 2. You can [install it on your server](https://firefly-iii.readthedocs.io/en/latest/installation/server.html).
 3. You can [run it using Docker](https://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master).
-   
-   Please read the [considerations when using Heroku](https://firefly-iii.readthedocs.io/en/latest/installation/hosted.html#considerations-when-using-heroku) first though.
+    * Please read the [considerations when using Heroku](https://firefly-iii.readthedocs.io/en/latest/installation/hosted.html#considerations-when-using-heroku) first though.
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70).
-
-   Note that you must have a paid Sandstorm account for this to work, or you must self-host your Sandstorm server.
+    * Note that you must have a paid Sandstorm account for this to work, or you must self-host your Sandstorm server.
 6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 7. You can [install it using AMPPS](https://www.ampps.com/)
 8. You can [install it with YunoHost](https://install-app.yunohost.org/?app=firefly-iii).
