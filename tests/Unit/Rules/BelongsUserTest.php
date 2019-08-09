@@ -90,6 +90,8 @@ class BelongsUserTest extends TestCase
         try {
             $this->assertTrue($engine->passes($attribute, $value));
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
     }

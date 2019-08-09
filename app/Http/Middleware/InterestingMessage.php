@@ -44,7 +44,7 @@ class InterestingMessage
      */
     public function handle(Request $request, Closure $next)
     {
-        Log::debug(sprintf('Interesting Message middleware for URI %s', $request->url()));
+        //Log::debug(sprintf('Interesting Message middleware for URI %s', $request->url()));
         if ($this->testing()) {
             return $next($request);
         }

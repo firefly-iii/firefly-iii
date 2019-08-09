@@ -50,6 +50,7 @@ class CreateControllerTest extends TestCase
     public function testCreate(): void
     {
         $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_transactions_create_withdrawal');
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $cash         = $this->getRandomAsset();
@@ -63,7 +64,7 @@ class CreateControllerTest extends TestCase
 
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.create'));
+        $response = $this->get(route('transactions.create', ['withdrawal']));
         $response->assertStatus(200);
     }
 }

@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use Illuminate\Contracts\Validation\Rule;
+use Log;
 
 /**
  * Class BelongsUser
@@ -78,6 +79,7 @@ class BelongsUser implements Rule
             return true; // @codeCoverageIgnore
         }
         $attribute = (string)$attribute;
+        Log::debug(sprintf('Going to validate %s', $attribute));
         switch ($attribute) {
             case 'piggy_bank_id':
                 return $this->validatePiggyBankId((int)$value);
@@ -112,6 +114,7 @@ class BelongsUser implements Rule
      */
     protected function countField(string $class, string $field, string $value): int
     {
+        $value   = trim($value);
         $objects = [];
         // get all objects belonging to user:
         if (PiggyBank::class === $class) {
@@ -124,8 +127,11 @@ class BelongsUser implements Rule
         }
         $count = 0;
         foreach ($objects as $object) {
-            if (trim((string)$object->$field) === trim($value)) {
+            $objectValue = trim((string)$object->$field);
+            Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
+            if ($objectValue === $value) {
                 $count++;
+                Log::debug(sprintf('Hit! Count is now %d', $count));
             }
         }
 
@@ -182,6 +188,7 @@ class BelongsUser implements Rule
     private function validateBillName(string $value): bool
     {
         $count = $this->countField(Bill::class, 'name', $value);
+        Log::debug(sprintf('Result of countField for bill name "%s" is %d', $value, $count));
 
         return 1 === $count;
     }
