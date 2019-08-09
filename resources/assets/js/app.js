@@ -18,6 +18,8 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import CustomAttachments from "./components/transactions/CustomAttachments";
+
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -29,39 +31,56 @@ window.Vue = require('vue');
 import * as uiv from 'uiv';
 
 Vue.use(uiv);
+
+import CreateTransaction from './components/transactions/CreateTransaction';
+import EditTransaction from  './components/transactions/EditTransaction';
+import Clients from './components/passport/Clients';
+import AuthorizedClients from "./components/passport/AuthorizedClients";
+import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
+import Budget from "./components/transactions/Budget";
+import CustomDate from "./components/transactions/CustomDate";
+import CustomString from "./components/transactions/CustomString";
+import CustomTextarea from "./components/transactions/CustomTextarea";
+import StandardDate from "./components/transactions/StandardDate";
+import GroupDescription from "./components/transactions/GroupDescription";
+import TransactionDescription from "./components/transactions/TransactionDescription";
+import CustomTransactionFields from "./components/transactions/CustomTransactionFields";
+import PiggyBank from "./components/transactions/PiggyBank";
+import Tags from "./components/transactions/Tags";
+import Category from "./components/transactions/Category";
+import Amount from "./components/transactions/Amount";
+import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
+import TransactionType from "./components/transactions/TransactionType";
+import AccountSelect from "./components/transactions/AccountSelect";
+
 // components for create and edit transactions.
-Vue.component('budget', require('./components/transactions/Budget.vue'));
+Vue.component('budget', Budget);
+Vue.component('custom-date', CustomDate);
+Vue.component('custom-string', CustomString);
+Vue.component('custom-attachments', CustomAttachments);
+Vue.component('custom-textarea', CustomTextarea);
+Vue.component('standard-date', StandardDate);
+Vue.component('group-description', GroupDescription);
+Vue.component('transaction-description', TransactionDescription);
 
-Vue.component('custom-date', require('./components/transactions/CustomDate.vue'));
-Vue.component('custom-string', require('./components/transactions/CustomString.vue'));
-Vue.component('custom-attachments', require('./components/transactions/CustomAttachments.vue'));
-Vue.component('custom-textarea', require('./components/transactions/CustomTextArea.vue'));
-Vue.component('standard-date', require('./components/transactions/StandardDate.vue'));
-Vue.component('group-description', require('./components/transactions/GroupDescription'));
-Vue.component('transaction-description', require('./components/transactions/TransactionDescription'));
-
-Vue.component('custom-transaction-fields', require('./components/transactions/CustomTransactionFields.vue'));
-Vue.component('piggy-bank', require('./components/transactions/PiggyBank.vue'));
-Vue.component('tags', require('./components/transactions/Tags.vue'));
-Vue.component('category', require('./components/transactions/Category.vue'));
-Vue.component('amount', require('./components/transactions/Amount.vue'));
-Vue.component('foreign-amount', require('./components/transactions/ForeignAmountSelect.vue'));
-Vue.component('transaction-type', require('./components/transactions/TransactionType.vue'));
-Vue.component('account-select', require('./components/transactions/AccountSelect.vue'));
-
-
-
-
+Vue.component('custom-transaction-fields', CustomTransactionFields);
+Vue.component('piggy-bank', PiggyBank);
+Vue.component('tags', Tags);
+Vue.component('category', Category);
+Vue.component('amount', Amount);
+Vue.component('foreign-amount', ForeignAmountSelect);
+Vue.component('transaction-type', TransactionType);
+Vue.component('account-select', AccountSelect);
 
 /**
  * Components for OAuth2 tokens.
  */
-Vue.component('passport-clients', require('./components/passport/Clients.vue'));
-Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
-Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
+Vue.component('passport-clients', Clients);
+Vue.component('passport-authorized-clients',AuthorizedClients);
+Vue.component('passport-personal-access-tokens', PersonalAccessTokens);
 
-Vue.component('create-transaction', require('./components/transactions/CreateTransaction'));
-Vue.component('edit-transaction', require('./components/transactions/EditTransaction'));
+Vue.component('create-transaction', CreateTransaction);
+Vue.component('edit-transaction', EditTransaction);
 
 
 const app = new Vue({
