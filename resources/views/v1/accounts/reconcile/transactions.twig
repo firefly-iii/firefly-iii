@@ -8,7 +8,6 @@
         <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
-
         <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
         <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
     </tr>
@@ -17,9 +16,9 @@
     {# data for previous/next markers #}
     {% set endSet = false %}
     {% set startSet = false %}
-    {% for transaction in transactions %}
+    {% for journal in journals %}
         {# start marker #}
-        {% if transaction.date < start and startSet == false %}
+        {% if journal.date < start and startSet == false %}
             <tr>
                 <td colspan="5">
                     &nbsp;
@@ -37,7 +36,7 @@
         {% endif %}
 
         {# end marker #}
-        {% if transaction.date <= end and endSet == false %}
+        {% if journal.date <= end and endSet == false %}
             <tr>
                 <td colspan="5">
                     &nbsp;
@@ -53,71 +52,101 @@
             </tr>
             {% set endSet = true %}
         {% endif %}
-
-        <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
-            data-transaction-id="{{ transaction.id }}">
+        <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.transaction_journal_id }}">
             <td class="hidden-xs">
                 <div class="btn-group btn-group-xs">
-                    <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i
+                    <a href="{{ route('transactions.edit', [journal.transaction_group_id]) }}" class="btn btn-xs btn-default"><i
                                 class="fa fa-fw fa-pencil"></i></a>
                 </div>
+
             </td>
-            {# icon #}
+
+            <!-- icon -->
             <td class="hidden-xs">
-                {{ transaction|transactionIcon }}
-            </td>
-
-            {# description #}
-            <td>
-                <a href="{{ route('transactions.show',transaction.journal_id) }}">
-                    {{ transaction|transactionDescription }}
-                </a>
-                {# is a split journal #}
-                {{ transaction|transactionIsSplit }}
-
-                {# count attachments #}
-                {{ transaction|transactionHasAtt }}
-
-
-            </td>
-            <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
-            <td>
-                {% if currency.id == transaction.transaction_currency_id %}
-                    {% set transactionAmount = transaction.transaction_amount %}
-                {% else %}
-                    {% set transactionAmount = transaction.transaction_foreign_amount %}
+                {% if journal.transaction_type_type == 'Withdrawal' %}
+                    <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
                 {% endif %}
 
-                {% if transaction.reconciled %}
-                    {{ transaction|transactionReconciled }}
-                    <input type="hidden" name="cleared[]" data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
-                           data-inrange="{% if transaction.date >= start and transaction.date <= end  %}true{% else %}false"{% endif %}"
-                           class="cleared" data-id="{{ transaction.id }}" value="{{ transactionAmount }}">
-                {% else %}
-                    <input type="checkbox" name="reconciled[]"
-                           data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
-                           data-inrange="{% if transaction.date >= start and transaction.date <= end  %}true{% else %}false"{% endif %}"
-                           value="{{ transactionAmount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
+                {% if journal.transaction_type_type == 'Deposit' %}
+                    <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Transfer' %}
+                    <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Reconciliation' %}
+                    <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
+                {% endif %}
+                {% if journal.transaction_type_type == 'Opening balance' %}
+                    <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                 {% endif %}
             </td>
+
+            <!-- description -->
+            <td>
+                <a href="{{ route('transactions.show', [journal.transaction_group_id]) }}" title="{{ journal.description }}">
+                    {% if journal.group_title %}
+                        <span class="text-muted"><i class="fa fa-fw fa-share-alt" aria-hidden="true"></i></span> {{ journal.group_title }}:
+                    {% endif %}
+                    {{ journal.description }}</a>
+            </td>
+
+            <td style="text-align: right;">
+                <span style="margin-right:5px;">
+                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                {% if null != journal.foreign_amount %}
+                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                {% endif %}
+                </span>
+            </td>
+
+            <td>
+                {% if journal.date >= start and journal.date <= end  %}
+                    {% if journal.reconciled %}
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <input type="hidden" name="cleared[]" data-younger="{% if journal.date < start %}true{% else %}false{% endif %}"
+                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true{% else %}false"{% endif %}"
+                        class="cleared" data-id="{{ journal.transaction_journal_id }}" value="{{ journal.amount }}">
+                    {% else %}
+                        <input type="checkbox" name="reconciled[]"
+                               data-younger="{% if journal.date < start %}true{% else %}false{% endif %}"
+                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true{% else %}false"{% endif %}"
+                        value="{{ journal.amount }}" data-id="{{ journal.transaction_journal_id }}" disabled class="reconcile_checkbox">
+                    {% endif %}
+                {% else %}
+                    <!-- if not in range, just show reconciliation status -->
+                    {% if journal.reconciled %}
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    {% else %}
+                        <!-- TODO include icon -->
+                    {% endif %}
+
+                {% endif %}
+
+            </td>
+
             <td class="hidden-sm hidden-xs">
-                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+                {{ journal.date.formatLocalized(monthAndDayFormat) }}
             </td>
+
             <td class="hidden-xs hidden-sm hidden-md">
-                {# all source accounts #}
-                {{ transaction|transactionSourceAccount }}
+                <a href="{{ route('accounts.show', [journal.source_account_id]) }}" title="{{ journal.source_account_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a>
             </td>
+
             <td class="hidden-xs hidden-sm hidden-md">
-                {# all destination accounts #}
-                {{ transaction|transactionDestinationAccount }}
+                <a href="{{ route('accounts.show', [journal.destination_account_id]) }}" title="{{ journal.destination_account_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
             </td>
+            {#
             <td class="hidden-xs">
                 {{ transaction|transactionBudgets }}
             </td>
             <td class="hidden-xs">
                 {{ transaction|transactionCategories }}
             </td>
+            #}
         </tr>
+
     {% endfor %}
 
     {# if the start marker has not been generated yet, do it now, at the end of the loop. #}

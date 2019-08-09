@@ -23,16 +23,14 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Export\ExpandedProcessor;
-use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Chart\MetaPieChart;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\FiscalHelper;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelper;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Help\Help;
 use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelper;
@@ -45,12 +43,14 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\IP\IpifyOrg;
 use FireflyIII\Services\IP\IPRetrievalInterface;
-use FireflyIII\Services\Password\PwndVerifierV2;
+use FireflyIII\Services\Password\PwndVerifierV3;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
@@ -59,13 +59,9 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
+use FireflyIII\Support\Twig\Extension\TransactionGroupTwig;
 use FireflyIII\Support\Twig\General;
-use FireflyIII\Support\Twig\Journal;
-use FireflyIII\Support\Twig\Loader\AccountLoader;
-use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
-use FireflyIII\Support\Twig\Loader\TransactionLoader;
 use FireflyIII\Support\Twig\Rule;
-use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
@@ -96,17 +92,13 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
         $config = app('config');
-        //Twig::addExtension(new Functions($config));
-        Twig::addRuntimeLoader(new TransactionLoader);
-        Twig::addRuntimeLoader(new AccountLoader);
-        Twig::addRuntimeLoader(new TransactionJournalLoader);
+        Twig::addExtension(new Functions($config));
         Twig::addExtension(new General);
-        Twig::addExtension(new Journal);
+        Twig::addExtension(new TransactionGroupTwig);
         Twig::addExtension(new Translation);
-        Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
-        //Twig::addExtension(new Twig_Extension_Debug);
+        Twig::addExtension(new Twig_Extension_Debug);
     }
 
     /**
@@ -173,9 +165,8 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         // other generators
-        // export:
-        $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         // more generators:
@@ -192,7 +183,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ExchangeRateInterface::class, $class);
 
         // password verifier thing
-        $this->app->bind(Verifier::class, PwndVerifierV2::class);
+        $this->app->bind(Verifier::class, PwndVerifierV3::class);
 
         // IP thing:
         $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);

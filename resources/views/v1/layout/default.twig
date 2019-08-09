@@ -104,9 +104,9 @@
         <section class="sidebar">
             <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input autocomplete="off" type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
+                    <input autocomplete="off" type="text" name="search" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
                 </div>
             </form>
@@ -193,8 +193,8 @@
 {% if not shownDemo %}
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
-        var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
-        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";
+        var routeStepsUri = "{{ route('json.intro', [current_route_name, objectType|default("")]) }}";
+        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default("")]) }}";
     </script>
     <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}"></script>

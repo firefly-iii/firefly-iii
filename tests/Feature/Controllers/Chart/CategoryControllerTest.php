@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Account;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -33,10 +34,14 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
  * Class CategoryControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CategoryControllerTest extends TestCase
 {
@@ -46,7 +51,7 @@ class CategoryControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -54,6 +59,7 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws FireflyException
      */
     public function testAll(string $range): void
     {
@@ -61,13 +67,39 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $firstUse     = new Carbon;
-        $firstUse->subDays(3);
+        $firstUseDate = null;
+        switch ($range) {
+            default:
+                throw new FireflyException(sprintf('No case for %s', $range));
+            case '1D':
+                $firstUseDate = Carbon::now()->subDays(3);
+                break;
+            case '1W':
+                $firstUseDate = Carbon::now()->subDays(12);
+                break;
+            case '1M':
+                $firstUseDate = Carbon::now()->subDays(40);
+                break;
+            case '3M':
+                $firstUseDate = Carbon::now()->subDays(120);
+                break;
+            case '6M':
+                $firstUseDate = Carbon::now()->subDays(160);
+                break;
+            case '1Y':
+                $firstUseDate = Carbon::now()->subDays(365);
+                break;
+            case 'custom':
+                $firstUseDate = Carbon::now()->subDays(20);
+                break;
+        }
 
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0');
-        $repository->shouldReceive('firstUseDate')->andReturn($firstUse)->once();
+        $repository->shouldReceive('spentInPeriod')->andReturn('0')->atLeast()->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn('0')->atLeast()->once();
+        $repository->shouldReceive('firstUseDate')->andReturn($firstUseDate)->once();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
@@ -89,6 +121,9 @@ class CategoryControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $generator     = $this->mock(GeneratorInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         // spent per currency data:
         $spentNoCategory = [
@@ -129,7 +164,7 @@ class CategoryControllerTest extends TestCase
         $repository->shouldReceive('spentInPeriodPerCurrency')->times(2)->andReturn($spentData);
         $repository->shouldReceive('spentInPeriodPcWoCategory')->once()->andReturn($spentNoCategory);
 
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn($this->getEuro());
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
@@ -147,6 +182,10 @@ class CategoryControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('periodExpenses')->andReturn([])->once();
@@ -167,6 +206,10 @@ class CategoryControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('periodExpensesNoCategory')->andReturn([])->once();
@@ -183,15 +226,20 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testSpecificPeriod(string $range): void
     {
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $account      = factory(Account::class)->make();
+        $account      = $this->getRandomAsset();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 

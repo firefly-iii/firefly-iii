@@ -39,11 +39,12 @@ class PiggyBankEventFactory
 {
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -58,10 +59,11 @@ class PiggyBankEventFactory
     {
         Log::debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
         if (null === $piggyBank) {
+            Log::debug('Piggy bank is null');
             return null;
         }
 
-        if (!(TransactionType::TRANSFER === $journal->transactionType->type)) {
+        if (TransactionType::TRANSFER !== $journal->transactionType->type) {
             Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
 
             return null;
@@ -77,7 +79,7 @@ class PiggyBankEventFactory
 
             return null;
         }
-
+        Log::debug('Found repetition');
         $amount = $piggyRepos->getExactAmount($piggyBank, $repetition, $journal);
         if (0 === bccomp($amount, '0')) {
             Log::debug('Amount is zero, will not create event.');

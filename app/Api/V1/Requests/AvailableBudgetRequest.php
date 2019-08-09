@@ -25,6 +25,8 @@ namespace FireflyIII\Api\V1\Requests;
 
 /**
  * Class AvailableBudgetRequest
+ *
+ * @codeCoverageIgnore
  */
 class AvailableBudgetRequest extends Request
 {

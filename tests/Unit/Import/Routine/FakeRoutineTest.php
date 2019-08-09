@@ -30,9 +30,9 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Fake\StageAhoyHandler;
 use FireflyIII\Support\Import\Routine\Fake\StageFinalHandler;
 use FireflyIII\Support\Import\Routine\Fake\StageNewHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class FakeRoutineTest
@@ -45,7 +45,7 @@ class FakeRoutineTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -55,7 +55,7 @@ class FakeRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'a_route_' . random_int(1, 10000);
+        $job->key           = 'a_route_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'ahoy';
         $job->provider      = 'fake';
@@ -91,7 +91,7 @@ class FakeRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'a_route_' . random_int(1, 10000);
+        $job->key           = 'a_route_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'final';
         $job->provider      = 'fake';
@@ -128,7 +128,7 @@ class FakeRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'a_route_' . random_int(1, 10000);
+        $job->key           = 'a_route_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'fake';

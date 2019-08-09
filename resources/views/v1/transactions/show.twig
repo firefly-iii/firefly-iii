@@ -1,487 +1,402 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journal) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="box">
+        <div class="col-lg-6">
+            <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
-
-                    <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete',journal.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
-                                {# convert to withdrawal #}
-                                {% if journal.transactionType.type != "Withdrawal" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# convert to deposit #}
-                                {% if journal.transactionType.type != "Deposit" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# convert to transfer#}
-                                {% if journal.transactionType.type != "Transfer" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# other options #}
-                                <li>
-                                    <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                        <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
-                                        <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
-                                                class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="box-body no-padding">
                     <table class="table table-hover">
                         <tbody>
                         <tr>
                             <td>{{ trans('list.type') }}</td>
-                            <td>{{ journal.transactiontype.type|_ }}</td>
+                            <td>{{ first.transactiontype.type|_ }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>
-                            <td>{{ journal.description }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'source_accounts'|_ }}</td>
-                            <td>{{ sourceAccount(journal)|raw }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'destination_accounts'|_ }}</td>
-                            <td>{{ destinationAccount(journal)|raw }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'total_amount'|_ }}</td>
                             <td>
-                                {{ journal|journalTotalAmount }}
-
-                                {# if more transactions, list each one: #}
-
-                                {% if transactions|length > 2 %}
-                                    ({% for transaction in transactions %}
-                                    {% if transaction.type == 'Deposit' and transaction.amount > 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-                                    {% if transaction.type == 'Withdrawal' and transaction.amount < 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-
-                                    {% if transaction.type == 'Transfer' and transaction.amount > 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-
-                                {% endfor %})
+                                {% if splits == 1 %}
+                                    {{ first.description }}
+                                {% else %}
+                                    {{ transactionGroup.title }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.formatLocalized(dateTimeFormat) }}</td>
+                            <td>
+                                {{ first.date.formatLocalized(dateTimeFormat) }}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="box-footer">
-                    <div class="pull-right">
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a>
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-cog fa-fw"></i> {{ 'options'|_ }} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
+                    <div class="btn-group btn-group-xs">
+                        <a href="{{ route('transactions.edit', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-pencil"></i> {{ 'edit'|_ }}
+                        </a>
+                        <a href="{{ route('transactions.delete', [transactionGroup.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> {{ 'delete'|_ }}
+                        </a>
 
-                                {# convert to withdrawal #}
-                                {% if journal.transactionType.type != "Withdrawal" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# convert to deposit #}
-                                {% if journal.transactionType.type != "Deposit" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# convert to transfer#}
-                                {% if journal.transactionType.type != "Transfer" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# other options #}
-                                <li>
-                                    <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                        <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
-                                        <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
-                                                class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
-                                    </a>
-                                </li>
+                        {% if groupArray.transactions[0].type != 'withdrawal' %}
+                            <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}" class="btn btn-default"><i
+                                        class="fa fa-exchange"></i> {{ 'convert_to_withdrawal'|_ }}</a>
+                        {% endif %}
 
-                            </ul>
-                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
-                            </a>
-                        </div>
+                        {% if groupArray.transactions[0].type != 'deposit' %}
+                            <a href="{{ route('transactions.convert.index', ['deposit', transactionGroup.id]) }}" class="btn btn-default"><i
+                                        class="fa fa-exchange"></i> {{ 'convert_to_deposit'|_ }}</a>
+                        {% endif %}
+
+                        {% if groupArray.transactions[0].type != 'transfer' %}
+                            <a href="{{ route('transactions.convert.index', ['transfer', transactionGroup.id]) }}" class="btn btn-default"><i
+                                        class="fa fa-exchange"></i> {{ 'convert_to_transfer'|_ }}</a>
+                        {% endif %}
+
+
+                        {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
+                            <!--CLONE-->
+                            {#<a href="{{ route('transactions.clone', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a>#}
+                        {% endif %}
+                        {#
+                    <a href="{{ route('transactions.delete', [transactionGroup.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> {{ 'delete'|_ }}</a>
+                    #}
                     </div>
                 </div>
             </div>
-
-            {% if journal.piggyBankEvents|length > 0 %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
-                    </div>
-                    <div class="box-body table-responsive no-padding">
-                        {% include 'list/piggy-bank-events' with {'events': events, 'showPiggyBank':true} %}
-                    </div>
-                </div>
-            {% endif %}
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-
-            <div class="box">
+        <div class="col-lg-6">
+            <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_journal_meta'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body no-padding">
                     <table class="table table-hover">
                         <tbody>
-                        <tr>
-                            <td>{{ 'categories'|_ }}</td>
-                            <td>{{ journalCategories(journal)|raw }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'budgets'|_ }}</td>
-                            <td>{{ journalBudgets(journal)|raw }}</td>
-                        </tr>
-
-                        {# all date meta values #}
-                        {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
-                            {% if journalHasMeta(journal, dateField) %}
-                                <tr>
-                                    <td>{{ trans('list.'~dateField) }}</td>
-                                    <td>{{ journalGetMetaDate(journal,dateField).formatLocalized(monthAndDayFormat) }}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        {# all other meta values #}
-                        {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa-batch-id','sepa-ct-id','sepa-ct-op','sepa-db','sepa-country','sepa-cc','sepa-ep','sepa-ci'] %}
-                            {% if journalHasMeta(journal, metaField) %}
-                                <tr>
-                                    <td>{{ trans('list.'~metaField) }}</td>
-                                    <td>{{ journalGetMetaField(journal, metaField) }}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        {% if journal.notes.count == 1 %}
+                        {% if type != 'Withdrawal' or splits == 1 %}
                             <tr>
-                                <td>{{ trans('list.notes') }}</td>
-                                <td class="markdown">{{ journal.notes.first.text|markdown }}</td>
-                            </tr>
-                        {% endif %}
-
-                        {% if journal.bill_id %}
-                            <tr>
-                                <td>{{ 'bill'|_ }}</td>
-                                <td><a href="{{ route('bills.show', journal.bill_id) }}">{{ journal.bill.name }}</a></td>
-                            </tr>
-                        {% endif %}
-                        {% if journal.tags|length > 0 %}
-                            <tr>
-                                <td>{{ 'tags'|_ }}</td>
                                 <td>
-                                    {% for tag in journal.tags %}
-
-                                        <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
-                                                <i class="fa fa-fw fa-tag"></i>
-                                                {{ tag.tag }}</a>
-                                        </h4>
+                                    {{ 'source_accounts'|_ }}
+                                </td>
+                                <td>
+                                    {% for journal in groupArray.transactions %}
+                                        <a href="{{ route('accounts.show',journal.source_id) }}"
+                                           title="{{ journal.source_iban|default(journal.source_name) }}">
+                                            {{ journal.source_name }}
+                                        </a>
+                                        {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
                                     {% endfor %}
                                 </td>
                             </tr>
                         {% endif %}
+
+                        {% if type != 'Deposit' or splits == 1 %}
+                            <tr>
+                                <td>
+                                    {{ 'destination_accounts'|_ }}
+
+                                </td>
+                                <td>
+                                    {% for journal in groupArray.transactions %}
+                                        <a href="{{ route('accounts.show',journal.source_id) }}"
+                                           title="{{ journal.destination_iban|default(journal.destination_name) }}">
+                                            {{ journal.destination_name }}
+                                        </a>
+                                        {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td style="width:30%;">{{ 'total_amount'|_ }}</td>
+                            <td>
+                                {% for amount in amounts %}
+                                    {% if type == 'Withdrawal' or type == 'Deposit' %}
+                                        {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                    {% elseif type == 'Transfer' %}
+                                        <span class="text-info">
+                                        {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                    </span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            {% if attachments|length > 0 %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'attachments'|_ }}</h3>
-                    </div>
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table table-hover">
-                            {% for att in journal.attachments %}
-                                <tr>
-                                    <td>
-                                        <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            {% if att.file_exists %}
-                                                <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
-                                            {% endif %}
-                                            {% if not att.file_exists %}
-                                                <a href="#" class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i></a>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {% if att.file_exists %}
-                                            <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                            <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
-                                                {% if att.title %}
-                                                    {{ att.title }}
-                                                {% else %}
-                                                    {{ att.filename }}
-                                                {% endif %}
-                                            </a>
-                                            ({{ att.size|filesize }})
-                                            {% if att.notes.first %}
-                                                {{ att.notes.first.text|markdown }}
-                                            {% endif %}
-                                        {% endif %}
-                                        {% if not att.file_exists %}
-                                            <i class="fa fa-fw fa-exclamation-triangle"></i>
-                                                {% if att.title %}
-                                                    {{ att.title }}
-                                                {% else %}
-                                                    {{ att.filename }}
-                                                {% endif %}
-                                            <br>
-                                            <span class="text-danger">{{ 'attachment_not_found'|_ }}</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            {% endif %}
-            {# show links: #}
-            {% if links.count > 0 %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'journal_links'|_ }}</h3>
-                    </div>
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table table-hover">
-                            {% for link in links %}
-                                <tr>
-                                    <td>
-                                        <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i
-                                                        class="fa fa-fw fa-arrows-h"></i></a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {{ ('this_'~(what|lower))|_ }}
-                                        {% if link.source.id == journal.id %}
-                                            {{ journalLinkTranslation('outward', link.linkType.outward) }}
-                                            <a href="{{ route('transactions.show',link.destination.id) }}">
-                                                #{{ link.destination.id }}: {{ link.destination.description }}
-                                            </a>
-                                            ({{ link.destination|journalTotalAmount }})
-                                        {% else %}
-                                            {{ journalLinkTranslation('inward', link.linkType.inward) }}
-                                            <a href="{{ route('transactions.show',link.source.id) }}">
-                                                #{{ link.source.id }}: {{ link.source.description }}</a>
-                                            ({{ link.source|journalTotalAmount }})
-                                        {% endif %}
-                                        {% if link.notes.count == 1 %}
-                                            <br/>
-                                            {{ link.notes.first.text|markdown }}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-                <p>
-
-                </p>
-            {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th class="hidden-md hidden-sm hidden-xs">{{ trans('list.description') }}</th>
-                            <th>{{ trans('list.source_account') }}</th>
-                            <th>{{ trans('list.destination_account') }}</th>
-                            <th>{{ trans('list.amount') }}</th>
-                            <th class="hidden-md hidden-xs">{{ trans('list.budget') }}</th>
-                            <th class="hidden-md hidden-xs">{{ trans('list.category') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
 
-                        {% set maxIdentifier = ((transactions|length) / 2) -1 %}
-                        {% for x in 0..maxIdentifier %}
-                            <tr>
-                                {# loop each transaction in the array.#}
-                                {% for transaction in transactions %}
-                                    {% if
-                                        ((transaction.type == 'Withdrawal') and transaction.identifier == x and transaction.amount < 0)
-                                        or
-                                        ((transaction.type == 'Deposit' or transaction.type == 'Transfer') and transaction.identifier == x and transaction.amount > 0) %}
-                                        <td class="hidden-md hidden-sm hidden-xs">
-                                            {% if transaction.description == "" %}
-                                                {{ journal.description }}
-                                            {% else %}
-                                                {{ transaction.description }}
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if transaction.source_type == 'Cash account' %}
-                                                <span class="text-success">({{ 'cash'|_ }})</span>
-                                            {% else %}
-                                                <a href="{{ route('accounts.show', transaction.source_id) }}">{{ transaction.source_name }}</a>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if transaction.destination_type == 'Cash account' %}
-                                                <span class="text-success">({{ 'cash'|_ }})</span>
-                                            {% else %}
-                                                <a href="{{ route('accounts.show', transaction.destination_id) }}">{{ transaction.destination_name }}</a>
-                                            {% endif %}
-
-                                        </td>
-                                        <td>
-                                            {{ transaction|transactionArrayAmount }}
-                                        </td>
-                                        <td class="hidden-md hidden-xs">
-                                            {% if transaction.budget_id %}
-                                                <a href="{{ route('budgets.show', transaction.budget_id) }}"
-                                                   title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
-                                            {% endif %}
-                                        </td>
-                                        <td class="hidden-md hidden-xs">
-                                            {% if transaction.category_id %}
-                                                <a href="{{ route('categories.show', transaction.category_id) }}"
-                                                   title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
-                                            {% endif %}
-                                        </td>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    </div>
+    {% if splits > 1 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>{{ 'splits'|_ }}</h3>
             </div>
         </div>
-    </div>
-
-    {# link journal modal:#}
-    <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">
-        <form action="{{ route('transactions.link.store', [journal.id]) }}" method="post" class="form-horizontal">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{ 'link_to_other_transaction'|_ }}</h4>
+    {% endif %}
+    {% set boxSize=6 %}
+    {% if(splits == 2) %}
+        {% set boxSize=6 %}
+    {% endif %}
+    {% if (splits > 2) %}
+        {% set boxSize = 4 %}
+    {% endif %}
+    <div class="row">
+        {% for index,journal in groupArray.transactions %}
+            <div class="col-lg-{{ boxSize }}">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ journal.description }}
+                            {% if journal.reconciled %}
+                                <i class="fa fa-check"></i>
+                            {% endif %}
+                            {% if splits > 1 %}
+                                <small>
+                                    {{ index+1 }} / {{ splits }}
+                                </small>
+                            {% endif %}
+                        </h3>
                     </div>
-                    <div class="modal-body" id="helpBody">
-                        <p>{{ 'select_transaction_to_link'|_ }}</p>
-                        <div class="form-group">
-                            <label for="link_type" class="col-sm-2 control-label">{{ 'this_transaction'|_ }}</label>
-                            <div class="col-sm-10">
-                                <select id="link_type" class="form-control" name="link_type">
-                                    {% for linkType in linkTypes %}
-                                        <option label="{{ journalLinkTranslation('inward', linkType.inward) }}"
-                                                value="{{ linkType.id }}_inward">{{ journalLinkTranslation('inward', linkType.inward) }}</option>
-                                        <option label="{{ journalLinkTranslation('outward', linkType.outward) }}"
-                                                value="{{ linkType.id }}_outward">{{ journalLinkTranslation('outward', linkType.outward) }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="link_other" class="col-sm-2 control-label">{{ 'transaction'|_ }}</label>
-                            <div class="col-sm-10">
-                                <input type="text" name="link_other" autocomplete="off" id="link_other" value="" class="form-control">
-                                <p class="help-block">{{ 'to_link_not_found'|_ }}</p>
-                                <input type="hidden" name="link_journal_id" value="0">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="notes" class="col-sm-2 control-label">{{ 'notes'|_ }}</label>
-                            <div class="col-sm-10">
-                                <textarea id="notes" name="notes" class="form-control"></textarea>
-                            </div>
-                        </div>
+                    <div class="box-body no-padding">
+                        <table class="table">
+                            <tr>
+                                <td colspan="2">
+                                    <!-- type is: "{{ type }}" -->
+                                    <a href="{{ route('accounts.show', journal.source_id) }}"
+                                       title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
+                                    {% if type == 'Withdrawal' or type == 'Deposit' %}
+                                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                                    {% elseif type == 'Transfer' %}
+                                        <span class="text-info">
+                                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                    </span>
+                                    {% endif %}
+
+                                    <!-- do foreign amount -->
+                                    {% if null != journal.foreign_amount %}
+                                        {% if type == 'Withdrawal' or type == 'Deposit' %}
+                                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                        {% elseif type == 'Transfer' %}
+                                            <span class="text-info">
+                                        ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                    </span>
+                                        {% endif %}
+                                    {% endif %}
 
 
+                                    &rarr;
+                                    <a href="{{ route('accounts.show', journal.destination_id) }}"
+                                       title="{{ journal.destination_iban|default(journal.destination_name) }}">{{ journal.destination_name }}</a>
+                                </td>
+                            </tr>
+                            {% if null != journal.category_id %}
+                                <tr>
+                                    <td style="width:30%;">{{ 'category'|_ }}</td>
+                                    <td><a href="{{ route('categories.show', [journal.category_id]) }}">{{ journal.category_name }}</a></td>
+                                </tr>
+                            {% endif %}
+                            {% if null != journal.budget_id and type == 'Withdrawal' %}
+                                <tr>
+                                    <td>{{ 'budget'|_ }}</td>
+                                    <td><a href="{{ route('budgets.show', [journal.budget_id]) }}">{{ journal.budget_name }}</a></td>
+                                </tr>
+                            {% endif %}
+                            {% if null != journal.bill_id and type == 'Withdrawal' %}
+                                <tr>
+                                    <td>{{ 'bill'|_ }}</td>
+                                    <td><a href="{{ route('bills.show', [journal.bill_id]) }}">{{ journal.bill_name }}</a></td>
+                                </tr>
+                            {% endif %}
+                            <!-- other fields -->
+                            {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
+                                {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
+                                    <tr>
+                                        <td>{{ trans('list.'~dateField) }}</td>
+                                        <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).formatLocalized(monthAndDayFormat) }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci'] %}
+                                {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
+                                    <tr>
+                                        <td>{{ trans('list.'~metaField) }}</td>
+                                        <td>{{ journalGetMetaField(journal.transaction_journal_id, metaField) }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            {% if null != journal.notes and '' != journal.notes %}
+                                <tr>
+                                    <td>{{ trans('list.notes') }}</td>
+                                    <td class="markdown">{{ journal.notes|markdown }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if journal.tags|length > 0 %}
+                                <tr>
+                                    <td>{{ 'tags'|_ }}</td>
+                                    <td>
+                                        {% for tag in journal.tags %}
+                                            <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show', tag) }}">
+                                                    <i class="fa fa-fw fa-tag"></i>
+                                                    {{ tag }}</a>
+                                            </h4>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
-                        <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
+                    <div class="box-footer">
+                        <div class="btn-group btn-group-xs">
+                            <a href="#" class="btn btn-default link-modal" data-journal="{{ journal.transaction_journal_id }}">
+                                <i class="fa fa-fw fa-link"></i>
+                                {{ 'link_transaction'|_ }}
+                            </a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Transaction links -->
+                {% if links[journal.transaction_journal_id]|length > 0 %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                {{ 'journal_links'|_ }}
+                            </h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table">
+                                {% for link in links[journal.transaction_journal_id] %}
+                                    <tr>
+                                        <td style="width:120px;">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                                <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                        <td>{{ link.link }} "<a href="{{ route('transactions.show', link.group) }}"
+                                                                title="{{ link.description }}">{{ link.description }}</a>"
+
+                                            ({{ link.amount|raw }})
+                                            {% if '' != link.foreign_amount %}
+                                                ({{ link.foreign_amount|raw }})
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Attachments -->
+                {% if attachments[journal.transaction_journal_id]|length > 0 %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                {% for attachment in attachments[journal.transaction_journal_id] %}
+                                    <tr>
+                                        <td style="width:120px;">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="{{ route('attachments.edit', attachment.id) }}" class="btn btn-default"><i
+                                                            class="fa fa-pencil"></i></a>
+                                                <a href="{{ route('attachments.delete', attachment.id) }}" class="btn btn-danger"><i
+                                                            class="fa fa-trash"></i></a>
+                                                {% if attachment.file_exists %}
+                                                    <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><i
+                                                                class="fa fa-download"></i></a>
+                                                {% endif %}
+                                                {% if not attachment.file_exists %}
+                                                    <a href="#" class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i></a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if attachment.file_exists %}
+                                                <i class="fa {{ attachment.mime|mimeIcon }}"></i>
+                                                <a href="{{ route('attachments.view', attachment.id) }}" title="{{ attachment.filename }}">
+                                                    {% if attachment.title %}
+                                                        {{ attachment.title }}
+                                                    {% else %}
+                                                        {{ attachment.filename }}
+                                                    {% endif %}
+                                                </a>
+                                                ({{ attachment.size|filesize }})
+                                                {% if null != attachment.notes  and '' != attachment.notes %}
+                                                    {{ attachment.notes|markdown }}
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if not attachment.file_exists %}
+                                                <i class="fa fa-fw fa-exclamation-triangle"></i>
+                                                {% if attachment.title %}
+                                                    {{ attachment.title }}
+                                                {% else %}
+                                                    {{ attachment.filename }}
+                                                {% endif %}
+                                                <br>
+                                                <span class="text-danger">{{ 'attachment_not_found'|_ }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Piggy bank events -->
+                {% if events[journal.transaction_journal_id]|length > 0 %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'piggy_events'|_ }}</h3>
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                {% for event in events[journal.transaction_journal_id] %}
+                                    <tr>
+                                        <td style="width:30%;">{{ event.amount|raw }}</td>
+                                        <td>
+                                            <a href="{{ route('piggy-banks.show', [event.piggy_id]) }}">{{ event.piggy }}</a></td>
+
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-        </form>
+        {% endfor %}
     </div>
+
+
+
+    {# modal for linking journals. Will be filled by AJAX #}
+    <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">
+    </div>
+
+
 
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var autoCompleteUri = "{{ route('json.journals-with-id',[journal.id]) }}";
+        var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
+        var acURI = '{{ route('json.autocomplete.all-journals-with-id') }}';
+        var groupURI = '{{ route('transactions.show',['%GROUP']) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
+

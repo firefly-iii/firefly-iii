@@ -48,6 +48,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereErrors($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTransactions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUserId($value)
+ * @mixin \Eloquent
  */
 class ImportJob extends Model
 {

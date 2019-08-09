@@ -54,7 +54,7 @@ class ImportableConverterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -87,8 +87,8 @@ class ImportableConverterTest extends TestCase
         $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
-        $euro = TransactionCurrency::whereCode('EUR')->first();
-        $usd  = TransactionCurrency::whereCode('USD')->first();
+        $euro = $this->getEuro();
+        $usd  = $this->getDollar();
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro)->once();
 
         // set user and config:
@@ -113,9 +113,9 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('withdrawal', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals($importable->tags, $result[0]['tags']);
+        $this->assertEquals('withdrawal', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals($importable->tags, $result[0]['transactions'][0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
     }
 
@@ -145,7 +145,7 @@ class ImportableConverterTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')
-            ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
+                     ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -176,9 +176,9 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $today = new Carbon();
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals($today->format('Y-m-d H:i:s'), $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals($today->format('Y-m-d H:i:s'), $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
         $this->assertEquals($euro->id, $result[0]['transactions'][0]['currency_id']);
     }
 
@@ -237,13 +237,13 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('deposit', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
+        $this->assertEquals('deposit', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
         $this->assertEquals($revenue->id, $result[0]['transactions'][0]['source_id']);
         $this->assertEquals($asset->id, $result[0]['transactions'][0]['destination_id']);
-        $this->assertEquals('2018-01-02 00:00:00', $result[0]['book_date']);
+        $this->assertEquals('2018-01-02 00:00:00', $result[0]['transactions'][0]['book_date']);
 
     }
 
@@ -361,11 +361,11 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
-        $this->assertEquals(2, $result[0]['bill_id']); // will NOT be ignored.
-        $this->assertEquals($importable->billName, $result[0]['bill_name']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
+        $this->assertEquals(2, $result[0]['transactions'][0]['bill_id']); // will NOT be ignored.
+        $this->assertEquals($importable->billName, $result[0]['transactions'][0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
 
         // since amount is positive, $asset recieves the money
@@ -434,11 +434,11 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
-        $this->assertEquals(3, $result[0]['bill_id']);
-        $this->assertEquals($importable->billName, $result[0]['bill_name']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
+        $this->assertEquals(3, $result[0]['transactions'][0]['bill_id']);
+        $this->assertEquals($importable->billName, $result[0]['transactions'][0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
 
         // since amount is negative, $asset sends the money

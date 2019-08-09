@@ -104,7 +104,7 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         $budgets       = $configuration['budgets'] ?? [];
         $available     = [];
         $notAvailable  = [];
-        $total         = \count($budgets);
+        $total         = count($budgets);
         foreach ($budgets as $budget) {
             if ($this->haveAssetWithCurrency($budget['currency_code'])) {
                 Log::debug('Add budget to available list.');

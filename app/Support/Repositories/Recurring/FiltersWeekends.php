@@ -87,12 +87,12 @@ trait FiltersWeekends
         }
 
         // filter unique dates
-        Log::debug(sprintf('Count before filtering: %d', \count($dates)));
+        Log::debug(sprintf('Count before filtering: %d', count($dates)));
         $collection = new Collection($return);
         $filtered   = $collection->unique();
         $return     = $filtered->toArray();
 
-        Log::debug(sprintf('Count after filtering: %d', \count($return)));
+        Log::debug(sprintf('Count after filtering: %d', count($return)));
 
         return $return;
     }

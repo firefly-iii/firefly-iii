@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -47,7 +45,7 @@ class NewUserControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -56,11 +54,10 @@ class NewUserControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(0);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -76,12 +73,10 @@ class NewUserControllerTest extends TestCase
      */
     public function testIndexExisting(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(1);
 
         $this->be($this->user());
@@ -95,16 +90,19 @@ class NewUserControllerTest extends TestCase
      */
     public function testSubmit(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $euro          = $this->getEuro();
         $accountRepos->shouldReceive('store')->times(3);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $currencyRepos->shouldReceive('enable')->once();
+
+        Preferences::shouldReceive('set')->withArgs(['language', 'en_US'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['currencyPreference', 'EUR'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['transaction_journal_optional_fields', Mockery::any()])->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = [
             'bank_name'                       => 'New bank',
@@ -124,17 +122,21 @@ class NewUserControllerTest extends TestCase
      */
     public function testSubmitNull(): void
     {
+        $euro = $this->getEuro();
+        $this->mockDefaultSession();
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('store')->times(3);
         $currencyRepos->shouldReceive('findNull')->andReturn(null);
-        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(TransactionCurrency::find(2))->once();
+        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn($euro)->once();
         $currencyRepos->shouldReceive('enable')->once();
+
+        Preferences::shouldReceive('set')->withArgs(['language', 'en_US'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['currencyPreference', 'EUR'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['transaction_journal_optional_fields', Mockery::any()])->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = [
             'bank_name'                       => 'New bank',
@@ -154,16 +156,20 @@ class NewUserControllerTest extends TestCase
      */
     public function testSubmitSingle(): void
     {
+        $this->mockDefaultSession();
+        $euro = $this->getEuro();
         // mock stuff
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('store')->times(3);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $currencyRepos->shouldReceive('enable')->once();
+
+        Preferences::shouldReceive('set')->withArgs(['language', 'en_US'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['currencyPreference', 'EUR'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['transaction_journal_optional_fields', Mockery::any()])->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = [
             'bank_name'                       => 'New bank',

@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Helpers\Collector\TransactionCollector;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollector;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -48,24 +50,44 @@ class JournalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerRepository();
-        $this->registerCollector();
+        $this->registerGroupRepository();
+        $this->registerGroupCollector();
     }
 
     /**
-     * Register the collector.
+     *
      */
-    private function registerCollector(): void
+    private function registerGroupCollector(): void
     {
         $this->app->bind(
-            TransactionCollectorInterface::class,
+            GroupCollectorInterface::class,
             function (Application $app) {
-                /** @var TransactionCollectorInterface $collector */
-                $collector = app(TransactionCollector::class);
+                /** @var GroupCollectorInterface $collector */
+                $collector = app(GroupCollector::class);
                 if ($app->auth->check()) {
                     $collector->setUser(auth()->user());
                 }
 
                 return $collector;
+            }
+        );
+    }
+
+    /**
+     * Register group repos.
+     */
+    private function registerGroupRepository(): void
+    {
+        $this->app->bind(
+            TransactionGroupRepositoryInterface::class,
+            function (Application $app) {
+                /** @var TransactionGroupRepositoryInterface $repository */
+                $repository = app(TransactionGroupRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
             }
         );
     }

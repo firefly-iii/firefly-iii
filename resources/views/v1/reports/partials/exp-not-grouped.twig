@@ -23,7 +23,7 @@
                     {{ '0'|formatAmount }}
                 {% endif %}
                 {% for income in amounts.earned.per_currency %}
-                    {{ formatAmountBySymbol(income.sum, income.currency.symbol, income.currency.dp) }}<br/>
+                    {{ formatAmountBySymbol(income.sum * -1, income.currency.symbol, income.currency.dp) }}<br/>
                 {% endfor %}
             </td>
         </tr>

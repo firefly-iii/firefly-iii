@@ -17,7 +17,7 @@
                 <input type="hidden" name="page" value="{{ page }}" />
 
                 <div class="input-group">
-                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                    <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
                     <input step="any" class="form-control" id="amount" value="{{ available }}" autocomplete="off" name="amount" type="number"/>
                 </div>
             </div>

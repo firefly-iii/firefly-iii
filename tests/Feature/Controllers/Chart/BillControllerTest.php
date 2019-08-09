@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -43,7 +42,7 @@ class BillControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -58,12 +57,16 @@ class BillControllerTest extends TestCase
         $repository    = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $amounts = [
             1 => '100',
             2 => '100',
         ];
 
-        $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1))->withArgs([1]);
+        $currencyRepos->shouldReceive('findNull')->once()->andReturn($this->getEuro())->withArgs([1]);
         $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(2))->withArgs([2]);
 
         $repository->shouldReceive('getBillsPaidInRangePerCurrency')->once()->andReturn($amounts);
@@ -81,14 +84,16 @@ class BillControllerTest extends TestCase
      */
     public function testSingle(): void
     {
-        $transaction = factory(Transaction::class)->make();
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setBills')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
+        $collector->shouldReceive('setBill')->andReturnSelf()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());

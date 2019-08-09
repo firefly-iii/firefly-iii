@@ -22,19 +22,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\UpdatedTransactionJournal;
+use Carbon\Carbon;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Transformers\TransactionGroupTransformer;
+use FireflyIII\Validation\AccountValidator;
 use Illuminate\Http\Request;
 use Log;
 use View;
 
+
 /**
  * Class ConvertController.
+ *
+ * TODO when converting to a split transfer, all sources and destinations must be the same.
  */
 class ConvertController extends Controller
 {
@@ -45,6 +56,7 @@ class ConvertController extends Controller
 
     /**
      * ConvertController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -67,110 +79,286 @@ class ConvertController extends Controller
     /**
      * Show overview of a to be converted transaction.
      *
-     * @param TransactionType    $destinationType
-     * @param TransactionJournal $journal
+     * @param TransactionType $destinationType
+     * @param TransactionGroup $group
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @throws \Exception
      */
-    public function index(TransactionType $destinationType, TransactionJournal $journal)
+    public function index(TransactionType $destinationType, TransactionGroup $group)
     {
-        // @codeCoverageIgnoreStart
-        if ($this->isOpeningBalance($journal)) {
-            Log::debug('This is an opening balance.');
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
 
-            return $this->redirectToAccount($journal);
+        /** @var TransactionJournal $first */
+        $first      = $group->transactionJournals()->first();
+        $sourceType = $first->transactionType;
+        // return to account.
+        if (!in_array($sourceType->type, [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT], true)) {
+            return $this->redirectToAccount($first); // @codeCoverageIgnore
         }
-        // @codeCoverageIgnoreEnd
-        $positiveAmount = $this->repository->getJournalTotal($journal);
-        $sourceType     = $journal->transactionType;
-        $subTitle       = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
-        $subTitleIcon   = 'fa-exchange';
+
+        $groupTitle   = $group->title ?? $first->description;
+        $groupArray   = $transformer->transformObject($group);
+        $subTitle     = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $groupTitle]);
+        $subTitleIcon = 'fa-exchange';
+
+        // get a list of asset accounts and liabilities and stuff, in various combinations:
+        $validDepositSources  = $this->getValidDepositSources();
+        $validWithdrawalDests = $this->getValidWithdrawalDests();
+        $liabilities          = $this->getLiabilities();
+        $assets               = $this->getAssetAccounts();
+
+        // old input variables:
+        $preFilled = [
+            'source_name' => old('source_name'),
+        ];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
             Log::debug('This is already a transaction of the expected type..');
             session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
-            return redirect(route('transactions.show', [$journal->id]));
+            return redirect(route('transactions.show', [$group->id]));
         }
-
-        if ($journal->transactions()->count() > 2) { // cannot convert split.
-            Log::info('This journal has more than two transactions.');
-            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
-
-            return redirect(route('transactions.show', [$journal->id]));
-        }
-
-        // get source and destination account:
-        $sourceAccount      = $this->repository->getJournalSourceAccounts($journal)->first();
-        $destinationAccount = $this->repository->getJournalDestinationAccounts($journal)->first();
 
         return view(
             'transactions.convert', compact(
-                                      'sourceType', 'destinationType', 'journal', 'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
+                                      'sourceType', 'destinationType',
+                                      'group', 'groupTitle', 'groupArray', 'assets', 'validDepositSources', 'liabilities',
+                                      'validWithdrawalDests', 'preFilled',
                                       'subTitle', 'subTitleIcon'
                                   )
         );
     }
 
-
     /**
      * Do the conversion.
      *
-     * @param Request            $request
-     * @param TransactionType    $destinationType
-     * @param TransactionJournal $journal
+     * @param Request $request
+     * @param TransactionType $destinationType
+     * @param TransactionGroup $group
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function postIndex(Request $request, TransactionType $destinationType, TransactionJournal $journal)
+    public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
-        // @codeCoverageIgnoreStart
-        if ($this->isOpeningBalance($journal)) {
-            Log::debug('Journal is opening balance, return to account.');
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            // catch FF exception.
+            try {
+                $this->convertJournal($journal, $destinationType, $request->all());
+            } catch (FireflyException $e) {
+                session()->flash('error', $e->getMessage());
 
-            return $this->redirectToAccount($journal);
-        }
-        // @codeCoverageIgnoreEnd
-
-        $data = $request->all();
-
-        if ($journal->transactionType->type === $destinationType->type) {
-            Log::info('Journal is already of the desired type.');
-            session()->flash('error', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
-
-            return redirect(route('transactions.show', [$journal->id]));
+                return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
+            }
         }
 
-        if ($journal->transactions()->count() > 2) {
-            Log::info('Journal has more than two transactions.');
-            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
-
-            return redirect(route('transactions.show', [$journal->id]));
-        }
-
-        // get the new source and destination account:
-        $source      = $this->getSourceAccount($journal, $destinationType, $data);
-        $destination = $this->getDestinationAccount($journal, $destinationType, $data);
-
-        // update the journal:
-        $errors = $this->repository->convert($journal, $destinationType, $source, $destination);
-
-        if ($errors->count() > 0) {
-            Log::error('Errors while converting: ', $errors->toArray());
-
-            return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
-        }
-
-        // Success? Fire rules!
-        event(new UpdatedTransactionJournal($journal));
-
+        // correct transfers:
+        $group->refresh();
+        $this->correctTransfer($group);
 
         session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
+        event(new UpdatedTransactionGroup($group));
 
-        return redirect(route('transactions.show', [$journal->id]));
+        return redirect(route('transactions.show', [$group->id]));
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function getAssetAccounts(): array
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository      = app(AccountRepositoryInterface::class);
+        $accountList     = $repository->getActiveAccountsByType([AccountType::ASSET]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance  = app('steam')->balance($account, new Carbon);
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$repository->getMetaValue($account, 'account_role');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function getLiabilities(): array
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository      = app(AccountRepositoryInterface::class);
+        $accountList     = $repository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance                     = app('steam')->balance($account, new Carbon);
+            $currency                    = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role                        = 'l_' . $account->accountType->type;
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     */
+    private function getValidDepositSources(): array
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository     = app(AccountRepositoryInterface::class);
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $accountList    = $repository
+            ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $grouped        = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role = (string)$repository->getMetaValue($account, 'account_role');
+            $name = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+            if (AccountType::CASH === $account->accountType->type) {
+                // @codeCoverageIgnoreStart
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+                // @codeCoverageIgnoreEnd
+            }
+            if (AccountType::REVENUE === $account->accountType->type) {
+                $role = 'revenue_account'; // @codeCoverageIgnore
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $name;
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     */
+    private function getValidWithdrawalDests(): array
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository     = app(AccountRepositoryInterface::class);
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $accountList    = $repository
+            ->getActiveAccountsByType([AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $grouped        = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role = (string)$repository->getMetaValue($account, 'account_role');
+            $name = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+            if (AccountType::CASH === $account->accountType->type) {
+                // @codeCoverageIgnoreStart
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+                // @codeCoverageIgnoreEnd
+            }
+            if (AccountType::EXPENSE === $account->accountType->type) {
+                $role = 'expense_account'; // @codeCoverageIgnore
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $name;
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param TransactionType $transactionType
+     * @param array $data
+     * @return TransactionJournal
+     * @throws FireflyException
+     */
+    private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
+    {
+        /** @var AccountValidator $validator */
+        $validator = app(AccountValidator::class);
+        $validator->setUser(auth()->user());
+        $validator->setTransactionType($transactionType->type);
+
+        $sourceId        = $data['source_id'][$journal->id] ?? null;
+        $sourceName      = $data['source_name'][$journal->id] ?? null;
+        $destinationId   = $data['destination_id'][$journal->id] ?? null;
+        $destinationName = $data['destination_name'][$journal->id] ?? null;
+
+        // double check its not an empty string.
+        $sourceId         = '' === $sourceId || null === $sourceId ? null : (int)$sourceId;
+        $sourceName       = '' === $sourceName ? null : $sourceName;
+        $destinationId    = '' === $destinationId || null === $destinationId ? null : (int)$destinationId;
+        $destinationName  = '' === $destinationName ? null : $destinationName;
+        $validSource      = $validator->validateSource($sourceId, $sourceName);
+        $validDestination = $validator->validateDestination($destinationId, $destinationName);
+
+        if (false === $validSource) {
+            throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
+        }
+        if (false === $validDestination) {
+            throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
+        }
+
+        $update = [
+            'source_id'        => $sourceId,
+            'source_name'      => $sourceName,
+            'destination_id'   => $destinationId,
+            'destination_name' => $destinationName,
+            'type'             => $transactionType->type,
+        ];
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setTransactionJournal($journal);
+        $service->setData($update);
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
+    }
+
+    /**
+     * @param TransactionGroup $group
+     */
+    private function correctTransfer(TransactionGroup $group): void
+    {
     }
 }

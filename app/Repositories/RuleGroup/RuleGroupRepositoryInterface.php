@@ -37,7 +37,7 @@ interface RuleGroupRepositoryInterface
     public function count(): int;
 
     /**
-     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool
@@ -52,6 +52,13 @@ interface RuleGroupRepositoryInterface
     public function find(int $ruleGroupId): ?RuleGroup;
 
     /**
+     * @param string $title
+     *
+     * @return RuleGroup|null
+     */
+    public function findByTitle(string $title): ?RuleGroup;
+
+    /**
      * Get all rule groups.
      *
      * @return Collection
@@ -59,11 +66,9 @@ interface RuleGroupRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getActiveGroups(User $user): Collection;
+    public function getActiveGroups(): Collection;
 
     /**
      * @param RuleGroup $group
@@ -145,7 +150,7 @@ interface RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array     $data
+     * @param array $data
      *
      * @return RuleGroup
      */

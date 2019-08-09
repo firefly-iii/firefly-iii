@@ -1,28 +1,5 @@
 <?php
 
-/**
- * google2fa.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
- *
- * This file is part of Firefly III.
- *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Firefly III is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
- */
-
-declare(strict_types=1);
-
-
 return [
 
     /*
@@ -54,17 +31,17 @@ return [
      * 2FA verified session var
      */
 
-    'session_var'          => 'google2fa',
+    'session_var' => 'google2fa',
 
     /*
      * One Time Password request input name
      */
-    'otp_input'            => 'one_time_password',
+    'otp_input' => 'one_time_password',
 
     /*
      * One Time Password Window
      */
-    'window'               => 1,
+    'window' => 1,
 
     /*
      * Forbid user to reuse One Time Passwords.
@@ -74,18 +51,23 @@ return [
     /*
      * User's table column for google2fa secret
      */
-    'otp_secret_column'    => 'google2fa_secret',
+    'otp_secret_column' => 'mfa_secret',
 
     /*
      * One Time Password View
      */
-    'view'                 => 'google2fa.index',
+    'view' => 'auth.mfa',
 
     /*
      * One Time Password error message
      */
-    'error_messages'       => [
+    'error_messages' => [
         'wrong_otp' => "The 'One Time Password' typed was wrong.",
     ],
+
+    /*
+     * Throw exceptions or just fire events?
+     */
+    'throw_exceptions' => true,
 
 ];

@@ -39,7 +39,7 @@ class AuthenticateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
         Route::middleware('auth')->any(
             '/_test/authenticate', function () {
             return 'OK';

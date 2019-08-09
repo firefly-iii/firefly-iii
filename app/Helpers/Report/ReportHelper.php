@@ -25,10 +25,9 @@ namespace FireflyIII\Helpers\Report;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\BillLine;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -55,7 +54,7 @@ class ReportHelper implements ReportHelperInterface
         $this->budgetRepository = $budgetRepository;
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
 
 
@@ -70,8 +69,8 @@ class ReportHelper implements ReportHelperInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return BillCollection
@@ -92,10 +91,11 @@ class ReportHelper implements ReportHelperInterface
             foreach ($expectedDates as $payDate) {
                 $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
 
-                /** @var TransactionCollectorInterface $collector */
-                $collector = app(TransactionCollectorInterface::class);
-                $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
-                $transactions = $collector->getTransactions();
+
+                /** @var GroupCollectorInterface $collector */
+                $collector = app(GroupCollectorInterface::class);
+                $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBill($bill);
+                $journals = $collector->getExtractedJournals();
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);
@@ -105,16 +105,15 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setMin((string)$bill->amount_min);
                 $billLine->setMax((string)$bill->amount_max);
                 $billLine->setHit(false);
-                $entry = $transactions->filter(
-                    function (Transaction $transaction) use ($bill) {
-                        return $transaction->bill_id === $bill->id;
-                    }
-                );
-                $first = $entry->first();
+                /** @var array $first */
+                $first = null;
+                if (count($journals) > 0) {
+                    $first = reset($journals);
+                }
                 if (null !== $first) {
-                    $billLine->setTransactionJournalId($first->id);
-                    $billLine->setAmount($first->transaction_amount);
-                    $billLine->setLastHitDate($first->date);
+                    $billLine->setTransactionJournalId($first['transaction_journal_id']);
+                    $billLine->setAmount($first['amount']);
+                    $billLine->setLastHitDate($first['date']);
                     $billLine->setHit(true);
                 }
                 if ($billLine->isActive() || $billLine->isHit()) {

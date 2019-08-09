@@ -25,11 +25,10 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -56,6 +55,7 @@ class BudgetController extends Controller
 
     /**
      * BudgetController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -128,7 +128,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget      $budget
+     * @param Budget $budget
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
@@ -177,7 +177,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget           $budget
+     * @param Budget $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -195,21 +195,20 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setBudget($budget);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBudget($budget);
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getTransactions();
-        $result       = [];
-        $chartData    = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $assetId          = (int)$transaction->account_id;
+        $journals  = $collector->getExtractedJournals();
+        $result    = [];
+        $chartData = [];
+        foreach ($journals as $journal) {
+            $assetId          = (int)$journal['destination_account_id'];
             $result[$assetId] = $result[$assetId] ?? '0';
-            $result[$assetId] = bcadd($transaction->transaction_amount, $result[$assetId]);
+            $result[$assetId] = bcadd($journal['amount'], $result[$assetId]);
         }
 
         $names = $this->getAccountNames(array_keys($result));
@@ -229,7 +228,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget           $budget
+     * @param Budget $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -247,23 +246,20 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBudget($budget)->withCategoryInformation();
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getTransactions();
-        $result       = [];
-        $chartData    = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
-            $transCatId          = (int)$transaction->transaction_category_id;
-            $categoryId          = max($jrnlCatId, $transCatId);
+        $journals  = $collector->getExtractedJournals();
+        $result    = [];
+        $chartData = [];
+        foreach ($journals as $journal) {
+            $categoryId          = (int)$journal['category_id'];
             $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+            $result[$categoryId] = bcadd($journal['amount'], $result[$categoryId]);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
@@ -282,7 +278,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget           $budget
+     * @param Budget $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -300,21 +296,21 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getTransactions();
-        $result       = [];
-        $chartData    = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $opposingId          = (int)$transaction->opposing_account_id;
+        $journals  = $collector->getExtractedJournals();
+        $result    = [];
+        $chartData = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $opposingId          = (int)$journal['destination_account_id'];
             $result[$opposingId] = $result[$opposingId] ?? '0';
-            $result[$opposingId] = bcadd($transaction->transaction_amount, $result[$opposingId]);
+            $result[$opposingId] = bcadd($journal['amount'], $result[$opposingId]);
         }
 
         $names = $this->getAccountNames(array_keys($result));
@@ -392,9 +388,9 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return JsonResponse
@@ -441,8 +437,8 @@ class BudgetController extends Controller
      * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */

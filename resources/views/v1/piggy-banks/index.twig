@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if piggyBanks|length == 0 %}
-        {% include 'partials.empty' with {what: 'default', type: 'piggies',route: route('piggy-banks.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'piggies',route: route('piggy-banks.create')} %}
     {% else %}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

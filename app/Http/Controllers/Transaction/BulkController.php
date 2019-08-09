@@ -43,6 +43,7 @@ class BulkController extends Controller
 
     /**
      * BulkController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -62,24 +63,24 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
+     * TODO user wont be able to tell if journal is part of split.
+     *
      * @param Collection $journals
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Collection $journals)
+    public function edit(array $journals)
     {
         $subTitle = (string)trans('firefly.mass_bulk_journals');
+
+        $this->rememberPreviousUri('transactions.bulk-edit.uri');
+
+        // make amounts positive.
 
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budgetList = app('expandedform')->makeSelectListWithEmpty($repository->getActiveBudgets());
-        // collect some useful meta data for the mass edit:
-        $journals->each(
-            function (TransactionJournal $journal) {
-                $journal->transaction_count = $journal->transactions()->count();
-            }
-        );
 
         return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }
@@ -97,45 +98,80 @@ class BulkController extends Controller
     public function update(BulkEditJournalRequest $request)
     {
         $journalIds     = $request->get('journals');
-        $journalIds     = \is_array($journalIds) ? $journalIds : [];
+        $journalIds     = is_array($journalIds) ? $journalIds : [];
         $ignoreCategory = 1 === (int)$request->get('ignore_category');
         $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
         $ignoreTags     = 1 === (int)$request->get('ignore_tags');
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
-            $journal = $this->repository->findNull((int)$journalId);
-            if (null === $journal) {
-                continue;
-            }
-
-            $count++;
-            Log::debug(sprintf('Found journal #%d', $journal->id));
-
-            // update category if not told to ignore
-            if (false === $ignoreCategory) {
-                Log::debug(sprintf('Set category to %s', $request->string('category')));
-
-                $this->repository->updateCategory($journal, $request->string('category'));
-            }
-
-            // update budget if not told to ignore (and is withdrawal)
-            if (false === $ignoreBudget) {
-                Log::debug(sprintf('Set budget to %d', $request->integer('budget_id')));
-                $this->repository->updateBudget($journal, $request->integer('budget_id'));
-            }
-
-            // update tags:
-            if (false === $ignoreTags) {
-                Log::debug(sprintf('Set tags to %s', $request->string('budget_id')));
-                $this->repository->updateTags($journal, ['tags' => explode(',', $request->string('tags'))]);
+            $journalId = (int)$journalId;
+            $journal   = $this->repository->findNull($journalId);
+            if (null !== $journal) {
+                $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
+                $resultB = $this->updateJournalTags($journal, $ignoreTags, explode(',', $request->string('tags')));
+                $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->string('category'));
+                if ($resultA || $resultB || $resultC) {
+                    $count++;
+                }
             }
         }
-
         app('preferences')->mark();
         $request->session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool $ignoreUpdate
+     * @param array $tags
+     * @return bool
+     */
+    private function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
+    {
+
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
+        $this->repository->updateTags($journal, $tags);
+
+        return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool $ignoreUpdate
+     * @param string $category
+     * @return bool
+     */
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
+
+        return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool $ignoreUpdate
+     * @param int $budgetId
+     * @return bool
+     */
+    private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
+    {
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %d', $budgetId));
+        $this->repository->updateBudget($journal, $budgetId);
+
+        return true;
     }
 }

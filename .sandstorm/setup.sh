@@ -25,12 +25,12 @@ sed -i 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# zh_TW.UTF-8 UTF-8/zh_TW.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# nb_NO.UTF-8 UTF-8/nb_NO.UTF-8 UTF-8/g' /etc/locale.gen
-
+sed -i 's/# ro_RO.UTF-8 UTF-8/ro_RO.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# cs_CZ.UTF-8 UTF-8/cs_CZ.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# id_ID.UTF-8 UTF-8/id_ID.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# hu_HU.UTF-8 UTF-8/hu_HU.UTF-8 UTF-8/g' /etc/locale.gen
 
 dpkg-reconfigure --frontend=noninteractive locales
-
-
-
 
 # actually add repository
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E9C74FEEA2098A6E

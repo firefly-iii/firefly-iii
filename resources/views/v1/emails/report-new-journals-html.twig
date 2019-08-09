@@ -13,7 +13,7 @@
     <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
         You can find it in your Firefly III installation:<br />
         {% for journal in journals %}
-            <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> ({{ journal|journalTotalAmount }})
+            <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> (AMOUNT TODO)
         {% endfor %}
     </p>
 {% endif %}
@@ -25,7 +25,7 @@
     <ul>
         {% for journal in journals %}
             <li>
-                <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> ({{ journal|journalTotalAmount }})
+                <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> (AMOUNT TODO)
             </li>
         {% endfor %}
     </ul>

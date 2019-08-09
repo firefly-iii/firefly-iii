@@ -53,7 +53,8 @@ class TransactionLinkController extends Controller
     private $repository;
 
     /**
-     * JournalLinkController constructor.
+     * TransactionLinkController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -80,6 +81,7 @@ class TransactionLinkController extends Controller
      * @param TransactionJournalLink $link
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(TransactionJournalLink $link): JsonResponse
     {
@@ -93,7 +95,8 @@ class TransactionLinkController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -102,7 +105,7 @@ class TransactionLinkController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
         // read type from URI
-        $name = $request->get('name') ?? null;
+        $name = $request->get('name');
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -134,10 +137,11 @@ class TransactionLinkController extends Controller
     /**
      * List single resource.
      *
-     * @param Request                $request
+     * @param Request $request
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, TransactionJournalLink $journalLink): JsonResponse
     {

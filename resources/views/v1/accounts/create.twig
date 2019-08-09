@@ -1,12 +1,12 @@
 {% extends "./layout/default" %}
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, what) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
 {% endblock %}
 {% block content %}
 
     <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="what" value="{{ what }}"/>
+        <input type="hidden" name="objectType" value="{{ objectType }}"/>
         <input type="hidden" name="active" value="1"/>
 
         <div class="row">
@@ -17,13 +17,13 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
-                        {% if what == 'asset' or what == 'liabilities' %}
+                        {% if objectType == 'asset' or objectType == 'liabilities' %}
                             {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
                         {% endif %}
-                        {% if what == 'liabilities' %}
+                        {% if objectType == 'liabilities' %}
                             {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
-                            {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
-                            {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                            {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                            {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
                             {{ ExpandedForm.percentage('interest') }}
                             {{ ExpandedForm.select('interest_period', interestPeriods) }}
                         {% endif %}
@@ -41,14 +41,14 @@
 
                         {{ ExpandedForm.text('iban') }}
                         {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
-                        {{ ExpandedForm.text('accountNumber') }}
+                        {{ ExpandedForm.text('account_number') }}
 
-                        {% if what == 'asset' %}
+                        {% if objectType == 'asset' %}
 
-                            {{ ExpandedForm.amountNoCurrency('openingBalance') }}
-                            {{ ExpandedForm.date('openingBalanceDate') }}
-                            {{ ExpandedForm.select('accountRole', roles,null,{helpText : 'asset_account_role_help'|_}) }}
-                            {{ ExpandedForm.amountNoCurrency('virtualBalance') }}
+                            {{ ExpandedForm.amountNoCurrency('opening_balance') }}
+                            {{ ExpandedForm.date('opening_balance_date') }}
+                            {{ ExpandedForm.select('account_role', roles,null,{helpText : 'asset_account_role_help'|_}) }}
+                            {{ ExpandedForm.amountNoCurrency('virtual_balance') }}
                         {% endif %}
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('include_net_worth', 1) }}
@@ -67,7 +67,7 @@
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">
-                            {{ ('store_new_' ~ what ~ '_account')|_ }}
+                            {{ ('store_new_' ~ objectType ~ '_account')|_ }}
                         </button>
                     </div>
                 </div>

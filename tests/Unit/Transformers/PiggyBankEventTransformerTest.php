@@ -46,8 +46,9 @@ class PiggyBankEventTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
+
     /**
      * Basic test with no meta data.
      *
@@ -66,17 +67,19 @@ class PiggyBankEventTransformerTest extends TestCase
 
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($this->getEuro());
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
+
+
+
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 
@@ -99,18 +102,17 @@ class PiggyBankEventTransformerTest extends TestCase
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
 
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->atLeast()->once();
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 }

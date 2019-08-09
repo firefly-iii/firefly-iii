@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
+use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
+use Illuminate\Support\Collection;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
@@ -40,7 +43,7 @@ class AvailableBudgetTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,6 +53,9 @@ class AvailableBudgetTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
         /** @var AvailableBudget $availableBudget */
         $availableBudget = AvailableBudget::first();
         $currency        = $availableBudget->transactionCurrency;
@@ -63,7 +69,55 @@ class AvailableBudgetTransformerTest extends TestCase
         $this->assertEquals($currency->id, $result['currency_id']);
         $this->assertEquals($availableBudget->start_date->format('Y-m-d'), $result['start']);
         $this->assertEquals(round($availableBudget->amount, 2), $result['amount']);
+    }
 
+    /**
+     * Test basic transformer
+     *
+     * @covers \FireflyIII\Transformers\AvailableBudgetTransformer
+     */
+    public function testBasicDates(): void
+    {
+        $euro = $this->getEuro();
+        $data= [
+             [
+                'currency_id'             => $euro->id,
+                'currency_code'           => $euro->code,
+                'currency_symbol'         => $euro->symbol,
+                'currency_decimal_places' => $euro->decimal_places,
+                'amount'                  => '12.45',
+            ]
+        ];
+
+
+        $budget = $this->getRandomBudget();
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
+        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn($data);
+        $repository->shouldReceive('spentInPeriodWoBudgetMc')->atLeast()->once()->andReturn($data);
+
+        // spentInPeriodWoBudgetMc
+
+        $start        = new Carbon;
+        $end          = new Carbon;
+        $parameterBag = new ParameterBag;
+        $parameterBag->set('start', $start);
+        $parameterBag->set('end', $end);
+
+        /** @var AvailableBudget $availableBudget */
+        $availableBudget = AvailableBudget::first();
+        $currency        = $availableBudget->transactionCurrency;
+        // make transformer
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($parameterBag);
+        $result = $transformer->transform($availableBudget);
+
+        // test results
+        $this->assertEquals($availableBudget->id, $result['id']);
+        $this->assertEquals($currency->id, $result['currency_id']);
+        $this->assertEquals($availableBudget->start_date->format('Y-m-d'), $result['start']);
+        $this->assertEquals(round($availableBudget->amount, 2), $result['amount']);
     }
 
 }

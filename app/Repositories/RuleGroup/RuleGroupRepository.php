@@ -43,7 +43,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -56,7 +56,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool
@@ -86,6 +86,49 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return bool
+     */
+    public function resetRuleGroupOrder(): bool
+    {
+        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $this->user->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
+        $count = 1;
+        /** @var RuleGroup $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
+    {
+        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get();
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
      * @param int $ruleGroupId
      *
      * @return RuleGroup|null
@@ -109,13 +152,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getActiveGroups(User $user): Collection
+    public function getActiveGroups(): Collection
     {
-        return $user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
     }
 
     /**
@@ -158,16 +199,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->where('rule_triggers.trigger_value', 'update-journal')
                      ->where('rules.active', 1)
                      ->get(['rules.*']);
-    }
-
-    /**
-     * @return int
-     */
-    public function getHighestOrderRuleGroup(): int
-    {
-        $entry = $this->user->ruleGroups()->max('order');
-
-        return (int)$entry;
     }
 
     /**
@@ -254,49 +285,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @return bool
-     */
-    public function resetRuleGroupOrder(): bool
-    {
-        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $this->user->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
-        $count = 1;
-        /** @var RuleGroup $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            ++$count;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
-    {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get();
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            ++$count;
-        }
-
-        return true;
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -329,8 +317,18 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function getHighestOrderRuleGroup(): int
+    {
+        $entry = $this->user->ruleGroups()->max('order');
+
+        return (int)$entry;
+    }
+
+    /**
      * @param RuleGroup $ruleGroup
-     * @param array     $data
+     * @param array $data
      *
      * @return RuleGroup
      */
@@ -344,5 +342,15 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $this->resetRuleGroupOrder();
 
         return $ruleGroup;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return RuleGroup|null
+     */
+    public function findByTitle(string $title): ?RuleGroup
+    {
+        return $this->user->ruleGroups()->where('title', $title)->first();
     }
 }

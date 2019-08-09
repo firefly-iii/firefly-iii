@@ -45,7 +45,7 @@ class FixerIOv2 implements ExchangeRateInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -55,6 +55,7 @@ class FixerIOv2 implements ExchangeRateInterface
      * @param Carbon              $date
      *
      * @return CurrencyExchangeRate
+     * @throws Exception
      */
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {

@@ -71,7 +71,7 @@ class IngDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = array_values($row);
-        if (\count($this->row) >= 8) {                    // check if the array is correct
+        if (count($this->row) >= 8) {                    // check if the array is correct
             switch ($this->row[4]) {                     // Get value for the mutation type
                 case 'GT':                               // InternetBankieren
                 case 'OV':                               // Overschrijving

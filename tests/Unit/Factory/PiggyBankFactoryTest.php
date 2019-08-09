@@ -40,7 +40,7 @@ class PiggyBankFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -102,6 +102,6 @@ class PiggyBankFactoryTest extends TestCase
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
         $factory->setUser($this->user());
-        $this->assertNull($factory->find(null, 'I dont exist.' . random_int(1, 10000)));
+        $this->assertNull($factory->find(null, 'I dont exist.' . $this->randomInt()));
     }
 }

@@ -29,10 +29,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AccountUpdateServiceTest
@@ -45,7 +47,7 @@ class AccountUpdateServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -54,36 +56,22 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testDeleteExistingIB(): void
     {
-        /** @var Account $account */
-        $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
-             'virtual_balance' => '0', 'iban' => null, 'active' => true]
-        );
-        $opposing = $this->user()->accounts()->first();
-        $journal  = TransactionJournal::create(
-            ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
-            ]
-        );
-        // transactions:
-        Transaction::create(
-            ['account_id'              => $account->id, 'transaction_journal_id' => $journal->id,
-             'transaction_currency_id' => 1, 'amount' => '100', 'identifier' => 0,]
-        );
-        Transaction::create(
-            ['account_id'              => $opposing->id, 'transaction_journal_id' => $journal->id,
-             'transaction_currency_id' => 1, 'amount' => '-100', 'identifier' => 0,]
-        );
-
+        $group         = $this->getRandomWithdrawalGroup();
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $destroySerice = $this->mock(TransactionGroupDestroyService::class);
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn($group);
+        $destroySerice->shouldReceive('destroy')->atLeast()->once();
+        $account = $this->getRandomAsset();
 
         $data = [
-            'name'           => 'Some new name #' . random_int(1, 10000),
-            'active'         => true,
-            'virtualBalance' => '0',
-            'iban'           => null,
-            'accountRole'    => 'defaultAsset',
-            'notes'          => 'Hello',
-            'currency_id'    => 1,
+            'name'            => 'Some new name #' . $this->randomInt(),
+            'active'          => true,
+            'virtual_balance' => '0',
+            'iban'            => null,
+            'account_role'    => 'defaultAsset',
+            'notes'           => 'Hello',
+            'currency_id'     => 1,
         ];
 
         /** @var AccountUpdateService $service */
@@ -91,7 +79,6 @@ class AccountUpdateServiceTest extends TestCase
         $account = $service->update($account, $data);
 
         $this->assertEquals($data['name'], $account->name);
-        $this->assertEquals(0, $account->transactions()->count());
         /** @var Note $note */
         $note = $account->notes()->first();
         $this->assertEquals($data['notes'], $note->text);
@@ -106,11 +93,11 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . random_int(1, 10000),
-            'active'         => true,
-            'virtualBalance' => '0',
-            'iban'           => null,
-            'accountRole'    => 'defaultAsset',
+            'name'            => 'Some new name #' . $this->randomInt(),
+            'active'          => true,
+            'virtual_balance' => '0',
+            'iban'            => null,
+            'account_role'    => 'defaultAsset',
         ];
 
         /** @var AccountUpdateService $service */
@@ -129,12 +116,12 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . random_int(1, 10000),
-            'active'         => true,
-            'virtualBalance' => '0',
-            'iban'           => null,
-            'accountRole'    => 'defaultAsset',
-            'notes'          => '',
+            'name'            => 'Some new name #' . $this->randomInt(),
+            'active'          => true,
+            'virtual_balance' => '0',
+            'iban'            => null,
+            'account_role'    => 'defaultAsset',
+            'notes'           => '',
         ];
 
         /** @var AccountUpdateService $service */
@@ -159,12 +146,12 @@ class AccountUpdateServiceTest extends TestCase
         $note->save();
 
         $data = [
-            'name'           => 'Some new name #' . random_int(1, 10000),
-            'active'         => true,
-            'virtualBalance' => '0',
-            'iban'           => null,
-            'accountRole'    => 'defaultAsset',
-            'notes'          => '',
+            'name'            => 'Some new name #' . $this->randomInt(),
+            'active'          => true,
+            'virtual_balance' => '0',
+            'iban'            => null,
+            'account_role'    => 'defaultAsset',
+            'notes'           => '',
         ];
 
         /** @var AccountUpdateService $service */
@@ -182,38 +169,27 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateExistingIB(): void
     {
-        /** @var Account $account */
-        $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
-             'virtual_balance' => '0', 'iban' => null, 'active' => true]
-        );
-        $opposing = $this->user()->accounts()->first();
-        $journal  = TransactionJournal::create(
-            ['user_id' => $this->user()->id, 'transaction_type_id' => 4, 'transaction_currency_id' => 1, 'description' => 'IB',
-             'date'    => '2018-01-01', 'completed' => true, 'tag_count' => 0,
-            ]
-        );
-        // transactions:
-        Transaction::create(
-            ['account_id'              => $account->id, 'transaction_journal_id' => $journal->id,
-             'transaction_currency_id' => 1, 'amount' => '100', 'identifier' => 0,]
-        );
-        Transaction::create(
-            ['account_id'              => $opposing->id, 'transaction_journal_id' => $journal->id,
-             'transaction_currency_id' => 1, 'amount' => '-100', 'identifier' => 0,]
-        );
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $destroySerice = $this->mock(TransactionGroupDestroyService::class);
+        $group         = $this->getRandomWithdrawalGroup();
+
+        // make sure one transaction has the account as the asset.
+        $journal = $group->transactionJournals()->first();
+        $account = $journal->transactions()->first()->account;
 
 
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn($group);
         $data = [
-            'name'               => 'Some new name #' . random_int(1, 10000),
-            'active'             => true,
-            'virtualBalance'     => '0',
-            'iban'               => null,
-            'accountRole'        => 'defaultAsset',
-            'openingBalance'     => '105',
-            'openingBalanceDate' => new Carbon('2018-01-01'),
-            'notes'              => 'Hello',
-            'currency_id'        => 1,
+            'name'                 => 'Some new name #' . $this->randomInt(),
+            'active'               => true,
+            'virtual_balance'      => '0',
+            'iban'                 => null,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '105',
+            'opening_balance_date' => new Carbon('2018-01-01'),
+            'notes'                => 'Hello',
+            'currency_id'          => 1,
         ];
 
         /** @var AccountUpdateService $service */
@@ -221,8 +197,6 @@ class AccountUpdateServiceTest extends TestCase
         $account = $service->update($account, $data);
 
         $this->assertEquals($data['name'], $account->name);
-        $this->assertEquals(1, $account->transactions()->count());
-        $this->assertEquals(105, $account->transactions()->first()->amount);
         /** @var Note $note */
         $note = $account->notes()->first();
         $this->assertEquals($data['notes'], $note->text);
@@ -234,12 +208,13 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateExistingIBZero(): void
     {
+
         $deleteService = $this->mock(JournalDestroyService::class);
-        $deleteService->shouldReceive('destroy')->once();
+        //$deleteService->shouldReceive('destroy')->once();
 
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
@@ -260,50 +235,15 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'               => 'Some new name #' . random_int(1, 10000),
-            'active'             => true,
-            'virtualBalance'     => '0',
-            'iban'               => null,
-            'accountRole'        => 'defaultAsset',
-            'openingBalance'     => '0',
-            'openingBalanceDate' => new Carbon('2018-01-01'),
-            'notes'              => 'Hello',
-            'currency_id'        => 1,
-        ];
-
-        /** @var AccountUpdateService $service */
-        $service = app(AccountUpdateService::class);
-        $account = $service->update($account, $data);
-
-        $this->assertEquals($data['name'], $account->name);
-        $this->assertEquals(1, $account->transactions()->count());
-        $this->assertEquals(100, $account->transactions()->first()->amount);
-        /** @var Note $note */
-        $note = $account->notes()->first();
-        $this->assertEquals($data['notes'], $note->text);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testUpdateNewIB(): void
-    {
-        /** @var Account $account */
-        $account = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
-             'virtual_balance' => '0', 'iban' => null, 'active' => true]
-        );
-        $data    = [
-            'name'               => 'Some new name #' . random_int(1, 10000),
-            'active'             => true,
-            'virtualBalance'     => '0',
-            'iban'               => null,
-            'accountRole'        => 'defaultAsset',
-            'openingBalance'     => '100',
-            'openingBalanceDate' => new Carbon('2018-01-01'),
-            'notes'              => 'Hello',
-            'currency_id'        => 1,
+            'name'                 => 'Some new name #' . $this->randomInt(),
+            'active'               => true,
+            'virtual_balance'      => '0',
+            'iban'                 => null,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '0',
+            'opening_balance_date' => new Carbon('2018-01-01'),
+            'notes'                => 'Hello',
+            'currency_id'          => 1,
         ];
 
         /** @var AccountUpdateService $service */

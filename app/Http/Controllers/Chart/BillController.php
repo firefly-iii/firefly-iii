@@ -24,15 +24,13 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class BillController.
@@ -44,6 +42,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -99,12 +98,11 @@ class BillController extends Controller
     /**
      * Shows overview for a single bill.
      *
-     * @param TransactionCollectorInterface $collector
-     * @param Bill                          $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      */
-    public function single(TransactionCollectorInterface $collector, Bill $bill): JsonResponse
+    public function single(Bill $bill): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.bill.single');
@@ -113,22 +111,18 @@ class BillController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getTransactions();
-        /** @var Collection $results */
-        $results   = $results->sortBy(
-            function (Transaction $transaction) {
-                return $transaction->date->format('U');
-            }
-        );
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $journals  = $collector->setBill($bill)->getExtractedJournals();
+
         $chartData = [
             ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
             ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
             ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
         ];
 
-        /** @var Transaction $entry */
-        foreach ($results as $entry) {
-            $date                           = $entry->date->formatLocalized((string)trans('config.month_and_day'));
+        foreach ($journals as $journal) {
+            $date                           = $journal['date']->formatLocalized((string)trans('config.month_and_day'));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
 
@@ -136,7 +130,7 @@ class BillController extends Controller
             if (!isset($chartData[2]['entries'][$date])) {
                 $chartData[2]['entries'][$date] = '0';
             }
-            $amount                         = bcmul($entry->transaction_amount, '-1');
+            $amount                         = bcmul($journal['amount'], '-1');
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }
 

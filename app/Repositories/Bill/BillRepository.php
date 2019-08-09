@@ -54,7 +54,7 @@ class BillRepository implements BillRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -87,6 +87,37 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find bill by parameters.
+     *
+     * @param int|null    $billId
+     * @param string|null $billName
+     *
+     * @return Bill|null
+     */
+    public function findBill(?int $billId, ?string $billName): ?Bill
+    {
+        if (null !== $billId) {
+            $searchResult = $this->find((int)$billId);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on #%d, will return it.', $billId));
+
+                return $searchResult;
+            }
+        }
+        if (null !== $billName) {
+            $searchResult = $this->findByName((string)$billName);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on "%s", will return it.', $billName));
+
+                return $searchResult;
+            }
+        }
+        Log::debug('Found nothing');
+
+        return null;
+    }
+
+    /**
      * Find a bill by name.
      *
      * @param string $name
@@ -96,6 +127,8 @@ class BillRepository implements BillRepositoryInterface
     public function findByName(string $name): ?Bill
     {
         $bills = $this->user->bills()->get(['bills.*']);
+
+        // TODO no longer need to loop like this
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -115,8 +148,8 @@ class BillRepository implements BillRepositoryInterface
         /** @var Collection $set */
         $set = $this->user->bills()
                           ->where('active', 1)
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),])
-                          ->sortBy('name');
+                          ->orderBy('bills.name', 'ASC')
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
 
         return $set;
     }
@@ -139,15 +172,7 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->bills()->orderBy('name', 'ASC')->get();
-
-        $set = $set->sortBy(
-            function (Bill $bill) {
-                $int = $bill->active ? 0 : 1;
-
-                return $int . strtolower($bill->name);
-            }
-        );
+        $set = $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->get();
 
         return $set;
     }
@@ -179,16 +204,10 @@ class BillRepository implements BillRepositoryInterface
                              )
                              ->whereIn('transactions.account_id', $ids)
                              ->whereNull('transaction_journals.deleted_at')
+                             ->orderBy('bills.active', 'DESC')
+                             ->orderBy('bills.name', 'ASC')
                              ->groupBy($fields)
                              ->get($fields);
-
-        $set = $set->sortBy(
-            function (Bill $bill) {
-                $int = $bill->active ? 0 : 1;
-
-                return $int . strtolower($bill->name);
-            }
-        );
 
         return $set;
     }
@@ -526,9 +545,9 @@ class BillRepository implements BillRepositoryInterface
      * Link a set of journals to a bill.
      *
      * @param Bill       $bill
-     * @param Collection $transactions
+     * @param array $transactions
      */
-    public function linkCollectionToBill(Bill $bill, Collection $transactions): void
+    public function linkCollectionToBill(Bill $bill, array $transactions): void
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
@@ -559,12 +578,12 @@ class BillRepository implements BillRepositoryInterface
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
-        Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
 
         while ($start < $date) {
-            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
+            //Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-            Log::debug('Start is now ' . $start->format('Y-m-d'));
+            //Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);

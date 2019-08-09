@@ -6,18 +6,18 @@
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th data-defaultsign="az">{{ trans('list.name') }}</th>
-        {% if what == 'asset' %}
+        {% if objectType == 'asset' %}
             <th data-defaultsign="az" class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
         {% endif %}
-        {% if what == 'liabilities' %}
+        {% if objectType == 'liabilities' %}
             <th data-defaultsign="az">{{ trans('list.liability_type') }}</th>
             <th data-defaultsign="_19">{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.accountNumber') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
-        {% if what != 'liabilities' %}
+        {% if objectType != 'liabilities' %}
             <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         {% endif %}
         <th data-defaultsign="_19" style="width:15%;"
@@ -30,7 +30,7 @@
             <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs edit_tr_buttons"><a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}"
                                                                        href="{{ route('accounts.edit',account.id) }}"><i
-                                class="fa fa-fw fa-pencil"></i></a>{% if what == 'asset' %}<a class="btn btn-default btn-xs"
+                                class="fa fa-fw fa-pencil"></i></a>{% if objectType == 'asset' %}<a class="btn btn-default btn-xs"
                                                                                               title="{{ 'reconcile_this_account'|_ }}"
                                                                                               href="{{ route('accounts.reconcile',account.id) }}"><i
                                 class="fa fa-fw fa-check"></i></a>{% endif %}<a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
@@ -38,22 +38,22 @@
                                 class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
             <td data-value="{{ account.name }}"><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></td>
-            {% if what == "asset" %}
+            {% if objectType == "asset" %}
                 <td class="hidden-sm hidden-xs hidden-md">
                     {% for entry in account.accountmeta %}
-                        {% if entry.name == 'accountRole' %}
+                        {% if entry.name == 'account_role' %}
                             {{ ('account_role_'~entry.data)|_ }}
                         {% endif %}
                     {% endfor %}
                 </td>
             {% endif %}
-            {% if what == 'liabilities' %}
+            {% if objectType == 'liabilities' %}
                 <td>{{ account.accountTypeString }}</td>
             <td data-value="{{ account.interest }}">
                 {{ account.interest }}% ({{ account.interestPeriod|lower }})
             </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'accountNumber') }}{% endif %}</td>
+            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
@@ -67,7 +67,7 @@
                 {% endif %}
             </td>
             {# hide last activity to make room for other stuff #}
-            {% if what != 'liabilities' %}
+            {% if objectType != 'liabilities' %}
                 {% if account.lastActivityDate %}
                     <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
                         {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}

@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -47,25 +47,47 @@ class PreferencesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController
-     * @covers \FireflyIII\Http\Controllers\PreferencesController
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_preferences_index');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
+
+        // mock get preferences:
+
+        $frontPage       = new Preference;
+        $frontPage->data = [];
+        Preferences::shouldReceive('get')->withArgs(['frontPageAccounts', []])->andReturn($frontPage)->atLeast()->once();
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        $pref       = new Preference;
+        $pref->data = 0;
+        Preferences::shouldReceive('get')->withArgs(['customFiscalYear', 0])->atLeast()->once()->andReturn($pref);
+
+        $pref       = new Preference;
+        $pref->data = '01-01';
+        Preferences::shouldReceive('get')->withArgs(['fiscalYearStart', '01-01'])->atLeast()->once()->andReturn($pref);
+
+        $pref       = new Preference;
+        $pref->data = [];
+        Preferences::shouldReceive('get')->withArgs(['transaction_journal_optional_fields', []])->atLeast()->once()->andReturn($pref);
+
 
         $this->be($this->user());
         $response = $this->get(route('preferences.index'));
@@ -78,10 +100,10 @@ class PreferencesControllerTest extends TestCase
      */
     public function testPostIndex(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $userRepos->shouldReceive('hasRole')->andReturn(false);
 
         $data = [
@@ -94,6 +116,16 @@ class PreferencesControllerTest extends TestCase
             'language'              => 'en_US',
             'tj'                    => [],
         ];
+
+        Preferences::shouldReceive('set')->withArgs(['frontPageAccounts', [1]])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['viewRange', '1M'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['customFiscalYear', false])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['fiscalYearStart', '01-01'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['listPageSize', 100])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['listPageSize', 50])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['language', 'en_US'])->atLeast()->once();
+        Preferences::shouldReceive('set')->withArgs(['transaction_journal_optional_fields', Mockery::any()])->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->post(route('preferences.update'), $data);

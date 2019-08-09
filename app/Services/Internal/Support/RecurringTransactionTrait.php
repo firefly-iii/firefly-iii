@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\PiggyBankFactory;
@@ -35,7 +37,8 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
-use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Validation\AccountValidator;
 use Log;
 
 
@@ -47,9 +50,9 @@ trait RecurringTransactionTrait
 {
     /**
      * @param Recurrence $recurrence
-     * @param array      $repetitions
+     * @param array $repetitions
      */
-    public function createRepetitions(Recurrence $recurrence, array $repetitions): void
+    protected function createRepetitions(Recurrence $recurrence, array $repetitions): void
     {
         /** @var array $array */
         foreach ($repetitions as $array) {
@@ -57,7 +60,7 @@ trait RecurringTransactionTrait
                 [
                     'recurrence_id'     => $recurrence->id,
                     'repetition_type'   => $array['type'],
-                    'repetition_moment' => $array['moment'],
+                    'repetition_moment' => $array['moment'] ?? '',
                     'repetition_skip'   => $array['skip'],
                     'weekend'           => $array['weekend'] ?? 1,
                 ]
@@ -67,32 +70,71 @@ trait RecurringTransactionTrait
     }
 
     /**
+     * @param array $expectedTypes
+     * @param Account|null $account
+     * @param int|null $accountId
+     * @param string|null $accountName
+     *
+     * @return Account
+     */
+    protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
+    {
+        $result      = null;
+        $accountId   = (int)$accountId;
+        $accountName = (string)$accountName;
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
+
+        // if user has submitted an account ID, search for it.
+        $result = $repository->findNull((int)$accountId);
+        if (null !== $result) {
+            return $result;
+        }
+
+        // if user has submitted a name, search for it:
+        $result = $repository->findByName($accountName, $expectedTypes);
+        if (null !== $result) {
+            return $result;
+        }
+
+        // maybe we can create it? Try to avoid LOAN and other asset types.
+        $cannotCreate = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user);
+        foreach ($expectedTypes as $expectedType) {
+            if (in_array($expectedType, $cannotCreate, true)) {
+                continue;
+            }
+            if (!in_array($expectedType, $cannotCreate, true)) {
+                try {
+                    $result = $factory->findOrCreate($accountName, $expectedType);
+                    // @codeCoverageIgnoreStart
+                } catch (FireflyException $e) {
+                    Log::error($e->getMessage());
+                }
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
+        return $result ?? $repository->getCashAccount();
+    }
+
+    /**
      * Store transactions of a recurring transactions. It's complex but readable.
      *
      * @param Recurrence $recurrence
-     * @param array      $transactions
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @param array $transactions
+     * @throws FireflyException
      */
-    public function createTransactions(Recurrence $recurrence, array $transactions): void
+    protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {
         foreach ($transactions as $array) {
-            $source      = null;
-            $destination = null;
-            switch ($recurrence->transactionType->type) {
-                case TransactionType::WITHDRAWAL:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::EXPENSE, $array['destination_id'], $array['destination_name']);
-                    break;
-                case TransactionType::DEPOSIT:
-                    $source      = $this->findAccount(AccountType::REVENUE, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name']);
-                    break;
-                case TransactionType::TRANSFER:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name']);
-                    break;
-            }
+            $sourceTypes = config(sprintf('firefly.expected_source_types.source.%s', $recurrence->transactionType->type));
+            $destTypes   = config(sprintf('firefly.expected_source_types.destination.%s', $recurrence->transactionType->type));
+            $source      = $this->findAccount($sourceTypes, $array['source_id'], $array['source_name']);
+            $destination = $this->findAccount($destTypes, $array['destination_id'], $array['destination_name']);
 
             /** @var TransactionCurrencyFactory $factory */
             $factory         = app(TransactionCurrencyFactory::class);
@@ -101,6 +143,20 @@ trait RecurringTransactionTrait
             if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
             }
+
+            // once the accounts have been determined, we still verify their validity:
+            /** @var AccountValidator $validator */
+            $validator = app(AccountValidator::class);
+            $validator->setUser($recurrence->user);
+            $validator->setTransactionType($recurrence->transactionType->type);
+            if (!$validator->validateSource($source->id, null)) {
+                throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
+            }
+
+            if (!$validator->validateDestination($destination->id, null)) {
+                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
+            }
+
             $transaction = new RecurrenceTransaction(
                 [
                     'recurrence_id'           => $recurrence->id,
@@ -149,16 +205,20 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
+     *
+     * @codeCoverageIgnore
      */
-    public function deleteRepetitions(Recurrence $recurrence): void
+    protected function deleteRepetitions(Recurrence $recurrence): void
     {
         $recurrence->recurrenceRepetitions()->delete();
     }
 
     /**
      * @param Recurrence $recurrence
+     *
+     * @codeCoverageIgnore
      */
-    public function deleteTransactions(Recurrence $recurrence): void
+    protected function deleteTransactions(Recurrence $recurrence): void
     {
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
@@ -172,21 +232,12 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param null|string $expectedType
-     * @param int|null    $accountId
-     * @param null|string $accountName
-     *
-     * @return Account|null
-     */
-    abstract public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account;
-
-    /**
      * Update meta data for recurring transaction.
      *
      * @param Recurrence $recurrence
-     * @param array      $data
+     * @param array $data
      */
-    public function updateMetaData(Recurrence $recurrence, array $data): void
+    protected function updateMetaData(Recurrence $recurrence, array $data): void
     {
         // only two special meta fields right now. Let's just hard code them.
         $piggyId   = (int)($data['meta']['piggy_bank_id'] ?? 0.0);
@@ -201,8 +252,8 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
-     * @param int        $piggyId
-     * @param string     $piggyName
+     * @param int $piggyId
+     * @param string $piggyName
      */
     protected function updatePiggyBank(Recurrence $recurrence, int $piggyId, string $piggyName): void
     {
@@ -228,11 +279,11 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
-     * @param array      $tags
+     * @param array $tags
      */
     protected function updateTags(Recurrence $recurrence, array $tags): void
     {
-        if (\count($tags) > 0) {
+        if (count($tags) > 0) {
             /** @var RecurrenceMeta $entry */
             $entry = $recurrence->recurrenceMeta()->where('name', 'tags')->first();
             if (null === $entry) {
@@ -241,7 +292,7 @@ trait RecurringTransactionTrait
             $entry->value = implode(',', $tags);
             $entry->save();
         }
-        if (0 === \count($tags)) {
+        if (0 === count($tags)) {
             // delete if present
             $recurrence->recurrenceMeta()->where('name', 'tags')->delete();
         }

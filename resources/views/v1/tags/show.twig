@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    {% if periods.count > 0 %}
+    {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
@@ -113,7 +113,7 @@
         </div>
     {% endif %}
     <div class="row">
-        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -132,9 +132,9 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% include 'list/journals' %}
+                    {% include 'list/groups' %}
 
-                    {% if periods.count > 0 %}
+                    {% if periods|length > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('tags.show', [tag.id,'all']) }}">
@@ -152,13 +152,13 @@
                 </div>
             </div>
         </div>
-        {% if periods.count > 0 %}
+        {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
         {% endif %}
     </div>
-    {% if periods.count > 0 %}
+    {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>

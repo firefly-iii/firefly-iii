@@ -28,6 +28,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 use Log;
 use URL;
 
@@ -43,6 +45,7 @@ class LinkController extends Controller
 
     /**
      * LinkController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -62,11 +65,22 @@ class LinkController extends Controller
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @return Factory|View
+     */
+    public function modal(TransactionJournal $journal)
+    {
+        $linkTypes = $this->repository->get();
+
+        return view('transactions.links.modal', compact('journal', 'linkTypes'));
+    }
+
+    /**
      * Delete a link.
      *
      * @param TransactionJournalLink $link
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function delete(TransactionJournalLink $link)
     {
@@ -104,9 +118,9 @@ class LinkController extends Controller
      */
     public function store(JournalLinkRequest $request, TransactionJournal $journal)
     {
+        $linkInfo = $request->getLinkInfo();
 
         Log::debug('We are here (store)');
-        $linkInfo = $request->getLinkInfo();
         $other    = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
@@ -131,7 +145,7 @@ class LinkController extends Controller
         $this->repository->storeLink($linkInfo, $other, $journal);
         session()->flash('success', (string)trans('firefly.journals_linked'));
 
-        return redirect(route('transactions.show', [$journal->id]));
+        return redirect(route('transactions.show', [$journal->transaction_group_id]));
     }
 
     /**

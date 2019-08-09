@@ -47,6 +47,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -311,13 +312,6 @@ class CurrencyController extends Controller
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
         $total      = $collection->count();
-        $collection = $collection->sortBy(
-            function (TransactionCurrency $currency) {
-                $intEnabled = $currency->enabled ? 0 : 1;
-
-                return $intEnabled . $currency->name;
-            }
-        );
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));
@@ -393,6 +387,10 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $data = $request->getCurrencyData();
+
+        if (false === $data['enabled'] && $this->repository->currencyInUse($currency)) {
+            $data['enabled'] = true;
+        }
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
             $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));

@@ -42,7 +42,7 @@ class FrontpageControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,6 +50,8 @@ class FrontpageControllerTest extends TestCase
      */
     public function testPiggyBanks(): void
     {
+        $this->mockDefaultSession();
+
         $piggy      = $this->user()->piggyBanks()->first();
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggy]));

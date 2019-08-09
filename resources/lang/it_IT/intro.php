@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Benvenuti nella pagina indice di Firefly III. Si prega di prendersi il tempo necessario per questa introduzione per avere un\'idea di come funziona Firefly III.',
-    'index_accounts-chart'                  => 'Questo grafico mostra il saldo attuale dei conti attività. Puoi selezionare i conti visibili qui nelle tue preferenze.',
-    'index_box_out_holder'                  => 'Questa piccola casella e le caselle accanto a questa ti daranno una rapida panoramica della tua situazione finanziaria.',
-    'index_help'                            => 'Se hai bisogno di aiuto per una pagina o un modulo, premi questo pulsante.',
-    'index_outro'                           => 'La maggior parte delle pagine di Firefly III inizieranno con un piccolo tour come questo. Vi prego di contattarci quando avete domande o commenti. Grazie!',
-    'index_sidebar-toggle'                  => 'Per creare nuove transazioni, conto o altre cose, usa il menu sotto questa icona.',
+    'index_intro'                                     => 'Benvenuti nella pagina indice di Firefly III. Si prega di prendersi il tempo necessario per questa introduzione per avere un\'idea di come funziona Firefly III.',
+    'index_accounts-chart'                            => 'Questo grafico mostra il saldo attuale dei conti attività. Puoi selezionare i conti visibili qui nelle tue preferenze.',
+    'index_box_out_holder'                            => 'Questa piccola casella e le caselle accanto a questa ti daranno una rapida panoramica della tua situazione finanziaria.',
+    'index_help'                                      => 'Se hai bisogno di aiuto per una pagina o un modulo, premi questo pulsante.',
+    'index_outro'                                     => 'La maggior parte delle pagine di Firefly III inizieranno con un piccolo tour come questo. Vi prego di contattarci quando avete domande o commenti. Grazie!',
+    'index_sidebar-toggle'                            => 'Per creare nuove transazioni, conto o altre cose, usa il menu sotto questa icona.',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => 'Dai ai tuoi conti un IBAN valido. Ciò potrebbe rendere molto facile l\'importazione dei dati in futuro.',
-    'accounts_create_asset_opening_balance' => 'I conti attività possono avere un "saldo di apertura", che indica l\'inizio della cronologia di questo conto in Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III supporta più valute. I conti attività hanno una valuta principale, che devi impostare qui.',
-    'accounts_create_asset_virtual'         => 'A volte può aiutare a fornire al tuo conto un saldo virtuale: un ulteriore importo sempre aggiunto o rimosso dal saldo effettivo.',
+    'accounts_create_iban'                            => 'Dai ai tuoi conti un IBAN valido. Ciò potrebbe rendere molto facile l\'importazione dei dati in futuro.',
+    'accounts_create_asset_opening_balance'           => 'I conti attività possono avere un "saldo di apertura", che indica l\'inizio della cronologia di questo conto in Firefly III.',
+    'accounts_create_asset_currency'                  => 'Firefly III supporta più valute. I conti attività hanno una valuta principale, che devi impostare qui.',
+    'accounts_create_asset_virtual'                   => 'A volte può aiutare a fornire al tuo conto un saldo virtuale: un ulteriore importo sempre aggiunto o rimosso dal saldo effettivo.',
 
     // budgets index
-    'budgets_index_intro'                   => 'I budget sono usati per gestire le tue finanze e formano una delle funzioni principali di Firefly III.',
-    'budgets_index_set_budget'              => 'Imposta il tuo budget totale per ogni periodo in modo che Firefly III possa dirti se hai messo a bilancio tutti i soldi disponibili.',
-    'budgets_index_see_expenses_bar'        => 'Le spese effettuate riempiranno lentamente questa barra.',
-    'budgets_index_navigate_periods'        => 'Naviga attraverso i periodi per impostare facilmente i budget in anticipo.',
-    'budgets_index_new_budget'              => 'Crea nuovi budget come meglio credi.',
-    'budgets_index_list_of_budgets'         => 'Usa questa tabella per impostare gli importi per ciascun budget e vedere l\'andamento.',
-    'budgets_index_outro'                   => 'Per saperne di più sui budget, controlla l\'icona della guida nell\'angolo in alto a destra.',
+    'budgets_index_intro'                             => 'I budget sono usati per gestire le tue finanze e formano una delle funzioni principali di Firefly III.',
+    'budgets_index_set_budget'                        => 'Imposta il tuo budget totale per ogni periodo in modo che Firefly III possa dirti se hai messo a bilancio tutti i soldi disponibili.',
+    'budgets_index_see_expenses_bar'                  => 'Le spese effettuate riempiranno lentamente questa barra.',
+    'budgets_index_navigate_periods'                  => 'Naviga attraverso i periodi per impostare facilmente i budget in anticipo.',
+    'budgets_index_new_budget'                        => 'Crea nuovi budget come meglio credi.',
+    'budgets_index_list_of_budgets'                   => 'Usa questa tabella per impostare gli importi per ciascun budget e vedere l\'andamento.',
+    'budgets_index_outro'                             => 'Per saperne di più sui budget, controlla l\'icona della guida nell\'angolo in alto a destra.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Utilizza questi resoconti per ottenere informazioni dettagliate sulle tue finanze.',
-    'reports_index_inputReportType'         => 'Scegli un tipo di resoconto. Consulta le pagine della guida per vedere cosa ti mostra ciascuna resoconto.',
-    'reports_index_inputAccountsSelect'     => 'Puoi escludere o includere i conti attività come ritieni opportuno.',
-    'reports_index_inputDateRange'          => 'L\'intervallo di date selezionato dipende interamente da te: da un giorno a 10 anni.',
-    'reports_index_extra-options-box'       => 'A seconda del resoconto che hai selezionato, puoi selezionare filtri e opzioni aggiuntive qui. Guarda questa casella quando cambi i tipi di resoconto.',
+    'reports_index_intro'                             => 'Utilizza questi resoconti per ottenere informazioni dettagliate sulle tue finanze.',
+    'reports_index_inputReportType'                   => 'Scegli un tipo di resoconto. Consulta le pagine della guida per vedere cosa ti mostra ciascuna resoconto.',
+    'reports_index_inputAccountsSelect'               => 'Puoi escludere o includere i conti attività come ritieni opportuno.',
+    'reports_index_inputDateRange'                    => 'L\'intervallo di date selezionato dipende interamente da te: da un giorno a 10 anni.',
+    'reports_index_extra-options-box'                 => 'A seconda del resoconto che hai selezionato, puoi selezionare filtri e opzioni aggiuntive qui. Guarda questa casella quando cambi i tipi di resoconto.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Questo resoconto ti fornirà una panoramica rapida e completa delle tue finanze. Se desideri vedere qualcos\'altro, per favore non esitare a contattarmi!',
-    'reports_report_audit_intro'            => 'Questo resoconto ti fornirà approfondimenti dettagliati sui tuoi conti attività.',
-    'reports_report_audit_optionsBox'       => 'Utilizza queste caselle di controllo per mostrare o nascondere le colonne che ti interessano.',
+    'reports_report_default_intro'                    => 'Questo resoconto ti fornirà una panoramica rapida e completa delle tue finanze. Se desideri vedere qualcos\'altro, per favore non esitare a contattarmi!',
+    'reports_report_audit_intro'                      => 'Questo resoconto ti fornirà approfondimenti dettagliati sui tuoi conti attività.',
+    'reports_report_audit_optionsBox'                 => 'Utilizza queste caselle di controllo per mostrare o nascondere le colonne che ti interessano.',
 
     'reports_report_category_intro'                  => 'Questo resoconto ti fornirà informazioni su una o più categorie.',
     'reports_report_category_pieCharts'              => 'Questi grafici ti daranno un\'idea delle spese e delle entrate per categoria o per conto.',
@@ -129,7 +151,7 @@ return [
     'preferences_index_tabs'                                  => 'Altre opzioni sono disponibili dietro queste schede.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supporta più valute, che è possibile modificare su questa pagina.',
+    'currencies_index_intro'                                  => 'Firefly III supporta più valute, che è possibile modificare in questa pagina.',
     'currencies_index_default'                                => 'Firefly III ha una valuta predefinita.',
     'currencies_index_buttons'                                => 'Utilizza questi pulsanti per cambiare la valuta predefinita o per abilitare altre valute.',
 

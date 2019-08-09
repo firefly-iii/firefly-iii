@@ -39,7 +39,7 @@ class PrependNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal some notes.
-        $journal   = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal   = $this->getRandomWithdrawal();
         $note      = $journal->notes()->first();
         $start     = 'Default note text';
         $toPrepend = 'This is prepended';
@@ -62,13 +62,12 @@ class PrependNotesTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes()
      * @covers \FireflyIII\TransactionRules\Actions\PrependNotes
      */
     public function testActNewNote(): void
     {
         // give journal some notes.
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $note    = $journal->notes()->first();
         if (null !== $note) {
             $note->forceDelete();

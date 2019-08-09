@@ -38,7 +38,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string             $amount
  * @property Carbon             created_at
  * @property Carbon             updated_at
- *
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent wherePiggyBankId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class PiggyBankEvent extends Model
 {

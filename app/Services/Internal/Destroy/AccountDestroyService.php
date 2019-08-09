@@ -40,11 +40,13 @@ class AccountDestroyService
 {
     /**
      * Constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -53,18 +55,38 @@ class AccountDestroyService
      * @param Account|null $moveTo
      *
      * @return void
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function destroy(Account $account, ?Account $moveTo): void
     {
-
         if (null !== $moveTo) {
-            DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
-
-            // also update recurring transactions:
-            DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
-            DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
+            $this->moveTransactions($account, $moveTo);
+            $this->updateRecurrences($account, $moveTo);
         }
+        $this->destroyJournals($account);
+
+        // delete recurring transactions with this account:
+        if (null === $moveTo) {
+            $this->destroyRecurrences($account);
+        }
+
+        // delete piggy banks:
+        PiggyBank::where('account_id', $account->id)->delete();
+
+        // delete account.
+        try {
+            $account->delete();
+        } catch (Exception $e) { // @codeCoverageIgnore
+            Log::error(sprintf('Could not delete account: %s', $e->getMessage())); // @codeCoverageIgnore
+        }
+    }
+
+    /**
+     * @param Account $account
+     */
+    private function destroyJournals(Account $account): void
+    {
+
+        /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
 
         Log::debug('Now trigger account delete response #' . $account->id);
@@ -75,37 +97,49 @@ class AccountDestroyService
             $journal = $transaction->transactionJournal()->first();
             if (null !== $journal) {
                 Log::debug('Call for deletion of journal #' . $journal->id);
-                /** @var JournalDestroyService $service */
-
                 $service->destroy($journal);
             }
         }
+    }
 
-        // delete recurring transactions with this account:
-        if (null === $moveTo) {
-            $recurrences = RecurrenceTransaction::
-            where(
-                function (Builder $q) use ($account) {
-                    $q->where('source_id', $account->id);
-                    $q->orWhere('destination_id', $account->id);
-                }
-            )->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
-
-
-            $destroyService = new RecurrenceDestroyService();
-            foreach ($recurrences as $recurrenceId) {
-                $destroyService->destroyById((int)$recurrenceId);
+    /**
+     * @param Account $account
+     */
+    private function destroyRecurrences(Account $account): void
+    {
+        $recurrences = RecurrenceTransaction::
+        where(
+            static function (Builder $q) use ($account) {
+                $q->where('source_id', $account->id);
+                $q->orWhere('destination_id', $account->id);
             }
-        }
+        )->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
 
-        // delete piggy banks:
-        PiggyBank::where('account_id', $account->id)->delete();
-
-        try {
-            $account->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete account: %s', $e->getMessage())); // @codeCoverageIgnore
+        /** @var RecurrenceDestroyService $destroyService */
+        $destroyService = app(RecurrenceDestroyService::class);
+        foreach ($recurrences as $recurrenceId) {
+            $destroyService->destroyById((int)$recurrenceId);
         }
+    }
+
+
+    /**
+     * @param Account $account
+     * @param Account $moveTo
+     */
+    private function moveTransactions(Account $account, Account $moveTo): void
+    {
+        DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+    }
+
+    /**
+     * @param Account $account
+     * @param Account $moveTo
+     */
+    private function updateRecurrences(Account $account, Account $moveTo): void
+    {
+        DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
+        DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
     }
 
 }

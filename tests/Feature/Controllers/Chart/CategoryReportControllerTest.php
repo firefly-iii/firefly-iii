@@ -25,16 +25,13 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\TransactionType;
 use Log;
+use Preferences;
 use Tests\TestCase;
+
 
 /**
  * Class CategoryReportControllerTest
@@ -47,7 +44,7 @@ class CategoryReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -59,6 +56,10 @@ class CategoryReportControllerTest extends TestCase
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
@@ -83,6 +84,10 @@ class CategoryReportControllerTest extends TestCase
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
@@ -107,6 +112,10 @@ class CategoryReportControllerTest extends TestCase
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
@@ -131,6 +140,10 @@ class CategoryReportControllerTest extends TestCase
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
@@ -152,23 +165,24 @@ class CategoryReportControllerTest extends TestCase
     public function testMainChart(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transactions = factory(Transaction::class, 10)->make();
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([TransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setCategories')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setCategories')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

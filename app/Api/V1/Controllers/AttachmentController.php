@@ -39,6 +39,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use function strlen;
 
 /**
  * Class AttachmentController.
@@ -52,6 +53,7 @@ class AttachmentController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -70,7 +72,7 @@ class AttachmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * @codeCoverageIgnore
      * @param Attachment $attachment
      *
      * @return JsonResponse
@@ -86,9 +88,9 @@ class AttachmentController extends Controller
      * Download an attachment.
      *
      * @param Attachment $attachment
-     *
+     * @codeCoverageIgnore
      * @return LaravelResponse
-     * @throws FireflyException
+     * @throws   FireflyException
      */
     public function download(Attachment $attachment): LaravelResponse
     {
@@ -110,7 +112,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', \strlen($content));
+                ->header('Content-Length', strlen($content));
 
             return $response;
         }
@@ -121,7 +123,7 @@ class AttachmentController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -158,9 +160,8 @@ class AttachmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Attachment $attachment
-     *
      * @return JsonResponse
      */
     public function show(Request $request, Attachment $attachment): JsonResponse
@@ -207,7 +208,7 @@ class AttachmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param AttachmentRequest $request
-     * @param Attachment        $attachment
+     * @param Attachment $attachment
      *
      * @return JsonResponse
      */
@@ -230,8 +231,8 @@ class AttachmentController extends Controller
 
     /**
      * Upload an attachment.
-     *
-     * @param Request    $request
+     * @codeCoverageIgnore
+     * @param Request $request
      * @param Attachment $attachment
      *
      * @return JsonResponse

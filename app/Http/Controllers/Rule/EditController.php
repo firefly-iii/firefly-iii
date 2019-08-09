@@ -45,6 +45,7 @@ class EditController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -79,19 +80,19 @@ class EditController extends Controller
         $oldActions   = [];
         $oldTriggers  = [];
         // has old input?
-        if (\count($request->old()) > 0) {
+        if (count($request->old()) > 0) {
             $oldTriggers  = $this->getPreviousTriggers($request);
-            $triggerCount = \count($oldTriggers);
+            $triggerCount = count($oldTriggers);
             $oldActions   = $this->getPreviousActions($request);
-            $actionCount  = \count($oldActions);
+            $actionCount  = count($oldActions);
         }
 
         // overrule old input when it has no rule data:
         if (0 === $triggerCount && 0 === $actionCount) {
             $oldTriggers  = $this->getCurrentTriggers($rule);
-            $triggerCount = \count($oldTriggers);
+            $triggerCount = count($oldTriggers);
             $oldActions   = $this->getCurrentActions($rule);
-            $actionCount  = \count($oldActions);
+            $actionCount  = count($oldActions);
         }
 
         $hasOldInput = null !== $request->old('_token');

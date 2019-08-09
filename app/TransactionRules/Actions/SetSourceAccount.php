@@ -69,13 +69,6 @@ class SetSourceAccount implements ActionInterface
         $this->journal    = $journal;
         $this->repository = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
-        $count = $journal->transactions()->count();
-        if ($count > 2) {
-            Log::error(sprintf('Cannot change source account of journal #%d because it is a split journal.', $journal->id));
-
-            return false;
-        }
-
         // journal type:
         $type = $journal->transactionType->type;
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
@@ -102,9 +95,11 @@ class SetSourceAccount implements ActionInterface
         // get source transaction:
         $transaction = $journal->transactions()->where('amount', '<', 0)->first();
         if (null === $transaction) {
+            // @codeCoverageIgnoreStart
             Log::error(sprintf('Cannot change source account of journal #%d because no source transaction exists.', $journal->id));
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $transaction->account_id = $this->newSourceAccount->id;
         $transaction->save();
@@ -142,9 +137,9 @@ class SetSourceAccount implements ActionInterface
             // create new revenue account with this name:
             $data    = [
                 'name'            => $this->action->action_value,
-                'accountType'     => 'revenue',
+                'account_type'     => 'revenue',
                 'account_type_id' => null,
-                'virtualBalance'  => 0,
+                'virtual_balance'  => 0,
                 'active'          => true,
                 'iban'            => null,
             ];

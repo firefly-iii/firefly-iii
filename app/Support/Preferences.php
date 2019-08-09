@@ -32,17 +32,21 @@ use Session;
 
 /**
  * Class Preferences.
+ * @codeCoverageIgnore
  */
 class Preferences
 {
     /**
-     * @param User   $user
+     * @param User $user
      * @param string $search
      *
      * @return Collection
      */
     public function beginsWith(User $user, string $search): Collection
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $set = Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
 
         return $set;
@@ -55,6 +59,9 @@ class Preferences
      */
     public function delete(string $name): bool
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
@@ -76,21 +83,31 @@ class Preferences
      */
     public function findByName(string $name): Collection
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
+
         return Preference::where('name', $name)->get();
     }
 
     /**
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
     public function get(string $name, $default = null): ?Preference
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         /** @var User $user */
         $user = auth()->user();
         if (null === $user) {
-            return $default;
+            $preference       = new Preference;
+            $preference->data = $default;
+
+            return $preference;
         }
 
         return $this->getForUser($user, $name, $default);
@@ -98,12 +115,15 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param array            $list
+     * @param array $list
      *
      * @return array
      */
     public function getArrayForUser(User $user, array $list): array
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $result      = [];
         $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
         /** @var Preference $preference */
@@ -121,13 +141,16 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param string           $name
-     * @param null|string      $default
+     * @param string $name
+     * @param null|string $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
@@ -162,13 +185,16 @@ class Preferences
      */
     public function lastActivity(): string
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
 
         if (null !== $preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
-        if (\is_array($lastActivity)) {
+        if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
 
@@ -186,7 +212,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return \FireflyIII\Models\Preference
      */
@@ -207,8 +233,8 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param string           $name
-     * @param mixed            $value
+     * @param string $name
+     * @param mixed $value
      *
      * @return Preference
      */

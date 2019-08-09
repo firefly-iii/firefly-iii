@@ -29,9 +29,9 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
-use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
+use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -42,31 +42,39 @@ class RecurrenceFactory
     /** @var User */
     private $user;
 
-    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
+    /** @var MessageBag */
+    private $errors;
+
+    use TransactionTypeTrait, RecurringTransactionTrait;
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
+        $this->errors = new MessageBag;
     }
 
     /**
      * @param array $data
      *
      * @return Recurrence
+     * @throws FireflyException
      */
-    public function create(array $data): ?Recurrence
+    public function create(array $data): Recurrence
     {
         try {
             $type = $this->findTransactionType(ucfirst($data['recurrence']['type']));
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            $message = sprintf('Cannot make a recurring transaction of type "%s"', $data['recurrence']['type']);
+            Log::error($message);
+            Log::error($e->getTraceAsString());
 
-            return null;
+            throw new FireflyException($message);
         }
         /** @var Carbon $firstDate */
         $firstDate = $data['recurrence']['first_date'];
@@ -90,7 +98,19 @@ class RecurrenceFactory
 
         $this->updateMetaData($recurrence, $data);
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
-        $this->createTransactions($recurrence, $data['transactions'] ?? []);
+        try {
+            $this->createTransactions($recurrence, $data['transactions'] ?? []);
+            // @codeCoverageIgnoreStart
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            $recurrence->forceDelete();
+            $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
+            $this->errors->add('store', $message);
+            throw new FireflyException($message);
+
+        }
+
+        // @codeCoverageIgnoreEnd
 
         return $recurrence;
     }

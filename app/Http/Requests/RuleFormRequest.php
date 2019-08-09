@@ -112,7 +112,7 @@ class RuleFormRequest extends Request
     {
         $return     = [];
         $actionData = $this->get('actions');
-        if (\is_array($actionData)) {
+        if (is_array($actionData)) {
             foreach ($actionData as $action) {
                 $stopProcessing = $action['stop_processing'] ?? '0';
                 $return[]       = [
@@ -133,7 +133,7 @@ class RuleFormRequest extends Request
     {
         $return      = [];
         $triggerData = $this->get('triggers');
-        if (\is_array($triggerData)) {
+        if (is_array($triggerData)) {
             foreach ($triggerData as $trigger) {
                 $stopProcessing = $trigger['stop_processing'] ?? '0';
                 $return[]       = [

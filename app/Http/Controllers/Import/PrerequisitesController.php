@@ -74,7 +74,7 @@ class PrerequisitesController extends Controller
     {
         // catch impossible status:
         $allowed = ['new'];
-        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+        if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::index() only accepts %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
 
@@ -127,7 +127,7 @@ class PrerequisitesController extends Controller
 
         // catch impossible status:
         $allowed = ['new'];
-        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+        if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::post() only accepts %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
 

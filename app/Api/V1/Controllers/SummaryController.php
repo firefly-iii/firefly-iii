@@ -26,12 +26,12 @@ namespace FireflyIII\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use Exception;
+use FireflyIII\Api\V1\Requests\DateRequest;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -40,7 +40,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
@@ -58,7 +57,8 @@ class SummaryController extends Controller
     private $currencyRepos;
 
     /**
-     * AccountController constructor.
+     * SummaryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -84,21 +84,19 @@ class SummaryController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
+     * @throws Exception
      */
-    public function basic(Request $request): JsonResponse
+    public function basic(DateRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $dates = $request->getAll();
+        $start = $dates['start'];
+        $end   = $dates['end'];
+        $code  = $request->get('currency_code');
+
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
@@ -106,9 +104,15 @@ class SummaryController extends Controller
         $networthData = $this->getNetWorthInfo($start, $end);
         $total        = array_merge($balanceData, $billData, $spentData, $networthData);
 
-        // TODO: liabilities with icon line-chart
+        // give new keys
+        $return = [];
+        foreach ($total as $entry) {
+            if (null === $code || (null !== $code && $code === $entry['currency_code'])) {
+                $return[$entry['key']] = $entry;
+            }
+        }
 
-        return response()->json($total);
+        return response()->json($return);
 
     }
 
@@ -121,7 +125,6 @@ class SummaryController extends Controller
      * @param Carbon $end
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
     {
@@ -138,25 +141,6 @@ class SummaryController extends Controller
     }
 
     /**
-     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
-     *
-     * @param array               $spentInfo
-     * @param TransactionCurrency $currency
-     *
-     * @return float
-     */
-    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
-    {
-        foreach ($spentInfo as $array) {
-            if ($array['currency_id'] === $currency->id) {
-                return $array['amount'];
-            }
-        }
-
-        return 0.0;
-    }
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -170,36 +154,47 @@ class SummaryController extends Controller
         $sums     = [];
         $return   = [];
 
-        // collect income of user:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId           = (int)$transaction->transaction_currency_id;
+        // collect income of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::DEPOSIT]);
+
+        $set = $collector->getExtractedJournals();
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
+
+            $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
 
-        // collect expenses:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId            = (int)$transaction->transaction_currency_id;
+        // collect expenses of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::WITHDRAWAL]);
+
+
+        $set = $collector->getExtractedJournals();
+
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
+            $currencyId            = (int)$transactionJournal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
         }
 
         // format amounts:
@@ -315,6 +310,7 @@ class SummaryController extends Controller
      * @param Carbon $end
      *
      * @return array
+     * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -355,6 +351,25 @@ class SummaryController extends Controller
     }
 
     /**
+     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
+     *
+     * @param array $spentInfo
+     * @param TransactionCurrency $currency
+     *
+     * @return float
+     */
+    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
+    {
+        foreach ($spentInfo as $array) {
+            if ($array['currency_id'] === $currency->id) {
+                return $array['amount'];
+            }
+        }
+
+        return 0.0; // @codeCoverageIgnore
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -389,7 +404,7 @@ class SummaryController extends Controller
 
         $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $index => $data) {
+        foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency = $data['currency'];
             $amount   = round($data['balance'], $currency->decimal_places);

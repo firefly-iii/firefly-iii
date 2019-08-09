@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -36,6 +37,20 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     *
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal;
+
+    /**
+     * @param Account $account
+     * @return TransactionGroup|null
+     */
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
 
     /**
      * Moved here from account CRUD.
@@ -49,7 +64,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account      $account
+     * @param Account $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -60,7 +75,7 @@ interface AccountRepositoryInterface
      * Find by account number. Is used.
      *
      * @param string $number
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -68,7 +83,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -76,7 +91,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -139,17 +154,10 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
-     * @param $account
-     *
-     * @return string
-     */
-    public function getInterestPerDay(Account $account): string;
-
-    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string  $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -198,12 +206,6 @@ interface AccountRepositoryInterface
      */
     public function getReconciliation(Account $account): ?Account;
 
-    /**
-     * @param Account $account
-     *
-     * @return bool
-     */
-    public function isAsset(Account $account): bool;
 
     /**
      * @param Account $account
@@ -212,23 +214,6 @@ interface AccountRepositoryInterface
      */
     public function isLiability(Account $account): bool;
 
-    /**
-     * Returns the date of the very first transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
-    public function latestJournal(Account $account): ?TransactionJournal;
-
-    /**
-     * Returns the date of the very last transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function latestJournalDate(Account $account): ?Carbon;
 
     /**
      * Returns the date of the very first transaction in this account.
@@ -250,7 +235,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array  $types
+     * @param array $types
      *
      * @return Collection
      */
@@ -270,7 +255,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param array $data
      *
      * @return Account
      */

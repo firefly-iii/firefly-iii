@@ -35,6 +35,7 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
+
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
@@ -54,8 +55,8 @@ interface BudgetRepositoryInterface
      * This method collects various info on budgets, used on the budget page and on the index.
      *
      * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -79,6 +80,23 @@ interface BudgetRepositoryInterface
      * @param BudgetLimit $budgetLimit
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
+
+    /**
+     * @param int|null $budgetId
+     * @param string|null $budgetName
+     *
+     * @return Budget|null
+     */
+    public function findBudget(?int $budgetId, ?string $budgetName): ?Budget;
+
+    /**
+     * Find budget by name.
+     *
+     * @param string|null $name
+     *
+     * @return Budget|null
+     */
+    public function findByName(?string $name): ?Budget;
 
     /**
      * @param int|null $budgetId
@@ -112,8 +130,17 @@ interface BudgetRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -130,20 +157,20 @@ interface BudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      * @return Collection
+     *
      */
-    public function getAvailableBudgets(): Collection;
+    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
 
     /**
-     * Calculate the average amount in the budgets available in this period.
-     * Grouped by day.
+     * Returns all available budget objects.
      *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
+     * @param TransactionCurrency $currency
+     * @return Collection
      */
-    public function getAverageAvailable(Carbon $start, Carbon $end): string;
+    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
 
     /**
      * @param Budget $budget
@@ -157,8 +184,8 @@ interface BudgetRepositoryInterface
     /**
      * @param Collection $budgets
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -187,8 +214,8 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -203,9 +230,9 @@ interface BudgetRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param string              $amount
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $amount
      *
      * @return AvailableBudget
      */
@@ -213,7 +240,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param int    $order
+     * @param int $order
      */
     public function setBudgetOrder(Budget $budget, int $order): void;
 
@@ -227,8 +254,8 @@ interface BudgetRepositoryInterface
     /**
      * @param Collection $budgets
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -241,8 +268,8 @@ interface BudgetRepositoryInterface
      *
      * @param Collection $budgets
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -250,8 +277,8 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -259,8 +286,8 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -283,7 +310,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param array  $data
+     * @param array $data
      *
      * @return Budget
      */
@@ -291,7 +318,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param AvailableBudget $availableBudget
-     * @param array           $data
+     * @param array $data
      *
      * @return AvailableBudget
      */
@@ -299,7 +326,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param BudgetLimit $budgetLimit
-     * @param array       $data
+     * @param array $data
      *
      * @return BudgetLimit
      */

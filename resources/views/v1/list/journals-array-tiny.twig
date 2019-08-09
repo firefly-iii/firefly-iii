@@ -1,0 +1,10 @@
+<div class="list-group">
+    {% for journal in journals %}
+        <a class="list-group-item" href="{{ route('transactions.show', [journal.transaction_group_id]) }}">
+            {{ journal.description }}
+            <span class="pull-right small">
+                    {{ journalArrayAmount(journal) }}
+                </span>
+        </a>
+    {% endfor %}
+</div>

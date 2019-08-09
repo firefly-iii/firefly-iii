@@ -26,18 +26,14 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\CurrencyRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -55,7 +51,7 @@ use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
 use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\Transformers\RuleTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -82,6 +78,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyRepository constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -104,10 +101,11 @@ class CurrencyController extends Controller
     /**
      * Display a list of accounts.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -130,7 +128,7 @@ class CurrencyController extends Controller
 
         // filter list on currency preference:
         $collection = $unfiltered->filter(
-            function (Account $account) use ($currency, $accountRepository) {
+            static function (Account $account) use ($currency, $accountRepository) {
                 $currencyId = (int)$accountRepository->getMetaValue($account, 'currency_id');
 
                 return $currencyId === $currency->id;
@@ -161,11 +159,12 @@ class CurrencyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request             $request
+     * @param Request $request
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function availableBudgets(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -180,18 +179,11 @@ class CurrencyController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of available budgets. Count it and split it.
+
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser($admin);
-        $unfiltered = $repository->getAvailableBudgets();
-
-        // filter list.
-        $collection = $unfiltered->filter(
-            function (AvailableBudget $availableBudget) use ($currency) {
-                return $availableBudget->transaction_currency_id === $currency->id;
-            }
-        );
-
+        $collection       = $repository->getAvailableBudgetsByCurrency($currency);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
@@ -216,10 +208,11 @@ class CurrencyController extends Controller
     /**
      * List all bills
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function bills(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -236,7 +229,7 @@ class CurrencyController extends Controller
 
         // filter and paginate list:
         $collection = $unfiltered->filter(
-            function (Bill $bill) use ($currency) {
+            static function (Bill $bill) use ($currency) {
                 return $bill->transaction_currency_id === $currency->id;
             }
         );
@@ -263,29 +256,21 @@ class CurrencyController extends Controller
     /**
      * List all budget limits
      *
-     * @param Request             $request
+     * @param Request $request
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function budgetLimits(Request $request, TransactionCurrency $currency): JsonResponse
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $manager    = new Manager;
-        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $unfiltered = $repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
-
-        // TODO replace this
-        // filter budget limits on currency ID
-        $collection = $unfiltered->filter(
-            function (BudgetLimit $budgetLimit) use ($currency) {
-                return $budgetLimit->transaction_currency_id === $currency->id;
-            }
-        );
-
+        $repository   = app(BudgetRepositoryInterface::class);
+        $manager      = new Manager;
+        $baseUrl      = $request->getSchemeAndHttpHost() . '/api/v1';
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection   = $repository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
@@ -306,10 +291,11 @@ class CurrencyController extends Controller
     /**
      * Show a list of known exchange rates
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function cer(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -341,10 +327,11 @@ class CurrencyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  TransactionCurrency $currency
+     * @param TransactionCurrency $currency
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @codeCoverageIgnore
      */
     public function delete(TransactionCurrency $currency): JsonResponse
     {
@@ -366,10 +353,11 @@ class CurrencyController extends Controller
     /**
      * Disable a currency.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function disable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -398,10 +386,11 @@ class CurrencyController extends Controller
     /**
      * Enable a currency.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function enable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -429,6 +418,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -460,10 +450,11 @@ class CurrencyController extends Controller
     /**
      * Make the currency a default currency.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function makeDefault(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -491,11 +482,12 @@ class CurrencyController extends Controller
     /**
      * List all recurring transactions.
      *
-     * @param Request             $request
+     * @param Request $request
      *
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function recurrences(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -513,7 +505,7 @@ class CurrencyController extends Controller
 
         // filter selection
         $collection = $unfiltered->filter(
-            function (Recurrence $recurrence) use ($currency) {
+            static function (Recurrence $recurrence) use ($currency) {
                 /** @var RecurrenceTransaction $transaction */
                 foreach ($recurrence->recurrenceTransactions as $transaction) {
                     if ($transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id) {
@@ -550,10 +542,11 @@ class CurrencyController extends Controller
     /**
      * List all of them.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function rules(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -567,7 +560,7 @@ class CurrencyController extends Controller
         $unfiltered = $repository->getAll();
 
         $collection = $unfiltered->filter(
-            function (Rule $rule) use ($currency) {
+            static function (Rule $rule) use ($currency) {
                 /** @var RuleTrigger $trigger */
                 foreach ($rule->ruleTriggers as $trigger) {
                     if ('currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value) {
@@ -603,10 +596,11 @@ class CurrencyController extends Controller
     /**
      * Show a currency.
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -663,11 +657,12 @@ class CurrencyController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request             $request
+     * @param Request $request
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -682,28 +677,33 @@ class CurrencyController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setCurrency($currency);
 
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // filter on currency.
+            ->setCurrency($currency)
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
+
 
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
+        $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($transactions, $transformer, 'transactions');
@@ -715,7 +715,7 @@ class CurrencyController extends Controller
     /**
      * Update a currency.
      *
-     * @param CurrencyRequest     $request
+     * @param CurrencyRequest $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse

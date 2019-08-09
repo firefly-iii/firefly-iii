@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -38,24 +39,38 @@ class JournalList implements BinderInterface
      * @return mixed
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public static function routeBinder(string $value, Route $route): Collection
+    public static function routeBinder(string $value, Route $route): array
     {
         if (auth()->check()) {
-            $list = array_unique(array_map('\intval', explode(',', $value)));
-            if (0 === \count($list)) {
-                throw new NotFoundHttpException; // @codeCoverageIgnore
+            $list = self::parseList($value);
+
+            // get the journals by using the collector.
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+            $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
+            $collector->setJournalIds($list);
+            $result = $collector->getExtractedJournals();
+            if (0 === count($result)) {
+                throw new NotFoundHttpException;
             }
 
-            /** @var \Illuminate\Support\Collection $collection */
-            $collection = auth()->user()->transactionJournals()
-                                ->whereIn('transaction_journals.id', $list)
-                                ->where('transaction_journals.completed', 1)
-                                ->get(['transaction_journals.*']);
-
-            if ($collection->count() > 0) {
-                return $collection;
-            }
+            return $result;
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @param string $value
+     * @return array
+     */
+    protected static function parseList(string $value): array
+    {
+        $list = array_unique(array_map('\intval', explode(',', $value)));
+        if (0 === count($list)) {
+            throw new NotFoundHttpException; // @codeCoverageIgnore
+        }
+
+        return $list;
     }
 }

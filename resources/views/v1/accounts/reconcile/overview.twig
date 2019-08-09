@@ -15,8 +15,8 @@
                 <input type="hidden" name="end" value="{{ end.format('Y-m-d') }}"/>
                 <input type="hidden" name="startBalance" value="{{ startBalance }}"/>
                 <input type="hidden" name="endBalance" value="{{ endBalance }}"/>
-                {% for id in transactionIds %}
-                    <input type="hidden" name="transactions[]" value="{{ id }}"/>
+                {% for id in selectedIds %}
+                    <input type="hidden" name="journals[]" value="{{ id }}"/>
                 {% endfor %}
 
                 <table class="table table-striped table-bordered">
@@ -25,7 +25,7 @@
                         <td>{{ formatAmountByAccount(account, startBalance) }}</td>
                     </tr>
                     <tr>
-                        <td>{{ trans('firefly.selected_transactions', {count: transactionIds|length}) }}</td>
+                        <td>{{ trans('firefly.selected_transactions', {count: selectedIds|length}) }}</td>
                         <td>{{ formatAmountByAccount(account, amount) }}</td>
                     </tr>
                     <tr>
@@ -35,6 +35,10 @@
                     <tr>
                         <td>{{ 'submitted_end_balance'|_ }} ({{ end.formatLocalized(monthAndDayFormat) }})</td>
                         <td>{{ formatAmountByAccount(account, endBalance) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'sum_of_reconciliation'|_ }}</td>
+                        <td>{{ formatAmountByAccount(account, reconSum) }}</td>
                     </tr>
 
                     <tr>

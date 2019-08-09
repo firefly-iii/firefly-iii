@@ -42,7 +42,7 @@ class UserRepository implements UserRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -245,20 +245,14 @@ class UserRepository implements UserRepositoryInterface
         $return = [];
 
         // two factor:
-        $is2faEnabled      = app('preferences')->getForUser($user, 'twoFactorAuthEnabled', false)->data;
-        $has2faSecret      = null !== app('preferences')->getForUser($user, 'twoFactorAuthSecret');
-        $return['has_2fa'] = false;
-        if ($is2faEnabled && $has2faSecret) {
-            $return['has_2fa'] = true;
-        }
-
-        $return['is_admin']            = $this->hasRole($user, 'owner');
-        $return['blocked']             = 1 === (int)$user->blocked;
-        $return['blocked_code']        = $user->blocked_code;
-        $return['accounts']            = $user->accounts()->count();
-        $return['journals']            = $user->transactionJournals()->count();
-        $return['transactions']        = $user->transactions()->count();
-        $return['attachments']         = $user->attachments()->count();
+        $return['has_2fa']      = $user->mfa_secret !== null;
+        $return['is_admin']     = $this->hasRole($user, 'owner');
+        $return['blocked']      = 1 === (int)$user->blocked;
+        $return['blocked_code'] = $user->blocked_code;
+        $return['accounts']     = $user->accounts()->count();
+        $return['journals']     = $user->transactionJournals()->count();
+        $return['transactions'] = $user->transactions()->count();
+        $return['attachments']  = $user->attachments()->count();
         $return['attachments_size']    = $user->attachments()->sum('size');
         $return['bills']               = $user->bills()->count();
         $return['categories']          = $user->categories()->count();
@@ -268,8 +262,6 @@ class UserRepository implements UserRepositoryInterface
                                                     ->where('amount', '>', 0)
                                                     ->whereNull('budgets.deleted_at')
                                                     ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
-        $return['export_jobs']         = $user->exportJobs()->count();
-        $return['export_jobs_success'] = $user->exportJobs()->where('status', 'export_downloaded')->count();
         $return['import_jobs']         = $user->importJobs()->count();
         $return['import_jobs_success'] = $user->importJobs()->where('status', 'finished')->count();
         $return['rule_groups']         = $user->ruleGroups()->count();
@@ -287,6 +279,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function hasRole(User $user, string $role): bool
     {
+        // TODO no longer need to loop like this
+
         /** @var Role $userRole */
         foreach ($user->roles as $userRole) {
             if ($userRole->name === $role) {
@@ -372,5 +366,17 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return true;
+    }
+
+    /**
+     * Set MFA code.
+     *
+     * @param User   $user
+     * @param string|null $code
+     */
+    public function setMFACode(User $user, ?string $code): void
+    {
+        $user->mfa_secret = $code;
+        $user->save();
     }
 }

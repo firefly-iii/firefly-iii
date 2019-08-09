@@ -100,8 +100,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $this->repository->setConfiguration($this->importJob, $configuration);
         $messages = new MessageBag();
 
-        if (3 !== \count($configuration)) {
-            $messages->add('some_key', 'Ignore this error: ' . \count($configuration));
+        if (3 !== count($configuration)) {
+            $messages->add('some_key', 'Ignore this error: ' . count($configuration));
         }
 
         return $messages;

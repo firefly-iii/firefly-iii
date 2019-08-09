@@ -25,18 +25,21 @@ namespace Tests\Feature\Controllers\Account;
 
 
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
+
 
 /**
  *
  * Class DeleteControllerTest
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DeleteControllerTest extends TestCase
 {
@@ -46,7 +49,7 @@ class DeleteControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -56,18 +59,18 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
 
-        // mock hasRole for user repository:
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
+        // mock default session stuff
+        $this->mockDefaultSession();
+
         $this->be($this->user());
-        $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
-        $response = $this->get(route('accounts.delete', [$account->id]));
+        $response = $this->get(route('accounts.delete', [$asset->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -80,17 +83,20 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
         $repository->shouldReceive('findNull')->withArgs([0])->once()->andReturn(null);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // mock default session stuff
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['accounts.delete.uri' => 'http://localhost/accounts/show/1']);
-        $account = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
 
         $this->be($this->user());
-        $response = $this->post(route('accounts.destroy', [$account->id]));
+        $response = $this->post(route('accounts.destroy', [$asset->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }

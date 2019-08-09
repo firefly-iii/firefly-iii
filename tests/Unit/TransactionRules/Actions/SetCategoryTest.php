@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use Tests\TestCase;
 
@@ -39,8 +38,13 @@ class SetCategoryTest extends TestCase
     public function testAct(): void
     {
         // get journal, remove all budgets
-        $journal  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $category = $journal->user->categories()->first();
+        $journal  = $this->getRandomWithdrawal();
+        $category = $this->getRandomCategory();
+
+        $factory = $this->mock(CategoryFactory::class);
+        $factory->shouldReceive('setUser');
+        $factory->shouldReceive('findOrCreate')->andReturn($category);
+
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());
 
@@ -51,12 +55,31 @@ class SetCategoryTest extends TestCase
         $result                   = $action->act($journal);
         $this->assertTrue($result);
 
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $this->assertEquals(1, $transaction->categories()->count());
-            $this->assertEquals($category->name, $transaction->categories()->first()->name);
-        }
+        $this->assertEquals(1, $journal->categories()->count());
+    }
+    /**
+     * @covers \FireflyIII\TransactionRules\Actions\SetCategory
+     */
+    public function testActNull(): void
+    {
+        $factory = $this->mock(CategoryFactory::class);
+        $factory->shouldReceive('setUser');
+        $factory->shouldReceive('findOrCreate')->andReturnNull();
 
 
+        // get journal, remove all budgets
+        $journal  = $this->getRandomWithdrawal();
+        $category = $this->getRandomCategory();
+        $journal->categories()->detach();
+        $this->assertEquals(0, $journal->categories()->count());
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = $category->name;
+        $action                   = new SetCategory($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertFalse($result);
+
+        $this->assertEquals(0, $journal->categories()->count());
     }
 }

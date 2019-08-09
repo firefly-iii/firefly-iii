@@ -46,6 +46,7 @@ class ReportController extends Controller
 
     /**
      * ReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -171,6 +172,7 @@ class ReportController extends Controller
             $carbon                          = new Carbon($date);
             $label                           = $carbon->formatLocalized($format);
             $earned                          = $chartData[0]['entries'][$label] ?? '0';
+            $amount                          = bcmul($amount, '-1');
             $chartData[0]['entries'][$label] = bcadd($earned, $amount);
         }
         foreach ($source['spent'] as $date => $amount) {
@@ -222,6 +224,7 @@ class ReportController extends Controller
             'count_spent'  => 0,
         ];
         foreach ($source['earned'] as $amount) {
+            $amount = bcmul($amount,'-1');
             $numbers['sum_earned'] = bcadd($amount, $numbers['sum_earned']);
             ++$numbers['count_earned'];
         }

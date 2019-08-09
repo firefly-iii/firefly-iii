@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
-use FireflyIII\Transformers\ImportJobTransformer;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -44,7 +42,7 @@ class LinkTypeTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -55,7 +53,7 @@ class LinkTypeTransformerTest extends TestCase
     public function testBasic(): void
     {
 
-        $linkType= LinkType::first();
+        $linkType    = LinkType::first();
         $parameters  = new ParameterBag;
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($parameters);

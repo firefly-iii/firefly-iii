@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
@@ -69,22 +69,25 @@ class AmountController extends Controller
 
 
     /**
-     * Set the amount for a single budget in a specific period. Shows a waring when its a lot.
+     * Set the amount for a single budget in a specific period.
      *
-     * @param Request                   $request
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param Request $request
+     * @param Budget $budget
      *
      * @return JsonResponse
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
+    public function amount(Request $request, Budget $budget): JsonResponse
     {
         // grab vars from URI
         $amount = (string)$request->get('amount');
-        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+
+        /** @var Carbon $start */
+        $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+
+        /** @var Carbon $end */
+        $end = Carbon::createFromFormat('Y-m-d', $request->get('end'));
 
         // grab other useful vars
         $currency       = app('amount')->getDefaultCurrency();
@@ -95,11 +98,11 @@ class AmountController extends Controller
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
 
         // calculate what the user has spent in current period.
-        $spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
 
         // given the new budget, this is what they have left (and left per day?)
         $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
-        $leftPerDay = null; //
+        $leftPerDay = null;
 
         // If the user budgets ANY amount per day for this budget (anything but zero) Firefly III calculates how much he could spend per day.
         if (1 === bccomp(bcadd($amount, $spent), '0')) {
@@ -113,7 +116,7 @@ class AmountController extends Controller
         // If the difference is very large, give the user a notification.
         $average = $this->repository->budgetedPerDay($budget);
         $current = bcdiv($amount, (string)$periodLength);
-        if (bccomp(bcmul('1.1', $average), $current) === -1) {
+        if (bccomp(bcmul('1.3', $average), $current) === -1) {
             $largeDiff = true;
             $warnText  = (string)trans(
                 'firefly.over_budget_warn',
@@ -141,67 +144,6 @@ class AmountController extends Controller
         );
     }
 
-
-    /**
-     * Shows some basic info about the income and the suggested budget.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function infoIncome(Carbon $start, Carbon $end)
-    {
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        /** @var Carbon $searchBegin */
-        $searchBegin        = app('navigation')->subtractPeriod($start, $range, 3);
-        $searchEnd          = app('navigation')->addPeriod($end, $range, 3);
-        $daysInPeriod       = $start->diffInDays($end);
-        $daysInSearchPeriod = $searchBegin->diffInDays($searchEnd);
-        $average            = $this->repository->getAverageAvailable($start, $end);
-        $available          = bcmul($average, (string)$daysInPeriod);
-
-        Log::debug(sprintf('Average is %s, so total available is %s because days is %d.', $average, $available, $daysInPeriod));
-
-        // amount earned in this period:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-        $earned = (string)$collector->getTransactions()->sum('transaction_amount');
-        // Total amount earned divided by the number of days in the whole search period is the average amount earned per day.
-        // This is multiplied by the number of days in the current period, showing you the average.
-        $earnedAverage = bcmul(bcdiv($earned, (string)$daysInSearchPeriod), (string)$daysInPeriod);
-
-        Log::debug(sprintf('Earned is %s, earned average is %s', $earned, $earnedAverage));
-
-        // amount spent in period
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-        $spent        = (string)$collector->getTransactions()->sum('transaction_amount');
-        $spentAverage = app('steam')->positive(bcmul(bcdiv($spent, (string)$daysInSearchPeriod), (string)$daysInPeriod));
-
-        Log::debug(sprintf('Spent is %s, spent average is %s', $earned, $earnedAverage));
-
-        // the default suggestion is the money the user has spent, on average, over this period.
-        $suggested = $spentAverage;
-
-        Log::debug(sprintf('Suggested is now %s (spent average)', $suggested));
-
-        // if the user makes less per period, suggest that amount instead.
-        if (1 === bccomp($spentAverage, $earnedAverage)) {
-            Log::debug(
-                sprintf('Because earned average (%s) is less than spent average (%s) will suggest earned average instead.', $earnedAverage, $spentAverage)
-            );
-            $suggested = $earnedAverage;
-        }
-
-        $result = ['available' => $available, 'earned' => $earnedAverage, 'spent' => $spentAverage, 'suggested' => $suggested,];
-
-        return view('budgets.info', compact('result', 'searchBegin', 'searchEnd', 'start', 'end'));
-    }
-
-
     /**
      * Store an available budget for the current period.
      *
@@ -211,7 +153,9 @@ class AmountController extends Controller
      */
     public function postUpdateIncome(BudgetIncomeRequest $request): RedirectResponse
     {
+        /** @var Carbon $start */
         $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
+        /** @var Carbon $end */
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
@@ -227,8 +171,8 @@ class AmountController extends Controller
      * Shows the form to update available budget.
      *
      * @param Request $request
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -239,6 +183,6 @@ class AmountController extends Controller
         $available       = round($available, $defaultCurrency->decimal_places);
         $page            = (int)$request->get('page');
 
-        return view('budgets.income', compact('available', 'start', 'end', 'page'));
+        return view('budgets.income', compact('available', 'start', 'end', 'page','defaultCurrency'));
     }
 }

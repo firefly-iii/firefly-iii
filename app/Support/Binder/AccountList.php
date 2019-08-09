@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -37,7 +36,7 @@ class AccountList implements BinderInterface
 
     /**
      * @param string $value
-     * @param Route  $route
+     * @param Route $route
      *
      * @return Collection
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -45,32 +44,32 @@ class AccountList implements BinderInterface
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
+        //Log::debug(sprintf('Now in AccountList::routeBinder("%s")', $value));
         if (auth()->check()) {
+            //Log::debug('User is logged in.');
             $collection = new Collection;
             if ('allAssetAccounts' === $value) {
-                /** @var \Illuminate\Support\Collection $collection */
+                /** @var Collection $collection */
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                     ->where('account_types.type', AccountType::ASSET)
+                                    ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
+                //Log::debug(sprintf('Collection length is %d', $collection->count()));
             }
             if ('allAssetAccounts' !== $value) {
                 $incoming = array_map('\intval', explode(',', $value));
                 $list     = array_merge(array_unique($incoming), [0]);
-                /** @var \Illuminate\Support\Collection $collection */
+                /** @var Collection $collection */
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                     ->whereIn('accounts.id', $list)
+                                    ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
+                //Log::debug(sprintf('Collection length is %d', $collection->count()));
             }
 
             if ($collection->count() > 0) {
-                $collection = $collection->sortBy(
-                    function (Account $account) {
-                        return $account->name;
-                    }
-                );
-
                 return $collection;
             }
         }

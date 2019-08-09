@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class ListAccountsRequest
+ * @codeCoverageIgnore
  */
 class ListAccountsRequest extends SpectreRequest
 {
@@ -53,7 +54,7 @@ class ListAccountsRequest extends SpectreRequest
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;

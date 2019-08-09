@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -43,7 +44,7 @@ class AccountControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -51,6 +52,7 @@ class AccountControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
+        $this->mockDefaultSession();
         $return = [
             'accounts'   => [],
             'start'      => '0',
@@ -58,9 +60,11 @@ class AccountControllerTest extends TestCase
             'difference' => '0',
         ];
 
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $tasker->shouldReceive('getAccountReport')->andReturn($return);

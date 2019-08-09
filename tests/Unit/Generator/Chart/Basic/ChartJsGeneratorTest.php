@@ -39,7 +39,7 @@ class ChartJsGeneratorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -78,7 +78,7 @@ class ChartJsGeneratorTest extends TestCase
 
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
 
         $result = $generator->multiSet($data);
         $this->assertEquals('one', $result['labels'][0]);
@@ -105,7 +105,7 @@ class ChartJsGeneratorTest extends TestCase
         ];
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
         $result    = $generator->multiCurrencyPieChart($data);
 
         $this->assertEquals('three', $result['labels'][0]);
@@ -126,7 +126,7 @@ class ChartJsGeneratorTest extends TestCase
         ];
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
         $result    = $generator->multiCurrencyPieChart($data);
 
         $this->assertEquals('three', $result['labels'][0]);
@@ -147,7 +147,7 @@ class ChartJsGeneratorTest extends TestCase
         ];
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
         $result    = $generator->pieChart($data);
 
         $this->assertEquals('three', $result['labels'][0]);
@@ -168,7 +168,7 @@ class ChartJsGeneratorTest extends TestCase
         ];
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
         $result    = $generator->pieChart($data);
 
         $this->assertEquals('three', $result['labels'][0]);
@@ -188,7 +188,7 @@ class ChartJsGeneratorTest extends TestCase
         ];
 
         /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
+        $generator = app(ChartJsGenerator::class);
         $result    = $generator->singleSet('Some label', $data);
 
         $this->assertEquals('one', $result['labels'][0]);

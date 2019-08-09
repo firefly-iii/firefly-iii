@@ -69,7 +69,7 @@ class RecurrenceTransformer extends AbstractTransformer
         $this->budgetRepos = app(BudgetRepositoryInterface::class);
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -267,6 +267,30 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
                 $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
             }
+
+            // source info:
+            $sourceName = '';
+            $sourceId   = null;
+            $sourceType = null;
+            $sourceIban = null;
+            if (null !== $sourceAccount) {
+                $sourceName = $sourceAccount->name;
+                $sourceId   = $sourceAccount->id;
+                $sourceType = $sourceAccount->accountType->type;
+                $sourceIban = $sourceAccount->iban;
+            }
+            $destinationName = '';
+            $destinationId   = null;
+            $destinationType = null;
+            $destinationIban = null;
+            if (null !== $destinationAccount) {
+                $destinationName = $destinationAccount->name;
+                $destinationId   = $destinationAccount->id;
+                $destinationType = $destinationAccount->accountType->type;
+                $destinationIban = $destinationAccount->iban;
+            }
+
+
             $amount        = round($transaction->amount, $transaction->transactionCurrency->decimal_places);
             $foreignAmount = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
@@ -281,10 +305,14 @@ class RecurrenceTransformer extends AbstractTransformer
                 'foreign_currency_code'           => $foreignCurrencyCode,
                 'foreign_currency_symbol'         => $foreignCurrencySymbol,
                 'foreign_currency_decimal_places' => $foreignCurrencyDp,
-                'source_id'                       => $transaction->source_id,
-                'source_name'                     => null === $sourceAccount ? '' : $sourceAccount->name,
-                'destination_id'                  => $transaction->destination_id,
-                'destination_name'                => null === $destinationAccount ? '' : $destinationAccount->name,
+                'source_id'                       => $sourceId,
+                'source_name'                     => $sourceName,
+                'source_iban'                     => $sourceIban,
+                'source_type'                     => $sourceType,
+                'destination_id'                  => $destinationId,
+                'destination_name'                => $destinationName,
+                'destination_iban'                => $destinationIban,
+                'destination_type'                => $destinationType,
                 'amount'                          => $amount,
                 'foreign_amount'                  => $foreignAmount,
                 'description'                     => $transaction->description,

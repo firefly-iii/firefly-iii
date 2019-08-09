@@ -41,11 +41,12 @@ class TagFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -69,7 +70,6 @@ class TagFactory
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
         ];
-
         return Tag::create($array);
     }
 
@@ -81,17 +81,12 @@ class TagFactory
     public function findOrCreate(string $tag): ?Tag
     {
         $tag = trim($tag);
-        if (null === $this->tags) {
-            $this->tags = $this->user->tags()->get();
-        }
 
-        /** @var Tag $object */
-        foreach ($this->tags as $object) {
-            if (strtolower($object->tag) === strtolower($tag)) {
-                return $object;
-            }
+        /** @var Tag $dbTag */
+        $dbTag = $this->user->tags()->where('tag', $tag)->first();
+        if (null !== $dbTag) {
+            return $dbTag;
         }
-
         $newTag = $this->create(
             [
                 'tag'         => $tag,
@@ -102,7 +97,6 @@ class TagFactory
                 'zoom_level'  => null,
             ]
         );
-        $this->tags->push($newTag);
 
         return $newTag;
     }

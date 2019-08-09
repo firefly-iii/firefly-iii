@@ -18,22 +18,20 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: what */
-
 $(document).ready(function () {
     "use strict";
 
     // description
     if ($('input[name^="description["]').length > 0) {
-        console.log('descr');
+        console.log('Description.');
         var journalNames = new Bloodhound({
                                               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                               queryTokenizer: Bloodhound.tokenizers.whitespace,
                                               prefetch: {
                                                   url: 'json/transaction-journals/all?uid=' + uid,
                                                   filter: function (list) {
-                                                      return $.map(list, function (name) {
-                                                          return {name: name};
+                                                      return $.map(list, function (obj) {
+                                                          return obj;
                                                       });
                                                   }
                                               },
@@ -41,8 +39,8 @@ $(document).ready(function () {
                                                   url: 'json/transaction-journals/all?search=%QUERY&uid=' + uid,
                                                   wildcard: '%QUERY',
                                                   filter: function (list) {
-                                                      return $.map(list, function (name) {
-                                                          return {name: name};
+                                                      return $.map(list, function (obj) {
+                                                          return obj;
                                                       });
                                                   }
                                               }
@@ -52,15 +50,15 @@ $(document).ready(function () {
     }
     // destination account names:
     if ($('input[name^="destination_name["]').length > 0) {
-
+        console.log('Destination.');
         var destNames = new Bloodhound({
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
                                                url: 'json/expense-accounts?uid=' + uid,
                                                filter: function (list) {
-                                                   return $.map(list, function (name) {
-                                                       return {name: name};
+                                                   return $.map(list, function (obj) {
+                                                       return obj;
                                                    });
                                                }
                                            },
@@ -68,8 +66,8 @@ $(document).ready(function () {
                                                url: 'json/expense-accounts?search=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
-                                                   return $.map(list, function (name) {
-                                                       return {name: name};
+                                                   return $.map(list, function (obj) {
+                                                       return obj;
                                                    });
                                                }
                                            }
@@ -80,15 +78,15 @@ $(document).ready(function () {
 
     // source account name
     if ($('input[name^="source_name["]').length > 0) {
-
+        console.log('Source.');
         var sourceNames = new Bloodhound({
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
                                              prefetch: {
                                                  url: 'json/revenue-accounts?uid=' + uid,
                                                  filter: function (list) {
-                                                     return $.map(list, function (name) {
-                                                         return {name: name};
+                                                     return $.map(list, function (obj) {
+                                                         return obj;
                                                      });
                                                  }
                                              },
@@ -96,8 +94,8 @@ $(document).ready(function () {
                                                  url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
                                                  wildcard: '%QUERY',
                                                  filter: function (list) {
-                                                     return $.map(list, function (name) {
-                                                         return {name: name};
+                                                     return $.map(list, function (obj) {
+                                                         return obj;
                                                      });
                                                  }
                                              }
@@ -113,8 +111,8 @@ $(document).ready(function () {
                                         prefetch: {
                                             url: 'json/categories?uid=' + uid,
                                             filter: function (list) {
-                                                return $.map(list, function (name) {
-                                                    return {name: name};
+                                                return $.map(list, function (obj) {
+                                                    return obj;
                                                 });
                                             }
                                         },
@@ -122,8 +120,8 @@ $(document).ready(function () {
                                             url: 'json/categories?search=%QUERY&uid=' + uid,
                                             wildcard: '%QUERY',
                                             filter: function (list) {
-                                                return $.map(list, function (name) {
-                                                    return {name: name};
+                                                return $.map(list, function (obj) {
+                                                    return obj;
                                                 });
                                             }
                                         }

@@ -111,7 +111,7 @@ class StageNewHandler
             // @codeCoverageIgnoreEnd
             if (null !== $object) {
                 $array = null;
-                switch (\get_class($object)) {
+                switch (get_class($object)) {
                     case MonetaryAccountBank::class:
                         Log::debug('Going to convert a MonetaryAccountBank');
                         /** @var MonetaryAccountBank $object */
@@ -135,7 +135,7 @@ class StageNewHandler
                         break;
                     default:
                         // @codeCoverageIgnoreStart
-                        throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', \get_class($object)));
+                        throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', get_class($object)));
                     // @codeCoverageIgnoreEnd
                 }
                 if (null !== $array) {
@@ -145,7 +145,7 @@ class StageNewHandler
                 }
             }
         }
-        Log::info(sprintf('Found %d account(s) at bunq', \count($accounts)), $accounts);
+        Log::info(sprintf('Found %d account(s) at bunq', count($accounts)), $accounts);
 
         return $accounts;
     }
@@ -224,7 +224,7 @@ class StageNewHandler
             Log::debug('Setting is not null.');
         }
         if (null !== $maj->getAlias()) {
-            Log::debug(sprintf('Alias is not NULL. Count is %d', \count($maj->getAlias())));
+            Log::debug(sprintf('Alias is not NULL. Count is %d', count($maj->getAlias())));
             /** @var Pointer $alias */
             foreach ($maj->getAlias() as $alias) {
                 $return['aliases'][] = [
@@ -239,7 +239,7 @@ class StageNewHandler
             }
         }
         $coOwners = $maj->getAllCoOwner() ?? [];
-        Log::debug(sprintf('Count of getAllCoOwner is %d', \count($coOwners)));
+        Log::debug(sprintf('Count of getAllCoOwner is %d', count($coOwners)));
         /** @var CoOwner $coOwner */
         foreach ($coOwners as $coOwner) {
             $alias = $coOwner->getAlias();

@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use Exception;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -53,6 +53,7 @@ class ShowController extends Controller
 
     /**
      * ShowController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -76,62 +77,57 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request     $request
-     * @param Account     $account
+     * @param Request $request
+     * @param Account $account
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     *
-     * @throws FireflyException
-     *
+     * @throws Exception
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
-        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
-        }
-        // a basic thing to determin if this account is a liability:
-        if ($this->repository->isLiability($account)) {
-            return redirect(route('accounts.show.all', [$account->id]));
+        if (in_array($account->accountType->type, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION], true)) {
+            return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
 
         /** @var Carbon $start */
         $start = $start ?? session('start');
         /** @var Carbon $end */
         $end = $end ?? session('end');
+
         if ($end < $start) {
-            throw new FireflyException('End is after start!'); // @codeCoverageIgnore
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
 
-        $what         = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type)); // used for menu
-        $today        = new Carbon;
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
-        $currency     = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
-        }
-        $fStart   = $start->formatLocalized($this->monthAndDayFormat);
-        $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods  = $this->getAccountPeriodOverview($account, $end);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $collector->setRange($start, $end);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
+        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $today            = new Carbon;
+        $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
+        $page             = (int)$request->get('page');
+        $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
+        $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $fStart           = $start->formatLocalized($this->monthAndDayFormat);
+        $fEnd             = $end->formatLocalized($this->monthAndDayFormat);
+        $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
+        $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts(new Collection([$account]))
+            ->setLimit($pageSize)
+            ->setPage($page)->withAccountInformation()
+            ->setRange($start, $end);
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll = false;
-
 
         return view(
             'accounts.show',
             compact(
-                'account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end',
+                'account', 'showAll', 'objectType', 'currency', 'today', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end',
                 'chartUri'
             )
         );
@@ -142,10 +138,10 @@ class ShowController extends Controller
      *
      * @param Request $request
      * @param Account $account
-     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
      *
+     * @throws Exception
      */
     public function showAll(Request $request, Account $account)
     {
@@ -153,30 +149,28 @@ class ShowController extends Controller
             return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
         $isLiability  = $this->repository->isLiability($account);
+        $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = new Carbon;
         $today        = new Carbon;
         $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $currencyId   = (int)$this->repository->getMetaValue($account, 'currency_id');
-        $currency     = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
-        }
-        $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods  = new Collection;
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('accounts.show.all', [$account->id]));
+        $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $subTitle     = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods      = new Collection;
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll  = true;
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
+            compact('account', 'showAll', 'objectType', 'isLiability', 'currency', 'today',
+                    'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end')
         );
     }
 

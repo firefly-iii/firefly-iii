@@ -41,7 +41,7 @@ class FromAccountStartsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -49,7 +49,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -67,7 +67,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         /** @var TransactionJournal $journal */
@@ -86,7 +86,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         /** @var TransactionJournal $journal */
@@ -105,11 +105,11 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $value      = '';
-        $result     = FromAccountStarts::willMatchEverything($value);
+        $value  = '';
+        $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -118,11 +118,11 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $value      = 'x';
-        $result     = FromAccountStarts::willMatchEverything($value);
+        $value  = 'x';
+        $result = FromAccountStarts::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -131,11 +131,11 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $value      = null;
-        $result     = FromAccountStarts::willMatchEverything($value);
+        $value  = null;
+        $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

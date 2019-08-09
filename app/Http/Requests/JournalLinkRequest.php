@@ -52,12 +52,9 @@ class JournalLinkRequest extends Request
         $linkType                         = $this->get('link_type');
         $parts                            = explode('_', $linkType);
         $return['link_type_id']           = (int)$parts[0];
-        $return['transaction_journal_id'] = $this->integer('link_journal_id');
+        $return['transaction_journal_id'] = $this->integer('opposing');
         $return['notes']                  = $this->string('notes');
         $return['direction']              = $parts[1];
-        if (0 === $return['transaction_journal_id'] && ctype_digit($this->string('link_other'))) {
-            $return['transaction_journal_id'] = $this->integer('link_other');
-        }
 
         return $return;
     }
@@ -81,8 +78,8 @@ class JournalLinkRequest extends Request
 
         // fixed
         return [
-            'link_type'       => sprintf('required|in:%s', $string),
-            'link_journal_id' => 'belongsToUser:transaction_journals',
+            'link_type' => sprintf('required|in:%s', $string),
+            'opposing'  => 'belongsToUser:transaction_journals',
         ];
     }
 }

@@ -50,6 +50,16 @@ interface BillRepositoryInterface
     public function find(int $billId): ?Bill;
 
     /**
+     * Find bill by parameters.
+     *
+     * @param int|null    $billId
+     * @param string|null $billName
+     *
+     * @return Bill|null
+     */
+    public function findBill(?int $billId, ?string $billName): ?Bill;
+
+    /**
      * Find a bill by name.
      *
      * @param string $name
@@ -212,9 +222,9 @@ interface BillRepositoryInterface
      * Link a set of journals to a bill.
      *
      * @param Bill       $bill
-     * @param Collection $journals
+     * @param array $transactions
      */
-    public function linkCollectionToBill(Bill $bill, Collection $journals): void;
+    public function linkCollectionToBill(Bill $bill, array $transactions): void;
 
     /**
      * Given a bill and a date, this method will tell you at which moment this bill expects its next

@@ -45,17 +45,17 @@ class SearchControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController
-     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testIndex(): void
     {
-        $search = $this->mock(SearchInterface::class);
+        $this->mockDefaultSession();
+        $search    = $this->mock(SearchInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -71,16 +71,15 @@ class SearchControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController
-     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testSearch(): void
     {
+        $this->mockDefaultSession();
         $search = $this->mock(SearchInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();
-        $search->shouldReceive('searchTransactions')->once()->andReturn(new LengthAwarePaginator([],0,10));
+        $search->shouldReceive('searchTransactions')->once()->andReturn(new LengthAwarePaginator([], 0, 10));
         $search->shouldReceive('searchTime')->once()->andReturn(0.2);
 
         $this->be($this->user());

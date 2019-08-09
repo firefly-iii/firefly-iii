@@ -1,26 +1,289 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, destinationType, journal) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, group, groupTitle) }}
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8"
-          class="form-horizontal" id="store"
+    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, group.id]) }}" accept-charset="UTF-8"
+          class="form-horizontal"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
-            <div class="col-lg-10 col-md-12 col-sm-12">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ ('convert_options_'~sourceType.type~destinationType.type)|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.staticText('type', sourceType.type|_) }}
-                        {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', journal.id)~'">'~journal.description|escape~'</a>') }}
-                        {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
+                        <p>
+                            {# ONE: WITHDRAWAL TO DEPOSIT #}
+                            {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                                When converting from a withdrawal to a deposit, the money will be deposited into the
+                                displayed destination account(s), instead of being withdrawn from them. To complete the conversion,
+                                please set the new source account(s) below.
+                            {% endif %}
 
+                            {# TWO: WITHDRAWAL TO TRANSFER #}
+                            {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                                When converting a withdrawal into a transfer, the money will be transferred away from the source
+                                account(s) into other asset or liability account(s) instead of being spent on the original
+                                expense accounts. To complete the conversion, please select new destination account(s).
+                            {% endif %}
+
+                            {# THREE: DEPOSIT TO WITHDRAWAL #}
+                            {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+                                When converting a deposit into a withdrawal, the money will be withdrawn from the
+                                displayed source account(s), instead of being deposited into them. To complete the conversion,
+                                please select new destination accounts.
+                            {% endif %}
+
+                            {# FOUR: DEPOSIT TO TRANSFER#}
+                            {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+                                When you convert a deposit into a transfer, the money will be deposited into
+                                the listed destination account(s) from any of your asset or liability account(s).
+                                Please select the new source account(s) to complete the conversion.
+                            {% endif %}
+
+                            {# FIVE: TRANSFER TO WITHDRAWAL #}
+                            {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+                                When you convert a transfer into a withdrawal, the money will be spent
+                                on the destination account(s) you set here, instead of being transferred away.
+                                Please select the new destination account(s) to complete the conversion.
+                            {% endif %}
+
+                            {# SIX: TRANSFER TO DEPOSIT #}
+                            {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+                                When you convert a transfer into a deposit, the money will be deposited
+                                into the destination account(s) you see here, instead of being transferred into them.
+                                Please select the new source account(s) to complete the conversion.
+                            {% endif %}
+                        </p>
+
+                        <table class="table">
+                            <tr>
+                                <th style="width:10%;">ID</th>
+                                <th style="width:25%;">Description</th>
+                                <th style="width:25%;">Source account</th>
+                                <th style="width:25%;">Destination account</th>
+                                <th style="width:15%;">Amount</th>
+                            </tr>
+                            {% for transaction in groupArray.transactions %}
+                                <tr>
+                                    <td>#{{ transaction.transaction_journal_id }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td>
+                                        {# ONE: WITHDRAWAL TO DEPOSIT #}
+                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                                            {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
+                                            {% if
+                                                transaction.source_type == 'Asset account' %}
+                                                {{ Form.select('source_id['~transaction.transaction_journal_id~']', validDepositSources, null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                            {# NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] #}
+                                            {% if
+                                                transaction.source_type == 'Loan' or
+                                                transaction.source_type == 'Debt' or
+                                                transaction.source_type == 'Mortgage' %}
+                                                <input
+                                                        autocomplete="off"
+                                                        placeholder="Source account"
+                                                        name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                        type="text"
+                                                        value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}{% endif %}"
+                                                        class="form-control tt-input input-revenue"
+                                                        spellcheck="false" dir="auto">
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {# TWO: WITHDRAWAL TO TRANSFER #}
+                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+
+                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
+                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+                                            {# hide source in hidden input #}
+                                            <input type="hidden" name="source_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.source_id }}">
+                                        {% endif %}
+
+                                        {# THREE: DEPOSIT TO WITHDRAWAL #}
+                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
+                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+
+                                            {# hide new source in hidden input #}
+                                            <input type="hidden" name="source_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.destination_id }}">
+                                        {% endif %}
+
+                                        {# FOUR: DEPOSIT TO TRANSFER#}
+                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+                                            {# if new destination is asset, then asset#}
+                                            {% if transaction.destination_type == 'Asset account' %}
+                                                {{ Form.select('source_id['~transaction.transaction_journal_id~']', assets,null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                            {% if transaction.destination_type == 'Loan' or
+                                                transaction.destination_type == 'Debt' or
+                                                transaction.destination_type == 'Mortgage' %}
+                                                {{ Form.select('source_id['~transaction.transaction_journal_id~']', liabilities,null, {class: 'form-control'}) }}
+                                            {% endif %}
+
+                                            {# if new destination liability, then liability.#}
+
+                                        {% endif %}
+
+                                        {# FIVE: TRANSFER TO WITHDRAWAL #}
+                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
+                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+
+                                            {# hide source in hidden input #}
+                                            <input type="hidden" name="source_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.source_id }}">
+                                        {% endif %}
+
+                                        {# SIX: TRANSFER TO DEPOSIT #}
+                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+                                            {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
+                                            {% if
+                                                transaction.source_type == 'Asset account' %}
+                                                {{ Form.select('source_id['~transaction.transaction_journal_id~']', validDepositSources, null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                            {# NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] #}
+                                            {% if
+                                                transaction.source_type == 'Loan' or
+                                                transaction.source_type == 'Debt' or
+                                                transaction.source_type == 'Mortgage' %}
+                                                <input
+                                                        autocomplete="off"
+                                                        placeholder="Source account"
+                                                        name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                        type="text"
+                                                        value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                        class="form-control tt-input"
+                                                        spellcheck="false" dir="auto">
+                                            {% endif %}
+
+                                        {% endif %}
+
+                                    </td>
+                                    <td>
+                                        {# ONE: WITHDRAWAL TO DEPOSIT #}
+                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
+                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+
+                                            {# hide destination in hidden input #}
+                                            <input type="hidden" name="destination_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.source_id }}">
+                                        {% endif %}
+
+                                        {# TWO: WITHDRAWAL TO TRANSFER #}
+                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                                            {#if the source is a liability, destination must also be a liability.#}
+                                            {% if
+                                                transaction.source_type == 'Loan' or
+                                                transaction.source_type == 'Debt' or
+                                                transaction.source_type == 'Mortgage' %}
+                                                {{ Form.select('destination_id['~transaction.transaction_journal_id~']', liabilities, null, {class: 'form-control'}) }}
+                                            {% endif %}
+
+                                            {# if the source is an asset, destination can only be an asset. #}
+                                            {% if transaction.source_type == 'Asset account' %}
+                                                {{ Form.select('destination_id['~transaction.transaction_journal_id~']', assets, null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {# THREE: DEPOSIT TO WITHDRAWAL #}
+                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+
+                                            {# if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] #}
+                                            {% if transaction.destination_type == 'Asset account' %}
+                                                {{ Form.select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests, null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                            {% if transaction.destination_type == 'Loan' or
+                                                transaction.destination_type == 'Debt' or
+                                                transaction.destination_type == 'Mortgage' %}
+                                                {# if new source is Liability, destination must be expense account. #}
+                                                {# hier ben je. #}
+
+                                                <input
+                                                        autocomplete="off"
+                                                        placeholder="Destination account"
+                                                        name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                        type="text"
+                                                        value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                        class="form-control tt-input"
+                                                        spellcheck="false" dir="auto">
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {# FOUR: DEPOSIT TO TRANSFER#}
+                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
+                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+
+                                            {# hide destination in hidden input #}
+                                            <input type="hidden" name="destination_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.destination_id }}">
+                                        {% endif %}
+
+                                        {# FIVE: TRANSFER TO WITHDRAWAL #}
+                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+
+                                            {% if transaction.source_type == 'Asset account' %}
+                                                {{ Form.select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests, null, {class: 'form-control'}) }}
+                                            {% endif %}
+                                            {% if transaction.source_type == 'Loan' or
+                                                transaction.source_type == 'Debt' or
+                                                transaction.source_type == 'Mortgage' %}
+                                                <input
+                                                        autocomplete="off"
+                                                        placeholder="Destination account"
+                                                        name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                        type="text"
+                                                        value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}{% endif %}"
+                                                        class="form-control tt-input"
+                                                        spellcheck="false" dir="auto">
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {# SIX: TRANSFER TO DEPOSIT #}
+                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
+                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+
+                                            {# hide destination in hidden input #}
+                                            <input type="hidden" name="destination_id[{{ transaction.transaction_journal_id }}]" value="{{ transaction.destination_id }}">
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if transaction.transaction_type_type == 'Deposit' %}
+                                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                                            {% if null != transaction.foreign_amount %}
+                                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                                            {% endif %}
+                                        {% elseif transaction.transaction_type_type == 'Transfer' %}
+                                            <span class="text-info">{{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places, false) }}
+                                                {% if null != transaction.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places, false) }})
+                                                {% endif %}</span>
+                                        {% else %}
+                                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                                            {% if null != transaction.foreign_amount %}
+                                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+
+                        {#
+
+
+                            {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', group.id)~'">'~journal.description~'</a>') }}
+                            {{ ExpandedForm.staticText('type', sourceType.type|_) }}
+                            {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
+                        #}
                         {# in case of withdrawal #}
+
                         {% if sourceType.type == "Withdrawal" %}
                             {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {# if destination is cash, show (cash) #}
@@ -31,10 +294,11 @@
                             {% endif %}
 
                         {% endif %}
-
+                        #}
                         {# in case of deposit #}
-                        {% if sourceType.type == "Deposit" %}
-                            {# if source is cash, show (cash) #}
+                        {#
+                        {% if journalType.type == "Deposit" %}
+                            <!-- if source is cash, show (cash) -->
                             {% if sourceAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.staticText('source_account_revenue', '<span class="text-success">(cash)</a>') }}
                             {% else %}
@@ -42,15 +306,21 @@
                             {% endif %}
                             {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
+                        #}
 
                         {# in case of transfer #}
                         {% if sourceType.type == "Transfer" %}
                             {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
+                        #}
 
                         {# ONE #}
-                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                        {#
+                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                            ONE
+                        {% endif %}
+                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                             <p><em>
                                     {{ trans('firefly.convert_explanation_withdrawal_deposit',
                                         {
@@ -72,9 +342,10 @@
                                 {{ ExpandedForm.text('source_account_revenue', destinationAccount.name|escape) }}
                             {% endif %}
                         {% endif %}
-
+                        #}
                         {# TWO #}
-                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                        {#
+                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
                             <p><em>
                                     {{ trans('firefly.convert_explanation_withdrawal_transfer',
                                         {
@@ -95,9 +366,10 @@
                             {{ ExpandedForm.activeLongAccountList('destination_account_asset', null) }}
 
                         {% endif %}
-
+                        #}
                         {# THREE #}
-                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+                        {#
+                        {% if journalType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
                             <p>
                                 <em>
                                     {{ trans('firefly.convert_explanation_deposit_withdrawal',
@@ -123,9 +395,10 @@
                             {% endif %}
 
                         {% endif %}
-
+                        #}
                         {# FOUR #}
-                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+                        {#
+                        {% if journalType.type == 'Deposit' and destinationType.type == 'Transfer' %}
 
                             <p>
                                 <em>
@@ -147,9 +420,10 @@
                             </p>
                             {{ ExpandedForm.activeLongAccountList('source_account_asset', null) }}
                         {% endif %}
-
+                        #}
                         {# FIVE #}
-                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+                        {#
+                        {% if journalType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
 
                             <p>
                                 <em>
@@ -173,9 +447,10 @@
                             {{ ExpandedForm.text('destination_account_expense', destinationAccount.name|escape) }}
 
                         {% endif %}
-
+                        #}
                         {# SIX #}
-                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+                        {#
+                        {% if journalType.type == 'Transfer' and destinationType.type == 'Deposit' %}
 
 
                             <p>
@@ -200,10 +475,10 @@
                             {{ ExpandedForm.text('source_account_revenue', sourceAccount.name|escape) }}
 
                         {% endif %}
-
+                        #}
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('transactions.show', journal.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
+                        <a href="{{ route('transactions.show', group.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
                         <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
                             {{ trans('form.convert_'~sourceType.type) }}
                         </button>
@@ -216,6 +491,5 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/convert.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

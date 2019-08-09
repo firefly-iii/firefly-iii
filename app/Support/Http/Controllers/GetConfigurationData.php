@@ -68,7 +68,7 @@ trait GetConfigurationData
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
         $steps    = [];
-        if (\is_array($elements) && \count($elements) > 0) {
+        if (is_array($elements) && count($elements) > 0) {
             foreach ($elements as $key => $options) {
                 $currentStep = $options;
 
@@ -79,7 +79,7 @@ trait GetConfigurationData
                 $steps[] = $currentStep;
             }
         }
-        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, \count($steps)));
+        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
 
         return $steps;
     }
@@ -106,12 +106,12 @@ trait GetConfigurationData
             // first range is the current range:
             $title => [$start, $end],
         ];
-        Log::debug(sprintf('viewRange is %s', $viewRange));
-        Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
+        //Log::debug(sprintf('viewRange is %s', $viewRange));
+        //Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
-            Log::debug('Custom is true.');
+            //Log::debug('Custom is true.');
             $index             = app('navigation')->periodShow($start, $viewRange);
             $customPeriodStart = app('navigation')->startOfPeriod($start, $viewRange);
             $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);
@@ -188,7 +188,7 @@ trait GetConfigurationData
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (\is_array($elements) && \count($elements) > 0) {
+            if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
@@ -200,36 +200,10 @@ trait GetConfigurationData
                 }
             }
         }
-        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, \count($steps)));
+        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
 
         return $steps;
     }
-
-    /**
-     * Check if forbidden functions are set.
-     *
-     * @return bool
-     */
-    protected function hasForbiddenFunctions(): bool // validate system config
-    {
-        $list      = ['proc_close'];
-        $forbidden = explode(',', ini_get('disable_functions'));
-        $trimmed   = array_map(
-            function (string $value) {
-                return trim($value);
-            }, $forbidden
-        );
-        foreach ($list as $entry) {
-            if (\in_array($entry, $trimmed, true)) {
-                Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      *
      */

@@ -33,6 +33,7 @@ use Log;
 
 /**
  * Class ImportTransaction
+ * @codeCoverageIgnore
  */
 class ImportTransaction
 {
@@ -160,6 +161,29 @@ class ImportTransaction
             'opposing-bic'          => 'opposingBic',
             'opposing-number'       => 'opposingNumber',
         ];
+
+        $replaceOldRoles = [
+            'original-source'    => 'original_source',
+            'sepa-cc'            => 'sepa_cc',
+            'sepa-ct-op'         => 'sepa_ct_op',
+            'sepa-ct-id'         => 'sepa_ct_id',
+            'sepa-db'            => 'sepa_db',
+            'sepa-country'       => 'sepa_country',
+            'sepa-ep'            => 'sepa_ep',
+            'sepa-ci'            => 'sepa_ci',
+            'sepa-batch-id'      => 'sepa_batch_id',
+            'internal-reference' => 'internal_reference',
+            'date-interest'      => 'date_interest',
+            'date-invoice'       => 'date_invoice',
+            'date-book'          => 'date_book',
+            'date-payment'       => 'date_payment',
+            'date-process'       => 'date_process',
+            'date-due'           => 'date_due',
+        ];
+        if (array_key_exists($role, $replaceOldRoles)) {
+            $role = $replaceOldRoles[$role];
+        }
+
         if (isset($basics[$role])) {
             $field        = $basics[$role];
             $this->$field = $columnValue->getValue();
@@ -185,18 +209,18 @@ class ImportTransaction
             return;
         }
 
-        $meta = ['sepa-ct-id', 'sepa-ct-op', 'sepa-db', 'sepa-cc', 'sepa-country', 'sepa-batch-id', 'sepa-ep', 'sepa-ci', 'internal-reference', 'date-interest',
-                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due', 'original-source'];
+        $meta = ['sepa_ct_id', 'sepa_ct_op', 'sepa_db', 'sepa_cc', 'sepa_country', 'sepa_batch_id', 'sepa_ep', 'sepa_ci', 'internal_reference', 'date_interest',
+                 'date_invoice', 'date_book', 'date_payment', 'date_process', 'date_due', 'original_source'];
         Log::debug(sprintf('Now going to check role "%s".', $role));
-        if (\in_array($role, $meta, true)) {
+        if (in_array($role, $meta, true)) {
             Log::debug(sprintf('Role "%s" is in allowed meta roles, so store its value "%s".', $role, $columnValue->getValue()));
             $this->meta[$role] = $columnValue->getValue();
 
             return;
         }
 
-        $modifiers = ['rabo-debit-credit', 'ing-debit-credit'];
-        if (\in_array($role, $modifiers, true)) {
+        $modifiers = ['generic-debit-credit', 'ing-debit-credit', 'rabo-debit-credit'];
+        if (in_array($role, $modifiers, true)) {
             $this->modifiers[$role] = $columnValue->getValue();
 
             return;

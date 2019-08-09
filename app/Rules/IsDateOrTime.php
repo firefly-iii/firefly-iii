@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Exception;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
@@ -39,6 +40,7 @@ class IsDateOrTime implements Rule
      * Get the validation error message.
      *
      * @return string|array
+     * @codeCoverageIgnore
      */
     public function message()
     {
@@ -56,11 +58,14 @@ class IsDateOrTime implements Rule
     public function passes($attribute, $value): bool
     {
         $value = (string)$value;
-        if (10 === \strlen($value)) {
+        if ('' === $value) {
+            return false;
+        }
+        if (10 === strlen($value)) {
             // probably a date format.
             try {
                 Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException $e) {
+            } catch (InvalidDateException|Exception $e) {
                 Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return false;
@@ -71,7 +76,7 @@ class IsDateOrTime implements Rule
         // is an atom string, I hope?
         try {
             Carbon::parse($value);
-        } catch (InvalidDateException $e) {
+        } catch (InvalidDateException|Exception $e) {
             Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return false;

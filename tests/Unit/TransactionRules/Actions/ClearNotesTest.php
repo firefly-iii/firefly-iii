@@ -27,8 +27,8 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 
 /**
@@ -42,7 +42,7 @@ class ClearNotesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -51,7 +51,7 @@ class ClearNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal a note:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $note    = $journal->notes()->first();
         if (null === $note) {
             $note = new Note;
@@ -68,6 +68,8 @@ class ClearNotesTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

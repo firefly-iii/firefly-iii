@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => '欢迎来到 Firefly III 的首页。请花时间参观一下这个介绍，瞭解 Firefly III 是如何运作的。',
-    'index_accounts-chart'                  => '此图表显示您的资产帐户的目前馀额，您可以在偏好设定中选择此处可见的帐户。',
-    'index_box_out_holder'                  => '这个小盒子和这个旁边的盒子会提供您财务状况的快速概览。',
-    'index_help'                            => '如果您需要有关页面或表单的说明，请按此按钮。',
-    'index_outro'                           => 'Firefly III 的大多数页面将从像这样的小介绍开始，如果您有任何问题或意见，请与我联繫。请享受！',
-    'index_sidebar-toggle'                  => '若要建立新的交易记录、帐户或其他内容，请使用此图示下的选单。',
+    'index_intro'                                     => '欢迎来到 Firefly III 的首页。请花时间参观一下这个介绍，瞭解 Firefly III 是如何运作的。',
+    'index_accounts-chart'                            => '此图表显示您的资产帐户的目前馀额，您可以在偏好设定中选择此处可见的帐户。',
+    'index_box_out_holder'                            => '这个小盒子和这个旁边的盒子会提供您财务状况的快速概览。',
+    'index_help'                                      => '如果您需要有关页面或表单的说明，请按此按钮。',
+    'index_outro'                                     => 'Firefly III 的大多数页面将从像这样的小介绍开始，如果您有任何问题或意见，请与我联繫。请享受！',
+    'index_sidebar-toggle'                            => '若要建立新的交易记录、帐户或其他内容，请使用此图示下的选单。',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => '给您的帐户一个有效的 IBAN，可使未来资料导入变得更容易。',
-    'accounts_create_asset_opening_balance' => '资产帐户可能有一个 "初始馀额"，表示此帐户在 Firefly III 中的纪录开始。',
-    'accounts_create_asset_currency'        => 'Fireflly III 支持多种货币。资产帐户有一种主要货币，您必须在此处设定。',
-    'accounts_create_asset_virtual'         => '有时，它可以协助赋予你的帐户一个虚拟额度：一个总是增加至实际馀额中，或自其中删减的固定金额。',
+    'accounts_create_iban'                            => '给您的帐户一个有效的 IBAN，可使未来资料导入变得更容易。',
+    'accounts_create_asset_opening_balance'           => '资产帐户可能有一个 "初始馀额"，表示此帐户在 Firefly III 中的纪录开始。',
+    'accounts_create_asset_currency'                  => 'Fireflly III 支持多种货币。资产帐户有一种主要货币，您必须在此处设定。',
+    'accounts_create_asset_virtual'                   => '有时，它可以协助赋予你的帐户一个虚拟额度：一个总是增加至实际馀额中，或自其中删减的固定金额。',
 
     // budgets index
-    'budgets_index_intro'                   => '预算是用来管理你的财务，也是 Firefly III 的核心功能之一。',
-    'budgets_index_set_budget'              => '设定每个期间的总预算，这样 Firefly III 就可以告诉你，是否已经将所有可用的钱设定预算。',
-    'budgets_index_see_expenses_bar'        => '消费金额会慢慢地填满这个横条。',
-    'budgets_index_navigate_periods'        => '前往区间，以便提前轻鬆设定预算。',
-    'budgets_index_new_budget'              => '根据需要建立新预算。',
-    'budgets_index_list_of_budgets'         => '使用此表可以设定每个预算的金额，并查看您的情况。',
-    'budgets_index_outro'                   => '要瞭解有关预算的详细资讯，请查看右上角的说明图示。',
+    'budgets_index_intro'                             => '预算是用来管理你的财务，也是 Firefly III 的核心功能之一。',
+    'budgets_index_set_budget'                        => '设定每个期间的总预算，这样 Firefly III 就可以告诉你，是否已经将所有可用的钱设定预算。',
+    'budgets_index_see_expenses_bar'                  => '消费金额会慢慢地填满这个横条。',
+    'budgets_index_navigate_periods'                  => '前往区间，以便提前轻鬆设定预算。',
+    'budgets_index_new_budget'                        => '根据需要建立新预算。',
+    'budgets_index_list_of_budgets'                   => '使用此表可以设定每个预算的金额，并查看您的情况。',
+    'budgets_index_outro'                             => '要瞭解有关预算的详细资讯，请查看右上角的说明图示。',
 
     // reports (index)
-    'reports_index_intro'                   => '使用这些报表可以获得有关您财务状况的详细洞察报告。',
-    'reports_index_inputReportType'         => '选择报表类型。查看说明页面以瞭解每个报表向您显示的内容。',
-    'reports_index_inputAccountsSelect'     => '您可以根据需要排除或包括资产帐户。',
-    'reports_index_inputDateRange'          => '所选日期范围完全由您决定：从1天到10年不等。',
-    'reports_index_extra-options-box'       => '根据您选择的报表，您可以在此处选择额外的筛选标准和选项。更改报表类型时，请查看此区块。',
+    'reports_index_intro'                             => '使用这些报表可以获得有关您财务状况的详细洞察报告。',
+    'reports_index_inputReportType'                   => '选择报表类型。查看说明页面以瞭解每个报表向您显示的内容。',
+    'reports_index_inputAccountsSelect'               => '您可以根据需要排除或包括资产帐户。',
+    'reports_index_inputDateRange'                    => '所选日期范围完全由您决定：从1天到10年不等。',
+    'reports_index_extra-options-box'                 => '根据您选择的报表，您可以在此处选择额外的筛选标准和选项。更改报表类型时，请查看此区块。',
 
     // reports (reports)
-    'reports_report_default_intro'          => '这份报表将为您提供一个快速和全面的个人财务概览。如果你想看其他的东西，请不要犹豫并联繫我！',
-    'reports_report_audit_intro'            => '此报表将为您提供有关资产帐户的详细洞察报告。',
-    'reports_report_audit_optionsBox'       => '使用这些选取方块可以显示或隐藏您感兴趣的栏。',
+    'reports_report_default_intro'                    => '这份报表将为您提供一个快速和全面的个人财务概览。如果你想看其他的东西，请不要犹豫并联繫我！',
+    'reports_report_audit_intro'                      => '此报表将为您提供有关资产帐户的详细洞察报告。',
+    'reports_report_audit_optionsBox'                 => '使用这些选取方块可以显示或隐藏您感兴趣的栏。',
 
     'reports_report_category_intro'                  => '此报表将提供您一个或多个类别洞察报告。',
     'reports_report_category_pieCharts'              => '这些图表将提供您每个类别或每个帐户中，支出和所得的洞察报告。',
@@ -76,20 +98,20 @@ return [
     'transactions_create_withdrawal_ffInput_budget'           => '将您的提款连结至预算，以利财务管控。',
     'transactions_create_withdrawal_currency_dropdown_amount' => '当您的提款使用另一种货币时, 请使用此下拉清单。',
     'transactions_create_deposit_currency_dropdown_amount'    => '当您的存款使用另一种货币时, 请使用此下拉清单。',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => '选择一个小猪存钱罐，并将此转帐连结到您的储蓄。',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => '选择一个存钱罐，并将此转帐连结到您的储蓄。',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => '此栏位显示您在每个小猪存钱罐中保存了多少。',
-    'piggy-banks_index_button'                                => '此进度条旁边有两个按钮 (+ 和-)，用于从每个小猪存钱罐中增加或删除资金。',
-    'piggy-banks_index_accountStatus'                         => '此表中列出了每一个至少有一个小猪存钱罐的资产帐户的状态。',
+    'piggy-banks_index_saved'                                 => '此栏位显示您在每个存钱罐中存了多少。',
+    'piggy-banks_index_button'                                => '此进度条旁边有两个按钮 ( + 和 - )，用于从每个存钱罐中投入或取出资金。',
+    'piggy-banks_index_accountStatus'                         => '此表中列出了所有有存钱罐的资产帐户的状态。',
 
     // create piggy
     'piggy-banks_create_name'                                 => '你的目标是什麽？一个新沙发、一个相机、急难用金？',
-    'piggy-banks_create_date'                                 => '您可以为小猪存钱罐设定目标日期或截止日期。',
+    'piggy-banks_create_date'                                 => '您可以为存钱罐设定目标日期或截止日期。',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => '这张图表将显示这个小猪存钱罐的历史。',
-    'piggy-banks_show_piggyDetails'                           => '关于你的小猪存钱罐的一些细节',
+    'piggy-banks_show_piggyChart'                             => '这张图表将显示这个存钱罐的历史。',
+    'piggy-banks_show_piggyDetails'                           => '关于你的存钱罐的一些细节',
     'piggy-banks_show_piggyEvents'                            => '此处还列出了任何增加或删除。',
 
     // bill index

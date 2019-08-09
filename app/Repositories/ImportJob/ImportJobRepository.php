@@ -55,7 +55,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $this->uploadDisk    = Storage::disk('upload');
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -91,9 +91,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         Log::debug(sprintf('Now in appendTransactions(%s)', $job->key));
         $existingTransactions = $this->getTransactions($job);
         $new                  = array_merge($existingTransactions, $transactions);
-        Log::debug(sprintf('Old transaction count: %d', \count($existingTransactions)));
-        Log::debug(sprintf('To be added transaction count: %d', \count($transactions)));
-        Log::debug(sprintf('New count: %d', \count($new)));
+        Log::debug(sprintf('Old transaction count: %d', count($existingTransactions)));
+        Log::debug(sprintf('To be added transaction count: %d', count($transactions)));
+        Log::debug(sprintf('New count: %d', count($new)));
         $this->setTransactions($job, $new);
 
         return $job;
@@ -224,7 +224,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function getExtendedStatus(ImportJob $job): array
     {
         $status = $job->extended_status;
-        if (\is_array($status)) {
+        if (is_array($status)) {
             return $status;
         }
 
@@ -333,7 +333,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $json     = Crypt::encrypt(json_encode($transactions));
 
         // set count for easy access
-        $array             = ['count' => \count($transactions)];
+        $array             = ['count' => count($transactions)];
         $job->transactions = $array;
         $job->save();
         // store file.
@@ -386,7 +386,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->md5      = md5($content);
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
-        $attachment->size     = \strlen($content);
+        $attachment->size     = strlen($content);
         $attachment->uploaded = false;
         $attachment->save();
         $encrypted = Crypt::encrypt($content);
@@ -466,5 +466,15 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $size = $file->getSize();
 
         return $size > $this->maxUploadSize;
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return int
+     */
+    public function countByTag(ImportJob $job): int
+    {
+        return $job->tag->transactionJournals->count();
     }
 }

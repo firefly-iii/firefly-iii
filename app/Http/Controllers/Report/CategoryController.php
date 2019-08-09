@@ -64,13 +64,25 @@ class CategoryController extends Controller
         $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterPeriodReport($data);
+
+        // depending on the carbon format (a reliable way to determine the general date difference)
+        // change the "listOfPeriods" call so the entire period gets included correctly.
+        $range = app('navigation')->preferredCarbonFormat($start, $end);
+
+        if ('Y' === $range) {
+            $start->startOfYear();
+        }
+        if ('Y-m' === $range) {
+            $start->startOfMonth();
+        }
+
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
 
@@ -106,13 +118,25 @@ class CategoryController extends Controller
         $data       = $repository->periodIncome($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterPeriodReport($data);
+
+        // depending on the carbon format (a reliable way to determine the general date difference)
+        // change the "listOfPeriods" call so the entire period gets included correctly.
+        $range = app('navigation')->preferredCarbonFormat($start, $end);
+
+        if ('Y' === $range) {
+            $start->startOfYear();
+        }
+        if ('Y-m' === $range) {
+            $start->startOfMonth();
+        }
+
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -161,13 +185,13 @@ class CategoryController extends Controller
             $sum[$categoryId] = (float)$row['spent'];
         }
         array_multisort($sum, SORT_ASC, $report);
+        // @codeCoverageIgnoreStart
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
-            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
 
         // @codeCoverageIgnoreEnd

@@ -4,23 +4,14 @@ networks:
     driver: bridge
 services: 
   firefly_iii_app: 
-    environment: 
-      - FF_DB_HOST=firefly_iii_db
-      - FF_DB_NAME=firefly
-      - FF_DB_USER=firefly
-      - FF_DB_PASSWORD=firefly
-      - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
-      - FF_APP_ENV=local
-      - FF_DB_CONNECTION=pgsql
-      - TZ=Europe/Amsterdam
-      - APP_LOG_LEVEL=debug
-    image: jc5x/firefly-iii
-    links: 
+    image: jc5x/firefly-iii:develop
+    depends_on:
       - firefly_iii_db
     networks: 
       - firefly_iii_net
     ports: 
       - "80:80"
+    env_file: .env
     volumes: 
       - 
         source: firefly_iii_export
@@ -31,14 +22,14 @@ services:
         target: /var/www/firefly-iii/storage/upload
         type: volume
   firefly_iii_db: 
-    environment: 
-      - POSTGRES_PASSWORD=firefly
-      - POSTGRES_USER=firefly
     image: "postgres:10"
+    environment:
+      - POSTGRES_PASSWORD=secret_firefly_password
+      - POSTGRES_USER=firefly
     networks: 
       - firefly_iii_net
     volumes: 
-      - "firefly_iii_db:/var/lib/postgresql/data"
+      - firefly_iii_db:/var/lib/postgresql/data
 version: "3.2"
 volumes: 
   firefly_iii_db: ~

@@ -28,8 +28,9 @@ use FireflyIII\Rules\IsBoolean;
 
 
 /**
- *
+ * @codeCoverageIgnore
  * Class RuleGroupRequest
+ * TODO AFTER 4.8.0: split this into two request classes.
  */
 class RuleGroupRequest extends Request
 {

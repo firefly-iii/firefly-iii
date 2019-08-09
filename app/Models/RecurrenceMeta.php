@@ -33,6 +33,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property string $name
  * @property string $value
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $recurrence_id
+ * @property-read \FireflyIII\Models\Recurrence $recurrence
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereRecurrenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereValue($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta withoutTrashed()
+ * @mixin \Eloquent
  */
 class RecurrenceMeta extends Model
 {

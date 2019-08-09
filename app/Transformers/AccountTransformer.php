@@ -46,7 +46,7 @@ class AccountTransformer extends AbstractTransformer
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
 
         $this->repository = app(AccountRepositoryInterface::class);
@@ -105,7 +105,7 @@ class AccountTransformer extends AbstractTransformer
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
             'credit_card_type'        => $creditCardType,
-            'account_number'          => $this->repository->getMetaValue($account, 'accountNumber'),
+            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'         => round($account->virtual_balance, $decimalPlaces),
@@ -137,7 +137,7 @@ class AccountTransformer extends AbstractTransformer
      */
     private function getAccountRole(Account $account, string $accountType): ?string
     {
-        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
+        $accountRole = $this->repository->getMetaValue($account, 'account_role');
         if ('asset' !== $accountType || '' === (string)$accountRole) {
             $accountRole = null;
         }
@@ -157,8 +157,8 @@ class AccountTransformer extends AbstractTransformer
         $monthlyPaymentDate = null;
         $creditCardType     = null;
         if ('ccAsset' === $accountRole && 'asset' === $accountType) {
-            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
-            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
+            $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
 
         return [$creditCardType, $monthlyPaymentDate];
@@ -229,7 +229,7 @@ class AccountTransformer extends AbstractTransformer
     {
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
+        if (in_array($accountType, ['asset', 'liabilities'], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);

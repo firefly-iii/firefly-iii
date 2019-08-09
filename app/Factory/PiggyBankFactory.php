@@ -38,11 +38,12 @@ class PiggyBankFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -90,6 +91,9 @@ class PiggyBankFactory
     public function findByName(string $name): ?PiggyBank
     {
         $set = $this->user->piggyBanks()->get();
+
+        // TODO no longer need to loop like this
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             if ($piggy->name === $name) {

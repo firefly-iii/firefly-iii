@@ -24,19 +24,16 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Json;
 
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -51,7 +48,7 @@ class ReconcileControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -61,66 +58,43 @@ class ReconcileControllerTest extends TestCase
      */
     public function testOverview(): void
     {
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $transactions   = $this->user()->transactions()->inRandomOrder()->take(3)->get();
-        $transactions   = $transactions->each(
-            function (Transaction $transaction) {
-                $transaction->transaction_amount = '5';
-            }
-        );
-        $repository     = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
-
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $euro         = $this->getEuro();
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
         $date         = new Carbon;
+        $account      = $this->user()->accounts()->where('id', $withdrawal['source_account_id'])->first();
+
+        // make sure it falls into the current range
+        $withdrawal['date'] = new Carbon('2017-01-30');
+
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+
+        $collector->shouldReceive('setJournalIds')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$withdrawal]);
+
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($euro);
+
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $accountRepos->shouldReceive('findNull')->andReturn($this->getRandomAsset())->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->andReturn(1);
 
         $parameters = [
             'startBalance' => '0',
             'endBalance'   => '10',
-            'transactions' => [1, 2, 3],
-            'cleared'      => [4, 5, 6],
-        ];
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.overview', [1, '20170101', '20170131']) . '?' . http_build_query($parameters));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test overview when it's not an asset.
-     *
-     * @covers                   \FireflyIII\Http\Controllers\Json\ReconcileController
-     */
-    public function testOverviewNotAsset(): void
-    {
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $date           = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $account    = $this->user()->accounts()->where('account_type_id', '!=', 3)->first();
-        $parameters = [
-            'startBalance' => '0',
-            'endBalance'   => '10',
-            'transactions' => [1, 2, 3],
+            'journals'     => [1, 2, 3],
             'cleared'      => [4, 5, 6],
         ];
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile.overview', [$account->id, '20170101', '20170131']) . '?' . http_build_query($parameters));
-        $response->assertStatus(500);
+        $response->assertStatus(200);
+        $response->assertSee('-100');
     }
-
 
     /**
      * List transactions for reconciliation view.
@@ -129,50 +103,38 @@ class ReconcileControllerTest extends TestCase
      */
     public function testTransactions(): void
     {
-        $repository     = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $date           = new Carbon;
+        $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
+
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $date         = new Carbon;
+        $euro         = $this->getEuro();
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+
+
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
+
 
         $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$withdrawal]);
 
 
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile.transactions', [1, '20170101', '20170131']));
         $response->assertStatus(200);
+        $response->assertSee('-100');
     }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Json\ReconcileController
-     */
-    public function testTransactionsInitialBalance(): void
-    {
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $date           = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                  ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.transactions', [$transaction->account_id, '20170101', '20170131']));
-        $response->assertStatus(302);
-    }
-
-
 }

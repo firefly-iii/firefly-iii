@@ -20,7 +20,7 @@
                         <div class="form-group">
                             <label for="query" class="col-sm-1 control-label">{{ 'search_query'|_ }}</label>
                             <div class="col-sm-10">
-                                <input autocomplete="off" type="text" name="q" id="query" value="{{ fullQuery }}" class="form-control"
+                                <input autocomplete="off" type="text" name="search" id="query" value="{{ fullQuery }}" class="form-control"
                                        placeholder="{{ fullQuery }}">
                             </div>
                         </div>
@@ -124,5 +124,6 @@
         var searchUri = "{{ route('search.search') }}";
     </script>
     <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+    {# required for groups.twig #}
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

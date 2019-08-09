@@ -42,6 +42,7 @@ class AvailableBudgetController extends Controller
 
     /**
      * AvailableBudgetController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

@@ -49,7 +49,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $this->repository = $repository;
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
 
     }
@@ -144,11 +144,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $set->push($budget);
             }
         }
-        $set = $set->sortBy(
-            function (Budget $budget) {
-                return $budget->name;
-            }
-        );
 
         return $set;
     }

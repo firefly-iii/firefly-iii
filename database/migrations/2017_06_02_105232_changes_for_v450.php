@@ -33,15 +33,28 @@ class ChangesForV450 extends Migration
      */
     public function down(): void
     {
+        // split up for sqlite compatibility
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('foreign_amount');
 
+            }
+        );
+
+        Schema::table(
+            'transactions',
+            static function (Blueprint $table) {
                 // cannot drop foreign keys in SQLite:
                 if ('sqlite' !== config('database.default')) {
                     $table->dropForeign('transactions_foreign_currency_id_foreign');
                 }
+            }
+        );
+
+        Schema::table(
+            'transactions',
+            static function (Blueprint $table) {
                 $table->dropColumn('foreign_currency_id');
             }
         );

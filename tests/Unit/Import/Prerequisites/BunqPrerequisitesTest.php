@@ -28,11 +28,11 @@ use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Models\Preference;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\IP\IPRetrievalInterface;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\Object\FakeApiContext;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class BunqPrerequisitesTest
@@ -45,7 +45,7 @@ class BunqPrerequisitesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 

@@ -21,7 +21,6 @@
                                 :
                                 <span id="available" data-value="{{ available }}">{{ available|formatAmountPlain }}</span>
                                 <a href="#" class="updateIncome btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
-                                <a href="#" class="infoIncome btn btn-info btn-xs"><i class="fa fa-info-circle"></i></a>
                             </small>
                         </div>
                     </div>
@@ -86,7 +85,7 @@
         </div>
     </div>
     {% if paginator.count == 0 and inactive.count == 0 and page == 1 %}
-        {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% endif %}
@@ -252,7 +251,6 @@
         var budgetIndexUri = "{{ route('budgets.index','REPLACE') }}";
         var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";
         var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}?page={{ page }}";
-        var infoIncomeUri = "{{ route('budgets.income.info',[start.format('Y-m-d'),end.format('Y-m-d')]) }}";
         var periodStart = "{{ start.format('Y-m-d') }}";
         var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>

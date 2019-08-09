@@ -23,19 +23,21 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Recurring;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -50,7 +52,7 @@ class EditControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -58,20 +60,44 @@ class EditControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos       = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(PiggyBankRepositoryInterface::class);
 
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RecurrenceTransformer::class);
+        $asset          = $this->getRandomAsset();
+        $euro           = $this->getEuro();
+        $cash           = $this->getRandomAsset();
+        $this->mockDefaultSession();
+
+        $transformed = [
+            'transactions' => [
+                [
+                    'source_id'      => 1,
+                    'destination_id' => 1,
+                ],
+            ],
+        ];
+
+        // for view:
+        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()->andReturn(new Collection([$asset]));
+        Steam::shouldReceive('balance')->andReturn('100')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+        $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->andReturnNull();
+        $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($cash);
+        //Amount::shouldReceive('getDefaultCurrency')->andReturn($euro)->atLeast()->once();
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('100');
+
+        // transform recurrence.
         $transformer->shouldReceive('setParameters')->atLeast()->once();
-        $transformer->shouldReceive('transform')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn($transformed);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
+        // get stuff from recurrence.
         $recurringRepos->shouldReceive('setUser');
         $recurringRepos->shouldReceive('getNoteText')->andReturn('Note!');
         $recurringRepos->shouldReceive('repetitionDescription')->andReturn('dunno');
@@ -80,13 +106,15 @@ class EditControllerTest extends TestCase
 
 
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
-        //\Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(1));
+        //\Amount::shouldReceive('getDefaultCurrency')->andReturn($this->getEuro());
 
 
         $this->be($this->user());
         $response = $this->get(route('recurring.edit', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee('deposit_source_id');
+        $response->assertSee('withdrawal_destination_id');
     }
 
     /**
@@ -95,48 +123,52 @@ class EditControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $categoryRepos   = $this->mock(CategoryRepositoryInterface::class);
-        $userRepos       = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $validator      = $this->mock(AccountValidator::class);
+        $expense        = $this->getRandomExpense();
+
+        $this->mockDefaultSession();
 
         $recurringRepos->shouldReceive('update')->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+        Preferences::shouldReceive('mark')->once();
 
         $tomorrow   = Carbon::now()->addDays(2);
         $recurrence = $this->user()->recurrences()->first();
         $data       = [
-            'id'                      => $recurrence->id,
-            'title'                   => 'hello',
-            'first_date'              => $tomorrow->format('Y-m-d'),
-            'repetition_type'         => 'daily',
-            'skip'                    => 0,
-            'recurring_description'   => 'Some descr',
-            'active'                  => '1',
-            'apply_rules'             => '1',
-            'return_to_edit'          => '1',
+            'id'                        => $recurrence->id,
+            'title'                     => 'hello',
+            'first_date'                => $tomorrow->format('Y-m-d'),
+            'repetition_type'           => 'daily',
+            'skip'                      => 0,
+            'recurring_description'     => 'Some descr',
+            'active'                    => '1',
+            'apply_rules'               => '1',
+            'return_to_edit'            => '1',
             // mandatory for transaction:
-            'transaction_description' => 'Some descr',
-            'transaction_type'        => 'withdrawal',
-            'transaction_currency_id' => '1',
-            'amount'                  => '30',
+            'transaction_description'   => 'Some descr',
+            'transaction_type'          => 'withdrawal',
+            'transaction_currency_id'   => '1',
+            'amount'                    => '30',
             // mandatory account info:
-            'source_id'               => '1',
-            'source_name'             => '',
-            'destination_id'          => '',
-            'destination_name'        => 'Some Expense',
+            'source_id'                 => '1',
+            'source_name'               => '',
+            'withdrawal_destination_id' => $expense->id,
+            'destination_id'            => '',
+            'destination_name'          => 'Some Expense',
 
             // optional fields:
-            'budget_id'               => '1',
-            'category'                => 'CategoryA',
-            'tags'                    => 'A,B,C',
-            'create_another'          => '1',
-            'repetition_end'          => 'times',
-            'repetitions'             => 3,
+            'budget_id'                 => '1',
+            'category'                  => 'CategoryA',
+            'tags'                      => 'A,B,C',
+            'create_another'            => '1',
+            'repetition_end'            => 'times',
+            'repetitions'               => 3,
         ];
 
 

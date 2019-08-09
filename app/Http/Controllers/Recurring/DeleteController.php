@@ -39,6 +39,7 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -79,8 +80,8 @@ class DeleteController extends Controller
      * Destroy the recurring transaction.
      *
      * @param RecurringRepositoryInterface $repository
-     * @param Request                      $request
-     * @param Recurrence                   $recurrence
+     * @param Request $request
+     * @param Recurrence $recurrence
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

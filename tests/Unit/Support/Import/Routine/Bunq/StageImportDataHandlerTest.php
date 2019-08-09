@@ -57,7 +57,7 @@ class StageImportDataHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -67,7 +67,7 @@ class StageImportDataHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+        $job->key           = 'sidh_bbunq_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -117,7 +117,7 @@ class StageImportDataHandlerTest extends TestCase
         $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
         $payment->setAmount($amount);
         $payment->setCounterpartyAlias($labelMonetaryAccount);
-        $payment->setDescription('Random description #' . random_int(1, 10000));
+        $payment->setDescription('Random description #' . $this->randomInt());
         $value = [$payment];
         $list  = new BunqResponsePaymentList($value, [], null);
 
@@ -216,7 +216,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidA_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidA_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -290,7 +290,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidh_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -344,7 +344,7 @@ class StageImportDataHandlerTest extends TestCase
     //
     //        $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
     //        $payment->setAmount($amount);
-    //        $payment->setDescription('Some random thing #' . random_int(1, 10000));
+    //        $payment->setDescription('Some random thing #' . $this->randomInt());
     //        $payment->setCounterpartyAlias($labelMonetaryAccount);
     //        $value = [$payment];
     //        $list  = new BunqResponsePaymentList($value, [], null);
@@ -427,7 +427,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidh_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -477,7 +477,7 @@ class StageImportDataHandlerTest extends TestCase
     //        $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
     //        $payment->setAmount($amount);
     //        $payment->setCounterpartyAlias($labelMonetaryAccount);
-    //        $payment->setDescription('Random transfer #' . random_int(1, 10000));
+    //        $payment->setDescription('Random transfer #' . $this->randomInt());
     //        $value = [$payment];
     //        $list  = new BunqResponsePaymentList($value, [], null);
     //

@@ -48,13 +48,14 @@ use Throwable;
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @codeCoverageIgnore
  */
 class ExpandedForm
 {
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -75,7 +76,7 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account, 'accountRole');
+            $role       = $repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -93,8 +94,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -102,10 +103,7 @@ class ExpandedForm
     {
         // make repositories
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
+        $repository      = app(AccountRepositoryInterface::class);
         $accountList     = $repository->getActiveAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
         );
@@ -113,17 +111,78 @@ class ExpandedForm
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
+
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
-            $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account, 'accountRole');
-            if ('' === $role && !\in_array($account->accountType->type, $liabilityTypes, true)) {
+            $balance = app('steam')->balance($account, new Carbon);
+
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+
+            $role = $repository->getMetaValue($account, 'account_role');
+
+            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
 
-            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function activeWithdrawalDestinations(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $accountList     = $repository->getActiveAccountsByType(
+            [
+                AccountType::MORTGAGE,
+                AccountType::DEBT,
+                AccountType::CREDITCARD,
+                AccountType::LOAN,
+                AccountType::EXPENSE,
+            ]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+
+        // add cash account first:
+        $cash                     = $repository->getCashAccount();
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance  = app('steam')->balance($account, new Carbon);
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$repository->getMetaValue($account, 'account_role');
+            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            if ('no_account_type' === $role && AccountType::EXPENSE === $account->accountType->type) {
+                $role = 'expense_account'; // @codeCoverageIgnore
+
+            }
+
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
 
@@ -139,12 +198,69 @@ class ExpandedForm
     }
 
     /**
+     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
+     *
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
-     * @throws FireflyException
+     */
+    public function activeDepositDestinations(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        $accountList     = $repository->getActiveAccountsByType(
+            [
+                AccountType::MORTGAGE,
+                AccountType::DEBT,
+                AccountType::CREDITCARD,
+                AccountType::LOAN,
+                AccountType::REVENUE,
+            ]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+
+        // add cash account first:
+        $cash                     = $repository->getCashAccount();
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance  = app('steam')->balance($account, new Carbon);
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$repository->getMetaValue($account, 'account_role');
+            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+            if ('no_account_type' === $role && AccountType::REVENUE === $account->accountType->type) {
+                $role = 'revenue_account'; // @codeCoverageIgnore
+
+            }
+
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     *
+     * @return string
      */
     public function amount(string $name, $value = null, array $options = null): string
     {
@@ -153,8 +269,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -185,7 +301,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -206,7 +322,7 @@ class ExpandedForm
         // group accounts:
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
-            $role = $repository->getMetaValue($account, 'accountRole');
+            $role = $repository->getMetaValue($account, 'account_role');
             if (null === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -227,8 +343,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -249,7 +365,7 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            $role       = (string)$repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -267,8 +383,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @throws FireflyException
@@ -280,8 +396,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @throws FireflyException
@@ -293,9 +409,9 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param int    $value
-     * @param mixed  $checked
-     * @param array  $options
+     * @param int $value
+     * @param mixed $checked
+     * @param array $options
      *
      * @return string
      *
@@ -331,8 +447,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -354,8 +470,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -379,8 +495,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -404,7 +520,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -427,8 +543,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -453,8 +569,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -478,8 +594,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -503,12 +619,12 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            $role       = (string)$repository->getMetaValue($account, 'account_role'); // TODO bad form for currency
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
 
-            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
 
@@ -580,8 +696,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -611,8 +727,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -656,7 +772,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -681,8 +797,8 @@ class ExpandedForm
      * Function to render a percentage.
      *
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -707,8 +823,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -732,8 +848,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -754,8 +870,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param null       $value
+     * @param string $name
+     * @param null $value
      * @param array|null $options
      *
      * @return HtmlString
@@ -785,9 +901,9 @@ class ExpandedForm
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
-     * @param array  $list
-     * @param mixed  $selected
-     * @param array  $options
+     * @param array $list
+     * @param mixed $selected
+     * @param array $options
      *
      * @return string
      */
@@ -811,8 +927,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -834,8 +950,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -859,8 +975,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -883,8 +999,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -916,8 +1032,8 @@ class ExpandedForm
     /**
      * @param string $name
      * @param string $view
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -969,8 +1085,8 @@ class ExpandedForm
     /**
      * @param string $name
      * @param string $view
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

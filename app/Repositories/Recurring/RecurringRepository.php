@@ -26,9 +26,9 @@ namespace FireflyIII\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
@@ -62,7 +62,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -151,7 +151,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      *
-     * @param Recurrence  $recurrence
+     * @param Recurrence $recurrence
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -210,11 +210,29 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * @param Recurrence $recurrence
+     * @return PiggyBank|null
+     */
+    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank
+    {
+        $meta = $recurrence->recurrenceMeta;
+        /** @var RecurrenceMeta $metaEntry */
+        foreach ($meta as $metaEntry) {
+            if ('piggy_bank_id' === $metaEntry->name) {
+                $piggyId = (int)$metaEntry->value;
+                return $this->user->piggyBanks()->where('id', $piggyId)->first(['piggy_banks.*']);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Generate events in the date range.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon               $start
-     * @param Carbon               $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      *
      * @return array
@@ -274,8 +292,8 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * @param Recurrence $recurrence
-     * @param int        $page
-     * @param int        $pageSize
+     * @param int $page
+     * @param int $pageSize
      *
      * @return LengthAwarePaginator
      */
@@ -290,17 +308,17 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
-            $search[] = ['id' => (int)$journalId];
+            $search[] = (int)$journalId;
         }
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($recurrence->user);
-        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
-        // filter on specific journals.
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->setJournals(new Collection($search));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return $collector->getPaginatedTransactions();
+        $collector->setUser($recurrence->user);
+        $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)
+                  ->withAccountInformation();
+        $collector->setJournalIds($search);
+
+        return $collector->getPaginatedGroups();
     }
 
     /**
@@ -318,26 +336,34 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->where('data', json_encode((string)$recurrence->id))
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
-        foreach ($journalMeta as $journalId) {
-            $search[] = ['id' => (int)$journalId];
-        }
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($recurrence->user);
-        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->setJournals(new Collection($search));
 
-        return $collector->getTransactions();
+
+
+        foreach ($journalMeta as $journalId) {
+            $search[] = (int)$journalId;
+        }
+        if (0 === count($search)) {
+
+            return [];
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setUser($recurrence->user);
+        $collector->withCategoryInformation()->withBudgetInformation()->withAccountInformation();
+        // filter on specific journals.
+        $collector->setJournalIds($search);
+
+        return $collector->getGroups();
     }
 
     /**
      * Calculate the next X iterations starting on the date given in $date.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon               $date
-     * @param int                  $count
+     * @param Carbon $date
+     * @param int $count
      *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -428,20 +454,26 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param array $data
      *
      * @return Recurrence
+     * @throws FireflyException
      */
     public function store(array $data): Recurrence
     {
-        $factory = new RecurrenceFactory;
+        /** @var RecurrenceFactory $factory */
+        $factory = app(RecurrenceFactory::class);
         $factory->setUser($this->user);
+        $result = $factory->create($data);
+        if (null === $result) {
+            throw new FireflyException($factory->getErrors()->first());
+        }
 
-        return $factory->create($data);
+        return $result;
     }
 
     /**
      * Update a recurring transaction.
      *
      * @param Recurrence $recurrence
-     * @param array      $data
+     * @param array $data
      *
      * @return Recurrence
      * @throws FireflyException

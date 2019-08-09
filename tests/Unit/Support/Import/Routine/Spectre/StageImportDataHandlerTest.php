@@ -49,7 +49,7 @@ class StageImportDataHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -74,8 +74,8 @@ class StageImportDataHandlerTest extends TestCase
 
         $today = new Carbon;
         // create fake transactions:
-        $op1          = 'Some opposing account #' . random_int(1, 100);
-        $op2          = 'Some opposing revenue account #' . random_int(1, 100);
+        $op1          = 'Some opposing account #' . $this->randomInt();
+        $op2          = 'Some opposing revenue account #' . $this->randomInt();
         $transactions = [
             new SpectreTransaction(
                 [
@@ -85,7 +85,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => -123.45,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake description #' . random_int(1, 100),
+                    'description'   => 'Fake description #' . $this->randomInt(),
                     'category'      => 'some-category',
                     'duplicated'    => false,
                     'extra'         => [
@@ -104,7 +104,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => 563.21,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake second description #' . random_int(1, 100),
+                    'description'   => 'Fake second description #' . $this->randomInt(),
                     'category'      => 'some-other-category',
                     'duplicated'    => false,
                     'extra'         => [
@@ -123,7 +123,7 @@ class StageImportDataHandlerTest extends TestCase
         $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sid_a__' . random_int(1, 100000);
+        $job->key           = 'sid_a__' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -142,28 +142,26 @@ class StageImportDataHandlerTest extends TestCase
         $lrRequest    = $this->mock(ListTransactionsRequest::class);
         $mapper       = $this->mock(OpposingAccountMapper::class);
 
-        // expected result
         $expected = [
             0 => [
-                'type'            => 'withdrawal',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
-                'external_id'     => '1',
-                // journal data:
-                'description'     => $transactions[0]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // transaction here
+                        'date'                  => $today->format('Y-m-d'),
+                        'tags'                  => ['mode', 'active'],
+                        'type'                  => 'withdrawal',
+                        'user'                  => $job->user_id,
+                        'notes'                 => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
+                        'external_id'           => '1',
+                        // journal data:
+                        'description'           => $transactions[0]->getDescription(),
+                        'piggy_bank_id'         => null,
+                        'piggy_bank_name'       => null,
+                        'bill_id'               => null,
+                        'bill_name'             => null,
+                        'original-source'       => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '-123.45',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -180,28 +178,26 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
-
             ],
             1 => [
-                'type'            => 'deposit',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
-                'external_id'     => '2',
-                // journal data:
-                'description'     => $transactions[1]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // transaction here
+                        'date'                  => $today->format('Y-m-d'),
+                        'tags'                  => ['mode', 'active'],
+                        'type'                  => 'deposit',
+                        'user'                  => $job->user_id,
+                        'notes'                 => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
+                        'external_id'           => '2',
+                        // journal data:
+                        'description'           => $transactions[1]->getDescription(),
+                        'piggy_bank_id'         => null,
+                        'piggy_bank_name'       => null,
+                        'bill_id'               => null,
+                        'bill_name'             => null,
+                        'original-source'       => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '563.21',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -218,14 +214,13 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
-
             ],
         ];
+
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('findNull')->once()->withArgs([322])->andReturn($account);
         $importRepos->shouldReceive('setUser')->once();
-        $importRepos->shouldReceive('setTransactions')->once()
-                    ->withArgs([Mockery::any(), $expected]);
+        $importRepos->shouldReceive('setTransactions')->once()->withArgs([Mockery::any(), $expected]);
         $lrRequest->shouldReceive('setUser')->once();
         $lrRequest->shouldReceive('setAccount')->once()->withArgs([Mockery::any()]);
         $lrRequest->shouldReceive('call')->once();
@@ -273,9 +268,9 @@ class StageImportDataHandlerTest extends TestCase
 
         $today = new Carbon;
         // create fake transactions:
-        $op1          = 'Some opposing account #' . random_int(1, 100);
-        $op2          = 'Some opposing revenue account #' . random_int(1, 100);
-        $transactions = [
+        $op1                = 'Some opposing account #' . $this->randomInt();
+        $op2                = 'Some opposing revenue account #' . $this->randomInt();
+        $transactions       = [
             new SpectreTransaction(
                 [
                     'id'            => 1,
@@ -284,7 +279,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => -123.45,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake description #' . random_int(1, 100),
+                    'description'   => 'Fake description #' . $this->randomInt(),
                     'category'      => 'some-category',
                     'duplicated'    => true,
                     'extra'         => [
@@ -304,7 +299,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => 563.21,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake second description #' . random_int(1, 100),
+                    'description'   => 'Fake second description #' . $this->randomInt(),
                     'category'      => 'some-other-category',
                     'duplicated'    => false,
                     'extra'         => [
@@ -325,7 +320,7 @@ class StageImportDataHandlerTest extends TestCase
         $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sid_a_' . random_int(1, 10000);
+        $job->key           = 'sid_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -345,29 +340,26 @@ class StageImportDataHandlerTest extends TestCase
         $lrRequest    = $this->mock(ListTransactionsRequest::class);
         $mapper       = $this->mock(OpposingAccountMapper::class);
 
-        // expected result
         $expected = [
             0 => [
-                'type'            => 'withdrawal',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active', 'possibly-duplicated'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
-                'external_id'     => '1',
-                // journal data:
-                'description'     => $transactions[0]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // data here.
+                        'date'                  => $today->format('Y-m-d'),
+                        'type'                  => 'withdrawal',
+                        'tags'                  => ['mode', 'active', 'possibly-duplicated'],
+                        'user'                  => $job->user_id,
+                        'notes'                 => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
+                        'external_id'           => '1',
+                        // journal data:
+                        'description'           => $transactions[0]->getDescription(),
+                        'piggy_bank_id'         => null,
+                        'piggy_bank_name'       => null,
+                        'bill_id'               => null,
+                        'bill_name'             => null,
+                        'original-source'       => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '-123.45',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -386,26 +378,24 @@ class StageImportDataHandlerTest extends TestCase
                 ],
             ],
             1 => [
-                'type'            => 'deposit',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active', 'cat-name'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
-                'external_id'     => '2',
-                // journal data:
-                'description'     => $transactions[1]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // data here.
+                        'date'                  => $today->format('Y-m-d'),
+                        'type'                  => 'deposit',
+                        'tags'                  => ['mode', 'active', 'cat-name'],
+                        'user'                  => $job->user_id,
+                        'notes'                 => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
+                        'external_id'           => '2',
+                        // journal data:
+                        'description'           => $transactions[1]->getDescription(),
+                        'piggy_bank_id'         => null,
+                        'piggy_bank_name'       => null,
+                        'bill_id'               => null,
+                        'bill_name'             => null,
+                        'original-source'       => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '563.21',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -424,6 +414,7 @@ class StageImportDataHandlerTest extends TestCase
                 ],
             ],
         ];
+
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('findNull')->once()->withArgs([322])->andReturn($account);
         $importRepos->shouldReceive('setUser')->once();
@@ -474,8 +465,8 @@ class StageImportDataHandlerTest extends TestCase
 
         $today = new Carbon;
         // create fake transactions:
-        $op1          = 'Some opposing account #' . random_int(1, 100);
-        $op2          = 'Some opposing revenue account #' . random_int(1, 100);
+        $op1          = 'Some opposing account #' . $this->randomInt();
+        $op2          = 'Some opposing revenue account #' . $this->randomInt();
         $transactions = [
             new SpectreTransaction(
                 [
@@ -485,7 +476,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => -123.45,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake description #' . random_int(1, 100),
+                    'description'   => 'Fake description #' . $this->randomInt(),
                     'category'      => 'some-category',
                     'duplicated'    => true,
                     'extra'         => [
@@ -504,7 +495,7 @@ class StageImportDataHandlerTest extends TestCase
                     'made_on'       => $today->toW3cString(),
                     'amount'        => 563.21,
                     'currency_code' => 'EUR',
-                    'description'   => 'Fake second description #' . random_int(1, 100),
+                    'description'   => 'Fake second description #' . $this->randomInt(),
                     'category'      => 'some-other-category',
                     'duplicated'    => false,
                     'extra'         => [
@@ -524,7 +515,7 @@ class StageImportDataHandlerTest extends TestCase
         $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sid_a_' . random_int(1, 10000);
+        $job->key           = 'sid_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -543,29 +534,26 @@ class StageImportDataHandlerTest extends TestCase
         $lrRequest    = $this->mock(ListTransactionsRequest::class);
         $mapper       = $this->mock(OpposingAccountMapper::class);
 
-        // expected result
         $expected = [
             0 => [
-                'type'            => 'withdrawal',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active', 'possibly-duplicated'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
-                'external_id'     => '1',
-                // journal data:
-                'description'     => $transactions[0]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // data here
+                        'date'            => $today->format('Y-m-d'),
+                        'type'            => 'withdrawal',
+                        'tags'            => ['mode', 'active', 'possibly-duplicated'],
+                        'user'            => $job->user_id,
+                        'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op1 . "  \n",
+                        'external_id'     => '1',
+                        // journal data:
+                        'description'     => $transactions[0]->getDescription(),
+                        'piggy_bank_id'   => null,
+                        'piggy_bank_name' => null,
+                        'bill_id'         => null,
+                        'bill_name'       => null,
+                        'original-source' => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '-123.45',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -584,26 +572,24 @@ class StageImportDataHandlerTest extends TestCase
                 ],
             ],
             1 => [
-                'type'            => 'deposit',
-                'date'            => $today->format('Y-m-d'),
-                'tags'            => ['mode', 'active', 'cat-name'],
-                'user'            => $job->user_id,
-                'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
-                'external_id'     => '2',
-                // journal data:
-                'description'     => $transactions[1]->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
-                // transaction data:
-                'transactions'    => [
-                    [
+                'transactions' => [
+                    0 => [
+                        // data here
+                        'date'            => $today->format('Y-m-d'),
+                        'type'            => 'deposit',
+                        'tags'            => ['mode', 'active', 'cat-name'],
+                        'user'            => $job->user_id,
+                        'notes'           => "Imported from \"Fake Spectre Account\"  \npayee: " . $op2 . "  \n",
+                        'external_id'     => '2',
+                        // journal data:
+                        'description'     => $transactions[1]->getDescription(),
+                        'piggy_bank_id'   => null,
+                        'piggy_bank_name' => null,
+                        'bill_id'         => null,
+                        'bill_name'       => null,
+                        'original-source' => sprintf('spectre-v%s', config('firefly.version')),
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
-                        'description'           => null,
                         'amount'                => '563.21',
                         'budget_id'             => null,
                         'budget_name'           => null,
@@ -622,6 +608,7 @@ class StageImportDataHandlerTest extends TestCase
                 ],
             ],
         ];
+
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('findNull')->once()->withArgs([322])->andReturn($account);
         $importRepos->shouldReceive('setUser')->once();

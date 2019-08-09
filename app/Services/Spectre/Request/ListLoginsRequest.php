@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class ListLoginsRequest
+ * @codeCoverageIgnore
  */
 class ListLoginsRequest extends SpectreRequest
 {
@@ -55,7 +56,7 @@ class ListLoginsRequest extends SpectreRequest
             $response   = $this->sendSignedSpectreGet($uri, []);
 
             // count entries:
-            Log::debug(sprintf('Found %d entries in data-array', \count($response['data'])));
+            Log::debug(sprintf('Found %d entries in data-array', count($response['data'])));
 
             // extract next ID
             $hasNextPage = false;
@@ -72,7 +73,7 @@ class ListLoginsRequest extends SpectreRequest
             }
             // sort logins by date created:
             $sorted       = $collection->sortByDesc(
-                function (Login $login) {
+                static function (Login $login) {
                     return $login->getUpdatedAt()->timestamp;
                 }
             );

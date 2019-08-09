@@ -33,6 +33,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property string $name
  * @property string $value
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $rt_id
+ * @property-read \FireflyIII\Models\RecurrenceTransaction $recurrenceTransaction
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransactionMeta onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereRtId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransactionMeta whereValue($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransactionMeta withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransactionMeta withoutTrashed()
+ * @mixin \Eloquent
  */
 class RecurrenceTransactionMeta extends Model
 {

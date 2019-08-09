@@ -82,9 +82,9 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
             $toAccountName .= strtolower($account->name);
         }
 
-        $toAccountNameLength = \strlen($toAccountName);
+        $toAccountNameLength = strlen($toAccountName);
         $search              = strtolower($this->triggerValue);
-        $searchLength        = \strlen($search);
+        $searchLength        = strlen($search);
 
         // if the string to search for is longer than the account name,
         // return false

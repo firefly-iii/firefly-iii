@@ -57,8 +57,8 @@ class StageGetBudgetsHandler
         // store budgets in users preferences.
         $configuration['budgets'] = $request->budgets;
         $this->repository->setConfiguration($this->importJob, $configuration);
-        Log::debug(sprintf('Found %d budgets', \count($request->budgets)));
-        if (0 === \count($request->budgets)) {
+        Log::debug(sprintf('Found %d budgets', count($request->budgets)));
+        if (0 === count($request->budgets)) {
             throw new FireflyException('It seems this user has zero budgets or an error prevented Firefly III from reading them.');
         }
     }

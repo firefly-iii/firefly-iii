@@ -69,7 +69,7 @@ class ImportableConverter
      */
     public function convert(array $importables): array
     {
-        $total = \count($importables);
+        $total = count($importables);
         Log::debug(sprintf('Going to convert %d import transactions', $total));
         $result = [];
         /** @var ImportTransaction $importable */
@@ -83,6 +83,210 @@ class ImportableConverter
             }
             if (null !== $entry) {
                 $result[] = $entry;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param ImportTransaction $importable
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function convertSingle(ImportTransaction $importable): array
+    {
+        Log::debug(sprintf('Description is: "%s"', $importable->description));
+        $foreignAmount = $importable->calculateForeignAmount();
+        $amount        = $importable->calculateAmount();
+
+        Log::debug('All meta data: ', $importable->meta);
+
+        if ('' === $amount) {
+            $amount = $foreignAmount;
+        }
+        if ('' === $amount) {
+            throw new FireflyException('No transaction amount information.');
+        }
+
+        $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
+        $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
+
+        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
+
+
+        // amount is positive? Then switch:
+        if (1 === bccomp($amount, '0')) {
+            [$destination, $source] = [$source, $destination];
+            Log::debug(
+                sprintf(
+                    '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
+                    $amount, $source->name, $source->id, $destination->name, $destination->id
+                )
+            );
+        }
+
+        if ($destination->id === $source->id) {
+            throw new FireflyException(
+                sprintf(
+                    'Source ("%s", #%d) and destination ("%s", #%d) are the same account.', $source->name, $source->id, $destination->name, $destination->id
+                )
+            );
+        }
+
+        $transactionType = $this->getTransactionType($source->accountType->type, $destination->accountType->type);
+        $currency        = $currency ?? $this->getCurrency($source, $destination);
+
+        if ('unknown' === $transactionType) {
+            $message = sprintf(
+                'Cannot determine transaction type. Source account is a %s, destination is a %s', $source->accountType->type, $destination->accountType->type
+            );
+            Log::error($message, ['source' => $source->toArray(), 'dest' => $destination->toArray()]);
+            throw new FireflyException($message);
+        }
+
+        return [
+
+            'user'         => $this->importJob->user_id,
+            'group_title'  => null,
+            'transactions' => [
+                [
+                    'user'  => $this->importJob->user_id,
+                    'type'  => strtolower($transactionType),
+                    'date'  => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
+                    'order' => 0,
+
+                    'currency_id'   => $currency->id,
+                    'currency_code' => null,
+
+                    'foreign_currency_id'   => $importable->foreignCurrencyId,
+                    'foreign_currency_code' => null === $foreignCurrency ? null : $foreignCurrency->code,
+
+                    'amount'         => $amount,
+                    'foreign_amount' => $foreignAmount,
+
+                    'description' => $importable->description,
+
+                    'source_id'        => $source->id,
+                    'source_name'      => null,
+                    'destination_id'   => $destination->id,
+                    'destination_name' => null,
+
+                    'budget_id'   => $importable->budgetId,
+                    'budget_name' => $importable->budgetName,
+
+                    'category_id'   => $importable->categoryId,
+                    'category_name' => $importable->categoryName,
+
+                    'bill_id'   => $importable->billId,
+                    'bill_name' => $importable->billName,
+
+                    'piggy_bank_id'   => null,
+                    'piggy_bank_name' => null,
+
+                    'reconciled' => false,
+
+                    'notes' => $importable->note,
+                    'tags'  => $importable->tags,
+
+                    'internal_reference' => $importable->meta['internal-reference'] ?? null,
+                    'external_id'        => $importable->externalId,
+                    'original_source'    => $importable->meta['original-source'] ?? null,
+
+                    'sepa_cc'       => $importable->meta['sepa_cc'] ?? null,
+                    'sepa_ct_op'    => $importable->meta['sepa_ct_op'] ?? null,
+                    'sepa_ct_id'    => $importable->meta['sepa_ct_id'] ?? null,
+                    'sepa_db'       => $importable->meta['sepa_db'] ?? null,
+                    'sepa_country'  => $importable->meta['sepa_country'] ?? null,
+                    'sepa_ep'       => $importable->meta['sepa_ep'] ?? null,
+                    'sepa_ci'       => $importable->meta['sepa_ci'] ?? null,
+                    'sepa_batch_id' => $importable->meta['sepa_batch_id'] ?? null,
+
+                    'interest_date' => $this->convertDateValue($importable->meta['date-interest'] ?? null),
+                    'book_date'     => $this->convertDateValue($importable->meta['date-book'] ?? null),
+                    'process_date'  => $this->convertDateValue($importable->meta['date-process'] ?? null),
+                    'due_date'      => $this->convertDateValue($importable->meta['date-due'] ?? null),
+                    'payment_date'  => $this->convertDateValue($importable->meta['date-payment'] ?? null),
+                    'invoice_date'  => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
+                ],
+            ],
+        ];
+
+    }
+
+    /**
+     * @param string $source
+     * @param string $destination
+     *
+     * @return string
+     */
+    private function getTransactionType(string $source, string $destination): string
+    {
+        $type = 'unknown';
+
+        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
+        if (null !== $newType) {
+            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
+
+            return (string)$newType;
+        }
+        return $type;
+    }
+
+    /**
+     * @param Account $source
+     * @param Account $destination
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrency(Account $source, Account $destination): TransactionCurrency
+    {
+        $currency = null;
+        if ($destination->accountType->type === AccountType::ASSET) {
+            // destination is asset, might have currency preference:
+            $destinationCurrencyId = (int)$this->accountRepository->getMetaValue($destination, 'currency_id');
+            $currency              = 0 === $destinationCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($destinationCurrencyId, []);
+            Log::debug(sprintf('Destination is an asset account, and has currency preference %s', $currency->code));
+        }
+
+        if ($source->accountType->type === AccountType::ASSET) {
+            // source is asset, might have currency preference:
+            $sourceCurrencyId = (int)$this->accountRepository->getMetaValue($source, 'currency_id');
+            $currency         = 0 === $sourceCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($sourceCurrencyId, []);
+            Log::debug(sprintf('Source is an asset account, and has currency preference %s', $currency->code));
+        }
+        if (null === $currency) {
+            Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
+            $currency = $this->defaultCurrency;
+        }
+
+        return $currency;
+    }
+
+    /**
+     * @param string|null $date
+     *
+     * @return string|null
+     */
+    private function convertDateValue(string $date = null): ?string
+    {
+        $result = null;
+        if (null !== $date) {
+            try {
+                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
+                $dateFormat = $this->config['date-format'] ?? 'Ymd';
+                if ('!' !== $dateFormat{0}) {
+                    $dateFormat = '!' . $dateFormat;
+                }
+                $object = Carbon::createFromFormat($dateFormat, $date);
+                $result = $object->format('Y-m-d H:i:s');
+                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
+            } catch (InvalidDateException|InvalidArgumentException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
         }
 
@@ -128,205 +332,5 @@ class ImportableConverter
     public function setMappedValues(array $mappedValues): void
     {
         $this->mappedValues = $mappedValues;
-    }
-
-    /**
-     * @param string|null $date
-     *
-     * @return string|null
-     */
-    private function convertDateValue(string $date = null): ?string
-    {
-        $result = null;
-        if (null !== $date) {
-            try {
-                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
-                $dateFormat = $this->config['date-format'] ?? 'Ymd';
-                if ('!' !== $dateFormat{0}) {
-                    $dateFormat = '!' . $dateFormat;
-                }
-                $object = Carbon::createFromFormat($dateFormat, $date);
-                $result = $object->format('Y-m-d H:i:s');
-                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
-            } catch (InvalidDateException|InvalidArgumentException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param ImportTransaction $importable
-     *
-     * @throws FireflyException
-     * @return array
-     */
-    private function convertSingle(ImportTransaction $importable): array
-    {
-        Log::debug(sprintf('Description is: "%s"', $importable->description));
-        $foreignAmount = $importable->calculateForeignAmount();
-        $amount        = $importable->calculateAmount();
-
-        Log::debug('All meta data: ', $importable->meta);
-
-        if ('' === $amount) {
-            $amount = $foreignAmount;
-        }
-        if ('' === $amount) {
-            throw new FireflyException('No transaction amount information.');
-        }
-
-        $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
-        $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
-        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
-        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
-
-        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
-
-
-        // amount is positive? Then switch:
-        if (1 === bccomp($amount, '0')) {
-
-            [$destination, $source] = [$source, $destination];
-            Log::debug(
-                sprintf(
-                    '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
-                    $amount, $source->name, $source->id, $destination->name, $destination->id
-                )
-            );
-        }
-
-        if ($destination->id === $source->id) {
-            throw new FireflyException(
-                sprintf(
-                    'Source ("%s", #%d) and destination ("%s", #%d) are the same account.', $source->name, $source->id, $destination->name, $destination->id
-                )
-            );
-        }
-
-        $transactionType = $this->getTransactionType($source->accountType->type, $destination->accountType->type);
-        $currency        = $currency ?? $this->getCurrency($source, $destination);
-
-        if ('unknown' === $transactionType) {
-            $message = sprintf(
-                'Cannot determine transaction type. Source account is a %s, destination is a %s', $source->accountType->type, $destination->accountType->type
-            );
-            Log::error($message, ['source' => $source->toArray(), 'dest' => $destination->toArray()]);
-            throw new FireflyException($message);
-        }
-
-        return [
-            'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
-            'tags'               => $importable->tags,
-            'user'               => $this->importJob->user_id,
-            'notes'              => $importable->note,
-
-            // all custom fields:
-            'internal_reference' => $importable->meta['internal-reference'] ?? null,
-            'sepa-cc'            => $importable->meta['sepa-cc'] ?? null,
-            'sepa-ct-op'         => $importable->meta['sepa-ct-op'] ?? null,
-            'sepa-ct-id'         => $importable->meta['sepa-ct-id'] ?? null,
-            'sepa-db'            => $importable->meta['sepa-db'] ?? null,
-            'sepa-country'       => $importable->meta['sepa-country'] ?? null,
-            'sepa-ep'            => $importable->meta['sepa-ep'] ?? null,
-            'sepa-ci'            => $importable->meta['sepa-ci'] ?? null,
-            'sepa-batch-id'      => $importable->meta['sepa-batch-id'] ?? null,
-            'interest_date'      => $this->convertDateValue($importable->meta['date-interest'] ?? null),
-            'book_date'          => $this->convertDateValue($importable->meta['date-book'] ?? null),
-            'process_date'       => $this->convertDateValue($importable->meta['date-process'] ?? null),
-            'due_date'           => $this->convertDateValue($importable->meta['date-due'] ?? null),
-            'payment_date'       => $this->convertDateValue($importable->meta['date-payment'] ?? null),
-            'invoice_date'       => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
-            'external_id'        => $importable->externalId,
-            'original-source'    => $importable->meta['original-source'] ?? null,
-            // journal data:
-            'description'        => $importable->description,
-            'piggy_bank_id'      => null,
-            'piggy_bank_name'    => null,
-            'bill_id'            => $importable->billId,
-            'bill_name'          => $importable->billName,
-
-            // transaction data:
-            'transactions'       => [
-                [
-                    'currency_id'           => $currency->id,
-                    'currency_code'         => null,
-                    'description'           => null,
-                    'amount'                => $amount,
-                    'budget_id'             => $importable->budgetId,
-                    'budget_name'           => $importable->budgetName,
-                    'category_id'           => $importable->categoryId,
-                    'category_name'         => $importable->categoryName,
-                    'source_id'             => $source->id,
-                    'source_name'           => null,
-                    'destination_id'        => $destination->id,
-                    'destination_name'      => null,
-                    'foreign_currency_id'   => $importable->foreignCurrencyId,
-                    'foreign_currency_code' => null === $foreignCurrency ? null : $foreignCurrency->code,
-                    'foreign_amount'        => $foreignAmount,
-                    'reconciled'            => false,
-                    'identifier'            => 0,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @param Account $source
-     * @param Account $destination
-     *
-     * @return TransactionCurrency
-     */
-    private function getCurrency(Account $source, Account $destination): TransactionCurrency
-    {
-        $currency = null;
-        if ($destination->accountType->type === AccountType::ASSET) {
-            // destination is asset, might have currency preference:
-            $destinationCurrencyId = (int)$this->accountRepository->getMetaValue($destination, 'currency_id');
-            $currency              = 0 === $destinationCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($destinationCurrencyId, []);
-            Log::debug(sprintf('Destination is an asset account, and has currency preference %s', $currency->code));
-        }
-
-        if ($source->accountType->type === AccountType::ASSET) {
-            // source is asset, might have currency preference:
-            $sourceCurrencyId = (int)$this->accountRepository->getMetaValue($source, 'currency_id');
-            $currency         = 0 === $sourceCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($sourceCurrencyId, []);
-            Log::debug(sprintf('Source is an asset account, and has currency preference %s', $currency->code));
-        }
-        if (null === $currency) {
-            Log::debug(sprintf('Could not map currency, use default (%s)', $this->defaultCurrency->code));
-            $currency = $this->defaultCurrency;
-        }
-
-        return $currency;
-    }
-
-    /**
-     * @param string $source
-     * @param string $destination
-     *
-     * @return string
-     */
-    private function getTransactionType(string $source, string $destination): string
-    {
-        $type = 'unknown';
-
-        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $type = 'transfer';
-        }
-        if ($source === AccountType::REVENUE) {
-            Log::debug('Source is a revenue account. This is a deposit.');
-            $type = 'deposit';
-        }
-        if ($destination === AccountType::EXPENSE) {
-            Log::debug('Destination is an expense account. This is a withdrawal.');
-            $type = 'withdrawal';
-        }
-
-        return $type;
     }
 }

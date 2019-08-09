@@ -33,6 +33,7 @@ use Log;
 
 /**
  * Class RatesApiIOv1.
+ * @codeCoverageIgnore
  */
 class RatesApiIOv1 implements ExchangeRateInterface
 {
@@ -45,7 +46,7 @@ class RatesApiIOv1 implements ExchangeRateInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -71,7 +72,7 @@ class RatesApiIOv1 implements ExchangeRateInterface
 
         // build URI
         $uri = sprintf(
-            'https://ratesapi.io/api/%s?base=%s&symbols=%s',
+            'https://api.ratesapi.io/api/%s?base=%s&symbols=%s',
             $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code
         );
         Log::debug(sprintf('Going to request exchange rate using URI %s', $uri));

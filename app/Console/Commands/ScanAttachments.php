@@ -75,10 +75,10 @@ class ScanAttachments extends Command
                 $this->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 continue;
             }
-            $tmpfname = tempnam(sys_get_temp_dir(), 'FireflyIII');
-            file_put_contents($tmpfname, $decrypted);
-            $md5              = md5_file($tmpfname);
-            $mime             = mime_content_type($tmpfname);
+            $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            file_put_contents($tempFileName, $decrypted);
+            $md5              = md5_file($tempFileName);
+            $mime             = mime_content_type($tempFileName);
             $attachment->md5  = $md5;
             $attachment->mime = $mime;
             $attachment->save();

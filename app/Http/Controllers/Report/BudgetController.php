@@ -102,6 +102,18 @@ class BudgetController extends Controller
         $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
         $data[0]    = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
         $report     = $this->filterPeriodReport($data);
+
+        // depending on the carbon format (a reliable way to determine the general date difference)
+        // change the "listOfPeriods" call so the entire period gets included correctly.
+        $range = app('navigation')->preferredCarbonFormat($start, $end);
+
+        if ('Y' === $range) {
+            $start->startOfYear();
+        }
+        if ('Y-m' === $range) {
+            $start->startOfMonth();
+        }
+
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();

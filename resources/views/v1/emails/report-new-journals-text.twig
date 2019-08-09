@@ -10,7 +10,7 @@ Firefly III has created {{ journals.count }} transactions for you.
 You can find in in your Firefly III installation:
 
 {% for journal in journals %}
-{{ journal.description }}: {{ route('transactions.show', journal.id) }} ({{ journal|journalTotalAmountPlain }})
+{{ journal.description }}: {{ route('transactions.show', journal.id) }} (AMOUNT TODO)
 {% endfor %}
 {% endif %}
 
@@ -18,7 +18,7 @@ You can find in in your Firefly III installation:
 You can find them in your Firefly III installation:
 
 {% for journal in journals %}
-- {{ journal.description }}: {{ route('transactions.show', journal.id) }} ({{ journal|journalTotalAmountPlain }})
+- {{ journal.description }}: {{ route('transactions.show', journal.id) }} (AMOUNT TODO)
 {% endfor %}
 {% endif %}
 

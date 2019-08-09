@@ -25,7 +25,8 @@
                         {% for account in accounts %}
                             <tr>
                                 <td data-value="{{ account.name }}">
-                                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                                    <a href="{{ route('accounts.show', account.id) }}"
+                                       title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
                                     <td data-value="{{ accountSummary[account.id].earned }}"
@@ -70,7 +71,8 @@
                         {% for category in categories %}
                             <tr>
                                 <td data-value="{{ category.name }}">
-                                    <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
+                                    <a href="{{ route('categories.show', category.id) }}"
+                                       title="{{ category.name }}">{{ category.name }}</a>
                                 </td>
                                 {% if categorySummary[category.id] %}
                                     <td data-value="{{ categorySummary[category.id].earned }}"
@@ -171,6 +173,7 @@
         </div>
     </div>
     <div class="row">
+
         {% if averageExpenses|length > 0 %}
             <div class="col-lg-6">
                 <div class="box">
@@ -217,7 +220,8 @@
                             {% if averageExpenses|length > listLength %}
                                 <tr>
                                     <td colspan="4" class="active">
-                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                        <a href="#"
+                                           class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -234,12 +238,13 @@
                 </div>
             </div>
         {% endif %}
-        {% if topExpenses.count > 0 %}
+        {% if topExpenses|length > 0 %}
             <div class="col-lg-6">
 
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                        <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }}
+                            )</h3>
                     </div>
                     <div class="box-body">
                         <table class="table table-hover sortable">
@@ -254,16 +259,16 @@
                             <tbody>
                             {% set totalSum = 0 %}
                             {% for row in topExpenses %}
-                                {% set totalSum = totalSum + row.sum %}
+                                {% set totalSum = totalSum + row.amount %}
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
                                     <tr>
                                 {% endif %}
                                 <td data-sortable="false">
-                                    <a href="{{ route('transactions.show', row.journal_id) }}">
-                                        {% if row.transaction_description|length > 0 %}
-                                            {{ row.transaction_description }} ({{ row.description }})
+                                    <a href="{{ route('transactions.show', 1+row.transaction_group_id) }}">
+                                        {% if row.group_title|length > 0 %}
+                                            {{ row.group_title }} ({{ row.description }})
                                         {% else %}
                                             {{ row.description }}
                                         {% endif %}
@@ -272,13 +277,13 @@
                                 <td data-value="{{ row.date.format('Y-m-d') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td data-value="{{ row.opposing_account_name }}">
-                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
-                                        {{ row.opposing_account_name }}
+                                <td data-value="{{ row.destination_account_name }}">
+                                    <a href="{{ route('accounts.show', row.destination_account_id) }}">
+                                        {{ row.destination_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}" style="text-align: right;">
-                                    {{ row.transaction_amount|formatAmount }}
+                                <td data-value="{{ row.amount }}" style="text-align: right;">
+                                    {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_symbol_decimal_places) }}
                                 </td>
                                 </tr>
                             {% endfor %}
@@ -287,7 +292,8 @@
                             {% if topExpenses|length > listLength %}
                                 <tr>
                                     <td colspan="3" class="active">
-                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                        <a href="#"
+                                           class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -332,10 +338,10 @@
                                         <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                     </td>
                                     <td data-value="{{ row.average }}" style="text-align:right;">
-                                        {{ row.average|formatAmount }}
+                                        {{ (row.average*-1)|formatAmount }}
                                     </td>
                                     <td data-value="{{ row.sum }}" style="text-align:right;">
-                                        {{ row.sum|formatAmount }}
+                                        {{ (row.sum*-1)|formatAmount }}
                                     </td>
                                     <td data-value="{{ row.count }}">
                                         {{ row.count }}
@@ -346,7 +352,7 @@
                                 <td colspan="2">
                                     {{ 'sum'|_ }}
                                 </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                                <td style="text-align:right">{{ (totalSum*-1)|formatAmount }}</td>
                                 <td>{{ totalCount }}</td>
                             </tr>
                             </tbody>
@@ -356,7 +362,7 @@
             </div>
         {% endif %}
         <div class="col-lg-6">
-            {% if topIncome.count > 0 %}
+            {% if topIncome|length > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
@@ -374,40 +380,41 @@
                             <tbody>
                             {% set totalSum = 0 %}
                             {% for row in topIncome %}
-                                {% set totalSum = totalSum + row.transaction_amount %}
+                                {% set totalSum = totalSum + row.amount %}
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
                                     <tr>
                                 {% endif %}
-                                <td>
-                                    <a href="{{ route('transactions.show', row.journal_id) }}">
-                                        {% if row.transaction_description|length > 0 %}
-                                            {{ row.transaction_description }} ({{ row.description }})
+                                <td data-sortable="false">
+                                    <a href="{{ route('transactions.show', 1+row.transaction_group_id) }}">
+                                        {% if row.group_title|length > 0 %}
+                                            {{ row.group_title }} ({{ row.description }})
                                         {% else %}
                                             {{ row.description }}
                                         {% endif %}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.date.format('Y-m-d H-i-s') }}">
+                                <td data-value="{{ row.date.format('Y-m-d') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td data-value="{{ row.opposing_account_name }}">
-                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
-                                        {{ row.opposing_account_name }}
+                                <td data-value="{{ row.destination_account_name }}">
+                                    <a href="{{ route('accounts.show', row.destination_account_id) }}">
+                                        {{ row.destination_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}" style="text-align:right">
-                                    {{ row.transaction_amount|formatAmount }}
+                                <td data-value="{{ row.amount }}" style="text-align: right;">
+                                    {{ formatAmountBySymbol(row.amount*-1, row.currency_symbol, row.currency_symbol_decimal_places) }}
                                 </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                             <tfoot>
-                            {% if topIncome.count > listLength %}
+                            {% if topIncome|length > listLength %}
                                 <tr>
                                     <td colspan="3" class="active">
-                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                        <a href="#"
+                                           class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -415,7 +422,7 @@
                                 <td colspan="3">
                                     {{ 'sum'|_ }}
                                 </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                                <td style="text-align:right">{{ (totalSum*-1)|formatAmount }}</td>
                             </tr>
                             </tfoot>
                         </table>

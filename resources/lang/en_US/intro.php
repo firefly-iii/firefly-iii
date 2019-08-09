@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
-    'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
-    'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
-    'index_help'                            => 'If you ever need help with a page or a form, press this button.',
-    'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
-    'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_intro'                                     => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
+    'index_accounts-chart'                            => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
+    'index_box_out_holder'                            => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
+    'index_help'                                      => 'If you ever need help with a page or a form, press this button.',
+    'index_outro'                                     => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
+    'index_sidebar-toggle'                            => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'         => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                            => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
+    'accounts_create_asset_opening_balance'           => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
+    'accounts_create_asset_currency'                  => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
+    'accounts_create_asset_virtual'                   => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
-    'budgets_index_see_expenses_bar'        => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'        => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'              => 'Create new budgets as you see fit.',
-    'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
-    'budgets_index_outro'                   => 'To learn more about budgeting, checkout the help icon in the top right corner.',
+    'budgets_index_intro'                             => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
+    'budgets_index_set_budget'                        => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
+    'budgets_index_see_expenses_bar'                  => 'Spending money will slowly fill this bar.',
+    'budgets_index_navigate_periods'                  => 'Navigate through periods to easily set budgets ahead of time.',
+    'budgets_index_new_budget'                        => 'Create new budgets as you see fit.',
+    'budgets_index_list_of_budgets'                   => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_outro'                             => 'To learn more about budgeting, checkout the help icon in the top right corner.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',
-    'reports_index_inputReportType'         => 'Pick a report type. Check out the help pages to see what each report shows you.',
-    'reports_index_inputAccountsSelect'     => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'          => 'The selected date range is entirely up to you: from one day to 10 years.',
-    'reports_index_extra-options-box'       => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
+    'reports_index_intro'                             => 'Use these reports to get detailed insights in your finances.',
+    'reports_index_inputReportType'                   => 'Pick a report type. Check out the help pages to see what each report shows you.',
+    'reports_index_inputAccountsSelect'               => 'You can exclude or include asset accounts as you see fit.',
+    'reports_index_inputDateRange'                    => 'The selected date range is entirely up to you: from one day to 10 years.',
+    'reports_index_extra-options-box'                 => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_default_intro'                    => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
+    'reports_report_audit_intro'                      => 'This report will give you detailed insights in your asset accounts.',
+    'reports_report_audit_optionsBox'                 => 'Use these check boxes to show or hide the columns you are interested in.',
 
     'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
     'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',

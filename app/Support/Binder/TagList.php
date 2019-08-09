@@ -46,21 +46,24 @@ class TagList implements BinderInterface
         if (auth()->check()) {
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             Log::debug('List of tags is', $list);
-            if (0 === \count($list)) {
+            // @codeCoverageIgnoreStart
+            if (0 === count($list)) {
                 Log::error('Tag list is empty.');
-                throw new NotFoundHttpException; // @codeCoverageIgnore
+                throw new NotFoundHttpException;
             }
+            // @codeCoverageIgnoreEnd
+
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $repository->setUser(auth()->user());
             $allTags = $repository->get();
 
             $collection = $allTags->filter(
-                function (Tag $tag) use ($list) {
-                    if (\in_array(strtolower($tag->tag), $list, true)) {
+                static function (Tag $tag) use ($list) {
+                    if (in_array(strtolower($tag->tag), $list, true)) {
                         return true;
                     }
-                    if (\in_array((string)$tag->id, $list, true)) {
+                    if (in_array((string)$tag->id, $list, true)) {
                         return true;
                     }
 

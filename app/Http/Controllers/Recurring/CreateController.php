@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -45,6 +46,7 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -71,7 +73,6 @@ class CreateController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request)
     {
@@ -120,12 +121,16 @@ class CreateController extends Controller
      * @param RecurrenceFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(RecurrenceFormRequest $request)
     {
-        $data       = $request->getAll();
-        $recurrence = $this->recurring->store($data);
+        $data = $request->getAll();
+        try {
+            $recurrence = $this->recurring->store($data);
+        } catch (FireflyException $e) {
+            session()->flash('error', $e->getMessage());
+            return redirect(route('recurring.create'))->withInput();
+        }
 
         $request->session()->flash('success', (string)trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();

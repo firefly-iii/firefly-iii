@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if count == 0 %}
-        {% include 'partials.empty' with {what: 'default', type: 'tags',route: route('tags.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'tags',route: route('tags.create')} %}
     {% else %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -47,7 +46,7 @@ class AttachmentControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -55,16 +54,19 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        $this->mockDefaultSession();
+
+        // data
+        $attachment = $this->getRandomAttachment();
+
         // mock stuff
-        $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
-        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
-        $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $this->mock(AttachmentRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.delete', [1]));
+        $response = $this->get(route('attachments.delete', [$attachment->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -75,17 +77,17 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
+        $attachment = $this->getRandomAttachment();
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['attachments.delete.uri' => 'http://localhost']);
         $this->be($this->user());
-        $response = $this->post(route('attachments.destroy', [1]));
+        $response = $this->post(route('attachments.destroy', [$attachment->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
@@ -95,17 +97,16 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDownload(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
-        $response = $this->get(route('attachments.download', [1]));
+        $response = $this->get(route('attachments.download', [$attachment->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('This is attachment number one.');
@@ -116,16 +117,17 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDownloadFail(): void
     {
+        $this->mockDefaultSession();
+
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(false);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
-        $response = $this->get(route('attachments.download', [1]));
+        $response = $this->get(route('attachments.download', [$attachment->id]));
         $response->assertStatus(500);
     }
 
@@ -134,16 +136,15 @@ class AttachmentControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        $this->mockDefaultSession();
         $attachRepository = $this->mock(AttachmentRepositoryInterface::class);
-        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
-
+        $attachment       = $this->getRandomAttachment();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $attachRepository->shouldReceive('getNoteText')->andReturn('OK');
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.edit', [1]));
+        $response = $this->get(route('attachments.edit', [$attachment->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -152,8 +153,9 @@ class AttachmentControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
-    public function testIndex()
+    public function testIndex(): void
     {
+        $this->mockDefaultSession();
         $repository = $this->mock(AttachmentRepositoryInterface::class);
         $userRepos  = $this->mock(UserRepositoryInterface::class);
 
@@ -174,63 +176,60 @@ class AttachmentControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
         $repository->shouldReceive('update')->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
-            'title'       => 'Some updated title ' . random_int(1000, 9999),
+            'title'       => 'Some updated title ' . $this->randomInt(),
             'notes'       => 'A',
             'description' => 'B',
         ];
 
         $this->be($this->user());
-        $response = $this->post(route('attachments.update', [1]), $data);
+        $response = $this->post(route('attachments.update', [$attachment->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController
-     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testView(): void
     {
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
+        $this->mockDefaultSession();
+
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
 
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.view', [3]));
+        $response = $this->get(route('attachments.view', [$attachment->id]));
         $response->assertStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController
-     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testViewFail(): void
     {
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mockDefaultSession();
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
 
         $repository->shouldReceive('exists')->once()->andReturn(false);
 
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.view', [1]));
+        $response = $this->get(route('attachments.view', [$attachment->id]));
         $response->assertStatus(500);
     }
 }

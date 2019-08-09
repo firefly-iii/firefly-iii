@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface PiggyBankRepositoryInterface
 {
-
     /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
@@ -118,6 +117,14 @@ interface PiggyBankRepositoryInterface
     public function findNull(int $piggyBankId): ?PiggyBank;
 
     /**
+     * @param int|null       $piggyBankId
+     * @param string|null    $piggyBankName
+     *
+     * @return PiggyBank|null
+     */
+    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
+
+    /**
      * Get current amount saved in piggy bank.
      *
      * @param PiggyBank $piggyBank
@@ -191,13 +198,6 @@ interface PiggyBankRepositoryInterface
      * @return string
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
-
-    /**
-     * @param PiggyBankEvent $event
-     *
-     * @return int|null
-     */
-    public function getTransactionWithEvent(PiggyBankEvent $event): ?int;
 
     /**
      * Get for piggy account what is left to put in piggies.

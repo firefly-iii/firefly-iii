@@ -183,16 +183,18 @@ function updateFormFields() {
 
     if (transactionType === 'withdrawal') {
         // hide source account name:
-        $('#source_name_holder').hide();
+        // $('#source_name_holder').hide(); // source_name no longer exists
+        $('#deposit_source_id_holder').hide(); // new one!
 
         // show source account ID:
         $('#source_id_holder').show();
 
+        // show destination name:
+        // $('#destination_name_holder').show(); // old one
+        $('#withdrawal_destination_id_holder').show();
+
         // hide destination ID:
         $('#destination_id_holder').hide();
-
-        // show destination name:
-        $('#destination_name_holder').show();
 
         // show budget
         $('#budget_id_holder').show();
@@ -202,18 +204,28 @@ function updateFormFields() {
     }
 
     if (transactionType === 'deposit') {
-        $('#source_name_holder').show();
+        // $('#source_name_holder').show(); // source name no longer exists.
+        $('#deposit_source_id_holder').show(); // new one!
+
         $('#source_id_holder').hide();
-        $('#destination_name_holder').hide();
+
+        // $('#destination_name_holder').hide(); // old one
+        $('#withdrawal_destination_id_holder').hide();
+
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'transfer') {
-        $('#source_name_holder').hide();
+        // $('#source_name_holder').hide(); // source name no longer exists.
+        $('#deposit_source_id_holder').hide(); // new one!
+
         $('#source_id_holder').show();
-        $('#destination_name_holder').hide();
+
+        // $('#destination_name_holder').hide(); // old one
+        $('#withdrawal_destination_id_holder').hide();
+
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').show();

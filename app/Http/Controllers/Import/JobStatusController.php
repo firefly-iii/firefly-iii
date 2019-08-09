@@ -106,7 +106,7 @@ class JobStatusController extends Controller
 
         // if count is zero:
         if (null !== $importJob->tag_id) {
-            $count = $importJob->tag->transactionJournals->count();
+            $count = $this->repository->countByTag($importJob);
         }
         if (0 === $count) {
             $json['report_txt'] = (string)trans('import.result_no_transactions');
@@ -139,7 +139,7 @@ class JobStatusController extends Controller
         // catch impossible status:
         $allowed = ['ready_to_run', 'need_job_config'];
 
-        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+        if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
             $this->repository->setStatus($importJob, 'error');
 
@@ -202,7 +202,7 @@ class JobStatusController extends Controller
         Log::info('Now in JobStatusController::store');
         // catch impossible status:
         $allowed = ['provider_finished', 'storing_data'];
-        if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
+        if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
 
             return response()->json(

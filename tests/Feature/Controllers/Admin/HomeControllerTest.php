@@ -40,7 +40,7 @@ class HomeControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -48,7 +48,12 @@ class HomeControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
         $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        // default for session
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
@@ -64,7 +69,10 @@ class HomeControllerTest extends TestCase
      */
     public function testTestMessage(): void
     {
+        $this->mockDefaultSession();
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();

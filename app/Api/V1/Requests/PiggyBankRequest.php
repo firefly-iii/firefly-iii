@@ -25,10 +25,13 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
+use FireflyIII\Rules\ZeroOrMore;
 
 /**
  *
  * Class PiggyBankRequest
+ * @codeCoverageIgnore
+ * TODO AFTER 4.8.0: split this into two request classes.
  */
 class PiggyBankRequest extends Request
 {
@@ -75,7 +78,7 @@ class PiggyBankRequest extends Request
             'name'           => 'required|between:1,255|uniquePiggyBankForUser',
             'account_id'     => ['required', 'belongsToUser:accounts', new IsAssetAccountId],
             'target_amount'  => 'required|numeric|more:0',
-            'current_amount' => 'numeric|more:0|lte:target_amount',
+            'current_amount' => ['numeric', new ZeroOrMore, 'lte:target_amount'],
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',

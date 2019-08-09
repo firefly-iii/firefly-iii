@@ -52,7 +52,7 @@ class FinTSRoutine implements RoutineInterface
     {
         Log::debug(sprintf('Now in FinTSRoutine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
         $valid = ['ready_to_run']; // should be only ready_to_run
-        if (\in_array($this->importJob->status, $valid, true)) {
+        if (in_array($this->importJob->status, $valid, true)) {
             switch ($this->importJob->stage) {
                 default:
                     throw new FireflyException(sprintf('FinTSRoutine cannot handle stage "%s".', $this->importJob->stage)); // @codeCoverageIgnore
@@ -67,8 +67,6 @@ class FinTSRoutine implements RoutineInterface
                     $this->repository->setTransactions($this->importJob, $transactions);
                     $this->repository->setStatus($this->importJob, 'provider_finished');
                     $this->repository->setStage($this->importJob, 'final');
-
-                    return;
             }
         }
     }

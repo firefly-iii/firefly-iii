@@ -58,7 +58,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
     {
         $config   = $this->repository->getConfiguration($this->importJob);
         $mapping  = $config['mapping'] ?? [];
-        $complete = \count($mapping) > 0;
+        $complete = count($mapping) > 0;
         if (true === $complete) {
             // move job to correct stage to download transactions
             $this->repository->setStage($this->importJob, 'go-for-import');
@@ -94,10 +94,10 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
          */
         $ibanToAsset = [];
         Log::debug('Going to map IBANs for easy mapping later on.');
-        if (0 === \count($accounts)) {
+        if (0 === count($accounts)) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
-        if (0 === \count($mapping)) {
+        if (0 === count($mapping)) {
             $messages = new MessageBag;
             $messages->add('nomap', (string)trans('import.bunq_no_mapping'));
 
@@ -119,7 +119,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
 
             Log::debug(sprintf('IBAN for bunq account #%d is "%s"', $bunqId, $bunqIban));
             if (null !== $bunqIban) {
-                $ibanToAsset[$bunqIban] = $accountId;
+                $ibanToAsset[$bunqIban] = $accountId; // @codeCoverageIgnore
             }
             $final[$bunqId] = $accountId;
         }
@@ -144,7 +144,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
     {
         $config   = $this->repository->getConfiguration($this->importJob);
         $accounts = $config['accounts'] ?? [];
-        if (0 === \count($accounts)) {
+        if (0 === count($accounts)) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
         // list the users accounts:

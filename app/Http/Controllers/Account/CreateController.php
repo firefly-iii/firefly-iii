@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\Request;
 use Log;
 
@@ -37,11 +38,13 @@ use Log;
  */
 class CreateController extends Controller
 {
+    use ModelInformation;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
      * CreateController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -63,32 +66,19 @@ class CreateController extends Controller
     /**
      * Create a new account.
      *
-     * @param Request     $request
-     * @param string|null $what
+     * @param Request $request
+     * @param string|null $objectType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request, string $what = null)
+    public function create(Request $request, string $objectType = null)
     {
-        $what            = $what ?? 'asset';
+        $objectType      = $objectType ?? 'asset';
         $defaultCurrency = app('amount')->getDefaultCurrency();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle        = (string)trans('firefly.make_new_' . $what . '_account');
-        $roles           = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans('firefly.account_role_' . $role);
-        }
-
-        // types of liability:
-        $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
-        $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        $liabilityTypes = [
-            $debt->id     => (string)trans('firefly.account_type_' . AccountType::DEBT),
-            $loan->id     => (string)trans('firefly.account_type_' . AccountType::LOAN),
-            $mortgage->id => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
-        ];
-        asort($liabilityTypes);
+        $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $subTitle        = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
+        $roles           = $this->getRoles();
+        $liabilityTypes  = $this->getLiabilityTypes();
 
         // interest calculation periods:
         $interestPeriods = [
@@ -111,11 +101,10 @@ class CreateController extends Controller
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
-        Log::channel('audit')->info('Create new account.');
+        Log::channel('audit')->info('Creating new account.');
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
+        return view('accounts.create', compact('subTitleIcon', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
-
 
     /**
      * Store the new account.
@@ -132,15 +121,13 @@ class CreateController extends Controller
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         app('preferences')->mark();
 
-        Log::channel('audit')->info('Store new account.', $data);
+        Log::channel('audit')->info('Stored new account.', $data);
 
         // update preferences if necessary:
         $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
-        if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
-            // @codeCoverageIgnoreStart
+        if (AccountType::ASSET === $account->accountType->type) {
             $frontPage[] = $account->id;
             app('preferences')->set('frontPageAccounts', $frontPage);
-            // @codeCoverageIgnoreEnd
         }
         // redirect to previous URL.
         $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
@@ -148,10 +135,12 @@ class CreateController extends Controller
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 
-            $redirect = redirect(route('accounts.create', [$request->input('what')]))->withInput();
+            $redirect = redirect(route('accounts.create', [$request->input('objectType')]))->withInput();
         }
 
         return $redirect;
     }
+
+
 
 }

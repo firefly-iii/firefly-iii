@@ -44,7 +44,7 @@ class JobConfigurationControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -54,11 +54,13 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '1Afake_job_' . random_int(1, 10000);
+        $job->key       = '1Afake_job_' . $this->randomInt();
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
@@ -89,18 +91,18 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '2Bfake_job_' . random_int(1, 10000);
+        $job->key       = '2Bfake_job_' . $this->randomInt();
         $job->status    = 'some_bad_state';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
 
+        $this->mockDefaultSession();
+
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-
 
 
         $this->be($this->user());
@@ -117,11 +119,13 @@ class JobConfigurationControllerTest extends TestCase
     {
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '3Cfake_job_' . random_int(1, 10000);
+        $job->key       = '3Cfake_job_' . $this->randomInt();
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
@@ -147,11 +151,13 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '4Dfake_job_' . random_int(1, 10000);
+        $job->key       = '4Dfake_job_' . $this->randomInt();
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $messages = new MessageBag;
         $messages->add('some', 'srrange message');
@@ -182,11 +188,13 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '5Ffake_job_' . random_int(1, 10000);
+        $job->key       = '5Ffake_job_' . $this->randomInt();
         $job->status    = 'some_bad_state';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $messages = new MessageBag;
         $messages->add('some', 'srrange message');
@@ -212,11 +220,13 @@ class JobConfigurationControllerTest extends TestCase
 
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '6Efake_job_' . random_int(1, 10000);
+        $job->key       = '6Efake_job_' . $this->randomInt();
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
@@ -244,11 +254,13 @@ class JobConfigurationControllerTest extends TestCase
         $file           = UploadedFile::fake()->image('avatar.jpg');
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = '7Dfake_job_' . random_int(1, 10000);
+        $job->key       = '7Dfake_job_' . $this->randomInt();
         $job->status    = 'has_prereq';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $messages = new MessageBag;
         $messages->add('some', 'srrange message');

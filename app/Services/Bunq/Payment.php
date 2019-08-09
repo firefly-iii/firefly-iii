@@ -31,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class Payment
+ * @codeCoverageIgnore
  */
 class Payment
 {

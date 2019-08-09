@@ -93,7 +93,7 @@ class LineReader
         $names          = array_keys($specifics);
         $toApply        = [];
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class     = config(sprintf('csv.import_specifics.%s', $name));
@@ -134,8 +134,21 @@ class LineReader
         $results = $stmt->process($reader);
         $lines   = [];
         foreach ($results as $line) {
-            $lines[] = array_values($line);
+
+            $lineValues = array_values($line);
+
+            // do a first sanity check on whatever comes out of the CSV file.
+            array_walk(
+                $lineValues, static function ($element) {
+                $element = str_replace('&nbsp;', ' ', (string)$element);
+
+                return $element;
+            }
+            );
+
+            $lines[] = $lineValues;
         }
+
 
         return $lines;
     }

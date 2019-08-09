@@ -49,7 +49,8 @@ class SetBudget implements ActionInterface
     }
 
     /**
-     * Set budget X
+     * Set budget.
+     * TODO the filter is no longer necessary.
      *
      * @param TransactionJournal $journal
      *
@@ -62,15 +63,18 @@ class SetBudget implements ActionInterface
         $repository->setUser($journal->user);
         $search  = $this->action->action_value;
         $budgets = $repository->getActiveBudgets();
+
+        // TODO no longer need to loop like this
+
         $budget  = $budgets->filter(
-            function (Budget $current) use ($search) {
+            static function (Budget $current) use ($search) {
                 return $current->name === $search;
             }
         )->first();
         if (null === $budget) {
             Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
 
-            return true;
+            return false;
         }
 
         if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
@@ -88,12 +92,7 @@ class SetBudget implements ActionInterface
 
         Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
 
-        $journal->budgets()->detach();
-        // set budget on transactions:
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->budgets()->sync([$budget->id]);
-        }
+        $journal->budgets()->sync([$budget->id]);
         $journal->touch();
 
         return true;

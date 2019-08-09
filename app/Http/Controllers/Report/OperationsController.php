@@ -41,6 +41,7 @@ class OperationsController extends Controller
 
     /**
      * OperationsController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

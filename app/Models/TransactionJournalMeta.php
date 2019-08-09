@@ -34,6 +34,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property TransactionJournal $transactionJournal
  * @property string             $data
  * @property int                $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $hash
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta withoutTrashed()
+ * @mixin \Eloquent
  */
 class TransactionJournalMeta extends Model
 {
@@ -63,7 +84,7 @@ class TransactionJournalMeta extends Model
      */
     public function getDataAttribute($value)
     {
-        return json_decode($value);
+        return json_decode($value, false);
     }
 
     /**

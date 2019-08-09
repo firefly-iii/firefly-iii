@@ -28,8 +28,8 @@ use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
@@ -46,11 +46,11 @@ use Session;
 
 /**
  * Class EventServiceProvider.
+ * @codeCoverageIgnore
  */
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * @codeCoverageIgnore
      * The event listener mappings for the application.
      *
      * @var array
@@ -89,12 +89,12 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            StoredTransactionJournal::class    => [
-                'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
+            StoredTransactionGroup::class    => [
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
-            UpdatedTransactionJournal::class   => [
-                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
+            UpdatedTransactionGroup::class   => [
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
             ],
             // API related events:
             AccessTokenCreated::class          => [
@@ -103,7 +103,6 @@ class EventServiceProvider extends ServiceProvider
         ];
 
     /**
-     * @codeCoverageIgnore
      * Register any events for your application.
      */
     public function boot(): void
@@ -119,7 +118,7 @@ class EventServiceProvider extends ServiceProvider
     {
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
-            function (PiggyBank $piggyBank) {
+            static function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = $piggyBank->startdate;
@@ -129,7 +128,7 @@ class EventServiceProvider extends ServiceProvider
             }
         );
         Client::created(
-            function (Client $oauthClient) {
+            static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
                 $user       = $repository->findNull((int)$oauthClient->user_id);

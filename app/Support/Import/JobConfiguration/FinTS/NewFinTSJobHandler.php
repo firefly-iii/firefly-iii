@@ -32,8 +32,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\MessageBag;
 
 /**
- *
  * Class NewFinTSJobHandler
+ * @codeCoverageIgnore
  */
 class NewFinTSJobHandler implements FinTSConfigurationInterface
 {
@@ -64,7 +64,6 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_url'] = $this->validURI($config['fints_url']) ? $config['fints_url'] : '';
 
         $this->repository->setConfiguration($this->importJob, $config);
-
 
         $incomplete = false;
         foreach ($config as $value) {

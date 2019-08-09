@@ -62,7 +62,7 @@ class TriggerFactory
         $obj->stopProcessing = $trigger->stop_processing;
 
         Log::debug(sprintf('self::getTriggerClass("%s") = "%s"', $triggerType, $class));
-        Log::debug(sprintf('%s::makeFromTriggerValue(%s) = object of class "%s"', $class, $trigger->trigger_value, \get_class($obj)));
+        Log::debug(sprintf('%s::makeFromTriggerValue(%s) = object of class "%s"', $class, $trigger->trigger_value, get_class($obj)));
 
         return $obj;
     }
@@ -101,7 +101,7 @@ class TriggerFactory
      */
     protected static function getTriggerTypes(): array
     {
-        if (0 === \count(self::$triggerTypes)) {
+        if (0 === count(self::$triggerTypes)) {
             self::$triggerTypes = Domain::getRuleTriggers();
         }
 

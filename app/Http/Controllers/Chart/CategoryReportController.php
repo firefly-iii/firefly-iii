@@ -47,6 +47,7 @@ class CategoryReportController extends Controller
 
     /**
      * CategoryReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -207,7 +208,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -261,7 +262,7 @@ class CategoryReportController extends Controller
                 $labelOut       = $category->id . '-out';
                 $labelSumIn     = $category->id . '-total-in';
                 $labelSumOut    = $category->id . '-total-out';
-                $currentIncome  = $income[$category->id] ?? '0';
+                $currentIncome  = bcmul($income[$category->id] ?? '0','-1');
                 $currentExpense = $expenses[$category->id] ?? '0';
 
                 // add to sum:
@@ -279,15 +280,16 @@ class CategoryReportController extends Controller
             /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
+            $currentStart->startOfDay();
         }
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key];
+                $newSet[$key] = $chartData[$key]; // @codeCoverageIgnore
             }
         }
-        if (0 === \count($newSet)) {
+        if (0 === count($newSet)) {
             $newSet = $chartData;
         }
         $data = $this->generator->multiSet($newSet);

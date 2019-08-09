@@ -27,44 +27,89 @@
     {% set sum = 0 %}
     {% for transaction in journals %}
         {# add to sum #}
-        {% set sum = (sum + transaction.transaction_amount) %}
+
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
             <td class="hidden-xs">
-                {{ transaction|transactionIcon }}
+                {% if transaction.transaction_type_type == 'Withdrawal' %}
+                    <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Deposit' %}
+                    <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Transfer' %}
+                    <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Reconciliation' %}
+                    XX
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Opening balance' %}
+                    XX
+                {% endif %}
             </td>
+
             <td>
-                <a href="{{ route('transactions.show',transaction.journal_id) }}">
-                    {{ transaction|transactionDescription }}
+                <a href="{{ route('transactions.show',transaction.transaction_journal_id) }}">
+                    {% if transaction.group_title|length > 0 %}
+                        {{ transaction.group_title }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
                 </a>
             </td>
+
             <td>
-                {{ transaction|transactionAmount }}
+                {% if transaction.transaction_type_type == 'Deposit' %}
+                    {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% set sum = (sum + (transaction.amount*-1)) %}
+                {% else %}
+                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% set sum = (sum + transaction.amount) %}
+                {% endif %}
             </td>
+
             <td class="hidden-sm hidden-xs">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
             </td>
+
             {% if not hideSource %}
                 <td class="hidden-xs">
-                    {{ transaction|transactionSourceAccount }}
+                    <a href="{{ route('accounts.show', transaction.source_account_id) }}">
+                        {{ transaction.source_account_name }}
+                    </a>
                 </td>
             {% endif %}
+
             {% if not hideDestination %}
                 <td class="hidden-xs">
-                    {{ transaction|transactionDestinationAccount }}
+                    <a href="{{ route('accounts.show', transaction.destination_account_id) }}">
+                        {{ transaction.destination_account_name }}
+                    </a>
                 </td>
             {% endif %}
 
-            {# Do NOT hide the budget? #}
+            <!-- Do NOT hide the budget? -->
             {% if not hideBudget %}
                 <td class="hidden-xs">
-                    {{ transaction|transactionBudgets }}
+                    {% if transaction.budget_id %}
+                        <a href="{{ route('budgets.show', [transaction.budget_id]) }}">
+                            {{ transaction.budget_name }}
+                        </a>
+                    {% endif %}
                 </td>
             {% endif %}
 
-            {# Do NOT hide the category? #}
+            <!-- Do NOT hide the category? -->
             {% if not hideCategory %}
                 <td class="hidden-xs">
-                    {{ transaction|transactionCategories }}
+                    {% if transaction.category_id %}
+                        <a href="{{ route('categories.show', [transaction.category_id]) }}">
+                            {{ transaction.category_name }}
+                        </a>
+                    {% endif %}
                 </td>
             {% endif %}
         </tr>
@@ -74,14 +119,9 @@
     <tr>
         <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
         <td>
-            {% if inverseAmount %}
-                {{ (sum*-1)|formatAmount }}
-            {% else %}
-                {{ sum|formatAmount }}
-            {% endif %}
+            {# TODO avoid using formatAmount #}
+            {{ sum|formatAmount }}
         </td>
     </tr>
     </tfoot>
 </table>
-
-{{ journals.render|raw }}

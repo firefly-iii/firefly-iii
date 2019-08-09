@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class CurrencyDestroyService
+ * @codeCoverageIgnore
  */
 class CurrencyDestroyService
 {
@@ -38,7 +39,7 @@ class CurrencyDestroyService
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 

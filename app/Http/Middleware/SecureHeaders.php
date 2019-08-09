@@ -44,9 +44,11 @@ class SecureHeaders
     {
         $response    = $next($request);
         $google      = '';
+        $googleImg   = '';
         $analyticsId = config('firefly.analytics_id');
         if ('' !== $analyticsId) {
-            $google = 'www.googletagmanager.com/gtag/js'; // @codeCoverageIgnore
+            $google    = 'www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
+            $googleImg = 'https://www.google-analytics.com/';
         }
         $csp = [
             "default-src 'none'",
@@ -54,9 +56,9 @@ class SecureHeaders
             sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
-            "font-src 'self'",
+            "font-src 'self' data:",
             "connect-src 'self'",
-            "img-src 'self' data: https://api.tiles.mapbox.com",
+            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $googleImg),
             "manifest-src 'self'",
         ];
 

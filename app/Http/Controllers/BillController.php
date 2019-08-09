@@ -24,7 +24,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -39,7 +39,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use URL;
 
 /**
  * Class BillController.
@@ -55,6 +54,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -124,7 +124,7 @@ class BillController extends Controller
      * Destroy a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -143,7 +143,7 @@ class BillController extends Controller
      * Edit a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -212,11 +212,6 @@ class BillController extends Controller
                 return $return;
             }
         );
-        $bills = $bills->sortBy(
-            function (array $bill) {
-                return (int)!$bill['active'] . strtolower($bill['name']);
-            }
-        );
 
         // add info about rules:
         $rules = $this->billRepository->getRulesForBills($paginator->getCollection());
@@ -237,7 +232,7 @@ class BillController extends Controller
      * Rescan bills for transactions.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -258,7 +253,7 @@ class BillController extends Controller
                 $matcher->setTriggeredLimit(100000); // large upper limit
                 $matcher->setRule($rule);
                 $matchingTransactions = $matcher->findTransactionsByRule();
-                $total                += $matchingTransactions->count();
+                $total                += count($matchingTransactions);
                 $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
             }
 
@@ -267,14 +262,14 @@ class BillController extends Controller
             app('preferences')->mark();
         }
 
-        return redirect(URL::previous());
+        return redirect(route('bills.show', [$bill->id]));
     }
 
     /**
      * Show a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -309,29 +304,31 @@ class BillController extends Controller
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
-        // use collector:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withCategoryInformation();
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('bills.show', [$bill->id]));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
+                  ->withCategoryInformation()->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
         $collection  = $this->billRepository->getAttachments($bill);
         $attachments = new Collection;
+
+        // @codeCoverageIgnoreStart
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
             $attachments = $collection->each(
-                function (Attachment $attachment) use ($transformer) {
+                static function (Attachment $attachment) use ($transformer) {
                     return $transformer->transform($attachment);
                 }
             );
         }
+        // @codeCoverageIgnoreEnd
 
 
-        return view('bills.show', compact('attachments', 'transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
 
@@ -362,7 +359,7 @@ class BillController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
@@ -373,7 +370,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillFormRequest $request
-     * @param Bill            $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse
      */
@@ -390,7 +387,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));

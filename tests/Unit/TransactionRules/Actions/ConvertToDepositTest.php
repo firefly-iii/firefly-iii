@@ -45,43 +45,7 @@ class ConvertToDepositTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
-    }
-
-    /**
-     * Convert a withdrawal to a deposit.
-     *
-     * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
-     */
-    public function testActWithdrawal()
-    {
-        $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
-        $journal = $this->getRandomWithdrawal();
-
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::WITHDRAWAL, $journal->transactionType->type);
-
-        // mock used stuff:
-        $factory = $this->mock(AccountFactory::class);
-        $factory->shouldReceive('setUser')->once();
-        $factory->shouldReceive('findOrCreate')->once()->withArgs([$name, AccountType::REVENUE])->andReturn($revenue);
-
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $name;
-        $action                   = new ConvertToDeposit($ruleAction);
-        try {
-            $result = $action->act($journal);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        $this->assertTrue($result);
-
-        // journal is now a deposit.
-        $journal->refresh();
-        $this->assertEquals(TransactionType::DEPOSIT, $journal->transactionType->type);
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -89,10 +53,10 @@ class ConvertToDepositTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActTransfer()
+    public function testActTransfer(): void
     {
         $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
+        $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomTransfer();
 
         // journal is a transfer:
@@ -111,6 +75,46 @@ class ConvertToDepositTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+        }
+        $this->assertTrue($result);
+
+        // journal is now a deposit.
+        $journal->refresh();
+        $this->assertEquals(TransactionType::DEPOSIT, $journal->transactionType->type);
+    }
+
+    /**
+     * Convert a withdrawal to a deposit.
+     *
+     * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
+     */
+    public function testActWithdrawal(): void
+    {
+        $revenue = $this->getRandomRevenue();
+        $name    = 'Random revenue #' . $this->randomInt();
+        $journal = $this->getRandomWithdrawal();
+
+        // journal is a withdrawal:
+        $this->assertEquals(TransactionType::WITHDRAWAL, $journal->transactionType->type);
+
+        // mock used stuff:
+        $factory = $this->mock(AccountFactory::class);
+        $factory->shouldReceive('setUser')->once();
+        $factory->shouldReceive('findOrCreate')->once()->withArgs([$name, AccountType::REVENUE])->andReturn($revenue);
+
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = $name;
+        $action                   = new ConvertToDeposit($ruleAction);
+        try {
+            $result = $action->act($journal);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

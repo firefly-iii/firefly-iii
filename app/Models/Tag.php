@@ -46,6 +46,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string         tagMode
  * @property Carbon         created_at
  * @property Carbon         updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property-read \FireflyIII\User $user
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTagMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withoutTrashed()
+ * @mixin \Eloquent
  */
 class Tag extends Model
 {

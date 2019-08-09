@@ -78,7 +78,7 @@ class SetSourceAccountTest extends TestCase
     public function testActDepositRevenue(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 5)->first();
+        $account      = $this->getRandomRevenue();
         $deposit      = $this->getRandomDeposit();
 
         $accountRepos->shouldReceive('setUser');
@@ -87,7 +87,7 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new revenue #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new revenue #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($deposit);
         $this->assertTrue($result);
@@ -143,32 +143,9 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new account #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new account #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($withdrawal);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * Test this on a split journal.
-     *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
-     */
-    public function testSplitJournal(): void
-    {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                   ->first();
-        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
-
-        // mock
-        $accountRepos->shouldReceive('setUser');
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . random_int(1, 10000);
-        $action                   = new SetSourceAccount($ruleAction);
-        $result                   = $action->act($journal);
         $this->assertFalse($result);
     }
 }

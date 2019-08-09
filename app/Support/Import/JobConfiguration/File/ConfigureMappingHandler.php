@@ -67,7 +67,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
         $specifics      = $config['specifics'] ?? [];
         $names          = array_keys($specifics);
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class = config(sprintf('csv.import_specifics.%s', $name));
@@ -92,7 +92,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         $config = $this->importJob->configuration;
 
-        if (isset($data['mapping']) && \is_array($data['mapping'])) {
+        if (isset($data['mapping']) && is_array($data['mapping'])) {
             foreach ($data['mapping'] as $index => $array) {
                 $config['column-mapping-config'][$index] = [];
                 foreach ($array as $value => $mapId) {
@@ -311,8 +311,8 @@ class ConfigureMappingHandler implements FileConfigurationInterface
             $columnConfig[$columnIndex]['values'] = array_unique($columnConfig[$columnIndex]['values']);
             asort($columnConfig[$columnIndex]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (0 === \count($columnConfig[$columnIndex]['values'])) {
-                unset($columnConfig[$columnIndex]);
+            if (0 === count($columnConfig[$columnIndex]['values'])) {
+                unset($columnConfig[$columnIndex]); // @codeCoverageIgnore
             }
         }
 
@@ -331,7 +331,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         /** @var array $validColumns */
         $validColumns = array_keys(config('csv.import_roles'));
-        if (!\in_array($name, $validColumns, true)) {
+        if (!in_array($name, $validColumns, true)) {
             $name = '_ignore';
         }
 

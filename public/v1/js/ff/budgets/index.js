@@ -26,7 +26,6 @@ $(function () {
     "use strict";
 
     $('.updateIncome').on('click', updateIncome);
-    $('.infoIncome').on('click', infoIncome);
 
     /*
      On start, fill the "spent"-bar using the content from the page.
@@ -234,14 +233,6 @@ function updateBudgetedAmounts(e) {
 function updateIncome() {
     "use strict";
     $('#defaultModal').empty().load(updateIncomeUri, function () {
-        $('#defaultModal').modal('show');
-    });
-
-    return false;
-}
-
-function infoIncome() {
-    $('#defaultModal').empty().load(infoIncomeUri, function () {
         $('#defaultModal').modal('show');
     });
 

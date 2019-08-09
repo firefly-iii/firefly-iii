@@ -19,7 +19,6 @@
                             {{ trans('form.permDeleteWarning') }}
                             {{ 'perm-delete-many'|_ }}
                         </p>
-
                         <p>
                             {{ trans('form.mass_journal_are_you_sure') }}
                             {{ trans('form.mass_make_selection') }}
@@ -28,8 +27,9 @@
                         <table class="table table-striped table-condensed">
                             <tr>
                                 <th>&nbsp;</th>
+                                <th>{{ trans('list.transaction_type') }}</th>
                                 <th>{{ trans('list.description') }}</th>
-                                <th>{{ trans('list.total_amount') }}</th>
+                                <th>{{ trans('list.amount') }}</th>
                                 <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
                                 <th class="hidden-xs">{{ trans('list.from') }}</th>
                                 <th class="hidden-xs">{{ trans('list.to') }}</th>
@@ -37,22 +37,61 @@
                             {% for journal in journals %}
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.id }}" checked/>
+                                        <input type="checkbox" name="confirm_mass_delete[]" value="{{ journal.transaction_journal_id }}" checked/>
                                     </td>
                                     <td>
-                                        <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
+                                        {% if journal.transaction_type_type == 'Withdrawal' %}
+                                            <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
+                                        {% endif %}
+
+                                        {% if journal.transaction_type_type == 'Deposit' %}
+                                            <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                                        {% endif %}
+
+                                        {% if journal.transaction_type_type == 'Transfer' %}
+                                            <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                                        {% endif %}
+
+                                        {% if journal.transaction_type_type == 'Reconciliation' %}
+                                            <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
+                                        {% endif %}
+                                        {% if journal.transaction_type_type == 'Opening balance' %}
+                                            <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        {{ journal|journalTotalAmount }}
+                                        <a href="{{ route('transactions.show',journal.transaction_journal_id) }}"
+                                           title="{{ journal.description }}">{{ journal.description }}</a>
+                                    </td>
+                                    <td>
+                                        {% if journal.transaction_type_type == 'Deposit' %}
+                                            {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                            {% if null != journal.foreign_amount %}
+                                                ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                            {% endif %}
+                                        {% elseif journal.transaction_type_type == 'Transfer' %}
+                                            <span class="text-info">{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places, false) }}
+                                                {% if null != journal.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places, false) }})
+                                                {% endif %}
+                                            </span>
+                                        {% else %}
+                                            {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                            {% if null != journal.foreign_amount %}
+                                                ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                            {% endif %}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ journal.date.formatLocalized(monthAndDayFormat) }}
                                     </td>
                                     <td>
-                                        {{ sourceAccount(journal)|raw }}
+                                        <a href="{{ route('accounts.show', [journal.source_account_id]) }}"
+                                           title="{{ journal.source_account_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a>
                                     </td>
                                     <td>
-                                        {{ destinationAccount(journal)|raw }}
+                                        <a href="{{ route('accounts.show', [journal.destination_account_id]) }}"
+                                           title="{{ journal.destination_account_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
                                     </td>
                                 </tr>
                             {% endfor %}

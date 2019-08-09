@@ -59,8 +59,8 @@ class StageImportDataHandler
         Log::debug('Now in StageImportDataHandler::run()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
-        Log::debug(sprintf('Count of accounts in array is %d', \count($accounts)));
-        if (0 === \count($accounts)) {
+        Log::debug(sprintf('Count of accounts in array is %d', count($accounts)));
+        if (0 === count($accounts)) {
             throw new FireflyException('There are no accounts in this import job. Cannot continue.'); // @codeCoverageIgnore
         }
         $toImport = $config['account_mapping'] ?? [];
@@ -73,14 +73,15 @@ class StageImportDataHandler
                 $merge          = $this->getTransactions($spectreAccount, $localAccount);
                 $totalSet[]     = $merge;
                 Log::debug(
-                    sprintf('Found %d transactions in account "%s" (%s)', \count($merge), $spectreAccount->getName(), $spectreAccount->getCurrencyCode())
+                    sprintf('Found %d transactions in account "%s" (%s)', count($merge), $spectreAccount->getName(), $spectreAccount->getCurrencyCode())
                 );
                 continue;
             }
             Log::debug(sprintf('Local account is = zero, will not import from Spectr account with ID #%d', $spectreId));
         }
         $totalSet = array_merge(...$totalSet);
-        Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
+        Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
+
         $this->repository->setTransactions($this->importJob, $totalSet);
     }
 
@@ -112,8 +113,8 @@ class StageImportDataHandler
     private function convertToArray(array $transactions, SpectreAccount $spectreAccount, LocalAccount $originalSource): array
     {
         $array = [];
-        $total = \count($transactions);
-        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
+        $total = count($transactions);
+        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', count($transactions)));
         /** @var SpectreTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now creating array for transaction %d of %d', $index + 1, $total));
@@ -174,35 +175,33 @@ class StageImportDataHandler
             }
 
             $entry   = [
-                'type'            => $type,
-                'date'            => $transaction->getMadeOn()->format('Y-m-d'),
-                'tags'            => $tags,
-                'user'            => $this->importJob->user_id,
-                'notes'           => $notes,
-
-                // all custom fields:
-                'external_id'     => (string)$transaction->getId(),
-
-                // journal data:
-                'description'     => $transaction->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
                 // transaction data:
                 'transactions'    => [
                     [
-                        'currency_id'           => null,
-                        'currency_code'         => $currencyCode,
-                        'description'           => null,
-                        'amount'                => $amount,
-                        'budget_id'             => null,
-                        'budget_name'           => null,
-                        'category_id'           => null,
-                        'category_name'         => $transaction->getCategory(),
-                        'source_id'             => $source->id,
+                        'date'            => $transaction->getMadeOn()->format('Y-m-d'),
+                        'tags'            => $tags,
+                        'user'            => $this->importJob->user_id,
+                        'notes'           => $notes,
+
+                        // all custom fields:
+                        'external_id'     => (string)$transaction->getId(),
+
+                        // journal data:
+                        'description'     => $transaction->getDescription(),
+                        'piggy_bank_id'   => null,
+                        'piggy_bank_name' => null,
+                        'bill_id'         => null,
+                        'bill_name'       => null,
+                        'original-source' => sprintf('spectre-v%s', config('firefly.version')),
+                        'type'            => $type,
+                        'currency_id'     => null,
+                        'currency_code'   => $currencyCode,
+                        'amount'          => $amount,
+                        'budget_id'       => null,
+                        'budget_name'     => null,
+                        'category_id'     => null,
+                        'category_name'   => $transaction->getCategory(),
+                        'source_id'       => $source->id,
                         'source_name'           => null,
                         'destination_id'        => $destination->id,
                         'destination_name'      => null,
@@ -216,7 +215,7 @@ class StageImportDataHandler
             ];
             $array[] = $entry;
         }
-        Log::debug(sprintf('Return %d entries', \count($array)));
+        Log::debug(sprintf('Return %d entries', count($array)));
 
         return $array;
     }
@@ -233,7 +232,7 @@ class StageImportDataHandler
         if (null === $account) {
             throw new FireflyException(sprintf('Cannot find Firefly III asset account with ID #%d. Job must stop now.', $accountId)); // @codeCoverageIgnore
         }
-        if (!\in_array($account->accountType->type, [AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT], true)) {
+        if (!in_array($account->accountType->type, [AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT], true)) {
             throw new FireflyException(
                 sprintf('Account with ID #%d is not an asset/loan/mortgage/debt account. Job must stop now.', $accountId)
             ); // @codeCoverageIgnore

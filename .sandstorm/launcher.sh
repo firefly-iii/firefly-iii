@@ -11,7 +11,7 @@ mkdir -p /var/log
 mkdir -p /var/log/mysql
 mkdir -p /var/log/nginx
 # Wipe /var/run, since pidfiles and socket files from previous launches should go away
-# TODO someday: I'd prefer a tmpfs for these.
+# Someday: I'd prefer a tmpfs for these.
 rm -rf /var/run
 mkdir -p /var/run
 rm -rf /var/tmp

@@ -90,9 +90,9 @@
                 </div>
                 <div class="box-body">
                     {% if budgetLimit %}
-                        {% include 'list.transactions' %}
+                        {% include 'list.groups' %}
                     {% else %}
-                        {% include 'list.transactions'  with {showCategories: true} %}
+                        {% include 'list.groups' %}
                     {% endif %}
                     {% if budgetLimit %}
                         <p>
@@ -183,5 +183,6 @@
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/budgets/show.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+    {# required for groups.twig #}
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

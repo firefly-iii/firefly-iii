@@ -34,9 +34,9 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use Illuminate\Support\Collection;
 use League\Csv\Reader;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ConfigureRolesHandlerTest
@@ -49,7 +49,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -107,7 +107,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteNoAmount(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $config  = [
+        $config      = [
             'column-count' => 5,
             'column-roles' => [
                 0 => 'sepa-cc',
@@ -117,8 +117,8 @@ class ConfigureRolesHandlerTest extends TestCase
                 4 => 'amount_foreign',
             ],
         ];
-        $handler = new ConfigureRolesHandler();
-        $result  = $handler->configurationComplete($config);
+        $handler     = new ConfigureRolesHandler();
+        $result      = $handler->configurationComplete($config);
         $this->assertCount(1, $result);
         $this->assertEquals(
             'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
@@ -134,7 +134,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-B' . random_int(1, 10000);
+        $job->key           = 'role-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -186,7 +186,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetExampleFromLine(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $lines = [
+        $lines       = [
             ['one', 'two', '', 'three'],
             ['four', 'five', '', 'six'],
         ];
@@ -215,7 +215,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -297,7 +297,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -368,7 +368,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -543,7 +543,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-A' . random_int(1, 10000);
+        $job->key           = 'role-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

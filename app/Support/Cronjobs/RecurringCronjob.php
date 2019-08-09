@@ -34,6 +34,37 @@ use Log;
  */
 class RecurringCronjob extends AbstractCronjob
 {
+    /** @var bool */
+    private $force;
+
+    /** @var Carbon */
+    private $date;
+
+    /**
+     * RecurringCronjob constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->force = false;
+        $this->date  = new Carbon;
+    }
+
+    /**
+     * @param bool $force
+     */
+    public function setForce(bool $force): void
+    {
+        $this->force = $force;
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
+    }
 
     /**
      * @return bool
@@ -47,38 +78,46 @@ class RecurringCronjob extends AbstractCronjob
         $diff          = time() - $lastTime;
         $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), true);
         if (0 === $lastTime) {
-            Log::info('Recurring transactions cronjob has never fired before.');
+            Log::info('Recurring transactions cron-job has never fired before.');
         }
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43200) {
-            Log::info(sprintf('It has been %s since the recurring transactions cronjob has fired. It will not fire now.', $diffForHumans));
+            Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired.', $diffForHumans));
+            if (false === $this->force) {
+                Log::info('The cron-job will not fire now.');
 
-            return false;
+                return false;
+            }
+
+            // fire job regardless.
+            if (true === $this->force) {
+                Log::info('Execution of the recurring transaction cron-job has been FORCED.');
+            }
         }
 
         if ($lastTime > 0 && $diff > 43200) {
-            Log::info(sprintf('It has been %s since the recurring transactions cronjob has fired. It will fire now!', $diffForHumans));
+            Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        try {
-            $this->fireRecurring();
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Could not run recurring transaction cron job: %s', $e->getMessage()));
-        }
+        $this->fireRecurring();
+
+        app('preferences')->mark();
 
         return true;
     }
 
     /**
      *
-     * @throws FireflyException
      */
     private function fireRecurring(): void
     {
-        $job = new CreateRecurringTransactions(new Carbon);
+        Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d')));
+        /** @var CreateRecurringTransactions $job */
+        $job = app(CreateRecurringTransactions::class);
+        $job->setDate($this->date);
+        $job->setForce($this->force);
         $job->handle();
-        app('fireflyconfig')->set('last_rt_job', time());
+        app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
+        Log::info('Done with recurring cron job task.');
     }
 }

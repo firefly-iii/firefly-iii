@@ -23,20 +23,18 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -50,7 +48,7 @@ class BudgetControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -63,8 +61,17 @@ class BudgetControllerTest extends TestCase
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
+        try {
+            $date = new Carbon('2015-01-01');
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
 
-        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon('2015-01-01'))->once();
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $repository->shouldReceive('firstUseDate')->andReturn($date)->once();
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
         $generator->shouldReceive('singleSet')->andReturn([])->once();
 
@@ -85,6 +92,10 @@ class BudgetControllerTest extends TestCase
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
         $generator->shouldReceive('singleSet')->once()->andReturn([]);
 
@@ -95,15 +106,20 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Chart\BudgetController
+     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController
      */
     public function testBudgetLimitWrongLimit(): void
     {
-        $repository = $this->mock(BudgetRepositoryInterface::class);
-        $generator  = $this->mock(GeneratorInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(GeneratorInterface::class);
+        $budget = $this->getRandomBudget();
+        $limit  = BudgetLimit::where('budget_id', '!=', $budget->id)->first();
+
+        // mock default session
+        $this->mockDefaultSession();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.budget.budget-limit', [1, 8]));
+        $response = $this->get(route('chart.budget.budget-limit', [$budget->id, $limit->id]));
         $response->assertStatus(500);
     }
 
@@ -115,17 +131,21 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseAsset(string $range): void
     {
-        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
-        $generator        = $this->mock(GeneratorInterface::class);
-        $collector        = $this->mock(TransactionCollectorInterface::class);
-        $transactions     = factory(Transaction::class, 10)->make();
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+        $destination  = $this->user()->accounts()->find($withdrawal['destination_account_id']);
 
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
 
         $generator->shouldReceive('pieChart')->once()->andReturn([]);
 
@@ -143,22 +163,23 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseCategory(string $range): void
     {
+        $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
-        $collector  = $this->mock(TransactionCollectorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
         $catRepos   = $this->mock(CategoryRepositoryInterface::class);
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $category   = $this->user()->categories()->find($withdrawal['category_id']);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $transactions = factory(Transaction::class, 10)->make();
-        $categories   = factory(Category::class, 10)->make();
+        $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
-
-        $catRepos->shouldReceive('getCategories')->andReturn($categories)->once();
+        $catRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->once();
 
         $generator->shouldReceive('pieChart')->once()->andReturn([]);
 
@@ -176,22 +197,25 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseExpense(string $range): void
     {
+        $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+        $destination  = $this->user()->accounts()->find($withdrawal['destination_account_id']);
 
-        $transactions = factory(Transaction::class, 10)->make();
-        $accounts     = factory(Account::class, 10)->make();
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+
+        $collector->shouldReceive('withAccountInformation')->once()->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
-        $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
+        $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
 
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn($accounts)->once();
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$destination]))->once();
 
         $generator->shouldReceive('pieChart')->once()->andReturn([]);
 
@@ -207,25 +231,27 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testFrontpage(string $range): void
+    public function testFrontPage(string $range): void
     {
-        $repository             = $this->mock(BudgetRepositoryInterface::class);
-        $generator              = $this->mock(GeneratorInterface::class);
-        $collector              = $this->mock(TransactionCollectorInterface::class);
-        $budget                 = factory(Budget::class)->make();
-        $budgetLimit            = factory(BudgetLimit::class)->make();
-        $budgetLimit->budget_id = $budget->id;
-        $transaction            = factory(Transaction::class)->make();
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(GroupCollectorInterface::class);
+        $budget      = $this->getRandomBudget();
+        $budgetLimit = $this->getRandomBudgetLimit();
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->once();
         $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$budgetLimit]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
@@ -243,25 +269,26 @@ class BudgetControllerTest extends TestCase
      */
     public function testFrontpageMultiLimit(string $range): void
     {
-        $repository     = $this->mock(BudgetRepositoryInterface::class);
-        $generator      = $this->mock(GeneratorInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $budget         = factory(Budget::class)->make();
-        $one            = factory(BudgetLimit::class)->make();
-        $two            = factory(BudgetLimit::class)->make();
-        $one->budget_id = $budget->id;
-        $two->budget_id = $budget->id;
-        $transaction    = factory(Transaction::class)->make();
+
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $budget     = $this->getRandomBudget();
+        $limit1     = $this->getRandomBudgetLimit();
+        $limit2     = $this->getRandomBudgetLimit();
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->once();
-        $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$one, $two]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('-100');
+        $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$limit1, $limit2]));
+        $repository->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
@@ -279,21 +306,25 @@ class BudgetControllerTest extends TestCase
      */
     public function testFrontpageNoLimits(string $range): void
     {
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
-        $budget      = factory(Budget::class)->make();
-        $transaction = factory(Transaction::class)->make();
+
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $budget     = $this->getRandomBudget();
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
         $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection);
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
+        //$collector->shouldReceive('getTransactions')->andReturn([$withdrawal])->once();
+        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
@@ -308,13 +339,17 @@ class BudgetControllerTest extends TestCase
      */
     public function testPeriod(): void
     {
-        $repository             = $this->mock(BudgetRepositoryInterface::class);
-        $generator              = $this->mock(GeneratorInterface::class);
-        $budget                 = factory(Budget::class)->make();
-        $budgetLimit            = factory(BudgetLimit::class)->make();
-        $budgetLimit->budget_id = $budget->id;
-        $fiscalHelper           = $this->mock(FiscalHelperInterface::class);
-        $date                   = new Carbon;
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $budgetLimit  = $this->getRandomBudgetLimit();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -323,7 +358,7 @@ class BudgetControllerTest extends TestCase
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->get(route('chart.budget.period', [1, '1', '20120101', '20120131']));
+        $response = $this->get(route('chart.budget.period', [$budgetLimit->budget_id, '1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 
@@ -336,6 +371,11 @@ class BudgetControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 

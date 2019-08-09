@@ -27,6 +27,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -40,7 +41,7 @@ class PiggyBankControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,13 +51,18 @@ class PiggyBankControllerTest extends TestCase
     {
         $generator  = $this->mock(GeneratorInterface::class);
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
-        $event      = factory(PiggyBankEvent::class)->make();
+        /** @var PiggyBankEvent $event */
+        $event = PiggyBankEvent::inRandomOrder()->first();
+        $piggy = $event->piggy_bank_id;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $repository->shouldReceive('getEvents')->andReturn(new Collection([$event]));
         $generator->shouldReceive('singleSet')->once()->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->get(route('chart.piggy-bank.history', [1]));
+        $response = $this->get(route('chart.piggy-bank.history', [$piggy]));
         $response->assertStatus(200);
     }
 }

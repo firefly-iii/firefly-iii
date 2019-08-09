@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'html_language'         => 'zh',
-    'locale'                => 'zh_CN,简体中文,zh_CN.utf8,zh_CN.UTF-8',
+    'locale'                => 'zh_CN.utf8,zh_CN.UTF-8',
     'month'                 => '%Y 年 %B',
     'month_and_day'         => '%Y年 %B %e日',
     'month_and_date_day'    => '%Y 年 %B %e 日 %A',

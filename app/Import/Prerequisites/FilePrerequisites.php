@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Prerequisites;
 
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  *
@@ -33,6 +34,16 @@ use Illuminate\Support\MessageBag;
  */
 class FilePrerequisites implements PrerequisitesInterface
 {
+
+    /**
+     * FilePrerequisites constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
     /**
      * Returns view name that allows user to fill in prerequisites.
      *

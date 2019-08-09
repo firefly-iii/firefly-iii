@@ -34,6 +34,14 @@ interface CategoryRepositoryInterface
 {
 
     /**
+     * @param int|null      $categoryId
+     * @param string|null   $categoryName
+     *
+     * @return Category|null
+     */
+    public function findCategory( ?int $categoryId, ?string $categoryName): ?Category;
+
+    /**
      * @param Category $category
      *
      * @return bool
@@ -58,9 +66,9 @@ interface CategoryRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
+     * @return array
      */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
+    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
 
@@ -214,9 +222,9 @@ interface CategoryRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
+     * @return array
      */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
+    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * A very cryptic method name that means:

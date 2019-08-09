@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Добро пожаловать на стартовую страницу Firefly III. Пожалуйста, найдите время, чтобы ознакомиться с этим кратким введением в возможности Firefly III.',
-    'index_accounts-chart'                  => 'Эта диаграмма показывает текущий баланс ваших счетов. Вы можете выбрать счета, видимые здесь, в настройках.',
-    'index_box_out_holder'                  => 'Небольшие блоки, собранные на этой странице, показывают общее положение дел с вашими финансами.',
-    'index_help'                            => 'Если вам нужна помощь со страницей или формой - нажмите эту кнопку.',
-    'index_outro'                           => 'Большинство страниц Firefly III начнутся с небольшого тура, подобного этому. Пожалуйста, свяжитесь со мной, если у вас возникнут вопросы или комментарии. Наслаждайтесь!',
-    'index_sidebar-toggle'                  => 'Для создания новый транзакций, счётов или другие элементов, используйте меню под этим значком.',
+    'index_intro'                                     => 'Добро пожаловать на стартовую страницу Firefly III. Пожалуйста, найдите время, чтобы ознакомиться с этим кратким введением в возможности Firefly III.',
+    'index_accounts-chart'                            => 'Эта диаграмма показывает текущий баланс ваших счетов. Вы можете выбрать счета, видимые здесь, в настройках.',
+    'index_box_out_holder'                            => 'Небольшие блоки, собранные на этой странице, показывают общее положение дел с вашими финансами.',
+    'index_help'                                      => 'Если вам нужна помощь со страницей или формой - нажмите эту кнопку.',
+    'index_outro'                                     => 'Большинство страниц Firefly III начнутся с небольшого тура, подобного этому. Пожалуйста, свяжитесь со мной, если у вас возникнут вопросы или комментарии. Наслаждайтесь!',
+    'index_sidebar-toggle'                            => 'Для создания новый транзакций, счётов или другие элементов, используйте меню под этим значком.',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => 'Задайте вашим счетам действующий IBAN. В будущем это может сделать импорт данных очень простым.',
-    'accounts_create_asset_opening_balance' => 'У счёта активов всегда есть «начальный баланс», показывающий, какая сумма была на этом счету, когда вы начали работать с ним в Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III поддерживает несколько валют. Каждый счёт связан с одной основной валютой, которую вы должны указать здесь.',
-    'accounts_create_asset_virtual'         => 'Иногда бывает удобно предоставить вашему счёту виртуальный баланс: дополнительная сумма, всегда добавленная или выведенная из фактического баланса.',
+    'accounts_create_iban'                            => 'Задайте вашим счетам действующий IBAN. В будущем это может сделать импорт данных очень простым.',
+    'accounts_create_asset_opening_balance'           => 'У счёта активов всегда есть «начальный баланс», показывающий, какая сумма была на этом счету, когда вы начали работать с ним в Firefly III.',
+    'accounts_create_asset_currency'                  => 'Firefly III поддерживает несколько валют. Каждый счёт связан с одной основной валютой, которую вы должны указать здесь.',
+    'accounts_create_asset_virtual'                   => 'Иногда бывает удобно предоставить вашему счёту виртуальный баланс: дополнительная сумма, всегда добавленная или выведенная из фактического баланса.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Бюджеты используются для управления финансами и являются одной из основных функций Firefly III.',
-    'budgets_index_set_budget'              => 'Установите свой общий бюджет на каждый период, чтобы Firefly III мог подсказать вам, если вы потратите все запланированные деньги.',
-    'budgets_index_see_expenses_bar'        => 'По мере того, как вы будете тратить деньги, эта диаграмма будет заполняться.',
-    'budgets_index_navigate_periods'        => 'Перемещайтесь между периодами, чтобы планировать бюджеты заранее.',
-    'budgets_index_new_budget'              => 'Создавайте новые бюджеты по своему усмотрению.',
-    'budgets_index_list_of_budgets'         => 'Используйте эту таблицу, чтобы установить суммы для каждого бюджета и посмотреть, как у вас дела.',
-    'budgets_index_outro'                   => 'Чтобы узнать больше о бюджете, воспользуйтесь значком справки в верхнем правом углу.',
+    'budgets_index_intro'                             => 'Бюджеты используются для управления финансами и являются одной из основных функций Firefly III.',
+    'budgets_index_set_budget'                        => 'Установите свой общий бюджет на каждый период, чтобы Firefly III мог подсказать вам, если вы потратите все запланированные деньги.',
+    'budgets_index_see_expenses_bar'                  => 'По мере того, как вы будете тратить деньги, эта диаграмма будет заполняться.',
+    'budgets_index_navigate_periods'                  => 'Перемещайтесь между периодами, чтобы планировать бюджеты заранее.',
+    'budgets_index_new_budget'                        => 'Создавайте новые бюджеты по своему усмотрению.',
+    'budgets_index_list_of_budgets'                   => 'Используйте эту таблицу, чтобы установить суммы для каждого бюджета и посмотреть, как у вас дела.',
+    'budgets_index_outro'                             => 'Чтобы узнать больше о бюджете, воспользуйтесь значком справки в верхнем правом углу.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Используйте эти отчеты, чтобы получить подробные сведения о ваших финансах.',
-    'reports_index_inputReportType'         => 'Выберите тип отчета. Просмотрите страницу справки, чтобы узнать, что показывает каждый отчёт.',
-    'reports_index_inputAccountsSelect'     => 'Вы можете исключить или включить основные счета по своему усмотрению.',
-    'reports_index_inputDateRange'          => 'Выбранный диапазон дат зависит от вас: от одного дня до 10 лет.',
-    'reports_index_extra-options-box'       => 'В зависимости от выбранного вами отчёта вы можете выбрать здесь дополнительные фильтры и параметры. Посмотрите этот блок, когда вы меняете типы отчётов.',
+    'reports_index_intro'                             => 'Используйте эти отчеты, чтобы получить подробные сведения о ваших финансах.',
+    'reports_index_inputReportType'                   => 'Выберите тип отчета. Просмотрите страницу справки, чтобы узнать, что показывает каждый отчёт.',
+    'reports_index_inputAccountsSelect'               => 'Вы можете исключить или включить основные счета по своему усмотрению.',
+    'reports_index_inputDateRange'                    => 'Выбранный диапазон дат зависит от вас: от одного дня до 10 лет.',
+    'reports_index_extra-options-box'                 => 'В зависимости от выбранного вами отчёта вы можете выбрать здесь дополнительные фильтры и параметры. Посмотрите этот блок, когда вы меняете типы отчётов.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'В этом отчёте вы получите быстрый и исчерпывающий обзор ваших финансов. Если вы хотите увидеть что-нибудь ещё, пожалуйста, не стесняйтесь обращаться ко мне!',
-    'reports_report_audit_intro'            => 'Этот отчёт покажет вам подробную информацию о ваших активах.',
-    'reports_report_audit_optionsBox'       => 'Используйте эти флажки, чтобы показать или скрыть интересующие вас столбцы.',
+    'reports_report_default_intro'                    => 'В этом отчёте вы получите быстрый и исчерпывающий обзор ваших финансов. Если вы хотите увидеть что-нибудь ещё, пожалуйста, не стесняйтесь обращаться ко мне!',
+    'reports_report_audit_intro'                      => 'Этот отчёт покажет вам подробную информацию о ваших активах.',
+    'reports_report_audit_optionsBox'                 => 'Используйте эти флажки, чтобы показать или скрыть интересующие вас столбцы.',
 
     'reports_report_category_intro'                  => 'Этот отчёт даст вам представление об одной или нескольких категориях.',
     'reports_report_category_pieCharts'              => 'Эти диаграммы дадут вам представление о расходах и доходах по категориям или счетам.',

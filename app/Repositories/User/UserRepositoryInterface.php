@@ -40,6 +40,14 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
+     * Set MFA code.
+     *
+     * @param User $user
+     * @param string|null $code
+     */
+    public function setMFACode(User $user, ?string $code): void;
+
+    /**
      * Gives a user a role.
      *
      * @param User   $user

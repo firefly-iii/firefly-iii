@@ -27,6 +27,7 @@ use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Installer;
+use FireflyIII\Http\Middleware\InterestingMessage;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
@@ -47,6 +48,7 @@ use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 /**
  * Class Kernel
@@ -125,7 +127,7 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Binder::class,
                 Authenticate::class,
-                RedirectIfTwoFactorAuthenticated::class,
+                //RedirectIfTwoFactorAuthenticated::class,
             ],
 
             // MUST be logged in
@@ -154,10 +156,11 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
-                AuthenticateTwoFactor::class,
+                MFAMiddleware::class,
                 Range::class,
                 Binder::class,
                 CreateFreshApiToken::class,
+                InterestingMessage::class,
             ],
             // MUST be logged in
             // MUST have 2fa
@@ -172,7 +175,7 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
-                AuthenticateTwoFactor::class,
+                //AuthenticateTwoFactor::class,
                 IsAdmin::class,
                 Range::class,
                 Binder::class,

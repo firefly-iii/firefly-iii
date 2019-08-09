@@ -256,7 +256,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if topExpenses.count > 0 %}
+        {% if topExpenses|length > 0 %}
             <div class="col-lg-6">
 
                 <div class="box">
@@ -283,9 +283,9 @@
                                     <tr>
                                 {% endif %}
                                 <td data-sortable="false">
-                                    <a href="{{ route('transactions.show', row.journal_id) }}">
-                                        {% if row.transaction_description|length > 0 %}
-                                            {{ row.transaction_description }} ({{ row.description }})
+                                    <a href="{{ route('transactions.show', 1+row.transaction_group_id) }}">
+                                        {% if row.group_title|length > 0 %}
+                                            {{ row.group_title }} ({{ row.description }})
                                         {% else %}
                                             {{ row.description }}
                                         {% endif %}
@@ -294,13 +294,13 @@
                                 <td data-value="{{ row.date.format('Y-m-d') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td data-value="{{ row.opposing_account_name }}">
-                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
-                                        {{ row.opposing_account_name }}
+                                <td data-value="{{ row.destination_account_name }}">
+                                    <a href="{{ route('accounts.show', row.destination_account_id) }}">
+                                        {{ row.destination_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}" style="text-align: right;">
-                                    {{ row.transaction_amount|formatAmount }}
+                                <td data-value="{{ row.amount }}" style="text-align: right;">
+                                    {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_symbol_decimal_places) }}
                                 </td>
                                 </tr>
                             {% endfor %}
@@ -354,10 +354,10 @@
                                         <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                     </td>
                                     <td data-value="{{ row.average }}" style="text-align:right;">
-                                        {{ row.average|formatAmount }}
+                                        {{ (row.average*-1)|formatAmount }}
                                     </td>
                                     <td data-value="{{ row.sum }}" style="text-align:right;">
-                                        {{ row.sum|formatAmount }}
+                                        {{ (row.sum*-1)|formatAmount }}
                                     </td>
                                     <td data-value="{{ row.count }}">
                                         {{ row.count }}
@@ -368,7 +368,7 @@
                                 <td colspan="2">
                                     {{ 'sum'|_ }}
                                 </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                                <td style="text-align:right">{{ (totalSum*-1)|formatAmount }}</td>
                                 <td>{{ totalCount }}</td>
                             </tr>
                             </tbody>
@@ -378,7 +378,7 @@
             </div>
         {% endif %}
         <div class="col-lg-6">
-            {% if topIncome.count > 0 %}
+            {% if topIncome|length > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
@@ -403,7 +403,7 @@
                                     <tr>
                                 {% endif %}
                                 <td>
-                                    <a href="{{ route('transactions.show', row.journal_id) }}">
+                                    <a href="{{ route('transactions.show', row.transaction_journal_id) }}">
                                         {% if row.transaction_description|length > 0 %}
                                             {{ row.transaction_description }} ({{ row.description }})
                                         {% else %}
@@ -414,14 +414,15 @@
                                 <td data-value="{{ row.date.format('Y-m-d H-i-s') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td data-value="{{ row.opposing_account_name }}">
-                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
-                                        {{ row.opposing_account_name }}
+                                <td data-value="{{ row.source_account_name }}">
+                                    <a href="{{ route('accounts.show', row.source_account_id) }}">
+                                        {{ row.source_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}" style="text-align:right;">
-                                    {{ row.transaction_amount|formatAmount }}
+                                <td data-value="{{ row.transaction_amount*-1 }}" style="text-align:right;">
+                                    {{ (row.transaction_amount*-1)|formatAmount }}
                                 </td>
+
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -437,7 +438,7 @@
                                 <td colspan="3">
                                     {{ 'sum'|_ }}
                                 </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
+                                <td style="text-align:right">{{ (totalSum*-1)|formatAmount }}</td>
                             </tr>
                             </tfoot>
                         </table>

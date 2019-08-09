@@ -41,8 +41,6 @@ declare(strict_types=1);
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Foundation\Inspiring;
-
 /*
 |--------------------------------------------------------------------------
 | Console Routes
@@ -53,9 +51,3 @@ use Illuminate\Foundation\Inspiring;
 | simple approach to interacting with each command's IO methods.
 |
 */
-
-Artisan::command(
-    'inspire', function () {
-    $this->comment(Inspiring::quote());
-}
-)->describe('Display an inspiring quote');

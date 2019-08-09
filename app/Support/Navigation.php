@@ -24,8 +24,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use Log;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 
 /**
  * Class Navigation.
@@ -90,7 +89,7 @@ class Navigation
 
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (2 === $difference && $date->day > 0 && \in_array($repeatFreq, $months, true)) {
+        if (2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
             $date->subDays($date->day);
         }
 
@@ -227,7 +226,7 @@ class Navigation
 
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
-            if (\in_array($repeatFreq, $subDay, true)) {
+            if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
             $currentEnd->endOfDay();
@@ -236,7 +235,7 @@ class Navigation
         }
         $currentEnd->$function();
         $currentEnd->endOfDay();
-        if (\in_array($repeatFreq, $subDay, true)) {
+        if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
 
@@ -307,16 +306,15 @@ class Navigation
             $displayFormat = (string)trans('config.year');
         }
 
+
         $begin   = clone $start;
         $entries = [];
         while ($begin < $end) {
             $formatted           = $begin->format($format);
             $displayed           = $begin->formatLocalized($displayFormat);
             $entries[$formatted] = $displayed;
-
             $begin->$increment();
         }
-
         return $entries;
     }
 
@@ -540,7 +538,7 @@ class Navigation
         $subtract = $subtract ?? 1;
         $date     = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
-        Log::debug(sprintf('subtractPeriod: date is %s, repeat frequency is %s and subtract is %d', $date->format('Y-m-d'), $repeatFreq, $subtract));
+        //Log::debug(sprintf('subtractPeriod: date is %s, repeat frequency is %s and subtract is %d', $date->format('Y-m-d'), $repeatFreq, $subtract));
         $functionMap = [
             '1D'      => 'subDays',
             'daily'   => 'subDays',
@@ -564,16 +562,16 @@ class Navigation
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
             $date->$function($subtract);
-            Log::debug(sprintf('%s is in function map, execute %s with argument %d', $repeatFreq, $function, $subtract));
-            Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
+            //Log::debug(sprintf('%s is in function map, execute %s with argument %d', $repeatFreq, $function, $subtract));
+            //Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
 
             return $date;
         }
         if (isset($modifierMap[$repeatFreq])) {
             $subtract *= $modifierMap[$repeatFreq];
             $date->subMonths($subtract);
-            Log::debug(sprintf('%s is in modifier map with value %d, execute subMonths with argument %d', $repeatFreq, $modifierMap[$repeatFreq], $subtract));
-            Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
+            //Log::debug(sprintf('%s is in modifier map with value %d, execute subMonths with argument %d', $repeatFreq, $modifierMap[$repeatFreq], $subtract));
+            //Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
 
             return $date;
         }
@@ -586,10 +584,10 @@ class Navigation
             /** @var Carbon $tEnd */
             $tEnd       = session('end', Carbon::now()->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
-            Log::debug(sprintf('repeatFreq is %s, start is %s and end is %s (session data).', $repeatFreq, $tStart->format('Y-m-d'), $tEnd->format('Y-m-d')));
-            Log::debug(sprintf('Diff in days is %d', $diffInDays));
+            //Log::debug(sprintf('repeatFreq is %s, start is %s and end is %s (session data).', $repeatFreq, $tStart->format('Y-m-d'), $tEnd->format('Y-m-d')));
+            //Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $date->subDays($diffInDays * $subtract);
-            Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
+            //Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
 
             return $date;
         }

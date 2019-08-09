@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Budget;
 
 
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -45,7 +43,7 @@ class CreateControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -54,14 +52,13 @@ class CreateControllerTest extends TestCase
      */
     public function testCreate(): void
     {
-        Log::debug('Now in testCreate()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->mockDefaultSession();
+
 
         $this->be($this->user());
         $response = $this->get(route('budgets.create'));
@@ -78,20 +75,20 @@ class CreateControllerTest extends TestCase
     {
         Log::debug('Now in testStore()');
         // mock stuff
-        $budget       = factory(Budget::class)->make();
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $budget     = $this->getRandomBudget();
+        $repository = $this->mock(BudgetRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
         $repository->shouldReceive('cleanupBudgets');
 
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
         $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Budget ' . random_int(1000, 9999),
+            'name' => sprintf('New Budget %s', $this->randomInt()),
         ];
         $this->be($this->user());
         $response = $this->post(route('budgets.store'), $data);

@@ -198,7 +198,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.transactions'  with {showBudgets:true, showCategories:true} %}
+                    {% include 'list.groups' %}
                 </div>
             </div>
         </div>
@@ -211,5 +211,6 @@
 
 {% block scripts %}
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+    {# required for groups.twig #}
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

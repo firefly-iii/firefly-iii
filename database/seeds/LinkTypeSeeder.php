@@ -46,10 +46,11 @@ class LinkTypeSeeder extends Seeder
                 'outward'  => '(partially) refunds',
                 'editable' => false,
             ],
-            ['name'     => 'Paid',
-             'inward'   => 'is (partially) paid for by',
-             'outward'  => '(partially) pays for',
-             'editable' => false,
+            [
+                'name'     => 'Paid',
+                'inward'   => 'is (partially) paid for by',
+                'outward'  => '(partially) pays for',
+                'editable' => false,
             ],
             [
                 'name'     => 'Reimbursement',

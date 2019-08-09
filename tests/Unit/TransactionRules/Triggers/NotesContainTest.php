@@ -37,7 +37,7 @@ class NotesContainTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -53,7 +53,7 @@ class NotesContainTest extends TestCase
      */
     public function testTriggeredDifferent(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -69,7 +69,7 @@ class NotesContainTest extends TestCase
      */
     public function testTriggeredEmpty(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -85,7 +85,7 @@ class NotesContainTest extends TestCase
      */
     public function testTriggeredNone(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $trigger = NotesContain::makeFromStrings('Bla bla', false);
         $result  = $trigger->triggered($journal);
@@ -97,7 +97,7 @@ class NotesContainTest extends TestCase
      */
     public function testTriggeredPartial(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);

@@ -30,9 +30,9 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Bunq\StageNewHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class BunqRoutineTest
@@ -45,7 +45,7 @@ class BunqRoutineTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -56,7 +56,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brY_' . random_int(1, 10000);
+        $job->key           = 'brY_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'bunq';
@@ -96,7 +96,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brY_' . random_int(1, 10000);
+        $job->key           = 'brY_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'bunq';
@@ -107,7 +107,6 @@ class BunqRoutineTest extends TestCase
         // mock stuff:
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $handler    = $this->mock(StageImportDataHandler::class);
-
 
 
         $handler->shouldReceive('setImportJob')->once();
@@ -121,7 +120,6 @@ class BunqRoutineTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
-
 
 
         $routine = new BunqRoutine;
@@ -142,7 +140,7 @@ class BunqRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'brX_' . random_int(1, 10000);
+        $job->key           = 'brX_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'bunq';

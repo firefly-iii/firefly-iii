@@ -50,6 +50,7 @@ class CategoryController extends Controller
 
     /**
      * CategoryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -106,6 +107,7 @@ class CategoryController extends Controller
             ],
         ];
         $step      = $this->calculateStep($start, $end);
+        /** @var Carbon $current */
         $current   = clone $start;
 
         Log::debug(sprintf('abc Step is %s', $step));
@@ -113,7 +115,7 @@ class CategoryController extends Controller
         switch ($step) {
             case '1D':
                 while ($current <= $end) {
-                    Log::debug(sprintf('Current day is %s', $current->format('Y-m-d')));
+                    //Log::debug(sprintf('Current day is %s', $current->format('Y-m-d')));
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $sum                             = bcadd($spent, $earned);
@@ -124,12 +126,15 @@ class CategoryController extends Controller
                     $current->addDay();
                 }
                 break;
+            // @codeCoverageIgnoreStart
+            // for some reason it doesn't pick up on these case entries.
             case '1W':
             case '1M':
             case '1Y':
+            // @codeCoverageIgnoreEnd
                 while ($current <= $end) {
                     $currentEnd = app('navigation')->endOfPeriod($current, $step);
-                    Log::debug(sprintf('abc Range is %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+                    //Log::debug(sprintf('abc Range is %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
 
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
@@ -391,7 +396,7 @@ class CategoryController extends Controller
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = session()->get('end');
         if ($end < $start) {
-            [$end, $start] = [$start, $end];
+            [$end, $start] = [$start, $end]; // @codeCoverageIgnore
         }
 
         $data = $this->makePeriodChart($category, $start, $end);

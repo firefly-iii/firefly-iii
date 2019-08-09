@@ -10,15 +10,21 @@
     <tbody>
     {% for transaction in sorted %}
         <tr>
-            <td data-value="{{ transaction.opposing_account_name }}">
-                <a href="{{ route('accounts.show',transaction.opposing_account_id) }}">{{ transaction.opposing_account_name }}</a>
+            <td data-value="{{ transaction.destination_account_name }}">
+                <a href="{{ route('accounts.show',transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
             </td>
             <td data-value="{{ transaction.description }}">{{ transaction.description }}</td>
             <td data-value="{{ transaction.date.format('Y-m-d') }}">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
-            </td>
-            <td style="text-align: right;" data-value="{{ transaction.transaction_amount }}"><span
-                        style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+            </td><!-- TODO i dont think transactionAmount will work -->
+            <td style="text-align: right;" data-value="{{ transaction.amount}}"><span
+                        style="margin-right:5px;">
+
+                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% if null != transaction.foreign_amount %}
+                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                    {% endif %}
+                </span></td>
         </tr>
     {% endfor %}
     </tbody>

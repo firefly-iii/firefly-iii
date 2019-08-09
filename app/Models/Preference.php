@@ -37,6 +37,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $created_at
  * @property int    $id
  * @property User   user
+ * @property int $user_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereUserId($value)
+ * @mixin \Eloquent
  */
 class Preference extends Model
 {

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -39,35 +40,74 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class TransactionJournal.
  *
- * @property User                $user
- * @property int                 $bill_id
- * @property Collection          $categories
- * @property bool                $completed
- * @property string              $description
- * @property int                 $transaction_type_id
- * @property int                 transaction_currency_id
- * @property TransactionCurrency $transactionCurrency
- * @property Collection          $tags
- * @property int                 user_id
- * @property Collection          transactions
- * @property int                 transaction_count
- * @property Carbon              interest_date
- * @property Carbon              book_date
- * @property Carbon              process_date
- * @property bool                encrypted
- * @property int                 order
- * @property int                 budget_id
- * @property string              period_marker
- * @property Carbon              $date
- * @property string              $transaction_type_type
- * @property int                 $id
- * @property TransactionType     $transactionType
- * @property Collection          budgets
- * @property Bill                $bill
- * @property Collection          transactionJournalMeta
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @property User                                                                                      $user
+ * @property int                                                                                       $bill_id
+ * @property Collection                                                                                $categories
+ * @property bool                                                                                      $completed
+ * @property string                                                                                    $description
+ * @property int                                                                                       $transaction_type_id
+ * @property int                                                                                       transaction_currency_id
+ * @property TransactionCurrency                                                                       $transactionCurrency
+ * @property Collection                                                                                $tags
+ * @property int                                                                                       user_id
+ * @property Collection                                                                                transactions
+ * @property int                                                                                       transaction_count
+ * @property Carbon                                                                                    interest_date
+ * @property Carbon                                                                                    book_date
+ * @property Carbon                                                                                    process_date
+ * @property bool                                                                                      encrypted
+ * @property int                                                                                       order
+ * @property int                                                                                       budget_id
+ * @property string                                                                                    period_marker
+ * @property Carbon                                                                                    $date
+ * @property string                                                                                    $transaction_type_type
+ * @property int                                                                                       $id
+ * @property TransactionType                                                                           $transactionType
+ * @property Collection                                                                                budgets
+ * @property Bill                                                                                      $bill
+ * @property Collection                                                                                transactionJournalMeta
+ * @property TransactionGroup                                                                          transactionGroup
+ * @property int                                                                                       transaction_group_id
+ * @SuppressWarnings (PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
+ * @property \Illuminate\Support\Carbon|null                                                           $created_at
+ * @property \Illuminate\Support\Carbon|null                                                           $updated_at
+ * @property \Illuminate\Support\Carbon|null                                                           $deleted_at
+ * @property int                                                                                       $tag_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]                   $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]         $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $sourceJournalLinks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]               $transactionGroups
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal after(\Carbon\Carbon $date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal before(\Carbon\Carbon $date)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereBookDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereInterestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereProcessDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withoutTrashed()
+ * @mixin \Eloquent
  */
 class TransactionJournal extends Model
 {
@@ -95,14 +135,14 @@ class TransactionJournal extends Model
 
     /** @var array Fields that can be filled */
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
-           'transaction_currency_id', 'description', 'completed',
-           'date', 'rent_date', 'encrypted', 'tag_count',];
+        = ['user_id', 'transaction_type_id', 'bill_id', 'tag_count','transaction_currency_id', 'description', 'completed', 'order',
+           'date'];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
     /**
      * Checks if tables are joined.
+     * @codeCoverageIgnore
      *
      * @param Builder $query
      * @param string  $table
@@ -131,6 +171,7 @@ class TransactionJournal extends Model
      *
      * @return TransactionJournal
      * @throws NotFoundHttpException
+     * @throws FireflyException
      */
     public static function routeBinder(string $value): TransactionJournal
     {
@@ -139,8 +180,7 @@ class TransactionJournal extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionJournal $journal */
-            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)
-                            ->first(['transaction_journals.*']);
+            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -186,6 +226,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isDeposit(): bool
@@ -291,7 +332,7 @@ class TransactionJournal extends Model
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->whereIn('transaction_types.type', $types);
         }
     }
@@ -325,11 +366,11 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function transactionGroups(): BelongsToMany
+    public function transactionGroup(): BelongsTo
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsTo(TransactionGroup::class);
     }
 
     /**

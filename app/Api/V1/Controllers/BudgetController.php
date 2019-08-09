@@ -23,16 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Exception;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Api\V1\Requests\BudgetRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\Transformers\BudgetTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -56,6 +57,8 @@ class BudgetController extends Controller
 
     /**
      * BudgetController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -77,10 +80,12 @@ class BudgetController extends Controller
     /**
      * Display a listing of the resource.
      *
+     *
      * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function budgetLimits(Request $request, Budget $budget): JsonResponse
     {
@@ -113,6 +118,7 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Budget $budget): JsonResponse
     {
@@ -127,6 +133,7 @@ class BudgetController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -163,9 +170,10 @@ class BudgetController extends Controller
      * Show a budget.
      *
      * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Budget $budget): JsonResponse
     {
@@ -189,6 +197,7 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *
      */
     public function store(BudgetRequest $request): JsonResponse
     {
@@ -213,9 +222,9 @@ class BudgetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param BudgetLimitRequest $request
-     * @param Budget             $budget
-     *
+     * @param Budget $budget
      * @return JsonResponse
+     * @throws Exception
      */
     public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
     {
@@ -240,9 +249,10 @@ class BudgetController extends Controller
      *
      * @param Request $request
      *
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -264,25 +274,33 @@ class BudgetController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBudget($budget);
+
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // filter on budget.
+            ->setBudget($budget)
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
 
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
 
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
+        $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
 
@@ -296,7 +314,7 @@ class BudgetController extends Controller
      * Update a budget.
      *
      * @param BudgetRequest $request
-     * @param Budget        $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      */

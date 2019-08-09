@@ -24,11 +24,9 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AddTag;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AddTagTest
@@ -41,7 +39,7 @@ class AddTagTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -49,42 +47,84 @@ class AddTagTest extends TestCase
      */
     public function testActExistingTag(): void
     {
-        $tag = $this->user()->tags()->inRandomOrder()->whereNull('deleted_at')->first();
-
         $tagFactory = $this->mock(TagFactory::class);
+        $tag        = $this->getRandomTag();
+        $journal    = $this->getRandomWithdrawal();
+
+        // make sure journal has no tags:
+        $journal->tags()->sync([]);
+        $journal->save();
+
+        // add single existing tag:
+        $journal->tags()->sync([$tag->id]);
+
+
         $tagFactory->shouldReceive('setUser')->once();
         $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$tag->tag])->andReturn($tag);
 
-
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-        $journal->tags()->sync([]);
-        $journal->tags()->sync([$tag->id]);
+        // assert connection exists.
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
+
+        // file action
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $tag->tag;
-
         $action = new AddTag($ruleAction);
         $result = $action->act($journal);
         $this->assertFalse($result);
+
+        // assert DB is unchanged.
+        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
+    }
+
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Actions\AddTag
+     */
+    public function testActNewTag(): void
+    {
+        $tagFactory = $this->mock(TagFactory::class);
+        $tag        = $this->getRandomTag();
+        $journal    = $this->getRandomWithdrawal();
+
+        // make sure journal has no tags:
+        $journal->tags()->sync([]);
+        $journal->save();
+
+        $tagFactory->shouldReceive('setUser')->once();
+        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$tag->tag])->andReturn($tag);
+
+        // assert connection does not exist.
+        $this->assertDatabaseMissing('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
+
+        // file action
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = $tag->tag;
+        $action = new AddTag($ruleAction);
+        $result = $action->act($journal);
+        $this->assertTrue($result);
+
+        // assert DB is unchanged.
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
     }
 
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AddTag
      */
-    public function testActNoTag(): void
+    public function testActNullTag(): void
     {
-        $newTagName               = 'TestTag-' . random_int(1, 10000);
-        $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        // try to add non-existing tag
+        $tagFactory = $this->mock(TagFactory::class);
+        $newTagName = 'TestTag-' . $this->randomInt();
+
+        // should return null:
+        $tagFactory->shouldReceive('setUser')->once();
+        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$newTagName])->andReturnNull();
+
+        $journal                  = $this->getRandomWithdrawal();
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $newTagName;
         $action                   = new AddTag($ruleAction);
         $result                   = $action->act($journal);
-        $this->assertTrue($result);
-
-        // find newly created tag:
-        $tag = Tag::orderBy('id', 'DESC')->first();
-        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
+        $this->assertFalse($result);
     }
 }

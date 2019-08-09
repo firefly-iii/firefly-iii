@@ -24,39 +24,61 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Firefly III indeks sayfasına hoşgeldiniz. Firefly III\'nin nasıl çalıştığını öğrenmek için lütfen bu tanıtımı izleyin.',
-    'index_accounts-chart'                  => 'Bu grafik, varlık hesaplarınızın geçerli bakiyesini gösterir. Burada görünen hesapları tercihlerinizde seçebilirsiniz.',
-    'index_box_out_holder'                  => 'Bu küçük kutu ve bunun yanındaki kutular size finansal durumunuza hızlı bir bakış sunar.',
-    'index_help'                            => 'Bir sayfa veya formla ilgili yardıma ihtiyacınız varsa, bu düğmeye basın.',
-    'index_outro'                           => 'Firefly III\'ün çoğu sayfası bunun gibi küçük bir turla başlayacak. Sorularınız ve yorumlarınız olursa lütfen benimle iletişime geçin. Keyfini çıkarın!',
-    'index_sidebar-toggle'                  => 'Yeni işlemler, hesaplar veya başka şeyler oluşturmak için bu simgenin altındaki menüyü kullanın.',
+    'index_intro'                                     => 'Firefly III indeks sayfasına hoşgeldiniz. Firefly III\'nin nasıl çalıştığını öğrenmek için lütfen bu tanıtımı izleyin.',
+    'index_accounts-chart'                            => 'Bu grafik, varlık hesaplarınızın geçerli bakiyesini gösterir. Burada görünen hesapları tercihlerinizde seçebilirsiniz.',
+    'index_box_out_holder'                            => 'Bu küçük kutu ve bunun yanındaki kutular size finansal durumunuza hızlı bir bakış sunar.',
+    'index_help'                                      => 'Bir sayfa veya formla ilgili yardıma ihtiyacınız varsa, bu düğmeye basın.',
+    'index_outro'                                     => 'Firefly III\'ün çoğu sayfası bunun gibi küçük bir turla başlayacak. Sorularınız ve yorumlarınız olursa lütfen benimle iletişime geçin. Keyfini çıkarın!',
+    'index_sidebar-toggle'                            => 'Yeni işlemler, hesaplar veya başka şeyler oluşturmak için bu simgenin altındaki menüyü kullanın.',
+    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+
+    // transactions (withdrawal)
+    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
+    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
+    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (deposit)
+    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
+    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+
+    // transactions (transfer)
+    'transactions_create_transfer_source'             => 'Select the source asset account here.',
+    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
+    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
-    'accounts_create_iban'                  => 'Hesaplarınıza geçerli IBAN girin. Bu, ileride veri aktarma işlemini kolaylaştırabilir.',
-    'accounts_create_asset_opening_balance' => 'Aktif hesapların, Firefly\'da bu hesap geçmişinin başlangıcını gösteren bir "açılış bakiyesi" olabilir.',
-    'accounts_create_asset_currency'        => 'Firefly III, birden fazla para birimini destekliyor. Varlık hesaplarının bir ana para birimi var, burada ayarlamanız gerekir.',
-    'accounts_create_asset_virtual'         => 'Bazen hesabınıza sanal bir bakiye sağlamanıza yardımcı olabilir: ek bir miktar her zaman gerçek bakiyeye eklenir veya gerçek bakiyeden çıkarılır.',
+    'accounts_create_iban'                            => 'Hesaplarınıza geçerli IBAN girin. Bu, ileride veri aktarma işlemini kolaylaştırabilir.',
+    'accounts_create_asset_opening_balance'           => 'Aktif hesapların, Firefly\'da bu hesap geçmişinin başlangıcını gösteren bir "açılış bakiyesi" olabilir.',
+    'accounts_create_asset_currency'                  => 'Firefly III, birden fazla para birimini destekliyor. Varlık hesaplarının bir ana para birimi var, burada ayarlamanız gerekir.',
+    'accounts_create_asset_virtual'                   => 'Bazen hesabınıza sanal bir bakiye sağlamanıza yardımcı olabilir: ek bir miktar her zaman gerçek bakiyeye eklenir veya gerçek bakiyeden çıkarılır.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Bütçeler, finansmanınızı yönetmek ve Firefly III\'nin temel işlevlerinden birini oluşturmak için kullanılır.',
-    'budgets_index_set_budget'              => 'Toplam bütçenizi her dönem için belirleyin, böylelikle Firefly size mevcut tüm parayı bütçelendirdiğinizde söyleyebilir.',
-    'budgets_index_see_expenses_bar'        => 'Para harcamak yavaşça bu çubuğu dolduracaktır.',
-    'budgets_index_navigate_periods'        => 'Bütçeleri önceden kolayca ayarlamak için dönemleri gezinin.',
-    'budgets_index_new_budget'              => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
-    'budgets_index_list_of_budgets'         => 'Her bütçe için tutarları ayarlamak ve ne durumda olduğunuzu görmek için bu tabloyu kullanın.',
-    'budgets_index_outro'                   => 'Bütçeleme hakkında daha fazla bilgi almak için sağ üst köşedeki yardım simgesini kontrol edin.',
+    'budgets_index_intro'                             => 'Bütçeler, finansmanınızı yönetmek ve Firefly III\'nin temel işlevlerinden birini oluşturmak için kullanılır.',
+    'budgets_index_set_budget'                        => 'Toplam bütçenizi her dönem için belirleyin, böylelikle Firefly size mevcut tüm parayı bütçelendirdiğinizde söyleyebilir.',
+    'budgets_index_see_expenses_bar'                  => 'Para harcamak yavaşça bu çubuğu dolduracaktır.',
+    'budgets_index_navigate_periods'                  => 'Bütçeleri önceden kolayca ayarlamak için dönemleri gezinin.',
+    'budgets_index_new_budget'                        => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
+    'budgets_index_list_of_budgets'                   => 'Her bütçe için tutarları ayarlamak ve ne durumda olduğunuzu görmek için bu tabloyu kullanın.',
+    'budgets_index_outro'                             => 'Bütçeleme hakkında daha fazla bilgi almak için sağ üst köşedeki yardım simgesini kontrol edin.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
-    'reports_index_inputReportType'         => 'Bir rapor türü seçin. Her bir raporun neyi gösterdiğini görmek için yardım sayfalarına göz atın.',
-    'reports_index_inputAccountsSelect'     => 'Varlık hesaplarını uygun gördüğünüz gibi hariç tutabilir veya ekleyebilirsiniz.',
-    'reports_index_inputDateRange'          => 'Seçilen tarih aralığı tamamen size kalmış: 1 günden 10 yıla kadar.',
-    'reports_index_extra-options-box'       => 'Seçtiğiniz rapora bağlı olarak, burada ekstra filtre ve seçenekleri belirleyebilirsiniz. Rapor türlerini değiştirirken bu kutuya dikkat edin.',
+    'reports_index_intro'                             => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
+    'reports_index_inputReportType'                   => 'Bir rapor türü seçin. Her bir raporun neyi gösterdiğini görmek için yardım sayfalarına göz atın.',
+    'reports_index_inputAccountsSelect'               => 'Varlık hesaplarını uygun gördüğünüz gibi hariç tutabilir veya ekleyebilirsiniz.',
+    'reports_index_inputDateRange'                    => 'Seçilen tarih aralığı tamamen size kalmış: 1 günden 10 yıla kadar.',
+    'reports_index_extra-options-box'                 => 'Seçtiğiniz rapora bağlı olarak, burada ekstra filtre ve seçenekleri belirleyebilirsiniz. Rapor türlerini değiştirirken bu kutuya dikkat edin.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Bu rapor size mali durumunuz hakkında hızlı ve kapsamlı bir bilgi verecektir. Başka bir şey görmek isterseniz, lütfen benimle iletişime geçmekten çekinmeyin!',
-    'reports_report_audit_intro'            => 'Bu rapor size aktif hesaplarınızla ilgili ayrıntılı bilgiler verecektir.',
-    'reports_report_audit_optionsBox'       => 'İlgilendiğiniz sütunları göstermek veya gizlemek için bu onay kutularını kullanın.',
+    'reports_report_default_intro'                    => 'Bu rapor size mali durumunuz hakkında hızlı ve kapsamlı bir bilgi verecektir. Başka bir şey görmek isterseniz, lütfen benimle iletişime geçmekten çekinmeyin!',
+    'reports_report_audit_intro'                      => 'Bu rapor size aktif hesaplarınızla ilgili ayrıntılı bilgiler verecektir.',
+    'reports_report_audit_optionsBox'                 => 'İlgilendiğiniz sütunları göstermek veya gizlemek için bu onay kutularını kullanın.',
 
     'reports_report_category_intro'                  => 'Bu rapor size bir veya birden fazla kategoride fikir verecektir.',
     'reports_report_category_pieCharts'              => 'Bu grafikler, size her bir kategori veya hesaptaki gelir ve giderler konusunda fikir verecektir.',
@@ -131,7 +153,7 @@ return [
     // currencies
     'currencies_index_intro'                                  => 'Firefly III, bu sayfada değiştirebileceğiniz birden fazla para birimini destekliyor.',
     'currencies_index_default'                                => 'Firefly III has one default currency.',
-    'currencies_index_buttons'                                => 'Use these buttons to change the default currency or enable other currencies.',
+    'currencies_index_buttons'                                => 'Varsayılan para birimini değiştirmek veya diğer para etkinleştirmek için bu düğmeleri kullanın.',
 
     // create currency
     'currencies_create_code'                                  => 'Bu kod ISO uyumlu olmalıdır (Yeni para biriminiz için Google\'da arayın).',

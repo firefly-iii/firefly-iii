@@ -24,11 +24,10 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -63,6 +62,7 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -147,7 +147,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int                 $currencyId
+         * @var int $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -174,13 +174,28 @@ class AccountController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * Expenses per budget for all time, as shown on account overview.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account $account
+     *
+     * @return JsonResponse
+     */
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
+        $end   = Carbon::now();
+
+        return $this->expenseBudget($account, $start, $end);
+    }
 
     /**
      * Expenses per budget, as shown on account overview.
      *
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -194,30 +209,28 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
-        $transactions = $collector->getTransactions();
-        $chartData    = [];
-        $result       = [];
-        $budgetIds    = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlBudgetId  = (int)$transaction->transaction_journal_budget_id;
-            $transBudgetId = (int)$transaction->transaction_budget_id;
-            $currencyName  = $transaction->transaction_currency_name;
-            $budgetId      = max($jrnlBudgetId, $transBudgetId);
-            $combi         = $budgetId . $currencyName;
-            $budgetIds[]   = $budgetId;
+        $journals  = $collector->getExtractedJournals();
+        $chartData = [];
+        $result    = [];
+        $budgetIds = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyName = $journal['currency_name'];
+            $budgetId     = (int)$journal['budget_id'];
+            $combi        = $budgetId . $currencyName;
+            $budgetIds[]  = $budgetId;
             if (!isset($result[$combi])) {
                 $result[$combi] = [
                     'total'           => '0',
                     'budget_id'       => $budgetId,
                     'currency'        => $currencyName,
-                    'currency_symbol' => $transaction->transaction_currency_symbol,
+                    'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
+            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
         }
 
         $names = $this->getBudgetNames($budgetIds);
@@ -236,28 +249,27 @@ class AccountController extends Controller
     }
 
     /**
-     * Expenses per budget for all time, as shown on account overview.
+     * Expenses grouped by category for account.
      *
      * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
+     * @param Account $account
      *
      * @return JsonResponse
      */
-    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $end   = Carbon::now();
 
-        return $this->expenseBudget($account, $start, $end);
+        return $this->expenseCategory($account, $start, $end);
     }
-
 
     /**
      * Expenses per category for one single account.
      *
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -272,20 +284,18 @@ class AccountController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::WITHDRAWAL]);
-        $transactions = $collector->getTransactions();
-        $result       = [];
-        $chartData    = [];
-        $categoryIds  = [];
+        $journals    = $collector->getExtractedJournals();
+        $result      = [];
+        $chartData   = [];
+        $categoryIds = [];
 
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlCatId     = (int)$transaction->transaction_journal_category_id;
-            $transCatId    = (int)$transaction->transaction_category_id;
-            $currencyName  = $transaction->transaction_currency_name;
-            $categoryId    = max($jrnlCatId, $transCatId);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyName  = $journal['currency_name'];
+            $categoryId    = $journal['category_id'];
             $combi         = $categoryId . $currencyName;
             $categoryIds[] = $categoryId;
             if (!isset($result[$combi])) {
@@ -293,10 +303,10 @@ class AccountController extends Controller
                     'total'           => '0',
                     'category_id'     => $categoryId,
                     'currency'        => $currencyName,
-                    'currency_symbol' => $transaction->transaction_currency_symbol,
+                    'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
+            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
         }
 
         $names = $this->getCategoryNames($categoryIds);
@@ -313,23 +323,6 @@ class AccountController extends Controller
 
         return response()->json($data);
     }
-
-    /**
-     * Expenses grouped by category for account.
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return JsonResponse
-     */
-    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = Carbon::now();
-
-        return $this->expenseCategory($account, $start, $end);
-    }
-
 
     /**
      * Shows the balances for all the user's frontpage accounts.
@@ -348,23 +341,37 @@ class AccountController extends Controller
 
 
         Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (0 === \count($frontPage->data)) {
-            $frontPage->data = $defaultSet;
+        if (0 === count($frontPage->data)) {
+            app('preferences')->set('frontPageAccounts', $defaultSet);
             Log::debug('frontpage set is empty!');
-            $frontPage->save();
         }
         $accounts = $repository->getAccountsById($frontPage->data);
 
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
 
+    /**
+     * Shows the income grouped by category for an account, in all time.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account $account
+     *
+     * @return JsonResponse
+     */
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
+        $end   = Carbon::now();
+
+        return $this->incomeCategory($account, $start, $end);
+    }
 
     /**
      * Shows all income per account for each category.
      *
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -380,19 +387,18 @@ class AccountController extends Controller
         }
 
         // grab all journals:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::DEPOSIT]);
-        $transactions = $collector->getTransactions();
-        $result       = [];
-        $chartData    = [];
-        $categoryIds  = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlCatId     = (int)$transaction->transaction_journal_category_id;
-            $transCatId    = (int)$transaction->transaction_category_id;
-            $categoryId    = max($jrnlCatId, $transCatId);
-            $currencyName  = $transaction->transaction_currency_name;
+        $journals    = $collector->getExtractedJournals();
+        $result      = [];
+        $chartData   = [];
+        $categoryIds = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $categoryId    = $journal['category_id'];
+            $currencyName  = $journal['currency_name'];
             $combi         = $categoryId . $currencyName;
             $categoryIds[] = $categoryId;
             if (!isset($result[$combi])) {
@@ -400,10 +406,10 @@ class AccountController extends Controller
                     'total'           => '0',
                     'category_id'     => $categoryId,
                     'currency'        => $currencyName,
-                    'currency_symbol' => $transaction->transaction_currency_symbol,
+                    'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
+            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
         }
 
         $names = $this->getCategoryNames($categoryIds);
@@ -420,31 +426,14 @@ class AccountController extends Controller
     }
 
     /**
-     * Shows the income grouped by category for an account, in all time.
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return JsonResponse
-     */
-    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = Carbon::now();
-
-        return $this->incomeCategory($account, $start, $end);
-    }
-
-
-    /**
      * Shows overview of account during a single period.
      *
      * TODO this chart is not multi-currency aware.
      *
      * @param Account $account
-     * @param Carbon  $start
+     * @param Carbon $start
      *
-     * @param Carbon  $end
+     * @param Carbon $end
      *
      * @return JsonResponse
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -502,8 +491,8 @@ class AccountController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return JsonResponse
@@ -579,7 +568,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int                 $currencyId
+         * @var int $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {

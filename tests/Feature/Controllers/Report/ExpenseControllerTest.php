@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -47,7 +47,7 @@ class ExpenseControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -56,43 +56,29 @@ class ExpenseControllerTest extends TestCase
      */
     public function testBudget(): void
     {
-        $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $expense      = $this->getRandomExpense();
+        $revenue      = $this->getRandomRevenue();
+        $date         = new Carbon;
+        $transactions = [$this->getRandomWithdrawalAsArray()];
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
-        // fake collection:
-        $transA                                  = new Transaction;
-        $transA->transaction_currency_id         = 1;
-        $transA->transaction_budget_name         = 'Budget';
-        $transA->transaction_budget_id           = 1;
-        $transA->transaction_currency_symbol     = 'A';
-        $transA->transaction_currency_dp         = 2;
-        $transA->transaction_amount              = '100';
-        $transB                                  = new Transaction;
-        $transB->transaction_currency_id         = 2;
-        $transB->transaction_budget_name         = null;
-        $transB->transaction_budget_id           = 0;
-        $transB->transaction_journal_budget_name = 'Budget2';
-        $transB->transaction_journal_budget_id   = 2;
-        $transB->transaction_currency_symbol     = 'A';
-        $transB->transaction_currency_dp         = 2;
-        $transB->transaction_amount              = '100';
-        $collection                              = new Collection([$transA, $transB]);
 
-        // mock collector for spentByBudget (complex)
-        $collector = $this->mock(TransactionCollectorInterface::class);
         // dont care about any calls, just return a default set of fake transactions:
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($collection);
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn($transactions)->atLeast()->once();
 
 
         $this->be($this->user());
@@ -105,54 +91,37 @@ class ExpenseControllerTest extends TestCase
      */
     public function testCategory(): void
     {
-        $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $expense      = $this->getRandomExpense();
+        $revenue      = $this->getRandomRevenue();
+        $date         = new Carbon;
+        $one          = $this->getRandomWithdrawalAsArray();
+        $two          = $this->getRandomWithdrawalAsArray();
+
+        // two categories
+        $oneCat = $this->getRandomCategory();
+        $twoCat = $this->user()->categories()->where('id', '!=', $oneCat->id)->inRandomOrder()->first();
+
+        $one['category_id']   = $oneCat->id;
+        $one['category_name'] = $oneCat->name;
+        $two['category_id']   = $twoCat->id;
+        $two['category_name'] = $twoCat->name;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
-        // fake collection:
-        $transA                                    = new Transaction;
-        $transA->transaction_currency_id           = 1;
-        $transA->transaction_category_name         = 'Category';
-        $transA->transaction_category_id           = 1;
-        $transA->transaction_currency_symbol       = 'A';
-        $transA->transaction_currency_dp           = 2;
-        $transA->transaction_amount                = '100';
-        $transB                                    = new Transaction;
-        $transB->transaction_currency_id           = 2;
-        $transB->transaction_category_name         = null;
-        $transB->transaction_category_id           = 0;
-        $transB->transaction_journal_category_name = 'Category2';
-        $transB->transaction_journal_category_id   = 2;
-        $transB->transaction_currency_symbol       = 'A';
-        $transB->transaction_currency_dp           = 2;
-        $transB->transaction_amount                = '100';
-        $collection                                = new Collection([$transA, $transB]);
-        $transC                                    = new Transaction;
-        $transC->transaction_currency_id           = 3;
-        $transC->transaction_category_name         = null;
-        $transC->transaction_category_id           = 0;
-        $transC->transaction_journal_category_name = 'Category3';
-        $transC->transaction_journal_category_id   = 3;
-        $transC->transaction_currency_symbol       = 'A';
-        $transC->transaction_currency_dp           = 2;
-        $transC->transaction_amount                = '100';
-        $secondCollection                          = new Collection([$transC]);
-
-        // mock collector for spentByCategory and earnedByCategory (complex)
-        $collector = $this->mock(TransactionCollectorInterface::class);
-        // dont care about any calls, just return a default set of fake transactions:
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($collection, $secondCollection);
-        //$collector->shouldReceive('')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$one], [$two])->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.category', ['1', $expense->id, '20170101', '20170131']));
@@ -164,42 +133,27 @@ class ExpenseControllerTest extends TestCase
      */
     public function testSpent(): void
     {
-        $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+
+        $expense      = $this->getRandomExpense();
+        $revenue      = $this->getRandomRevenue();
+        $date         = new Carbon;
+        $transactions = [$this->getRandomWithdrawalAsArray()];
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
-        // fake collection:
-        $transA                                  = new Transaction;
-        $transA->transaction_currency_id         = 1;
-        $transA->transaction_category_name       = 'Category';
-        $transA->transaction_category_id         = 1;
-        $transA->transaction_currency_symbol     = 'A';
-        $transA->transaction_currency_dp         = 2;
-        $transA->transaction_amount              = '100';
-        $transB                                  = new Transaction;
-        $transB->transaction_currency_id         = 2;
-        $transB->transaction_category_name       = null;
-        $transB->transaction_category_id         = 0;
-        $transB->transaction_journal_budget_name = 'Category2';
-        $transB->transaction_journal_budget_id   = 2;
-        $transB->transaction_currency_symbol     = 'A';
-        $transB->transaction_currency_dp         = 2;
-        $transB->transaction_amount              = '100';
-        $collection                              = new Collection([$transA, $transB]);
-
-        // mock collector for spentInPeriod and earnedInPeriod (complex)
-        $collector = $this->mock(TransactionCollectorInterface::class);
-        // dont care about any calls, just return a default set of fake transactions:
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($collection);
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn($transactions)->atLeast()->once();
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.spent', ['1', $expense->id, '20170101', '20170131']));
@@ -211,44 +165,29 @@ class ExpenseControllerTest extends TestCase
      */
     public function testTopExpense(): void
     {
-        $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+
+        $expense      = $this->getRandomExpense();
+        $revenue      = $this->getRandomRevenue();
+        $date         = new Carbon;
+        $transactions = [$this->getRandomWithdrawalAsArray()];
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
-        // fake collection:
-        $transA                                  = new Transaction;
-        $transA->transaction_currency_id         = 1;
-        $transA->transaction_category_name       = 'Category';
-        $transA->transaction_category_id         = 1;
-        $transA->transaction_currency_symbol     = 'A';
-        $transA->transaction_currency_dp         = 2;
-        $transA->transaction_amount              = '100';
-        $transA->opposing_account_id             = $expense->id;
-        $transB                                  = new Transaction;
-        $transB->transaction_currency_id         = 2;
-        $transB->transaction_category_name       = null;
-        $transB->transaction_category_id         = 0;
-        $transB->transaction_journal_budget_name = 'Category2';
-        $transB->transaction_journal_budget_id   = 2;
-        $transB->transaction_currency_symbol     = 'A';
-        $transB->transaction_currency_dp         = 2;
-        $transB->transaction_amount              = '100';
-        $transB->opposing_account_id             = $expense->id;
-        $collection                              = new Collection([$transA, $transB]);
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
 
-        // mock collector for topExpense (complex)
-        $collector = $this->mock(TransactionCollectorInterface::class);
-        // dont care about any calls, just return a default set of fake transactions:
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($collection);
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn($transactions)->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.expenses', ['1', $expense->id, '20170101', '20170131']));
@@ -260,43 +199,28 @@ class ExpenseControllerTest extends TestCase
      */
     public function testTopIncome(): void
     {
-        $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+
+        $expense      = $this->getRandomExpense();
+        $revenue      = $this->getRandomRevenue();
+        $date         = new Carbon;
+        $transactions = [$this->getRandomWithdrawalAsArray()];
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
-        // fake collection:
-        $transA                                  = new Transaction;
-        $transA->transaction_currency_id         = 1;
-        $transA->transaction_category_name       = 'Category';
-        $transA->transaction_category_id         = 1;
-        $transA->transaction_currency_symbol     = 'A';
-        $transA->transaction_currency_dp         = 2;
-        $transA->transaction_amount              = '100';
-        $transA->opposing_account_id             = $expense->id;
-        $transB                                  = new Transaction;
-        $transB->transaction_currency_id         = 2;
-        $transB->transaction_category_name       = null;
-        $transB->transaction_category_id         = 0;
-        $transB->transaction_journal_budget_name = 'Category2';
-        $transB->transaction_journal_budget_id   = 2;
-        $transB->transaction_currency_symbol     = 'A';
-        $transB->transaction_currency_dp         = 2;
-        $transB->transaction_amount              = '100';
-        $transB->opposing_account_id             = $expense->id;
-        $collection                              = new Collection([$transA, $transB]);
-
-        $collector = $this->mock(TransactionCollectorInterface::class);
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($collection);
-        //$collector->shouldReceive('')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn($transactions)->atLeast()->once();
 
 
         $this->be($this->user());

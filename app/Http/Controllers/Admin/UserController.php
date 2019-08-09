@@ -35,6 +35,9 @@ use Log;
  */
 class UserController extends Controller
 {
+    /** @var UserRepositoryInterface */
+    private $repository;
+
     /**
      * UserController constructor.
      */
@@ -46,7 +49,7 @@ class UserController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
-
+                $this->repository = app(UserRepositoryInterface::class);
                 return $next($request);
             }
         );
@@ -72,13 +75,12 @@ class UserController extends Controller
      * Destroy a user.
      *
      * @param User                    $user
-     * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(User $user, UserRepositoryInterface $repository)
+    public function destroy(User $user)
     {
-        $repository->destroy($user);
+        $this->repository->destroy($user);
         session()->flash('success', (string)trans('firefly.user_deleted'));
 
         return redirect(route('admin.users'));
@@ -114,26 +116,19 @@ class UserController extends Controller
     /**
      * Show index of user manager.
      *
-     * @param UserRepositoryInterface $repository
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(UserRepositoryInterface $repository)
+    public function index()
     {
         $subTitle     = (string)trans('firefly.user_administration');
         $subTitleIcon = 'fa-users';
-        $users        = $repository->all();
+        $users        = $this->repository->all();
 
         // add meta stuff.
         $users->each(
-            function (User $user) use ($repository) {
-                $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
-                $preferences   = app('preferences')->getArrayForUser($user, $list);
-                $user->isAdmin = $repository->hasRole($user, 'owner');
-                $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
-                $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
-                $user->has2FA  = ($is2faEnabled && $has2faSecret);
-                $user->prefs   = $preferences;
+            function (User $user) {
+                $user->isAdmin = $this->repository->hasRole($user, 'owner');
+                $user->has2FA  = null !== $user->mfa_secret;
             }
         );
 
@@ -143,18 +138,17 @@ class UserController extends Controller
     /**
      * Show single user.
      *
-     * @param UserRepositoryInterface $repository
      * @param User                    $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(UserRepositoryInterface $repository, User $user)
+    public function show(User $user)
     {
         $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $subTitle      = (string)trans('firefly.single_user_administration', ['email' => $user->email]);
         $subTitleIcon  = 'fa-user';
-        $information   = $repository->getUserData($user);
+        $information   = $this->repository->getUserData($user);
 
         return view(
             'admin.users.show', compact(
@@ -168,22 +162,21 @@ class UserController extends Controller
      *
      * @param UserFormRequest         $request
      * @param User                    $user
-     * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(UserFormRequest $request, User $user, UserRepositoryInterface $repository)
+    public function update(UserFormRequest $request, User $user)
     {
         Log::debug('Actually here');
         $data = $request->getUserData();
 
         // update password
         if ('' !== $data['password']) {
-            $repository->changePassword($user, $data['password']);
+            $this->repository->changePassword($user, $data['password']);
         }
 
-        $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
-        $repository->updateEmail($user, $data['email']);
+        $this->repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
+        $this->repository->updateEmail($user, $data['email']);
 
         session()->flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
         app('preferences')->mark();

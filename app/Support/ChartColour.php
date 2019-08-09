@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 /**
  * Class ChartColour.
+ * @codeCoverageIgnore
  */
 class ChartColour
 {
@@ -58,7 +59,7 @@ class ChartColour
      */
     public static function getColour(int $index): string
     {
-        $index %= \count(self::$colours);
+        $index %= count(self::$colours);
         $row   = self::$colours[$index];
 
         return sprintf('rgba(%d, %d, %d, 0.7)', $row[0], $row[1], $row[2]);

@@ -60,15 +60,19 @@ class OpposingAccountMapper
             Log::debug(sprintf('Because amount is %s, will instead search for accounts of type %s', $amount, $expectedType));
         }
 
+        // append expected types with liability types:
+        $expectedTypes = [$expectedType, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+
+
         if ((int)$accountId > 0) {
             // find any account with this ID:
             $result = $this->repository->findNull($accountId);
-            if (null !== $result && ($result->accountType->type === $expectedType || $result->accountType->type === AccountType::ASSET)) {
+            if (null !== $result && (in_array($result->accountType->type, $expectedTypes, true) || $result->accountType->type === AccountType::ASSET)) {
                 Log::debug(sprintf('Found account "%s" (%s) based on given ID %d. Return it!', $result->name, $result->accountType->type, $accountId));
 
                 return $result;
             }
-            if (null !== $result && $result->accountType->type !== $expectedType) {
+            if (null !== $result && !in_array($result->accountType->type, $expectedTypes, true)) {
                 Log::warning(
                     sprintf(
                         'Found account "%s" (%s) based on given ID %d, but need a %s. Return nothing.', $result->name, $result->accountType->type, $accountId,
@@ -90,7 +94,7 @@ class OpposingAccountMapper
         }
 
         // first search for $expectedType, then find asset:
-        $searchTypes = [$expectedType, AccountType::ASSET];
+        $searchTypes = [$expectedType, AccountType::ASSET, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN];
         foreach ($searchTypes as $type) {
             // find by (respectively):
             // IBAN, accountNumber, name,
@@ -114,9 +118,9 @@ class OpposingAccountMapper
         $creation = [
             'name'            => $data['name'] ?? '(no name)',
             'iban'            => $data['iban'] ?? null,
-            'accountNumber'   => $data['number'] ?? null,
+            'account_number'  => $data['number'] ?? null,
             'account_type_id' => null,
-            'accountType'     => $expectedType,
+            'account_type'    => $expectedType,
             'active'          => true,
             'BIC'             => $data['bic'] ?? null,
         ];

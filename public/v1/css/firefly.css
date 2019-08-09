@@ -18,6 +18,18 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+.no-margin-pagination {padding-bottom:0;padding-top:0;}
+.no-margin-pagination ul.pagination {margin:0 !important;}
+
+
+input.ti-new-tag-input {
+    font-size: 14px !important;
+    line-height: 1.42857143;
+    color: #555;
+    font-family:"Source Sans Pro", "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+}
+
 .split_amount_input {
     width: 40%;
     border-radius: 0;
@@ -35,6 +47,13 @@
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
 
 }
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; font-weight: bold;}
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 
 .split_amount_input:focus {
     border-color: #98cbe8;
@@ -61,7 +80,7 @@
 
 .general-chart-error {
     height: 30px;
-    background: url('/images/error.png') no-repeat center center;
+    background: url('/v1/images/error.png') no-repeat center center;
 }
 
 p.tagcloud .label {

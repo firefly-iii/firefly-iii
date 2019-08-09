@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Log;
 
@@ -36,6 +37,26 @@ use Log;
  */
 class Request extends FormRequest
 {
+    /**
+     * @param $array
+     *
+     * @return array|null
+     */
+    public function arrayFromValue($array): ?array
+    {
+        if (is_array($array)) {
+            return $array;
+        }
+        if (null === $array) {
+            return null;
+        }
+        if (is_string($array)) {
+            return explode(',', $array);
+        }
+
+        return null;
+    }
+
     /**
      * Return a boolean value.
      *
@@ -60,9 +81,15 @@ class Request extends FormRequest
      *
      * @return bool
      */
-    public function convertBoolean(string $value): bool
+    public function convertBoolean(?string $value): bool
     {
+        if (null === $value) {
+            return false;
+        }
         if ('true' === $value) {
+            return true;
+        }
+        if ('yes' === $value) {
             return true;
         }
         if (1 === $value) {
@@ -76,6 +103,30 @@ class Request extends FormRequest
         }
 
         return false;
+    }
+
+    /**
+     * @param string|null $string
+     *
+     * @return Carbon|null
+     */
+    public function dateFromValue(?string $string): ?Carbon
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+        try {
+            $carbon = new Carbon($string);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Invalid date: %s: %s', $string, $e->getMessage()));
+
+            return null;
+        }
+
+        return $carbon;
     }
 
     /**
@@ -108,6 +159,25 @@ class Request extends FormRequest
     }
 
     /**
+     * Parse to integer
+     *
+     * @param string|null $string
+     *
+     * @return int|null
+     */
+    public function integerFromValue(?string $string): ?int
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (int)$string;
+    }
+
+    /**
      * Return string value.
      *
      * @param string $field
@@ -122,6 +192,24 @@ class Request extends FormRequest
     }
 
     /**
+     * Parse and clean a string.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function stringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->cleanString($string);
+
+        return '' === $result ? null : $result;
+
+    }
+
+    /**
      * Return date or NULL.
      *
      * @param string $field
@@ -130,7 +218,14 @@ class Request extends FormRequest
      */
     protected function date(string $field): ?Carbon
     {
-        return $this->get($field) ? new Carbon($this->get($field)) : null;
+        $result = null;
+        try {
+            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+        } catch (Exception $e) {
+            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        }
+
+        return $result;
     }
 
     /**
@@ -146,7 +241,7 @@ class Request extends FormRequest
             return null;
         }
         $value = (string)$this->get($field);
-        if (10 === \strlen($value)) {
+        if (10 === strlen($value)) {
             // probably a date format.
             try {
                 $result = Carbon::createFromFormat('Y-m-d', $value);

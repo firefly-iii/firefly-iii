@@ -42,7 +42,7 @@ class RecurrenceControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -53,7 +53,7 @@ class RecurrenceControllerTest extends TestCase
     public function testEventsNdom(): void
     {
         $repository = $this->mock(RecurringRepositoryInterface::class);
-
+        $this->mockDefaultSession();
         // collection of dates:
         $dates = [new Carbon('2018-01-01'), new Carbon('2018-01-07')];
         $repository->shouldReceive('getOccurrencesInRange')->withAnyArgs()->once()
@@ -106,6 +106,7 @@ class RecurrenceControllerTest extends TestCase
     public function testEventsNumberOfEvents(): void
     {
         $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         // collection of dates:
         $dates = [new Carbon('2018-01-01'), new Carbon('2018-01-07')];
@@ -158,7 +159,8 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testEventsStartAfterEnd(): void
     {
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $parameters = [
             'start'      => '2018-01-01',
@@ -182,6 +184,7 @@ class RecurrenceControllerTest extends TestCase
     public function testEventsUntilDate(): void
     {
         $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         // collection of dates:
         $dates = [new Carbon('2018-01-01'), new Carbon('2018-01-07')];
@@ -235,6 +238,7 @@ class RecurrenceControllerTest extends TestCase
     public function testEventsWeeklyMonday(): void
     {
         $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         // collection of dates:
         $dates = [new Carbon('2018-01-01'), new Carbon('2018-01-07')];
@@ -288,6 +292,7 @@ class RecurrenceControllerTest extends TestCase
     public function testEventsYearly(): void
     {
         $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         // collection of dates:
         $dates = [new Carbon('2018-01-01'), new Carbon('2018-01-07')];
@@ -338,7 +343,8 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testSuggest(): void
     {
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $this->mock(RecurringRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $this->be($this->user());
 

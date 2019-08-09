@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Prerequisites;
 
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  * This class contains all the routines necessary for the fake import provider.
@@ -34,6 +35,16 @@ class FakePrerequisites implements PrerequisitesInterface
 {
     /** @var User The current user */
     private $user;
+
+    /**
+     * FakePrerequisites constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
 
     /**
      * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
@@ -97,7 +108,7 @@ class FakePrerequisites implements PrerequisitesInterface
     {
         $apiKey     = $data['api_key'] ?? '';
         $messageBag = new MessageBag();
-        if (32 !== \strlen($apiKey)) {
+        if (32 !== strlen($apiKey)) {
             $messageBag->add('api_key', 'API key must be 32 chars.');
 
             return $messageBag;
@@ -122,7 +133,7 @@ class FakePrerequisites implements PrerequisitesInterface
         if (null === $apiKey->data) {
             return false;
         }
-        if (32 === \strlen((string)$apiKey->data)) {
+        if (32 === strlen((string)$apiKey->data)) {
             return true;
         }
 

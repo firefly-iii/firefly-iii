@@ -24,9 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
+use Exception;
+
 /**
  * Class NotImplementedException.
+ * @codeCoverageIgnore
  */
-class NotImplementedException extends \Exception
+class NotImplementedException extends Exception
 {
 }

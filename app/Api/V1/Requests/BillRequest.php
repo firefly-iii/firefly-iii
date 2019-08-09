@@ -29,6 +29,10 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class BillRequest
+ *
+ * TODO AFTER 4.8.0: split this into two request classes.
+ *
+ * @codeCoverageIgnore
  */
 class BillRequest extends Request
 {
@@ -76,6 +80,7 @@ class BillRequest extends Request
      * The rules that the incoming request must be matched against.
      *
      * @return array
+     *
      */
     public function rules(): array
     {
@@ -88,7 +93,6 @@ class BillRequest extends Request
             'date'          => 'required|date',
             'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
             'skip'          => 'between:0,31',
-            'automatch'     => [new IsBoolean],
             'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',
         ];
@@ -108,14 +112,14 @@ class BillRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator) {
                 $data = $validator->getData();
                 $min  = (float)($data['amount_min'] ?? 0);
                 $max  = (float)($data['amount_max'] ?? 0);

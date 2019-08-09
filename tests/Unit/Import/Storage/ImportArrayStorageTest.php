@@ -23,25 +23,26 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Import\Storage;
 
-use Carbon\Carbon;
+use Amount;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollector;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\Rule;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\TransactionRules\Processor;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -55,7 +56,7 @@ class ImportArrayStorageTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -66,14 +67,28 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasic(): void
     {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+
+        $this->mock(TagRepositoryInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+        $this->mock(GroupCollectorInterface::class);
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'a_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -83,184 +98,785 @@ class ImportArrayStorageTest extends TestCase
         $job->save();
 
 
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getTransactions')->once()->andReturn([]);
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn([]);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
     }
 
     /**
+     * Submit a transfer. Mark it as not duplicate.
+     *
      * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
      */
-    public function testBasicStoreDoubleTransferWithRules(): void
+    public function testTransfer(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
 
-        // get a transfer:
-        /** @var TransactionJournal $transfer */
-        $transfer = $this->user()->transactionJournals()
-                         ->inRandomOrder()->where('transaction_type_id', 3)
-                         ->first();
+        // data that is returned:
+        $withdrawalGroup = $this->getRandomWithdrawalGroup();
+        $tag             = $this->getRandomTag();
+        $transfer        = $this->getRandomTransferAsArray();
 
-        // get transfer as a collection, so the compare routine works.
-        $transactionCollector = new TransactionCollector;
-        $transactionCollector->setUser($this->user());
-        $transactionCollector->setJournals(new Collection([$transfer]));
-        $transferCollection = $transactionCollector->withOpposingAccount()->getTransactions();
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
 
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'h_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
         $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
-        $job->transactions  = ['count' => 3];
-        $transactions       = [$this->singleTransfer(), $this->singleWithdrawal(), $this->basedOnTransfer($transfer)];
+        $job->configuration = [];
+        $job->transactions  = [];
         $job->save();
 
-        // get some stuff:
-        $tag                      = $this->user()->tags()->inRandomOrder()->first();
-        $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $ruleOne                  = new Rule;
-        $ruleOne->stop_processing = false;
-        $ruleTwo                  = new Rule;
-        $ruleTwo->stop_processing = true;
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // mock calls:
-        $collector->shouldReceive('setUser')->times(2);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
-        $repository->shouldReceive('setTag')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection([$ruleOne, $ruleTwo]));
-        $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('store')->twice()->andReturn($journal);
-        $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(5);
-        $repository->shouldReceive('addErrorMessage')->withArgs(
-            [Mockery::any(), 'Row #2 ("' . $transfer->description . '") could not be imported. Such a transfer already exists.']
-        )->once();
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
 
-        // mock collector so it will return some transfers:
-        $collector->shouldReceive('setAllAssetAccounts')->times(1)->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
-        $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transferCollection);
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
 
-        // set journals for the return method.
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('addFilter')->andReturnSelf();
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($withdrawalGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
 
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
-        $result = new Collection;
         try {
-            $result = $storage->store();
+            $storage->store();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
-        $this->assertCount(2, $result);
     }
 
     /**
-     * Two withdrawals, one of which is duplicated.
+     * Submit a transfer, and its not duplicate.
      *
      * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
      */
-    public function testBasicStoreIsDouble(): void
+    public function testTransferNotDuplicate(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
+
+        // data that is returned:
+        $transferGroup = $this->getRandomTransferGroup();
+        $tag           = $this->getRandomTag();
+        $transfer      = $this->getRandomTransferAsArray();
+
+        // make sure the right fields of the transfergroup and the transactions
+        // are equal, so the duplicate detector is triggered.
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
 
         // make fake job
-        $transactions = [$this->singleWithdrawal(), $this->singleWithdrawal()];
-        $job          = new ImportJob;
+        $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'b_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
         $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
-        $job->transactions  = ['count' => 2];
+        $job->configuration = [];
+        $job->transactions  = [];
         $job->save();
 
-        // get some stuff:
-        $tag                          = $this->user()->tags()->inRandomOrder()->first();
-        $journal                      = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $ruleOne                      = new Rule;
-        $ruleOne->stop_processing     = false;
-        $ruleTwo                      = new Rule;
-        $ruleTwo->stop_processing     = true;
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($transferGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Submit a transfer, and the amounts match, but the rest doesn't.
+     *
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testTransferNotDuplicateAmount(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
+
+        // data that is returned:
+        $transferGroup = $this->getRandomTransferGroup();
+        $tag           = $this->getRandomTag();
+        $transfer      = $this->getRandomTransferAsArray();
+
+        // are equal, so the duplicate detector is triggered.
+        $transactions[0]['transactions'][0]['amount'] = '56.78';
+        $transfer['amount']                           = '56.78';
+        //$transferGroup['transactions']['amount']   = '12';
+        /** @var TransactionJournal $journal */
+        $journal = $transferGroup->transactionJournals->first();
+        $journal->transactions->each(static function (Transaction $t) {
+            if ($t->amount < 0) {
+                $t->amount = '-56.78';
+            }
+            if ($t->amount > 0) {
+                $t->amount = '56.78';
+            }
+            $t->save();
+        });
+        $transferGroup->refresh();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->transactions  = [];
+        $job->save();
+
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($transferGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Submit a transfer, and the amounts match, and the description matches, but the rest doesn't
+     *
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testTransferNotDuplicateDescr(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
+
+        // data that is returned:
+        $transferGroup = $this->getRandomTransferGroup();
+        $tag           = $this->getRandomTag();
+        $transfer      = $this->getRandomTransferAsArray();
+
+        // are equal, so the duplicate detector is triggered.
+        $transactions[0]['transactions'][0]['amount']      = '56.78';
+        $transfer['amount']                                = '56.78';
+        $transactions[0]['transactions'][0]['description'] = $transfer['description'];
+
+
+        //$transferGroup['transactions']['amount']   = '12';
+        /** @var TransactionJournal $journal */
+        $journal = $transferGroup->transactionJournals->first();
+        $journal->transactions->each(static function (Transaction $t) {
+            if ($t->amount < 0) {
+                $t->amount = '-56.78';
+            }
+            if ($t->amount > 0) {
+                $t->amount = '56.78';
+            }
+            $t->save();
+        });
+        $transferGroup->refresh();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->transactions  = [];
+        $job->save();
+
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($transferGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Submit a transfer, and the amounts match, and the description matches,
+     * and the date matches, but the rest doesn't
+     *
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testTransferNotDuplicateDate(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
+
+        // data that is returned:
+        $transferGroup = $this->getRandomTransferGroup();
+        $tag           = $this->getRandomTag();
+        $transfer      = $this->getRandomTransferAsArray();
+
+        // are equal, so the duplicate detector is triggered.
+        $transactions[0]['transactions'][0]['amount']      = '56.78';
+        $transfer['amount']                                = '56.78';
+        $transactions[0]['transactions'][0]['description'] = $transfer['description'];
+        $transactions[0]['transactions'][0]['date']        = $transfer['date']->format('Y-m-d H:i:s');
+
+
+        //$transferGroup['transactions']['amount']   = '12';
+        /** @var TransactionJournal $journal */
+        $journal = $transferGroup->transactionJournals->first();
+        $journal->transactions->each(static function (Transaction $t) {
+            if ($t->amount < 0) {
+                $t->amount = '-56.78';
+            }
+            if ($t->amount > 0) {
+                $t->amount = '56.78';
+            }
+            $t->save();
+        });
+        $transferGroup->refresh();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->transactions  = [];
+        $job->save();
+
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($transferGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Submit a transfer, and the amounts match, and the description matches,
+     * and the date matches, and the accounts match, making it a duplicate.
+     *
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testTransferNotDuplicateAccounts(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportTransfer(),
+        ];
+
+        // data that is returned:
+        $transferGroup = $this->getRandomTransferGroup();
+        $tag           = $this->getRandomTag();
+        $transfer      = $this->getRandomTransferAsArray();
+
+        // are equal, so the duplicate detector is triggered.
+        $transfer['amount']                                = '56.78';
+        $transfer['source_account_id']                     = 0;
+        $transfer['source_account_name']                   = 'x';
+        $transfer['destination_account_id']                = 0;
+        $transfer['destination_account_name']              = 'x';
+        $transactions[0]['transactions'][0]['amount']      = '56.78';
+        $transactions[0]['transactions'][0]['description'] = $transfer['description'];
+        $transactions[0]['transactions'][0]['date']        = $transfer['date']->format('Y-m-d H:i:s');
+
+
+        //$transferGroup['transactions']['amount']   = '12';
+        /** @var TransactionJournal $journal */
+        $journal = $transferGroup->transactionJournals->first();
+        $journal->transactions->each(static function (Transaction $t) {
+            if ($t->amount < 0) {
+                $t->amount = '-56.78';
+            }
+            if ($t->amount > 0) {
+                $t->amount = '56.78';
+            }
+            $t->save();
+        });
+        $transferGroup->refresh();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $this->mock(TagRepositoryInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->transactions  = [];
+        $job->save();
+
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+
+        // also mocks collector:
+        $collector->shouldReceive('setUser')->atLeast()->once();
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$transfer]);
+
+        // since a duplicate was found, must register error:
+        $repository->shouldReceive('addErrorMessage')->atLeast()->once()->withArgs([Mockery::any(), sprintf('Row #0 ("%s") could not be imported. It already exists.', $transfer['description'])]);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Same as testBasic but submits the minimum amount of data required to store a transaction.
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testSimple(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportWithdrawal(),
+        ];
+
+        // data that is returned:
+        $withdrawalGroup = $this->getRandomWithdrawalGroup();
+        $tag             = $this->getRandomTag();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+        $this->mock(GroupCollectorInterface::class);
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
+
+        // make fake job
+        $job = new ImportJob;
+        $job->user()->associate($this->user());
+        $job->key           = 'a_storage' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'fake';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->transactions  = [];
+        $job->save();
+
+
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($withdrawalGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
+
+
+        $storage = new ImportArrayStorage;
+        $storage->setImportJob($job);
+        try {
+            $storage->store();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Same as testBasic but submits the minimum amount of data required to store a transaction.
+     *
+     * The one journal in the list is a duplicate.
+     *
+     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
+     */
+    public function testSimpleDuplicate(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportWithdrawal(),
+        ];
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+
+        $this->mock(TagRepositoryInterface::class);
+        $this->mock(Processor::class);
+        $this->mock(RuleRepositoryInterface::class);
+        $this->mock(GroupCollectorInterface::class);
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
         $meta                         = new TransactionJournalMeta;
-        $meta->transaction_journal_id = 3;
+        $meta->transaction_journal_id = 1;
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
-        $repository->shouldReceive('setTag')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection([$ruleOne, $ruleTwo]));
-        $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('store')->once()->andReturn($journal);
-        $journalRepos->shouldReceive('findByHash')->andReturn(null, $meta, null)->times(3);
-        $repository->shouldReceive('addErrorMessage')->once()
-                   ->withArgs([Mockery::any(), 'Row #1 ("' . $transactions[1]['description'] . '") could not be imported. It already exists.']);
-
-        $storage = new ImportArrayStorage;
-        $storage->setImportJob($job);
-        $result = new Collection;
-        try {
-            $result = $storage->store();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        $this->assertCount(1, $result);
-    }
-
-    /**
-     * Very basic storage routine. Call store with no data.
-     *
-     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
-     */
-    public function testBasicStoreNothing(): void
-    {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
 
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'c_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -269,390 +885,235 @@ class ImportArrayStorageTest extends TestCase
         $job->transactions  = [];
         $job->save();
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $journalRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn([]);
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturn($meta);
+
+        // errors because of duplicate:
+        $repository->shouldReceive('addErrorMessage')->atLeast()->once()
+                   ->withArgs([Mockery::any(), 'Row #0 ("") could not be imported. It already exists.']);
+
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
-        $result = new Collection;
         try {
-            $result = $storage->store();
+            $storage->store();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
-        $this->assertCount(0, $result);
     }
 
     /**
-     * Call store with no data, also assume rules.
+     * Same as testBasic but submits the minimum amount of data required to store a transaction.
+     *
+     * Also applies the rules, but there are none.
      *
      * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
      */
-    public function testBasicStoreNothingWithRules(): void
+    public function testSimpleApplyNoRules(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportWithdrawal(),
+        ];
+
+        // data that is returned:
+        $withdrawalGroup = $this->getRandomWithdrawalGroup();
+        $tag             = $this->getRandomTag();
+
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+
+        $this->mock(Processor::class);
+
+        $this->mock(GroupCollectorInterface::class);
+        Amount::shouldReceive('something');
+
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+
 
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
-        $job->key           = 'd_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
         $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
+        $job->configuration = [
+            'apply-rules' => true,
+        ];
         $job->transactions  = [];
         $job->save();
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        // mock calls:
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn([]);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection);
-        $journalRepos->shouldReceive('setUser')->once();
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleRepos->shouldReceive('setUser')->atLeast()->once();
 
-        $storage = new ImportArrayStorage;
-        $storage->setImportJob($job);
-        $result = new Collection;
-        try {
-            $result = $storage->store();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        $this->assertCount(0, $result);
-    }
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
 
-    /**
-     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
-     */
-    public function testBasicStoreSingleWithNoRules(): void
-    {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'applying_rules']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'rules_applied']);
 
-        // make fake job
-        $transactions = [$this->singleWithdrawal()];
-        $job          = new ImportJob;
-        $job->user()->associate($this->user());
-        $job->key           = 'e_storage' . random_int(1, 10000);
-        $job->status        = 'new';
-        $job->stage         = 'new';
-        $job->provider      = 'fake';
-        $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
-        $job->transactions  = ['count' => 1];
-        $job->save();
 
-        // get some stuff:
-        $tag     = $this->user()->tags()->inRandomOrder()->first();
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($withdrawalGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
-        $repository->shouldReceive('setTag')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection);
-        $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('store')->once()->andReturn($journal);
-        $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
+        // calls for application of rules, but returns NO rules.
+        $ruleRepos->shouldReceive('getForImport')->once()->andReturn(new Collection);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
-        $result = new Collection;
         try {
-            $result = $storage->store();
+            $storage->store();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
-        $this->assertCount(1, $result);
     }
 
+
     /**
+     * Same as testBasic but submits the minimum amount of data required to store a transaction.
+     *
+     * Also applies the rules, but there are none.
+     *
      * @covers \FireflyIII\Import\Storage\ImportArrayStorage
+     *
      */
-    public function testBasicStoreSingleWithRules(): void
+    public function testSimpleApplyOneRules(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        // data to submit:
+        $transactions = [
+            $this->singleImportWithdrawal(),
+        ];
 
-        // make fake job
-        $job          = new ImportJob;
-        $transactions = [$this->singleWithdrawal()];
-        $job->user()->associate($this->user());
-        $job->key           = 'f_storage' . random_int(1, 10000);
-        $job->status        = 'new';
-        $job->stage         = 'new';
-        $job->provider      = 'fake';
-        $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
-        $job->transactions  = ['count' => 1];
-        $job->save();
-
-        // get some stuff:
-        $tag                      = $this->user()->tags()->inRandomOrder()->first();
-        $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $ruleOne                  = new Rule;
-        $ruleOne->stop_processing = false;
-        $ruleTwo                  = new Rule;
-        $ruleTwo->stop_processing = true;
+        // data that is returned:
+        $withdrawalGroup = $this->getRandomWithdrawalGroup();
+        $tag             = $this->getRandomTag();
+        $rule            = $this->getRandomRule();
 
         // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $groupRepos   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $processor = $this->mock(Processor::class);
 
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
-        $repository->shouldReceive('setTag')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection([$ruleOne, $ruleTwo]));
-        $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('store')->once()->andReturn($journal);
-        $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
+        $this->mock(GroupCollectorInterface::class);
+        Amount::shouldReceive('something');
 
+        $language       = new Preference;
+        $language->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
 
-        $storage = new ImportArrayStorage;
-        $storage->setImportJob($job);
-        $result = new Collection;
-        try {
-            $result = $storage->store();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        $this->assertCount(1, $result);
-    }
-
-    /**
-     * @covers \FireflyIII\Import\Storage\ImportArrayStorage
-     */
-    public function testBasicStoreTransferWithRules(): void
-    {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
 
         // make fake job
         $job = new ImportJob;
-        $transactions = [$this->singleTransfer(), $this->singleWithdrawal()];
         $job->user()->associate($this->user());
-        $job->key           = 'g_storage' . random_int(1, 10000);
+        $job->key           = 'a_storage' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
         $job->file_type     = '';
-        $job->configuration = ['apply-rules' => true];
-        $job->transactions  = ['count' => 2];
+        $job->configuration = [
+            'apply-rules' => true,
+        ];
+        $job->transactions  = [];
         $job->save();
 
-        // get a transfer:
-        $transfer = $this->user()->transactionJournals()
-                         ->inRandomOrder()->where('transaction_type_id', 3)
-                         ->first();
 
-        // get transfer as a collection, so the compare routine works.
-        $transactionCollector = new TransactionCollector;
-        $transactionCollector->setUser($this->user());
-        $transactionCollector->setJournals(new Collection([$transfer]));
-        $transferCollection = $transactionCollector->withOpposingAccount()->getTransactions();
+        // mock user calls
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $groupRepos->shouldReceive('setUser')->atLeast()->once();
+        $tagRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // get some stuff:
-        $tag                      = $this->user()->tags()->inRandomOrder()->first();
-        $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $ruleOne                  = new Rule;
-        $ruleOne->stop_processing = false;
-        $ruleTwo                  = new Rule;
-        $ruleTwo->stop_processing = true;
+        // mock other calls.
+        $repository->shouldReceive('getTransactions')->atLeast()->once()->andReturn($transactions);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        // status changes of the job.
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'storing_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'stored_data']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linking_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'linked_to_tag']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'applying_rules']);
+        $repository->shouldReceive('setStatus')->atLeast()->once()->withArgs([Mockery::any(), 'rules_applied']);
 
-        // mock calls:
-        $collector->shouldReceive('setUser')->times(2); // twice for transfer
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withAnyArgs();
-        $ruleRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('setUser')->once();
-        $tagRepos->shouldReceive('store')->once()->andReturn($tag);
-        $repository->shouldReceive('setTag')->once();
-        $ruleRepos->shouldReceive('getForImport')->andReturn(new Collection([$ruleOne, $ruleTwo]));
-        $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('store')->twice()->andReturn($journal);
-        $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(4);
-        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
 
-        // mock collector so it will return some transfers:
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
-        $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($transferCollection);
+        // calls to validate and import transactions:
+        $journalRepos->shouldReceive('findByHash')->withArgs([Mockery::any()])->atLeast()->once()->andReturnNull();
+        $groupRepos->shouldReceive('store')->atLeast()->once()->andReturn($withdrawalGroup);
+        $tagRepos->shouldReceive('store')->atLeast()->once()->andReturn($tag);
+        $repository->shouldReceive('setTag')->atLeast()->once()->andReturn($job);
 
-        // set journals for the return method.
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('addFilter')->andReturnSelf();
+        // calls for application of rules, but returns 1 rules.
+        $ruleRepos->shouldReceive('getForImport')->once()->andReturn(new Collection([$rule]));
+        $processor->shouldReceive('make')->atLeast()->once();
+        $processor->shouldReceive('handleTransactionJournal')->atLeast()->once();
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
-        $result = new Collection;
         try {
-            $result = $storage->store();
+            $storage->store();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
-        $this->assertCount(2, $result);
-    }
-
-    /**
-     * @param TransactionJournal $transfer
-     *
-     * @return array
-     */
-    private function basedOnTransfer(TransactionJournal $transfer): array
-    {
-        $destination = $transfer->transactions()->where('amount', '>', 0)->first();
-        $source      = $transfer->transactions()->where('amount', '<', 0)->first();
-        $amount      = $destination->amount;
-
-        return
-            [
-                'type'               => 'transfer',
-                'date'               => $transfer->date->format('Y-m-d H:i:s'),
-                'tags'               => '',
-                'user'               => $this->user()->id,
-
-                // all custom fields:
-                'internal_reference' => null,
-                'notes'              => null,
-
-                // journal data:
-                'description'        => $transfer->description,
-                'piggy_bank_id'      => null,
-                'piggy_bank_name'    => null,
-                'bill_id'            => null,
-                'bill_name'          => null,
-
-                // transaction data:
-                'transactions'       => [
-                    [
-                        'currency_id'           => null,
-                        'currency_code'         => 'EUR',
-                        'description'           => null,
-                        'amount'                => $amount,
-                        'budget_id'             => null,
-                        'budget_name'           => null,
-                        'category_id'           => null,
-                        'category_name'         => null,
-                        'source_id'             => $source->account_id,
-                        'source_name'           => null,
-                        'destination_id'        => $destination->account_id,
-                        'destination_name'      => null,
-                        'foreign_currency_id'   => null,
-                        'foreign_currency_code' => null,
-                        'foreign_amount'        => null,
-                        'reconciled'            => false,
-                        'identifier'            => 0,
-                    ],
-                ],
-            ];
-
     }
 
     /**
      * @return array
-     * @throws \Exception
      */
-    private function singleTransfer(): array
-    {
-        return
-            [
-                'type'               => 'transfer',
-                'date'               => Carbon::now()->format('Y-m-d'),
-                'tags'               => '',
-                'user'               => $this->user()->id,
-
-                // all custom fields:
-                'internal_reference' => null,
-                'notes'              => null,
-
-                // journal data:
-                'description'        => 'Some TEST transfer #' . random_int(1, 10000),
-                'piggy_bank_id'      => null,
-                'piggy_bank_name'    => null,
-                'bill_id'            => null,
-                'bill_name'          => null,
-
-                // transaction data:
-                'transactions'       => [
-                    [
-                        'currency_id'           => null,
-                        'currency_code'         => 'EUR',
-                        'description'           => null,
-                        'amount'                => random_int(500, 5000) / 100,
-                        'budget_id'             => null,
-                        'budget_name'           => null,
-                        'category_id'           => null,
-                        'category_name'         => null,
-                        'source_id'             => 1,
-                        'source_name'           => null,
-                        'destination_id'        => 2,
-                        'destination_name'      => null,
-                        'foreign_currency_id'   => null,
-                        'foreign_currency_code' => null,
-                        'foreign_amount'        => null,
-                        'reconciled'            => false,
-                        'identifier'            => 0,
-                    ],
-                ],
-            ];
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    private function singleWithdrawal(): array
+    private function singleImportWithdrawal(): array
     {
         return
             [
                 'type'               => 'withdrawal',
-                'date'               => Carbon::now()->format('Y-m-d'),
                 'tags'               => '',
                 'user'               => $this->user()->id,
 
@@ -661,7 +1122,7 @@ class ImportArrayStorageTest extends TestCase
                 'notes'              => null,
 
                 // journal data:
-                'description'        => 'Some TEST withdrawal #' . random_int(1, 10000),
+                'description'        => 'Some TEST withdrawal #1',
                 'piggy_bank_id'      => null,
                 'piggy_bank_name'    => null,
                 'bill_id'            => null,
@@ -670,10 +1131,12 @@ class ImportArrayStorageTest extends TestCase
                 // transaction data:
                 'transactions'       => [
                     [
+                        'date'                  => '2019-01-01',
+                        'type'                  => 'withdrawal',
                         'currency_id'           => null,
                         'currency_code'         => 'EUR',
                         'description'           => null,
-                        'amount'                => random_int(500, 5000) / 100,
+                        'amount'                => '12.34',
                         'budget_id'             => null,
                         'budget_name'           => null,
                         'category_id'           => null,
@@ -681,7 +1144,56 @@ class ImportArrayStorageTest extends TestCase
                         'source_id'             => null,
                         'source_name'           => 'Checking Account',
                         'destination_id'        => null,
-                        'destination_name'      => 'Random TEST expense account #' . random_int(1, 10000),
+                        'destination_name'      => 'Random TEST expense account #2',
+                        'foreign_currency_id'   => null,
+                        'foreign_currency_code' => null,
+                        'foreign_amount'        => null,
+                        'reconciled'            => false,
+                        'identifier'            => 0,
+                    ],
+                ],
+            ];
+    }
+
+    /**
+     * @return array
+     */
+    private function singleImportTransfer(): array
+    {
+        return
+            [
+                'type'               => 'transfer',
+                'tags'               => '',
+                'user'               => $this->user()->id,
+
+                // all custom fields:
+                'internal_reference' => null,
+                'notes'              => null,
+
+                // journal data:
+                'description'        => 'Some TEST transfer #1',
+                'piggy_bank_id'      => null,
+                'piggy_bank_name'    => null,
+                'bill_id'            => null,
+                'bill_name'          => null,
+
+                // transaction data:
+                'transactions'       => [
+                    [
+                        'date'                  => '2019-01-01',
+                        'type'                  => 'transfer',
+                        'currency_id'           => null,
+                        'currency_code'         => 'EUR',
+                        'description'           => null,
+                        'amount'                => '12.34',
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => null,
+                        'source_id'             => null,
+                        'source_name'           => 'Checking Account',
+                        'destination_id'        => null,
+                        'destination_name'      => 'Random TEST expense account #2',
                         'foreign_currency_id'   => null,
                         'foreign_currency_code' => null,
                         'foreign_amount'        => null,

@@ -25,6 +25,7 @@ namespace Tests\Unit\Factory;
 
 
 use FireflyIII\Factory\AccountMetaFactory;
+use FireflyIII\Models\AccountMeta;
 use Log;
 use Tests\TestCase;
 
@@ -34,15 +35,13 @@ use Tests\TestCase;
  */
 class AccountMetaFactoryTest extends TestCase
 {
-
-
     /**
      *
      */
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,16 +49,17 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCreate(): void
     {
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
             'name'       => 'Some name',
             'data'       => 'Some value',
         ];
 
-        $factory = new AccountMetaFactory;
+        $factory = app(AccountMetaFactory::class);
         $result  = $factory->create($data);
         $this->assertEquals($data['name'], $result->name);
+        $result->forceDelete();
     }
 
     /**
@@ -67,19 +67,20 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudDelete(): void
     {
-        $factory = new AccountMetaFactory;
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
-            'name'       => 'Some name ' . random_int(1, 100000),
+            'name'       => sprintf('Some name %d', $this->randomInt()),
             'data'       => 'Some value',
         ];
 
-        $factory->create($data);
+        $new = $factory->create($data);
 
         // update existing one
         $result = $factory->crud($account, $data['name'], '');
         $this->assertNull($result);
+        $this->assertCount(0, AccountMeta::where('id', $new->id)->get());
     }
 
     /**
@@ -87,11 +88,11 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudExisting(): void
     {
-        $factory = new AccountMetaFactory;
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
-            'name'       => 'Some name ' . random_int(1, 100000),
+            'name'       => sprintf('Some name %d', $this->randomInt()),
             'data'       => 'Some value',
         ];
 
@@ -103,7 +104,6 @@ class AccountMetaFactoryTest extends TestCase
         $this->assertEquals($result->account_id, $account->id);
         $this->assertEquals($existing->name, $result->name);
         $this->assertEquals('Some NEW value', $result->data);
-
     }
 
     /**
@@ -111,9 +111,9 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudNew(): void
     {
-        $account = $this->user()->accounts()->inRandomOrder()->first();
-        $factory = new AccountMetaFactory;
-        $result  = $factory->crud($account, 'random name ' . random_int(1, 100000), 'Some value');
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
+        $result  = $factory->crud($account, 'random name ' . $this->randomInt(), 'Some value');
         $this->assertNotNull($result);
         $this->assertEquals($result->account_id, $account->id);
 

@@ -21,22 +21,17 @@
 
 declare(strict_types=1);
 
-
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
      'as'        => 'installer.', 'prefix' => 'install'], function () {
     Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
-    Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
-    Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
-    Route::post('upgrade', ['uses' => 'InstallController@upgrade', 'as' => 'upgrade']);
-    Route::post('verify', ['uses' => 'InstallController@verify', 'as' => 'verify']);
-    Route::post('decrypt', ['uses' => 'InstallController@decrypt', 'as' => 'decrypt']);
+    Route::post('runCommand', ['uses' => 'InstallController@runCommand', 'as' => 'runCommand']);
 }
 );
 
 Route::group(
-    ['middleware' => 'binders-only','namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], function () {
-        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], static function () {
+    Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
 }
 );
 
@@ -44,11 +39,12 @@ Route::group(
  * These routes only work when the user is NOT logged in.
  */
 Route::group(
-    ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], function () {
+    ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], static function () {
 
     // Authentication Routes...
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Auth\LoginController@login');
+
 
     // Registration Routes...
     Route::get('register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
@@ -57,7 +53,7 @@ Route::group(
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
     Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
-    Route::post('password/reset',['uses' => 'Auth\ResetPasswordController@reset']);
+    Route::post('password/reset', ['uses' => 'Auth\ResetPasswordController@reset']);
     Route::get('password/reset', ['uses' => 'Auth\ForgotPasswordController@showLinkRequestForm', 'as' => 'password.reset.request']);
 
     // Change email routes:
@@ -80,16 +76,17 @@ Route::group(
 }
 );
 
-/**
- * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
- *
- */
+
+///**
+// * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+// *
+// */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'], function () {
-    Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
+    Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
     Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-
+    //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
+    //
 }
 );
 
@@ -117,10 +114,10 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
 
     // show:
-    Route::get('{what}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense|liabilities');
+    Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
     // create
-    Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense|liabilities');
+    Route::get('create/{objectType}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('objectType', 'revenue|asset|expense|liabilities');
     Route::post('store', ['uses' => 'Account\CreateController@store', 'as' => 'store']);
 
 
@@ -147,9 +144,10 @@ Route::group(
     );
 
     // show reconciliation
-    Route::get('reconcile/show/{tj}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
-    Route::get('reconcile/edit/{tj}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
-    Route::post('reconcile/update/{tj}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
+    // TODO improve me
+    //Route::get('reconcile/show/{transactionGroup}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
+    //Route::get('reconcile/edit/{transactionGroup}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
+    //Route::post('reconcile/update/{transactionGroup}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
 
 
 }
@@ -223,7 +221,6 @@ Route::group(
 
     // update budget amount and income amount
     Route::get('income/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@updateIncome', 'as' => 'income']);
-    Route::get('info/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@infoIncome', 'as' => 'income.info']);
     Route::post('income', ['uses' => 'Budget\AmountController@postUpdateIncome', 'as' => 'income.post']);
     Route::post('amount/{budget}', ['uses' => 'Budget\AmountController@amount', 'as' => 'amount']);
 
@@ -238,19 +235,19 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'categories', 'as' => 'categories.'], function () {
 
     // index:
-    Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
+    Route::get('', ['uses' => 'Category\IndexController@index', 'as' => 'index']);
 
     // create
-    Route::get('create', ['uses' => 'CategoryController@create', 'as' => 'create']);
-    Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
+    Route::get('create', ['uses' => 'Category\CreateController@create', 'as' => 'create']);
+    Route::post('store', ['uses' => 'Category\CreateController@store', 'as' => 'store']);
 
     // edit
-    Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
-    Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
+    Route::get('edit/{category}', ['uses' => 'Category\EditController@edit', 'as' => 'edit']);
+    Route::post('update/{category}', ['uses' => 'Category\EditController@update', 'as' => 'update']);
 
     // delete
-    Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
-    Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
+    Route::get('delete/{category}', ['uses' => 'Category\DeleteController@delete', 'as' => 'delete']);
+    Route::post('destroy/{category}', ['uses' => 'Category\DeleteController@destroy', 'as' => 'destroy']);
 
     // show category:
     Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show.all']);
@@ -280,20 +277,6 @@ Route::group(
     Route::post('store', ['uses' => 'CurrencyController@store', 'as' => 'store']);
     Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
     Route::post('destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'destroy']);
-
-}
-);
-
-/**
- * Export Controller
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'], function () {
-    Route::get('', ['uses' => 'ExportController@index', 'as' => 'index']);
-    Route::get('status/{exportJob}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
-    Route::get('download/{exportJob}', ['uses' => 'ExportController@download', 'as' => 'download']);
-
-    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'submit']);
 
 }
 );
@@ -550,12 +533,21 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'], function () {
 
     // for auto complete
+    Route::get('accounts', ['uses' => 'Json\AutoCompleteController@accounts', 'as' => 'autocomplete.accounts']);
+    Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'autocomplete.revenue-accounts']);
+    Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'autocomplete.expense-accounts']);
+    Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'autocomplete.budgets']);
+    Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'autocomplete.categories']);
+    Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
+    Route::get('piggy-banks', ['uses' => 'Json\AutoCompleteController@piggyBanks', 'as' => 'autocomplete.piggy-banks']);
+    Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
+    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
+    Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
+    Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
 
 
-    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
-    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
-    Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
-//    Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
+
+    Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
 
     // boxes
     Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
@@ -564,21 +556,19 @@ Route::group(
     Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
 
     // rules
-    Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
-    Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
+    Route::get('trigger', ['uses' => 'Json\RuleController@trigger', 'as' => 'trigger']);
+    Route::get('action', ['uses' => 'Json\RuleController@action', 'as' => 'action']);
 
-    // frontpage
+    // front page
     Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
 
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
     // intro things:
-    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::any('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
     Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
     Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
-
-    Route::get('/{subject}', ['uses' => 'Json\AutoCompleteController@autoComplete', 'as' => 'autocomplete']);
 
 }
 );
@@ -654,6 +644,7 @@ Route::group(
     Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
     Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+    Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
 
 }
 );
@@ -822,17 +813,17 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rule-groups', 'as' => 'rule-groups.'], function () {
-    Route::get('create', ['uses' => 'RuleGroupController@create', 'as' => 'create']);
-    Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'edit']);
-    Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
-    Route::get('up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'up']);
-    Route::get('down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'down']);
-    Route::get('select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'select-transactions']);
+    Route::get('create', ['uses' => 'RuleGroup\CreateController@create', 'as' => 'create']);
+    Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroup\EditController@edit', 'as' => 'edit']);
+    Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@delete', 'as' => 'delete']);
+    Route::get('up/{ruleGroup}', ['uses' => 'RuleGroup\EditController@up', 'as' => 'up']);
+    Route::get('down/{ruleGroup}', ['uses' => 'RuleGroup\EditController@down', 'as' => 'down']);
+    Route::get('select/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@selectTransactions', 'as' => 'select-transactions']);
 
-    Route::post('store', ['uses' => 'RuleGroupController@store', 'as' => 'store']);
-    Route::post('update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
-    Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'destroy']);
-    Route::post('execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'execute']);
+    Route::post('store', ['uses' => 'RuleGroup\CreateController@store', 'as' => 'store']);
+    Route::post('update/{ruleGroup}', ['uses' => 'RuleGroup\EditController@update', 'as' => 'update']);
+    Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@destroy', 'as' => 'destroy']);
+    Route::post('execute/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@execute', 'as' => 'execute']);
 }
 );
 
@@ -874,15 +865,38 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
 
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
+    // show groups:
+    // TODO improve these routes
+    Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+
+    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
         ['what' => 'withdrawal|deposit|transfers|transfer']
     );
 
-    Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
-    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+    // create group:
+    Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
+    Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
+
+    // edit group
+    Route::get('edit/{transactionGroup}', ['uses' => 'Transaction\EditController@edit', 'as' => 'edit']);
+    Route::post('update', ['uses' => 'Transaction\EditController@update', 'as' => 'update']);
+
+    // delete group
+    Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
+    Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
+
+    // clone group:
+    Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
+
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
+    // TODO end of improvement.
+
+
+    Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
 }
 );
 
@@ -892,13 +906,16 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'],
     function () {
-        Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
-        Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
-        Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
-        Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
-        Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
+        // TODO improve these routes
+
+        //Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
+        //
+        //Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
+        //Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
+        //
+        //Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
+        //Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
+        // TODO end of improvement.
     }
 );
 
@@ -908,7 +925,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/mass', 'as' => 'transactions.mass.'],
     function () {
-        Route::get('edit/{simpleJournalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
+        Route::get('edit/{journalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
         Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
         Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
         Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
@@ -921,7 +938,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'],
     function () {
-        Route::get('edit/{simpleJournalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
+        Route::get('edit/{journalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
         Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
     }
 );
@@ -929,23 +946,25 @@ Route::group(
 /**
  * Transaction Split Controller
  */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
-     'as'         => 'transactions.split.'], function () {
-    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
-    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
-
-}
-);
+//Route::group(
+//    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
+//     'as'         => 'transactions.split.'], function () {
+//    // TODO improve these routes
+//    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
+//    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
+//    // TODO end of todo.
+//
+//}
+//);
 
 /**
  * Transaction Convert Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/convert',
-     'as'         => 'transactions.convert.'], function () {
-    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
-    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+     'as'         => 'transactions.convert.'], static function () {
+    Route::get('{transactionType}/{transactionGroup}', ['uses' => 'ConvertController@index', 'as' => 'index']);
+    Route::post('{transactionType}/{transactionGroup}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
 }
 );
 
@@ -955,8 +974,11 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'],
     function () {
-        Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
 
+        Route::get('modal/{tj}', ['uses' => 'LinkController@modal', 'as' => 'modal']);
+
+        // TODO improve this route:
+        Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
         Route::get('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
 

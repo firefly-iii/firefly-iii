@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Facade;
  * @method string|null opposite(string $amount = null)
  * @method int phpBytes(string $string)
  * @method string positive(string $amount)
+ * @method array balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date)
  *
  * @codeCoverageIgnore
  */

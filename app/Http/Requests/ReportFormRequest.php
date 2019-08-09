@@ -60,7 +60,7 @@ class ReportFormRequest extends Request
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('accounts');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
@@ -83,7 +83,7 @@ class ReportFormRequest extends Request
         $repository = app(BudgetRepositoryInterface::class);
         $set        = $this->get('budget');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $budgetId) {
                 $budget = $repository->findNull((int)$budgetId);
                 if (null !== $budget) {
@@ -106,7 +106,7 @@ class ReportFormRequest extends Request
         $repository = app(CategoryRepositoryInterface::class);
         $set        = $this->get('category');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $categoryId) {
                 $category = $repository->findNull((int)$categoryId);
                 if (null !== $category) {
@@ -130,7 +130,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
                 // @codeCoverageIgnoreStart
@@ -157,7 +157,7 @@ class ReportFormRequest extends Request
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('exp_rev');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
@@ -181,7 +181,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
                 // @codeCoverageIgnoreStart
@@ -208,7 +208,7 @@ class ReportFormRequest extends Request
         $set        = $this->get('tag');
         $collection = new Collection;
         Log::debug('Set is:', $set ?? []);
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $tagTag) {
                 Log::debug(sprintf('Now searching for "%s"', $tagTag));
                 $tag = $repository->findByTag($tagTag);

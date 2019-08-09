@@ -45,6 +45,7 @@ class CreateController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -88,8 +89,8 @@ class CreateController extends Controller
             $oldActions  = $this->getPreviousActions($request);
         }
 
-        $triggerCount = \count($oldTriggers);
-        $actionCount  = \count($oldActions);
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
 
         // title depends on whether or not there is a rule group:
@@ -140,8 +141,8 @@ class CreateController extends Controller
         $oldTriggers = $this->getTriggersForBill($bill);
         $oldActions  = $this->getActionsForBill($bill);
 
-        $triggerCount = \count($oldTriggers);
-        $actionCount  = \count($oldActions);
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
 
         // title depends on whether or not there is a rule group:

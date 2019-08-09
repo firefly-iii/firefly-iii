@@ -33,6 +33,7 @@ use Preferences as Prefs;
 
 /**
  * Class Amount.
+ * @codeCoverageIgnore
  */
 class Amount
 {
@@ -155,10 +156,56 @@ class Amount
     }
 
     /**
+     * This method will properly format the given number, in color or "black and white",
+     * as a currency, given two things: the currency required and the current locale.
+     *
+     * @param string $symbol
+     * @param int    $decimalPlaces
+     * @param string $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @noinspection MoreThanThreeArgumentsInspection
+     */
+    public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
+    {
+        $coloured = $coloured ?? true;
+        $locale   = explode(',', (string)trans('config.locale'));
+        $locale   = array_map('trim', $locale);
+        setlocale(LC_MONETARY, $locale);
+        $float     = round($amount, 12);
+        $info      = localeconv();
+        $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+
+        // some complicated switches to format the amount correctly:
+        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
+        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
+        $space     = true === $separated ? ' ' : '';
+        $result    = false === $precedes ? $formatted . $space . $symbol : $symbol . $space . $formatted;
+
+        if (true === $coloured) {
+            if ($amount > 0) {
+                return sprintf('<span class="text-success">%s</span>', $result);
+            }
+            if ($amount < 0) {
+                return sprintf('<span class="text-danger">%s</span>', $result);
+            }
+
+            return sprintf('<span style="color:#999">%s</span>', $result);
+        }
+
+        return $result;
+    }
+
+    /**
      * @return Collection
      */
     public function getAllCurrencies(): Collection
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
@@ -167,6 +214,9 @@ class Amount
      */
     public function getCurrencies(): Collection
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
@@ -175,6 +225,9 @@ class Amount
      */
     public function getCurrencyCode(): string
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
@@ -198,6 +251,9 @@ class Amount
      */
     public function getCurrencySymbol(): string
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencySymbol');
         if ($cache->has()) {
@@ -218,6 +274,9 @@ class Amount
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         /** @var User $user */
         $user = auth()->user();
 
@@ -233,6 +292,9 @@ class Amount
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $cache = new CacheProperties;
         $cache->addProperty('getDefaultCurrency');
         $cache->addProperty($user->id);
@@ -246,7 +308,7 @@ class Amount
         $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
 
         // could still be json encoded:
-        if (\strlen($currencyCode) > 3) {
+        if (strlen($currencyCode) > 3) {
             $currencyCode = json_decode($currencyCode) ?? 'EUR';
         }
 

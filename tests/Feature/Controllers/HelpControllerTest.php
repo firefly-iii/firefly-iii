@@ -42,16 +42,16 @@ class HelpControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShow(): void
     {
+        $this->mockDefaultSession();
+
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(true)->once();
         $help->shouldReceive('inCache')->andReturn(false)->once();
@@ -66,18 +66,15 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromCache(): void
     {
-        // force pref in dutch for test
-        Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL']);
+        $this->mockDefaultSession();
 
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->withArgs(['index'])->andReturn(true)->once();
-        $help->shouldReceive('inCache')->withArgs(['index', 'nl_NL'])->andReturn(false)->once();
-        $help->shouldReceive('getFromGithub')->withArgs(['index', 'nl_NL'])->andReturn('')->once();
+        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->once();
+        $help->shouldReceive('getFromGithub')->withArgs(['index', 'en_US'])->andReturn('')->once();
 
         // is US in cache?
         $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(true)->once();
@@ -86,7 +83,7 @@ class HelpControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('help.show', ['index']));
         $response->assertStatus(200);
-        $response->assertSee('US from cache.'); // Dutch translation
+        $response->assertSee('US from cache.');
 
         // put English back:
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
@@ -95,18 +92,15 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromGithub(): void
     {
-        // force pref in dutch for test
-        Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL']);
+        $this->mockDefaultSession();
 
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->withArgs(['index'])->andReturn(true)->once();
-        $help->shouldReceive('inCache')->withArgs(['index', 'nl_NL'])->andReturn(false)->once();
-        $help->shouldReceive('getFromGithub')->withArgs(['index', 'nl_NL'])->andReturn('')->once();
+        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->once();
+        $help->shouldReceive('getFromGithub')->withArgs(['index', 'en_US'])->andReturn('')->once();
 
         // is US in cache?
         $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->once();
@@ -117,7 +111,7 @@ class HelpControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('help.show', ['index']));
         $response->assertStatus(200);
-        $response->assertSee('Deze helptekst is nog niet beschikbaar in het Nederlands.'); // Dutch
+        $response->assertSee('This help text is not yet available in your language');
 
         // put English back:
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
@@ -126,10 +120,11 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowCached(): void
     {
+        $this->mockDefaultSession();
+
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(true)->once();
         $help->shouldReceive('inCache')->andReturn(true)->once();
@@ -143,10 +138,11 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController
-     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowNoRoute(): void
     {
+        $this->mockDefaultSession();
+
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->andReturn(false)->once();
 

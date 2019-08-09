@@ -25,19 +25,15 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -51,7 +47,7 @@ class TagReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -64,11 +60,14 @@ class TagReportControllerTest extends TestCase
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
+
+        $this->mockDefaultSession();
+
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -100,8 +99,10 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -132,8 +133,10 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -163,8 +166,10 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -182,43 +187,41 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
+     * TODO something in this test sometimes gives a 404 but not sure yet what it is.
+     *
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testMainChart(): void
     {
+        $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $tag          = $this->user()->tags()->first();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+
+        $withdrawal  = $this->getRandomWithdrawalAsArray();
+        $tag         = $this->user()->tags()->where('tag', 'Expensive')->first();
+        $date        = new Carbon;
+        $false       = new Preference;
+        $false->data = false;
+
+        $this->mockDefaultSession();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Preferences::shouldReceive('get')->withArgs(['customFiscalYear', false])->andReturn($false);
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $set = new Collection;
-        for ($i = 0; $i < 10; ++$i) {
-            $transaction = factory(Transaction::class)->make();
-            $tag         = factory(Tag::class)->make();
-            $transaction->transactionJournal->tags()->save($tag);
-            $set->push($transaction);
-        }
-        $tag = $this->user()->tags()->first();
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([TransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setTags')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($set);
-        $generator->shouldReceive('multiSet')->andReturn([])->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTags')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+        $generator->shouldReceive('multiSet')->andReturn([])->once()->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('chart.tag.main', ['1', $tag->tag, '20120101', '20120131']));
@@ -230,16 +233,17 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagExpense(): void
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $tag          = $this->user()->tags()->first();
+        $this->mockDefaultSession();
+        $generator = $this->mock(GeneratorInterface::class);
+        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $tagRepos  = $this->mock(TagRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
+        $tag = $this->user()->tags()->first();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -247,6 +251,7 @@ class TagReportControllerTest extends TestCase
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
         $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
+
         $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
         $pieChart->shouldReceive('generate')->withArgs(['expense', 'tag'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
@@ -261,6 +266,7 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagIncome(): void
     {
+        $this->mockDefaultSession();
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
@@ -269,12 +275,13 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
+
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
         $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();

@@ -26,8 +26,8 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class ClearBudgetTest
@@ -40,7 +40,7 @@ class ClearBudgetTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -49,8 +49,8 @@ class ClearBudgetTest extends TestCase
     public function testAct(): void
     {
         // associate budget with journal:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-        $budget  = $journal->user->budgets()->first();
+        $journal = $this->getRandomWithdrawal();
+        $budget  = $this->getRandomBudget();
         $journal->budgets()->save($budget);
         $this->assertGreaterThan(0, $journal->budgets()->count());
 

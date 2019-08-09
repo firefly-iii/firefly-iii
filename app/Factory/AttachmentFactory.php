@@ -41,11 +41,12 @@ class AttachmentFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -58,13 +59,14 @@ class AttachmentFactory
     public function create(array $data): ?Attachment
     {
         // append if necessary.
-        $model = false === strpos('FireflyIII', $data['model']) ? 'FireflyIII\\Models\\' . $data['model'] : $data['model'];
+        $model = false === strpos($data['model'], 'FireflyIII') ? sprintf('FireflyIII\\Models\\%s', $data['model']) : $data['model'];
 
+        // get journal instead of transaction.
         if (Transaction::class === $model) {
             /** @var Transaction $transaction */
             $transaction = $this->user->transactions()->find((int)$data['model_id']);
             if (null === $transaction) {
-                throw new FireflyException('Unexpectedly could not find transaction');
+                throw new FireflyException('Unexpectedly could not find transaction'); // @codeCoverageIgnore
             }
             $data['model_id'] = $transaction->transaction_journal_id;
             $model            = TransactionJournal::class;

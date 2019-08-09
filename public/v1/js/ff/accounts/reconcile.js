@@ -77,9 +77,9 @@ function storeReconcile() {
     var ids = [];
     $.each($('.reconcile_checkbox:checked'), function (i, v) {
         var obj = $(v);
-        if(obj.data('inrange') === true){
-        console.log('Added item with amount to list of checked ' + obj.val());
-        ids.push(obj.data('id'));
+        if (obj.data('inrange') === true) {
+            console.log('Added item with amount to list of checked ' + obj.val());
+            ids.push(obj.data('id'));
         } else {
             console.log('Ignored item with amount because is not in range ' + obj.val());
         }
@@ -97,7 +97,7 @@ function storeReconcile() {
         endBalance: parseFloat($('input[name="end_balance"]').val()),
         startDate: $('input[name="start_date"]').val(),
         startEnd: $('input[name="end_date"]').val(),
-        transactions: ids,
+        journals: ids,
         cleared: cleared,
     };
     var uri = overviewUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());

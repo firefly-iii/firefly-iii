@@ -137,7 +137,7 @@
 
 
     {% if total == 0 and page == 1 %}
-        {% include 'partials.empty' with {what: 'default', type: 'recurring',route: route('recurring.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
     {% endif %}
 {% endblock %}
 

@@ -45,12 +45,14 @@ class PreferenceController extends Controller
 {
     /**
      * LinkTypeController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 /** @var User $user */
                 $user       = auth()->user();
                 $repository = app(AccountRepositoryInterface::class);
@@ -59,7 +61,7 @@ class PreferenceController extends Controller
                 // an important fallback is that the frontPageAccount array gets refilled automatically
                 // when it turns up empty.
                 $frontPageAccounts = app('preferences')->getForUser($user, 'frontPageAccounts', [])->data;
-                if (0 === \count($frontPageAccounts)) {
+                if (0 === count($frontPageAccounts)) {
                     /** @var Collection $accounts */
                     $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
                     $accountIds = $accounts->pluck('id')->toArray();
@@ -76,7 +78,8 @@ class PreferenceController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -85,7 +88,7 @@ class PreferenceController extends Controller
         $available = [
             'language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference',
             'transaction_journal_optional_fields', 'frontPageAccounts', 'viewRange',
-            'listPageSize, twoFactorAuthEnabled',
+            'listPageSize',
         ];
 
         $preferences = new Collection;
@@ -111,17 +114,16 @@ class PreferenceController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
-
     }
 
     /**
      * Return a single preference by name.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Preference $preference
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Preference $preference): JsonResponse
     {
@@ -144,10 +146,9 @@ class PreferenceController extends Controller
      * Update a preference.
      *
      * @param PreferenceRequest $request
-     * @param Preference        $preference
+     * @param Preference $preference
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(PreferenceRequest $request, Preference $preference): JsonResponse
     {
@@ -165,7 +166,6 @@ class PreferenceController extends Controller
                 $newValue = (int)$data['data'];
                 break;
             case 'customFiscalYear':
-            case 'twoFactorAuthEnabled':
                 $newValue = 1 === (int)$data['data'];
                 break;
         }

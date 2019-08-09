@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -78,7 +76,7 @@ class Search implements SearchInterface
         $this->billRepository     = app(BillRepositoryInterface::class);
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -133,6 +131,22 @@ class Search implements SearchInterface
     }
 
     /**
+     * @param string $string
+     */
+    private function extractModifier(string $string): void
+    {
+        $parts = explode(':', $string);
+        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
+            $type  = trim((string)$parts[0]);
+            $value = trim((string)$parts[1]);
+            if (in_array($type, $this->validModifiers, true)) {
+                // filter for valid type
+                $this->modifiers->push(['type' => $type, 'value' => $value]);
+            }
+        }
+    }
+
+    /**
      * @return float
      */
     public function searchTime(): float
@@ -149,75 +163,54 @@ class Search implements SearchInterface
         $pageSize = 50;
         $page     = 1;
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
-        if ($this->hasModifiers()) {
-            $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        }
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
+        $collector->setLimit($pageSize)->setPage($page)->withAccountInformation();
+        $collector->withCategoryInformation()->withBudgetInformation();
         $collector->setSearchWords($this->words);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->addFilter(DoubleTransactionFilter::class);
 
         // Most modifiers can be applied to the collector directly.
         $collector = $this->applyModifiers($collector);
 
-        return $collector->getPaginatedTransactions();
+        return $collector->getPaginatedGroups();
 
     }
 
     /**
-     * @param int $limit
-     */
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
-        $this->billRepository->setUser($user);
-        $this->categoryRepository->setUser($user);
-        $this->budgetRepository->setUser($user);
-    }
-
-    /**
-     * @param TransactionCollectorInterface $collector
+     * @param GroupCollectorInterface $collector
      *
-     * @return TransactionCollectorInterface
+     * @return GroupCollectorInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyModifiers(TransactionCollectorInterface $collector): TransactionCollectorInterface
+    private function applyModifiers(GroupCollectorInterface $collector): GroupCollectorInterface
     {
         /*
          * TODO:
          * 'bill',
          */
+        $totalAccounts = new Collection;
 
         foreach ($this->modifiers as $modifier) {
             switch ($modifier['type']) {
                 default:
                     die(sprintf('unsupported modifier: "%s"', $modifier['type']));
+                case 'from':
                 case 'source':
                     // source can only be asset, liability or revenue account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
                     $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
                     if ($accounts->count() > 0) {
-                        $collector->setAccounts($accounts);
+                        $totalAccounts = $accounts->merge($totalAccounts);
                     }
                     break;
+                case 'to':
                 case 'destination':
                     // source can only be asset, liability or expense account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
                     $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
                     if ($accounts->count() > 0) {
-                        $collector->setOpposingAccounts($accounts);
+                        $totalAccounts = $accounts->merge($totalAccounts);
                     }
                     break;
                 case 'category':
@@ -280,23 +273,28 @@ class Search implements SearchInterface
                     break;
             }
         }
+        $collector->setAccounts($totalAccounts);
 
         return $collector;
     }
 
     /**
-     * @param string $string
+     * @param int $limit
      */
-    private function extractModifier(string $string): void
+    public function setLimit(int $limit): void
     {
-        $parts = explode(':', $string);
-        if (2 === \count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
-            $type  = trim((string)$parts[0]);
-            $value = trim((string)$parts[1]);
-            if (\in_array($type, $this->validModifiers, true)) {
-                // filter for valid type
-                $this->modifiers->push(['type' => $type, 'value' => $value]);
-            }
-        }
+        $this->limit = $limit;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
+        $this->billRepository->setUser($user);
+        $this->categoryRepository->setUser($user);
+        $this->budgetRepository->setUser($user);
     }
 }

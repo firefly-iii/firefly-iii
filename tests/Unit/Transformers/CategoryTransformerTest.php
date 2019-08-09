@@ -46,7 +46,7 @@ class CategoryTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -87,16 +87,16 @@ class CategoryTransformerTest extends TestCase
         // mock some objects for the spent/earned lists.
         $expense                            = new Transaction;
         $expense->transaction_currency_code = 'EUR';
-        $expense->transactionCurrency       = TransactionCurrency::find(1);
+        $expense->transactionCurrency       = $this->getEuro();
         $expense->transaction_amount        = '-100';
         $income                             = new Transaction;
         $income->transaction_currency_code  = 'EUR';
-        $income->transactionCurrency        = TransactionCurrency::find(1);
+        $income->transactionCurrency        = $this->getEuro();
         $income->transaction_amount         = '100';
 
 
-        $incomeCollection  = new Collection([$income]);
-        $expenseCollection = new Collection([$expense]);
+        $incomeCollection  = [$income];
+        $expenseCollection = [$expense];
 
         $repository->shouldReceive('spentInPeriodCollection')->atLeast()->once()->andReturn($expenseCollection);
         $repository->shouldReceive('earnedInPeriodCollection')->atLeast()->once()->andReturn($incomeCollection);

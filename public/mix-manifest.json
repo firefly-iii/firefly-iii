@@ -1,7 +1,3 @@
 {
-    "/v2/js/index.js": "/v2/js/index.js",
-    "/v2/js/manifest.js": "/v2/js/manifest.js",
-    "/v2/js/vendor.js": "/v2/js/vendor.js",
-    "/undefined.js": "/undefined.js",
-    "/v2/css/app.css": "/v2/css/app.css"
+    "/v1/js/app.js": "/v1/js/app.js"
 }

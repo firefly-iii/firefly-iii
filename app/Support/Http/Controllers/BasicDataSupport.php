@@ -31,23 +31,6 @@ trait BasicDataSupport
 {
 
     /**
-     * Sum up an array.
-     *
-     * @param array $array
-     *
-     * @return string
-     */
-    protected function arraySum(array $array): string // filter + group data
-    {
-        $sum = '0';
-        foreach ($array as $entry) {
-            $sum = bcadd($sum, $entry);
-        }
-
-        return $sum;
-    }
-
-    /**
      * Filters empty results from getBudgetPeriodReport.
      *
      * @param array $data
@@ -70,7 +53,6 @@ trait BasicDataSupport
                 unset($data[$entryId]);
             }
         }
-
         return $data;
     }
 

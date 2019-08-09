@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
@@ -46,14 +45,14 @@ class AccountTasker implements AccountTaskerInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -119,8 +118,8 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return array
@@ -130,23 +129,15 @@ class AccountTasker implements AccountTaskerInterface
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->withOpposingAccount();
-        $transactions = $collector->getTransactions();
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) {
-                // return negative amounts only.
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    return $transaction;
-                }
-
-                return false;
-            }
-        );
-        $expenses     = $this->groupByOpposing($transactions);
+                  ->withAccountInformation();
+        $journals = $collector->getExtractedJournals();
+        $expenses = $this->groupByDestination($journals);
 
         // sort the result
         // Obtain a list of columns
@@ -161,8 +152,8 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return array
@@ -172,23 +163,14 @@ class AccountTasker implements AccountTaskerInterface
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withOpposingAccount();
-        $transactions = $collector->getTransactions();
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) {
-                // return positive amounts only.
-                if (1 === bccomp($transaction->transaction_amount, '0')) {
-                    return $transaction;
-                }
-
-                return false;
-            }
-        );
-        $income       = $this->groupByOpposing($transactions);
+                  ->withAccountInformation();
+        $income = $this->groupByDestination($collector->getExtractedJournals());
 
         // sort the result
         // Obtain a list of columns
@@ -211,12 +193,12 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Collection $transactions
+     * @param array $array
      *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function groupByOpposing(Collection $transactions): array
+    private function groupByDestination(array $array): array
     {
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         /** @var CurrencyRepositoryInterface $currencyRepos */
@@ -226,19 +208,19 @@ class AccountTasker implements AccountTaskerInterface
         $countAccounts = []; // if count remains 0 use original name, not the name with the currency.
 
 
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $opposingId                 = (int)$transaction->opposing_account_id;
-            $currencyId                 = (int)$transaction->transaction_currency_id;
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $opposingId                 = (int)$journal['destination_account_id'];
+            $currencyId                 = (int)$journal['currency_id'];
             $key                        = sprintf('%s-%s', $opposingId, $currencyId);
-            $name                       = sprintf('%s (%s)', $transaction->opposing_account_name, $transaction->transaction_currency_code);
+            $name                       = sprintf('%s (%s)', $journal['destination_account_name'], $journal['currency_name']);
             $countAccounts[$opposingId] = isset($countAccounts[$opposingId]) ? $countAccounts[$opposingId] + 1 : 1;
             if (!isset($expenses[$key])) {
                 $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
                 $expenses[$key]          = [
                     'id'              => $opposingId,
                     'name'            => $name,
-                    'original'        => $transaction->opposing_account_name,
+                    'original'        => $journal['destination_account_name'],
                     'sum'             => '0',
                     'average'         => '0',
                     'currencies'      => [],
@@ -246,8 +228,8 @@ class AccountTasker implements AccountTaskerInterface
                     'count'           => 0,
                 ];
             }
-            $expenses[$key]['currencies'][] = (int)$transaction->transaction_currency_id;
-            $expenses[$key]['sum']          = bcadd($expenses[$key]['sum'], $transaction->transaction_amount);
+            $expenses[$key]['currencies'][] = (int)$journal['currency_id'];
+            $expenses[$key]['sum']          = bcadd($expenses[$key]['sum'], $journal['amount']);
             ++$expenses[$key]['count'];
         }
         // do averages:
@@ -261,8 +243,8 @@ class AccountTasker implements AccountTaskerInterface
             if ($expenses[$key]['count'] > 1) {
                 $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], (string)$expenses[$key]['count']);
             }
-            $expenses[$key]['currencies']     = \count(array_unique($expenses[$key]['currencies']));
-            $expenses[$key]['all_currencies'] = \count($currencies);
+            $expenses[$key]['currencies']     = count(array_unique($expenses[$key]['currencies']));
+            $expenses[$key]['all_currencies'] = count($currencies);
         }
 
         return $expenses;

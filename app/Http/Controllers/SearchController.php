@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Log;
 use Throwable;
 
@@ -62,15 +60,18 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = (string)$request->get('q');
+        $fullQuery = (string)$request->get('search');
 
         // parse search terms:
         $searcher->parseQuery($fullQuery);
-        $query    = $searcher->getWordsAsString();
+        $query     = $searcher->getWordsAsString();
         $modifiers = $searcher->getModifiers();
-        $subTitle = (string)trans('breadcrumbs.search_result', ['query' => $query]);
+        $subTitle  = (string)trans('breadcrumbs.search_result', ['query' => $query]);
 
-        return view('search.index', compact('query','modifiers', 'fullQuery', 'subTitle'));
+        return view(
+            'search.index',
+            compact('query', 'modifiers', 'fullQuery', 'subTitle')
+        );
     }
 
     /**
@@ -87,11 +88,11 @@ class SearchController extends Controller
 
         $searcher->parseQuery($fullQuery);
         $searcher->setLimit((int)config('firefly.search_result_limit'));
-        $transactions = $searcher->searchTransactions();
+        $groups = $searcher->searchTransactions();
         $searchTime = $searcher->searchTime(); // in seconds
 
         try {
-            $html = view('search.search', compact('transactions','searchTime'))->render();
+            $html = view('search.search', compact('groups','searchTime'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
@@ -100,6 +101,6 @@ class SearchController extends Controller
 
         // @codeCoverageIgnoreEnd
 
-        return response()->json(['count' => $transactions->count(), 'html' => $html]);
+        return response()->json(['count' => $groups->count(), 'html' => $html]);
     }
 }

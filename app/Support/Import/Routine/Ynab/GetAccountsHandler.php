@@ -63,7 +63,7 @@ class GetAccountsHandler
         $request->call();
         $config['accounts'] = $request->accounts;
         $this->repository->setConfiguration($this->importJob, $config);
-        if (0 === \count($config['accounts'])) {
+        if (0 === count($config['accounts'])) {
             throw new FireflyException('This budget contains zero accounts.');
         }
     }

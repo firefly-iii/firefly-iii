@@ -29,14 +29,19 @@ use Log;
 
 /**
  * Class FireflyConfig.
+ * @codeCoverageIgnore
  */
 class FireflyConfig
 {
+
     /**
      * @param string $name
      */
     public function delete(string $name): void
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
@@ -51,12 +56,15 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */
     public function get(string $name, $default = null): ?Configuration
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
@@ -79,12 +87,15 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if ($config) {
 
@@ -106,6 +117,10 @@ class FireflyConfig
      */
     public function put(string $name, $value): Configuration
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
+
         return $this->set($name, $value);
     }
 
@@ -117,6 +132,9 @@ class FireflyConfig
      */
     public function set(string $name, $value): Configuration
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         Log::debug('Set new value for ', ['name' => $name]);
         /** @var Configuration $config */
         $config = Configuration::whereName($name)->first();

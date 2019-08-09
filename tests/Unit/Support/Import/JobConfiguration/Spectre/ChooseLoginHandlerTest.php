@@ -35,10 +35,10 @@ use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Object\Token;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ChooseLoginHandlerTest
@@ -51,7 +51,7 @@ class ChooseLoginHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -62,7 +62,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-A' . random_int(1, 10000);
+        $job->key           = 'slh-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -85,7 +85,7 @@ class ChooseLoginHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-B' . random_int(1, 10000);
+        $job->key           = 'slh-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -109,7 +109,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -149,7 +149,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -269,7 +269,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

@@ -28,14 +28,7 @@ namespace FireflyIII\Generator\Report\Tag;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -52,9 +45,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     private $accounts;
     /** @var Carbon The end date */
     private $end;
-    /** @var Collection The expenses involved */
+    /** @var array The expenses involved */
     private $expenses;
-    /** @var Collection The income involved */
+    /** @var array The income involved */
     private $income;
     /** @var Carbon The start date */
     private $start;
@@ -84,7 +77,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $reportType      = 'tag';
         $expenses        = $this->getExpenses();
         $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
+        $accountSummary  = $this->getObjectSummary($this->summarizeByAssetAccount($expenses), $this->summarizeByAssetAccount($income));
         $tagSummary      = $this->getObjectSummary($this->summarizeByTag($expenses), $this->summarizeByTag($income));
         $averageExpenses = $this->getAverages($expenses, SORT_ASC);
         $averageIncome   = $this->getAverages($income, SORT_DESC);
@@ -202,80 +195,72 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     /**
      * Get expense collection for report.
      *
-     * @return Collection
+     * @return array
      */
-    protected function getExpenses(): Collection
+    protected function getExpenses(): array
     {
-        if ($this->expenses->count() > 0) {
+        if (count($this->expenses) > 0) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-        $collector->addFilter(DoubleTransactionFilter::class);
+                  ->setTags($this->tags)->withAccountInformation();
 
-        $transactions   = $collector->getTransactions();
-        $this->expenses = $transactions;
+        $journals       = $collector->getExtractedJournals();
+        $this->expenses = $journals;
 
-        return $transactions;
+        return $journals;
     }
 
     /**
      * Get the income for this report.
      *
-     * @return Collection
+     * @return array
      */
-    protected function getIncome(): Collection
+    protected function getIncome(): array
     {
-        if ($this->income->count() > 0) {
+        if (count($this->income) > 0) {
             return $this->income;
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withOpposingAccount();
+                  ->setTags($this->tags)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-        $collector->addFilter(DoubleTransactionFilter::class);
+        $journals     = $collector->getExtractedJournals();
+        $this->income = $journals;
 
-        $transactions = $collector->getTransactions();
-        $this->income = $transactions;
-
-        return $transactions;
+        return $journals;
     }
 
     /**
      * Summarize by tag.
      *
-     * @param Collection $collection
+     * @param array $array
      *
      * @return array
      */
-    protected function summarizeByTag(Collection $collection): array
+    protected function summarizeByTag(array $array): array
     {
         $tagIds = array_map('\intval', $this->tags->pluck('id')->toArray());
         $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $journal     = $transaction->transactionJournal;
-            $journalTags = $journal->tags;
-            /** @var Tag $journalTag */
-            foreach ($journalTags as $journalTag) {
-                $journalTagId = (int)$journalTag->id;
-                if (\in_array($journalTagId, $tagIds, true)) {
-                    $result[$journalTagId] = $result[$journalTagId] ?? '0';
-                    $result[$journalTagId] = bcadd($transaction->transaction_amount, $result[$journalTagId]);
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            /**
+             * @var int $id
+             * @var array $tag
+             */
+            foreach ($journal['tags'] as $id => $tag) {
+                if (in_array($id, $tagIds, true)) {
+                    $result[$id] = $result[$id] ?? '0';
+                    $result[$id] = bcadd($journal['amount'], $result[$id]);
                 }
             }
         }

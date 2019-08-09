@@ -39,6 +39,8 @@ class LinkToBill implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
+     * @codeCoverageIgnore
+     *
      * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
@@ -65,13 +67,13 @@ class LinkToBill implements ActionInterface
             $journal->bill()->associate($bill);
             $journal->save();
             Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal->id, $bill->id, $bill->name));
+
+            return true;
         }
 
-        if (null === $bill) {
-            Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found!', $journal->id, $billName));
-        }
+        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found!', $journal->id, $billName));
 
 
-        return true;
+        return false;
     }
 }

@@ -34,16 +34,37 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class RuleGroup.
  *
- * @property bool       $active
- * @property User       $user
- * @property Carbon     $created_at
- * @property Carbon     $updated_at
- * @property string     $title
- * @property string     $text
- * @property int        $id
- * @property int        $order
+ * @property bool $active
+ * @property User $user
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property string $title
+ * @property string $text
+ * @property int $id
+ * @property int $order
  * @property Collection $rules
- * @property string     description
+ * @property string description
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withoutTrashed()
+ * @property bool $stop_processing
+ * @mixin \Eloquent
  */
 class RuleGroup extends Model
 {
@@ -55,15 +76,16 @@ class RuleGroup extends Model
      */
     protected $casts
         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'active'     => 'boolean',
-            'order'      => 'int',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
+            'active'          => 'boolean',
+            'stop_processing' => 'boolean',
+            'order'           => 'int',
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
+    protected $fillable = ['user_id', 'stop_processing', 'order', 'title', 'description', 'active'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

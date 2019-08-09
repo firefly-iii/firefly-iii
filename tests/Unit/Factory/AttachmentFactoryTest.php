@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AttachmentFactory;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 use Tests\TestCase;
@@ -42,7 +44,7 @@ class AttachmentFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -51,7 +53,7 @@ class AttachmentFactoryTest extends TestCase
     public function testCreate(): void
     {
 
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $journal = $this->getRandomWithdrawal();
         $data    = [
             'model_id' => $journal->id,
             'model'    => TransactionJournal::class,
@@ -60,10 +62,78 @@ class AttachmentFactoryTest extends TestCase
             'notes'    => 'Some notes',
         ];
 
-        $factory = new AttachmentFactory;
+        /** @var AttachmentFactory $factory */
+        $factory = app(AttachmentFactory::class);
         $factory->setUser($this->user());
-        $result = $factory->create($data);
+        try {
+            $result = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
         $this->assertEquals($data['title'], $result->title);
+        $this->assertEquals(1, $result->notes()->count());
+
+
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\AttachmentFactory
+     */
+    public function testCreateTransaction(): void
+    {
+
+        $journal     = $this->getRandomWithdrawal();
+        $transaction = $journal->transactions()->first();
+        $data        = [
+            'model_id' => $transaction->id,
+            'model'    => Transaction::class,
+            'filename' => 'testfile.pdf',
+            'title'    => 'File name',
+            'notes'    => 'Some notes',
+        ];
+
+        /** @var AttachmentFactory $factory */
+        $factory = app(AttachmentFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $result = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        $this->assertEquals($data['title'], $result->title);
+        $this->assertEquals($result->attachable_id, $journal->id);
+        $this->assertEquals(1, $result->notes()->count());
+
+
+    }
+
+
+    /**
+     * @covers \FireflyIII\Factory\AttachmentFactory
+     */
+    public function testCreateTransactionAppendModel(): void
+    {
+
+        $journal     = $this->getRandomWithdrawal();
+        $transaction = $journal->transactions()->first();
+        $data        = [
+            'model_id' => $transaction->id,
+            'model'    => 'Transaction',
+            'filename' => 'testfile.pdf',
+            'title'    => 'File name',
+            'notes'    => 'Some notes',
+        ];
+
+        /** @var AttachmentFactory $factory */
+        $factory = app(AttachmentFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $result = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        $this->assertEquals($data['title'], $result->title);
+        $this->assertEquals($result->attachable_id, $journal->id);
         $this->assertEquals(1, $result->notes()->count());
 
 

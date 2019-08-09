@@ -85,11 +85,17 @@
                     <div class="box-body">
                         <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
                         {% if enabled2FA == true %}
+                            <p class="text-info">
+                                {{ trans('firefly.pref_two_factor_backup_code_count', {count: mfaBackupCount}) }}
+                            </p>
 
                             <div class="btn-group">
                                 <a class="btn btn-info" href="{{ route('profile.code') }}">
                                     <i class="fa fa-recycle"></i>
                                     {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                <a class="btn btn-default" href="{{ route('profile.new-backup-codes') }}">
+                                    <i class="fa fa-star"></i>
+                                    {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
                                 <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
                                     <i class="fa fa-trash"></i>
                                     {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>

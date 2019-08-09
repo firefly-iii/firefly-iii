@@ -51,41 +51,45 @@ trait UserNavigation
     protected function getPreviousUri(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        // "forbidden" words for specific identifiers:
-        // if these are in the previous URI, don't refer back there.
-        $array     = [
-            'accounts.delete.uri'          => '/accounts/show/',
-            'transactions.delete.uri'      => '/transactions/show/',
-            'attachments.delete.uri'       => '/attachments/show/',
-            'bills.delete.uri'             => '/bills/show/',
-            'budgets.delete.uri'           => '/budgets/show/',
-            'categories.delete.uri'        => '/categories/show/',
-            'currencies.delete.uri'        => '/currencies/show/',
-            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
-            'tags.delete.uri'              => '/tags/show/',
-            'rules.delete.uri'             => '/rules/edit/',
-            'transactions.mass-delete.uri' => '/transactions/show/',
-        ];
-        $forbidden = $array[$identifier] ?? '/show/';
-        Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
-
         $uri = (string)session($identifier);
         Log::debug(sprintf('The URI is %s', $uri));
-        if (
-            !(false === strpos($identifier, 'delete'))
-            && !(false === strpos($uri, $forbidden))) {
-            $uri = $this->redirectUri;
-            Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
-        }
+
         if (!(false === strpos($uri, 'jscript'))) {
             $uri = $this->redirectUri; // @codeCoverageIgnore
             Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
 
-        // more debug notes:
-        Log::debug(sprintf('strpos($identifier, "delete"): %s', var_export(strpos($identifier, 'delete'), true)));
-        Log::debug(sprintf('strpos($uri, $forbidden): %s', var_export(strpos($uri, $forbidden), true)));
+        // "forbidden" words for specific identifiers:
+        // if these are in the previous URI, don't refer back there.
+        //        $array     = [
+        //            'accounts.delete.uri'          => '/accounts/show/',
+        //            'transactions.delete.uri'      => '/transactions/show/',
+        //            'attachments.delete.uri'       => '/attachments/show/',
+        //            'bills.delete.uri'             => '/bills/show/',
+        //            'budgets.delete.uri'           => '/budgets/show/',
+        //            'categories.delete.uri'        => '/categories/show/',
+        //            'currencies.delete.uri'        => '/currencies/show/',
+        //            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
+        //            'tags.delete.uri'              => '/tags/show/',
+        //            'rules.delete.uri'             => '/rules/edit/',
+        //            'transactions.mass-delete.uri' => '/transactions/show/',
+        //        ];
+        //$forbidden = $array[$identifier] ?? '/show/';
+        //Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
 
+
+        //        if (
+        //            !(false === strpos($identifier, 'delete'))
+        //            && !(false === strpos($uri, $forbidden))) {
+        //            $uri = $this->redirectUri;
+        //            //Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
+        //        }
+
+
+        // more debug notes:
+        //Log::debug(sprintf('strpos($identifier, "delete"): %s', var_export(strpos($identifier, 'delete'), true)));
+        //Log::debug(sprintf('strpos($uri, $forbidden): %s', var_export(strpos($uri, $forbidden), true)));
+        Log::debug(sprintf('Return direct link %s', $uri));
         return $uri;
     }
 
@@ -95,6 +99,7 @@ trait UserNavigation
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @codeCoverageIgnore
      */
     protected function redirectToAccount(TransactionJournal $journal)
     {
@@ -103,7 +108,7 @@ trait UserNavigation
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $account = $transaction->account;
-            if (\in_array($account->accountType->type, $valid, true)) {
+            if (in_array($account->accountType->type, $valid, true)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
         }
@@ -118,6 +123,7 @@ trait UserNavigation
      * @param Account $account
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @codeCoverageIgnore
      */
     protected function redirectToOriginalAccount(Account $account)
     {
@@ -143,21 +149,25 @@ trait UserNavigation
     }
 
     /**
-     * Remember previous URL.
-     *
      * @param string $identifier
+     *
+     * @return string|null
      */
-    protected function rememberPreviousUri(string $identifier): void
+    protected function rememberPreviousUri(string $identifier): ?string
     {
+        $return = null;
         /** @var ViewErrorBag $errors */
         $errors = session()->get('errors');
         if (null === $errors || (null !== $errors && 0 === $errors->count())) {
-            $url = app('url')->previous();
-            session()->put($identifier, $url);
-            Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
+            $return = app('url')->previous();
 
-            return;
+            // TODO URL might not be one we *want* to remember.
+
+            session()->put($identifier, $return);
+            //Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
+            //return;
         }
-        Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
+        //Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
+        return $return;
     }
 }

@@ -24,12 +24,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\JobConfiguration;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
 use FireflyIII\Import\JobConfiguration\YnabJobConfiguration;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler;
-use FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\NewYnabJobHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectBudgetHandler;
@@ -48,7 +45,7 @@ class YnabJobConfigurationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -61,7 +58,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_A' . random_int(1, 100000);
+        $job->key           = 'ynab_jc_A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'ynab';
@@ -92,7 +89,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_B' . random_int(1, 10000);
+        $job->key           = 'ynab_jc_B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'select_budgets';
         $job->provider      = 'ynab';
@@ -126,7 +123,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_C' . random_int(1, 10000);
+        $job->key           = 'ynab_jc_C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'select_accounts';
         $job->provider      = 'ynab';
@@ -158,7 +155,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_E' . random_int(1, 100000);
+        $job->key           = 'ynab_jc_E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'ynab';

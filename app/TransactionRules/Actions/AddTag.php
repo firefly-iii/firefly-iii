@@ -73,7 +73,6 @@ class AddTag implements ActionInterface
 
             return true;
         }
-
         Log::debug(sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal->id));
 
         return false;

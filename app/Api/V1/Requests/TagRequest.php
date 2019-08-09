@@ -28,6 +28,10 @@ use FireflyIII\Models\Tag;
 
 /**
  * Class TagRequest
+ *
+ * @codeCoverageIgnore
+ *
+ * TODO AFTER 4.8.0: split this into two request classes.
  */
 class TagRequest extends Request
 {

@@ -1,14 +1,14 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, what) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
 {% endblock %}
 
 {% block content %}
     {% if accounts.count > 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="box" id="account-index-{{ what }}">
+                <div class="box" id="account-index-{{ objectType }}">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ subTitle }}
@@ -17,8 +17,8 @@
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('accounts.create', what) }}"><i
-                                                    class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}
+                                    <li><a href="{{ route('accounts.create', objectType) }}"><i
+                                                    class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}
                                         </a></li>
                                 </ul>
                             </div>
@@ -29,20 +29,20 @@
 
                     <div class="box-body table-responsive no-padding">
                         <div style="padding:8px;">
-                            <a href="{{ route('accounts.create', what) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}</a>
+                            <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
                         </div>
 
                         {% include 'list.accounts' %}
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('accounts.create', what) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}</a>
+                        <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
                     </div>
                 </div>
             </div>
         </div>
     {% endif %}
     {% if accounts.count == 0 and page == 1 %}
-        {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
+        {% include 'partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
     {% endif %}
 {% endblock %}
 
@@ -52,7 +52,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        var what = '{{ what|escape }}';
+        var objectType = '{{ objectType|escape }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

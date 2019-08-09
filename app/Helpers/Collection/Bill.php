@@ -103,16 +103,7 @@ class Bill
      */
     public function getBills(): Collection
     {
-        $set = $this->bills->sortBy(
-            function (BillLine $bill) {
-                $active = 0 === (int)$bill->getBill()->active ? 1 : 0;
-                $name   = $bill->getBill()->name;
-
-                return $active . $name;
-            }
-        );
-
-        return $set;
+        return $this->bills;
     }
 
     /**

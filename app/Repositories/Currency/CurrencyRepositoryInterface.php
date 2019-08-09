@@ -35,6 +35,12 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
+     * @param string $search
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection;
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return int
@@ -131,6 +137,26 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
+
+    /**
+     * Find by object, ID or code. Returns user default or system default.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
+
+    /**
+     * Find by object, ID or code. Returns NULL if nothing found.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
 
     /**
      * Find by ID, return NULL if not found.

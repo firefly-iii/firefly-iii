@@ -41,6 +41,7 @@ class AttachmentController extends Controller
 
     /**
      * AttachmentController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -121,7 +122,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', \strlen($content));
+                ->header('Content-Length', strlen($content));
 
             return $response;
         }

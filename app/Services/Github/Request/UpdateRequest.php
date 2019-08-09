@@ -34,6 +34,7 @@ use SimpleXMLElement;
 
 /**
  * Class UpdateRequest
+ * @codeCoverageIgnore
  */
 class UpdateRequest implements GithubRequest
 {
@@ -67,7 +68,7 @@ class UpdateRequest implements GithubRequest
 
         //fetch the products for each category
         if (isset($releaseXml->entry)) {
-            Log::debug(sprintf('Count of entries is: %d', \count($releaseXml->entry)));
+            Log::debug(sprintf('Count of entries is: %d', count($releaseXml->entry)));
             foreach ($releaseXml->entry as $entry) {
                 $array = [
                     'id'      => (string)$entry->id,

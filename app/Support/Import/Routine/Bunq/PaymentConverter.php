@@ -58,7 +58,7 @@ class PaymentConverter
         $this->importJobRepos = app(ImportJobRepositoryInterface::class);
         $this->accountFactory = app(AccountFactory::class);
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -228,8 +228,8 @@ class PaymentConverter
             'iban'            => $party->getIban(),
             'name'            => $party->getLabelUser()->getDisplayName(),
             'account_type_id' => null,
-            'accountType'     => $expectedType,
-            'virtualBalance'  => null,
+            'account_type'     => $expectedType,
+            'virtual_balance'  => null,
             'active'          => true,
         ];
         $account = $this->accountFactory->create($data);

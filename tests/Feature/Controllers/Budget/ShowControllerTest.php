@@ -23,24 +23,28 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Budget;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionJournal;
+use Exception;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
  *
  * Class ShowControllerTest
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShowControllerTest extends TestCase
 {
@@ -50,7 +54,7 @@ class ShowControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -63,32 +67,43 @@ class ShowControllerTest extends TestCase
      */
     public function testNoBudget(string $range): void
     {
-        Log::info(sprintf('Now in testNoBudget(%s)', $range));
-
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = null;
+        $this->mockDefaultSession();
+
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
-        $journalRepos->shouldReceive('firstNull')->andReturn(null);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
-
-        $date = new Carbon();
         $this->session(['start' => $date, 'end' => clone $date]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('budgets.no-budget'));
+        $response = $this->get(route('budgets.no-budget', ['2019-01-01', '2019-01-31']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -102,27 +117,36 @@ class ShowControllerTest extends TestCase
      */
     public function testNoBudgetAll(string $range): void
     {
-        Log::info(sprintf('Now in testNoBudgetAll(%s)', $range));
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $date      = null;
+        $this->mockDefaultSession();
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->andReturn(null);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
-        $date = new Carbon();
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
         $this->session(['start' => $date, 'end' => clone $date]);
 
         $this->be($this->user());
@@ -139,74 +163,33 @@ class ShowControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testNoBudgetDate(string $range): void
-    {
-        Log::info(sprintf('Now in testNoBudgetDate(%s)', $range));
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->andReturn(null);
-
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
-
-        $date = new Carbon();
-        $this->session(['start' => $date, 'end' => clone $date]);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('budgets.no-budget', ['2016-01-01']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Budget\ShowController
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
     public function testShow(string $range): void
     {
-        Log::info(sprintf('Now in testShow(%s)', $range));
-        // mock stuff
-
-        $budgetLimit = factory(BudgetLimit::class)->make();
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetLimit  = $this->getRandomBudgetLimit();
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+
+        $this->mockDefaultSession();
+        
+        
+
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
-
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -215,33 +198,20 @@ class ShowControllerTest extends TestCase
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
 
-        $date = new Carbon();
-        $date->subDay();
-        $this->session(['first' => $date]);
+        try {
+            $date = new Carbon;
+            $date->subDay();
+            $this->session(['first' => $date]);
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.show', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers                   \FireflyIII\Http\Controllers\Budget\ShowController
-     */
-    public function testShowByBadBudgetLimit(): void
-    {
-        Log::info('Now in testShowByBadBudgetLimit()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('budgets.show.limit', [1, 8]));
-        $response->assertStatus(500);
     }
 
     /**
@@ -252,26 +222,32 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByBudgetLimit(string $range): void
     {
-        Log::info(sprintf('Now in testShowByBudgetLimit(%s)', $range));
-        // mock stuff
-        $journalRepos      = $this->mock(JournalRepositoryInterface::class);
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository  = $this->mock(BudgetRepositoryInterface::class);
-        $collector         = $this->mock(TransactionCollectorInterface::class);
+        $collector         = $this->mock(GroupCollectorInterface::class);
         $userRepos         = $this->mock(UserRepositoryInterface::class);
 
+
+        $this->mockDefaultSession();
+
+
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepository->shouldReceive('getAccountsByType')->andReturn(new Collection);
         $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
         $budgetRepository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

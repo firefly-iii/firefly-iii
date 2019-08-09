@@ -36,6 +36,16 @@ class SpectrePrerequisites implements PrerequisitesInterface
     private $user;
 
     /**
+     * SpectrePrerequisites constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
+
+    /**
      * Returns view name that allows user to fill in prerequisites.
      *
      * @return string

@@ -101,7 +101,7 @@
     {% endif %}
 
     <div class="row">
-        <div class="{% if periods.count > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -112,14 +112,11 @@
                     {% else %}
                         {% set showReconcile = false %}
                     {% endif %}
-                    {% if periods.count > 0 %}
-                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile} %}
-                    {% else %}
-                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile, showCategories: true, showBudgets: true, showBill:true} %}
-                    {% endif %}
+
+                    {% include 'list.groups' %}
                     <p>
                         <i class="fa fa-calendar"></i>
-                        {% if periods.count > 0 %}
+                        {% if periods|length > 0 %}
                             <a href="{{ route('accounts.show.all', [account.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
@@ -132,7 +129,7 @@
                 </div>
             </div>
         </div>
-        {% if periods.count > 0 %}
+        {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
@@ -173,5 +170,6 @@
     <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
     <script src="v1/js/lib/jquery.color-2.1.2.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
     <script src="v1/js/ff/accounts/show.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+    {# required for groups.twig #}
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

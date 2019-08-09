@@ -40,6 +40,7 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

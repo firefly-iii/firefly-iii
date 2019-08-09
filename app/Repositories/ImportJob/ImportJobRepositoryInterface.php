@@ -63,6 +63,13 @@ interface ImportJobRepositoryInterface
     public function countTransactions(ImportJob $job): int;
 
     /**
+     * @param ImportJob $job
+     *
+     * @return int
+     */
+    public function countByTag(ImportJob $job): int;
+
+    /**
      * @param string $importProvider
      *
      * @return ImportJob

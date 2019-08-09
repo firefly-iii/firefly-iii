@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
+
+use Amount;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -51,28 +52,37 @@ class MassControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testDelete(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+        $withdrawal      = $this->getRandomWithdrawal();
+        $withdrawalArray = $this->getRandomWithdrawalAsArray();
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
+        $collector = $this->mock(GroupCollectorInterface::class);
+        $collector->shouldReceive('setTypes')
+                  ->withArgs([[TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]])->atLeast()->once()->andReturnSelf();
 
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withTagInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->withArgs([[$withdrawal->id]])->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$withdrawalArray]);
 
-        $withdrawals = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.delete', $withdrawals));
+        $response = $this->get(route('transactions.mass.delete', [$withdrawal->id]));
         $response->assertStatus(200);
         $response->assertSee('Delete a number of transactions');
         // has bread crumb
@@ -84,23 +94,16 @@ class MassControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        $repository = $this->mockDefaultSession();
+        $deposit    = $this->getRandomDeposit();
 
-        $deposits   = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get();
-        $depositIds = $deposits->pluck('id')->toArray();
-
-        // mock deletion:
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('findNull')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
-        $repository->shouldReceive('destroy')->times(2);
+        $repository->shouldReceive('findNull')->atLeast()->once()->andReturn($deposit);
+        $repository->shouldReceive('destroyJournal')->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
 
-        $data = [
-            'confirm_mass_delete' => $depositIds,
-        ];
+        $data = ['confirm_mass_delete' => [$deposit->id],];
         $this->be($this->user());
         $response = $this->post(route('transactions.mass.destroy'), $data);
         $response->assertSessionHas('success');
@@ -112,165 +115,70 @@ class MassControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        // mock things
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $withdrawal      = $this->getRandomWithdrawal();
+        $withdrawalArray = $this->getRandomWithdrawalAsArray();
+        $asset           = $this->getRandomAsset();
+        $budget          = $this->getRandomBudget();
+
+        $journalRepos = $this->mockDefaultSession();
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        // data:
-        $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
-        $transfersArray = $transfers->pluck('id')->toArray();
-        $source         = $this->user()->accounts()->first();
-
-        $transaction = new Transaction;
-
-        // mock calls:
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            [
-                'amount'         => '10',
-                'foreign_amount' => '',
-                'type'           => 'transfer',
-                'id'             => 3,
-                'journal_id'     => 1,
-            ]
-        );
-
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([new Transaction]));
-
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        // mock data for edit page:
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
-        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer')->atLeast()->once();
-
-        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false)->atLeast()->once();
-
-        // mock stuff:
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
-
-        // mock more stuff:
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->atLeast()->once();
-
-
-        $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', $transfersArray));
-        $response->assertStatus(200);
-        $response->assertSee('Edit a number of transactions');
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
-     */
-    public function testEditMultiple(): void
-    {
+        $repository   = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
-        // mock calls:
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            [
-                'amount'         => '10',
-                'foreign_amount' => '',
-                'type'           => 'transfer',
-                'id'             => 3,
-                'journal_id'     => 1,
-            ]
-        );
 
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector = $this->mock(GroupCollectorInterface::class);
+        $collector->shouldReceive('setTypes')
+                  ->withArgs([[TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]])->atLeast()->once()->andReturnSelf();
+
         $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([new Transaction]));
+        $collector->shouldReceive('withTagInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->withArgs([[$withdrawal->id]])->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$withdrawalArray]);
 
-
+        $repository->shouldReceive('getAccountsByType')->atLeast()->once()->andReturn(new Collection([$asset]));
+        $budgetRepos->shouldReceive('getBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->atLeast()->once();
 
-
-        // mock stuff:
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
-
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal)->atLeast()->once();
-        $journalRepos->shouldReceive('getJournalSourceAccounts')
-                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]))->atLeast()->once();
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')
-                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection, new Collection([1]))->atLeast()->once();
-        $journalRepos->shouldReceive('getTransactionType')
-                     ->andReturn('Withdrawal', 'Opening balance', 'Withdrawal', 'Withdrawal', 'Withdrawal')->atLeast()->once();
-        $journalRepos->shouldReceive('isJournalReconciled')
-                     ->andReturn(true, false, false, false, false)->atLeast()->once();
-
-        // default transactions
-        $collection = $this->user()->transactionJournals()->take(5)->get();
-        $allIds     = $collection->pluck('id')->toArray();
-        $route      = route('transactions.mass.edit', implode(',', $allIds));
         $this->be($this->user());
-        $response = $this->get($route);
+        $response = $this->get(route('transactions.mass.edit', [$withdrawal->id]));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee('marked as reconciled');
-        $response->assertSee('multiple source accounts');
-        $response->assertSee('multiple destination accounts');
     }
-
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testUpdate(): void
     {
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)
-                                     ->whereNull('deleted_at')
-                                     ->first();
+        $deposit       = $this->getRandomDeposit();
+        $repository    = $this->mockDefaultSession();
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $updateService = $this->mock(JournalUpdateService::class);
 
-        // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $this->expectsEvents(UpdatedTransactionGroup::class);
 
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('update')->once();
-        $repository->shouldReceive('findNull')->once()->andReturn($deposit);
-        $repository->shouldReceive('getTransactionType')->andReturn('Deposit');
-        $repository->shouldReceive('getNoteText')->andReturn('Some note');
+        $updateService->shouldReceive('setTransactionJournal')->atLeast()->once();
+        $updateService->shouldReceive('setData')->atLeast()->once();
+        $updateService->shouldReceive('update')->atLeast()->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
+        $repository->shouldReceive('findNull')->atLeast()->once()->andReturn($deposit);
 
         $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 
         $data = [
-            'journals'                                  => [$deposit->id],
-            'description'                               => [$deposit->id => 'Updated salary thing'],
-            'amount'                                    => [$deposit->id => 1600],
-            'amount_currency_id_amount_' . $deposit->id => 1,
-            'date'                                      => [$deposit->id => '2014-07-24'],
-            'source_name'                               => [$deposit->id => 'Job'],
-            'destination_id'                            => [$deposit->id => 1],
-            'category'                                  => [$deposit->id => 'Salary'],
+            'journals'       => [$deposit->id],
+            'description'    => [$deposit->id => 'Updated salary thing'],
+            'amount'         => [$deposit->id => 1600],
+            'date'           => [$deposit->id => '2014-07-24'],
+            'source_name'    => [$deposit->id => 'Job'],
+            'destination_id' => [$deposit->id => 1],
+            'category'       => [$deposit->id => 'Salary'],
         ];
 
         $this->be($this->user());

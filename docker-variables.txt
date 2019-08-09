@@ -1,0 +1,184 @@
+# You can leave this on "local". If you change it to production most console commands will ask for extra confirmation.
+# Never set it to "testing".
+APP_ENV=local
+
+# Set to true if you want to see debug information in error screens.
+APP_DEBUG=false
+
+# This should be your email address
+SITE_OWNER=mail@example.com
+
+# The encryption key for your sessions. Keep this very secure.
+# If you generate a new one existing data must be considered LOST.
+# Change it to a string of exactly 32 chars or use command `php artisan key:generate` to generate it
+APP_KEY=SomeRandomStringOf32CharsExactly
+
+# Change this value to your preferred time zone.
+# Example: Europe/Amsterdam
+TZ=Europe/Amsterdam
+
+# This variable must match your installation's external address but keep in mind that
+# it's only used on the command line as a fallback value.
+APP_URL=http://localhost
+
+# TRUSTED_PROXIES is a useful variable when using Docker and/or a reverse proxy.
+# Set it to ** and reverse proxies work just fine.
+TRUSTED_PROXIES=
+
+# The log channel defines where your log entries go to.
+# 'daily' is the default logging mode giving you 5 daily rotated log files in /storage/logs/.
+# Several other options exist. You can use 'single' for one big fat error log (not recommended).
+# Also available are 'syslog', 'errorlog' and 'stdout' which will log to the system itself.
+LOG_CHANNEL=daily
+
+# Log level. You can set this from least severe to most severe:
+# debug, info, notice, warning, error, critical, alert, emergency
+# If you set it to debug your logs will grow large, and fast. If you set it to emergency probably
+# nothing will get logged, ever.
+APP_LOG_LEVEL=notice
+
+# Database credentials. Make sure the database exists. I recommend a dedicated user for Firefly III
+# For other database types, please see the FAQ: http://firefly-iii.readthedocs.io/en/latest/support/faq.html
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=firefly
+DB_USERNAME=firefly
+DB_PASSWORD=secret_firefly_password
+
+# PostgreSQL supports SSL. You can configure it here.
+PGSQL_SSL_MODE=prefer
+PGSQL_SSL_ROOT_CERT=null
+PGSQL_SSL_CERT=null
+PGSQL_SSL_KEY=null
+PGSQL_SSL_CRL_FILE=null
+
+# If you're looking for performance improvements, you could install memcached.
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+
+# You can configure another file storage backend if you cannot use the local storage option.
+# To set this up, fill in the following variables. The upload path is used to store uploaded
+# files and the export path is to store exported data (before download).
+SFTP_HOST=
+SFTP_PORT=
+SFTP_UPLOAD_PATH=
+SFTP_EXPORT_PATH=
+
+# SFTP uses either the username/password combination or the private key to authenticate.
+SFTP_USERNAME=
+SFTP_PASSWORD=
+SFTP_PRIV_KEY=
+
+# Cookie settings. Should not be necessary to change these.
+COOKIE_PATH="/"
+COOKIE_DOMAIN=
+COOKIE_SECURE=false
+
+# If you want Firefly III to mail you, update these settings
+# For instructions, see: https://firefly-iii.readthedocs.io/en/latest/installation/mail.html
+MAIL_DRIVER=log
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_FROM=changeme@example.com
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+# Other mail drivers:
+MAILGUN_DOMAIN=
+MAILGUN_SECRET=
+MANDRILL_SECRET=
+SPARKPOST_SECRET=
+
+# Firefly III can send you the following messages
+SEND_REGISTRATION_MAIL=true
+SEND_ERROR_MESSAGE=true
+
+# These messages contain (sensitive) transaction information:
+SEND_REPORT_JOURNALS=true
+
+# Set a Mapbox API key here (see mapbox.com) so there might be a map available at various places.
+MAPBOX_API_KEY=
+
+# Firefly III currently supports two provider for live Currency Exchange Rates:
+# "fixer" is the default (for backward compatibility), and "ratesapi" is the new one.
+# RatesApi.IO (see https://ratesapi.io) is a FREE and OPEN SOURCE live currency exchange rates,
+# built compatible with Fixer.IO, based on data published by European Central Bank, and doesn't require API key.
+CER_PROVIDER=ratesapi
+
+# If you have select "fixer" as default currency exchange rates,
+# set a Fixer IO API key here (see https://fixer.io) to enable live currency exchange rates.
+# Please note that this WILL ONLY WORK FOR PAID fixer.io accounts because they severely limited
+# the free API up to the point where you might as well offer nothing.
+FIXER_API_KEY=
+
+# If you wish to track your own behavior over Firefly III, set a valid analytics tracker ID here.
+ANALYTICS_ID=
+
+# Firefly III has two options for user authentication. "eloquent" is the default,
+# and "ldap" for LDAP servers.
+# For full instructions on these settings please visit:
+# https://firefly-iii.readthedocs.io/en/latest/installation/authentication.html
+LOGIN_PROVIDER=eloquent
+
+# LDAP connection configuration
+# OpenLDAP, FreeIPA or ActiveDirectory
+ADLDAP_CONNECTION_SCHEME=OpenLDAP
+ADLDAP_AUTO_CONNECT=true
+
+# LDAP connection settings
+ADLDAP_CONTROLLERS=
+ADLDAP_PORT=389
+ADLDAP_TIMEOUT=5
+ADLDAP_BASEDN=""
+ADLDAP_FOLLOW_REFFERALS=false
+ADLDAP_USE_SSL=false
+ADLDAP_USE_TLS=false
+
+ADLDAP_ADMIN_USERNAME=
+ADLDAP_ADMIN_PASSWORD=
+
+ADLDAP_ACCOUNT_PREFIX=
+ADLDAP_ACCOUNT_SUFFIX=
+
+# LDAP authentication settings.
+ADLDAP_PASSWORD_SYNC=false
+ADLDAP_LOGIN_FALLBACK=false
+
+ADLDAP_DISCOVER_FIELD=distinguishedname
+ADLDAP_AUTH_FIELD=distinguishedname
+
+# Will allow SSO if your server provides an AUTH_USER field.
+WINDOWS_SSO_DISCOVER=samaccountname
+WINDOWS_SSO_KEY=AUTH_USER
+
+# field to sync as local username.
+ADLDAP_SYNC_FIELD=userprincipalname
+
+# You can disable the X-Frame-Options header if it interfears with tools like
+# Organizr. This is at your own risk.
+DISABLE_FRAME_HEADER=false
+
+# Leave the following configuration vars as is.
+# Unless you like to tinker and know what you're doing.
+APP_NAME=FireflyIII
+ADLDAP_CONNECTION=default
+BROADCAST_DRIVER=log
+QUEUE_DRIVER=sync
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+CACHE_PREFIX=firefly
+SEARCH_RESULT_LIMIT=50
+PUSHER_KEY=
+PUSHER_SECRET=
+PUSHER_ID=
+DEMO_USERNAME=
+DEMO_PASSWORD=
+IS_DOCKER=false
+USE_ENCRYPTION=false
+IS_SANDSTORM=false
+IS_HEROKU=false
+BUNQ_USE_SANDBOX=false
+FFIII_LAYOUT=v1

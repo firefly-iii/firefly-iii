@@ -24,11 +24,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Services\Internal\Destroy;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
-use Tests\TestCase;
+use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class AccountDestroyServiceTest
  */
@@ -40,7 +43,7 @@ class AccountDestroyServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -48,8 +51,9 @@ class AccountDestroyServiceTest extends TestCase
      */
     public function testDestroyBasic(): void
     {
+        $this->mock(RecurrenceDestroyService::class);
         $account = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         /** @var AccountDestroyService $service */
@@ -59,14 +63,51 @@ class AccountDestroyServiceTest extends TestCase
         $this->assertDatabaseMissing('accounts', ['id' => $account->id, 'deleted_at' => null]);
     }
 
+
+    /**
+     * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
+     */
+    public function testDestroyWithRecurrence(): void
+    {
+        $recService = $this->mock(RecurrenceDestroyService::class);
+        $account = Account::create(
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
+             'virtual_balance' => '0', 'iban' => null, 'active' => true]
+        );
+
+        $recurrence            = $this->getRandomRecurrence();
+        $recurrenceTransaction = RecurrenceTransaction::create(
+            [
+                'recurrence_id'           => $recurrence->id,
+                'transaction_currency_id' => $this->getEuro()->id,
+                'source_id'               => $account->id,
+                'destination_id'          => $account->id,
+                'amount'                  => 10,
+                'description'             => 'Hello',
+            ]
+        );
+
+        $recService->shouldReceive('destroyById')->once()
+            ->withAnyArgs([$recurrenceTransaction->id]);
+
+        /** @var AccountDestroyService $service */
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
+
+        $this->assertDatabaseMissing('accounts', ['id' => $account->id, 'deleted_at' => null]);
+
+        $recurrenceTransaction->forceDelete();
+    }
+
     /**
      * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
      */
     public function testDestroyDontMove(): void
     {
+        $this->mock(RecurrenceDestroyService::class);
         // create objects:
         $account = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         Transaction::create(['account_id' => $account->id, 'transaction_journal_id' => 1, 'amount' => 10, 'transaction_currency_id' => 1]);
@@ -87,12 +128,13 @@ class AccountDestroyServiceTest extends TestCase
      */
     public function testDestroyMove(): void
     {
+        $this->mock(RecurrenceDestroyService::class);
         $account     = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $move        = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $transaction = Transaction::create(['account_id' => $account->id, 'transaction_journal_id' => 1, 'amount' => 10, 'transaction_currency_id' => 1]);

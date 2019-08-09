@@ -31,6 +31,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $data
  * @property string $name
  * @property int    $account_id
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \FireflyIII\Models\Account $account
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class AccountMeta extends Model
 {

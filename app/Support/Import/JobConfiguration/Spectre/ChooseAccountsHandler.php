@@ -63,7 +63,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         Log::debug('Now in ChooseAccountsHandler::configurationComplete()');
         $config         = $this->importJob->configuration;
         $importAccounts = $config['account_mapping'] ?? [];
-        $complete       = \count($importAccounts) > 0 && $importAccounts !== [0 => 0];
+        $complete       = count($importAccounts) > 0 && $importAccounts !== [0 => 0];
         if ($complete) {
             Log::debug('Looks like user has mapped import accounts to Firefly III accounts', $importAccounts);
             $this->repository->setStage($this->importJob, 'go-for-import');
@@ -98,7 +98,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $config['account_mapping'] = $final;
         $config['apply-rules']     = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
-        if ($final === [0 => 0] || 0 === \count($final)) {
+        if ($final === [0 => 0] || 0 === count($final)) {
             $messages->add('count', (string)trans('import.spectre_no_mapping'));
         }
 
@@ -117,7 +117,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         Log::debug('Now in ChooseAccountsHandler::getnextData()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
-        if (0 === \count($accounts)) {
+        if (0 === count($accounts)) {
             throw new FireflyException('It seems you have no accounts with this bank. The import cannot continue.'); // @codeCoverageIgnore
         }
         $converted = [];
@@ -129,7 +129,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $login    = null;
         $logins   = $config['all-logins'] ?? [];
         $selected = $config['selected-login'] ?? 0;
-        if (0 === \count($logins)) {
+        if (0 === count($logins)) {
             throw new FireflyException('It seems you have no configured logins in this import job. The import cannot continue.'); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Selected login to use is %d', $selected));

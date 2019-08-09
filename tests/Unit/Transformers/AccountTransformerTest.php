@@ -44,7 +44,7 @@ class AccountTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -56,7 +56,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $parameters = new ParameterBag;
@@ -72,9 +72,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // opening balance:
@@ -127,7 +127,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -140,9 +140,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // opening balance:
@@ -195,7 +195,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -208,14 +208,14 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('ccAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // credit card fields:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-01-01')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_type'])->andReturn('monthlyFull')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_monthly_payment_date'])->andReturn('2018-01-01')->atLeast()->once();
 
 
         // opening balance:
@@ -270,7 +270,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -283,9 +283,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // data for liability
@@ -344,7 +344,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomExpense();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -357,9 +357,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // steam is also called for the account balance:

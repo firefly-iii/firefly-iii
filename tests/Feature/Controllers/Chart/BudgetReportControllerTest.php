@@ -25,18 +25,16 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
+
 
 /**
  * Class BudgetReportControllerTest
@@ -49,7 +47,7 @@ class BudgetReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -57,13 +55,16 @@ class BudgetReportControllerTest extends TestCase
      */
     public function testAccountExpense(): void
     {
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $generator   = $this->mock(GeneratorInterface::class);
-        $pieChart    = $this->mock(MetaPieChartInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
+        // mock default session
+        $this->mockDefaultSession();
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
@@ -83,13 +84,17 @@ class BudgetReportControllerTest extends TestCase
      */
     public function testBudgetExpense(): void
     {
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $generator   = $this->mock(GeneratorInterface::class);
-        $pieChart    = $this->mock(MetaPieChartInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
+        // mock default session
+        $this->mockDefaultSession();
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
@@ -105,46 +110,48 @@ class BudgetReportControllerTest extends TestCase
     }
 
     /**
+     * TODO something in this method makes it return a 404.
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testMainChart(): void
     {
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+        $asset        = $this->getRandomAsset();
+        $budget       = $this->getRandomBudget();
+        $limit1       = $this->getRandomBudgetLimit();
+        $limit2       = $this->getRandomBudgetLimit();
+
+        // need to update at least one budget limit so it fits the limits that have been set below.
+        $limit3             = new BudgetLimit;
+        $limit3->budget_id  = $budget->id;
+        $limit3->start_date = new Carbon('2012-01-01');
+        $limit3->end_date   = new Carbon('2012-01-31');
+        $limit3->amount     = '100';
+        $limit3->save();
+
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $one                              = factory(BudgetLimit::class)->make();
-        $one->budget_id                   = 1;
-        $two                              = factory(BudgetLimit::class)->make();
-        $two->budget_id                   = 1;
-        $two->start_date                  = new Carbon('2012-01-01');
-        $two->end_date                    = new Carbon('2012-01-31');
-        $transaction                      = factory(Transaction::class)->make();
-        $transaction->transaction_amount  = '-100';
-        $transaction->destination_amount  = '-100';
-        $transaction->amount              = '-100';
-        $transaction->opposing_account_id = 8;
+        $budgetRepos->shouldReceive('getAllBudgetLimits')->andReturn(new Collection([$limit1, $limit2, $limit3]))->once();
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
 
-        $budgetRepos->shouldReceive('getAllBudgetLimits')->andReturn(new Collection([$one, $two]))->once();
-
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([TransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setBudgets')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setBudgets')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
-        $response = $this->get(route('chart.budget.main', ['1', '1', '20120101', '20120131', 0]));
+        $response = $this->get(route('chart.budget.main', [$asset->id, $budget->id, '20120101', '20120131']));
         $response->assertStatus(200);
     }
 }

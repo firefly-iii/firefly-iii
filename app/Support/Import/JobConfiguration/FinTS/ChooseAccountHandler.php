@@ -34,8 +34,8 @@ use FireflyIII\Support\FinTS\FinTS;
 use Illuminate\Support\MessageBag;
 
 /**
- *
  * Class ChooseAccountHandler
+ * @codeCoverageIgnore
  */
 class ChooseAccountHandler implements FinTSConfigurationInterface
 {

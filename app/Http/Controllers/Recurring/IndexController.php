@@ -48,6 +48,7 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -121,8 +122,8 @@ class IndexController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        $array        = $transformer->transform($recurrence);
-        $transactions = $this->recurring->getTransactions($recurrence);
+        $array  = $transformer->transform($recurrence);
+        $groups = $this->recurring->getTransactions($recurrence);
 
         // transform dates back to Carbon objects:
         foreach ($array['recurrence_repetitions'] as $index => $repetition) {
@@ -133,7 +134,7 @@ class IndexController extends Controller
 
         $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'transactions'));
+        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups'));
     }
 
 }

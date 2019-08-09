@@ -48,6 +48,29 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property RuleGroup  $ruleGroup
  * @property int        $rule_group_id
  * @property string     $description
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereRuleGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereStopProcessing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereStrict($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule withoutTrashed()
+ * @mixin \Eloquent
  */
 class Rule extends Model
 {
@@ -124,6 +147,7 @@ class Rule extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setDescriptionAttribute($value): void
     {

@@ -44,7 +44,7 @@ class BillTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -109,10 +109,7 @@ class BillTransformerTest extends TestCase
 
         $this->assertEquals('2018-03-01', $result['next_expected_match']);
         $this->assertEquals(['2018-01-01'], $result['pay_dates']);
-        $this->assertEquals(
-            ['2018-01-02', '2018-01-09', '2018-01-16', '2018-01-21', '2018-01-30',]
-            , $result['paid_dates']
-        );
+        $this->assertEquals(['2018-01-02', '2018-01-09', '2018-01-16', '2018-01-21', '2018-01-30',], $result['paid_dates']);
     }
 
 }

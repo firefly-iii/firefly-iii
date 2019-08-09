@@ -32,6 +32,7 @@ use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
 /**
+ * TODO make sure all import methods work.
  *
  * Class IndexController
  */
@@ -76,8 +77,6 @@ class IndexController extends Controller
      */
     public function create(string $importProvider)
     {
-
-
         $hasPreReq      = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
         $hasConfig      = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
         $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $importProvider));
@@ -89,12 +88,13 @@ class IndexController extends Controller
         Log::debug(sprintf('Has prerequisites? %s', var_export($hasPreReq, true)));
         Log::debug(sprintf('Has config? %s', var_export($hasConfig, true)));
 
-
+        // @codeCoverageIgnoreStart
         if ($isDemoUser && !$allowedForDemo) {
             Log::debug('User is demo and this provider doesnt work for demo users.');
 
             return redirect(route('import.index'));
         }
+        // @codeCoverageIgnoreEnd
 
         $importJob = $this->repository->create($importProvider);
 
@@ -172,7 +172,7 @@ class IndexController extends Controller
                  ->header('Expires', '0')
                  ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                  ->header('Pragma', 'public')
-                 ->header('Content-Length', \strlen($result));
+                 ->header('Content-Length', strlen($result));
 
         return $response;
     }

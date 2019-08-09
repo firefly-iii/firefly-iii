@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Json;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -47,7 +48,7 @@ class BoxControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -55,13 +56,18 @@ class BoxControllerTest extends TestCase
      */
     public function testAvailable(): void
     {
-        $return     = [
+        $this->mockDefaultSession();
+        $return        = [
             0 => [
                 'spent' => '-1200', // more than budgeted.
             ],
         ];
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
@@ -78,13 +84,18 @@ class BoxControllerTest extends TestCase
      */
     public function testAvailableDays(): void
     {
-        $return     = [
+        $this->mockDefaultSession();
+        $return        = [
             0 => [
                 'spent' => '-800', // more than budgeted.
             ],
         ];
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
+
 
         $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
@@ -101,18 +112,22 @@ class BoxControllerTest extends TestCase
      */
     public function testBalance(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $this->mockDefaultSession();
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         // try a collector for income:
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+        //$collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        //$collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('json.box.balance'));
@@ -124,23 +139,25 @@ class BoxControllerTest extends TestCase
      */
     public function testBalanceTransactions(): void
     {
-        $transaction                          = new Transaction;
-        $transaction->transaction_currency_id = 1;
-        $transaction->transaction_amount      = '5';
-
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $euro          = $this->getEuro();
 
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
-
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         // try a collector for income:
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+
+        //$collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        //$collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
+        $currencyRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($euro);
 
         $this->be($this->user());
         $response = $this->get(route('json.box.balance'));
@@ -152,9 +169,12 @@ class BoxControllerTest extends TestCase
      */
     public function testBills(): void
     {
-        $billRepos = $this->mock(BillRepositoryInterface::class);
+        $this->mockDefaultSession();
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('0');
         $billRepos->shouldReceive('getBillsUnpaidInRange')->andReturn('0');
 
@@ -168,23 +188,24 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorth(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
 
 
         $netWorthHelper = $this->mock(NetWorthInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
@@ -200,22 +221,23 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthFuture(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
@@ -230,21 +252,59 @@ class BoxControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
-    public function testNetWorthNoCurrency(): void
+    public function testNetWorthPast(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
+
+        $start = new Carbon;
+        $start->subMonths(6)->startOfMonth();
+        $end = clone $start;
+        $end->endOfMonth();
+        $this->session(['start' => $start, 'end' => $end]);
+        $this->be($this->user());
+        $response = $this->get(route('json.box.net-worth'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
+     */
+    public function testNetWorthNoCurrency(): void
+    {
+        $this->mockDefaultSession();
+        $result = [
+            [
+                'currency' => $this->getEuro(),
+                'balance'  => '3',
+            ],
+        ];
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
@@ -265,9 +325,10 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthNoInclude(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -276,11 +337,11 @@ class BoxControllerTest extends TestCase
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('0');
@@ -296,9 +357,10 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthVirtual(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -307,13 +369,13 @@ class BoxControllerTest extends TestCase
         $account->virtual_balance = '1000';
         $accountRepos             = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos            = $this->mock(CurrencyRepositoryInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');

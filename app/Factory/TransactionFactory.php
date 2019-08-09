@@ -25,14 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -40,170 +38,112 @@ use Log;
  */
 class TransactionFactory
 {
+    /** @var TransactionJournal */
+    private $journal;
+    /** @var Account */
+    private $account;
+    /** @var TransactionCurrency */
+    private $currency;
+    /** @var TransactionCurrency */
+    private $foreignCurrency;
     /** @var User */
     private $user;
-
-    use TransactionServiceTrait;
+    /** @var bool */
+    private $reconciled;
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
+        $this->reconciled = false;
     }
 
     /**
-     * @param array $data
-     *
-     * @return Transaction
-     * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @param bool $reconciled
+     * @codeCoverageIgnore
      */
-    public function create(array $data): ?Transaction
+    public function setReconciled(bool $reconciled): void
     {
-        Log::debug('Start of TransactionFactory::create()');
-        $currencyId = $data['currency_id'] ?? null;
-        $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
-        if ('' === $data['amount']) {
-            Log::error('Empty string in data.', $data);
-            throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
-        }
-        if (null === $currencyId) {
-            $currency   = app('amount')->getDefaultCurrencyByUser($data['account']->user);
-            $currencyId = $currency->id;
-        }
-        $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
-        Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
-
-        return Transaction::create(
-            [
-                'reconciled'              => $data['reconciled'],
-                'account_id'              => $data['account']->id,
-                'transaction_journal_id'  => $data['transaction_journal']->id,
-                'description'             => $data['description'],
-                'transaction_currency_id' => $currencyId,
-                'amount'                  => $data['amount'],
-                'foreign_amount'          => $data['foreign_amount'],
-                'foreign_currency_id'     => null,
-                'identifier'              => $data['identifier'],
-            ]
-        );
+        $this->reconciled = $reconciled;
     }
 
     /**
-     * Create a pair of transactions based on the data given in the array.
+     * @param Account $account
+     * @codeCoverageIgnore
+     */
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @codeCoverageIgnore
+     */
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    /**
+     * @param TransactionCurrency $foreignCurrency |null
+     * @codeCoverageIgnore
+     */
+    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    {
+        $this->foreignCurrency = $foreignCurrency;
+    }
+
+    /**
+     * Create transaction with negative amount (for source accounts).
      *
+     * @param string $amount
+     * @param string|null $foreignAmount
+     * @return Transaction|null
+     */
+    public function createNegative(string $amount, ?string $foreignAmount): ?Transaction
+    {
+        if (null !== $foreignAmount) {
+            $foreignAmount = app('steam')->negative($foreignAmount);
+        }
+
+        return $this->create(app('steam')->negative($amount), $foreignAmount);
+    }
+
+    /**
+     * Create transaction with positive amount (for destination accounts).
+     *
+     * @param string $amount
+     * @param string|null $foreignAmount
+     * @return Transaction|null
+     */
+    public function createPositive(string $amount, ?string $foreignAmount): ?Transaction
+    {
+        if (null !== $foreignAmount) {
+            $foreignAmount = app('steam')->positive($foreignAmount);
+        }
+
+        return $this->create(app('steam')->positive($amount), $foreignAmount);
+    }
+
+
+    /**
      * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return Collection
-     * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @codeCoverageIgnore
      */
-    public function createPair(TransactionJournal $journal, array $data): Collection
+    public function setJournal(TransactionJournal $journal): void
     {
-        Log::debug('Start of TransactionFactory::createPair()', $data);
-        // all this data is the same for both transactions:
-        Log::debug('Searching for currency info.');
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
-        $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $currency        = $currency ?? $defaultCurrency;
-
-        // enable currency:
-        if (false === $currency->enabled) {
-            $currency->enabled = true;
-            $currency->save();
-        }
-
-
-        // type of source account and destination account depends on journal type:
-        $sourceType      = $this->accountType($journal, 'source');
-        $destinationType = $this->accountType($journal, 'destination');
-
-        Log::debug(sprintf('Expect source account to be of type "%s"', $sourceType));
-        Log::debug(sprintf('Expect source destination to be of type "%s"', $destinationType));
-
-        // find source and destination account:
-        $sourceAccount      = $this->findAccount($sourceType, (int)$data['source_id'], $data['source_name']);
-        $destinationAccount = $this->findAccount($destinationType, (int)$data['destination_id'], $data['destination_name']);
-
-        if (null === $sourceAccount || null === $destinationAccount) {
-            $debugData                = $data;
-            $debugData['source_type'] = $sourceType;
-            $debugData['dest_type']   = $destinationType;
-            Log::error('Info about source/dest:', $debugData);
-            throw new FireflyException('Could not determine source or destination account.');
-        }
-
-        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
-
-        // based on the source type, destination type and transaction type, the system can start throwing FireflyExceptions.
-        $this->validateTransaction($sourceAccount->accountType->type, $destinationAccount->accountType->type, $journal->transactionType->type);
-        $source = $this->create(
-            [
-                'description'         => $data['description'],
-                'amount'              => app('steam')->negative((string)$data['amount']),
-                'foreign_amount'      => null,
-                'currency'            => $currency,
-                'account'             => $sourceAccount,
-                'transaction_journal' => $journal,
-                'reconciled'          => $data['reconciled'],
-                'identifier'          => $data['identifier'],
-            ]
-        );
-        $dest   = $this->create(
-            [
-                'description'         => $data['description'],
-                'amount'              => app('steam')->positive((string)$data['amount']),
-                'foreign_amount'      => null,
-                'currency'            => $currency,
-                'account'             => $destinationAccount,
-                'transaction_journal' => $journal,
-                'reconciled'          => $data['reconciled'],
-                'identifier'          => $data['identifier'],
-            ]
-        );
-        if (null === $source || null === $dest) {
-            throw new FireflyException('Could not create transactions.'); // @codeCoverageIgnore
-        }
-
-        // set foreign currency
-        Log::debug('Trying to find foreign currency information.');
-        $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
-        $this->setForeignCurrency($source, $foreign);
-        $this->setForeignCurrency($dest, $foreign);
-
-        // set foreign amount:
-        if (null !== $data['foreign_amount']) {
-            $this->setForeignAmount($source, app('steam')->negative((string)$data['foreign_amount']));
-            $this->setForeignAmount($dest, app('steam')->positive((string)$data['foreign_amount']));
-        }
-
-        // set budget:
-        if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
-            $data['budget_id']   = null;
-            $data['budget_name'] = null;
-        }
-
-        $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
-        $this->setBudget($source, $budget);
-        $this->setBudget($dest, $budget);
-
-        // set category
-        $category = $this->findCategory($data['category_id'], $data['category_name']);
-        $this->setCategory($source, $category);
-        $this->setCategory($dest, $category);
-
-        return new Collection([$source, $dest]);
+        $this->journal = $journal;
     }
 
     /**
      * @param User $user
+     * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
@@ -211,29 +151,48 @@ class TransactionFactory
     }
 
     /**
-     * @param string $sourceType
-     * @param string $destinationType
-     * @param string $transactionType
-     *
-     * @throws FireflyException
+     * @param string $amount
+     * @param string|null $foreignAmount
+     * @return Transaction|null
      */
-    private function validateTransaction(string $sourceType, string $destinationType, string $transactionType): void
+    private function create(string $amount, ?string $foreignAmount): ?Transaction
     {
-        // throw big fat error when source type === dest type and it's not a transfer or reconciliation.
-        if ($sourceType === $destinationType && $transactionType !== TransactionType::TRANSFER) {
-            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationType));
+        $result = null;
+        $data   = [
+            'reconciled'              => $this->reconciled,
+            'account_id'              => $this->account->id,
+            'transaction_journal_id'  => $this->journal->id,
+            'description'             => null,
+            'transaction_currency_id' => $this->currency->id,
+            'amount'                  => $amount,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => null,
+            'identifier'              => 0,
+        ];
+        try {
+            $result = Transaction::create($data);
+            // @codeCoverageIgnoreStart
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
         }
-        // source must be in this list AND dest must be in this list:
-        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::CREDITCARD, AccountType::CASH, AccountType::DEBT, AccountType::MORTGAGE,
-                 AccountType::LOAN, AccountType::MORTGAGE];
-        if (
-            !\in_array($sourceType, $list, true)
-            && !\in_array($destinationType, $list, true)) {
-            throw new FireflyException(sprintf('At least one of the accounts must be an asset account (%s, %s).', $sourceType, $destinationType));
-        }
-        // either of these must be asset or default account.
+        // @codeCoverageIgnoreEnd
+        if (null !== $result) {
+            Log::debug(
+                sprintf(
+                    'Created transaction #%d (%s %s, account %s), part of journal #%d', $result->id, $this->currency->code, $amount, $this->account->name,
+                    $this->journal->id
+                )
+            );
 
+            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
+                $result->foreign_currency_id = $this->foreignCurrency->id;
+                $result->foreign_amount      = $foreignAmount;
+
+            }
+            $result->save();
+        }
+
+        return $result;
     }
-
-
 }

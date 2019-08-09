@@ -24,13 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
 
-use FireflyIII\Models\Transaction;
-use Illuminate\Support\Collection;
+use FireflyIII\Models\TransactionType;
 
 /**
  * Class Support.
- * @method Collection getExpenses()
- * @method Collection getIncome()
+ * @method array getExpenses()
+ * @method array getIncome()
  *
  * @codeCoverageIgnore
  */
@@ -39,53 +38,63 @@ class Support
     /**
      * Get the top expenses.
      *
-     * @return Collection
+     * @return array
      */
-    public function getTopExpenses(): Collection
+    public function getTopExpenses(): array
     {
-        return $this->getExpenses()->sortBy('transaction_amount');
+        $expenses = $this->getExpenses();
+        usort($expenses, function ($a, $b) {
+            return $a['amount'] <=> $b['amount'];
+        });
+
+        return $expenses;
     }
 
     /**
      * Get the top income.
      *
-     * @return Collection
+     * @return array
      */
-    public function getTopIncome(): Collection
+    public function getTopIncome(): array
     {
-        return $this->getIncome()->sortByDesc('transaction_amount');
+        $income = $this->getIncome();
+        usort($income, function ($a, $b) {
+            return $b['amount'] <=> $a['amount'];
+        });
+
+        return $income;
     }
 
     /**
      * Get averages from a collection.
      *
-     * @param Collection $collection
-     * @param int        $sortFlag
+     * @param array $array
+     * @param int $sortFlag
      *
      * @return array
      */
-    protected function getAverages(Collection $collection, int $sortFlag): array
+    protected function getAverages(array $array, int $sortFlag): array
     {
         $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
+        /** @var array $journal */
+        foreach ($array as $journal) {
             // opposing name and ID:
-            $opposingId = $transaction->opposing_account_id;
+            $opposingId = $journal['destination_account_id'];
 
             // is not set?
             if (!isset($result[$opposingId])) {
-                $name                = $transaction->opposing_account_name;
+                $name                = $journal['destination_account_name'];
                 $result[$opposingId] = [
                     'name'    => $name,
                     'count'   => 1,
                     'id'      => $opposingId,
-                    'average' => $transaction->transaction_amount,
-                    'sum'     => $transaction->transaction_amount,
+                    'average' => $journal['amount'],
+                    'sum'     => $journal['amount'],
                 ];
                 continue;
             }
             ++$result[$opposingId]['count'];
-            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
+            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $journal['amount']);
             $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], (string)$result[$opposingId]['count']);
         }
 
@@ -137,6 +146,7 @@ class Support
          * @var string $entry
          */
         foreach ($earned as $objectId => $entry) {
+            $entry = bcmul($entry, '-1');
             if (!isset($return[$objectId])) {
                 $return[$objectId] = ['spent' => '0', 'earned' => '0'];
             }
@@ -151,18 +161,50 @@ class Support
     /**
      * Summarize the data by account.
      *
-     * @param Collection $collection
+     * @param array $array
      *
      * @return array
      */
-    protected function summarizeByAccount(Collection $collection): array
+    protected function summarizeByAccount(array $array): array
     {
         $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $accountId          = $transaction->account_id;
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $accountId          = $journal['source_account_id'] ?? 0;
             $result[$accountId] = $result[$accountId] ?? '0';
-            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
+            $result[$accountId] = bcadd($journal['amount'], $result[$accountId]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Summarize the data by the asset account or liability, depending on the type.
+     *
+     * In case of transfers, it will choose the source account.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    protected function summarizeByAssetAccount(array $array): array
+    {
+        $result = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $accountId = 0;
+            switch ($journal['transaction_type_type']) {
+                case TransactionType::WITHDRAWAL:
+                case TransactionType::TRANSFER:
+                    $accountId = $journal['source_account_id'] ?? 0;
+                    break;
+                case TransactionType::DEPOSIT:
+                    $accountId = $journal['destination_account_id'] ?? 0;
+                    break;
+            }
+
+            $result[$accountId] = $result[$accountId] ?? '0';
+            $result[$accountId] = bcadd($journal['amount'], $result[$accountId]);
         }
 
         return $result;

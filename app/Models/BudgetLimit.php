@@ -41,6 +41,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              spent
  * @property int                 $transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereBudgetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class BudgetLimit extends Model
 {

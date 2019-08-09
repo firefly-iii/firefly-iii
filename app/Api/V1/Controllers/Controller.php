@@ -61,7 +61,6 @@ class Controller extends BaseController
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function buildParams(): string
     {
@@ -86,7 +85,6 @@ class Controller extends BaseController
      * Method to grab all parameters from the URI.
      *
      * @return ParameterBag
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getParameters(): ParameterBag
     {

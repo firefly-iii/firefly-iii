@@ -24,17 +24,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Budget;
 
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -49,7 +45,7 @@ class AmountControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -57,21 +53,24 @@ class AmountControllerTest extends TestCase
      */
     public function testAmount(): void
     {
-        Log::info('Now in testAmount()');
         // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $budget     = $this->getRandomBudget();
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
         $repository->shouldReceive('budgetedPerDay')->andReturn('10');
 
+        $this->mockDefaultSession();
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('200');
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
-        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response = $this->post(route('budgets.amount', [$budget->id]), $data);
         $response->assertStatus(200);
+        // assert some reactions:
+        $response->assertSee($budget->name);
+        $response->assertSee('"amount":"200"');
     }
 
 
@@ -80,192 +79,23 @@ class AmountControllerTest extends TestCase
      */
     public function testAmountLargeDiff(): void
     {
-        Log::info('Now in testAmountLargeDiff()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $budget     = $this->getRandomBudget();
+
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
         $repository->shouldReceive('budgetedPerDay')->andReturn('10');
 
+        $this->mockDefaultSession();
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('200');
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = ['amount' => 20000, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
-        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response = $this->post(route('budgets.amount', [$budget->id]), $data);
         $response->assertStatus(200);
-        $response->assertSee('Normally you budget about \u20ac10.00 per day.');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Budget\AmountController
-     */
-    public function testAmountOutOfRange(): void
-    {
-        Log::info('Now in testAmountOutOfRange()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
-
-        $today = new Carbon;
-        $start = $today->startOfMonth()->format('Y-m-d');
-        $end   = $today->endOfMonth()->format('Y-m-d');
-        $data  = ['amount' => 200, 'start' => $start, 'end' => $end];
-        $this->be($this->user());
-        $response = $this->post(route('budgets.amount', [1]), $data);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Budget\AmountController
-     */
-    public function testAmountZero(): void
-    {
-        Log::info('Now in testAmountZero()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('budgetedPerDay')->andReturn('10');
-
-        $data = ['amount' => 0, 'start' => '2017-01-01', 'end' => '2017-01-31'];
-        $this->be($this->user());
-        $response = $this->post(route('budgets.amount', [1]), $data);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Budget\AmountController
-     */
-    public function testInfoIncome(): void
-    {
-        Log::info('Now in testInfoIncome()');
-        // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
-
-        // collect transactions to return. First an expense, then income.
-        $income                      = new Transaction;
-        $income->transaction_amount  = '150';
-        $incomeCollection            = new Collection([$income]);
-        $expense                     = new Transaction;
-        $expense->transaction_amount = '100';
-        $expenseCollection           = new Collection([$expense]);
-
-        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
-
-
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Budget\AmountController
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testInfoIncomeExpanded(string $range): void
-    {
-        Log::info(sprintf('Now in testInfoIncomeExpanded(%s)', $range));
-        // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
-
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
-
-        // collect transactions to return. First an expense, then income.
-        $income                      = new Transaction;
-        $income->transaction_amount  = '150';
-        $incomeCollection            = new Collection([$income]);
-        $expense                     = new Transaction;
-        $expense->transaction_amount = '100';
-        $expenseCollection           = new Collection([$expense]);
-
-        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('budgets.income.info', ['20170301', '20170430']));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Budget\AmountController
-     */
-    public function testInfoIncomeInversed(): void
-    {
-        Log::info('Now in testInfoIncomeInversed()');
-        // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
-        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
-
-        // collect transactions to return. First an expense, then income.
-        $income                      = new Transaction;
-        $income->transaction_amount  = '100';
-        $incomeCollection            = new Collection([$income]);
-        $expense                     = new Transaction;
-        $expense->transaction_amount = '150';
-        $expenseCollection           = new Collection([$expense]);
-
-        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
-
-
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
-        $response->assertStatus(200);
+        $response->assertSee('Usually you budget about 200 per day.');
+        $response->assertSee($budget->name);
     }
 
     /**
@@ -273,18 +103,12 @@ class AmountControllerTest extends TestCase
      */
     public function testPostUpdateIncome(): void
     {
-        Log::info('Now in testPostUpdateIncome()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-        //$fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        //$fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
         $repository->shouldReceive('setAvailableBudget');
         $repository->shouldReceive('cleanupBudgets');
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $data = ['amount' => '200', 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
@@ -298,22 +122,19 @@ class AmountControllerTest extends TestCase
      */
     public function testUpdateIncome(): void
     {
-        Log::info('Now in testUpdateIncome()');
-        // must be in list
-        $this->be($this->user());
-
-        // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+
+        $this->mockDefaultSession();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
         $repository->shouldReceive('cleanupBudgets');
 
+
+        $this->be($this->user());
         $response = $this->get(route('budgets.income', ['2017-01-01', '2017-01-31']));
         $response->assertStatus(200);
     }

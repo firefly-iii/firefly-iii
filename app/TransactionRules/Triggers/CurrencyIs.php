@@ -70,8 +70,15 @@ final class CurrencyIs extends AbstractTrigger implements TriggerInterface
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $currency   = $repository->findByNameNull($this->triggerValue);
-        $hit        = true;
+
+        // if currency name contains " ("
+        if (0 === strpos($this->triggerValue, ' (')) {
+            $parts              = explode(' (', $this->triggerValue);
+            $this->triggerValue = $parts[0];
+        }
+
+        $currency = $repository->findByNameNull($this->triggerValue);
+        $hit      = true;
         if (null !== $currency) {
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {

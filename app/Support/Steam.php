@@ -28,10 +28,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use stdClass;
 
 /**
  * Class Steam.
+ * @codeCoverageIgnore
  */
 class Steam
 {
@@ -44,13 +46,16 @@ class Steam
      */
     public function balance(Account $account, Carbon $date): string
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         //
         /** @var AccountRepositoryInterface $repository */
@@ -93,6 +98,9 @@ class Steam
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -139,6 +147,9 @@ class Steam
      */
     public function balanceInRange(Account $account, Carbon $start, Carbon $end): array
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -225,7 +236,9 @@ class Steam
      */
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
-
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -259,6 +272,9 @@ class Steam
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties;
@@ -291,6 +307,9 @@ class Steam
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties;
@@ -371,6 +390,7 @@ class Steam
         ];
         $replace = "\x20"; // plain old normal space
         $string  = str_replace($search, $replace, $string);
+        $string  = str_replace(["\n", "\t", "\r"], "\x20", $string);
 
         return trim($string);
     }
@@ -382,6 +402,9 @@ class Steam
      */
     public function getLastActivities(array $accounts): array
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
         $list = [];
 
         $set = auth()->user()->transactions()

@@ -28,8 +28,8 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class OpposingAccountMapperTest
@@ -42,7 +42,7 @@ class OpposingAccountMapperTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -72,16 +72,16 @@ class OpposingAccountMapperTest extends TestCase
      */
     public function testAccountIdBadType(): void
     {
-        $expected       = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
+        $expected       = $this->getRandomRevenue();
         $expected->iban = null;
         $expected->save();
         $amount       = '-12.34';
         $expectedArgs = [
             'name'            => $expected->name,
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -90,6 +90,9 @@ class OpposingAccountMapperTest extends TestCase
         $repository->shouldReceive('findNull')->andReturn($expected)->once();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::LOAN]])->andReturnNull();
         $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
                    ->andReturn(new Account);
 
@@ -116,9 +119,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => $expected->name,
             'iban'            => $expected->iban,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -127,8 +130,15 @@ class OpposingAccountMapperTest extends TestCase
         $repository->shouldReceive('findNull')->andReturn($expected)->once();
         $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByIbanNull')->withArgs([$expected->iban, [AccountType::LOAN]])->andReturnNull();
+
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::EXPENSE]])->andReturnNull();
         $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::ASSET]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::DEBT]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::MORTGAGE]])->andReturnNull();
+        $repository->shouldReceive('findByName')->withArgs([$expected->name, [AccountType::LOAN]])->andReturnNull();
         $repository->shouldReceive('store')->withArgs([$expectedArgs])->once()
                    ->andReturn(new Account);
 
@@ -152,9 +162,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => '(no name)',
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::EXPENSE,
+            'account_type'     => AccountType::EXPENSE,
             'active'          => true,
             'BIC'             => null,
         ];
@@ -184,9 +194,9 @@ class OpposingAccountMapperTest extends TestCase
         $expectedArgs = [
             'name'            => '(no name)',
             'iban'            => null,
-            'accountNumber'   => null,
+            'account_number'   => null,
             'account_type_id' => null,
-            'accountType'     => AccountType::REVENUE,
+            'account_type'     => AccountType::REVENUE,
             'active'          => true,
             'BIC'             => null,
         ];

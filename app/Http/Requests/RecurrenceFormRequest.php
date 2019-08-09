@@ -29,6 +29,9 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
+use FireflyIII\Validation\AccountValidator;
+use Illuminate\Validation\Validator;
+use Log;
 
 /**
  * Class RecurrenceFormRequest
@@ -120,11 +123,11 @@ class RecurrenceFormRequest extends Request
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
             case 'withdrawal':
-                $return['transactions'][0]['source_id']        = $this->integer('source_id');
-                $return['transactions'][0]['destination_name'] = $this->string('destination_name');
+                $return['transactions'][0]['source_id']      = $this->integer('source_id');
+                $return['transactions'][0]['destination_id'] = $this->integer('withdrawal_destination_id');
                 break;
             case 'deposit':
-                $return['transactions'][0]['source_name']    = $this->string('source_name');
+                $return['transactions'][0]['source_id']      = $this->integer('deposit_source_id');
                 $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
                 break;
             case 'transfer':
@@ -134,6 +137,86 @@ class RecurrenceFormRequest extends Request
         }
 
         return $return;
+    }
+
+
+    /**
+     * Configure the validator instance with special rules for after the basic validation rules.
+     *
+     * @param Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                // validate all account info
+                $this->validateAccountInformation($validator);
+            }
+        );
+    }
+
+    /**
+     * Validates the given account information. Switches on given transaction type.
+     *
+     * @param Validator $validator
+     * @throws FireflyException
+     */
+    public function validateAccountInformation(Validator $validator): void
+    {
+        Log::debug('Now in validateAccountInformation()');
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+        $data             = $validator->getData();
+        $transactionType  = $data['transaction_type'] ?? 'invalid';
+
+        $accountValidator->setTransactionType($transactionType);
+
+        // default values:
+        $sourceId      = null;
+        $destinationId = null;
+
+        switch ($this->string('transaction_type')) {
+            default:
+                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
+            case 'withdrawal':
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['withdrawal_destination_id'];
+                break;
+            case 'deposit':
+                $sourceId      = (int)$data['deposit_source_id'];
+                $destinationId = (int)$data['destination_id'];
+                break;
+            case 'transfer':
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['destination_id'];
+                break;
+        }
+
+
+        // validate source account.
+        $validSource = $accountValidator->validateSource($sourceId, null);
+
+        // do something with result:
+        if (false === $validSource) {
+            $message = (string)trans('validation.generic_invalid_source');
+            $validator->errors()->add('source_id', $message);
+            $validator->errors()->add('deposit_source_id', $message);
+
+            return;
+        }
+
+        // validate destination account
+        $validDestination = $accountValidator->validateDestination($destinationId, null);
+        // do something with result:
+        if (false === $validDestination) {
+            $message = (string)trans('validation.generic_invalid_destination');
+            $validator->errors()->add('destination_id', $message);
+            $validator->errors()->add('withdrawal_destination_id', $message);
+
+            return;
+        }
     }
 
     /**
@@ -251,7 +334,7 @@ class RecurrenceFormRequest extends Request
         }
         //monthly,17
         //ndom,3,7
-        if (\in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
             $return['type']   = substr($value, 0, 6);
             $return['moment'] = substr($value, 7);
         }

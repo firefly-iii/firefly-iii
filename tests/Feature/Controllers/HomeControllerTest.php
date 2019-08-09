@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Account;
+use Amount;
+use Event;
+use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -52,7 +53,7 @@ class HomeControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -61,12 +62,7 @@ class HomeControllerTest extends TestCase
      */
     public function testDateRange(): void
     {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $this->mockDefaultSession();
         $this->be($this->user());
 
         $args = [
@@ -84,12 +80,7 @@ class HomeControllerTest extends TestCase
      */
     public function testDateRangeCustom(): void
     {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $this->mockDefaultSession();
         $this->be($this->user());
 
         $args = [
@@ -105,7 +96,6 @@ class HomeControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\HomeController
-     * @covers       \FireflyIII\Http\Controllers\HomeController
      * @covers       \FireflyIII\Http\Controllers\Controller
      * @dataProvider dateRangeProvider
      *
@@ -113,39 +103,49 @@ class HomeControllerTest extends TestCase
      */
     public function testIndex(string $range): void
     {
+        Event::fake();
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_index');
+        $account = $this->getRandomAsset();
+
+        $pref       = new Preference;
+        $pref->data = [$account->id];
+        Preferences::shouldReceive('get')->withArgs(['frontPageAccounts', [$account->id]])->atLeast()->once()->andReturn($pref);
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+        Steam::shouldReceive('balance')->atLeast()->once()->andReturn('5');
         // mock stuff
-        $account       = factory(Account::class)->make();
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $billRepos     = $this->mock(BillRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $euro         = $this->getEuro();
+
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('count')->andReturn(1);
+        $accountRepos->shouldReceive('count')->andReturn(1)->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection([$account]));
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $billRepos->shouldReceive('getBills')->andReturn(new Collection);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection([$account]))->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]))->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $billRepos->shouldReceive('getBills')->andReturn(new Collection)->atLeast()->once();
+//        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro);
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getGroups')->atLeast()->once()->andReturn(new Collection);
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('index'));
         $response->assertStatus(200);
+        Event::assertDispatched(RequestedVersionCheckStatus::class);
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\HomeController
      * @covers       \FireflyIII\Http\Controllers\HomeController
      * @covers       \FireflyIII\Http\Controllers\Controller
      * @dataProvider dateRangeProvider
@@ -154,12 +154,10 @@ class HomeControllerTest extends TestCase
      */
     public function testIndexEmpty(string $range): void
     {
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_index');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(0);
 
         $this->be($this->user());

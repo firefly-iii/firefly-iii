@@ -201,7 +201,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if topExpenses.count > 0 %}
+        {% if topExpenses|length > 0 %}
             <div class="col-lg-6">
 
                 <div class="box">
@@ -221,16 +221,18 @@
                             <tbody>
                             {% set totalSum = 0 %}
                             {% for row in topExpenses %}
-                                {% set totalSum = totalSum + row.transaction_amount %}
+
+                                {% set totalSum = totalSum + row.amount %}
+
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
                                     <tr>
                                 {% endif %}
                                 <td data-sortable="false">
-                                    <a href="{{ route('transactions.show', row.journal_id) }}">
-                                        {% if row.transaction_description|length > 0 %}
-                                            {{ row.transaction_description }} ({{ row.description }})
+                                    <a href="{{ route('transactions.show', row.transaction_group_id) }}">
+                                        {% if row.group_title|length > 0 %}
+                                            {{ row.group_title }} ({{ row.description }})
                                         {% else %}
                                             {{ row.description }}
                                         {% endif %}
@@ -239,14 +241,18 @@
                                 <td data-value="{{ row.date.format('Y-m-d') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td data-value="{{ row.opposing_account_name }}">
-                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
-                                        {{ row.opposing_account_name }}
+
+                                <td data-value="{{ row.destination_account_name }}">
+                                    <a href="{{ route('accounts.show', row.destination_account_id) }}">
+                                        {{ row.destination_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}" style="text-align: right;">
-                                    {{ row.transaction_amount|formatAmount }}
+
+
+                                <td data-value="{{ row.amount}}" style="text-align: right;">
+                                    {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_symbol_decimal_places) }}
                                 </td>
+
                                 </tr>
                             {% endfor %}
                             </tbody>

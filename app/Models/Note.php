@@ -36,6 +36,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $text
  * @property string $title
  * @property int    $noteable_id
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string $noteable_type
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $noteable
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Note onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereNoteableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereNoteableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Note whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Note withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Note withoutTrashed()
+ * @mixin \Eloquent
  */
 class Note extends Model
 {
@@ -66,6 +86,7 @@ class Note extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setTextAttribute($value): void
     {

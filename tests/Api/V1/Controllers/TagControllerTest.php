@@ -23,19 +23,17 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Transformers\TagTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class TagControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagControllerTest extends TestCase
 {
@@ -46,131 +44,7 @@ class TagControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', \get_class($this)));
-    }
-
-    /**
-     * Destroy Tag over API.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TagController
-     */
-    public function testDelete(): void
-    {
-        // mock stuff:
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
-
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(2);
-        $tagRepos->shouldReceive('destroy')->once()->andReturn(true);
-        $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->id])->andReturnNull();
-        $tagRepos->shouldReceive('findNull')->once()->withArgs([$tag->id])->andReturn($tag);
-
-
-        // call API
-        $response = $this->delete(route('api.v1.tags.delete', [$tag->id]));
-        $response->assertStatus(204);
-    }
-
-    /**
-     * Destroy Tag over API.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TagController
-     */
-    public function testDeleteByTag(): void
-    {
-        // mock stuff:
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(2);
-        $tagRepos->shouldReceive('destroy')->once()->andReturn(true);
-        $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->tag])->andReturn($tag);
-
-        // call API
-        $response = $this->delete(route('api.v1.tags.delete', [$tag->tag]));
-        $response->assertStatus(204);
-    }
-
-    /**
-     * Tag index
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TagController
-     */
-    public function testIndex(): void
-    {
-        // mock stuff:
-        $tagRepos    = $this->mock(TagRepositoryInterface::class);
-        $transformer = $this->mock(TagTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(1);
-        $tagRepos->shouldReceive('get')->once()->andReturn(new Collection());
-
-        // call API
-        $response = $this->get(route('api.v1.tags.index'));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Destroy Tag over API.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TagController
-     */
-    public function testShow(): void
-    {
-        // mock stuff:
-        $tagRepos    = $this->mock(TagRepositoryInterface::class);
-        $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $transformer = $this->mock(TagTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(2);
-        $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->id])->andReturnNull();
-        $tagRepos->shouldReceive('findNull')->once()->withArgs([$tag->id])->andReturn($tag);
-
-
-        // call API
-        $response = $this->get(route('api.v1.tags.show', [$tag->id]));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Show Tag over API.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TagController
-     */
-    public function testShowByTag(): void
-    {
-        // mock stuff:
-        $tagRepos    = $this->mock(TagRepositoryInterface::class);
-        $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $transformer = $this->mock(TagTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(2);
-        $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->tag])->andReturn($tag);
-
-        // call API
-        $response = $this->get(route('api.v1.tags.show', [$tag->tag]));
-        $response->assertStatus(200);
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -183,7 +57,7 @@ class TagControllerTest extends TestCase
     {
         $tagRepos    = $this->mock(TagRepositoryInterface::class);
         $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $data        = ['tag' => 'Some tag' . $this->randomInt(),];
         $transformer = $this->mock(TagTransformer::class);
 
         // mock transformer
@@ -203,46 +77,43 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * Show transactions.
-     *
      * @covers \FireflyIII\Api\V1\Controllers\TagController
      */
-    public function testTransactions(): void
+    public function testCloud(): void
     {
-        // mock stuff:
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $tag          = $this->user()->tags()->inRandomOrder()->first();
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tags     = $this->user()->tags()->inRandomOrder()->limit(3)->get();
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $paginator = new LengthAwarePaginator([], 0, 50);
-
-        // mock calls:
-        $tagRepos->shouldReceive('setUser')->times(2);
-        $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->id])->andReturnNull();
-        $tagRepos->shouldReceive('findNull')->once()->withArgs([$tag->id])->andReturn($tag);
-
-        $collector->shouldReceive('setUser')->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->once()->andReturnSelf();
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setTag')->once()->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->once()->andReturnSelf();
-        $collector->shouldReceive('setRange')->once()->andReturnSelf();
-        $collector->shouldReceive('setPage')->once()->andReturnSelf();
-        $collector->shouldReceive('setTypes')->once()->andReturnSelf();
-        $collector->shouldReceive('setLimit')->once()->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->once()->andReturn($paginator);
-
+        $tagRepos->shouldReceive('setUser')->times(1);
+        $tagRepos->shouldReceive('get')->atLeast()->once()->andReturn($tags);
+        $tagRepos->shouldReceive('earnedInPeriod')->times(3)->andReturn('0');
+        $tagRepos->shouldReceive('spentInPeriod')->times(3)->andReturn('-10', '-20', '-30');
 
         // call API
-        $response = $this->get(route('api.v1.tags.transactions', [$tag->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31']));
+        $parameters = [
+            'start' => '2019-01-01',
+            'end'   => '2019-01-05',
+        ];
+        $response   = $this->get(route('api.v1.tag-cloud.cloud') . '?' . http_build_query($parameters));
         $response->assertStatus(200);
+
+        $response->assertJson(
+            [
+                'tags' => [
+                    [
+                        'size'     => 10,
+                        'relative' => 0.3333,
+                    ],
+                    [
+                        'size'     => 20,
+                        'relative' => 0.6667,
+                    ],
+                    [
+                        'size'     => 30,
+                        'relative' => 1,
+                    ],
+                ],
+            ]);
     }
 
     /**
@@ -255,7 +126,7 @@ class TagControllerTest extends TestCase
     {
         $tagRepos    = $this->mock(TagRepositoryInterface::class);
         $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $data        = ['tag' => 'Some tag' . $this->randomInt(),];
         $transformer = $this->mock(TagTransformer::class);
 
         // mock transformer

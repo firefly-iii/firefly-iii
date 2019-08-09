@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Recurring;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -114,11 +115,15 @@ interface RecurringRepositoryInterface
      * @param Carbon               $start
      * @param Carbon               $end
      *
-     * @throws FireflyException
-     *
      * @return array
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Recurrence $recurrence
+     * @return PiggyBank|null
+     */
+    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank;
 
     /**
      * Get the tags from the recurring transaction.
@@ -176,10 +181,9 @@ interface RecurringRepositoryInterface
 
     /**
      * Store a new recurring transaction.
-     *\
      *
      * @param array $data
-     *
+     * @throws FireflyException
      * @return Recurrence
      */
     public function store(array $data): Recurrence;

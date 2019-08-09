@@ -49,24 +49,9 @@ interface AttachmentRepositoryInterface
     public function exists(Attachment $attachment): bool;
 
     /**
-     * @param int $attachmentId
-     *
-     * @return Attachment|null
-     */
-    public function findWithoutUser(int $attachmentId): ?Attachment;
-
-    /**
      * @return Collection
      */
     public function get(): Collection;
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBetween(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param Attachment $attachment

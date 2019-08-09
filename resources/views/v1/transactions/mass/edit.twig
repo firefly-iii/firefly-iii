@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactions) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journals) }}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,9 @@
                     <div class="box-body">
                         <p>
                             {{ 'cannot_edit_other_fields'|_ }}
+                            <span class="text-danger">{{ 'cannot_change_amount_reconciled'|_ }}</span>
                         </p>
+
                         <table class="table table-striped table-condensed">
                             <tr>
                                 <th class="">&nbsp;</th>
@@ -29,91 +31,129 @@
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.budget') }}</th>
                             </tr>
-                            {% for transaction in transactions %}
+                            {% for journal in journals %}
                                 <tr>
                                     <td>
                                         {# LINK TO EDIT FORM #}
-                                        <a href="{{ route('transactions.edit', transaction.journal_id) }}" class="btn btn-xs btn-default"><i
+                                        <a href="{{ route('transactions.edit', journal.transaction_group_id) }}" class="btn btn-xs btn-default"><i
                                                     class="fa fa-fw fa-pencil"></i></a>
-                                        <input type="hidden" name="journals[]" value="{{ transaction.journal_id }}"/>
+                                        <input type="hidden" name="journals[]" value="{{ journal.transaction_journal_id }}"/>
                                     </td>
                                     <td>
                                         {# DESCRIPTION #}
                                         <input class="form-control input-sm" autocomplete="off"
-                                               placeholder="{{ transaction.description }}" name="description[{{ transaction.journal_id }}]"
-                                               type="text" value="{{ transaction.description }}">
+                                               placeholder="{{ journal.description }}" name="description[{{ journal.transaction_journal_id }}]"
+                                               type="text" value="{{ journal.description }}">
                                     </td>
                                     {# AMOUNT #}
                                     <td>
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-addon">{{ transaction.currency_symbol }}</span>
-                                            <input name="amount[{{ transaction.journal_id }}]" class="form-control" autocomplete="off"
-                                                   step="any" type="number" value="{{ transaction.amount }}">
-                                            <input type="hidden" name="transaction_currency_id[{{ transaction.journal_id }}]"
-                                                   value="{{ transaction.currency_id }}">
-                                        </div>
-                                        {% if transaction.foreign_amount %}
-                                            {# insert foreign data #}
+                                        {% if journal.reconciled == false %}
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-addon">{{ transaction.foreign_currency_symbol }}</span>
-                                                <input name="foreign_amount[{{ transaction.journal_id }}]" class="form-control" autocomplete="off"
-                                                       step="any" type="number" value="{{ transaction.foreign_amount }}">
-                                                <input type="hidden" name="foreign_currency_id[{{ transaction.journal_id }}]" value="{{ transaction.foreign_currency_id }}">
+                                                <span class="input-group-addon">{{ journal.currency_symbol }}</span>
+                                                <input name="amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
+                                                       step="any" type="number" value="{{ journal.amount }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ journal.transaction_journal_id }}]"
+                                                       value="{{ journal.currency_id }}">
                                             </div>
+                                            {% if journal.foreign_amount %}
+                                                {# insert foreign data #}
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-addon">{{ journal.foreign_currency_symbol }}</span>
+                                                    <input name="foreign_amount[{{ journal.transaction_journal_id }}]" class="form-control" autocomplete="off"
+                                                           step="any" type="number" value="{{ journal.foreign_amount }}">
+                                                    <input type="hidden" name="foreign_currency_id[{{ journal.transaction_journal_id }}]"
+                                                           value="{{ journal.foreign_currency_id }}">
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
+                                        <span class="text-sm">
+                                        {% if journal.reconciled != false %}
+                                            {% if journal.transaction_type_type == 'Deposit' %}
+                                                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                                {% if null != journal.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                {% endif %}
+                                            {% elseif journal.transaction_type_type == 'Transfer' %}
+                                                <span class="text-info">
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places, false) }}
+                                                    {% if null != journal.foreign_amount %}
+                                                        ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places, false) }})
+                                                    {% endif %}
+                                                </span>
+                                            {% else %}
+                                                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                                {% if null != journal.foreign_amount %}
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                            </span>
                                     </td>
                                     <td>
                                         {# DATE #}
                                         <input class="form-control input-sm" autocomplete="off"
-                                               name="date[{{ transaction.journal_id }}]" type="date" value="{{ transaction.date|slice(0,10) }}">
+                                               name="date[{{ journal.transaction_journal_id }}]" type="date" value="{{ journal.date|slice(0,10) }}">
                                     </td>
+                                    <!-- {{ journal.transaction_type_type }} -->
+                                    <!-- Source: {{ journal.source_account_name }} ({{ journal.source_account_id }}) -->
+                                    <!-- Destination: {{ journal.destination_account_name }} ({{ journal.destination_account_id }}) -->
                                     <td style="position: relative;">
+
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
-                                        {% if transaction.type == 'Transfer' or transaction.type == 'Withdrawal' %}
-                                            <select class="form-control input-sm" name="source_id[{{ transaction.journal_id }}]">
-                                                {% for account in accounts %}
-                                                    <!-- {{ transaction.type }}: {{ transaction.source_name }} -->
-                                                    <option value="{{ account.id }}"{% if account.id == transaction.source_id %} selected{% endif %} label="{{ account.name }}">{{ account.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        {% else %}
-                                            {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
-                                            <input class="form-control input-sm" placeholder="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}" autocomplete="off"
-                                                   name="source_name[{{ transaction.journal_id }}]" type="text" value="{% if transaction.source_type != 'Cash account' %}{{ transaction.source_name }}{% endif %}">
-                                        {% endif %}
-                                    </td>
-                                    <td style="position: relative;">
-                                        {% if transaction.type == 'Transfer' or transaction.type == 'Deposit' %}
-                                            {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
-                                            <select class="form-control input-sm" name="destination_id[{{ transaction.journal_id }}]">
-                                                {% for account in accounts %}
-                                                    <option value="{{ account.id }}"{% if account.id == transaction.destination_id %} selected="selected"{% endif %}
+                                        {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Withdrawal' %}
+                                            <select class="form-control input-sm" name="source_id[{{ journal.transaction_journal_id }}]">
+                                                {% for account in withdrawalSources %}
+                                                    <option value="{{ account.id }}"{% if account.id == journal.source_account_id %} selected{% endif %}
                                                             label="{{ account.name }}">{{ account.name }}</option>
                                                 {% endfor %}
                                             </select>
-                                        {% else %}
+                                        {% endif %}
 
-                                            {# DESTINATION ACCOUNT NAME FOR EXPENSE #}
-                                            <input class="form-control input-sm" placeholder="{% if transaction.destination_type != 'Cash account' %}{{ transaction.destination_name }}{% endif %}"
-                                                   name="destination_name[{{ transaction.journal_id }}]" type="text" autocomplete="off"
-                                                   value="{% if transaction.destination_type != 'Cash account' %}{{ transaction.destination_name }}{% endif %}">
+                                        {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
+                                        {% if journal.transaction_type_type == 'Deposit' %}
+                                            <input class="form-control input-sm"
+                                                   placeholder="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}"
+                                                   autocomplete="off"
+                                                   name="source_name[{{ journal.transaction_journal_id }}]" type="text"
+                                                   value="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}">
+                                        {% endif %}
+                                    </td>
+                                    <td style="position: relative;">
+
+                                        {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
+                                        {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Deposit' %}
+
+                                            <select class="form-control input-sm" name="destination_id[{{ journal.transaction_journal_id }}]">
+                                                {% for account in depositDestinations %}
+                                                    <option value="{{ account.id }}"{% if account.id == journal.destination_account_id %} selected="selected"{% endif %}
+                                                            label="{{ account.name }}">{{ account.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        {% endif %}
+
+                                        {# DESTINATION ACCOUNT NAME FOR WITHDRAWAL #}
+                                        {% if journal.transaction_type_type == 'Withdrawal' %}
+                                            <input class="form-control input-sm"
+                                                   placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}"
+                                                   name="destination_name[{{ journal.transaction_journal_id }}]" type="text" autocomplete="off"
+                                                   value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}">
                                         {% endif %}
                                     </td>
                                     {# category #}
                                     <td style="position: relative;">
-                                        <input class="form-control input-sm" placeholder="{{ transaction.category_name }}" autocomplete="off"
-                                               name="category[{{ transaction.journal_id }}]" type="text" value="{{ transaction.category_name }}">
+                                        <input class="form-control input-sm" placeholder="{{ journal.category_name }}" autocomplete="off"
+                                               name="category[{{ journal.transaction_journal_id }}]" type="text" value="{{ journal.category_name }}">
                                     </td>
                                     {# budget #}
                                     <td>
-                                        {% if transaction.type == 'Withdrawal' %}
-                                            <select class="form-control input-sm" name="budget_id[{{ transaction.journal_id }}]">
+                                        {% if journal.transaction_type_type == 'Withdrawal' %}
+                                            <select class="form-control input-sm" name="budget_id[{{ journal.transaction_journal_id }}]">
                                                 <option value="0" label="({{ 'no_budget'|_ }})"
-                                                        {% if transaction.budget_id == 0 %}selected="selected"{% endif %}
+                                                        {% if journal.budget_id == 0 %}selected="selected"{% endif %}
                                                 >({{ 'no_budget'|_ }})
                                                 </option>
                                                 {% for budget in budgets %}
-                                                    <option value="{{ budget.id }}"{% if budget.id == transaction.budget_id %} selected="selected"{% endif %}
+                                                    <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"{% endif %}
                                                             label="{{ budget.name }}">{{ budget.name }}</option>
                                                 {% endfor %}
                                             </select>

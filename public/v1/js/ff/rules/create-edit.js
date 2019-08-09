@@ -307,7 +307,7 @@ function updateTriggerInput(selectList) {
         case 'to_account_is':
         case 'to_account_contains':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/all-accounts');
+            createAutoComplete(inputResult, 'json/accounts');
             break;
         case 'tag_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -377,8 +377,8 @@ function createAutoComplete(input, URI) {
                                     prefetch: {
                                         url: URI + '?uid=' + uid,
                                         filter: function (list) {
-                                            return $.map(list, function (name) {
-                                                return {name: name};
+                                            return $.map(list, function (item) {
+                                                return {name: item.name};
                                             });
                                         }
                                     },
@@ -386,8 +386,8 @@ function createAutoComplete(input, URI) {
                                         url: URI + '?search=%QUERY&uid=' + uid,
                                         wildcard: '%QUERY',
                                         filter: function (list) {
-                                            return $.map(list, function (name) {
-                                                return {name: name};
+                                            return $.map(list, function (item) {
+                                                return {name: item.name};
                                             });
                                         }
                                     }

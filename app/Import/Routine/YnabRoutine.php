@@ -54,7 +54,7 @@ class YnabRoutine implements RoutineInterface
     {
         Log::debug(sprintf('Now in YNAB routine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
         $valid = ['ready_to_run']; // should be only ready_to_run
-        if (\in_array($this->importJob->status, $valid, true)) {
+        if (in_array($this->importJob->status, $valid, true)) {
 
             // get access token from YNAB
             if ('get_access_token' === $this->importJob->stage) {
@@ -83,14 +83,14 @@ class YnabRoutine implements RoutineInterface
                 $budgets       = $configuration['budgets'] ?? [];
 
                 // if more than 1 budget, select budget first.
-                if (\count($budgets) > 1) {
+                if (count($budgets) > 1) {
                     $this->repository->setStage($this->importJob, 'select_budgets');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
 
                     return;
                 }
 
-                if (1 === \count($budgets)) {
+                if (1 === count($budgets)) {
                     $this->repository->setStatus($this->importJob, 'ready_to_run');
                     $this->repository->setStage($this->importJob, 'get_accounts');
                 }

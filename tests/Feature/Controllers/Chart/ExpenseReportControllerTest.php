@@ -24,13 +24,12 @@ namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -44,7 +43,7 @@ class ExpenseReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -53,28 +52,64 @@ class ExpenseReportControllerTest extends TestCase
      */
     public function testMainChart(): void
     {
-        $expense           = $this->user()->accounts()->where('account_type_id', 4)->first();
         $generator         = $this->mock(GeneratorInterface::class);
-        $collector         = $this->mock(TransactionCollectorInterface::class);
+        $collector         = $this->mock(GroupCollectorInterface::class);
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper      = $this->mock(FiscalHelperInterface::class);
+        $expense           = $this->getRandomExpense();
+        $date              = new Carbon;
+        $withdrawal        = $this->getRandomWithdrawalAsArray();
+
         $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
 
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $set                                = new Collection;
-        $transaction                        = new Transaction();
-        $transaction->opposing_account_name = 'Somebody';
-        $transaction->transaction_amount    = '5';
-        $set->push($transaction);
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn($set);
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+        $generator->shouldReceive('multiSet')->andReturn([])->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('chart.expense.main', ['1', $expense->id, '20120101', '20120131']));
+        $response->assertStatus(200);
+    }
+
+
+    /**
+     * Same test, but with a deposit
+     * @covers \FireflyIII\Http\Controllers\Chart\ExpenseReportController
+     */
+    public function testMainChartDeposit(): void
+    {
+        $generator         = $this->mock(GeneratorInterface::class);
+        $collector         = $this->mock(GroupCollectorInterface::class);
+        $accountRepository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper      = $this->mock(FiscalHelperInterface::class);
+        $expense           = $this->getRandomExpense();
+        $date              = new Carbon;
+        $deposit           = $this->getRandomDepositAsArray();
+
+        $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$deposit])->atLeast()->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

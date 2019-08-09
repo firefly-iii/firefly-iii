@@ -41,7 +41,7 @@ class CurrencyTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -53,7 +53,7 @@ class CurrencyTransformerTest extends TestCase
     {
         // mocks and prep:
         $parameters  = new ParameterBag;
-        $currency    = TransactionCurrency::first();
+        $currency    = $this->getEuro();
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($parameters);
 
@@ -75,7 +75,7 @@ class CurrencyTransformerTest extends TestCase
     {
         // mocks and prep:
         $parameters = new ParameterBag;
-        $currency   = TransactionCurrency::first();
+        $currency   = $this->getEuro();
         $parameters->set('defaultCurrency', $currency);
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($parameters);

@@ -31,6 +31,8 @@ use FireflyIII\User;
 
 /**
  * Class UserRequest
+ * @codeCoverageIgnore
+ * TODO AFTER 4.8.0: split this into two request classes.
  */
 class UserRequest extends Request
 {

@@ -47,7 +47,7 @@ class RemoveTag implements ActionInterface
 
     /**
      * Remove tag X
-     *
+     * TODO the filter is no longer necessary.
      * @param TransactionJournal $journal
      *
      * @return bool

@@ -89,14 +89,14 @@ trait RuleManagement
      * @param Request $request
      *
      * @return array
-     *
+     * @codeCoverageIgnore
      */
     protected function getPreviousActions(Request $request): array
     {
         $index    = 0;
         $triggers = [];
         $oldInput = $request->old('actions');
-        if (\is_array($oldInput)) {
+        if (is_array($oldInput)) {
             foreach ($oldInput as $oldAction) {
                 try {
                     $triggers[] = view(
@@ -123,13 +123,14 @@ trait RuleManagement
      * @param Request $request
      *
      * @return array
+     * @codeCoverageIgnore
      */
     protected function getPreviousTriggers(Request $request): array
     {
         $index    = 0;
         $triggers = [];
         $oldInput = $request->old('triggers');
-        if (\is_array($oldInput)) {
+        if (is_array($oldInput)) {
             foreach ($oldInput as $oldTrigger) {
                 try {
                     $triggers[] = view(
