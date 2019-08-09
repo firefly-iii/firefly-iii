@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.8.9 (API 0.10.0)] - 2019-08-22
 
-A huge change that introduces significant database and API changes. Read more about it [in this Patreon post](https://www.patreon.com/posts/summer-time-to-28072164).
+A huge change that introduces significant database and API changes. Read more about it [in this Patreon post](https://www.patreon.com/posts/29044368).
 
 ### Open and known issues
 - The "new transaction"-form isn't translated.
