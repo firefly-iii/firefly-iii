@@ -148,7 +148,7 @@ This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/L
 ### Donate
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
 
-OK that was a joke. You can donate using [PayPal](https://docs.firefly-iii.org/en/latest/contact/note-donations.html) or [Patreon](https://www.patreon.com/jc5).
+OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) or [Patreon](https://www.patreon.com/jc5).
 
 Thank you for considering donating to Firefly III!  
 
