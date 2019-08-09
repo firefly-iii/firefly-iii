@@ -384,13 +384,14 @@ class TransactionJournalFactory
      */
     private function hashArray(NullArrayObject $row): string
     {
-        $row['import_hash_v2']  = null;
-        $row['original_source'] = null;
-        $json                   = json_encode($row);
+        $dataRow = $row->getArrayCopy();
+
+        unset($dataRow['import_hash_v2'], $dataRow['original_source']);
+        $json                   = json_encode($dataRow);
         if (false === $json) {
             // @codeCoverageIgnoreStart
             $json = json_encode((string)microtime());
-            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $row->getArrayCopy());
+            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
             // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json);

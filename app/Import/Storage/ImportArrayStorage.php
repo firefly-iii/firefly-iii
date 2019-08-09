@@ -234,19 +234,21 @@ class ImportArrayStorage
     private function storeGroup(int $index, array $group): ?TransactionGroup
     {
 
+
+
+        Log::debug(sprintf('Going to store entry #%d', $index + 1));
+
+        // do some basic error catching.
+        foreach ($group['transactions'] as $groupIndex => $transaction) {
+            $group['transactions'][$groupIndex]['date']        = Carbon::parse($transaction['date'], config('app.timezone'));
+            $group['transactions'][$groupIndex]['description'] = '' === $transaction['description'] ? '(empty description)' : $transaction['description'];
+        }
+
         // do duplicate detection!
         if ($this->duplicateDetected($index, $group)) {
             Log::warning(sprintf('Row #%d seems to be a imported already and will be ignored.', $index));
 
             return null;
-        }
-
-        Log::debug(sprintf('Going to store entry #%d', $index + 1));
-
-        // do some basic error catching.
-        foreach ($group['transactions'] as $index => $transaction) {
-            $group['transactions'][$index]['date']        = Carbon::parse($transaction['date'], config('app.timezone'));
-            $group['transactions'][$index]['description'] = '' === $transaction['description'] ? '(empty description)' : $transaction['description'];
         }
 
         // store the group
