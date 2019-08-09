@@ -120,7 +120,6 @@ class ImportableConverter
 
         // amount is positive? Then switch:
         if (1 === bccomp($amount, '0')) {
-
             [$destination, $source] = [$source, $destination];
             Log::debug(
                 sprintf(

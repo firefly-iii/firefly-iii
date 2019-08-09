@@ -73,7 +73,6 @@ class ShowController extends Controller
         $type     = $first->transactionType->type;
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
-        $message  = $request->get('message');
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
@@ -91,7 +90,7 @@ class ShowController extends Controller
         return view(
             'transactions.show', compact(
                                    'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
-                                   'events', 'attachments', 'links', 'message'
+                                   'events', 'attachments', 'links'
                                )
         );
     }

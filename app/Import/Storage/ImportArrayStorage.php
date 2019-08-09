@@ -459,8 +459,9 @@ class ImportArrayStorage
 
             // compare date:
             $transferDate = $transfer['date']->format('Y-m-d H:i:s');
-            Log::debug(sprintf('Comparing dates "%s" to "%s"', $transaction['date'], $transferDate));
-            if ($transaction['date'] !== $transferDate) {
+            $transactionDate = $transaction['date']->format('Y-m-d H:i:s');
+            Log::debug(sprintf('Comparing dates "%s" to "%s"', $transactionDate, $transferDate));
+            if ($transactionDate !== $transferDate) {
                 Log::debug('Date is not a match, continue with next transfer.');
                 continue; // @codeCoverageIgnore
             }

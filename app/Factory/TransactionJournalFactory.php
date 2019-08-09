@@ -287,7 +287,7 @@ class TransactionJournalFactory
             $destForeignCurrency   = $foreignCurrency;
         }
 
-        if ('Transfer' === $type->type) {
+        if (TransactionType::TRANSFER === $type->type) {
             // get currencies
             $currency        = $this->getCurrency($currency, $sourceAccount);
             $foreignCurrency = $this->getCurrency($foreignCurrency, $destinationAccount);
@@ -296,6 +296,11 @@ class TransactionJournalFactory
             $destCurrency          = $foreignCurrency;
             $sourceForeignCurrency = $foreignCurrency;
             $destForeignCurrency   = $currency;
+        }
+
+        // if transfer, switch accounts:
+        if (TransactionType::TRANSFER === $type->type) {
+            [$sourceAccount, $destinationAccount] = [$destinationAccount, $sourceAccount];
         }
 
         /** Create a basic journal. */

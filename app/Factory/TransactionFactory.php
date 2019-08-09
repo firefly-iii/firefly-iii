@@ -177,7 +177,12 @@ class TransactionFactory
         }
         // @codeCoverageIgnoreEnd
         if (null !== $result) {
-            Log::debug(sprintf('Created transaction #%d (%s %s), part of journal #%d', $result->id, $this->currency->code, $amount, $this->journal->id));
+            Log::debug(
+                sprintf(
+                    'Created transaction #%d (%s %s, account %s), part of journal #%d', $result->id, $this->currency->code, $amount, $this->account->name,
+                    $this->journal->id
+                )
+            );
 
             // do foreign currency thing: add foreign currency info to $one and $two if necessary.
             if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
