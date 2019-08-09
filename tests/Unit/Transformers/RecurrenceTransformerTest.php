@@ -79,7 +79,7 @@ class RecurrenceTransformerTest extends TestCase
         $recurrenceRepos->shouldReceive('getXOccurrences')->andReturn($ranges)->atLeast()->once();
         $factory->shouldReceive('findOrCreate')->atLeast()->once()->withArgs([null,Mockery::any()])->andReturn($category);
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($budget);
-        $piggyRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($piggy);
+        $piggyRepos->shouldReceive('findNull')->andReturn($piggy);
         $billRepos->shouldReceive('find')->andReturn($bill);
 
         // basic transformation:

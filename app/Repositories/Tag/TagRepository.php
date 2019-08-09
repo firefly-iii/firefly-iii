@@ -326,7 +326,8 @@ class TagRepository implements TagRepositoryInterface
 
         Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
 
-        if (0 !== bccomp($diff, '0')) {// for each full coin in tag, add so many points
+        if (0 !== bccomp($diff, '0')) { // for each full coin in tag, add so many points
+            // minus the smallest tag.
             $pointsPerCoin = bcdiv($maxPoints, $diff);
         }
 
@@ -335,7 +336,8 @@ class TagRepository implements TagRepositoryInterface
         foreach ($tags as $tag) {
             $amount       = (string)$tag->amount_sum;
             $amount       = '' === $amount ? '0' : $amount;
-            $pointsForTag = bcmul($amount, $pointsPerCoin);
+            $amountMin = bcsub($amount, $min);
+            $pointsForTag = bcmul($amountMin, $pointsPerCoin);
             $fontSize     = bcadd($minimumFont, $pointsForTag);
             Log::debug(sprintf('Tag "%s": Amount is %s, so points is %s', $tag->tag, $amount, $fontSize));
 

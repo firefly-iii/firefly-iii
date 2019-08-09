@@ -94,7 +94,7 @@ class ImportArrayStorage
 
         // get language of user.
         /** @var Preference $pref */
-        $pref           = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
+        $pref           = app('preferences')->getForUser($importJob->user, 'language', config('firefly.default_language', 'en_US'));
         $this->language = $pref->data;
 
         Log::debug('Constructed ImportArrayStorage()');

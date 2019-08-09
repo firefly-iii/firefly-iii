@@ -104,7 +104,10 @@ class Preferences
         /** @var User $user */
         $user = auth()->user();
         if (null === $user) {
-            return $default;
+            $preference       = new Preference;
+            $preference->data = $default;
+
+            return $preference;
         }
 
         return $this->getForUser($user, $name, $default);

@@ -939,7 +939,7 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount'] ?? '0');
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                     $currencyId = (int)$transaction['foreign_currency_id'];
@@ -952,7 +952,7 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount'] ?? '0');
                 }
             }
         }
