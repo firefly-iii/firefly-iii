@@ -5,7 +5,7 @@
 [![Packagist](https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square)](https://packagist.org/packages/grumpydictator/firefly-iii) 
 [![License](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square])](https://www.gnu.org/licenses/gpl-3.0.en.html) 
 [![Donate using Paypal](https://img.shields.io/badge/donate-PayPal-green?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
-[![Donate using Patreon](https://img.shields.io/badge/donate-%40JC5-green?logo=patreon)](https://img.shields.io/badge/donate-%40JC5-green?logo=patreon)
+[![Donate using Patreon](https://img.shields.io/badge/donate-%40JC5-green?logo=patreon)](https://www.patreon.com/jc5)
 
 
 * [Introduction](#introduction)
