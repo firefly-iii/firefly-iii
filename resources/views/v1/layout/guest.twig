@@ -54,6 +54,8 @@
 <script type="text/javascript" src="v1/js/ff/guest.js?v={{ FF_VERSION }}"></script>
 {% if config('firefly.analytics_id')  != '' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
+    <!-- Your own installation will NOT include it -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
