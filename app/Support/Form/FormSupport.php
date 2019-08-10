@@ -22,6 +22,8 @@
 namespace FireflyIII\Support\Form;
 
 use Carbon\Carbon;
+use Exception;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 use RuntimeException;
@@ -32,6 +34,32 @@ use Throwable;
  */
 trait FormSupport
 {
+
+
+    /**
+     * @return AccountRepositoryInterface
+     */
+    protected function getAccountRepository(): AccountRepositoryInterface
+    {
+        return app(AccountRepositoryInterface::class);
+    }
+
+    /**
+     * @return Carbon
+     */
+    protected function getDate(): Carbon
+    {
+        /** @var Carbon $date */
+        $date = null;
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        return $date;
+    }
+
     /**
      * @param string $name
      * @param array  $list
