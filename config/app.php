@@ -21,6 +21,7 @@
 
 
 declare(strict_types=1);
+
 use FireflyIII\Providers\ImportServiceProvider;
 
 
@@ -145,6 +146,7 @@ return [
         'Amount'        => \FireflyIII\Support\Facades\Amount::class,
         'Steam'         => \FireflyIII\Support\Facades\Steam::class,
         'ExpandedForm'  => \FireflyIII\Support\Facades\ExpandedForm::class,
+        'AccountForm'   => \FireflyIII\Support\Facades\AccountForm::class,
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
 
     ],

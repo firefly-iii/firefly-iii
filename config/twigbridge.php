@@ -21,17 +21,17 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use TwigBridge\Extension\Laravel\Url;
-use TwigBridge\Extension\Laravel\Str;
-use TwigBridge\Extension\Laravel\Translator;
-use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Config;
 use TwigBridge\Extension\Laravel\Dump;
 use TwigBridge\Extension\Laravel\Input;
-use TwigBridge\Extension\Laravel\Config;
-use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Extension\Laravel\Str;
+use TwigBridge\Extension\Laravel\Translator;
+use TwigBridge\Extension\Laravel\Url;
+use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Extension\Loader\Filters;
 use TwigBridge\Extension\Loader\Functions;
-use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Twig\Template;
 
 /**
@@ -193,16 +193,21 @@ return [
             'Steam',
             'Config',
             'Request',
+            'Form'         => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],],
             'ExpandedForm' => [
-                'is_safe' => ['date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file',
-                              'staticText', 'password', 'nonSelectableAmount', 'number', 'assetAccountList', 'amountNoCurrency', 'currencyList',
-                              'ruleGroupList', 'assetAccountCheckList', 'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty',
-                              'activeAssetAccountList', 'percentage', 'activeLongAccountList', 'longAccountList','balanceAll',
-                              'activeWithdrawalDestinations','activeDepositDestinations'
+                'is_safe' => [
+                    'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
+                    'password', 'nonSelectableAmount', 'number', 'assetAccountList', 'amountNoCurrency', 'currencyList', 'ruleGroupList',
+                    'assetAccountCheckList', 'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty', 'percentage',
+                    'activeLongAccountList', 'longAccountList', 'balanceAll', 'activeWithdrawalDestinations', 'activeDepositDestinations',
 
 
-                ],],
-            'Form'         => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],
+                ],
+            ],
+            'AccountForm'  => [
+                'is_safe' => [
+                    'activeAssetAccountList', 'activeLongAccountList',
+                ],
             ],
         ],
 

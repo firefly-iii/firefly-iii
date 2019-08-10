@@ -55,6 +55,7 @@ use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
+use FireflyIII\Support\Form\AccountForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
@@ -144,6 +145,13 @@ class FireflyServiceProvider extends ServiceProvider
             'expandedform',
             function () {
                 return new ExpandedForm;
+            }
+        );
+
+        $this->app->bind(
+            'accountform',
+            static function () {
+                return new AccountForm;
             }
         );
 
