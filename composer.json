@@ -66,7 +66,6 @@
     "ext-simplexml": "*",
     "ext-tokenizer": "*",
     "ext-xml": "*",
-    "ext-zip": "*",
     "adldap2/adldap2-laravel": "6.*",
     "bacon/bacon-qr-code": "1.*",
     "bunq/sdk_php": "dev-master",
