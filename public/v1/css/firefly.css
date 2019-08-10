@@ -263,3 +263,7 @@ span.twitter-typeahead {
     outline: 0;
     background-color: #428bca;
 }
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
