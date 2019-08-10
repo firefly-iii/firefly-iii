@@ -29,12 +29,10 @@ RUN docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # configure PHP
-#RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
-#    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
-#    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
 
-RUN sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
-    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini; exit 0
+RUN sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini; exit 0
+RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini; exit 0
 
 # Copy in Firefly III source
 WORKDIR $FIREFLY_PATH
