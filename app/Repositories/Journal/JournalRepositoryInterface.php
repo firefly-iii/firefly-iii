@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
@@ -33,7 +32,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface JournalRepositoryInterface.
- * TODO needs cleaning up. Remove unused methods.
  */
 interface JournalRepositoryInterface
 {
@@ -47,16 +45,6 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function searchJournalDescriptions(string $search): Collection;
-
-    /**
-     * TODO maybe create command line repository?
-     *
-     * Get all transaction journals with a specific type, regardless of user.
-     *
-     * @param array $types
-     * @return Collection
-     */
-    public function getAllJournals(array $types): Collection;
 
     /**
      * Deletes a transaction group.
@@ -102,28 +90,6 @@ interface JournalRepositoryInterface
     public function firstNull(): ?TransactionJournal;
 
     /**
-     * TODO console repository?
-     *
-     * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
-    public function getJournalBudgetId(TransactionJournal $journal): int;
-
-    /**
-     * TODO console repository?
-     *
-     * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
-    public function getJournalCategoryId(TransactionJournal $journal): int;
-
-    /**
      * TODO this method is no longer well-fitted in 4.8.0. Should be refactored and/or removed.
      * Return a list of all destination accounts related to journal.
      *
@@ -153,14 +119,6 @@ interface JournalRepositoryInterface
     public function getJournalTotal(TransactionJournal $journal): string;
 
     /**
-     * TODO only used on command line.
-     * Return all journals without a group, used in an upgrade routine.
-     *
-     * @return array
-     */
-    public function getJournalsWithoutGroup(): array;
-
-    /**
      * TODO used only in transformer, so only for API use.
      * @param TransactionJournalLink $link
      *
@@ -168,16 +126,6 @@ interface JournalRepositoryInterface
      */
     public function getLinkNoteText(TransactionJournalLink $link): string;
 
-    /**
-     * TODO used only on console
-     * Return Carbon value of a meta field (or NULL).
-     *
-     * @param TransactionJournal $journal
-     * @param string $field
-     *
-     * @return null|Carbon
-     */
-    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
 
     /**
      * Return Carbon value of a meta field (or NULL).
@@ -189,49 +137,9 @@ interface JournalRepositoryInterface
      */
     public function getMetaDateById(int $journalId, string $field): ?Carbon;
 
-    /**
-     * TODO used only on the console.
-     *
-     * Return value of a meta field (or NULL).
-     *
-     * @param TransactionJournal $journal
-     * @param string $field
-     *
-     * @return null|string
-     */
-    public function getMetaField(TransactionJournal $journal, string $field): ?string;
 
-    /**
-     * TODO used only on the console.
-     *
-     * Return text of a note attached to journal, or NULL
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return string|null
-     */
-    public function getNoteText(TransactionJournal $journal): ?string;
 
-    /**
-     * TODO used only on the console.
-     *
-     * Returns all journals with more than 2 transactions. Should only return empty collections
-     * in Firefly III > v4.8.0.
-     *
-     * @return Collection
-     */
-    public function getSplitJournals(): Collection;
 
-    /**
-     * TODO used only on the console.
-     *
-     * Return all tags as strings in an array.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     */
-    public function getTags(TransactionJournal $journal): array;
 
     /**
      * TODO maybe move to account repository?

@@ -26,6 +26,7 @@ use Exception;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
@@ -58,6 +59,8 @@ class MigrateToGroups extends Command
     private $groupFactory;
     /** @var JournalRepositoryInterface */
     private $journalRepository;
+    /** @var JournalCLIRepositoryInterface */
+    private $cliRepository;
     /** @var JournalDestroyService */
     private $service;
     private $count;
@@ -122,6 +125,7 @@ class MigrateToGroups extends Command
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->service           = app(JournalDestroyService::class);
         $this->groupFactory      = app(TransactionGroupFactory::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 
     /**
@@ -195,7 +199,7 @@ class MigrateToGroups extends Command
      */
     private function makeGroupsFromAll(): void
     {
-        $orphanedJournals = $this->journalRepository->getJournalsWithoutGroup();
+        $orphanedJournals = $this->cliRepository->getJournalsWithoutGroup();
         $count            = count($orphanedJournals);
         if ($count > 0) {
             Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $count));
@@ -215,7 +219,7 @@ class MigrateToGroups extends Command
      */
     private function makeGroupsFromSplitJournals(): void
     {
-        $splitJournals = $this->journalRepository->getSplitJournals();
+        $splitJournals = $this->cliRepository->getSplitJournals();
         if ($splitJournals->count() > 0) {
             $this->info(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
             /** @var TransactionJournal $journal */
@@ -248,6 +252,7 @@ class MigrateToGroups extends Command
 
         $this->journalRepository->setUser($journal->user);
         $this->groupFactory->setUser($journal->user);
+        $this->cliRepository->setUser($journal->user);
 
         $data             = [
             // mandatory fields.
@@ -255,32 +260,31 @@ class MigrateToGroups extends Command
             'transactions' => [],
         ];
         $destTransactions = $this->getDestinationTransactions($journal);
-        $budgetId         = $this->journalRepository->getJournalBudgetId($journal);
-        $categoryId       = $this->journalRepository->getJournalCategoryId($journal);
-        $notes            = $this->journalRepository->getNoteText($journal);
-        $tags             = $this->journalRepository->getTags($journal);
-        $internalRef      = $this->journalRepository->getMetaField($journal, 'internal-reference');
-        $sepaCC           = $this->journalRepository->getMetaField($journal, 'sepa_cc');
-        $sepaCtOp         = $this->journalRepository->getMetaField($journal, 'sepa_ct_op');
-        $sepaCtId         = $this->journalRepository->getMetaField($journal, 'sepa_ct_id');
-        $sepaDb           = $this->journalRepository->getMetaField($journal, 'sepa_db');
-        $sepaCountry      = $this->journalRepository->getMetaField($journal, 'sepa_country');
-        $sepaEp           = $this->journalRepository->getMetaField($journal, 'sepa_ep');
-        $sepaCi           = $this->journalRepository->getMetaField($journal, 'sepa_ci');
-        $sepaBatchId      = $this->journalRepository->getMetaField($journal, 'sepa_batch_id');
-        $externalId       = $this->journalRepository->getMetaField($journal, 'external-id');
-        $originalSource   = $this->journalRepository->getMetaField($journal, 'original-source');
-        $recurrenceId     = $this->journalRepository->getMetaField($journal, 'recurrence_id');
-        $bunq             = $this->journalRepository->getMetaField($journal, 'bunq_payment_id');
-        $hash             = $this->journalRepository->getMetaField($journal, 'import_hash');
-        $hashTwo          = $this->journalRepository->getMetaField($journal, 'import_hash_v2');
-        $interestDate     = $this->journalRepository->getMetaDate($journal, 'interest_date');
-        $bookDate         = $this->journalRepository->getMetaDate($journal, 'book_date');
-        $processDate      = $this->journalRepository->getMetaDate($journal, 'process_date');
-        $dueDate          = $this->journalRepository->getMetaDate($journal, 'due_date');
-        $paymentDate      = $this->journalRepository->getMetaDate($journal, 'payment_date');
-        $invoiceDate      = $this->journalRepository->getMetaDate($journal, 'invoice_date');
-
+        $budgetId         = $this->cliRepository->getJournalBudgetId($journal);
+        $categoryId       = $this->cliRepository->getJournalCategoryId($journal);
+        $notes            = $this->cliRepository->getNoteText($journal);
+        $tags             = $this->cliRepository->getTags($journal);
+        $internalRef      = $this->cliRepository->getMetaField($journal, 'internal-reference');
+        $sepaCC           = $this->cliRepository->getMetaField($journal, 'sepa_cc');
+        $sepaCtOp         = $this->cliRepository->getMetaField($journal, 'sepa_ct_op');
+        $sepaCtId         = $this->cliRepository->getMetaField($journal, 'sepa_ct_id');
+        $sepaDb           = $this->cliRepository->getMetaField($journal, 'sepa_db');
+        $sepaCountry      = $this->cliRepository->getMetaField($journal, 'sepa_country');
+        $sepaEp           = $this->cliRepository->getMetaField($journal, 'sepa_ep');
+        $sepaCi           = $this->cliRepository->getMetaField($journal, 'sepa_ci');
+        $sepaBatchId      = $this->cliRepository->getMetaField($journal, 'sepa_batch_id');
+        $externalId       = $this->cliRepository->getMetaField($journal, 'external-id');
+        $originalSource   = $this->cliRepository->getMetaField($journal, 'original-source');
+        $recurrenceId     = $this->cliRepository->getMetaField($journal, 'recurrence_id');
+        $bunq             = $this->cliRepository->getMetaField($journal, 'bunq_payment_id');
+        $hash             = $this->cliRepository->getMetaField($journal, 'import_hash');
+        $hashTwo          = $this->cliRepository->getMetaField($journal, 'import_hash_v2');
+        $interestDate     = $this->cliRepository->getMetaDate($journal, 'interest_date');
+        $bookDate         = $this->cliRepository->getMetaDate($journal, 'book_date');
+        $processDate      = $this->cliRepository->getMetaDate($journal, 'process_date');
+        $dueDate          = $this->cliRepository->getMetaDate($journal, 'due_date');
+        $paymentDate      = $this->cliRepository->getMetaDate($journal, 'payment_date');
+        $invoiceDate      = $this->cliRepository->getMetaDate($journal, 'invoice_date');
 
         Log::debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
 

@@ -23,6 +23,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
@@ -50,6 +51,9 @@ class TransactionIdentifier extends Command
 
     /** @var JournalRepositoryInterface */
     private $journalRepository;
+
+    /** @var JournalCLIRepositoryInterface */
+    private $cliRepository;
 
     /** @var int */
     private $count;
@@ -81,7 +85,7 @@ class TransactionIdentifier extends Command
             return 0;
         }
         // @codeCoverageIgnoreEnd
-        $journals = $this->journalRepository->getSplitJournals();
+        $journals = $this->cliRepository->getSplitJournals();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->updateJournalIdentifiers($journal);
@@ -111,6 +115,7 @@ class TransactionIdentifier extends Command
     private function stupidLaravel(): void
     {
         $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
         $this->count             = 0;
     }
 

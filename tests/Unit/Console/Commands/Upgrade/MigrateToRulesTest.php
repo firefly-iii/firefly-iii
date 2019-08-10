@@ -107,11 +107,12 @@ class MigrateToRulesTest extends TestCase
      */
     public function testHandleEvenBill(): void
     {
-        $bill = Bill::create(
+        $billName = 'I am a bill #' . $this->randomInt();
+        $bill     = Bill::create(
             [
                 'user_id'                 => $this->user()->id,
                 'transaction_currency_id' => null,
-                'name'                    => 'I am a bill',
+                'name'                    => $billName,
                 'match'                   => 'some,kind,of,match',
                 'amount_min'              => '30',
                 'amount_max'              => '30',
@@ -137,8 +138,8 @@ class MigrateToRulesTest extends TestCase
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => 'Auto-generated rule for bill "I am a bill"',
-            'description'     => 'This rule is auto-generated to try to match bill "I am a bill".',
+            'title'           => sprintf('Auto-generated rule for bill "%s"', $billName),
+            'description'     => sprintf('This rule is auto-generated to try to match bill "%s".', $billName),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [
@@ -214,11 +215,12 @@ class MigrateToRulesTest extends TestCase
      */
     public function testHandleUnevenBill(): void
     {
-        $bill = Bill::create(
+        $billName = 'I am a bill #' . $this->randomInt();
+        $bill     = Bill::create(
             [
                 'user_id'                 => $this->user()->id,
                 'transaction_currency_id' => null,
-                'name'                    => 'I am a bill',
+                'name'                    => $billName,
                 'match'                   => 'some,kind,of,match',
                 'amount_min'              => '30',
                 'amount_max'              => '40',
@@ -244,8 +246,8 @@ class MigrateToRulesTest extends TestCase
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => 'Auto-generated rule for bill "I am a bill"',
-            'description'     => 'This rule is auto-generated to try to match bill "I am a bill".',
+            'title'           => sprintf('Auto-generated rule for bill "%s"', $billName),
+            'description'     => sprintf('This rule is auto-generated to try to match bill "%s".', $billName),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [
