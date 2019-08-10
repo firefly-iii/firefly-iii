@@ -197,16 +197,16 @@ return [
             'ExpandedForm' => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
-                    'password', 'nonSelectableAmount', 'number', 'assetAccountList', 'amountNoCurrency', 'currencyList', 'ruleGroupList',
-                    'assetAccountCheckList', 'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty', 'percentage',
-                    'activeLongAccountList', 'longAccountList', 'balanceAll', 'activeWithdrawalDestinations', 'activeDepositDestinations',
+                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'currencyList', 'ruleGroupList',
+                    'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty', 'percentage', 'balanceAll',
 
 
                 ],
             ],
             'AccountForm'  => [
                 'is_safe' => [
-                    'activeAssetAccountList', 'activeLongAccountList',
+                    'activeAssetAccountList', 'activeLongAccountList', 'activeWithdrawalDestinations', 'activeDepositDestinations',
+                    'assetAccountCheckList', 'assetAccountList', 'longAccountList',
                 ],
             ],
         ],

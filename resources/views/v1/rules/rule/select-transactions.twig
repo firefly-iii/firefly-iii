@@ -28,7 +28,7 @@
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
                                     {{ ExpandedForm.date('start_date', first) }}
                                     {{ ExpandedForm.date('end_date', today) }}
-                                    {{ ExpandedForm.assetAccountCheckList('accounts', {'select_all': true,  'class': 'account-checkbox', 'label': trans('firefly.include_transactions_from_accounts') }) }}
+                                    {{ AccountForm.assetAccountCheckList('accounts', {'select_all': true,  'class': 'account-checkbox', 'label': trans('firefly.include_transactions_from_accounts') }) }}
                                 </div>
                             </div>
                         </div>
