@@ -61,6 +61,7 @@
     "ext-fileinfo": "*",
     "ext-gd": "*",
     "ext-intl": "*",
+    "ext-session": "*",
     "ext-json": "*",
     "ext-openssl": "*",
     "ext-simplexml": "*",

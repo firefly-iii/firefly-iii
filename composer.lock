@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46b4edbe3ec2ec96772d5131a7013c88",
+    "content-hash": "37a04601a45e0a40bd62e1b79ffa73d1",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -6099,20 +6099,20 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.9.2",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "8d0a041a565fc1e927e75f1d1bea5f34edf6e7d1"
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/8d0a041a565fc1e927e75f1d1bea5f34edf6e7d1",
-                "reference": "8d0a041a565fc1e927e75f1d1bea5f34edf6e7d1",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/007c053ae6f31bba39dfa19a7726f56e9763bbea",
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2"
+                "php": "^7.1"
             },
             "replace": {
                 "myclabs/deep-copy": "self.version"
@@ -6120,8 +6120,6 @@
             "require-dev": {
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.6",
-                "phpstan/phpstan": "^0.9.2",
-                "phpstan/phpstan-phpunit": "^0.9.4",
                 "phpunit/phpunit": "^7.1"
             },
             "type": "library",
@@ -6145,7 +6143,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-08-09T12:38:39+00:00"
+            "time": "2019-08-09T12:45:53+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7879,6 +7877,7 @@
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-session": "*",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-simplexml": "*",
