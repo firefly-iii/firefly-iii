@@ -86,73 +86,6 @@ class JournalRepository implements JournalRepositoryInterface
         return $query->get();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * @param TransactionJournal $journal
-     * @param TransactionType $type
-     * @param Account $source
-     * @param Account $destination
-     *
-     * @return MessageBag
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag
-    {
-        if ($source->id === $destination->id || null === $source->id || null === $destination->id) {
-            // default message bag that shows errors for everything.
-            $messages = new MessageBag;
-            $messages->add('source_account_revenue', (string)trans('firefly.invalid_convert_selection'));
-            $messages->add('destination_account_asset', (string)trans('firefly.invalid_convert_selection'));
-            $messages->add('destination_account_expense', (string)trans('firefly.invalid_convert_selection'));
-            $messages->add('source_account_asset', (string)trans('firefly.invalid_convert_selection'));
-
-            return $messages;
-        }
-
-        $srcTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        $dstTransaction = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $srcTransaction || null === $dstTransaction) {
-            // default message bag that shows errors for everything.
-
-            $messages = new MessageBag;
-            $messages->add('source_account_revenue', (string)trans('firefly.source_or_dest_invalid'));
-            $messages->add('destination_account_asset', (string)trans('firefly.source_or_dest_invalid'));
-            $messages->add('destination_account_expense', (string)trans('firefly.source_or_dest_invalid'));
-            $messages->add('source_account_asset', (string)trans('firefly.source_or_dest_invalid'));
-
-            return $messages;
-        }
-        // update transactions, and update journal:
-
-        $srcTransaction->account_id   = $source->id;
-        $dstTransaction->account_id   = $destination->id;
-        $journal->transaction_type_id = $type->id;
-        $dstTransaction->save();
-        $srcTransaction->save();
-        $journal->save();
-
-        // if journal is a transfer now, remove budget:
-        if (TransactionType::TRANSFER === $type->type) {
-
-            $journal->budgets()->detach();
-            // also from transactions:
-            foreach ($journal->transactions as $transaction) {
-                $transaction->budgets()->detach();
-            }
-        }
-        // if journal is not a withdrawal, remove the bill ID.
-        if (TransactionType::WITHDRAWAL !== $type->type) {
-            $journal->bill_id = null;
-            $journal->save();
-        }
-
-        app('preferences')->mark();
-
-        return new MessageBag;
-    }
-
     /**
      * @param TransactionGroup $transactionGroup
      *
@@ -246,23 +179,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
-    public function getAssetTransaction(TransactionJournal $journal): ?Transaction
-    {
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            if (AccountType::ASSET === $transaction->account->accountType->type) {
-                return $transaction;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Return all attachments for journal.
      *
      * @param TransactionJournal $journal
@@ -285,18 +201,6 @@ class JournalRepository implements JournalRepositoryInterface
     {
         // TODO: Implement getAttachmentsByJournal() method.
         throw new NotImplementedException;
-    }
-
-    /**
-     * Returns the first positive transaction for the journal. Useful when editing journals.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
-     */
-    public function getFirstPosTransaction(TransactionJournal $journal): Transaction
-    {
-        return $journal->transactions()->where('amount', '>', 0)->first();
     }
 
     /**
@@ -341,65 +245,6 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return 0;
-    }
-
-    /**
-     * Return the name of the category linked to the journal (if any) or to the transactions (if any).
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
-    public function getJournalCategoryName(TransactionJournal $journal): string
-    {
-        $category = $journal->categories()->first();
-        if (null !== $category) {
-            return $category->name;
-        }
-        /** @noinspection NullPointerExceptionInspection */
-        $category = $journal->transactions()->first()->categories()->first();
-        if (null !== $category) {
-            return $category->name;
-        }
-
-        return '';
-    }
-
-    /**
-     * Return requested date as string. When it's a NULL return the date of journal,
-     * otherwise look for meta field and return that one.
-     *
-     * @param TransactionJournal $journal
-     * @param null|string $field
-     *
-     * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    public function getJournalDate(TransactionJournal $journal, ?string $field): string
-    {
-        if (null === $field) {
-            return $journal->date->format('Y-m-d');
-        }
-        /** @noinspection NotOptimalIfConditionsInspection */
-        if (null !== $journal->$field && $journal->$field instanceof Carbon) {
-            // make field NULL
-            $carbon          = clone $journal->$field;
-            $journal->$field = null;
-            $journal->save();
-
-            // create meta entry
-            $this->setMetaDate($journal, $field, $carbon);
-
-            // return that one instead.
-            return $carbon->format('Y-m-d');
-        }
-        $metaField = $this->getMetaDate($journal, $field);
-        if (null !== $metaField) {
-            return $metaField->format('Y-m-d');
-        }
-
-        return '';
     }
 
     /**
@@ -539,24 +384,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Return string value of a meta date (or NULL).
-     *
-     * @param TransactionJournal $journal
-     * @param string $field
-     *
-     * @return null|string
-     */
-    public function getMetaDateString(TransactionJournal $journal, string $field): ?string
-    {
-        $date = $this->getMetaDate($journal, $field);
-        if (null === $date) {
-            return null;
-        }
-
-        return $date->format('Y-m-d');
-    }
-
-    /**
      * Return value of a meta field (or NULL) as a string.
      *
      * @param TransactionJournal $journal
@@ -677,36 +504,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Return the transaction type of the journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
-    public function getTransactionType(TransactionJournal $journal): string
-    {
-        return $journal->transactionType->type;
-    }
-
-    /**
-     * Will tell you if journal is reconciled or not.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function isJournalReconciled(TransactionJournal $journal): bool
-    {
-        foreach ($journal->transactions as $transaction) {
-            if ($transaction->reconciled) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param int $transactionId
      */
     public function reconcileById(int $journalId): void
@@ -716,45 +513,6 @@ class JournalRepository implements JournalRepositoryInterface
         if (null !== $journal) {
             $journal->transactions()->update(['reconciled' => true]);
         }
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return bool
-     */
-    public function reconcile(Transaction $transaction): bool
-    {
-        Log::debug(sprintf('Going to reconcile transaction #%d', $transaction->id));
-        $opposing = $this->findOpposingTransaction($transaction);
-
-        if (null === $opposing) {
-            Log::debug('Opposing transaction is NULL. Cannot reconcile.');
-
-            return false;
-        }
-        Log::debug(sprintf('Opposing transaction ID is #%d', $opposing->id));
-
-        $transaction->reconciled = true;
-        $opposing->reconciled    = true;
-        $transaction->save();
-        $opposing->save();
-
-        return true;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param int $order
-     *
-     * @return bool
-     */
-    public function setOrder(TransactionJournal $journal, int $order): bool
-    {
-        $journal->order = $order;
-        $journal->save();
-
-        return true;
     }
 
     /**
@@ -851,21 +609,6 @@ class JournalRepository implements JournalRepositoryInterface
             ->whereIn('transaction_types.type', $types)
             ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
             ->get(['transaction_journals.*']);
-    }
-
-    /**
-     * Get all transaction journals with a specific type, for the logged in user.
-     *
-     * @param array $types
-     * @return Collection
-     */
-    public function getJournals(array $types): Collection
-    {
-        return $this->user->transactionJournals()
-                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                          ->whereIn('transaction_types.type', $types)
-                          ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-                          ->get(['transaction_journals.*']);
     }
 
     /**
