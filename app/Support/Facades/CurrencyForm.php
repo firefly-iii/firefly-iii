@@ -1,6 +1,6 @@
 <?php
 /**
- * AccountForm.php
+ * CurrencyForm.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -27,10 +27,10 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
- * Class AccountForm.
+ * Class CurrencyForm.
  *
  */
-class AccountForm extends Facade
+class CurrencyForm extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -39,6 +39,6 @@ class AccountForm extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'accountform';
+        return 'currencyform';
     }
 }

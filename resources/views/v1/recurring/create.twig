@@ -86,7 +86,7 @@
 
                         {{ ExpandedForm.text('transaction_description') }}
                         {# transaction information (mandatory) #}
-                        {{ ExpandedForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
                         {{ ExpandedForm.amountNoCurrency('amount', []) }}
 
                         {# source account if withdrawal, or if transfer: #}
@@ -115,7 +115,7 @@
                     </div>
                     <div class="box-body">
                         {# transaction information (optional) #}
-                        {{ ExpandedForm.currencyListEmpty('foreign_currency_id', 0) }}
+                        {{ CurrencyForm.currencyListEmpty('foreign_currency_id', 0) }}
                         {{ ExpandedForm.amountNoCurrency('foreign_amount', []) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
@@ -132,7 +132,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
+                        {{ PiggyBankForm.piggyBankList('piggy_bank_id',0) }}
                     </div>
                 </div>
             </div>

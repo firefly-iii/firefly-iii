@@ -40,7 +40,9 @@ use Throwable;
 class CurrencyForm
 {
     use FormSupport;
+
     /**
+     * TODO cleanup and describe.
      * @param string $name
      * @param mixed  $value
      * @param array  $options
@@ -64,6 +66,8 @@ class CurrencyForm
     }
 
     /**
+     * TODO cleanup and describe.
+     *
      * @param string $name
      * @param mixed  $value
      * @param array  $options
@@ -90,6 +94,8 @@ class CurrencyForm
 
 
     /**
+     * TODO describe and cleanup.
+     *
      * @param string $name
      * @param mixed  $value
      * @param array  $options
@@ -103,6 +109,8 @@ class CurrencyForm
     }
 
     /**
+     * TODO cleanup and describe better.
+     *
      * @param string $name
      * @param string $view
      * @param mixed  $value

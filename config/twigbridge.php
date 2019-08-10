@@ -179,7 +179,7 @@ return [
         |
         */
         'facades'   => [
-            'Breadcrumbs'  => [
+            'Breadcrumbs'   => [
                 'is_safe' => [
                     'render',
                 ],
@@ -193,20 +193,35 @@ return [
             'Steam',
             'Config',
             'Request',
-            'Form'         => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],],
-            'ExpandedForm' => [
+            'Form'          => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],],
+            'ExpandedForm'  => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
-                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'currencyList', 'ruleGroupList',
-                    'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty', 'percentage', 'balanceAll',
+                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'percentage',
 
 
                 ],
             ],
-            'AccountForm'  => [
+            'AccountForm'   => [
                 'is_safe' => [
                     'activeAssetAccountList', 'activeLongAccountList', 'activeWithdrawalDestinations', 'activeDepositDestinations',
                     'assetAccountCheckList', 'assetAccountList', 'longAccountList',
+                ],
+            ],
+            'CurrencyForm'  => [
+                'is_safe' => [
+                    'currencyList', 'currencyListEmpty', 'balanceAll',
+                ],
+            ],
+            'PiggyBankForm' =>
+                [
+                    'is_safe' => [
+                        'piggyBankList',
+                    ],
+                ],
+            'RuleForm'      => [
+                'is_safe' => [
+                    'ruleGroupList', 'ruleGroupListWithEmpty',
                 ],
             ],
         ],

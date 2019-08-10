@@ -53,9 +53,12 @@ use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV3;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
-use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
+use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Form\AccountForm;
+use FireflyIII\Support\Form\CurrencyForm;
+use FireflyIII\Support\Form\PiggyBankForm;
+use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
@@ -143,7 +146,7 @@ class FireflyServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             'expandedform',
-            function () {
+            static function () {
                 return new ExpandedForm;
             }
         );
@@ -152,6 +155,26 @@ class FireflyServiceProvider extends ServiceProvider
             'accountform',
             static function () {
                 return new AccountForm;
+            }
+        );
+        $this->app->bind(
+            'currencyform',
+            static function () {
+                return new CurrencyForm;
+            }
+        );
+
+        $this->app->bind(
+            'piggybankform',
+            static function () {
+                return new PiggyBankForm;
+            }
+        );
+
+        $this->app->bind(
+            'ruleform',
+            static function () {
+                return new RuleForm;
             }
         );
 
