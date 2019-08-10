@@ -47,7 +47,7 @@ class TagTransformer extends AbstractTransformer
     /**
      * Transform a tag.
      *
-     * TODO add spent, earned, tranferred, etc.
+     * TODO add spent, earned, transferred, etc.
      *
      * @param Tag $tag
      *

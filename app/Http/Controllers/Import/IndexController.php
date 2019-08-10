@@ -32,7 +32,6 @@ use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
 /**
- * TODO make sure all import methods work.
  *
  * Class IndexController
  */
