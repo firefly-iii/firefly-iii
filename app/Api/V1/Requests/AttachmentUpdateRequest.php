@@ -1,7 +1,7 @@
 <?php
 /**
- * AttachmentRequest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * AttachmentUpdateRequest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -23,17 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Rules\IsValidAttachmentModel;
-
 /**
- * Class AttachmentRequest
+ * ClassAttachmentUpdateRequest
+ *
  * @codeCoverageIgnore
- * TODO AFTER 4.8.0: split this into two request classes.
  */
-class AttachmentRequest extends Request
+class AttachmentUpdateRequest extends Request
 {
     /**
      * Authorize logged in users.
@@ -69,32 +64,10 @@ class AttachmentRequest extends Request
      */
     public function rules(): array
     {
-        $models = implode(
-            ',',
-            [
-                str_replace('FireflyIII\\Models\\', '', Bill::class),
-                str_replace('FireflyIII\\Models\\', '', ImportJob::class),
-                str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
-            ]
-        );
-        $model  = $this->string('model');
-        $rules  = [
-            'filename' => 'required|between:1,255',
+        return [
+            'filename' => 'between:1,255',
             'title'    => 'between:1,255',
             'notes'    => 'between:1,65000',
-            'model'    => sprintf('required|in:%s', $models),
-            'model_id' => ['required', 'numeric', new IsValidAttachmentModel($model)],
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                unset($rules['model'], $rules['model_id']);
-                $rules['filename'] = 'between:1,255';
-                break;
-        }
-
-        return $rules;
     }
 }

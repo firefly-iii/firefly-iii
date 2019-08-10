@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\AttachmentRequest;
+use FireflyIII\Api\V1\Requests\AttachmentStoreRequest;
+use FireflyIII\Api\V1\Requests\AttachmentUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
@@ -182,12 +183,12 @@ class AttachmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param AttachmentRequest $request
+     * @param AttachmentStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(AttachmentRequest $request): JsonResponse
+    public function store(AttachmentStoreRequest $request): JsonResponse
     {
         $data       = $request->getAll();
         $attachment = $this->repository->store($data);
@@ -207,12 +208,12 @@ class AttachmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param AttachmentRequest $request
+     * @param AttachmentUpdateRequest $request
      * @param Attachment $attachment
      *
      * @return JsonResponse
      */
-    public function update(AttachmentRequest $request, Attachment $attachment): JsonResponse
+    public function update(AttachmentUpdateRequest $request, Attachment $attachment): JsonResponse
     {
         $data = $request->getAll();
         $this->repository->update($attachment, $data);
