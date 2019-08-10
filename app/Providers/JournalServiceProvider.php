@@ -24,6 +24,8 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Helpers\Collector\GroupCollector;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Repositories\Journal\JournalAPIRepository;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
@@ -102,6 +104,20 @@ class JournalServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // also bind new API repository
+        $this->app->bind(
+            JournalAPIRepositoryInterface::class,
+            function (Application $app) {
+                /** @var JournalAPIRepositoryInterface $repository */
+                $repository = app(JournalAPIRepository::class);
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }

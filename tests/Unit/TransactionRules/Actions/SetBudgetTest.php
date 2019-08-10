@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetBudget;
 use Illuminate\Support\Collection;
@@ -42,9 +41,6 @@ class SetBudgetTest extends TestCase
         // get journal, remove all budgets
         $journal     = $this->getRandomWithdrawal();
         $budget      = $this->getRandomBudget();
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
 
         $journal->budgets()->sync([]);
         $this->assertEquals(0, $journal->budgets()->count());
@@ -65,17 +61,13 @@ class SetBudgetTest extends TestCase
     {
         // get journal, remove all budgets
         $journal     = $this->getRandomWithdrawal();
-        $budget      = $this->getRandomBudget();
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
 
         $journal->budgets()->sync([]);
         $this->assertEquals(0, $journal->budgets()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $budget->name;
+        $ruleAction->action_value = 'non-existing budget #' . $this->randomInt();
         $action                   = new SetBudget($ruleAction);
         $result                   = $action->act($journal);
         $this->assertFalse($result);
@@ -91,9 +83,6 @@ class SetBudgetTest extends TestCase
         // get journal, remove all budgets
         $journal     = $this->getRandomDeposit();
         $budget      = $this->getRandomBudget();
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
 
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());

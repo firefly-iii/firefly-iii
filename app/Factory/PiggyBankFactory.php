@@ -90,7 +90,7 @@ class PiggyBankFactory
      */
     public function findByName(string $name): ?PiggyBank
     {
-        return $this->user->piggyBanks()->where('name', $name)->first();
+        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
     /**

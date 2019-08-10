@@ -47,10 +47,6 @@ use stdClass;
 
 /**
  * Class JournalRepository.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class JournalRepository implements JournalRepositoryInterface
 {
@@ -147,21 +143,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param int $transactionid
-     *
-     * @return Transaction|null
-     */
-    public function findTransaction(int $transactionid): ?Transaction
-    {
-        $transaction = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                  ->where('transaction_journals.user_id', $this->user->id)
-                                  ->where('transactions.id', $transactionid)
-                                  ->first(['transactions.*']);
-
-        return $transaction;
-    }
-
-    /**
      * Get users first transaction journal or NULL.
      *
      * @return TransactionJournal|null
@@ -176,31 +157,6 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Return all attachments for journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getAttachments(TransactionJournal $journal): Collection
-    {
-        return $journal->attachments;
-    }
-
-    /**
-     * Get all attachments connected to the transaction group.
-     *
-     * @param TransactionJournal $transactionJournal
-     *
-     * @return Collection
-     */
-    public function getAttachmentsByJournal(TransactionJournal $transactionJournal): Collection
-    {
-        // TODO: Implement getAttachmentsByJournal() method.
-        throw new NotImplementedException;
     }
 
     /**
@@ -447,23 +403,7 @@ class JournalRepository implements JournalRepositoryInterface
         return $note->text;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getPiggyBankEvents(TransactionJournal $journal): Collection
-    {
-        /** @var Collection $set */
-        $events = $journal->piggyBankEvents()->get();
-        $events->each(
-            function (PiggyBankEvent $event) {
-                $event->piggyBank = $event->piggyBank()->withTrashed()->first();
-            }
-        );
 
-        return $events;
-    }
 
     /**
      * Returns all journals with more than 2 transactions. Should only return empty collections

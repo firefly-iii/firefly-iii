@@ -23,16 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
 
 /**
  * Interface JournalRepositoryInterface.
@@ -98,31 +95,11 @@ interface JournalRepositoryInterface
     public function findNull(int $journalId): ?TransactionJournal;
 
     /**
-     * TODO maybe create API repository?
-     *
-     * @param int $transactionid
-     *
-     * @return Transaction|null
-     */
-    public function findTransaction(int $transactionid): ?Transaction;
-
-    /**
      * Get users very first transaction journal.
      *
      * @return TransactionJournal|null
      */
     public function firstNull(): ?TransactionJournal;
-
-    /**
-     * TODO maybe create API repository?
-     *
-     * Return all attachments for journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getAttachments(TransactionJournal $journal): Collection;
 
     /**
      * TODO console repository?
@@ -234,15 +211,6 @@ interface JournalRepositoryInterface
      * @return string|null
      */
     public function getNoteText(TransactionJournal $journal): ?string;
-
-    /**
-     * TODO used only in the API
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
      * TODO used only on the console.
