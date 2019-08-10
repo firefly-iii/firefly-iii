@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Log;
 
 /**
@@ -50,27 +47,15 @@ class SetBudget implements ActionInterface
 
     /**
      * Set budget.
-     * TODO the filter is no longer necessary.
-     *
      * @param TransactionJournal $journal
      *
      * @return bool
      */
     public function act(TransactionJournal $journal): bool
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $repository->setUser($journal->user);
         $search  = $this->action->action_value;
-        $budgets = $repository->getActiveBudgets();
 
-        // TODO no longer need to loop like this
-
-        $budget  = $budgets->filter(
-            static function (Budget $current) use ($search) {
-                return $current->name === $search;
-            }
-        )->first();
+        $budget = $journal->user->budgets()->where('name', $search)->first();
         if (null === $budget) {
             Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
 

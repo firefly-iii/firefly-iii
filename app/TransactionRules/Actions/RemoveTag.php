@@ -47,7 +47,6 @@ class RemoveTag implements ActionInterface
 
     /**
      * Remove tag X
-     * TODO the filter is no longer necessary.
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -56,12 +55,7 @@ class RemoveTag implements ActionInterface
     {
         // if tag does not exist, no need to continue:
         $name = $this->action->action_value;
-        /** @var Tag $tag */
-        $tag = $journal->user->tags()->get()->filter(
-            function (Tag $tag) use ($name) {
-                return $tag->tag === $name;
-            }
-        )->first();
+        $tag = $journal->user->tags()->where('tag', $name)->first();
 
         if (null !== $tag) {
             Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal->id));
