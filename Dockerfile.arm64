@@ -1,4 +1,4 @@
-FROM arm32v7/php:7.2.8-apache-stretch
+FROM arm32v7/php:7.2-apache-stretch
 ARG ARCH
 COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1

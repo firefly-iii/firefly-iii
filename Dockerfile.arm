@@ -1,4 +1,4 @@
-FROM arm32v7/php:7.2.8-apache-stretch
+FROM arm32v7/php:7.2-apache-stretch
 ARG ARCH
 COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
@@ -29,8 +29,11 @@ RUN docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # configure PHP
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
-    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
+#RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+#    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
+#    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
+
+RUN sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
     sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
 
 # Copy in Firefly III source
