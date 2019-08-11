@@ -155,6 +155,7 @@
                                     ></piggy-bank>
                                     -->
                                     <tags
+                                            :tags="transaction.tags"
                                             v-model="transaction.tags"
                                             :error="transaction.errors.tags"
                                     ></tags>
@@ -355,6 +356,14 @@
             processIncomingGroupRow(transaction) {
                 console.log(transaction);
                 this.setTransactionType(transaction.type);
+
+                let newTags = [];
+                for(let key in transaction.tags) {
+                    if (transaction.tags.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        newTags.push({text: transaction.tags[key], tiClasses: []});
+                    }
+                }
+
                 this.transactions.push({
                     description: transaction.description,
                     date: transaction.date.substr(0, 10),
@@ -385,7 +394,8 @@
                         },
                     },
                     budget: transaction.budget_id,
-                    tags: transaction.tags,
+                    tags: newTags,
+                    //tags: 'abc',
                     custom_fields: {
                         interest_date: transaction.interest_date,
                         book_date: transaction.book_date,

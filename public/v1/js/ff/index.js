@@ -106,7 +106,7 @@ function getBalanceBox() {
             // show balance in "sums", show single entry in list.
             for (x in data.sums) {
                 $('#box-balance-sums').html(data.sums[x]);
-                $('#box-balance-list').html(data.incomes[x] + ' / ' + data.expenses[x]);
+                $('#box-balance-list').html(data.incomes[x] + ' + ' + data.expenses[x]);
             }
             return;
         }
@@ -120,7 +120,7 @@ function getBalanceBox() {
             sum = data.sums[x];
             expense = data.expenses[x];
             income = data.incomes[x];
-            string = income + ' / ' + expense + ': ' + sum;
+            string = income + ' + ' + expense + ': ' + sum;
             if (data.preferred == x) {
                 $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
             }
@@ -136,7 +136,7 @@ function getBalanceBox() {
             sum = data.sums[x];
             expense = data.expenses[x];
             income = data.incomes[x];
-            string = income + ' / ' + expense + ': ' + sum;
+            string = income + ' + ' + expense + ': ' + sum;
             if (data.preferred != x) {
                 $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
             }
