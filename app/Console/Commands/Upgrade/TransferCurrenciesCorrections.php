@@ -242,7 +242,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function startUpdateRoutine(): void
     {
-        $set = $this->journalRepos->getAllJournals([TransactionType::TRANSFER]);
+        $set = $this->cliRepos->getAllJournals([TransactionType::TRANSFER]);
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $this->updateTransferCurrency($journal);

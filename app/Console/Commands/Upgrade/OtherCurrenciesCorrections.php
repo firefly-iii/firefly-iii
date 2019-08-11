@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 
@@ -61,6 +62,8 @@ class OtherCurrenciesCorrections extends Command
     private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $journalRepos;
+    /** @var JournalCLIRepositoryInterface */
+    private $cliRepos;
     /** @var int */
     private $count;
 
@@ -105,6 +108,7 @@ class OtherCurrenciesCorrections extends Command
         $this->accountRepos      = app(AccountRepositoryInterface::class);
         $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->journalRepos      = app(JournalRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
 
     /**
@@ -166,6 +170,7 @@ class OtherCurrenciesCorrections extends Command
         $this->accountRepos->setUser($journal->user);
         $this->journalRepos->setUser($journal->user);
         $this->currencyRepos->setUser($journal->user);
+        $this->cliRepos->setUser($journal->user);
 
         $leadTransaction = $this->getLeadTransaction($journal);
 
@@ -223,7 +228,7 @@ class OtherCurrenciesCorrections extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set =
-            $this->journalRepos->getAllJournals(
+            $this->cliRepos->getAllJournals(
                 [
                     TransactionType::WITHDRAWAL,
                     TransactionType::DEPOSIT,
