@@ -49,7 +49,7 @@ class OpposingAccountMapper
      */
     public function map(?int $accountId, string $amount, array $data): Account
     {
-        Log::debug('Now in OpposingAccountMapper::map()');
+        Log::debug(sprintf('Now in OpposingAccountMapper::map(%d, "%s")', $accountId, $amount), $data);
         // default assumption is we're looking for an expense account.
         $expectedType = AccountType::EXPENSE;
         $result       = null;

@@ -261,7 +261,7 @@ class TransactionJournalFactory
         $sourceForeignCurrency = $foreignCurrency;
         $destForeignCurrency   = $foreignCurrency;
 
-        if ('Withdrawal' === $type->type) {
+        if (TransactionType::WITHDRAWAL === $type->type) {
             // make sure currency is correct.
             $currency = $this->getCurrency($currency, $sourceAccount);
             // make sure foreign currency != currency.
@@ -273,7 +273,7 @@ class TransactionJournalFactory
             $sourceForeignCurrency = $foreignCurrency;
             $destForeignCurrency   = $foreignCurrency;
         }
-        if ('Deposit' === $type->type) {
+        if (TransactionType::DEPOSIT === $type->type) {
             // make sure currency is correct.
             $currency = $this->getCurrency($currency, $destinationAccount);
             // make sure foreign currency != currency.
@@ -296,11 +296,6 @@ class TransactionJournalFactory
             $destCurrency          = $foreignCurrency;
             $sourceForeignCurrency = $foreignCurrency;
             $destForeignCurrency   = $currency;
-        }
-
-        // if transfer, switch accounts:
-        if (TransactionType::TRANSFER === $type->type) {
-            [$sourceAccount, $destinationAccount] = [$destinationAccount, $sourceAccount];
         }
 
         /** Create a basic journal. */
