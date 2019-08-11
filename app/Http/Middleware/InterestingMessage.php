@@ -26,7 +26,7 @@ use Closure;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\Request;
-use Log;
+use Preferences;
 
 /**
  * Class InterestingMessage
@@ -50,6 +50,7 @@ class InterestingMessage
         }
 
         if ($this->groupMessage($request)) {
+            Preferences::mark();
             $this->handleGroupMessage($request);
         }
 
