@@ -365,6 +365,7 @@
                 }
 
                 this.transactions.push({
+                    transaction_journal_id: transaction.transaction_journal_id,
                     description: transaction.description,
                     date: transaction.date.substr(0, 10),
                     amount: this.positiveAmount(transaction.amount),
@@ -541,12 +542,11 @@
                 if (0 === sourceId) {
                     sourceId = null;
                 }
-
                 currentArray =
                     {
+                        transaction_journal_id: row.transaction_journal_id,
                         type: transactionType,
                         date: date,
-
                         amount: row.amount,
                         currency_id: row.currency_id,
 
@@ -743,6 +743,7 @@
 
             addTransaction: function (e) {
                 this.transactions.push({
+                    transaction_journal_id: 0,
                     description: "",
                     date: "",
                     amount: "",
