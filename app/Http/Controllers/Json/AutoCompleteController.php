@@ -68,6 +68,9 @@ class AutoCompleteController extends Controller
                 $filteredAccountTypes[] = $type;
             }
         }
+        if (0 === count($filteredAccountTypes)) {
+            $filteredAccountTypes = $allowedAccountTypes;
+        }
         Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
 
         $return          = [];
