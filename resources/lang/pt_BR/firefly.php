@@ -1395,7 +1395,7 @@ return [
     'help_weekend'                       => 'O que o Firefly III deve fazer quando a transação recorrente cai em um sábado ou domingo?',
     'do_nothing'                         => 'Apenas criar a transação',
     'skip_transaction'                   => 'Pular a ocorrência',
-    'jump_to_friday'                     => 'Criar a transação na segunda-feira seguinte',
+    'jump_to_friday'                     => 'Criar a transação na sexta-feira anterior',
     'jump_to_monday'                     => 'Criar a transação na segunda-feira seguinte',
     'will_jump_friday'                   => 'Será criada na sexta-feira em vez de nos finais de semana.',
     'will_jump_monday'                   => 'Será criada na segunda-feira em vez de nos finais de semana.',
