@@ -165,7 +165,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var CategoryRepositoryInterface $repository */
@@ -174,17 +174,29 @@ class CategoryController extends Controller
         $report     = [];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $end);
-            if (0 !== bccomp($spent, '0') || 0 !== bccomp($earned, '0')) {
-                $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'earned' => $earned, 'id' => $category->id];
+            $spent      = $repository->spentInPeriod($category, $accounts, $start, $end);
+            $earned     = $repository->earnedInPeriod($category, $accounts, $start, $end);
+            $currencies = array_keys($spent) + array_keys($earned);
+            foreach ($currencies as $code) {
+                $currencyInfo          = $spent[$code] ?? $earned[$code];
+                $report[$category->id] = [
+                    'name'                    => sprintf('%s (%s)', $category->name, $code),
+                    'spent'                   => round($spent[$code]['spent'] ?? '0', $currencyInfo['currency_decimal_places']),
+                    'earned'                  => round($earned[$code]['earned'] ?? '0', $currencyInfo['currency_decimal_places']),
+                    'id'                      => $category->id,
+                    'currency_id'             => $currencyInfo['currency_id'],
+                    'currency_code'           => $currencyInfo['currency_code'],
+                    'currency_symbol'         => $currencyInfo['currency_symbol'],
+                    'cyrrency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                ];
             }
         }
         $sum = [];
         foreach ($report as $categoryId => $row) {
-            $sum[$categoryId] = (float)$row['spent'];
+        $sum[$categoryId] = (float)$row['spent'];
         }
         array_multisort($sum, SORT_ASC, $report);
+
         // @codeCoverageIgnoreStart
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
@@ -197,6 +209,20 @@ class CategoryController extends Controller
         // @codeCoverageIgnoreEnd
 
         return $result;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function noAmountInArray(array $array): bool
+    {
+        if (0 === count($array)) {
+            return true;
+        }
+
+        return false;
     }
 
 
