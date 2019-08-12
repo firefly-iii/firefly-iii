@@ -60,20 +60,6 @@ interface CategoryRepositoryInterface
      */
     public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * A very cryptic method name that means:
      *
@@ -217,16 +203,6 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * A very cryptic method name that means:

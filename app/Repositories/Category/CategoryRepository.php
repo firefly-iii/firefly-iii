@@ -130,29 +130,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user);
-        if (0 !== $accounts->count()) {
-            $collector->setAccounts($accounts);
-        }
-
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategories($categories);
-
-        return $collector->getExtractedJournals();
-    }
-
     /**
      * A very cryptic method name that means:
      *
@@ -658,30 +635,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-
-        return $collector->getExtractedJournals();
     }
 
     /**
