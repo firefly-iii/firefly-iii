@@ -253,7 +253,7 @@ class TransactionJournalFactory
         }
         // @codeCoverageIgnoreEnd
 
-        // TODO After 4.8.0 better handling below:
+        // TODO AFTER 4.8,0 better handling below:
 
         /** double check currencies. */
         $sourceCurrency        = $currency;

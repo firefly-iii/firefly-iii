@@ -47,7 +47,7 @@ interface JournalCLIRepositoryInterface
 
     /**
      * Returns all journals with more than 2 transactions. Should only return empty collections
-     * in Firefly III > v4.8.0.
+     * in Firefly III > v4.8,0.
      *
      * @return Collection
      */

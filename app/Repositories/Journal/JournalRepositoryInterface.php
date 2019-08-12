@@ -90,7 +90,7 @@ interface JournalRepositoryInterface
     public function firstNull(): ?TransactionJournal;
 
     /**
-     * TODO this method is no longer well-fitted in 4.8.0. Should be refactored and/or removed.
+     * TODO this method is no longer well-fitted in 4.8,0. Should be refactored and/or removed.
      * Return a list of all destination accounts related to journal.
      *
      * @param TransactionJournal $journal
@@ -100,7 +100,7 @@ interface JournalRepositoryInterface
     public function getJournalDestinationAccounts(TransactionJournal $journal): Collection;
 
     /**
-     * TODO this method is no longer well-fitted in 4.8.0. Should be refactored and/or removed.
+     * TODO this method is no longer well-fitted in 4.8,0. Should be refactored and/or removed.
      * Return a list of all source accounts related to journal.
      *
      * @param TransactionJournal $journal

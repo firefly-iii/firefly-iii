@@ -31,7 +31,7 @@ use FireflyIII\Rules\ZeroOrMore;
  *
  * Class PiggyBankRequest
  * @codeCoverageIgnore
- * TODO AFTER 4.8.0: split this into two request classes.
+ * TODO AFTER 4.8,0: split this into two request classes.
  */
 class PiggyBankRequest extends Request
 {
