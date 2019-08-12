@@ -90,17 +90,7 @@ class BudgetFactory
      */
     public function findByName(string $name): ?Budget
     {
-        /** @var Collection $collection */
-        $collection = $this->user->budgets()->get();
-        // TODO no longer need to loop like this
-        /** @var Budget $budget */
-        foreach ($collection as $budget) {
-            if ($budget->name === $name) {
-                return $budget;
-            }
-        }
-
-        return null;
+        return $this->user->budgets()->where('name', $name)->first();
     }
 
     /**

@@ -700,28 +700,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-
-        return $collector->getSum();
-    }
-
-    /**
      * @param Category $category
      * @param array $data
      *

@@ -90,18 +90,7 @@ class PiggyBankFactory
      */
     public function findByName(string $name): ?PiggyBank
     {
-        $set = $this->user->piggyBanks()->get();
-
-        // TODO no longer need to loop like this
-
-        /** @var PiggyBank $piggy */
-        foreach ($set as $piggy) {
-            if ($piggy->name === $name) {
-                return $piggy;
-            }
-        }
-
-        return null;
+        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first();
     }
 
     /**

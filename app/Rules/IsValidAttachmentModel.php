@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\Rule;
@@ -106,8 +107,9 @@ class IsValidAttachmentModel implements Rule
         }
 
         if (Transaction::class === $this->model) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
+            /** @var JournalAPIRepositoryInterface $repository */
+            $repository = app(JournalAPIRepositoryInterface::class);
+
             /** @var User $user */
             $user = auth()->user();
             $repository->setUser($user);

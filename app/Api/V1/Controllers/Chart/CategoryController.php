@@ -65,7 +65,7 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      *
-     * TODO after 4.8.0, simplify
+     * TODO after 4.8,0, simplify
      */
     public function overview(DateRequest $request): JsonResponse
     {

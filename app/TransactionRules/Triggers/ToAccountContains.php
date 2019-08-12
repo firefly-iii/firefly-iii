@@ -65,6 +65,7 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
 
     /**
      * Returns true when to-account contains X
+     * TODO
      *
      * @param TransactionJournal $journal
      *

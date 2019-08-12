@@ -311,9 +311,7 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
     {
         /** @var GroupUpdateService $service */
         $service      = app(GroupUpdateService::class);
-        $updatedGroup = $service->update($transactionGroup, $data);
-
-        return $updatedGroup;
+        return $service->update($transactionGroup, $data);
     }
 
     /**

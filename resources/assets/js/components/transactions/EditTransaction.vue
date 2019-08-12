@@ -155,6 +155,7 @@
                                     ></piggy-bank>
                                     -->
                                     <tags
+                                            :tags="transaction.tags"
                                             v-model="transaction.tags"
                                             :error="transaction.errors.tags"
                                     ></tags>
@@ -355,7 +356,16 @@
             processIncomingGroupRow(transaction) {
                 console.log(transaction);
                 this.setTransactionType(transaction.type);
+
+                let newTags = [];
+                for(let key in transaction.tags) {
+                    if (transaction.tags.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        newTags.push({text: transaction.tags[key], tiClasses: []});
+                    }
+                }
+
                 this.transactions.push({
+                    transaction_journal_id: transaction.transaction_journal_id,
                     description: transaction.description,
                     date: transaction.date.substr(0, 10),
                     amount: this.positiveAmount(transaction.amount),
@@ -385,7 +395,8 @@
                         },
                     },
                     budget: transaction.budget_id,
-                    tags: transaction.tags,
+                    tags: newTags,
+                    //tags: 'abc',
                     custom_fields: {
                         interest_date: transaction.interest_date,
                         book_date: transaction.book_date,
@@ -531,12 +542,11 @@
                 if (0 === sourceId) {
                     sourceId = null;
                 }
-
                 currentArray =
                     {
+                        transaction_journal_id: row.transaction_journal_id,
                         type: transactionType,
                         date: date,
-
                         amount: row.amount,
                         currency_id: row.currency_id,
 
@@ -733,6 +743,7 @@
 
             addTransaction: function (e) {
                 this.transactions.push({
+                    transaction_journal_id: 0,
                     description: "",
                     date: "",
                     amount: "",

@@ -225,6 +225,11 @@ trait AccountServiceTrait
             $destName = trans('firefly.initial_balance_account', ['account' => $account->name], $language);
             $sourceId = $account->id;
         }
+        if (0 === bccomp($amount, '0')) {
+            Log::debug('Amount is zero, so will not make an OB group.');
+
+            return null;
+        }
         $amount     = app('steam')->positive($amount);
         $submission = [
             'group_title'  => null,

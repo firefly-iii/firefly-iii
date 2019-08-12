@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Requests;
  * Class BudgetLimitRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8.0: split this into two request classes.
+ * TODO AFTER 4.8,0: split this into two request classes.
  */
 class BudgetLimitRequest extends Request
 {

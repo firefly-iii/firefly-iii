@@ -52,9 +52,9 @@
         data() {
             return {
                 tag: '',
-                tags: [],
                 autocompleteItems: [],
                 debounce: null,
+                tags: this.value,
             };
         },
         watch: {
@@ -70,6 +70,7 @@
                 return this.error.length > 0;
             },
             initItems() {
+                console.log('Now in initItems');
                 if (this.tag.length < 2) {
                     return;
                 }

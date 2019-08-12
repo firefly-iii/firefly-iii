@@ -64,7 +64,7 @@ class AssetAccountMapper
      */
     public function map(?int $accountId, array $data): Account
     {
-        Log::debug('Now in AssetAccountMapper::map()');
+        Log::debug(sprintf('Now in AssetAccountMapper::map(%d)', $accountId), $data);
         if ((int)$accountId > 0) {
             // find asset account with this ID:
             $result = $this->repository->findNull($accountId);

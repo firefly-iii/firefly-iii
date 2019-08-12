@@ -38,7 +38,7 @@
                                 {{ ExpandedForm.checkbox('has_headers',1,importJob.configuration['has-headers'],{helpText: trans('import.job_config_uc_header_help')}) }}
                                 {{ ExpandedForm.text('date_format',importJob.configuration['date-format'],{helpText: trans('import.job_config_uc_date_help', {dateExample: phpdate('Ymd')}) }) }}
                                 {{ ExpandedForm.select('csv_delimiter', data.delimiters, importJob.configuration['delimiter'], {helpText: trans('import.job_config_uc_delimiter_help') } ) }}
-                                {{ ExpandedForm.activeAssetAccountList('csv_import_account', importJob.configuration['import-account'], {helpText: trans('import.job_config_uc_account_help')}) }}
+                                {{ AccountForm.activeAssetAccountList('csv_import_account', importJob.configuration['import-account'], {helpText: trans('import.job_config_uc_account_help')}) }}
 
                                 <h4>{{ 'optionalFields'|_ }}</h4>
                                 <div class="form-group">

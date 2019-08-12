@@ -2,7 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.9 (API 0.10.0)] - 2019-08-22
+## [4.8.0.1 (API 0.10.0)] - 2019-08-12
+
+Fixes the most pressing issues found in the previous release.
+
+### Fixed
+- The balance box on the dashboard shows only negative numbers, skewing the results.
+- Selecting or using tags in new transactions results in an error.
+- Editing a transaction with tags will drop the tags from the transaction.
+- [Issue 2382](https://github.com/firefly-iii/firefly-iii/issues/2382) Ranger config
+- [Issue 2384](https://github.com/firefly-iii/firefly-iii/issues/2384) When upgrading manually, you may see: `The command "generate-keys" does not exist.`
+- [Issue 2385](https://github.com/firefly-iii/firefly-iii/issues/2385) When upgrading manually, the firefly:verify command may fail to run.
+- [Issue 2388](https://github.com/firefly-iii/firefly-iii/issues/2388) When registering as a new user, leaving the opening balance at 0 will give you an error.
+- [Issue 2395](https://github.com/firefly-iii/firefly-iii/issues/2395) Editing split transactions is broken.
+- [Issue 2397](https://github.com/firefly-iii/firefly-iii/issues/2397) Transfers are stored the wrong way around.
+- [Issue 2399](https://github.com/firefly-iii/firefly-iii/issues/2399) Not all account balances are updated after you create a new transaction.
+- [Issue 2401](https://github.com/firefly-iii/firefly-iii/issues/2401) Could not delete a split from a split transaction.
+
+## [4.8.0 (API 0.10.0)] - 2019-08-09
 
 A huge change that introduces significant database and API changes. Read more about it [in this Patreon post](https://www.patreon.com/posts/29044368).
 

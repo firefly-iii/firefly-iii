@@ -114,6 +114,6 @@ class UpgradeDatabase extends Command
     {
         Artisan::call('migrate', ['--seed' => true]);
         Artisan::call('firefly-iii:decrypt-all');
-        Artisan::call('generate-keys');
+        Artisan::call('passport:install');
     }
 }

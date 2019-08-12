@@ -26,6 +26,7 @@ use FireflyConfig;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -54,9 +55,9 @@ class TransactionIdentifierTest extends TestCase
     {
         // mock classes:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
+        $cliRepos     = $this->mock(JournalCLIRepositoryInterface::class);
         // commands:
-        $journalRepos->shouldReceive('getSplitJournals')->andReturn(new Collection)
+        $cliRepos->shouldReceive('getSplitJournals')->andReturn(new Collection)
                      ->atLeast()->once();
 
         // configuration
@@ -127,9 +128,9 @@ class TransactionIdentifierTest extends TestCase
 
         // mock classes:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
+        $cliRepos     = $this->mock(JournalCLIRepositoryInterface::class);
         // commands:
-        $journalRepos->shouldReceive('getSplitJournals')->andReturn(new Collection([$journal]))
+        $cliRepos->shouldReceive('getSplitJournals')->andReturn(new Collection([$journal]))
                      ->atLeast()->once();
 
         // configuration

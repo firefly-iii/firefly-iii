@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f0659be8b94240ba32a05fb5f693a01",
+    "content-hash": "37a04601a45e0a40bd62e1b79ffa73d1",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -6099,16 +6099,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.9.1",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72"
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
-                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/007c053ae6f31bba39dfa19a7726f56e9763bbea",
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea",
                 "shasum": ""
             },
             "require": {
@@ -6143,7 +6143,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-04-07T13:18:21+00:00"
+            "time": "2019-08-09T12:45:53+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7877,12 +7877,12 @@
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-session": "*",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-tokenizer": "*",
-        "ext-xml": "*",
-        "ext-zip": "*"
+        "ext-xml": "*"
     },
     "platform-dev": []
 }

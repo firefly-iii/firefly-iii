@@ -297,7 +297,7 @@
                 foreignCurrency = null;
                 // loop tags
                 for (let tagKey in row.tags) {
-                    if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
+                    if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && tagKey <= 4294967294) {
                         tagList.push(row.tags[tagKey].text);
                     }
                 }

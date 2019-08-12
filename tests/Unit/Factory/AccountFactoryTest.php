@@ -410,7 +410,7 @@ class AccountFactoryTest extends TestCase
     {
         // mock repositories:
         $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $groupFactory    = $this->mock(TransactionGroupFactory::class);
+        $this->mock(TransactionGroupFactory::class);
         $metaFactory     = $this->mock(AccountMetaFactory::class);
         $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         $euro            = $this->getEuro();
@@ -429,8 +429,6 @@ class AccountFactoryTest extends TestCase
 
         // mock calls to the repository:
         $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $groupFactory->shouldReceive('setUser')->atLeast()->once();
-        $groupFactory->shouldReceive('create')->atLeast()->once();
 
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
         $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();

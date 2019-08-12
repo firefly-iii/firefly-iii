@@ -55,21 +55,7 @@ class CategoryFactory
      */
     public function findByName(string $name): ?Category
     {
-        $result = null;
-        /** @var Collection $collection */
-        $collection = $this->user->categories()->get();
-
-        // TODO no longer need to loop like this
-
-        /** @var Category $category */
-        foreach ($collection as $category) {
-            if ($category->name === $name) {
-                $result = $category;
-                break;
-            }
-        }
-
-        return $result;
+        return $this->user->categories()->where('name', $name)->first();
     }
 
     /**

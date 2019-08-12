@@ -112,15 +112,11 @@ class ImportableConverter
 
         $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
         $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
-        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
-        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
 
-        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
-
-
-        // amount is positive? Then switch:
+        // if the amount is positive, switch source and destination (account and opposing account)
         if (1 === bccomp($amount, '0')) {
-            [$destination, $source] = [$source, $destination];
+            $source          = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+            $destination     = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
@@ -128,6 +124,12 @@ class ImportableConverter
                 )
             );
         }
+
+        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
+
+        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
+
 
         if ($destination->id === $source->id) {
             throw new FireflyException(

@@ -164,16 +164,16 @@ class BillControllerTest extends TestCase
         $repository  = $this->mock(BillRepositoryInterface::class);
         $userRepos   = $this->mock(UserRepositoryInterface::class);
         $transformer = $this->mock(BillTransformer::class);
-        $euro = $this->getEuro();
-        $pref       = new Preference;
-        $pref->data = 50;
+        $euro        = $this->getEuro();
+        $pref        = new Preference;
+        $pref->data  = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
         Amount::shouldReceive('formatAnything')->andReturn('-100');
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            ['id'       => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
-             'currency' => $this->getEuro(),
+            ['id'                      => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
+             'currency'                => $this->getEuro(),
              'currency_id'             => $euro->id,
              'currency_code'           => $euro->code,
              'currency_symbol'         => $euro->symbol,

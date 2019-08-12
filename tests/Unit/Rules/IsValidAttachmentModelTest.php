@@ -28,6 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Rules\IsValidAttachmentModel;
 use Log;
@@ -88,11 +89,11 @@ class IsValidAttachmentModelTest extends TestCase
      */
     public function testTransaction(): void
     {
-        $transaction      = $this->getRandomWithdrawal()->transactions()->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $transaction     = $this->getRandomWithdrawal()->transactions()->first();
+        $apiJournalRepos = $this->mock(JournalAPIRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('setUser')->atLeast()->once();
-        $journalRepos->shouldReceive('findTransaction')->atLeast()->once()->withArgs([$transaction->id])->andReturn($transaction);
+        $apiJournalRepos->shouldReceive('setUser')->atLeast()->once();
+        $apiJournalRepos->shouldReceive('findTransaction')->atLeast()->once()->withArgs([$transaction->id])->andReturn($transaction);
 
         $value     = $transaction->id;
         $attribute = 'not-important';

@@ -250,15 +250,6 @@ interface CategoryRepositoryInterface
     public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
      * @param array $data
      *
      * @return Category

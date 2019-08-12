@@ -15,7 +15,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('title') }}
-                    {{ ExpandedForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
+                    {{ RuleForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
                     {{ ExpandedForm.select('trigger',allJournalTriggers(), primaryTrigger) }}
 
                     {# only correct way to do active checkbox #}
