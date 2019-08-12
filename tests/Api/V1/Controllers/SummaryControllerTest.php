@@ -142,7 +142,7 @@ class SummaryControllerTest extends TestCase
 
         $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));
         $response->assertStatus(200);
-        // TODO after 4.8.0: check if JSON is correct
+        // TODO AFTER 4.8,0: check if JSON is correct
     }
 
     /**
@@ -253,6 +253,6 @@ class SummaryControllerTest extends TestCase
 
         $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));
         $response->assertStatus(200);
-        // TODO after 4.8.0: check if JSON is correct
+        // TODO AFTER 4.8,0: check if JSON is correct
     }
 }

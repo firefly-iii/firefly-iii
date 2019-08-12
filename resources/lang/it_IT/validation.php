@@ -190,6 +190,6 @@ return [
     'ob_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
     'ob_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
 
-    'generic_invalid_source' => 'You can\'t use this account as the source account.',
-    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
+    'generic_invalid_source' => 'Non puoi utilizzare questo conto come conto di origine.',
+    'generic_invalid_destination' => 'Non puoi utilizzare questo conto come conto di destinazione.',
 ];

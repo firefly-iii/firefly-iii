@@ -253,7 +253,7 @@ return [
     'weekend'                 => 'Fine settimana',
     'client_secret'           => 'Segreto del client',
 
-    'withdrawal_destination_id' => 'Destination account',
-    'deposit_source_id'         => 'Source account',
+    'withdrawal_destination_id' => 'Conto di destinazione',
+    'deposit_source_id'         => 'Conto di origine',
 
 ];
