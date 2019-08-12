@@ -12,10 +12,13 @@ RUN apt-get update && apt-get install -y locales unzip libldap2-dev && apt-get c
 
 ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
 
+# Use script for all extensions.
+RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && install-php-extensions --cleanup bcmath gd pdo_pgsql pdo_sqlite pdo_mysql intl opcache memcached
+
+# Then install LDAP
 RUN docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/
 
-# Use script for
-RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && install-php-extensions --cleanup bcmath gd pdo_pgsql pdo_sqlite pdo_mysql intl opcache memcached
+RUN docker-php-ext-install -j$(nproc) ldap
 
 # another thing.
 RUN a2enmod rewrite && a2enmod ssl && \
