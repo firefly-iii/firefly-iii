@@ -49,14 +49,16 @@ interface CategoryRepositoryInterface
     public function destroy(Category $category): bool;
 
     /**
-     * @param Collection $categories
+     * Returns the amount earned in a category, for a set of accounts, in a specific period.
+     *
+     * @param Category $category
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
-    public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
 
@@ -204,17 +206,17 @@ interface CategoryRepositoryInterface
      */
     public function setUser(User $user);
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
-     * @param Collection $categories
+     * Returns the amount spent in a category, for a set of accounts, in a specific period.
+     *
+     * @param Category $category
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
-    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $categories
