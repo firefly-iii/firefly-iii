@@ -8,23 +8,17 @@ LABEL version="1.5" maintainer="thegrumpydictator@gmail.com"
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 
 # Install stuff Firefly III runs with & depends on: php extensions, locales, dev headers and composer
-RUN apt-get update && apt-get install -y locales unzip libldap2-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y locales unzip && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://raw.githubusercontent.com/JC5/docker-php-extension-installer/patch-2/install-php-extensions /usr/local/bin/
 
-# Use script for all extensions.
-RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && install-php-extensions --cleanup bcmath gd pdo_pgsql pdo_sqlite pdo_mysql intl opcache memcached
+RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions --cleanup bcmath ldap gd pdo_pgsql pdo_sqlite pdo_mysql intl opcache memcached
 
-# Then install LDAP
-RUN docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/
-
-RUN docker-php-ext-install -j$(nproc) ldap
-
-# another thing.
-RUN a2enmod rewrite && a2enmod ssl && \
-    echo "hu_HU.UTF-8 UTF-8\nro_RO.UTF-8 UTF-8\nnb_NO.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\ncs_CZ.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nes_ES.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\nzh_TW.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\n\n" > /etc/locale.gen && \
-    locale-gen && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN a2enmod rewrite && a2enmod ssl
+RUN echo "hu_HU.UTF-8 UTF-8\nro_RO.UTF-8 UTF-8\nnb_NO.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\ncs_CZ.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nes_ES.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\nzh_TW.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\n\n" > /etc/locale.gen
+RUN locale-gen
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy in Firefly III source
 WORKDIR $FIREFLY_PATH
