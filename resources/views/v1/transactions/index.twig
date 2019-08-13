@@ -24,7 +24,7 @@
                 </div>
                 <div class="box-body no-padding">
                     <div style="padding:8px;">
-                        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
+                        <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {# actual list #}
                     {% include 'list.groups' %}
