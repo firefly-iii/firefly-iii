@@ -214,7 +214,7 @@ class AutoCompleteController extends Controller
         $array    = array_merge($array, $limited->toArray());
         foreach ($array as $index => $item) {
             // give another key for consistency
-            $array[$index]['name'] = sprintf('#%d: %s', $item['id'], $item['description']);
+            $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
         }
 
 
