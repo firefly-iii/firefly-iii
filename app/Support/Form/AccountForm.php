@@ -64,8 +64,7 @@ class AccountForm
             $role                        = '' === $role ? 'no_account_type' : $role;
             $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
             $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $name                        = sprintf('%s (%s)', $account->name, $formatted);
-            $grouped[$key][$account->id] = $name;
+            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
         }
 
         return $this->select($name, $grouped, $value, $options);
@@ -107,8 +106,7 @@ class AccountForm
 
             $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
             $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $name                        = sprintf('%s (%s)', $account->name, $formatted);
-            $grouped[$key][$account->id] = $name;
+            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
         }
 
 
@@ -157,8 +155,7 @@ class AccountForm
             }
             $key                         = (string)trans('firefly.opt_group_' . $role);
             $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $name                        = sprintf('%s (%s)', $account->name, $formatted);
-            $grouped[$key][$account->id] = $name;
+            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
         }
 
         return $this->select($name, $grouped, $value, $options);
@@ -203,8 +200,7 @@ class AccountForm
             }
             $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
             $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $name                        = sprintf('%s (%s)', $account->name, $formatted);
-            $grouped[$key][$account->id] = $name;
+            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
         }
 
         return $this->select($name, $grouped, $value, $options);
