@@ -87,7 +87,7 @@ class GroupCollector implements GroupCollectorInterface
 
         $this->total  = 0;
         $this->limit  = 50;
-        $this->page   = 0;
+        $this->page   = 1;
         $this->fields = [
             # group
             'transaction_groups.id as transaction_group_id',
@@ -158,7 +158,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->total = $collection->count();
 
         // now filter the array according to the page and the
-        $offset = $this->page * $this->limit;
+        $offset = ($this->page-1) * $this->limit;
 
         return $collection->slice($offset, $this->limit);
 
@@ -370,9 +370,9 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setPage(int $page): GroupCollectorInterface
     {
-        $page       = 0 === $page ? 0 : $page - 1;
+        $page       = 0 === $page ? 1 : $page;
         $this->page = $page;
-        app('log')->debug(sprintf('GroupCollector: page is now %d (is minus 1)', $page));
+        app('log')->debug(sprintf('GroupCollector: page is now %d', $page));
 
         return $this;
     }
