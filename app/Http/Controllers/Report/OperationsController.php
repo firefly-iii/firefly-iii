@@ -154,8 +154,8 @@ class OperationsController extends Controller
         $expenses  = $this->tasker->getExpenseReport($start, $end, $accounts);
         $incomeSum = array_sum(
             array_map(
-                function ($item) {
-                    return $item['sum'];
+                static function ($item) {
+                    return bcmul($item['sum'], '-1');
                 },
                 $incomes
             )
@@ -163,7 +163,7 @@ class OperationsController extends Controller
 
         $expensesSum = array_sum(
             array_map(
-                function ($item) {
+                static function ($item) {
                     return $item['sum'];
                 },
                 $expenses
