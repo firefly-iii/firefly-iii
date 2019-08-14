@@ -160,7 +160,7 @@ class AccountTasker implements AccountTaskerInterface
      */
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
-        // get all expenses for the given accounts in the given period!
+        // get all incomes for the given accounts in the given period!
         // also transfers!
         // get all transactions:
 
