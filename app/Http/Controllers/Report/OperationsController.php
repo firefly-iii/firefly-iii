@@ -155,7 +155,7 @@ class OperationsController extends Controller
         $incomeSum = array_sum(
             array_map(
                 static function ($item) {
-                    return bcmul($item['sum'], '-1');
+                    return $item['sum'];
                 },
                 $incomes
             )

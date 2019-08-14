@@ -189,6 +189,46 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+            $this->accountIds = $accountIds;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+            $this->accountIds = $accountIds;
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific bill.
      *
      * @param Bill $bill
@@ -1009,5 +1049,45 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
+    }
+
+    /**
+     * These accounts must not be source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
+            $this->accountIds = $accountIds;
+        }
+
+        return $this;
+    }
+
+    /**
+     * These accounts must not be destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
+            $this->accountIds = $accountIds;
+        }
+
+        return $this;
     }
 }

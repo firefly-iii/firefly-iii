@@ -133,11 +133,12 @@ class AccountTasker implements AccountTaskerInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setSourceAccounts($accounts)->setRange($start, $end);
+        $collector->excludeDestinationAccounts($accounts);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->withAccountInformation();
         $journals = $collector->getExtractedJournals();
-        $expenses = $this->groupByDestination($journals);
+        $expenses = $this->groupExpenseByDestination($journals);
 
         // sort the result
         // Obtain a list of columns
@@ -166,11 +167,11 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setDestinationAccounts($accounts)->setRange($start, $end);
+        $collector->excludeSourceAccounts($accounts);
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->withAccountInformation();
-        $income = $this->groupByDestination($collector->getExtractedJournals());
+        $income = $this->groupIncomeBySource($collector->getExtractedJournals());
 
         // sort the result
         // Obtain a list of columns
@@ -196,9 +197,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param array $array
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function groupByDestination(array $array): array
+    private function groupExpenseByDestination(array $array): array
     {
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         /** @var CurrencyRepositoryInterface $currencyRepos */
@@ -207,18 +207,18 @@ class AccountTasker implements AccountTaskerInterface
         $expenses      = [];
         $countAccounts = []; // if count remains 0 use original name, not the name with the currency.
 
-
         /** @var array $journal */
         foreach ($array as $journal) {
-            $opposingId                 = (int)$journal['destination_account_id'];
-            $currencyId                 = (int)$journal['currency_id'];
-            $key                        = sprintf('%s-%s', $opposingId, $currencyId);
-            $name                       = sprintf('%s (%s)', $journal['destination_account_name'], $journal['currency_name']);
-            $countAccounts[$opposingId] = isset($countAccounts[$opposingId]) ? $countAccounts[$opposingId] + 1 : 1;
+            $destinationId                 = (int)$journal['destination_account_id'];
+            $currencyId                    = (int)$journal['currency_id'];
+            $key                           = sprintf('%s-%s', $destinationId, $currencyId);
+            $name                          = sprintf('%s (%s)', $journal['destination_account_name'], $journal['currency_name']);
+            $countAccounts[$destinationId] = isset($countAccounts[$destinationId]) ? $countAccounts[$destinationId] + 1 : 1;
+
             if (!isset($expenses[$key])) {
                 $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
                 $expenses[$key]          = [
-                    'id'              => $opposingId,
+                    'id'              => $destinationId,
                     'name'            => $name,
                     'original'        => $journal['destination_account_name'],
                     'sum'             => '0',
@@ -232,6 +232,7 @@ class AccountTasker implements AccountTaskerInterface
             $expenses[$key]['sum']          = bcadd($expenses[$key]['sum'], $journal['amount']);
             ++$expenses[$key]['count'];
         }
+
         // do averages:
         $keys = array_keys($expenses);
         foreach ($keys as $key) {
@@ -248,5 +249,63 @@ class AccountTasker implements AccountTaskerInterface
         }
 
         return $expenses;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function groupIncomeBySource(array $array): array
+    {
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $currencies    = [$defaultCurrency->id => $defaultCurrency,];
+        $income        = [];
+        $countAccounts = []; // if count remains 0 use original name, not the name with the currency.
+
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $sourceId                 = (int)$journal['source_account_id'];
+            $currencyId               = (int)$journal['currency_id'];
+            $key                      = sprintf('%s-%s', $sourceId, $currencyId);
+            $name                     = sprintf('%s (%s)', $journal['source_account_name'], $journal['currency_name']);
+            $countAccounts[$sourceId] = isset($countAccounts[$sourceId]) ? $countAccounts[$sourceId] + 1 : 1;
+
+            if (!isset($income[$key])) {
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
+                $income[$key]            = [
+                    'id'              => $sourceId,
+                    'name'            => $name,
+                    'original'        => $journal['source_account_name'],
+                    'sum'             => '0',
+                    'average'         => '0',
+                    'currencies'      => [],
+                    'single_currency' => $currencies[$currencyId],
+                    'count'           => 0,
+                ];
+            }
+            $income[$key]['currencies'][] = (int)$journal['currency_id'];
+            $income[$key]['sum']          = bcadd($income[$key]['sum'], bcmul($journal['amount'], '-1'));
+            ++$income[$key]['count'];
+        }
+
+        // do averages:
+        $keys = array_keys($income);
+        foreach ($keys as $key) {
+            $opposingId = $income[$key]['id'];
+            if (1 === $countAccounts[$opposingId]) {
+                $income[$key]['name'] = $income[$key]['original'];
+            }
+
+            if ($income[$key]['count'] > 1) {
+                $income[$key]['average'] = bcdiv($income[$key]['sum'], (string)$income[$key]['count']);
+            }
+            $income[$key]['currencies']     = count(array_unique($income[$key]['currencies']));
+            $income[$key]['all_currencies'] = count($currencies);
+        }
+
+        return $income;
     }
 }

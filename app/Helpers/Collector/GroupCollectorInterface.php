@@ -47,6 +47,41 @@ interface GroupCollectorInterface
     public function getExtractedJournals(): array;
 
     /**
+     * Set source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * These accounts must not be source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Exclude destination accounts.
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Set destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
      * Return the sum of all journals.
      *
      * @return string
