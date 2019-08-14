@@ -52,7 +52,7 @@
             </td>
 
             <td>
-                <a href="{{ route('transactions.show',transaction.transaction_journal_id) }}">
+                <a href="{{ route('transactions.show',transaction.transaction_group_id) }}">
                     {% if transaction.group_title|length > 0 %}
                         {{ transaction.group_title }} ({{ transaction.description }})
                     {% else %}
