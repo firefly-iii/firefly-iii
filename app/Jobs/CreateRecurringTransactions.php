@@ -97,6 +97,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     public function setDate(Carbon $date): void
     {
+        $date->startOfDay();
         $this->date = $date;
     }
 
@@ -301,6 +302,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private function handleOccurrence(Recurrence $recurrence, Carbon $date): ?TransactionGroup
     {
         Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
+        $date->startOfDay();
         if ($date->ne($this->date)) {
             Log::debug(sprintf('%s is not not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
