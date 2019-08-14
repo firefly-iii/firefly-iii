@@ -64,11 +64,26 @@
             <td>
                 {% if transaction.transaction_type_type == 'Deposit' %}
                     {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% if null != transaction.foreign_amount %}
+                        ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                    {% endif %}
                     {% set sum = (sum + (transaction.amount*-1)) %}
+                {% elseif transaction.transaction_type_type == 'Transfer' %}
+                    <span class="text-info">
+                        {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places, false) }}
+                        {% if null != transaction.foreign_amount %}
+                            ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places, false) }})
+                        {% endif %}
+                            </span>
+                    {% set sum = (sum + transaction.amount*-1) %}
                 {% else %}
                     {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% if null != transaction.foreign_amount %}
+                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                    {% endif %}
                     {% set sum = (sum + transaction.amount) %}
                 {% endif %}
+
             </td>
 
             <td class="hidden-sm hidden-xs">
