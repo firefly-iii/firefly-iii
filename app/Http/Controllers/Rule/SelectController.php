@@ -181,10 +181,10 @@ class SelectController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if ($matchingTransactions->count() === $limit) {
+        if (count($matchingTransactions) === $limit) {
             $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
-        if (0 === $matchingTransactions->count()) {
+        if (0 === count($matchingTransactions)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 

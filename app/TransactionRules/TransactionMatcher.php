@@ -107,10 +107,10 @@ class TransactionMatcher
      * transaction journals matching the given $triggers. This is accomplished by trying to fire these
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
-     * @return Collection
+     * @return array
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function findTransactionsByTriggers(): Collection
+    public function findTransactionsByTriggers(): array
     {
         if (0 === count($this->triggers)) {
             return new Collection;
@@ -125,9 +125,7 @@ class TransactionMatcher
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
-        $result = $result->slice(0, $this->searchLimit);
-
-        return $result;
+        return array_slice($result, 0, $this->searchLimit);
     }
 
     /**
@@ -251,7 +249,7 @@ class TransactionMatcher
      *
      * @param Processor $processor
      *
-     * @return Collection
+     * @return array
      */
     private function runProcessor(Processor $processor): array
     {
@@ -265,7 +263,7 @@ class TransactionMatcher
         //   - all transactions have been fetched from the database
         //   - the maximum number of transactions to return has been found
         //   - the maximum number of transactions to search in have been searched
-        $pageSize    = min($this->searchLimit, min($this->triggeredLimit, 50));
+        $pageSize    = $this->searchLimit;
         $processed   = 0;
         $page        = 1;
         $totalResult = [];
