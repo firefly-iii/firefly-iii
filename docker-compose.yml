@@ -26,6 +26,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=secret_firefly_password
       - POSTGRES_USER=firefly
+      - POSTGRES_DB=homestead
     networks: 
       - firefly_iii_net
     volumes: 
