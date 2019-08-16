@@ -36,7 +36,6 @@ use Throwable;
 /**
  * Class ExpenseController
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class ExpenseController extends Controller
 {
@@ -128,8 +127,6 @@ class ExpenseController extends Controller
      * @param Carbon $end
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {

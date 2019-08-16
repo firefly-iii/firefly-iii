@@ -59,7 +59,6 @@ class BalanceController extends Controller
         $helper  = app(BalanceReportHelperInterface::class);
         $report = $helper->getBalanceReport($accounts, $start, $end);
         // TODO no budget.
-        // TODO sum over account.
 //        try {
             $result = view('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart

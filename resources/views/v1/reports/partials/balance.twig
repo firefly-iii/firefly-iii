@@ -3,7 +3,9 @@
     <tr>
         <th>{{ 'budgets'|_ }}</th>
         {% for account in report.accounts %}
+            {% if account.sum != 0 %}
             <th class="hidden-xs" style="text-align: right;"><a href="{{ route('accounts.show',account.id) }}" title="{{ account.iban|default(account.name) }}">{{ account.name }}</a></th>
+            {% endif %}
         {% endfor %}
         <th style="text-align: right;">{{ 'sum'|_ }}</th>
     </tr>
@@ -11,6 +13,7 @@
     <tbody>
 
     {% for budget in report.budgets %}
+        {% if budget.spent|length > 0 %}
     <tr>
         <td>
             <a href="{{ route('budgets.show', [budget.budget_id]) }}">{{ budget.budget_name }}</a>
@@ -20,10 +23,6 @@
             <td style="text-align: right;">
                 {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
             </td>
-            {% else %}
-            <td>
-                &nbsp;
-            </td>
             {% endif %}
         {% endfor %}
         <td style="text-align: right;">
@@ -32,13 +31,18 @@
             {% endfor %}
         </td>
     </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
     <tfoot>
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
         {% for account in report.accounts %}
-            <td style="text-align: right;">{{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}</td>
+            {% if account.sum != 0 %}
+            <td style="text-align: right;">
+                    {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+            </td>
+            {% endif %}
         {% endfor %}
     </tr>
     </tfoot>

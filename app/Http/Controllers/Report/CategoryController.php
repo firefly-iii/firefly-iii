@@ -154,7 +154,6 @@ class CategoryController extends Controller
      *
      * @return mixed|string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
