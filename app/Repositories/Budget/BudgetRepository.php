@@ -1069,7 +1069,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
         }
         if (null !== $end) {
-            $query->where('emd_date', '<=', $end->format('Y-m-d H:i:s'));
+            $query->where('end_date', '<=', $end->format('Y-m-d H:i:s'));
         }
 
         return $query->get();
