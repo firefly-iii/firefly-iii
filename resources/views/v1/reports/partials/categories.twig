@@ -9,11 +9,7 @@
     </thead>
     <tbody>
 
-    {% set sumSpent = 0 %}
-    {% set sumEarned = 0 %}
-    {% for index, category in report %}
-        {% set sumSpent = sumSpent + category.spent %}
-        {% set sumEarned = sumEarned + category.earned %}
+    {% for index, category in report.categories %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
@@ -35,11 +31,23 @@
     <tfoot>
     {% if report|length > listLength %}
         <tr>
-            <td colspan="3" class="active">
+            <td colspan="4" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
             </td>
         </tr>
     {% endif %}
+    {% for sum in report.sums %}
+    <tr>
+        <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td></td>
+    </tr>
+    {% endfor %}
     {#
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>

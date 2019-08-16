@@ -27,7 +27,11 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -65,11 +69,91 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Balance
+     * @return array
      */
-    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): Balance
+    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         Log::debug('Start of balance report');
+        $report = [
+            'budgets'  => [],
+            'accounts' => [],
+        ];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $report['accounts'][$account->id] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'iban' => $account->iban,
+                'sum'  => '0',
+            ];
+        }
+
+        $budgets = $this->budgetRepository->getBudgets();
+        // per budget, dan per balance line
+        // of als het in een balance line valt dan daaronder en anders niet
+        // kruistabel vullen?
+
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId                     = $budget->id;
+            $report['budgets'][$budgetId] = [
+                'budget_id'   => $budgetId,
+                'budget_name' => $budget->name,
+                'spent'       => [], // per account
+                'sums'        => [], // per currency
+            ];
+            $spent                        = [];
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $journals  = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
+                                   ->getExtractedJournals();
+            /** @var array $journal */
+            foreach ($journals as $journal) {
+                $sourceAccount                  = $journal['source_account_id'];
+                $currencyId                     = $journal['currency_id'];
+                $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
+                        'source_account_id'       => $sourceAccount,
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                        'spent'                   => '0',
+                    ];
+                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
+
+                // also fix sum:
+                $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
+                        'sum'                     => '0',
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                    ];
+                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
+
+                // add currency info for account sum
+                $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];
+                $report['accounts'][$sourceAccount]['currency_code']           = $journal['currency_code'];
+                $report['accounts'][$sourceAccount]['currency_name']           = $journal['currency_name'];
+                $report['accounts'][$sourceAccount]['currency_symbol']         = $journal['currency_symbol'];
+                $report['accounts'][$sourceAccount]['currency_decimal_places'] = $journal['currency_decimal_places'];
+            }
+            $report['budgets'][$budgetId]['spent'] = $spent;
+            // get transactions in budget
+        }
+
+        return $report;
+        // do sums:
+
+
+        echo '<pre>';
+        print_r($report);
+        exit;
+
+
         $balance      = new Balance;
         $header       = new BalanceHeader;
         $budgetLimits = $this->budgetRepository->getAllBudgetLimits($start, $end);

@@ -171,31 +171,60 @@ class CategoryController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $categories = $repository->getCategories();
-        $report     = [];
+        $report     = [
+            'categories' => [],
+            'sums'       => [],
+        ];
         /** @var Category $category */
         foreach ($categories as $category) {
             $spent      = $repository->spentInPeriod($category, $accounts, $start, $end);
             $earned     = $repository->earnedInPeriod($category, $accounts, $start, $end);
-            $currencies = array_keys($spent) + array_keys($earned);
+            if (0 === count($spent) && 0 === count($earned)) {
+                continue;
+            }
+            $currencies = array_unique(array_merge(array_keys($spent), array_keys($earned)));
             foreach ($currencies as $code) {
-                $currencyInfo          = $spent[$code] ?? $earned[$code];
-                $report[$category->id] = [
-                    'name'                    => sprintf('%s (%s)', $category->name, $code),
-                    'spent'                   => round($spent[$code]['spent'] ?? '0', $currencyInfo['currency_decimal_places']),
-                    'earned'                  => round($earned[$code]['earned'] ?? '0', $currencyInfo['currency_decimal_places']),
+                $currencyInfo               = $spent[$code] ?? $earned[$code];
+                $key                        = sprintf('%s-%s', $category->id, $code);
+                $report['categories'][$key] = [
+                    'name'                    => $category->name,
+                    'spent'                   => $spent[$code]['spent'] ?? '0',
+                    'earned'                  => $earned[$code]['earned'] ?? '0',
                     'id'                      => $category->id,
                     'currency_id'             => $currencyInfo['currency_id'],
                     'currency_code'           => $currencyInfo['currency_code'],
                     'currency_symbol'         => $currencyInfo['currency_symbol'],
-                    'cyrrency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                    'currency_name'         => $currencyInfo['currency_name'],
+                    'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
                 ];
+
             }
         }
         $sum = [];
-        foreach ($report as $categoryId => $row) {
-        $sum[$categoryId] = (float)$row['spent'];
+        /**
+         * @var string $categoryId
+         * @var array  $row
+         */
+        foreach ($report['categories'] as $categoryId => $row) {
+            $sum[$categoryId] = (float)$row['spent'];
         }
-        array_multisort($sum, SORT_ASC, $report);
+        array_multisort($sum, SORT_ASC, $report['categories']);
+
+        // get sums:
+        foreach ($report['categories'] as $entry) {
+            $currencyId                  = $entry['currency_id'];
+            $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
+                    'spent'                     => '0',
+                    'earned'                     => '0',
+                    'currency_id'             => $entry['currency_id'],
+                    'currency_code'           => $entry['currency_code'],
+                    'currency_symbol'         => $entry['currency_symbol'],
+                    'currency_name'         => $entry['currency_name'],
+                    'cyrrency_decimal_places' => $entry['currency_decimal_places'],
+                ];
+            $report['sums'][$currencyId]['spent'] = bcadd($report['sums'][$currencyId]['spent'], $entry['spent']);
+            $report['sums'][$currencyId]['earned'] = bcadd($report['sums'][$currencyId]['earned'], $entry['earned']);
+        }
 
         // @codeCoverageIgnoreStart
         try {

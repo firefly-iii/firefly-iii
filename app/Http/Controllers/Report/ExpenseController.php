@@ -74,7 +74,6 @@ class ExpenseController extends Controller
      * @param Carbon $end
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {

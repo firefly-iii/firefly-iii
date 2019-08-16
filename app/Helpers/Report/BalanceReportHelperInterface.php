@@ -38,7 +38,7 @@ interface BalanceReportHelperInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Balance
+     * @return array
      */
-    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): Balance;
+    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): array;
 }

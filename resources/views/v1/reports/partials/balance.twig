@@ -1,59 +1,45 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th colspan="2">{{ 'budgets'|_ }}</th>
-        {% for account in balance.getBalanceHeader.getAccounts %}
-            <th class="hidden-xs" style="text-align: right;"><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></th>
+        <th>{{ 'budgets'|_ }}</th>
+        {% for account in report.accounts %}
+            <th class="hidden-xs" style="text-align: right;"><a href="{{ route('accounts.show',account.id) }}" title="{{ account.iban|default(account.name) }}">{{ account.name }}</a></th>
         {% endfor %}
-        <th style="text-align: right;">
-            {{ 'leftInBudget'|_ }}
-        </th>
+        <th style="text-align: right;">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
 
-    {% for balanceLine in balance.getBalanceLines %}
-        <tr>
-
-            {% if balanceLine.getBudget.id %}
-                <td>
-                    <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
-                    {% if balanceLine.getStartdate and balanceLine.getEnddate %}
-                        <span class="small" class="hidden-xs"><br>
-                            {{ balanceLine.getStartdate.formatLocalized(monthAndDayFormat) }}
-                            &mdash;
-                            {{ balanceLine.getEnddate.formatLocalized(monthAndDayFormat) }}
-                            </span>
-                    {% endif %}
-                </td>
-                <td style="text-align: right;">
-                    {% if(balanceLine.getBudgetLimit.amount) %}
-                        {{ balanceLine.getBudgetLimit.amount|formatAmount }}
-                    {% else %}
-                        {{ '0'|formatAmount }}
-                    {% endif %}
-                </td>
-            {% else %}
-                <td colspan="2">{{ balanceLine.getTitle }}</td>
-            {% endif %}
-
-            {% for balanceEntry in balanceLine.getBalanceEntries %}
-                <td class="hidden-xs" style="text-align: right;">
-                    {% if balanceEntry.getSpent != 0 %}
-                        <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
-                        <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="balance-amount"
-                           data-account-id="{{ balanceEntry.getAccount.id }}"
-                           data-budget-id="{{ balanceLine.getBudget.id }}" data-role="{{ balanceLine.getRole }}"></i>
-                    {% endif %}
-                    {% if balanceEntry.getLeft != 0 %}
-                        <span class="text-success" style="text-align: right;">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>
-                    {% endif %}
-                </td>
-            {% endfor %}
+    {% for budget in report.budgets %}
+    <tr>
+        <td>
+            <a href="{{ route('budgets.show', [budget.budget_id]) }}">{{ budget.budget_name }}</a>
+        </td>
+        {% for account in report.accounts %}
+            {% if budget.spent[account.id] %}
             <td style="text-align: right;">
-                {{ balanceLine.leftOfRepetition|formatAmount }}
+                {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
             </td>
-        </tr>
+            {% else %}
+            <td>
+                &nbsp;
+            </td>
+            {% endif %}
+        {% endfor %}
+        <td style="text-align: right;">
+            {% for sum in report.sums[budget.budget_id] %}
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+            {% endfor %}
+        </td>
+    </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+    <tr>
+        <td><em>{{ 'sum'|_ }}</em></td>
+        {% for account in report.accounts %}
+            <td style="text-align: right;">{{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}</td>
+        {% endfor %}
+    </tr>
+    </tfoot>
 </table>
