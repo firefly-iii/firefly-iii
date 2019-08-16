@@ -94,9 +94,9 @@
 
             <td style="text-align: right;">
                 <span style="margin-right:5px;">
-                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                 {% if null != journal.foreign_amount %}
-                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                 {% endif %}
                 </span>
             </td>

@@ -65,20 +65,20 @@
                                     </td>
                                     <td>
                                         {% if journal.transaction_type_type == 'Deposit' %}
-                                            {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                            {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                             {% if null != journal.foreign_amount %}
-                                                ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                             {% endif %}
                                         {% elseif journal.transaction_type_type == 'Transfer' %}
-                                            <span class="text-info">{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_symbol_decimal_places, false) }}
+                                            <span class="text-info">{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                                 {% if null != journal.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places, false) }})
+                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                                                 {% endif %}
                                             </span>
                                         {% else %}
-                                            {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+                                            {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                                             {% if null != journal.foreign_amount %}
-                                                ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_symbol_decimal_places) }})
+                                                ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                             {% endif %}
                                         {% endif %}
                                     </td>

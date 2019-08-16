@@ -8,58 +8,54 @@
     </tr>
     </thead>
     <tbody>
-    {% set sum = 0 %}
-    {% for entry in entries %}
-        {% set sum = sum + entry.sum %}
+    {% for account in report.accounts %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
             <tr>
         {% endif %}
-        <td data-value="{{ entry.name }}">
-            <a href="{{ route('accounts.show',entry.id) }}">{{ entry.name }}</a>
-            {% if entry.count > 1 %}
+        <td data-value="{{ account.name }}">
+            <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
+            {% if account.count > 1 %}
                 <br/>
                 <small>
-                    {{ entry.count }} {{ 'transactions'|_|lower }}
+                    {{ account.count }} {{ 'transactions'|_|lower }}
                 </small>
             {% endif %}
         </td>
-        <td data-value="{{ entry.sum }}" style="text-align: right;">
-            {% if entry.currencies == 1 %}
-                {{ formatAmountByCurrency(entry.single_currency, entry.sum) }}
-            {% else %}
-                {{ (entry.sum)|formatAmount }}
-            {% endif %}
+        <td data-value="{{ account.sum }}" style="text-align: right;">
+            {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
         </td>
         <td class="hidden-xs" data-value="{{ entry.average }}" style="text-align: right;">
             {% if entry.count > 1 %}
-                {{ entry.average|formatAmount }}
+                {{ formatAmountBySymbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
             {% else %}
                 &mdash;
             {% endif %}
         </td>
         <td>
             <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
-               data-account-id="{{ entry.id }}"></i>
+               data-account-id="{{ account.id }}"></i>
         </td>
         </tr>
     {% endfor %}
     </tbody>
+
     <tfoot>
-    {% if entries|length > listLength %}
+    {% if report.accounts|length > listLength %}
         <tr>
             <td colspan="4" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
             </td>
         </tr>
     {% endif %}
-    <tr>
-        <td><em>{{ 'sum'|_ }}</em></td>
-        <td style="text-align: right;">{{ (sum)|formatAmount }}</td>
-    </tr>
-    <tr>
-        <td colspan="4"><small class="text-warning">{{ 'sum_in_default_currency'|_ }}</small></td>
-    </tr>
-    </tfoot>
+    {% for sum in report.sums %}
+        <tr>
+            <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    {% endfor %}
 </table>
