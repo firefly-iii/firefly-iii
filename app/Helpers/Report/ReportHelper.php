@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Bill as BillCollection;
-use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
@@ -117,54 +115,6 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $report;
-        echo '<pre>';
-        print_r($report);
-        exit;
-
-
-        $collection = new BillCollection;
-        $collection->setStartDate($start);
-        $collection->setEndDate($end);
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
-            foreach ($expectedDates as $payDate) {
-                $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
-
-
-                /** @var GroupCollectorInterface $collector */
-                $collector = app(GroupCollectorInterface::class);
-                $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBill($bill);
-                $journals = $collector->getExtractedJournals();
-
-                $billLine = new BillLine;
-                $billLine->setBill($bill);
-                $billLine->setCurrency($bill->transactionCurrency);
-                $billLine->setPayDate($payDate);
-                $billLine->setEndOfPayDate($endOfPayPeriod);
-                $billLine->setMin((string)$bill->amount_min);
-                $billLine->setMax((string)$bill->amount_max);
-                $billLine->setHit(false);
-                /** @var array $first */
-                $first = null;
-                if (count($journals) > 0) {
-                    $first = reset($journals);
-                }
-                if (null !== $first) {
-                    $billLine->setTransactionJournalId($first['transaction_journal_id']);
-                    $billLine->setAmount($first['amount']);
-                    $billLine->setLastHitDate($first['date']);
-                    $billLine->setHit(true);
-                }
-                if ($billLine->isActive() || $billLine->isHit()) {
-                    $collection->addBill($billLine);
-                }
-            }
-        }
-        $collection->filterBills();
-
-        return $collection;
     }
 
     /**
