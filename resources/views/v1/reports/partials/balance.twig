@@ -20,10 +20,15 @@
         </td>
         {% for account in report.accounts %}
             {% if budget.spent[account.id] %}
-            <td style="text-align: right;">
-                {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
-            </td>
+                <td style="text-align: right;">
+                    {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
+                </td>
+            {% else %}
+                {% if report.accounts[account.id].sum != 0 %}
+                    <td>&nbsp;</td>
+                {% endif %}
             {% endif %}
+
         {% endfor %}
         <td style="text-align: right;">
             {% for sum in report.sums[budget.budget_id] %}

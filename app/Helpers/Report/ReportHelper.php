@@ -66,20 +66,61 @@ class ReportHelper implements ReportHelperInterface
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @param Carbon $start
      * @param Carbon $end
      * @param Collection $accounts
      *
-     * @return BillCollection
+     * @return array
      */
-    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection
+    public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
+        $report     = [
+            'bills' => [],
+        ];
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
+            $billId        = $bill->id;
+            $currency      = $bill->transactionCurrency;
+            $current       = [
+                'id'                      => $bill->id,
+                'name'                    => $bill->name,
+                'active'                  => $bill->active,
+                'amount_min'              => $bill->amount_min,
+                'amount_max'              => $bill->amount_max,
+                'currency_id'             => $bill->transaction_currency_id,
+                'currency_code'           => $currency->code,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'expected_dates'          => $expectedDates->toArray(),
+                'paid_moments'            => [],
+            ];
+
+            /** @var Carbon $start */
+            foreach ($expectedDates as $expectedStart) {
+                $expectedEnd = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
+
+                // is paid in this period maybe?
+                /** @var GroupCollectorInterface $collector */
+                $collector = app(GroupCollectorInterface::class);
+                $collector->setAccounts($accounts)->setRange($expectedStart, $expectedEnd)->setBill($bill);
+                $current['paid_moments'][] = $collector->getExtractedJournals();
+            }
+
+            // append to report:
+            $report['bills'][$billId] = $current;
+        }
+
+        return $report;
+        echo '<pre>';
+        print_r($report);
+        exit;
+
 
         $collection = new BillCollection;
         $collection->setStartDate($start);

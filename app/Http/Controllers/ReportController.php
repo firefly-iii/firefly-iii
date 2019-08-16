@@ -238,8 +238,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_default',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );

@@ -702,6 +702,16 @@ Route::group(
 );
 
 /**
+ * Report Data Bill Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/bill', 'as' => 'report-data.bills.'],
+    static function () {
+        Route::get('overview/{accountList}/{start_date}/{end_date}', ['uses' => 'BillController@overview', 'as' => 'overview']);
+    }
+);
+
+/**
  * Report Data Expense / Revenue Account Controller
  */
 Route::group(
