@@ -109,6 +109,7 @@ class JavascriptController extends Controller
         $account    = $repository->findNull((int)$request->get('account'));
         $currencyId = 0;
         if (null !== $account) {
+            // TODO we can use getAccountCurrency() instead
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
         }
         /** @var TransactionCurrency $currency */

@@ -75,6 +75,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->repository->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
         if (null === $currency) {
