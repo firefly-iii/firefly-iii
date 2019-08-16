@@ -66,7 +66,7 @@ class BudgetReportController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart that groups expenses by the account.
      *
@@ -97,7 +97,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart that groups the expenses by budget.
      *
@@ -128,7 +128,7 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Main overview of a budget in the budget report.
      *

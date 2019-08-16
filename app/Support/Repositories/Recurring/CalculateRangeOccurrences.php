@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
  */
 trait CalculateRangeOccurrences
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -60,7 +60,7 @@ trait CalculateRangeOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -107,7 +107,7 @@ trait CalculateRangeOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.

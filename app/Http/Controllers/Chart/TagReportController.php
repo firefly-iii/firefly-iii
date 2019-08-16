@@ -53,7 +53,7 @@ class TagReportController extends Controller
         $this->generator = app(GeneratorInterface::class);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expenses for tags grouped on account.
      *
@@ -84,7 +84,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate income for tag grouped by account.
      *
@@ -115,7 +115,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expense for tag grouped on budget.
      *
@@ -145,7 +145,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expense for tag grouped on category.
      *
@@ -175,7 +175,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate main tag overview chart.
      *
@@ -292,7 +292,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show expense grouped by expense account.
      *
@@ -323,7 +323,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show income grouped by tag.
      *

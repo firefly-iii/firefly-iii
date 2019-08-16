@@ -382,7 +382,7 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Shows a budget overview chart (spent and budgeted).
      *

@@ -36,7 +36,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']

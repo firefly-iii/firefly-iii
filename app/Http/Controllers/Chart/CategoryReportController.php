@@ -61,7 +61,7 @@ class CategoryReportController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for expenses grouped by expense account.
      *
@@ -89,7 +89,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for income grouped by revenue account.
      *
@@ -120,7 +120,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for expenses grouped by expense account.
      *
@@ -151,7 +151,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Piechart for income grouped by account.
      *
@@ -182,7 +182,7 @@ class CategoryReportController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Main report category chart.
      *

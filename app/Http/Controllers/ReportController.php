@@ -69,7 +69,7 @@ class ReportController extends Controller
             }
         );
     }
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show account report.
      *
@@ -138,7 +138,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show budget report.
      *
@@ -176,7 +176,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show category report.
      *
@@ -386,7 +386,7 @@ class ReportController extends Controller
         return redirect($uri);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get a tag report.
      *

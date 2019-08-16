@@ -575,7 +575,7 @@ trait AugumentData
         return $grouped;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent by budget.
@@ -635,7 +635,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent by category.
@@ -696,7 +696,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent in a period.
@@ -744,7 +744,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Returns an array with the following values:

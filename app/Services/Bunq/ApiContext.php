@@ -39,7 +39,7 @@ use Tests\Object\FakeApiContext;
  */
 class ApiContext
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param BunqEnumApiEnvironmentType $environmentType
      * @param string                     $apiKey

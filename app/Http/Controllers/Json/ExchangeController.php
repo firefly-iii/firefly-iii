@@ -37,7 +37,7 @@ use Log;
  */
 class ExchangeController extends Controller
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Returns an exchange rate.
      *

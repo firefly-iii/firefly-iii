@@ -260,7 +260,7 @@ class CategoryController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Chart for period for transactions without a category.

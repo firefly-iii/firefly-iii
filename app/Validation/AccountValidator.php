@@ -63,8 +63,10 @@ class AccountValidator
         $this->destError    = 'No error yet.';
         $this->sourceError  = 'No error yet.';
         $this->combinations = config('firefly.source_dests');
+
         /** @var AccountRepositoryInterface accountRepository */
         $this->accountRepository = app(AccountRepositoryInterface::class);
+
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -174,25 +176,12 @@ class AccountValidator
      */
     private function canCreateType(string $accountType): bool
     {
-        $result = false;
-        switch ($accountType) {
-            default:
-                Log::error(sprintf('AccountValidator::validateSource cannot handle "%s".', $this->transactionType));
-                break;
-            case AccountType::ASSET:
-            case AccountType::LOAN:
-            case AccountType::MORTGAGE:
-            case AccountType::DEBT:
-                $result = false;
-                break;
-            case AccountType::EXPENSE:
-            case AccountType::REVENUE:
-            case AccountType::INITIAL_BALANCE:
-                $result = true;
-                break;
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
         }
 
-        return $result;
+        return false;
     }
 
     /**
@@ -225,25 +214,20 @@ class AccountValidator
      */
     private function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account
     {
-        $result = null;
-
         // find by ID
         if ($accountId > 0) {
             $first = $this->accountRepository->findNull($accountId);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
-                $result = $first;
+                return $first;
             }
         }
 
         // find by name:
-        if (null === $result && '' !== $accountName) {
-            $second = $this->accountRepository->findByName($accountName, $validTypes);
-            if (null !== $second) {
-                $result = $second;
-            }
+        if ('' !== $accountName) {
+            return $this->accountRepository->findByName($accountName, $validTypes);
         }
 
-        return $result;
+        return null;
     }
 
     /**

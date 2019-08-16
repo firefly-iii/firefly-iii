@@ -279,7 +279,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->user->categories()->find($categoryId);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Find a category.
@@ -317,7 +317,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $factory->findOrCreate(null, $data['name']);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Category $category
@@ -389,7 +389,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $categories
@@ -433,7 +433,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $data;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $accounts
@@ -472,7 +472,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $categories

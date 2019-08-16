@@ -90,7 +90,7 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Validator::resolver(
-        /** @noinspection MoreThanThreeArgumentsInspection */
+
             function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }

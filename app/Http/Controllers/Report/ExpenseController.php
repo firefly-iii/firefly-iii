@@ -63,7 +63,7 @@ class ExpenseController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generates the overview per budget.
      *
@@ -117,7 +117,7 @@ class ExpenseController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generates the overview per category (spent and earned).
      *
@@ -179,7 +179,7 @@ class ExpenseController extends Controller
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Overview of spending.
      *
@@ -232,7 +232,7 @@ class ExpenseController extends Controller
         // for period, get spent and earned for each account (by name)
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * List of top expenses.
      *
@@ -284,7 +284,7 @@ class ExpenseController extends Controller
 
         return $result;
     }
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * List of top income.
      *

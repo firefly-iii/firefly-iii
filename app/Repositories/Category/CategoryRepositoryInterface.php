@@ -124,7 +124,7 @@ interface CategoryRepositoryInterface
      */
     public function getCategories(): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Return most recent transaction(journal) date or null when never used before.
@@ -146,7 +146,7 @@ interface CategoryRepositoryInterface
      */
     public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $accounts
@@ -176,7 +176,7 @@ interface CategoryRepositoryInterface
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param string $query
@@ -185,7 +185,7 @@ interface CategoryRepositoryInterface
      */
     public function searchCategory(string $query): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param User $user

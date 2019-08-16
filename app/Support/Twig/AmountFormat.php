@@ -122,7 +122,7 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatAmountBySymbol',
-            /** @noinspection MoreThanThreeArgumentsInspection */
+
             static function (string $amount, string $symbol, int $decimalPlaces = null, bool $coloured = null): string {
                 $decimalPlaces            = $decimalPlaces ?? 2;
                 $coloured                 = $coloured ?? true;

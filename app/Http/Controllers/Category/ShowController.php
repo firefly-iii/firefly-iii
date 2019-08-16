@@ -65,7 +65,7 @@ class ShowController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show a single category.
      *

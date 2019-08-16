@@ -467,7 +467,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $amount;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Carbon $start
@@ -544,7 +544,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Get all budgets with these ID's.
@@ -570,7 +570,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $accounts
@@ -822,7 +822,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param array $data
