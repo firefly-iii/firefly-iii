@@ -57,17 +57,17 @@ class BudgetController extends Controller
         $cache->addProperty('budget-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         $helper  = app(BudgetReportHelperInterface::class);
         $budgets = $helper->getBudgetReport($start, $end, $accounts);
-        try {
+        //try {
             $result = view('reports.partials.budgets', compact('budgets'))->render();
             // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
-            $result = 'Could not render view.';
-        }
+//        } catch (Throwable $e) {
+//            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
+//            $result = 'Could not render view.';
+//        }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
 

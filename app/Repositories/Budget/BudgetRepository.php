@@ -179,10 +179,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
         if (null === $end && null === $start) {
-            return $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
+            return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
         }
         if (null === $end xor null === $start) {
-            $query = $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC');
+            $query = $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC');
             // one of the two is null
             if (null !== $end) {
                 // end date must be before $end.
@@ -704,6 +704,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                         'id'             => $transaction['currency_id'],
                         'decimal_places' => $transaction['currency_decimal_places'],
                         'code'           => $transaction['currency_code'],
+                        'name'           => $transaction['currency_name'],
                         'symbol'         => $transaction['currency_symbol'],
                     ];
                 }
@@ -720,9 +721,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
@@ -792,9 +794,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
