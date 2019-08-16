@@ -63,7 +63,7 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
-use FireflyIII\Support\Twig\Extension\TransactionGroupTwig;
+use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Translation;
