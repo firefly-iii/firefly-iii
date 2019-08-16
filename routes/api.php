@@ -42,7 +42,9 @@ declare(strict_types=1);
  */
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'about', 'as' => 'api.v1.about.'],
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'about',
+        'as'        => 'api.v1.about.'],
     static function () {
 
         // Accounts API routes:
@@ -53,7 +55,8 @@ Route::group(
 
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts', 'as' => 'api.v1.accounts.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts',
+     'as'         => 'api.v1.accounts.'],
     static function () {
 
         // Accounts API routes:
@@ -70,7 +73,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments', 'as' => 'api.v1.attachments.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments',
+     'as'         => 'api.v1.attachments.'],
     static function () {
 
         // Attachment API routes:
@@ -85,7 +89,7 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets',
      'as'         => 'api.v1.available_budgets.'],
     static function () {
 
@@ -99,7 +103,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], static function () {
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills',
+     'as'         => 'api.v1.bills.'], static function () {
 
     // Bills API routes:
     Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
@@ -116,7 +121,8 @@ Route::group(
 
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits', 'as' => 'api.v1.budget_limits.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits',
+     'as'         => 'api.v1.budget_limits.'],
     static function () {
 
         // Budget Limit API routes:
@@ -130,7 +136,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets', 'as' => 'api.v1.budgets.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets',
+     'as'         => 'api.v1.budgets.'],
     static function () {
 
         // Budget API routes:
@@ -146,7 +153,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories', 'as' => 'api.v1.categories.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories',
+     'as'         => 'api.v1.categories.'],
     static function () {
 
         // Category API routes:
@@ -165,7 +173,7 @@ Route::group(
 
 // Accounts
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
      'as'         => 'api.v1.chart.account.'],
     static function () {
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
@@ -177,7 +185,7 @@ Route::group(
 
 // Available budgets
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/ab',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/ab',
      'as'         => 'api.v1.chart.ab.'],
     static function () {
 
@@ -188,7 +196,7 @@ Route::group(
 
 // Categories
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
      'as'         => 'api.v1.chart.category.'],
     static function () {
 
@@ -202,7 +210,8 @@ Route::group(
 
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration', 'as' => 'api.v1.configuration.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration',
+     'as'         => 'api.v1.configuration.'],
     static function () {
 
         // Configuration API routes:
@@ -212,7 +221,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer', 'as' => 'api.v1.cer.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',
+     'as'         => 'api.v1.cer.'],
     static function () {
 
         // Currency Exchange Rate API routes:
@@ -221,7 +231,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'import', 'as' => 'api.v1.import.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'import',
+     'as'         => 'api.v1.import.'],
     static function () {
 
         // Transaction Links API routes:
@@ -231,7 +242,8 @@ Route::group(
     }
 );
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types', 'as' => 'api.v1.link_types.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
+     'as'         => 'api.v1.link_types.'],
     static function () {
 
         // Link Type API routes:
@@ -245,7 +257,7 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
      'as'         => 'api.v1.transaction_links.'],
     static function () {
 
@@ -260,7 +272,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'piggy_banks', 'as' => 'api.v1.piggy_banks.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'piggy_banks',
+     'as'         => 'api.v1.piggy_banks.'],
     static function () {
 
         // Piggy Bank API routes:
@@ -274,7 +287,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences', 'as' => 'api.v1.preferences.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences',
+     'as'         => 'api.v1.preferences.'],
     static function () {
 
         // Preference API routes:
@@ -285,7 +299,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'recurrences', 'as' => 'api.v1.recurrences.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'recurrences',
+     'as'         => 'api.v1.recurrences.'],
     static function () {
 
         // Recurrence API routes:
@@ -300,7 +315,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rules', 'as' => 'api.v1.rules.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rules',
+     'as'         => 'api.v1.rules.'],
     static function () {
 
         // Rules API routes:
@@ -317,7 +333,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rule_groups', 'as' => 'api.v1.rule_groups.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rule_groups',
+     'as'         => 'api.v1.rule_groups.'],
     static function () {
 
         // Rules API routes:
@@ -336,7 +353,7 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'         => 'api.v1.summary.'],
     static function () {
 
@@ -347,7 +364,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies', 'as' => 'api.v1.currencies.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
+     'as'         => 'api.v1.currencies.'],
     static function () {
 
         // Transaction currency API routes:
@@ -373,7 +391,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags', 'as' => 'api.v1.tags.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags',
+     'as'         => 'api.v1.tags.'],
     static function () {
         // Tag API routes:
         Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
@@ -386,7 +405,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud', 'as' => 'api.v1.tag-cloud.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud',
+     'as'         => 'api.v1.tag-cloud.'],
     static function () {
         // Tag cloud API routes (to prevent collisions)
         Route::get('', ['uses' => 'TagController@cloud', 'as' => 'cloud']);
@@ -395,7 +415,8 @@ Route::group(
 
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions', 'as' => 'api.v1.transactions.'],
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions',
+     'as'         => 'api.v1.transactions.'],
     static function () {
 
         // Transaction API routes:
