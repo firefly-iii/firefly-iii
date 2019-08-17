@@ -35,6 +35,9 @@ use Tests\TestCase;
  * Try split journal
  *
  * Class SetDestinationAccountTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetDestinationAccountTest extends TestCase
 {

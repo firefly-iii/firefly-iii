@@ -154,7 +154,6 @@ class CategoryController extends Controller
      *
      * @return mixed|string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -171,20 +170,61 @@ class CategoryController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $categories = $repository->getCategories();
-        $report     = [];
+        $report     = [
+            'categories' => [],
+            'sums'       => [],
+        ];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $end);
-            if (0 !== bccomp($spent, '0') || 0 !== bccomp($earned, '0')) {
-                $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'earned' => $earned, 'id' => $category->id];
+            $spent      = $repository->spentInPeriod($category, $accounts, $start, $end);
+            $earned     = $repository->earnedInPeriod($category, $accounts, $start, $end);
+            if (0 === count($spent) && 0 === count($earned)) {
+                continue;
+            }
+            $currencies = array_unique(array_merge(array_keys($spent), array_keys($earned)));
+            foreach ($currencies as $code) {
+                $currencyInfo               = $spent[$code] ?? $earned[$code];
+                $key                        = sprintf('%s-%s', $category->id, $code);
+                $report['categories'][$key] = [
+                    'name'                    => $category->name,
+                    'spent'                   => $spent[$code]['spent'] ?? '0',
+                    'earned'                  => $earned[$code]['earned'] ?? '0',
+                    'id'                      => $category->id,
+                    'currency_id'             => $currencyInfo['currency_id'],
+                    'currency_code'           => $currencyInfo['currency_code'],
+                    'currency_symbol'         => $currencyInfo['currency_symbol'],
+                    'currency_name'         => $currencyInfo['currency_name'],
+                    'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                ];
+
             }
         }
         $sum = [];
-        foreach ($report as $categoryId => $row) {
+        /**
+         * @var string $categoryId
+         * @var array  $row
+         */
+        foreach ($report['categories'] as $categoryId => $row) {
             $sum[$categoryId] = (float)$row['spent'];
         }
-        array_multisort($sum, SORT_ASC, $report);
+        array_multisort($sum, SORT_ASC, $report['categories']);
+
+        // get sums:
+        foreach ($report['categories'] as $entry) {
+            $currencyId                  = $entry['currency_id'];
+            $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
+                    'spent'                     => '0',
+                    'earned'                     => '0',
+                    'currency_id'             => $entry['currency_id'],
+                    'currency_code'           => $entry['currency_code'],
+                    'currency_symbol'         => $entry['currency_symbol'],
+                    'currency_name'         => $entry['currency_name'],
+                    'cyrrency_decimal_places' => $entry['currency_decimal_places'],
+                ];
+            $report['sums'][$currencyId]['spent'] = bcadd($report['sums'][$currencyId]['spent'], $entry['spent']);
+            $report['sums'][$currencyId]['earned'] = bcadd($report['sums'][$currencyId]['earned'], $entry['earned']);
+        }
+
         // @codeCoverageIgnoreStart
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
@@ -197,6 +237,20 @@ class CategoryController extends Controller
         // @codeCoverageIgnoreEnd
 
         return $result;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function noAmountInArray(array $array): bool
+    {
+        if (0 === count($array)) {
+            return true;
+        }
+
+        return false;
     }
 
 

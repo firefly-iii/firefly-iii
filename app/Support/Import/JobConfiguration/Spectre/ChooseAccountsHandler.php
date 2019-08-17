@@ -110,7 +110,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getNextData(): array
     {
@@ -157,6 +157,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         /** @var AccountModel $account */
         foreach ($accounts as $account) {
             $accountId         = $account->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId        = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currency          = $this->getCurrency($currencyId);
             $array[$accountId] = [

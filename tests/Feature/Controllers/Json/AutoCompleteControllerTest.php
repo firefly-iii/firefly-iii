@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class AutoCompleteControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AutoCompleteControllerTest extends TestCase
 {

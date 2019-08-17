@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class RangeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SandstormTest extends TestCase
 {

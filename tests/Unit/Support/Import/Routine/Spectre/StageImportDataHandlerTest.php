@@ -40,6 +40,9 @@ use Tests\TestCase;
 
 /**
  * Class StageImportDataHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StageImportDataHandlerTest extends TestCase
 {

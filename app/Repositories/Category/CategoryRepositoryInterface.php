@@ -49,28 +49,16 @@ interface CategoryRepositoryInterface
     public function destroy(Category $category): bool;
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * Returns the amount earned in a category, for a set of accounts, in a specific period.
      *
-     * @return string
-     */
-    public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * @param Collection $categories
+     * @param Category $category
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
      */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
+    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * A very cryptic method name that means:
@@ -136,7 +124,7 @@ interface CategoryRepositoryInterface
      */
     public function getCategories(): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Return most recent transaction(journal) date or null when never used before.
@@ -149,6 +137,7 @@ interface CategoryRepositoryInterface
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
+     * TODO not multi-currency
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -158,9 +147,10 @@ interface CategoryRepositoryInterface
      */
     public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
+     * TODO not multi-currency
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -170,6 +160,7 @@ interface CategoryRepositoryInterface
     public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * TODO not multi-currency
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -180,6 +171,7 @@ interface CategoryRepositoryInterface
     public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * TODO not multi-currency
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -188,7 +180,7 @@ interface CategoryRepositoryInterface
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param string $query
@@ -197,34 +189,24 @@ interface CategoryRepositoryInterface
      */
     public function searchCategory(string $query): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param User $user
      */
     public function setUser(User $user);
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * Returns the amount spent in a category, for a set of accounts, in a specific period.
      *
-     * @return string
-     */
-    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $categories
+     * @param Category $category
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
      */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * A very cryptic method name that means:

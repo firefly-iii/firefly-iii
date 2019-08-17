@@ -47,13 +47,14 @@ class SetBudget implements ActionInterface
 
     /**
      * Set budget.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
      */
     public function act(TransactionJournal $journal): bool
     {
-        $search  = $this->action->action_value;
+        $search = $this->action->action_value;
 
         $budget = $journal->user->budgets()->where('name', $search)->first();
         if (null === $budget) {

@@ -48,9 +48,7 @@ class Handler extends ExceptionHandler
      *
      * @param Request   $request
      * @param Exception $exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      *
      * @return mixed
      */
@@ -112,7 +110,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry etc.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
+     *  // it's five its fine.
      *
      * @param Exception $exception
      *

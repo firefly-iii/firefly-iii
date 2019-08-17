@@ -88,7 +88,7 @@ trait GetConfigurationData
      * Get config for date range.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
@@ -177,7 +177,7 @@ trait GetConfigurationData
      * @param string $specificPage
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getSpecificSteps(string $route, string $specificPage): array // get config values
     {

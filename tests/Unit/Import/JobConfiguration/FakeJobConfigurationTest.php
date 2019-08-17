@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class FakeJobConfigurationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FakeJobConfigurationTest extends TestCase
 {

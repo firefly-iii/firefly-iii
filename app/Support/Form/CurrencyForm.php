@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CurrencyForm.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -117,7 +118,7 @@ class CurrencyForm
      * @param array  $options
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
     {
@@ -168,7 +169,7 @@ class CurrencyForm
      * @param array  $options
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function currencyField(string $name, string $view, $value = null, array $options = null): string
     {

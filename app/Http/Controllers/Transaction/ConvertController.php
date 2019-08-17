@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ use View;
  */
 class ConvertController extends Controller
 {
-    use ModelInformation;
+    use ModelInformation, UserNavigation;
 
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
@@ -87,16 +88,16 @@ class ConvertController extends Controller
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+        }
+
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
 
         /** @var TransactionJournal $first */
         $first      = $group->transactionJournals()->first();
         $sourceType = $first->transactionType;
-        // return to account.
-        if (!in_array($sourceType->type, [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT], true)) {
-            return $this->redirectToAccount($first); // @codeCoverageIgnore
-        }
 
         $groupTitle   = $group->title ?? $first->description;
         $groupArray   = $transformer->transformObject($group);
@@ -144,6 +145,10 @@ class ConvertController extends Controller
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+        }
+
         /** @var TransactionJournal $journal */
         foreach ($group->transactionJournals as $journal) {
             // catch FF exception.

@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class AppendDescriptionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AppendDescriptionTest extends TestCase
 {

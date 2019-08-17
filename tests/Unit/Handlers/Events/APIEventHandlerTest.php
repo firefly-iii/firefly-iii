@@ -35,6 +35,9 @@ use Tests\TestCase;
 /**
  *
  * Class APIEventHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class APIEventHandlerTest extends TestCase
 {

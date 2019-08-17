@@ -36,7 +36,7 @@ use Log;
 /**
  * Class TagRepository.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
  */
 class TagRepository implements TagRepositoryInterface
 {
@@ -272,7 +272,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon|null $end
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
@@ -410,7 +410,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Collection $tags
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function getMinAmount(Collection $tags): string
     {

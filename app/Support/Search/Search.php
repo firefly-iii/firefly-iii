@@ -181,7 +181,7 @@ class Search implements SearchInterface
      * @param GroupCollectorInterface $collector
      *
      * @return GroupCollectorInterface
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function applyModifiers(GroupCollectorInterface $collector): GroupCollectorInterface
     {

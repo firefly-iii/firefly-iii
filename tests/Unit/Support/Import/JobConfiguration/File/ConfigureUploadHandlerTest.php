@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigureUploadHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConfigureUploadHandlerTest extends TestCase
 {

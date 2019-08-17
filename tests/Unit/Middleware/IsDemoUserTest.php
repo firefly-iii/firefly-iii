@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class IsDemoUserTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsDemoUserTest extends TestCase
 {

@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class AssetAccountMapperTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AssetAccountMapperTest extends TestCase
 {

@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class FileRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FileRoutineTest extends TestCase
 {

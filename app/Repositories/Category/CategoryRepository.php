@@ -37,9 +37,9 @@ use Navigation;
 /**
  * Class CategoryRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ *
+ *
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -72,23 +72,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return true;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        $set = $this->earnedInPeriodCollection($categories, $accounts, $start, $end);
-
-        return $this->sumJournals($set);
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -97,18 +80,54 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return array
      */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
+
+
         $collector->setUser($this->user);
-        if (0 !== $accounts->count()) {
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategory($category);
+
+        if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
+        // collect and group results:
+        $array  = $collector->getExtractedJournals();
+        $return = [];
 
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategories($categories);
+        foreach ($array as $journal) {
+            $currencyCode = $journal['currency_code'];
+            if (!isset($return[$currencyCode])) {
+                $return[$currencyCode] = [
+                    'currency_id'             => $journal['currency_id'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'earned'                  => '0',
+                ];
+            }
 
-        return $collector->getExtractedJournals();
+            // also extract foreign currency information:
+            if (null !== $journal['foreign_currency_id']) {
+                $currencyCode = $journal['foreign_currency_code'];
+                if (!isset($return[$currencyCode])) {
+                    $return[$currencyCode] = [
+                        'currency_id'             => $journal['foreign_currency_id'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                        'earned'                  => '0',
+                    ];
+                }
+                $return[$currencyCode]['earned'] = bcadd($return[$currencyCode]['earned'], app('steam')->positive($journal['foreign_amount']));
+            }
+            $return[$currencyCode]['earned'] = bcadd($return[$currencyCode]['earned'], app('steam')->positive($journal['amount']));
+        }
+
+        return $return;
     }
 
     /**
@@ -260,7 +279,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->user->categories()->find($categoryId);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Find a category.
@@ -298,13 +317,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $factory->findOrCreate(null, $data['name']);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Category $category
      *
      * @return Carbon|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function firstUseDate(Category $category): ?Carbon
     {
@@ -346,7 +365,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Carbon|null
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -370,7 +389,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $categories
@@ -414,7 +433,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $data;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $accounts
@@ -453,9 +472,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
+     * TODO not multi currency aware.
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon $start
@@ -491,7 +511,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         foreach ($journals as $journal) {
             $categoryId                          = (int)$journal['category_id'];
             $date                                = $journal['date']->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $journal['amount']);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', bcmul($journal['amount'],'-1'));
         }
 
         return $data;
@@ -529,7 +549,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
+            $result['entries'][$date] = bcadd($result['entries'][$date], bcmul($journal['amount'],'-1'));
         }
         Log::debug('Done looping transactions..');
         Log::debug('Finished periodIncomeNoCategory()');
@@ -561,42 +581,61 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * Returns the amount spent in a category, for a set of accounts, in a specific period.
      *
-     * @return string
-     */
-    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        $array = $this->spentInPeriodCollection($categories, $accounts, $start, $end);
-
-        return $this->sumJournals($array);
-    }
-
-    /**
-     * @param Collection $categories
+     * @param Category   $category
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
-
         $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategory($category);
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
+        // collect and group results:
+        $array  = $collector->getExtractedJournals();
+        $return = [];
 
-        return $collector->getExtractedJournals();
+        foreach ($array as $journal) {
+            $currencyCode = $journal['currency_code'];
+            if (!isset($return[$currencyCode])) {
+                $return[$currencyCode] = [
+                    'currency_id'             => $journal['currency_id'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'spent'                   => '0',
+                ];
+            }
+
+            // also extract foreign currency information:
+            if (null !== $journal['foreign_currency_id']) {
+                $currencyCode = $journal['foreign_currency_code'];
+                if (!isset($return[$currencyCode])) {
+                    $return[$currencyCode] = [
+                        'currency_id'             => $journal['foreign_currency_id'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                        'spent'                   => '0',
+                    ];
+                }
+                $return[$currencyCode]['spent'] = bcadd($return[$currencyCode]['spent'], $journal['foreign_amount']);
+            }
+            $return[$currencyCode]['spent'] = bcadd($return[$currencyCode]['spent'], $journal['amount']);
+        }
+
+        return $return;
     }
 
     /**
@@ -714,7 +753,10 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * TODO does not take currencies into account.
+     *
      * @param array $journals
+     *
      * @return string
      */
     private function sumJournals(array $journals): string

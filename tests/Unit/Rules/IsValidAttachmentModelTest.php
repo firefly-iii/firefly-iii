@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * IsValidAttachmentModelTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -36,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class IsValidAttachmentModelTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsValidAttachmentModelTest extends TestCase
 {

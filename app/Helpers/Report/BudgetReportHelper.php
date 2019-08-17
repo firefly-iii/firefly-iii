@@ -57,8 +57,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     /**
      * Get the full budget report.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * TODO one big method is very complex.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -68,104 +68,142 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         $set   = $this->repository->getBudgets();
-        $array = [];
+        $array = [
+            'budgets' => [],
+            'sums'    => [],
+        ];
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
+            $entry = [
+                'budget_id'   => $budget->id,
+                'budget_name' => $budget->name,
+                'no_budget'   => false,
+                'rows'        => [],
+            ];
+            // get multi currency expenses first:
             $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
-            if (0 === $budgetLimits->count()) { // no budget limit(s) for this budget
-                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end); // spent for budget in time range
-                if (bccomp($spent, '0') === -1) {
-                    $line    = [
-                        'type'      => 'budget',
-                        'id'        => $budget->id,
-                        'name'      => $budget->name,
-                        'budgeted'  => '0',
-                        'spent'     => $spent,
-                        'left'      => '0',
-                        'overspent' => '0',
+            $expenses     = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
+            if (0 === count($expenses)) {
+                // list the budget limits, basic amounts.
+                /** @var BudgetLimit $limit */
+                foreach ($budgetLimits as $limit) {
+                    $row = [
+                        'limit_id'                => $limit->id,
+                        'start_date'              => $limit->start_date,
+                        'end_date'                => $limit->end_date,
+                        'budgeted'                => $limit->amount,
+                        'spent'                   => '0',
+                        'left'                    => $limit->amount,
+                        'overspent'               => null,
+                        'currency_id'             => $limit->transactionCurrency->id,
+                        'currency_code'           => $limit->transactionCurrency->code,
+                        'currency_name'           => $limit->transactionCurrency->name,
+                        'currency_symbol'         => $limit->transactionCurrency->symbol,
+                        'currency_decimal_places' => $limit->transactionCurrency->decimal_places,
                     ];
-                    $array[] = $line;
+
+                    $entry['rows'][] = $row;
                 }
-                continue;
             }
-            /** @var BudgetLimit $budgetLimit */
-            foreach ($budgetLimits as $budgetLimit) { // one or more repetitions for budget
-                $data    = $this->calculateExpenses($budget, $budgetLimit, $accounts);
-                $line    = [
-                    'type'  => 'budget-line',
-                    'start' => $budgetLimit->start_date,
-                    'end'   => $budgetLimit->end_date,
-                    'limit' => $budgetLimit->id,
-                    'id'    => $budget->id,
-                    'name'  => $budget->name,
-
-                    'budgeted'  => (string)$budgetLimit->amount,
-                    'spent'     => $data['expenses'],
-                    'left'      => $data['left'],
-                    'overspent' => $data['overspent'],
+            foreach ($expenses as $expense) {
+                $limit = $this->budgetLimitInCurrency($expense['currency_id'], $budgetLimits);
+                $row   = [
+                    'limit_id'                => null,
+                    'start_date'              => null,
+                    'end_date'                => null,
+                    'budgeted'                => null,
+                    'spent'                   => $expense['amount'],
+                    'left'                    => null,
+                    'overspent'               => null,
+                    'currency_id'             => $expense['currency_id'],
+                    'currency_code'           => $expense['currency_name'],
+                    'currency_name'           => $expense['currency_name'],
+                    'currency_symbol'         => $expense['currency_symbol'],
+                    'currency_decimal_places' => $expense['currency_decimal_places'],
                 ];
-                $array[] = $line;
+                if (null !== $limit) {
+                    // yes
+                    $row['start_date'] = $limit->start_date;
+                    $row['end_date']   = $limit->end_date;
+                    $row['budgeted']   = $limit->amount;
+                    $row['limit_id']   = $limit->id;
+
+                    // less than zero? Set to 0.0
+                    $row['left'] = -1 === bccomp(bcadd($limit->amount, $row['spent']), '0') ? '0' : bcadd($limit->amount, $row['spent']);
+
+                    // spent > budgeted? then sum, otherwise other sum
+                    $row['overspent'] = 1 === bccomp($row['spent'], $row['budgeted']) ? bcadd($row['spent'], $row['budgeted']) : '0';
+                }
+                $entry['rows'][] = $row;
             }
+            $array['budgets'][] = $entry;
         }
-        $noBudget = $this->repository->spentInPeriodWoBudget($accounts, $start, $end); // stuff outside of budgets
-        $line     = [
-            'type'      => 'no-budget',
-            'budgeted'  => '0',
-            'spent'     => $noBudget,
-            'left'      => '0',
-            'overspent' => '0',
+        $noBudget      = $this->repository->spentInPeriodWoBudgetMc($accounts, $start, $end);
+        $noBudgetEntry = [
+            'budget_id'   => null,
+            'budget_name' => null,
+            'no_budget'   => true,
+            'rows'        => [],
         ];
-        $array[]  = $line;
+        foreach ($noBudget as $row) {
+            $noBudgetEntry['rows'][] = [
+                'limit_id'                => null,
+                'start_date'              => null,
+                'end_date'                => null,
+                'budgeted'                => null,
+                'spent'                   => $row['amount'],
+                'left'                    => null,
+                'overspent'               => null,
+                'currency_id'             => $row['currency_id'],
+                'currency_code'           => $row['currency_code'],
+                'currency_name'           => $row['currency_name'],
+                'currency_symbol'         => $row['currency_symbol'],
+                'currency_decimal_places' => $row['currency_decimal_places'],
+            ];
+        }
+        $array['budgets'][] = $noBudgetEntry;
 
-        return $array;
-    }
-
-    /**
-     * Get all budgets and the expenses in these budgets.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection
-    {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budgets    = $repository->getActiveBudgets();
-
-        $set = new Collection;
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $total = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
-            if (bccomp($total, '0') === -1) {
-                $set->push($budget);
+        // fill sums:
+        /** @var array $budget */
+        foreach ($array['budgets'] as $budget) {
+            /** @var array $row */
+            foreach ($budget['rows'] as $row) {
+                $currencyId                        = $row['currency_id'];
+                $array['sums'][$currencyId]        = $array['sums'][$currencyId] ?? [
+                        'currency_id'             => $row['currency_id'],
+                        'currency_code'           => $row['currency_code'],
+                        'currency_name'           => $row['currency_name'],
+                        'currency_symbol'         => $row['currency_symbol'],
+                        'currency_decimal_places' => $row['currency_decimal_places'],
+                        'budgeted'                => '0',
+                        'spent'                   => '0',
+                        'left'                    => '0',
+                        'overspent'               => '0',
+                    ];
+                $array['sums'][$currencyId]['budgeted'] = bcadd($array['sums'][$currencyId]['budgeted'], $row['budgeted'] ?? '0');
+                $array['sums'][$currencyId]['spent'] = bcadd($array['sums'][$currencyId]['spent'], $row['spent'] ?? '0');
+                $array['sums'][$currencyId]['left'] = bcadd($array['sums'][$currencyId]['left'], $row['left'] ?? '0');
+                $array['sums'][$currencyId]['overspent'] = bcadd($array['sums'][$currencyId]['overspent'], $row['overspent'] ?? '0');
             }
         }
-
-        return $set;
+        return $array;
     }
 
     /**
-     * Calculate the expenses for a budget.
+     * Returns from the collection the budget limit with the indicated currency ID
      *
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     * @param Collection  $accounts
+     * @param int        $currencyId
+     * @param Collection $budgetLimits
      *
-     * @return array
+     * @return BudgetLimit|null
      */
-    private function calculateExpenses(Budget $budget, BudgetLimit $budgetLimit, Collection $accounts): array
+    private function budgetLimitInCurrency(int $currencyId, Collection $budgetLimits): ?BudgetLimit
     {
-        $array              = [];
-        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
-        $array['left']      = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? bcadd($budgetLimit->amount, $expenses) : '0';
-        $array['spent']     = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? $expenses : '0';
-        $array['overspent'] = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? '0' : bcadd($expenses, $budgetLimit->amount);
-        $array['expenses']  = $expenses;
-
-        return $array;
+        return $budgetLimits->first(
+            static function (BudgetLimit $limit) use ($currencyId) {
+                return $limit->transaction_currency_id === $currencyId;
+            }
+        );
     }
 }

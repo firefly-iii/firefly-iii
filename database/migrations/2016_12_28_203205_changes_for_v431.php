@@ -75,13 +75,14 @@ class ChangesForV431 extends Migration
      * Run the migrations.
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function up(): void
     {
         // add decimal places to "transaction currencies".
         Schema::table(
             'transaction_currencies',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->smallInteger('decimal_places', false, true)->default(2);
             }
         );
@@ -89,7 +90,7 @@ class ChangesForV431 extends Migration
         // change field "startdate" to "start_date"
         Schema::table(
             'budget_limits',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->renameColumn('startdate', 'start_date');
             }
         );
@@ -97,7 +98,7 @@ class ChangesForV431 extends Migration
         // add date field "end_date" after "start_date"
         Schema::table(
             'budget_limits',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->date('end_date')->nullable()->after('start_date');
             }
         );
@@ -105,13 +106,13 @@ class ChangesForV431 extends Migration
         // drop "repeats" and "repeat_freq".
         Schema::table(
             'budget_limits',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('repeats');
             }
         );
         Schema::table(
             'budget_limits',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('repeat_freq');
             }
         );

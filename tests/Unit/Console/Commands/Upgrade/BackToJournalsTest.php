@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * BackToJournalsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -32,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class BackToJournalsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BackToJournalsTest extends TestCase
 {

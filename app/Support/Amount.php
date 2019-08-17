@@ -36,7 +36,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
@@ -50,8 +50,6 @@ class Amount
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
@@ -122,7 +120,7 @@ class Amount
      * @param bool                                   $coloured
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
@@ -164,7 +162,7 @@ class Amount
      * @param bool   $coloured
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @noinspection MoreThanThreeArgumentsInspection
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string

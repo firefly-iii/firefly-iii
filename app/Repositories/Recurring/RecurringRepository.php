@@ -234,9 +234,8 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
@@ -366,7 +365,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param int $count
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * 
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
@@ -400,7 +399,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceRepetition $repetition
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * 
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {

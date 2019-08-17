@@ -44,6 +44,9 @@ use Tests\TestCase;
 
 /**
  * Class ChooseAccountsHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseAccountsHandlerTest extends TestCase
 {

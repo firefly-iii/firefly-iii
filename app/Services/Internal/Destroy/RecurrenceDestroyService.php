@@ -48,7 +48,7 @@ class RecurrenceDestroyService
      * Delete recurrence.
      *
      * @param Recurrence $recurrence
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function destroy(Recurrence $recurrence): void
     {

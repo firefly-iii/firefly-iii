@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * GracefulNotFoundHandler.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -43,9 +44,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      *
      * @param Request   $request
      * @param Exception $exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      *
      * @return mixed
      */

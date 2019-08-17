@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToDepositTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToDepositTest extends TestCase
 {

@@ -49,8 +49,6 @@ class TransactionJournalMetaFactory
      * @param array $data
      *
      * @return TransactionJournalMeta|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {

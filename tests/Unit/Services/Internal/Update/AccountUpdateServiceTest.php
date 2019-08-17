@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class AccountUpdateServiceTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountUpdateServiceTest extends TestCase
 {

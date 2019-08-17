@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class RecurrenceControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RecurrenceControllerTest extends TestCase
 {

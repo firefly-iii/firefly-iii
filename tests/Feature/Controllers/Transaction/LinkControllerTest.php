@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class LinkControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkControllerTest extends TestCase
 {

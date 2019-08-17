@@ -51,8 +51,8 @@ use PragmaRX\Recovery\Recovery;
  * Class ProfileController.
  *
  * @method Guard guard()
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
+ *
  */
 class ProfileController extends Controller
 {
@@ -438,8 +438,6 @@ class ProfileController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -524,8 +522,6 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {

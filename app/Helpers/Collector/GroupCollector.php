@@ -46,8 +46,6 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    /** @var array The accounts to filter on. Asset accounts or liabilities. */
-    private $accountIds;
     /** @var array The standard fields to select. */
     private $fields;
     /** @var bool Will be set to true if query result contains account information. (see function withAccountInformation). */
@@ -86,8 +84,6 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasJoinedTagTables   = false;
 
         $this->total  = 0;
-        $this->limit  = 50;
-        $this->page   = 0;
         $this->fields = [
             # group
             'transaction_groups.id as transaction_group_id',
@@ -157,10 +153,14 @@ class GroupCollector implements GroupCollectorInterface
         $collection  = $this->parseArray($result);
         $this->total = $collection->count();
 
-        // now filter the array according to the page and the
-        $offset = $this->page * $this->limit;
+        // now filter the array according to the page and the limit (if necessary)
+        if (null !== $this->limit && null !== $this->page) {
+        $offset = ($this->page-1) * $this->limit;
 
         return $collection->slice($offset, $this->limit);
+        }
+
+        return $collection;
 
     }
 
@@ -182,7 +182,44 @@ class GroupCollector implements GroupCollectorInterface
                 }
             );
             app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
-            $this->accountIds = $accountIds;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -370,9 +407,9 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setPage(int $page): GroupCollectorInterface
     {
-        $page       = 0 === $page ? 0 : $page - 1;
+        $page       = 0 === $page ? 1 : $page;
         $this->page = $page;
-        app('log')->debug(sprintf('GroupCollector: page is now %d (is minus 1)', $page));
+        app('log')->debug(sprintf('GroupCollector: page is now %d', $page));
 
         return $this;
     }
@@ -807,6 +844,7 @@ class GroupCollector implements GroupCollectorInterface
         /** @var TransactionGroup $augmentedGroup */
         foreach ($collection as $augmentedGroup) {
             $groupId = $augmentedGroup->transaction_group_id;
+
             if (!isset($groups[$groupId])) {
                 // make new array
                 $parsedGroup                            = $this->parseAugmentedGroup($augmentedGroup);
@@ -837,7 +875,9 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
             }
 
+
         }
+
         $groups = $this->parseSums($groups);
 
         return new Collection($groups);
@@ -1009,5 +1049,43 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
+    }
+
+    /**
+     * These accounts must not be source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * These accounts must not be destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
     }
 }

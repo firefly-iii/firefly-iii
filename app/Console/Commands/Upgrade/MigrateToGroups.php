@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * MigrateToGroups.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -236,7 +237,7 @@ class MigrateToGroups extends Command
      * @param TransactionJournal $journal
      *
      * @throws Exception
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {

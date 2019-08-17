@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class CurrencyMapperTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CurrencyMapperTest extends TestCase
 {

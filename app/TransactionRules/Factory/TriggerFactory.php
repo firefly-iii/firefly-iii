@@ -78,11 +78,11 @@ class TriggerFactory
      * @param string $triggerValue
      * @param bool   $stopProcessing
      *
-     * @see TriggerFactory::getTrigger
-     *
      * @return AbstractTrigger
      *
      * @throws FireflyException
+     * @see TriggerFactory::getTrigger
+     *
      */
     public static function makeTriggerFromStrings(string $triggerType, string $triggerValue, bool $stopProcessing): AbstractTrigger
     {

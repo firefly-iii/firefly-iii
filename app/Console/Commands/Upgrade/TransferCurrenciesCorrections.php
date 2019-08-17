@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferCurrenciesCorrections.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -147,6 +148,7 @@ class TransferCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);
         if (null === $result) {
@@ -290,8 +292,6 @@ class TransferCurrenciesCorrections extends Command
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @param TransactionJournal $transfer
      */
     private function updateTransferCurrency(TransactionJournal $transfer): void

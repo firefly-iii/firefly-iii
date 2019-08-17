@@ -45,7 +45,7 @@ class OpposingAccountMapper
      * @param array    $data
      *
      * @return Account
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function map(?int $accountId, string $amount, array $data): Account
     {

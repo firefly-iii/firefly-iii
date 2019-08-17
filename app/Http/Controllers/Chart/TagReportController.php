@@ -53,7 +53,7 @@ class TagReportController extends Controller
         $this->generator = app(GeneratorInterface::class);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expenses for tags grouped on account.
      *
@@ -66,8 +66,6 @@ class TagReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -84,7 +82,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate income for tag grouped by account.
      *
@@ -97,8 +95,6 @@ class TagReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -115,7 +111,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expense for tag grouped on budget.
      *
@@ -127,8 +123,6 @@ class TagReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function budgetExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
@@ -145,7 +139,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate expense for tag grouped on category.
      *
@@ -157,8 +151,6 @@ class TagReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function categoryExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
@@ -175,7 +167,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generate main tag overview chart.
      *
@@ -188,9 +180,7 @@ class TagReportController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function mainChart(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
@@ -201,7 +191,7 @@ class TagReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -292,7 +282,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show expense grouped by expense account.
      *
@@ -305,8 +295,6 @@ class TagReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function tagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -323,7 +311,7 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show income grouped by tag.
      *
@@ -336,8 +324,6 @@ class TagReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
     {

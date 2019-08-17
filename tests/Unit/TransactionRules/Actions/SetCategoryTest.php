@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class SetCategoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetCategoryTest extends TestCase
 {

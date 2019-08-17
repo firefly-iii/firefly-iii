@@ -125,6 +125,7 @@ class OtherCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);
         if (null === $result) {
@@ -247,8 +248,8 @@ class OtherCurrenciesCorrections extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param TransactionJournal $journal
+     *
      * @return Transaction|null
      */
     private function getLeadTransaction(TransactionJournal $journal): ?Transaction

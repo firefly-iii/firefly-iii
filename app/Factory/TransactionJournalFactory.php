@@ -143,6 +143,9 @@ class TransactionJournalFactory
             if (null !== $journal) {
                 $collection->push($journal);
             }
+            if(null === $journal) {
+                Log::error('The createJournal() method returned NULL. This may indicate an error.');
+            }
         }
 
         return $collection;
@@ -247,6 +250,7 @@ class TransactionJournalFactory
             $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
             // @codeCoverageIgnoreStart
         } catch (FireflyException $e) {
+            Log::error('Could not validate source or destination.');
             Log::error($e->getMessage());
 
             return null;

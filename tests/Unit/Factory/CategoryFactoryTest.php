@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class CategoryFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CategoryFactoryTest extends TestCase
 {

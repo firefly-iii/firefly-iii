@@ -28,7 +28,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -281,7 +280,7 @@ trait PeriodOverview
      * @param Carbon $theDate
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
@@ -375,7 +374,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            // return $cache->get(); // @codeCoverageIgnore
+             return $cache->get(); // @codeCoverageIgnore
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);

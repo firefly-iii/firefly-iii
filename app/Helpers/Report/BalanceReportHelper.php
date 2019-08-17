@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Balance;
-use FireflyIII\Helpers\Collection\BalanceEntry;
-use FireflyIII\Helpers\Collection\BalanceHeader;
-use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,8 +43,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     *
      * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)
@@ -65,126 +62,78 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Balance
+     * @return array
      */
-    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): Balance
+    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         Log::debug('Start of balance report');
-        $balance      = new Balance;
-        $header       = new BalanceHeader;
-        $budgetLimits = $this->budgetRepository->getAllBudgetLimits($start, $end);
+        $report = [
+            'budgets'  => [],
+            'accounts' => [],
+        ];
+        /** @var Account $account */
         foreach ($accounts as $account) {
-            Log::debug(sprintf('Add account %s to headers.', $account->name));
-            $header->addAccount($account);
+            $report['accounts'][$account->id] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'iban' => $account->iban,
+                'sum'  => '0',
+            ];
         }
 
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($budgetLimits as $budgetLimit) {
-            if (null !== $budgetLimit->budget) {
-                $line = $this->createBalanceLine($budgetLimit, $accounts);
-                $balance->addBalanceLine($line);
+        $budgets = $this->budgetRepository->getBudgets();
+
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId                     = $budget->id;
+            $report['budgets'][$budgetId] = [
+                'budget_id'   => $budgetId,
+                'budget_name' => $budget->name,
+                'spent'       => [], // per account
+                'sums'        => [], // per currency
+            ];
+            $spent                        = [];
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $journals  = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
+                                   ->getExtractedJournals();
+            /** @var array $journal */
+            foreach ($journals as $journal) {
+                $sourceAccount                  = $journal['source_account_id'];
+                $currencyId                     = $journal['currency_id'];
+                $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
+                        'source_account_id'       => $sourceAccount,
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                        'spent'                   => '0',
+                    ];
+                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
+
+                // also fix sum:
+                $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
+                        'sum'                     => '0',
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                    ];
+                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
+
+                // add currency info for account sum
+                $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];
+                $report['accounts'][$sourceAccount]['currency_code']           = $journal['currency_code'];
+                $report['accounts'][$sourceAccount]['currency_name']           = $journal['currency_name'];
+                $report['accounts'][$sourceAccount]['currency_symbol']         = $journal['currency_symbol'];
+                $report['accounts'][$sourceAccount]['currency_decimal_places'] = $journal['currency_decimal_places'];
             }
+            $report['budgets'][$budgetId]['spent'] = $spent;
+            // get transactions in budget
         }
-        $noBudgetLine = $this->createNoBudgetLine($accounts, $start, $end);
-
-        $balance->addBalanceLine($noBudgetLine);
-        $balance->setBalanceHeader($header);
-
-        Log::debug('Clear unused budgets.');
-        // remove budgets without expenses from balance lines:
-        $balance = $this->removeUnusedBudgets($balance);
-
-        Log::debug('Return report.');
-
-        return $balance;
-    }
-
-    /**
-     * Create one balance line.
-     *
-     * @param BudgetLimit $budgetLimit
-     * @param Collection  $accounts
-     *
-     * @return BalanceLine
-     */
-    private function createBalanceLine(BudgetLimit $budgetLimit, Collection $accounts): BalanceLine
-    {
-        $line = new BalanceLine;
-        $line->setBudget($budgetLimit->budget);
-        $line->setBudgetLimit($budgetLimit);
-
-        // loop accounts:
-        foreach ($accounts as $account) {
-            $balanceEntry = new BalanceEntry;
-            $balanceEntry->setAccount($account);
-            $spent = $this->budgetRepository->spentInPeriod(
-                new Collection([$budgetLimit->budget]),
-                new Collection([$account]),
-                $budgetLimit->start_date,
-                $budgetLimit->end_date
-            );
-            $balanceEntry->setSpent($spent);
-            $line->addBalanceEntry($balanceEntry);
-        }
-
-        return $line;
-    }
-
-    /**
-     * Create a line for transactions without a budget.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return BalanceLine
-     */
-    private function createNoBudgetLine(Collection $accounts, Carbon $start, Carbon $end): BalanceLine
-    {
-        $empty = new BalanceLine;
-
-        foreach ($accounts as $account) {
-            $spent = $this->budgetRepository->spentInPeriodWoBudget(new Collection([$account]), $start, $end);
-            // budget
-            $budgetEntry = new BalanceEntry;
-            $budgetEntry->setAccount($account);
-            $budgetEntry->setSpent($spent);
-            $empty->addBalanceEntry($budgetEntry);
-        }
-
-        return $empty;
-    }
-
-    /**
-     * Remove unused budgets from the report.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @param Balance $balance
-     *
-     * @return Balance
-     */
-    private function removeUnusedBudgets(Balance $balance): Balance
-    {
-        $set    = $balance->getBalanceLines();
-        $newSet = new Collection;
-        /** @var BalanceLine $entry */
-        foreach ($set as $entry) {
-            if (null !== $entry->getBudget()->id) {
-                $sum = '0';
-                /** @var BalanceEntry $balanceEntry */
-                foreach ($entry->getBalanceEntries() as $balanceEntry) {
-                    $sum = bcadd($sum, $balanceEntry->getSpent());
-                }
-                if (bccomp($sum, '0') === -1) {
-                    $newSet->push($entry);
-                }
-                continue;
-            }
-            $newSet->push($entry);
-        }
-
-        $balance->setBalanceLines($newSet);
-
-        return $balance;
+        return $report;
     }
 }

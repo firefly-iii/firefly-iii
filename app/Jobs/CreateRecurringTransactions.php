@@ -67,7 +67,7 @@ use Log;
 
 /**
  * Class CreateRecurringTransactions.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  *
  */
 class CreateRecurringTransactions implements ShouldQueue
@@ -97,6 +97,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     public function setDate(Carbon $date): void
     {
+        $date->startOfDay();
         $this->date = $date;
     }
 
@@ -227,7 +228,7 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon $date
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     private function getTransactionData(Recurrence $recurrence, Carbon $date): array
     {
@@ -301,8 +302,9 @@ class CreateRecurringTransactions implements ShouldQueue
     private function handleOccurrence(Recurrence $recurrence, Carbon $date): ?TransactionGroup
     {
         Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
+        $date->startOfDay();
         if ($date->ne($this->date)) {
-            Log::debug(sprintf('%s is not not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
+            Log::debug(sprintf('%s is not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
             return null;
         }
@@ -439,8 +441,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     *
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {

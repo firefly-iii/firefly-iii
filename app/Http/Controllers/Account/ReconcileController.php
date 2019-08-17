@@ -86,6 +86,10 @@ class ReconcileController extends Controller
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         if (AccountType::ASSET !== $account->accountType->type) {
             // @codeCoverageIgnoreStart
             session()->flash('error', (string)trans('firefly.must_be_asset_account'));
@@ -146,6 +150,10 @@ class ReconcileController extends Controller
      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         Log::debug('In ReconcileController::submit()');
         $data = $request->getAll();
 
@@ -178,6 +186,10 @@ class ReconcileController extends Controller
      */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         $reconciliation = $this->accountRepos->getReconciliation($account);
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $source         = $reconciliation;

@@ -40,8 +40,8 @@ use Illuminate\Support\Collection;
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ *
  *
  */
 class BudgetController extends Controller
@@ -181,8 +181,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -232,8 +230,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -282,8 +278,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -333,8 +327,6 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function frontpage(): JsonResponse
     {
@@ -382,7 +374,7 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Shows a budget overview chart (spent and budgeted).
      *

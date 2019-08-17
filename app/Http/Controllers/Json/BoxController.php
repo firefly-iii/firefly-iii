@@ -52,8 +52,6 @@ class BoxController extends Controller
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function available(BudgetRepositoryInterface $repository): JsonResponse
     {
@@ -110,8 +108,6 @@ class BoxController extends Controller
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
@@ -237,8 +233,6 @@ class BoxController extends Controller
      * Total user net worth.
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function netWorth(): JsonResponse
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * BelongsUserTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -29,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class BelongsUserTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BelongsUserTest extends TestCase
 {

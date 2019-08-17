@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class SpectreJobConfigurationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SpectreJobConfigurationTest extends TestCase
 {

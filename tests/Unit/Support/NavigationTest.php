@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class NavigationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NavigationTest extends TestCase
 {
@@ -102,32 +105,6 @@ class NavigationTest extends TestCase
             }
 
             $this->assertEquals($expected->format('Y-m-d'), $result->format('Y-m-d'));
-        }
-    }
-
-    /**
-     * @covers \FireflyIII\Support\Navigation
-     */
-    public function testAddPeriodError(): void
-    {
-        $tests = [
-            // period, skip, start, expected end
-            ['bla', 0, '2018-01-01', '2018-01-02'],
-        ];
-
-        /** @var array $test */
-        foreach ($tests as $test) {
-
-            $freq = $test[0];
-            /** @noinspection MultiAssignmentUsageInspection */
-            $skip  = $test[1];
-            $start = new Carbon($test[2]);
-            $nav   = new Navigation;
-            try {
-                $nav->addPeriod($start, $freq, $skip);
-            } catch (FireflyException $e) {
-                $this->assertEquals('Cannot do addPeriod for $repeat_freq "bla"', $e->getMessage());
-            }
         }
     }
 

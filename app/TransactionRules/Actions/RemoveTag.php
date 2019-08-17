@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -47,6 +46,7 @@ class RemoveTag implements ActionInterface
 
     /**
      * Remove tag X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -55,7 +55,7 @@ class RemoveTag implements ActionInterface
     {
         // if tag does not exist, no need to continue:
         $name = $this->action->action_value;
-        $tag = $journal->user->tags()->where('tag', $name)->first();
+        $tag  = $journal->user->tags()->where('tag', $name)->first();
 
         if (null !== $tag) {
             Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal->id));

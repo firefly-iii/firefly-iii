@@ -60,7 +60,7 @@ interface GeneratorInterface
      *        ]
      *    ]
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
+     *  // it's five.
      *
      * @param array $data
      *

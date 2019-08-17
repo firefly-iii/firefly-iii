@@ -39,7 +39,7 @@ use Tests\Object\FakeApiContext;
  */
 class ApiContext
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param BunqEnumApiEnvironmentType $environmentType
      * @param string                     $apiKey
@@ -47,9 +47,9 @@ class ApiContext
      * @param array                      $permittedIps
      * @param string|null                $proxyUrl
      *
-     * @throws FireflyException
      * @return BunqApiContext|FakeApiContext
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
+     *@throws FireflyException
      */
     public function create(BunqEnumApiEnvironmentType $environmentType, string $apiKey, string $description, array $permittedIps, string $proxyUrl = null
     ) {

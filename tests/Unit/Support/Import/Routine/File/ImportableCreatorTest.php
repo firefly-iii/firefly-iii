@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class ImportableCreatorTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ImportableCreatorTest extends TestCase
 {

@@ -154,6 +154,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         /** @var AccountModel $localAccount */
         foreach ($collection as $localAccount) {
             $accountId                 = $localAccount->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId                = (int)$this->accountRepository->getMetaValue($localAccount, 'currency_id');
             $currency                  = $this->getCurrency($currencyId);
             $localAccounts[$accountId] = [

@@ -22,7 +22,7 @@
 <template>
     <div class="form-group"
          v-bind:class="{ 'has-error': hasError()}"
-         v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Withdrawal'">
+         v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
         <div class="col-sm-12">
             <select name="budget[]" ref="budget" @input="handleInput" class="form-control"
                     v-if="this.budgets.length > 0">

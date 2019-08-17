@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class IsSandstormUserTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsSandstormUserTest extends TestCase
 {

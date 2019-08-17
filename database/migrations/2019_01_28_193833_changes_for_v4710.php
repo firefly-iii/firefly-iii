@@ -41,6 +41,7 @@ class ChangesForV4710 extends Migration
 
     /**
      * Run the migrations.
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */
@@ -73,7 +74,7 @@ class ChangesForV4710 extends Migration
                     $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
                     // unique combi:
-                    $table->unique(['transaction_group_id', 'transaction_journal_id'],'unique_in_group');
+                    $table->unique(['transaction_group_id', 'transaction_journal_id'], 'unique_in_group');
                 }
             );
         }

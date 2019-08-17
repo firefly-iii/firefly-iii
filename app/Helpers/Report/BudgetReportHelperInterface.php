@@ -40,15 +40,4 @@ interface BudgetReportHelperInterface
      * @return array
      */
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): array;
-
-    /**
-     * Get budgets and the expenses in each budget.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
 }

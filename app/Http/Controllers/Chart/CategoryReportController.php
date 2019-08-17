@@ -61,7 +61,7 @@ class CategoryReportController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for expenses grouped by expense account.
      *
@@ -74,8 +74,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -89,7 +87,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for income grouped by revenue account.
      *
@@ -102,8 +100,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -120,7 +116,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Chart for expenses grouped by expense account.
      *
@@ -133,8 +129,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -151,7 +145,7 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Piechart for income grouped by account.
      *
@@ -164,7 +158,7 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -182,7 +176,7 @@ class CategoryReportController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Main report category chart.
      *
@@ -195,9 +189,7 @@ class CategoryReportController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {
@@ -208,7 +200,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -262,7 +254,7 @@ class CategoryReportController extends Controller
                 $labelOut       = $category->id . '-out';
                 $labelSumIn     = $category->id . '-total-in';
                 $labelSumOut    = $category->id . '-total-out';
-                $currentIncome  = bcmul($income[$category->id] ?? '0','-1');
+                $currentIncome  = $income[$category->id] ?? '0';
                 $currentExpense = $expenses[$category->id] ?? '0';
 
                 // add to sum:

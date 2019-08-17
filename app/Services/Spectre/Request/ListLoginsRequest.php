@@ -43,7 +43,7 @@ class ListLoginsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function call(): void
     {

@@ -36,6 +36,9 @@ use Tests\TestCase;
 
 /**
  * Class LineReaderTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LineReaderTest extends TestCase
 {

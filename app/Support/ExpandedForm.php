@@ -23,32 +23,17 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Amount as Amt;
-use Carbon\Carbon;
 use Eloquent;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Form\FormSupport;
-use Form;
 use Illuminate\Support\Collection;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\MessageBag;
 use Log;
-use RuntimeException;
 use Throwable;
 
 /**
  * Class ExpandedForm.
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
  * @codeCoverageIgnore
  */
 class ExpandedForm
@@ -225,7 +210,7 @@ class ExpandedForm
      * @param \Illuminate\Support\Collection $set
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function makeSelectListWithEmpty(Collection $set): array
     {

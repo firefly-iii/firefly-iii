@@ -118,8 +118,6 @@ class Range
 
     /**
      * Set the range for the current view.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setRange(): void
     {

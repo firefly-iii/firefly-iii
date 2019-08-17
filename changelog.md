@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.0.2 (API 0.10.0)] - 2019-08-17
+
+Fixes many other issues in the previous release.
+
+### Changed
+- Make many report boxes multi-currency.
+
+### Fixed
+- [Issue 2203](https://github.com/firefly-iii/firefly-iii/issues/2203) Reconciliation inconsistencies.
+- [Issue 2392](https://github.com/firefly-iii/firefly-iii/issues/2392) Bad namespace leads to installation errors.
+- [Issue 2393](https://github.com/firefly-iii/firefly-iii/issues/2393) Missing budget selector.
+- [Issue 2402](https://github.com/firefly-iii/firefly-iii/issues/2402) bad amounts in default report
+- [Issue 2405](https://github.com/firefly-iii/firefly-iii/issues/2405) Due date can't be edited.
+- [Issue 2404](https://github.com/firefly-iii/firefly-iii/issues/2404) bad page indicator in the "no category" transaction overview.
+- [Issue 2407](https://github.com/firefly-iii/firefly-iii/issues/2407) Fix recurring transaction dates
+- [Issue 2410](https://github.com/firefly-iii/firefly-iii/issues/2410) Transaction links inconsistent
+- [Issue 2414](https://github.com/firefly-iii/firefly-iii/issues/2414) Can't edit recurring transactions
+- [Issue 2415](https://github.com/firefly-iii/firefly-iii/issues/2415) Return here + reset form results in empty transaction form
+- [Issue 2416](https://github.com/firefly-iii/firefly-iii/issues/2416) Some form inconsistencies.
+- [Issue 2418](https://github.com/firefly-iii/firefly-iii/issues/2418) Reports are inaccurate or broken.
+- [Issue 2422](https://github.com/firefly-iii/firefly-iii/issues/2422) PHP error when matching transactions.
+- [Issue 2423](https://github.com/firefly-iii/firefly-iii/issues/2423) Reports are inaccurate or broken.
+- [Issue 2426](https://github.com/firefly-iii/firefly-iii/issues/2426) Inconsistent documentation and instructions.
+- [Issue 2427](https://github.com/firefly-iii/firefly-iii/issues/2427) Deleted account and "initial balance" accounts may appear in dropdowns.
+- [Issue 2428](https://github.com/firefly-iii/firefly-iii/issues/2428) Reports are inaccurate or broken. 
+- [Issue 2429](https://github.com/firefly-iii/firefly-iii/issues/2429) Typo leads to SQL errors in available budgets API
+- [Issue 2431](https://github.com/firefly-iii/firefly-iii/issues/2431) Issues creating new recurring transactions.
+- [Issue 2434](https://github.com/firefly-iii/firefly-iii/issues/2434) You can edit the initial balance transaction but it fails to save.
+- ARM build should work now.
+
+### API
+- [Issue 2429](https://github.com/firefly-iii/firefly-iii/issues/2429) Typo leads to SQL errors in available budgets API
+
 ## [4.8.0.1 (API 0.10.0)] - 2019-08-12
 
 Fixes the most pressing issues found in the previous release.

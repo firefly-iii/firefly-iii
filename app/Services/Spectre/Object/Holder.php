@@ -34,7 +34,7 @@ class Holder extends SpectreObject
      * Holder constructor.
      *
      * @param array $data
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      */
     public function __construct(array $data)
     {

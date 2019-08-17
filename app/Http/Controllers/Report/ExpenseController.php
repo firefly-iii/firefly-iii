@@ -36,7 +36,6 @@ use Throwable;
 /**
  * Class ExpenseController
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class ExpenseController extends Controller
 {
@@ -64,7 +63,7 @@ class ExpenseController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generates the overview per budget.
      *
@@ -74,7 +73,6 @@ class ExpenseController extends Controller
      * @param Carbon $end
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
@@ -119,7 +117,7 @@ class ExpenseController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Generates the overview per category (spent and earned).
      *
@@ -129,8 +127,6 @@ class ExpenseController extends Controller
      * @param Carbon $end
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
@@ -183,7 +179,7 @@ class ExpenseController extends Controller
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Overview of spending.
      *
@@ -236,7 +232,7 @@ class ExpenseController extends Controller
         // for period, get spent and earned for each account (by name)
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * List of top expenses.
      *
@@ -257,7 +253,7 @@ class ExpenseController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($expense->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
@@ -288,7 +284,7 @@ class ExpenseController extends Controller
 
         return $result;
     }
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * List of top income.
      *
@@ -309,7 +305,7 @@ class ExpenseController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($expense->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;

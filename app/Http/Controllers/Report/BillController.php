@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
 /**
- * BalanceController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * BillController.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+
 use Carbon\Carbon;
-use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -31,44 +32,43 @@ use Log;
 use Throwable;
 
 /**
- * Class BalanceController.
+ * Class BillController
  */
-class BalanceController extends Controller
+class BillController extends Controller
 {
-
     /**
-     * Show overview of budget balances.
-     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     *
-     * @return mixed|string
      */
-    public function general(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        // chart properties for cache:
+    public function overview(Collection $accounts, Carbon $start, Carbon $end)
+    {   // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('balance-report');
+        $cache->addProperty('bill-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $helper  = app(BalanceReportHelperInterface::class);
-        $report = $helper->getBalanceReport($accounts, $start, $end);
-        // TODO no budget.
+
+
+        /** @var ReportHelperInterface $helper */
+        $helper = app(ReportHelperInterface::class);
+        $report = $helper->getBillReport($accounts, $start, $end);
+
+
         try {
-            $result = view('reports.partials.balance', compact('report'))->render();
+            $result = view('reports.partials.bills', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;
+
     }
 }

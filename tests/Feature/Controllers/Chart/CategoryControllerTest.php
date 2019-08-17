@@ -60,6 +60,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function testAll(string $range): void
     {
@@ -97,10 +98,10 @@ class CategoryControllerTest extends TestCase
         $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $repository->shouldReceive('spentInPeriod')->andReturn('0')->atLeast()->once();
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0')->atLeast()->once();
+        $repository->shouldReceive('spentInPeriod')->andReturn([])->atLeast()->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn([])->atLeast()->once();
         $repository->shouldReceive('firstUseDate')->andReturn($firstUseDate)->once();
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,AccountType::MORTGAGE]])->andReturn(new Collection)->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());
@@ -244,8 +245,8 @@ class CategoryControllerTest extends TestCase
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0');
+        $repository->shouldReceive('spentInPeriod')->andReturn([]);
+        $repository->shouldReceive('earnedInPeriod')->andReturn([]);
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

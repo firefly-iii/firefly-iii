@@ -108,7 +108,7 @@ class StageImportDataHandler
      * @param LocalAccount   $originalSource
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function convertToArray(array $transactions, SpectreAccount $spectreAccount, LocalAccount $originalSource): array
     {

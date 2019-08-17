@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class UpdatedJournalEventHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UpdatedGroupEventHandlerTest extends TestCase
 {

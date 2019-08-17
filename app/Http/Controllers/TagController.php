@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -177,8 +176,6 @@ class TagController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
@@ -219,8 +216,6 @@ class TagController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function showAll(Request $request, Tag $tag)
     {

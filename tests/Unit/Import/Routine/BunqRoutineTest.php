@@ -36,6 +36,9 @@ use Tests\TestCase;
 
 /**
  * Class BunqRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BunqRoutineTest extends TestCase
 {

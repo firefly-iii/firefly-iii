@@ -25,18 +25,15 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class AmountController
@@ -75,8 +72,6 @@ class AmountController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function amount(Request $request, Budget $budget): JsonResponse
     {

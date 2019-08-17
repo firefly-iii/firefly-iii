@@ -67,8 +67,6 @@ class PrerequisitesController extends Controller
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
@@ -111,15 +109,13 @@ class PrerequisitesController extends Controller
      * Whatever storePrerequisites does, it should make sure that the system is ready to continue immediately. So
      * no extra calls or stuff, except maybe to open a session
      *
-     * @see PrerequisitesInterface::storePrerequisites
-     *
      * @param Request   $request
      * @param string    $importProvider
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @see PrerequisitesInterface::storePrerequisites
+     *
      */
     public function post(Request $request, string $importProvider, ImportJob $importJob = null)
     {

@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class DoAuthenticateHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DoAuthenticateHandlerTest extends TestCase
 {

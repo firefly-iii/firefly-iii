@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class AuthenticateTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AuthenticateTest extends TestCase
 {

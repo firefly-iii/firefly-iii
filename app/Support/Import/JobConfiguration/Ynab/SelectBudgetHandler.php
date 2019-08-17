@@ -170,6 +170,7 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         }
         /** @var Account $account */
         foreach ($this->accounts as $account) {
+            // TODO we can use getAccountCurrency() instead
             $currencyId = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             Log::debug(sprintf('Currency of %s is %d (looking for %d).', $account->name, $currencyId, $currency->id));
             if ($currencyId === $currency->id) {

@@ -39,6 +39,9 @@ use Tests\TestCase;
  * Do some end to end testing here, perhaps?
  *
  * Class CSVProcessorTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CSVProcessorTest extends TestCase
 {

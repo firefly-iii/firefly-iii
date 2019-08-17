@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Carbon\Carbon;
 use Crypt;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -38,7 +37,7 @@ use Log;
 
 /**
  * Class AttachmentRepository.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {

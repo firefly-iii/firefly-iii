@@ -127,7 +127,7 @@ class BillTransformer extends AbstractTransformer
      * @param Bill   $bill
      * @param Carbon $date
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {

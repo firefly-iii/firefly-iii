@@ -112,7 +112,7 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     protected function registerCreateEvents(): void
     {

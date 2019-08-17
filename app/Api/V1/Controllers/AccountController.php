@@ -47,7 +47,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class AccountController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AccountController extends Controller
 {
@@ -234,8 +234,6 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

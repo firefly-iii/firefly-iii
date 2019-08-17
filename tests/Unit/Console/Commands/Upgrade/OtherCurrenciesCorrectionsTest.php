@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * OtherCurrenciesCorrectionsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -38,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class OtherCurrenciesCorrectionsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class OtherCurrenciesCorrectionsTest extends TestCase
 {

@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class AccountDestroyServiceTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountDestroyServiceTest extends TestCase
 {
@@ -75,8 +78,8 @@ class AccountDestroyServiceTest extends TestCase
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
 
-        $recurrence            = $this->getRandomRecurrence();
-        $recurrenceTransaction = RecurrenceTransaction::create(
+        $recurrence  = $this->getRandomRecurrence();
+        $transaction = RecurrenceTransaction::create(
             [
                 'recurrence_id'           => $recurrence->id,
                 'transaction_currency_id' => $this->getEuro()->id,
@@ -88,7 +91,7 @@ class AccountDestroyServiceTest extends TestCase
         );
 
         $recService->shouldReceive('destroyById')->once()
-            ->withAnyArgs([$recurrenceTransaction->id]);
+                   ->withAnyArgs([$transaction->id]);
 
         /** @var AccountDestroyService $service */
         $service = app(AccountDestroyService::class);
@@ -96,7 +99,7 @@ class AccountDestroyServiceTest extends TestCase
 
         $this->assertDatabaseMissing('accounts', ['id' => $account->id, 'deleted_at' => null]);
 
-        $recurrenceTransaction->forceDelete();
+        $transaction->forceDelete();
     }
 
     /**

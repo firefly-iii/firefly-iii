@@ -86,7 +86,7 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $filtered          = $accounts->filter(
-            function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
@@ -97,6 +97,7 @@ class ReportController extends Controller
             }
         );
 
+        // TODO get liabilities and include those as well?
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
@@ -137,8 +138,6 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -199,8 +198,6 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -224,7 +221,7 @@ class ReportController extends Controller
             'count_spent'  => 0,
         ];
         foreach ($source['earned'] as $amount) {
-            $amount = bcmul($amount,'-1');
+            $amount = bcmul($amount, '-1');
             $numbers['sum_earned'] = bcadd($amount, $numbers['sum_earned']);
             ++$numbers['count_earned'];
         }

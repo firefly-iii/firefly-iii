@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class CategoryTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CategoryTransformerTest extends TestCase
 {
@@ -85,21 +88,27 @@ class CategoryTransformerTest extends TestCase
         $parameters->set('end', new Carbon('2018-01-31'));
 
         // mock some objects for the spent/earned lists.
-        $expense                            = new Transaction;
-        $expense->transaction_currency_code = 'EUR';
-        $expense->transactionCurrency       = $this->getEuro();
-        $expense->transaction_amount        = '-100';
-        $income                             = new Transaction;
-        $income->transaction_currency_code  = 'EUR';
-        $income->transactionCurrency        = $this->getEuro();
-        $income->transaction_amount         = '100';
+        $expense                            = [
+            'currency_id'             => 1,
+            'currency_code'           => 'EUR',
+            'currency_symbol'         => '€',
+            'currency_decimal_places' => 2,
+            'amount'                  => -100,
+        ];
+        $income                             = [
+            'currency_id'             => 1,
+            'currency_code'           => 'EUR',
+            'currency_symbol'         => '€',
+            'currency_decimal_places' => 2,
+            'amount'                  => 100,
+        ];
 
 
         $incomeCollection  = [$income];
         $expenseCollection = [$expense];
 
-        $repository->shouldReceive('spentInPeriodCollection')->atLeast()->once()->andReturn($expenseCollection);
-        $repository->shouldReceive('earnedInPeriodCollection')->atLeast()->once()->andReturn($incomeCollection);
+        $repository->shouldReceive('spentInPeriod')->atLeast()->once()->andReturn($expenseCollection);
+        $repository->shouldReceive('earnedInPeriod')->atLeast()->once()->andReturn($incomeCollection);
 
         /** @var Category $category */
         $category    = Category::first();

@@ -32,6 +32,10 @@ use Tests\TestCase;
 
 /**
  * Class ConfigurationControllerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConfigurationControllerTest extends TestCase
 {

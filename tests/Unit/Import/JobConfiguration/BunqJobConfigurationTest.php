@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class BunqJobConfigurationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BunqJobConfigurationTest extends TestCase
 {

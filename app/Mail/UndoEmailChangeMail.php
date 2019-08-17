@@ -28,6 +28,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UndoEmailChangeMail
+ *
  * @codeCoverageIgnore
  */
 class UndoEmailChangeMail extends Mailable

@@ -40,7 +40,7 @@ class AccountList implements BinderInterface
      *
      * @return Collection
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public static function routeBinder(string $value, Route $route): Collection
     {

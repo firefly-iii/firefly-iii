@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetTransformerTest extends TestCase
 {

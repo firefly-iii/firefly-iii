@@ -396,7 +396,6 @@
                     },
                     budget: transaction.budget_id,
                     tags: newTags,
-                    //tags: 'abc',
                     custom_fields: {
                         interest_date: transaction.interest_date,
                         book_date: transaction.book_date,
@@ -415,7 +414,6 @@
                         id: transaction.source_id,
                         name: transaction.source_name,
                         type: transaction.source_type,
-                        // i dont know these
                         currency_id: transaction.currency_id,
                         currency_name: transaction.currency_name,
                         currency_code: transaction.currency_code,

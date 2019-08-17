@@ -61,6 +61,7 @@ class ChangesForV473 extends Migration
 
     /**
      * Run the migrations.
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */

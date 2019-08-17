@@ -263,7 +263,7 @@ trait JournalServiceTrait
      *
      * @param TransactionJournal $journal
      * @param array              $tags
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      *
      * @codeCoverageIgnore
      */

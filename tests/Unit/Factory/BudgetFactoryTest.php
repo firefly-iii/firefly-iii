@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetFactoryTest extends TestCase
 {

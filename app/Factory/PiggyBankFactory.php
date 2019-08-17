@@ -52,7 +52,7 @@ class PiggyBankFactory
      * @param null|string $piggyBankName
      *
      * @return PiggyBank|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {

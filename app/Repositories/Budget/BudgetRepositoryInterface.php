@@ -147,6 +147,8 @@ interface BudgetRepositoryInterface
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
     /**
+     * TODO only used in API
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -165,6 +167,8 @@ interface BudgetRepositoryInterface
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
 
     /**
+     * TODO only used in API
+     *
      * Returns all available budget objects.
      *
      * @param TransactionCurrency $currency
@@ -205,7 +209,7 @@ interface BudgetRepositoryInterface
      */
     public function getByIds(array $budgetIds): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @return Collection
@@ -244,7 +248,7 @@ interface BudgetRepositoryInterface
      */
     public function setBudgetOrder(Budget $budget, int $order): void;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param User $user
@@ -252,6 +256,7 @@ interface BudgetRepositoryInterface
     public function setUser(User $user);
 
     /**
+     * TODO this method is not multi-currency aware.
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon $start
@@ -261,7 +266,7 @@ interface BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Return multi-currency spent information.
@@ -332,7 +337,7 @@ interface BudgetRepositoryInterface
      */
     public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Budget $budget
      * @param Carbon $start

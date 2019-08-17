@@ -30,6 +30,7 @@ use Illuminate\Queue\SerializesModels;
  * Class ConfirmEmailChangeMail
  *
  * Sends message to new address to confirm change.
+ *
  * @codeCoverageIgnore
  */
 class ConfirmEmailChangeMail extends Mailable

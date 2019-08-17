@@ -180,7 +180,8 @@ class Kernel extends HttpKernel
                 CreateFreshApiToken::class,
             ],
 
-            'api' => [
+            'apiX' => [
+                'auth:api',
                 'throttle:60,1',
                 'bindings',
             ],

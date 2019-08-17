@@ -42,7 +42,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class UserController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class UserController extends Controller
 {

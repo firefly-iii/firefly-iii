@@ -38,6 +38,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToTransferTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToTransferTest extends TestCase
 {

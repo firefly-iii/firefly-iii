@@ -112,11 +112,12 @@ class CategoryControllerTest extends TestCase
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        //Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
+        $repository->shouldReceive('spentInPeriod')->andReturn([]);
+        $repository->shouldReceive('earnedInPeriod')->andReturn([]);
 
 
         $this->be($this->user());

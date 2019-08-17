@@ -53,7 +53,7 @@ class PiggyBankEventFactory
      * @param PiggyBank|null     $piggyBank
      *
      * @return PiggyBankEvent|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): ?PiggyBankEvent
     {

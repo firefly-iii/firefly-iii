@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * JournalCLIRepositoryInterface.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com

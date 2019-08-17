@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class ClearCategoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearCategoryTest extends TestCase
 {

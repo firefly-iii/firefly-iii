@@ -31,6 +31,10 @@ use Tests\TestCase;
 
 /**
  * Class HomeControllerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class HomeControllerTest extends TestCase
 {

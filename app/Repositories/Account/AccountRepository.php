@@ -40,7 +40,7 @@ use Log;
 
 /**
  * Class AccountRepository.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AccountRepository implements AccountRepositoryInterface
 {

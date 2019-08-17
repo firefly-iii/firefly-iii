@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class AssetAccountIbansTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AssetAccountIbansTest extends TestCase
 {

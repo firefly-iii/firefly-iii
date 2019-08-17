@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * DeleteController.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -26,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\RedirectResponse;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,6 +38,7 @@ use URL;
  */
 class DeleteController extends Controller
 {
+    use UserNavigation;
     /** @var TransactionGroupRepositoryInterface */
     private $repository;
 
@@ -69,6 +72,10 @@ class DeleteController extends Controller
      */
     public function delete(TransactionGroup $group)
     {
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+        }
+
         Log::debug(sprintf('Start of delete view for group #%d', $group->id));
 
         $journal = $group->transactionJournals->first();
@@ -94,6 +101,10 @@ class DeleteController extends Controller
      */
     public function destroy(TransactionGroup $group): RedirectResponse
     {
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+        }
+
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
             throw new NotFoundHttpException;

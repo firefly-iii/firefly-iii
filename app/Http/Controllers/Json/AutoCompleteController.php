@@ -43,7 +43,7 @@ use Log;
  *
  * TODO autocomplete for transaction types.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AutoCompleteController extends Controller
 {
@@ -67,6 +67,9 @@ class AutoCompleteController extends Controller
             if (in_array($type, $allowedAccountTypes, true)) {
                 $filteredAccountTypes[] = $type;
             }
+        }
+        if (0 === count($filteredAccountTypes)) {
+            $filteredAccountTypes = $allowedAccountTypes;
         }
         Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
 
@@ -211,7 +214,7 @@ class AutoCompleteController extends Controller
         $array    = array_merge($array, $limited->toArray());
         foreach ($array as $index => $item) {
             // give another key for consistency
-            $array[$index]['name'] = sprintf('#%d: %s', $item['id'], $item['description']);
+            $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
         }
 
 

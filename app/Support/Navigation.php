@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use Log;
 
 /**
  * Class Navigation.
@@ -37,8 +38,6 @@ class Navigation
      * @param                $skip
      *
      * @return \Carbon\Carbon
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
     {
@@ -73,7 +72,9 @@ class Navigation
         ];
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
+            Log::error(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
+
+            return $theDate;
         }
         if (isset($modifierMap[$repeatFreq])) {
             $add *= $modifierMap[$repeatFreq];
@@ -103,7 +104,7 @@ class Navigation
      *
      * @return array
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
     {
@@ -169,8 +170,6 @@ class Navigation
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
     {
@@ -220,7 +219,9 @@ class Navigation
 
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
+            Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
+
+            return $end;
         }
         $function = $functionMap[$repeatFreq];
 
@@ -323,8 +324,6 @@ class Navigation
      * @param  string        $repeatFrequency
      *
      * @return string
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function periodShow(\Carbon\Carbon $theDate, string $repeatFrequency): string
     {
@@ -355,7 +354,10 @@ class Navigation
         }
 
         // special formatter for quarter of year
-        throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+        Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+
+        return $date->format('Y-m-d');
+
     }
 
     /**
@@ -478,8 +480,6 @@ class Navigation
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
@@ -520,8 +520,10 @@ class Navigation
         if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }
+        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
-        throw new FireflyException(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
+        return $theDate;
+
     }
 
     /**

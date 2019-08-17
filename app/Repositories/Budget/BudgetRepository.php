@@ -46,9 +46,9 @@ use Navigation;
 /**
  * Class BudgetRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ *
+ *
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
@@ -105,7 +105,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
@@ -173,16 +173,16 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
         if (null === $end && null === $start) {
-            return $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
+            return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
         }
         if (null === $end xor null === $start) {
-            $query = $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC');
+            $query = $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC');
             // one of the two is null
             if (null !== $end) {
                 // end date must be before $end.
@@ -335,8 +335,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return Carbon
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {
@@ -377,8 +377,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
     {
@@ -467,7 +467,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $amount;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Carbon $start
@@ -544,7 +544,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Get all budgets with these ID's.
@@ -570,7 +570,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param Collection $accounts
@@ -704,6 +704,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                         'id'             => $transaction['currency_id'],
                         'decimal_places' => $transaction['currency_decimal_places'],
                         'code'           => $transaction['currency_code'],
+                        'name'           => $transaction['currency_name'],
                         'symbol'         => $transaction['currency_symbol'],
                     ];
                 }
@@ -720,9 +721,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
@@ -792,9 +794,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
@@ -819,7 +822,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * @param array $data
@@ -867,7 +870,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
+     *  // it's 5.
      */
     public function cleanupBudgets(): bool
     {
@@ -989,8 +992,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit
     {
@@ -1069,7 +1072,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
         }
         if (null !== $end) {
-            $query->where('emd_date', '<=', $end->format('Y-m-d H:i:s'));
+            $query->where('end_date', '<=', $end->format('Y-m-d H:i:s'));
         }
 
         return $query->get();

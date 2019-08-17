@@ -40,6 +40,7 @@ class ChangesForV4711 extends Migration
 
     /**
      * Run the migrations.
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */
@@ -59,7 +60,8 @@ class ChangesForV4711 extends Migration
         }
         );
 
-        Schema::table('preferences', function (Blueprint $table) {
+        Schema::table(
+            'preferences', function (Blueprint $table) {
             $table->text('data')->nullable()->change();
         }
         );

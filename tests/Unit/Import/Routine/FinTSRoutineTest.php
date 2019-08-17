@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * FinTSRoutineTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -33,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class FinTSRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FinTSRoutineTest extends TestCase
 {

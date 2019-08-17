@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * IsDateOrTimeTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -28,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class IsDateOrTimeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsDateOrTimeTest extends TestCase
 {
@@ -51,7 +55,7 @@ class IsDateOrTimeTest extends TestCase
         /** @var mixed $value */
         foreach ($values as $value) {
             $engine = new IsDateOrTime();
-            $this->assertFalse($engine->passes($attribute, $value), $value);
+            $this->assertFalse($engine->passes($attribute, $value), sprintf('%s', var_export($value, true)));
         }
     }
 

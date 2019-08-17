@@ -34,7 +34,7 @@ use Log;
 /**
  * Class RuleRepository.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
  */
 class RuleRepository implements RuleRepositoryInterface
 {

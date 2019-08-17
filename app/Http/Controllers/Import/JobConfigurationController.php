@@ -68,8 +68,6 @@ class JobConfigurationController extends Controller
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      */
     public function index(ImportJob $importJob)
     {
@@ -119,8 +117,6 @@ class JobConfigurationController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function post(Request $request, ImportJob $importJob)
     {

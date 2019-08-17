@@ -37,8 +37,8 @@ use Log;
 /**
  * Class PiggyBankRepository.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ *
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
@@ -293,7 +293,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
@@ -406,7 +406,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
     {

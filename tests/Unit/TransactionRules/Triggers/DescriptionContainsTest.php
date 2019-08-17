@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class DescriptionContains
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DescriptionContainsTest extends TestCase
 {

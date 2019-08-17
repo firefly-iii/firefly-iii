@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Exception;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -47,7 +48,7 @@ class ClearNotes implements ActionInterface
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function act(TransactionJournal $journal): bool
     {

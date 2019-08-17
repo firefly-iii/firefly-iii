@@ -77,6 +77,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
         if (null === $currency) {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * MigrateJournalNotesTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -30,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class MigrateJournalNotesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class MigrateJournalNotesTest extends TestCase
 {

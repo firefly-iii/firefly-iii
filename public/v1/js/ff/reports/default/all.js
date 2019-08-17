@@ -31,5 +31,6 @@ $(function () {
     loadAjaxPartial('incomeReport', incomeReportUri);
     loadAjaxPartial('expenseReport', expenseReportUri);
     loadAjaxPartial('incomeVsExpenseReport', incExpReportUri);
+    loadAjaxPartial('billReport', billReportUri);
 
 });
