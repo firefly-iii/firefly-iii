@@ -26,8 +26,9 @@ namespace FireflyIII\Support\Http\Controllers;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Http\RedirectResponse;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Support\ViewErrorBag;
 use Log;
 
@@ -37,6 +38,108 @@ use Log;
  */
 trait UserNavigation
 {
+
+    //if (!$this->isEditableAccount($account)) {
+    //            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+    //        }
+
+    /**
+     * Will return false if you cant edit this account type.
+     *
+     * @param Account $account
+     *
+     * @return bool
+     */
+    protected function isEditableAccount(Account $account): bool
+    {
+        $editable = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $type     = $account->accountType->type;
+
+        return in_array($type, $editable, true);
+    }
+
+    /**
+     * @param TransactionGroup $group
+     *
+     * @return bool
+     */
+    protected function isEditableGroup(TransactionGroup $group): bool
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            return false;
+        }
+        $type     = $journal->transactionType->type;
+        $editable = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT];
+
+        return in_array($type, $editable, true);
+    }
+
+    /**
+     * @param TransactionGroup $group
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    protected function redirectGroupToAccount(TransactionGroup $group)
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            Log::error(sprintf('No journals in group #%d', $group->id));
+
+            return redirect(route('index'));
+        }
+        // prefer redirect to everything but expense and revenue:
+        $transactions = $journal->transactions;
+        $ignore       = [AccountType::REVENUE, AccountType::EXPENSE, AccountType::RECONCILIATION, AccountType::INITIAL_BALANCE];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $type = $transaction->account->accountType->type;
+            if (!in_array($type, $ignore)) {
+                return redirect(route('accounts.show', [$transaction->account_id]));
+            }
+        }
+
+        return redirect(route('index'));
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    protected function redirectAccountToAccount(Account $account)
+    {
+        $type = $account->accountType->type;
+        if (AccountType::RECONCILIATION === $type || AccountType::INITIAL_BALANCE === $type) {
+            // reconciliation must be stored somewhere in this account's transactions.
+
+            /** @var Transaction $transaction */
+            $transaction = $account->transactions()->first();
+            if (null === $transaction) {
+                Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
+                session()->flash('error', trans('firefly.cant_find_redirect_account'));
+
+                return redirect(route('index'));
+            }
+            $journal = $transaction->transactionJournal;
+            /** @var Transaction $other */
+            $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
+            if (null === $other) {
+                Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
+                session()->flash('error', trans('firefly.cant_find_redirect_account'));
+
+                return redirect(route('index'));
+            }
+
+            return redirect(route('accounts.show', [$other->account_id]));
+        }
+
+        return redirect(route('index'));
+    }
+
+
     /**
      * Functionality:.
      *
@@ -59,94 +162,72 @@ trait UserNavigation
             Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
 
-        // "forbidden" words for specific identifiers:
-        // if these are in the previous URI, don't refer back there.
-        //        $array     = [
-        //            'accounts.delete.uri'          => '/accounts/show/',
-        //            'transactions.delete.uri'      => '/transactions/show/',
-        //            'attachments.delete.uri'       => '/attachments/show/',
-        //            'bills.delete.uri'             => '/bills/show/',
-        //            'budgets.delete.uri'           => '/budgets/show/',
-        //            'categories.delete.uri'        => '/categories/show/',
-        //            'currencies.delete.uri'        => '/currencies/show/',
-        //            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
-        //            'tags.delete.uri'              => '/tags/show/',
-        //            'rules.delete.uri'             => '/rules/edit/',
-        //            'transactions.mass-delete.uri' => '/transactions/show/',
-        //        ];
-        //$forbidden = $array[$identifier] ?? '/show/';
-        //Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
-
-
-        //        if (
-        //            !(false === strpos($identifier, 'delete'))
-        //            && !(false === strpos($uri, $forbidden))) {
-        //            $uri = $this->redirectUri;
-        //            //Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
-        //        }
-
-
-        // more debug notes:
-        //Log::debug(sprintf('strpos($identifier, "delete"): %s', var_export(strpos($identifier, 'delete'), true)));
-        //Log::debug(sprintf('strpos($uri, $forbidden): %s', var_export(strpos($uri, $forbidden), true)));
         Log::debug(sprintf('Return direct link %s', $uri));
         return $uri;
     }
-
-    /**
-     * Redirect to asset account that transaction belongs to.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @codeCoverageIgnore
-     */
-    protected function redirectToAccount(TransactionJournal $journal)
-    {
-        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
-        $transactions = $journal->transactions;
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $account = $transaction->account;
-            if (in_array($account->accountType->type, $valid, true)) {
-                return redirect(route('accounts.show', [$account->id]));
-            }
-        }
-        // @codeCoverageIgnoreStart
-        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
-
-        return redirect(route('index'));
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
-     * @codeCoverageIgnore
-     */
-    protected function redirectToOriginalAccount(Account $account)
-    {
-        /** @var Transaction $transaction */
-        $transaction = $account->transactions()->first();
-        if (null === $transaction) {
-            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
-            Log::error(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id));
-
-            return redirect(route('index'));
-        }
-
-        $journal = $transaction->transactionJournal;
-        /** @var Transaction $opposingTransaction */
-        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
-
-        if (null === $opposingTransaction) {
-            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
-            Log::error(sprintf('Expected an opposing transaction. Account #%d has none. BEEP, error.', $account->id));
-        }
-
-        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
-    }
+    //
+    //    /**
+    //     * Redirect to asset account that transaction belongs to.
+    //     *
+    //     * @param TransactionGroup $group
+    //     *
+    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+    //     * @codeCoverageIgnore
+    //     */
+    //    protected function redirectToAccount(TransactionGroup $group)
+    //    {
+    //        $journals = $group->transactionJournals;
+    //        $first    = $journals->first();
+    //
+    //        if (null === $first) {
+    //            return redirect(route('index'));
+    //        }
+    //
+    //
+    //        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
+    //        $transactions = $journal->transactions;
+    //        /** @var Transaction $transaction */
+    //        foreach ($transactions as $transaction) {
+    //            $account = $transaction->account;
+    //            if (in_array($account->accountType->type, $valid, true)) {
+    //                return redirect(route('accounts.show', [$account->id]));
+    //            }
+    //        }
+    //        // @codeCoverageIgnoreStart
+    //        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
+    //
+    //        return redirect(route('index'));
+    //        // @codeCoverageIgnoreEnd
+    //    }
+    //
+    //    /**
+    //     * @param Account $account
+    //     *
+    //     * @return RedirectResponse|\Illuminate\Routing\Redirector
+    //     * @codeCoverageIgnore
+    //     */
+    //    protected function redirectToOriginalAccount(Account $account)
+    //    {
+    //        /** @var Transaction $transaction */
+    //        $transaction = $account->transactions()->first();
+    //        if (null === $transaction) {
+    //            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
+    //            Log::error(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id));
+    //
+    //            return redirect(route('index'));
+    //        }
+    //
+    //        $journal = $transaction->transactionJournal;
+    //        /** @var Transaction $opposingTransaction */
+    //        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
+    //
+    //        if (null === $opposingTransaction) {
+    //            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => e($account->name), 'id' => $account->id]));
+    //            Log::error(sprintf('Expected an opposing transaction. Account #%d has none. BEEP, error.', $account->id));
+    //        }
+    //
+    //        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
+    //    }
 
     /**
      * @param string $identifier

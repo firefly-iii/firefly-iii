@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 
 /**
@@ -38,7 +39,7 @@ use Illuminate\Http\Request;
  */
 class EditController extends Controller
 {
-    use ModelInformation;
+    use ModelInformation, UserNavigation;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var AccountRepositoryInterface The account repository */
@@ -79,6 +80,10 @@ class EditController extends Controller
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle       = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
@@ -144,6 +149,10 @@ class EditController extends Controller
      */
     public function update(AccountFormRequest $request, Account $account)
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         $data = $request->getAccountData();
         $this->repository->update($account, $data);
 

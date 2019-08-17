@@ -176,7 +176,7 @@
                                        title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
                                     {% if type == 'Withdrawal' or type == 'Deposit' %}
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                                    {% elseif type == 'Transfer' %}
+                                    {% elseif type == 'Transfer' or type == 'Opening balance' %}
                                         <span class="text-info">
                                         {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
@@ -192,7 +192,6 @@
                                     </span>
                                         {% endif %}
                                     {% endif %}
-
 
                                     &rarr;
                                     <a href="{{ route('accounts.show', journal.destination_id) }}"

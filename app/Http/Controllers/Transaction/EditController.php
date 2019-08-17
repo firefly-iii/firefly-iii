@@ -25,13 +25,14 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 
 /**
  * Class EditController
  */
 class EditController extends Controller
 {
-
+    use UserNavigation;
     /**
      * EditController constructor.
      * @codeCoverageIgnore
@@ -66,6 +67,10 @@ class EditController extends Controller
      */
     public function edit(TransactionGroup $transactionGroup)
     {
+        if (!$this->isEditableGroup($transactionGroup)) {
+            return $this->redirectGroupToAccount($transactionGroup); // @codeCoverageIgnore
+        }
+
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
