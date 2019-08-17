@@ -45,7 +45,7 @@ use function strlen;
 /**
  * Class AttachmentController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AttachmentController extends Controller
 {

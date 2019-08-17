@@ -66,7 +66,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class CurrencyController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class CurrencyController extends Controller
 {

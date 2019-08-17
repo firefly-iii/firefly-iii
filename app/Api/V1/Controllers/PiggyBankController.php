@@ -42,7 +42,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class PiggyBankController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class PiggyBankController extends Controller
 {
