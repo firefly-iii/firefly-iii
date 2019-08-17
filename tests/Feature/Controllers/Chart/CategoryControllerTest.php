@@ -60,6 +60,7 @@ class CategoryControllerTest extends TestCase
      *
      * @param string $range
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function testAll(string $range): void
     {

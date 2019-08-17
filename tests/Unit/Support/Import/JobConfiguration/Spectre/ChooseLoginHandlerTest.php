@@ -142,9 +142,9 @@ class ChooseLoginHandlerTest extends TestCase
     public function testConfigureJobCustomer(): void
     {
         // fake Spectre customer:
-        $fakeCustomerPreference       = new Preference;
-        $fakeCustomerPreference->name = 'spectre_customer';
-        $fakeCustomerPreference->data = [
+        $fakePref       = new Preference;
+        $fakePref->name = 'spectre_customer';
+        $fakePref->data = [
             'id'         => 1,
             'identifier' => 'fake',
             'secret'     => 'Dumbledore dies',
@@ -167,7 +167,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         // should try to grab customer from preferences:
         Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'spectre_customer', null])
-                   ->andReturn($fakeCustomerPreference)->once();
+                   ->andReturn($fakePref)->once();
 
         // mock stuff
         $ctRequest  = $this->mock(CreateTokenRequest::class);

@@ -50,6 +50,8 @@ use Tests\TestCase;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ *
  */
 class ImportArrayStorageTest extends TestCase
 {

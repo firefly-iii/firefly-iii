@@ -85,7 +85,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting = new MonetaryAccountSetting(null, null, null);
         $mab     = new BunqMonetaryAccountBank('EUR', 'Some descr', null, null, null, null, null, null, null, null);
-        $ma      = new BunqMonetaryAccount;
+        $monAcc  = new BunqMonetaryAccount;
         $alias   = new Pointer('a', 'b', null);
 
 
@@ -96,10 +96,10 @@ class StageNewHandlerTest extends TestCase
         $setting->setColor('FFFFFF');
         $mab->setSetting($setting);
         $mab->setAlias([$alias]);
-        $ma->setMonetaryAccountBank($mab);
+        $monAcc->setMonetaryAccountBank($mab);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
@@ -172,7 +172,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting   = new MonetaryAccountSetting(null, null, null);
         $maj       = new MonetaryAccountJoint('EUR', [], 'Some descr', null, null, null, null, null, null, null, null);
-        $ma        = new BunqMonetaryAccount;
+        $monAcc    = new BunqMonetaryAccount;
         $alias     = new Pointer('a', 'b', null);
         $labelUser = new LabelUser('x', 'James', 'NL');
         $coOwner   = new CoOwner($alias);
@@ -186,11 +186,11 @@ class StageNewHandlerTest extends TestCase
         $maj->setSetting($setting);
         $maj->setAlias([$alias]);
         $maj->setAllCoOwner([$coOwner]);
-        $ma->setMonetaryAccountJoint($maj);
+        $monAcc->setMonetaryAccountJoint($maj);
         $coOwner->setAlias($labelUser);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
@@ -264,7 +264,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting = new MonetaryAccountSetting(null, null, null);
         $mal     = new MonetaryAccountLight('EUR', 'Some descr', null, null, null, null, null, null, null, null);
-        $ma      = new BunqMonetaryAccount;
+        $monAcc  = new BunqMonetaryAccount;
         $alias   = new Pointer('a', 'b', null);
 
 
@@ -275,10 +275,10 @@ class StageNewHandlerTest extends TestCase
         $setting->setColor('FFFFFF');
         $mal->setSetting($setting);
         $mal->setAlias([$alias]);
-        $ma->setMonetaryAccountLight($mal);
+        $monAcc->setMonetaryAccountLight($mal);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
