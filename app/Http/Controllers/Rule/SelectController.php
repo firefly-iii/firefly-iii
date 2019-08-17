@@ -47,7 +47,7 @@ use Throwable;
 /**
  * Class SelectController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class SelectController extends Controller
 {
@@ -147,8 +147,6 @@ class SelectController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
@@ -216,8 +214,6 @@ class SelectController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testTriggersByRule(Rule $rule): JsonResponse
     {

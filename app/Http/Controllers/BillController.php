@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class BillController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BillController extends Controller
 {
@@ -339,8 +339,6 @@ class BillController extends Controller
      *
      * @return RedirectResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(BillFormRequest $request): RedirectResponse
     {

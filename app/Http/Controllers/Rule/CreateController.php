@@ -70,8 +70,6 @@ class CreateController extends Controller
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request, RuleGroup $ruleGroup = null)
     {
@@ -120,8 +118,6 @@ class CreateController extends Controller
      * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function createFromBill(Request $request, Bill $bill)
     {
@@ -168,7 +164,7 @@ class CreateController extends Controller
      * @param RuleFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function store(RuleFormRequest $request)
     {

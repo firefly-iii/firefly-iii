@@ -74,8 +74,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -102,8 +100,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -133,8 +129,6 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -164,7 +158,7 @@ class CategoryReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -195,9 +189,7 @@ class CategoryReportController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {

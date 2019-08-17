@@ -31,7 +31,7 @@ use Illuminate\Http\Request;
 /**
  * Class ReportController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ReportController extends Controller
 {
@@ -43,7 +43,7 @@ class ReportController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function general(Request $request): JsonResponse
     {

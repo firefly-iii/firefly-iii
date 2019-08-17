@@ -138,8 +138,6 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Http\JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -200,8 +198,6 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

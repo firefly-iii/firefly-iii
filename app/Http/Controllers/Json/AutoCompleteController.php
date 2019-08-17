@@ -43,7 +43,7 @@ use Log;
  *
  * TODO autocomplete for transaction types.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AutoCompleteController extends Controller
 {

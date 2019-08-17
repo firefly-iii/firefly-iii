@@ -38,7 +38,7 @@ use Log;
 /**
  * Class ReportController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ReportController extends Controller
 {
@@ -276,7 +276,7 @@ class ReportController extends Controller
      * @param string $reportType
      *
      * @return mixed
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function options(string $reportType)
     {
@@ -310,9 +310,7 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function postIndex(ReportFormRequest $request)
     {

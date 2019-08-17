@@ -39,7 +39,7 @@ use Illuminate\Support\Collection;
  *
  * Class BudgetReportController
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BudgetReportController extends Controller
 {
@@ -79,8 +79,6 @@ class BudgetReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -110,8 +108,6 @@ class BudgetReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -141,8 +137,6 @@ class BudgetReportController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {

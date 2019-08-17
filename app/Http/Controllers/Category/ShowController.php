@@ -31,13 +31,12 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
  * Class ShowController
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ShowController extends Controller
 {

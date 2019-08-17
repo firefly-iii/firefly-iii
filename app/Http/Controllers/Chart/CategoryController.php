@@ -71,8 +71,6 @@ class CategoryController extends Controller
      * @param Category                    $category
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function all(CategoryRepositoryInterface $repository, Category $category): JsonResponse
     {
@@ -204,8 +202,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -272,8 +268,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

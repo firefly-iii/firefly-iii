@@ -105,7 +105,6 @@ class EditController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(RuleGroup $ruleGroup)
     {

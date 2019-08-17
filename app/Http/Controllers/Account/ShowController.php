@@ -39,7 +39,7 @@ use View;
 /**
  * Class ShowController
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ShowController extends Controller
 {
@@ -138,8 +138,6 @@ class ShowController extends Controller
      * @param Request $request
      * @param Account $account
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     *
-     *
      * @throws Exception
      */
     public function showAll(Request $request, Account $account)
