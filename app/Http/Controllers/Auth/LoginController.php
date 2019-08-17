@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -92,8 +91,6 @@ class LoginController extends Controller
             Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
             $this->fireLockoutEvent($request);
 
-            /** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->sendLockoutResponse($request);
         }
 
@@ -104,8 +101,6 @@ class LoginController extends Controller
 
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
-            /** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
             $response = $this->sendLoginResponse($request);
             Log::debug(sprintf('Response Location header: %s', $response->headers->get('location')));
 
@@ -117,8 +112,6 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
         Log::channel('audit')->info(sprintf('Login attempt for user "%s" failed.', $request->get('email')));
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->sendFailedLoginResponse($request);
     }
 
