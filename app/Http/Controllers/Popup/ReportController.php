@@ -69,9 +69,6 @@ class ReportController extends Controller
             case 'category-entry':
                 $html = $this->categoryEntry($attributes);
                 break;
-            case 'balance-amount':
-                $html = $this->balanceAmount($attributes);
-                break;
         }
 
         return response()->json(['html' => $html]);

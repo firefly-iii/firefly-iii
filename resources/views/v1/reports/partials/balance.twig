@@ -22,6 +22,9 @@
             {% if budget.spent[account.id] %}
                 <td style="text-align: right;">
                     {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
+                    <i class="fa fa-fw fa-info-circle text-muted"></i>
+                       {# TODO #}
+                       {#data-location="category-entry" data-category-id="{{ category.id }}" data-currency-id="{{ category.currency_id }}"-->#}
                 </td>
             {% else %}
                 {% if report.accounts[account.id].sum != 0 %}
@@ -32,7 +35,7 @@
         {% endfor %}
         <td style="text-align: right;">
             {% for sum in report.sums[budget.budget_id] %}
-                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }} <i class="fa fa-fw fa-info-circle text-muted"></i><br />
             {% endfor %}
         </td>
     </tr>

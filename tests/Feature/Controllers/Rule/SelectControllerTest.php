@@ -137,7 +137,7 @@ class SelectControllerTest extends TestCase
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
-        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn(new Collection);
+        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn([]);
 
         $this->be($this->user());
         $uri      = route('rules.test-triggers') . '?' . http_build_query($data);
@@ -206,7 +206,7 @@ class SelectControllerTest extends TestCase
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
-        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn(new Collection);
+        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn([]);
 
         $this->be($this->user());
         $uri      = route('rules.test-triggers') . '?' . http_build_query($data);

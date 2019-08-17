@@ -59,13 +59,13 @@ class BalanceController extends Controller
         $helper  = app(BalanceReportHelperInterface::class);
         $report = $helper->getBalanceReport($accounts, $start, $end);
         // TODO no budget.
-//        try {
+        try {
             $result = view('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart
-//        } catch (Throwable $e) {
-//            Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
-//            $result = 'Could not render view.';
-//        }
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
 

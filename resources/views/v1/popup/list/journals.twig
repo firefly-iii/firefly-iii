@@ -25,9 +25,12 @@
     <tbody>
     {# Make sum: #}
     {% set sum = 0 %}
+    {% set symbol = '' %}
+    {% set decimal_places =2 %}
     {% for transaction in journals %}
         {# add to sum #}
-
+        {% set symbol = transaction.currency_symbol %}
+        {% set decimal_places = transaction.currency_decimal_places %}
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
             <td class="hidden-xs">
                 {% if transaction.transaction_type_type == 'Withdrawal' %}
@@ -134,8 +137,9 @@
     <tr>
         <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
         <td>
-            {# TODO avoid using formatAmount #}
-            {{ sum|formatAmount }}
+            {% if sum != 0 %}
+                {{ formatAmountBySymbol(sum, symbol, decimal_places) }}
+            {% endif %}
         </td>
     </tr>
     </tfoot>

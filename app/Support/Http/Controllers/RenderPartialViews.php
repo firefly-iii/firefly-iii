@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -76,56 +75,6 @@ trait RenderPartialViews
         return $result;
     }
 
-    /**
-     * View for balance row.
-     *
-     * @param array $attributes
-     *
-     * @return string
-     *
-     *
-     */
-    protected function balanceAmount(array $attributes): string // generate view for report.
-    {
-        $role = (int)$attributes['role'];
-        /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
-        /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
-        $budget  = $budgetRepository->findNull((int)$attributes['budgetId']);
-        $account = $accountRepository->findNull((int)$attributes['accountId']);
-
-
-        switch (true) {
-            case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget && null !== $account:
-                // normal row with a budget:
-                $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
-                break;
-            case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget && null !== $account:
-                // normal row without a budget:
-                $budget       = new Budget;
-                $journals     = $popupHelper->balanceForNoBudget($account, $attributes);
-                $budget->name = (string)trans('firefly.no_budget');
-                break;
-            case BalanceLine::ROLE_TAGROLE === $role:
-                // row with tag info.
-                return 'Firefly cannot handle this type of info-button (BalanceLine::TagRole)';
-        }
-        // @codeCoverageIgnoreStart
-        try {
-            $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Could not render: %s', $e->getMessage()));
-            $view = 'Firefly III could not render the view. Please see the log files.';
-        }
-        // @codeCoverageIgnoreEnd
-
-        return $view;
-    }
 
     /**
      * Get options for budget report.

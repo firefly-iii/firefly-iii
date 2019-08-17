@@ -1029,7 +1029,7 @@ return [
     'fiscal_year'                             => 'Fiscal year',
     'income_entry'                            => 'Income from account ":name" between :start and :end',
     'expense_entry'                           => 'Expenses to account ":name" between :start and :end',
-    'category_entry'                          => 'Expenses in category ":name" between :start and :end',
+    'category_entry'                          => 'Expenses and income in category ":name" between :start and :end',
     'budget_spent_amount'                     => 'Expenses in budget ":budget" between :start and :end',
     'balance_amount'                          => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
     'no_audit_activity'                       => 'No activity was recorded on account <a href=":url" title=":account_name">:account_name</a> between :start and :end.',

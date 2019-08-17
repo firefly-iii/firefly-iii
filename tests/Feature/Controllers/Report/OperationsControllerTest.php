@@ -55,7 +55,7 @@ class OperationsControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $return       = [
-            1 => [
+            1      => [
                 'id'      => 1,
                 'name'    => 'Some name',
                 'sum'     => '5',
@@ -104,6 +104,7 @@ class OperationsControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $return = [
+            'sums' => [],
             1 => [
                 'id'      => 1,
                 'name'    => 'Some name',

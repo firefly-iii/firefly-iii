@@ -26,8 +26,8 @@
         <td data-value="{{ account.sum }}" style="text-align: right;">
             {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
         </td>
-        <td class="hidden-xs" data-value="{{ entry.average }}" style="text-align: right;">
-            {% if entry.count > 1 %}
+        <td class="hidden-xs" data-value="{{ account.average }}" style="text-align: right;">
+            {% if account.count > 1 %}
                 {{ formatAmountBySymbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
             {% else %}
                 &mdash;
@@ -35,7 +35,7 @@
         </td>
         <td>
             <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
-               data-account-id="{{ account.id }}"></i>
+               data-account-id="{{ account.id }}" data-currency-id="{{ account.currency_id }}"></i>
         </td>
         </tr>
     {% endfor %}
