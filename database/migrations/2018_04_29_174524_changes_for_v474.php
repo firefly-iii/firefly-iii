@@ -32,6 +32,7 @@ class ChangesForV474 extends Migration
 {
     /**
      * Reverse the migrations.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return void
      */
@@ -92,6 +93,7 @@ class ChangesForV474 extends Migration
 
     /**
      * Run the migrations.
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */

@@ -23,7 +23,6 @@ declare(strict_types=1);
 use Carbon\Carbon;
 
 
-
 $factory->define(
     FireflyIII\Models\Account::class,
     function (Faker\Generator $faker) {

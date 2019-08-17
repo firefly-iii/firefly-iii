@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Carbon\Carbon;
+use FireflyIII\Models\TransactionJournal;
 
 
 $factory->define(
@@ -29,7 +30,7 @@ $factory->define(
         return [
             'user_id'         => 1,
             'attachable_id'   => 1,
-            'attachable_type' => \FireflyIII\Models\TransactionJournal::class,
+            'attachable_type' => TransactionJournal::class,
             'md5'             => md5($faker->words(6, true)),
             'mime'            => 'text/plain',
             'size'            => 1,
