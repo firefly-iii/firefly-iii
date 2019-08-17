@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class IsAssetAccountIdTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsAssetAccountIdTest extends TestCase
 {

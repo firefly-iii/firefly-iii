@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class HasNoTagTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class HasNoTagTest extends TestCase
 {

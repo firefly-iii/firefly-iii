@@ -27,6 +27,13 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 use Tests\TestCase;
 
+/**
+ * Class DeleteEmptyJournalsTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class DeleteEmptyJournalsTest extends TestCase
 {
     /**

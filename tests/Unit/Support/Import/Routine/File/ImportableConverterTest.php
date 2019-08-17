@@ -45,6 +45,9 @@ use Tests\TestCase;
  * todo test foreign currency
  *
  * Class ImportableConverterTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ImportableConverterTest extends TestCase
 {

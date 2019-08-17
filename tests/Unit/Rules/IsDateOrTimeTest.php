@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class IsDateOrTimeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsDateOrTimeTest extends TestCase
 {

@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class IndexControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IndexControllerTest extends TestCase
 {

@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class RemoveBillsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveBillsTest extends TestCase
 {

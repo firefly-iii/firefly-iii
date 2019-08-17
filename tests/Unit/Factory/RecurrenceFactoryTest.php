@@ -52,7 +52,9 @@ use Tests\TestCase;
  * With the correct types.
  *
  * Class RecurrenceFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RecurrenceFactoryTest extends TestCase
 {

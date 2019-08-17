@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class AttachmentTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AttachmentTransformerTest extends TestCase
 {

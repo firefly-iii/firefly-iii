@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class ReportEmptyObjectsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ReportEmptyObjectsTest extends TestCase
 {

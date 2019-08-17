@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class CreateLinkTypesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateLinkTypesTest extends TestCase
 {

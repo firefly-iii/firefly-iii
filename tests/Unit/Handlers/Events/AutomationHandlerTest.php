@@ -37,6 +37,9 @@ use Tests\TestCase;
 /**
  *
  * Class AutomationHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AutomationHandlerTest extends TestCase
 {

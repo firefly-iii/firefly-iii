@@ -36,6 +36,9 @@ use Tests\TestCase;
 
 /**
  * Class IsValidAttachmentModelTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsValidAttachmentModelTest extends TestCase
 {

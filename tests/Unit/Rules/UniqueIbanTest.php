@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class UniqueIbanTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UniqueIbanTest extends TestCase
 {

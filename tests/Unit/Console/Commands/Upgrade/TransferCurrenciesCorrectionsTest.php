@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class TransferCurrenciesCorrectionsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransferCurrenciesCorrectionsTest extends TestCase
 {

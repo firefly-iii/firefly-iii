@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class CCLiabilitiesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CCLiabilitiesTest extends TestCase
 {

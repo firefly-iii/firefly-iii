@@ -36,6 +36,9 @@ use Tests\TestCase;
 
 /**
  * Class AccountControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountControllerTest extends TestCase
 {

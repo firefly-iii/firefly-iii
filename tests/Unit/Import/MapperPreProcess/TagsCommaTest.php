@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class TagsCommaTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagsCommaTest extends TestCase
 {

@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class ApplyRulesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ApplyRulesTest extends TestCase
 {

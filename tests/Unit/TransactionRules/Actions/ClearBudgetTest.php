@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class ClearBudgetTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearBudgetTest extends TestCase
 {

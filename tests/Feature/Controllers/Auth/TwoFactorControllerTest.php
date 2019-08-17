@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class TwoFactorControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TwoFactorControllerTest extends TestCase
 {

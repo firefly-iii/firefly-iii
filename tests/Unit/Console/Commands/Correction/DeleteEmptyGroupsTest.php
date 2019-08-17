@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class DeleteEmptyGroupsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DeleteEmptyGroupsTest extends TestCase
 {

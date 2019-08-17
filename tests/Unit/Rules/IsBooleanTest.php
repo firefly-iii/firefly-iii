@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class IsBooleanTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IsBooleanTest extends TestCase
 {

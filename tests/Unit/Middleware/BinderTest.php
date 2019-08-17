@@ -48,6 +48,9 @@ use Tests\TestCase;
 /**
  * Class BinderTest
  * Per object: works, not existing, not logged in + existing
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BinderTest extends TestCase
 {

@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class LinkToBillTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkToBillTest extends TestCase
 {

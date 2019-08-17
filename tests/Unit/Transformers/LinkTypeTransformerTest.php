@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class LinkTypeTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkTypeTransformerTest extends TestCase
 {

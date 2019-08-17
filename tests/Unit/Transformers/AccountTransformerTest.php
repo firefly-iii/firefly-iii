@@ -35,6 +35,10 @@ use Tests\TestCase;
 
 /**
  * Class AccountTransformerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountTransformerTest extends TestCase
 {

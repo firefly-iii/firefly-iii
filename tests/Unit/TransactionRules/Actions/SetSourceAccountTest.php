@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class SetSourceAccountTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetSourceAccountTest extends TestCase
 {

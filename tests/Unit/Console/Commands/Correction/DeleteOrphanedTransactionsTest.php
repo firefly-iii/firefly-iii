@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class DeleteOrphanedTransactionsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DeleteOrphanedTransactionsTest extends TestCase
 {

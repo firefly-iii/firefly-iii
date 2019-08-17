@@ -42,6 +42,9 @@ use Tests\TestCase;
 
 /**
  * Class ChooseLoginHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseLoginHandlerTest extends TestCase
 {

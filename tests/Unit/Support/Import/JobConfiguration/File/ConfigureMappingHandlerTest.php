@@ -41,6 +41,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigureMappingHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  *
  */
 class ConfigureMappingHandlerTest extends TestCase

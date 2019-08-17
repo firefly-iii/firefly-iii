@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class CreateAccessTokensTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateAccessTokensTest extends TestCase
 {

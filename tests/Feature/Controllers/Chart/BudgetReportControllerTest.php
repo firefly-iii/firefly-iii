@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetReportControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetReportControllerTest extends TestCase
 {

@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class TagTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagTransformerTest extends TestCase
 {

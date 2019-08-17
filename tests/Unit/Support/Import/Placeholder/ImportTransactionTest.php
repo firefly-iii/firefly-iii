@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class ImportTransactionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ImportTransactionTest extends TestCase
 {

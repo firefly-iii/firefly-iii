@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class DecryptDatabaseTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DecryptDatabaseTest extends TestCase
 {

@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class IngDescriptionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IngDescriptionTest extends TestCase
 {

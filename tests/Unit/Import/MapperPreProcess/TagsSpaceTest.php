@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class TagsSpaceTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagsSpaceTest extends TestCase
 {

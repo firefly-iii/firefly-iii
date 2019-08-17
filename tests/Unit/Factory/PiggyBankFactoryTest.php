@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class PiggyBankFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankFactoryTest extends TestCase
 {

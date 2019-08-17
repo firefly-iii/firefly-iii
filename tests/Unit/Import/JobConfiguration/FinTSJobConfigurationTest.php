@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class FinTSJobConfigurationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FinTSJobConfigurationTest extends TestCase
 {

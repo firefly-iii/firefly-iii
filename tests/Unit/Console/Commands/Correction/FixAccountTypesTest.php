@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class FixAccountTypesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FixAccountTypesTest extends TestCase
 {

@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionTypeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionTypeTest extends TestCase
 {

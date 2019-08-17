@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class MappedValuesValidatorTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class MappedValuesValidatorTest extends TestCase
 {

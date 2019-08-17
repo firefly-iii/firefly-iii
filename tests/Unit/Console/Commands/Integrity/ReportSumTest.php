@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class ReportSumTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ReportSumTest extends TestCase
 {

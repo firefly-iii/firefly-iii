@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class NewFileJobHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NewFileJobHandlerTest extends TestCase
 {

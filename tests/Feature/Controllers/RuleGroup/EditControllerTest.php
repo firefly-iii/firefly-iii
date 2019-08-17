@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class EditControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class EditControllerTest extends TestCase
 {

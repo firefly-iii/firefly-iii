@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class YnabRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class YnabRoutineTest extends TestCase
 {

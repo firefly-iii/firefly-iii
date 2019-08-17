@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class AmountControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AmountControllerTest extends TestCase
 {

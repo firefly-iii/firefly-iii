@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class PreferenceTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PreferenceTransformerTest extends TestCase
 {

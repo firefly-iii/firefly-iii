@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class AmountDebitTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AmountDebitTest extends TestCase
 {

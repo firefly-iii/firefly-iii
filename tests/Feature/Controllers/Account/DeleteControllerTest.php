@@ -38,8 +38,9 @@ use Tests\TestCase;
  *
  * Class DeleteControllerTest
  *
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DeleteControllerTest extends TestCase
 {

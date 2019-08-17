@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class AppendNotesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AppendNotesTest extends TestCase
 {

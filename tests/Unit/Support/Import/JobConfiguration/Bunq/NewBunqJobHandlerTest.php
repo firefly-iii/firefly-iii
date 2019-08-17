@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class NewBunqJobHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NewBunqJobHandlerTest extends TestCase
 {

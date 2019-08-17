@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class BillTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BillTransformerTest extends TestCase
 {

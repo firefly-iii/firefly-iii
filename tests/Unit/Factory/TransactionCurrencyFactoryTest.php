@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionCurrencyFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionCurrencyFactoryTest extends TestCase
 {

@@ -42,6 +42,9 @@ use Tests\TestCase;
 
 /**
  * Class StageAuthenticatedHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StageAuthenticatedHandlerTest extends TestCase
 {

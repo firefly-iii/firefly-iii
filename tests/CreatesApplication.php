@@ -27,6 +27,9 @@ use Illuminate\Contracts\Console\Kernel;
 /**
  * Trait CreatesApplication
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 trait CreatesApplication
 {

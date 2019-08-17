@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class RenameMetaFieldsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RenameMetaFieldsTest extends TestCase
 {

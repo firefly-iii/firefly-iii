@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class TagFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagFactoryTest extends TestCase
 {

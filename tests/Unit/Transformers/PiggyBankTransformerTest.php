@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class PiggyBankTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankTransformerTest extends TestCase
 {

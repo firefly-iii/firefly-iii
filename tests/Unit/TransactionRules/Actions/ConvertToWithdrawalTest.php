@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToWithdrawalTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToWithdrawalTest extends TestCase
 {

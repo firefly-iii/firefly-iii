@@ -27,6 +27,9 @@ use Tests\TestCase;
 
 /**
  * Class TransferBudgetsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransferBudgetsTest extends TestCase
 {

@@ -34,6 +34,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionIdentifierTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionIdentifierTest extends TestCase
 {

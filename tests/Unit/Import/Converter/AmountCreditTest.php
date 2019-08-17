@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class AmountCreditTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AmountCreditTest extends TestCase
 {

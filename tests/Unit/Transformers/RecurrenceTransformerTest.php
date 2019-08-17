@@ -38,6 +38,9 @@ use Tests\TestCase;
 /**
  *
  * Class RecurrenceTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RecurrenceTransformerTest extends TestCase
 {

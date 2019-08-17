@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class CronControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CronControllerTest extends TestCase
 {

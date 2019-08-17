@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class MigrateAttachmentsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class MigrateAttachmentsTest extends TestCase
 {

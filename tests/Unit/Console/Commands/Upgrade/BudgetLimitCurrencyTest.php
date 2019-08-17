@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetLimitCurrencyTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetLimitCurrencyTest extends TestCase
 {

@@ -40,6 +40,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigureRolesHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConfigureRolesHandlerTest extends TestCase
 {
