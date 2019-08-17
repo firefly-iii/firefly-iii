@@ -113,8 +113,6 @@ trait ChartGeneration
      * @param Carbon     $end
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function getChartData(Collection $accounts, Carbon $start, Carbon $end): array // chart helper function
     {
@@ -138,25 +136,24 @@ trait ChartGeneration
             $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
             $earned     = (string)array_sum(
                 array_map(
-                    function ($item) {
+                    static function ($item) {
                         return $item['sum'];
                     },
-                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
+                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)['accounts']
                 )
             );
-
             $spent = (string)array_sum(
                 array_map(
-                    function ($item) {
+                    static function ($item) {
                         return $item['sum'];
                     },
-                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
+                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)['accounts']
                 )
             );
 
             $label               = $currentStart->format('Y-m') . '-01';
             $spentArray[$label]  = bcmul($spent, '-1');
-            $earnedArray[$label] = $earned;
+            $earnedArray[$label] = bcmul($earned, '-1');
             $currentStart        = app('navigation')->addPeriod($currentStart, '1M', 0);
         }
         $result = [

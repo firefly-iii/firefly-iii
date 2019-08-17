@@ -224,7 +224,7 @@ class ReportController extends Controller
             'count_spent'  => 0,
         ];
         foreach ($source['earned'] as $amount) {
-            $amount = bcmul($amount,'-1');
+            $amount = bcmul($amount, '-1');
             $numbers['sum_earned'] = bcadd($amount, $numbers['sum_earned']);
             ++$numbers['count_earned'];
         }

@@ -143,6 +143,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector->excludeDestinationAccounts($accounts);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])->withAccountInformation();
         $journals = $collector->getExtractedJournals();
+
         $report = $this->groupExpenseByDestination($journals);
 
         // TODO sorting
@@ -220,9 +221,8 @@ class AccountTasker implements AccountTaskerInterface
             $sourceId                 = (int)$journal['destination_account_id'];
             $currencyId               = (int)$journal['currency_id'];
             $key                      = sprintf('%s-%s', $sourceId, $currencyId);
-            if (!isset($report['accounts'][$key])) {
-                $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
-                $report['accounts'][$key] = [
+            $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
+            $report['accounts'][$key] = $report['accounts'][$key] ?? [
                     'id'                      => $sourceId,
                     'name'                    => $journal['destination_account_name'],
                     'sum'                     => '0',
@@ -234,8 +234,10 @@ class AccountTasker implements AccountTaskerInterface
                     'currency_code'           => $currencies[$currencyId]->code,
                     'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
                 ];
-            }
             $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], $journal['amount']);
+
+            Log::debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
+
             ++$report['accounts'][$key]['count'];
         }
 
