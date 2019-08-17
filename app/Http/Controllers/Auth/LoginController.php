@@ -116,24 +116,6 @@ class LoginController extends Controller
     }
 
     /**
-     * Log the user out of the application.
-     *
-     * @param Request   $request
-     * @param CookieJar $cookieJar
-     *
-     * @return $this|\Illuminate\Http\RedirectResponse
-     */
-    public function logout(Request $request, CookieJar $cookieJar)
-    {
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-        $cookie = $cookieJar->forget('twoFactorAuthenticated');
-
-        return redirect('/')->withCookie($cookie);
-    }
-
-    /**
      * Show the application's login form.
      *
      * @param Request $request
