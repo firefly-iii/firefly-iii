@@ -55,7 +55,7 @@ class IsDateOrTimeTest extends TestCase
         /** @var mixed $value */
         foreach ($values as $value) {
             $engine = new IsDateOrTime();
-            $this->assertFalse($engine->passes($attribute, $value), $value);
+            $this->assertFalse($engine->passes($attribute, $value), sprintf('%s', var_export($value, true)));
         }
     }
 
