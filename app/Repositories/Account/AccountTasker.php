@@ -146,15 +146,14 @@ class AccountTasker implements AccountTaskerInterface
 
         $report = $this->groupExpenseByDestination($journals);
 
-        // TODO sorting
-//        // sort the result
-//        // Obtain a list of columns
-//        $sum = [];
-//        foreach ($expenses as $accountId => $row) {
-//            $sum[$accountId] = (float)$row['sum'];
-//        }
-//
-//        array_multisort($sum, SORT_ASC, $expenses);
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($report['accounts'] as $accountId => $row) {
+            $sum[$accountId] = (float)$row['sum'];
+        }
+
+        array_multisort($sum, SORT_ASC, $report['accounts']);
 
         return $report;
     }
@@ -181,13 +180,12 @@ class AccountTasker implements AccountTaskerInterface
 
         // sort the result
         // Obtain a list of columns
-        //        $sum = [];
-        //        foreach ($report['income'] as $accountId => $row) {
-        //            $sum[$accountId] = (float)$row['sum'];
-        //        }
-        // TODO proper sorting.
-        //array_multisort($sum, SORT_DESC, $report);
-        //        var_dump($report);exit;
+        $sum = [];
+        foreach ($report['accounts'] as $accountId => $row) {
+            $sum[$accountId] = (float)$row['sum'];
+        }
+
+        array_multisort($sum, SORT_DESC, $report['accounts']);
 
         return $report;
     }
