@@ -26,7 +26,6 @@ use Adldap;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Log;
@@ -126,20 +125,16 @@ class LoginController extends Controller
     {
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
-        $pageTitle     = (string)trans('firefly.login_page_title');
+        $title         = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
 
-        // forget 2fa session thing.
-        $request->session()->forget('twoFactorAuthenticated');
-
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
         $allowRegistration = true;
         $allowReset        = true;
-        if (true === $singleUserMode && $userCount > 0) {
+        if (true === $singleUserMode && $count > 0) {
             $allowRegistration = false;
         }
 
@@ -152,6 +147,6 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'pageTitle'));
+        return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
 }
