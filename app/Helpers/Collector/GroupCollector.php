@@ -146,8 +146,14 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
+        $start = microtime(true);
         /** @var Collection $result */
         $result = $this->query->get($this->fields);
+        $end    = round(microtime(true) - $start, 5);
+
+        // log info about query time.
+        Log::info(sprintf('Query took Firefly III %s seconds', $end));
+        Log::info($this->query->toSql(), $this->query->getBindings());
 
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
