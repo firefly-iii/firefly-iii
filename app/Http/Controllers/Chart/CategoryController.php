@@ -81,7 +81,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $start    = $repository->firstUseDate($category) ?? $this->getDate();
         $range    = app('preferences')->get('viewRange', '1M')->data;
@@ -216,7 +216,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            return response()->json($cache->get());// @codeCoverageIgnore
+             return response()->json($cache->get());// @codeCoverageIgnore
         }
         $repository = app(CategoryRepositoryInterface::class);
         $expenses   = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
@@ -248,7 +248,7 @@ class CategoryController extends Controller
             $spent                           = $expenses[$category->id]['entries'][$period] ?? '0';
             $earned                          = $income[$category->id]['entries'][$period] ?? '0';
             $sum                             = bcadd($spent, $earned);
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+            $chartData[0]['entries'][$label] = round($spent, 12);
             $chartData[1]['entries'][$label] = round($earned, 12);
             $chartData[2]['entries'][$label] = round($sum, 12);
         }

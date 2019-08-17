@@ -208,7 +208,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -262,7 +262,7 @@ class CategoryReportController extends Controller
                 $labelOut       = $category->id . '-out';
                 $labelSumIn     = $category->id . '-total-in';
                 $labelSumOut    = $category->id . '-total-out';
-                $currentIncome  = bcmul($income[$category->id] ?? '0','-1');
+                $currentIncome  = $income[$category->id] ?? '0';
                 $currentExpense = $expenses[$category->id] ?? '0';
 
                 // add to sum:

@@ -475,6 +475,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
 
     /**
+     * TODO not multi currency aware.
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon $start
@@ -510,7 +511,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         foreach ($journals as $journal) {
             $categoryId                          = (int)$journal['category_id'];
             $date                                = $journal['date']->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $journal['amount']);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', bcmul($journal['amount'],'-1'));
         }
 
         return $data;
@@ -548,7 +549,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
+            $result['entries'][$date] = bcadd($result['entries'][$date], bcmul($journal['amount'],'-1'));
         }
         Log::debug('Done looping transactions..');
         Log::debug('Finished periodIncomeNoCategory()');

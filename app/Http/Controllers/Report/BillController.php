@@ -48,7 +48,7 @@ class BillController extends Controller
         $cache->addProperty('bill-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 
@@ -57,13 +57,13 @@ class BillController extends Controller
         $report = $helper->getBillReport($accounts, $start, $end);
 
 
-//        try {
+        try {
             $result = view('reports.partials.bills', compact('report'))->render();
             // @codeCoverageIgnoreStart
-//        } catch (Throwable $e) {
-//            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
-//            $result = 'Could not render view.';
-//        }
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
 

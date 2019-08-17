@@ -375,7 +375,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            // return $cache->get(); // @codeCoverageIgnore
+             return $cache->get(); // @codeCoverageIgnore
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);

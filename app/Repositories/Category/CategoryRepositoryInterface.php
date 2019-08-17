@@ -137,6 +137,7 @@ interface CategoryRepositoryInterface
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
+     * TODO not multi-currency
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -149,6 +150,7 @@ interface CategoryRepositoryInterface
 
 
     /**
+     * TODO not multi-currency
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -158,6 +160,7 @@ interface CategoryRepositoryInterface
     public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * TODO not multi-currency
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -168,6 +171,7 @@ interface CategoryRepositoryInterface
     public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * TODO not multi-currency
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

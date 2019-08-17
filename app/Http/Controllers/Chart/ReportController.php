@@ -86,7 +86,7 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $filtered          = $accounts->filter(
-            function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
@@ -97,6 +97,7 @@ class ReportController extends Controller
             }
         );
 
+        // TODO get liabilities and include those as well?
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
