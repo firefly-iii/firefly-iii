@@ -117,7 +117,7 @@ class CurrencyForm
      * @param array  $options
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
     {
@@ -168,7 +168,7 @@ class CurrencyForm
      * @param array  $options
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function currencyField(string $name, string $view, $value = null, array $options = null): string
     {

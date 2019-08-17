@@ -34,7 +34,7 @@ use Log;
 /**
  * Class LinkTypeRepository.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
  */
 class LinkTypeRepository implements LinkTypeRepositoryInterface
 {
@@ -252,7 +252,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournal $outward
      *
      * @return TransactionJournalLink|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
@@ -347,7 +347,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      * @param string                 $text
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @throws \Exception
      */
     private function setNoteText(TransactionJournalLink $link, string $text): void

@@ -46,9 +46,9 @@ use Navigation;
 /**
  * Class BudgetRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ *
+ *
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
@@ -105,7 +105,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
@@ -173,8 +173,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
@@ -335,8 +335,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return Carbon
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {
@@ -377,8 +377,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
     {
@@ -870,7 +870,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
+     *  // it's 5.
      */
     public function cleanupBudgets(): bool
     {
@@ -992,8 +992,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit
     {

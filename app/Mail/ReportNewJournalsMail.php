@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
  * Class ReportNewJournalsMail.
  *
  * Sends a list of newly created journals to the user.
+ *
  * @codeCoverageIgnore
  */
 class ReportNewJournalsMail extends Mailable

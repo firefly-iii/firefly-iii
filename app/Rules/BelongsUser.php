@@ -69,8 +69,8 @@ class BelongsUser implements Rule
      * @return bool
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function passes($attribute, $value): bool
     {
@@ -110,7 +110,7 @@ class BelongsUser implements Rule
      *
      * @return int
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function countField(string $class, string $field, string $value): int
     {

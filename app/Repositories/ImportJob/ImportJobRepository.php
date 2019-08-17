@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class ImportJobRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {

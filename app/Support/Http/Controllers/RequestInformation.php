@@ -65,8 +65,8 @@ trait RequestInformation
      * @param string $language
      *
      * @return string
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     *
      */
     protected function getHelpText(string $route, string $language): string // get from internet.
     {
@@ -213,7 +213,7 @@ trait RequestInformation
      * @param Carbon $date
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {

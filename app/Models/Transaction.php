@@ -23,13 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Transaction.
@@ -158,8 +156,6 @@ class Transaction extends Model
 
     /**
      * Check if a table is joined.
-     *
-     *
      *
      * @param Builder $query
      * @param string  $table

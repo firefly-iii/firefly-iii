@@ -110,7 +110,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getNextData(): array
     {

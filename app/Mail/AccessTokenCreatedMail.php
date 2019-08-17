@@ -30,6 +30,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class AccessTokenCreatedMail
+ *
  * @codeCoverageIgnore
  */
 class AccessTokenCreatedMail extends Mailable

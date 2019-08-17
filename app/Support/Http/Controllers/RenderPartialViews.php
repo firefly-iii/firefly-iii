@@ -83,7 +83,7 @@ trait RenderPartialViews
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function balanceAmount(array $attributes): string // generate view for report.
     {

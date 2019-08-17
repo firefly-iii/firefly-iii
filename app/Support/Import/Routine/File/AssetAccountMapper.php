@@ -60,7 +60,7 @@ class AssetAccountMapper
      * @param array    $data
      *
      * @return Account
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function map(?int $accountId, array $data): Account
     {

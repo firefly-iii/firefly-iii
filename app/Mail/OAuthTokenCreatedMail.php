@@ -31,6 +31,7 @@ use Laravel\Passport\Client;
 
 /**
  * Class OAuthTokenCreatedMail
+ *
  * @codeCoverageIgnore
  */
 class OAuthTokenCreatedMail extends Mailable

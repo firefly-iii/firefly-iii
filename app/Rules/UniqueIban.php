@@ -72,8 +72,8 @@ class UniqueIban implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     *
      */
     public function passes($attribute, $value): bool
     {
@@ -127,7 +127,7 @@ class UniqueIban implements Rule
 
     /**
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function getMaxOccurrences(): array
     {

@@ -137,9 +137,9 @@ class SetSourceAccount implements ActionInterface
             // create new revenue account with this name:
             $data    = [
                 'name'            => $this->action->action_value,
-                'account_type'     => 'revenue',
+                'account_type'    => 'revenue',
                 'account_type_id' => null,
-                'virtual_balance'  => 0,
+                'virtual_balance' => 0,
                 'active'          => true,
                 'iban'            => null,
             ];

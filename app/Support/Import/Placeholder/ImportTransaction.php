@@ -132,7 +132,7 @@ class ImportTransaction
      * @param ColumnValue $columnValue
      *
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function addColumnValue(ColumnValue $columnValue): void
     {

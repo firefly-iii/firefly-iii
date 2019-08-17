@@ -51,7 +51,7 @@ use Log;
  *
  * Class ImportArrayStorage
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ImportArrayStorage
 {
@@ -201,8 +201,8 @@ class ImportArrayStorage
      * @return Collection
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     private function storeGroupArray(): Collection
     {
@@ -388,9 +388,9 @@ class ImportArrayStorage
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
+     *
+     *
      */
     private function transferExists(array $transaction): bool
     {

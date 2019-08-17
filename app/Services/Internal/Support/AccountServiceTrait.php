@@ -86,7 +86,7 @@ trait AccountServiceTrait
      *
      * @param Account $account
      * @param array $data
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function updateMetaData(Account $account, array $data): void
     {

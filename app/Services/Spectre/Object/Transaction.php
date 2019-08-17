@@ -175,7 +175,7 @@ class Transaction extends SpectreObject
      * Get opposing account data.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getOpposingAccountData(): array
     {

@@ -27,7 +27,6 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,8 +36,8 @@ class ImportProvider implements BinderInterface
 {
     /**
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public static function getProviders(): array
     {

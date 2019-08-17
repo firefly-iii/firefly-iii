@@ -47,8 +47,8 @@ trait ChartGeneration
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {

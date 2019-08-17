@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -63,92 +64,6 @@ class Processor
     }
 
     /**
-     * Returns the rule
-     *
-     * @return \FireflyIII\Models\Rule
-     */
-    public function getRule(): Rule
-    {
-        return $this->rule;
-    }
-
-    /**
-     * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
-     * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
-     * matches all of the triggers (regardless of whether the Processor could act on it).
-     *
-     * @param Transaction $transaction
-     *
-     * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    public function handleTransaction(Transaction $transaction): bool
-    {
-        Log::debug(sprintf('handleTransactionJournal for journal #%d (transaction #%d)', $transaction->transaction_journal_id, $transaction->id));
-
-        // grab the actual journal.
-        $journal       = $transaction->transactionJournal()->first();
-        $this->journal = $journal;
-        // get all triggers:
-        $triggered = $this->triggered();
-        if ($triggered) {
-            Log::debug('Rule is triggered, go to actions.');
-            if ($this->actions->count() > 0) {
-                Log::debug('Has more than zero actions.');
-                $this->actions();
-            }
-            if (0 === $this->actions->count()) {
-                Log::info('Rule has no actions!');
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Method to check whether the current transaction would be triggered
-     * by the given list of triggers.
-     *
-     * @return bool
-     */
-    private function triggered(): bool
-    {
-        Log::debug('start of Processor::triggered()');
-        $foundTriggers = $this->getFoundTriggers();
-        $hitTriggers   = 0;
-        Log::debug(sprintf('Found triggers starts at %d', $foundTriggers));
-        /** @var AbstractTrigger $trigger */
-        foreach ($this->triggers as $trigger) {
-            ++$foundTriggers;
-            Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
-            /** @var AbstractTrigger $trigger */
-            if ($trigger->triggered($this->journal)) {
-                Log::debug('Is a match!');
-                ++$hitTriggers;
-                // is non-strict? then return true!
-                if (!$this->strict && UserAction::class !== get_class($trigger)) {
-                    Log::debug('Rule is set as non-strict, return true!');
-
-                    return true;
-                }
-                if (!$this->strict && UserAction::class === get_class($trigger)) {
-                    Log::debug('Rule is set as non-strict, but action was "user-action". Will not return true.');
-                }
-            }
-            if ($trigger->stopProcessing) {
-                Log::debug('Stop processing this trigger and break.');
-                break;
-            }
-        }
-        $result = ($hitTriggers === $foundTriggers && $foundTriggers > 0);
-        Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
-
-        return $result;
-    }
-
-    /**
      * Return found triggers
      *
      * @return int
@@ -169,27 +84,13 @@ class Processor
     }
 
     /**
-     * Run the actions
+     * Returns the rule
      *
-     * @return void
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @return Rule
      */
-    private function actions(): void
+    public function getRule(): Rule
     {
-        /**
-         * @var int
-         * @var RuleAction $action
-         */
-        foreach ($this->actions as $action) {
-            /** @var ActionInterface $actionClass */
-            $actionClass = ActionFactory::getAction($action);
-            Log::debug(sprintf('Fire action %s on journal #%d', get_class($actionClass), $this->journal->id));
-            $actionClass->act($this->journal);
-            if ($action->stop_processing) {
-                Log::debug('Stop processing now and break.');
-                break;
-            }
-        }
+        return $this->rule;
     }
 
     /**
@@ -200,7 +101,7 @@ class Processor
      * @param array $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function handleJournalArray(array $journal): bool
     {
@@ -232,10 +133,45 @@ class Processor
      * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
      * matches all of the triggers (regardless of whether the Processor could act on it).
      *
+     * @param Transaction $transaction
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    public function handleTransaction(Transaction $transaction): bool
+    {
+        Log::debug(sprintf('handleTransactionJournal for journal #%d (transaction #%d)', $transaction->transaction_journal_id, $transaction->id));
+
+        // grab the actual journal.
+        $journal       = $transaction->transactionJournal()->first();
+        $this->journal = $journal;
+        // get all triggers:
+        $triggered = $this->triggered();
+        if ($triggered) {
+            Log::debug('Rule is triggered, go to actions.');
+            if ($this->actions->count() > 0) {
+                Log::debug('Has more than zero actions.');
+                $this->actions();
+            }
+            if (0 === $this->actions->count()) {
+                Log::info('Rule has no actions!');
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
+     * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
+     * matches all of the triggers (regardless of whether the Processor could act on it).
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function handleTransactionJournal(TransactionJournal $journal): bool
     {
@@ -277,7 +213,7 @@ class Processor
      * @param Rule $rule
      * @param bool $includeActions
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function make(Rule $rule, bool $includeActions = null): void
     {
@@ -305,7 +241,7 @@ class Processor
      * @param string $triggerName
      * @param string $triggerValue
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function makeFromString(string $triggerName, string $triggerValue): void
     {
@@ -325,7 +261,7 @@ class Processor
      *
      * @param array $triggers
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function makeFromStringArray(array $triggers): void
     {
@@ -335,5 +271,70 @@ class Processor
             $this->triggers->push($trigger);
         }
 
+    }
+
+    /**
+     * Run the actions
+     *
+     * @return void
+     * @throws FireflyException
+     */
+    private function actions(): void
+    {
+        /**
+         * @var int
+         * @var RuleAction $action
+         */
+        foreach ($this->actions as $action) {
+            /** @var ActionInterface $actionClass */
+            $actionClass = ActionFactory::getAction($action);
+            Log::debug(sprintf('Fire action %s on journal #%d', get_class($actionClass), $this->journal->id));
+            $actionClass->act($this->journal);
+            if ($action->stop_processing) {
+                Log::debug('Stop processing now and break.');
+                break;
+            }
+        }
+    }
+
+    /**
+     * Method to check whether the current transaction would be triggered
+     * by the given list of triggers.
+     *
+     * @return bool
+     */
+    private function triggered(): bool
+    {
+        Log::debug('start of Processor::triggered()');
+        $foundTriggers = $this->getFoundTriggers();
+        $hitTriggers   = 0;
+        Log::debug(sprintf('Found triggers starts at %d', $foundTriggers));
+        /** @var AbstractTrigger $trigger */
+        foreach ($this->triggers as $trigger) {
+            ++$foundTriggers;
+            Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
+            /** @var AbstractTrigger $trigger */
+            if ($trigger->triggered($this->journal)) {
+                Log::debug('Is a match!');
+                ++$hitTriggers;
+                // is non-strict? then return true!
+                if (!$this->strict && UserAction::class !== get_class($trigger)) {
+                    Log::debug('Rule is set as non-strict, return true!');
+
+                    return true;
+                }
+                if (!$this->strict && UserAction::class === get_class($trigger)) {
+                    Log::debug('Rule is set as non-strict, but action was "user-action". Will not return true.');
+                }
+            }
+            if ($trigger->stopProcessing) {
+                Log::debug('Stop processing this trigger and break.');
+                break;
+            }
+        }
+        $result = ($hitTriggers === $foundTriggers && $foundTriggers > 0);
+        Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
+
+        return $result;
     }
 }

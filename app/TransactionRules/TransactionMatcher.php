@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
@@ -78,7 +79,7 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function findTransactionsByRule(): array
     {
@@ -108,7 +109,7 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function findTransactionsByTriggers(): array
     {

@@ -49,8 +49,8 @@ class SpectreRoutine implements RoutineInterface
      *
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function run(): void
     {

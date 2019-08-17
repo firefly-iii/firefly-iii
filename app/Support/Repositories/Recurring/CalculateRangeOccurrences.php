@@ -70,7 +70,7 @@ trait CalculateRangeOccurrences
      * @param string $moment
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getMonthlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -150,7 +150,7 @@ trait CalculateRangeOccurrences
      * @param string $moment
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -194,7 +194,7 @@ trait CalculateRangeOccurrences
      * @param string $moment
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getYearlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {

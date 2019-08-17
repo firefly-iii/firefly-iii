@@ -81,7 +81,7 @@ class MappedValuesValidator
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function validate(array $mappings): array
     {

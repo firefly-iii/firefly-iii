@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -57,7 +58,7 @@ class ConvertToDeposit implements ActionInterface
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function act(TransactionJournal $journal): bool
     {
@@ -121,7 +122,7 @@ class ConvertToDeposit implements ActionInterface
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function convertTransfer(TransactionJournal $journal): bool
     {
@@ -163,7 +164,7 @@ class ConvertToDeposit implements ActionInterface
      * @param TransactionJournal $journal
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function convertWithdrawal(TransactionJournal $journal): bool
     {

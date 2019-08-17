@@ -39,7 +39,7 @@ class ListCustomersRequest extends SpectreRequest
     /**
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function call(): void
     {

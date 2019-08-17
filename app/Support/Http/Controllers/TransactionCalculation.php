@@ -109,8 +109,6 @@ trait TransactionCalculation
      * @param Carbon $end
      *
      * @return array
-     *
-     *
      */
     protected function getExpensesInCategories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): array
     {
@@ -175,8 +173,6 @@ trait TransactionCalculation
      * @param Carbon $end
      *
      * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getIncomeForTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): array
     {

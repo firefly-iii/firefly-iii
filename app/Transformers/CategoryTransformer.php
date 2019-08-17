@@ -24,10 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;

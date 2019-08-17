@@ -53,8 +53,8 @@ use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV3;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
-use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\ExpandedForm;
+use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Form\AccountForm;
 use FireflyIII\Support\Form\CurrencyForm;
 use FireflyIII\Support\Form\PiggyBankForm;
@@ -63,9 +63,9 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
-use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Rule;
+use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
@@ -80,7 +80,7 @@ use Validator;
  * Class FireflyServiceProvider.
  *
  * @codeCoverageIgnore
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class FireflyServiceProvider extends ServiceProvider
 {
@@ -108,7 +108,7 @@ class FireflyServiceProvider extends ServiceProvider
     /**
      * Register stuff.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function register(): void
     {

@@ -67,7 +67,7 @@ use Log;
 
 /**
  * Class CreateRecurringTransactions.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  *
  */
 class CreateRecurringTransactions implements ShouldQueue
@@ -228,7 +228,7 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon $date
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     private function getTransactionData(Recurrence $recurrence, Carbon $date): array
     {
@@ -441,8 +441,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     *
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {
