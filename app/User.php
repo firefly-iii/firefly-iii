@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Eloquent;
+use Exception;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
@@ -43,66 +45,75 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\Token;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class User.
  *
- * @property int        $id
- * @property string     $email
- * @property bool       $isAdmin used in admin user controller.
- * @property bool       $has2FA  used in admin user controller.
- * @property array      $prefs   used in admin user controller.
- * @property string     password
- * @property string $mfa_secret
- * @property Collection roles
- * @property string     blocked_code
- * @property bool       blocked
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $remember_token
- * @property string|null $reset
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AvailableBudget[] $availableBudgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Bill[] $bills
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\CurrencyExchangeRate[] $currencyExchangeRates
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[] $importJobs
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[] $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Recurrence[] $recurrences
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[] $ruleGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactionGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereBlocked($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereBlockedCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereReset($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property int                                                                                $id
+ * @property string                                                                             $email
+ * @property bool                                                                               $isAdmin used in admin user
+ *           controller.
+ * @property bool                                                                                                           $has2FA  used in admin user
+ *           controller.
+ * @property array                                                                                                          $prefs   used in admin user
+ *           controller.
+ * @property string                                                                                                         password
+ * @property string                                                                                                         $mfa_secret
+ * @property Collection                                                                                                     roles
+ * @property string                                                                                                         blocked_code
+ * @property bool                                                            blocked
+ * @property Carbon|null                                 $created_at
+ * @property Carbon|null                                 $updated_at
+ * @property string|null                                                     $remember_token
+ * @property string|null                                                     $reset
+ * @property-read \Illuminate\Database\Eloquent\Collection|Account[]         $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]      $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|AvailableBudget[] $availableBudgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|Bill[]            $bills
+ * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]          $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|Category[]        $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|Client[]                     $clients
+ * @property-read \Illuminate\Database\Eloquent\Collection|CurrencyExchangeRate[]          $currencyExchangeRates
+ * @property-read \Illuminate\Database\Eloquent\Collection|ImportJob[]                          $importJobs
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[]                         $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBank[]                          $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|Preference[]                         $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection|Recurrence[]                  $recurrences
+ * @property-read \Illuminate\Database\Eloquent\Collection|RuleGroup[]                               $ruleGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|Rule[]                                                           $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]                                                            $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection|Token[]                                                          $tokens
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[]                                               $transactionGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                                             $transactionJournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]                                                    $transactions
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User query()
+ * @method static Builder|User whereBlocked($value)
+ * @method static Builder|User whereBlockedCode($value)
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereReset($value)
+ * @method static Builder|User whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class User extends Authenticatable
 {
@@ -238,7 +249,7 @@ class User extends Authenticatable
      * Generates access token.
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateAccessToken(): string
     {
@@ -295,7 +306,7 @@ class User extends Authenticatable
      * @codeCoverageIgnore
      * Link to roles.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function roles(): BelongsToMany
     {
