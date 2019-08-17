@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Category;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -63,7 +62,7 @@ class CategoryFactory
      * @param null|string $categoryName
      *
      * @return Category|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {

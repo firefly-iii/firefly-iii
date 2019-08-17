@@ -79,7 +79,7 @@ class TransactionCurrencyFactory
      * @param null|string $currencyCode
      *
      * @return TransactionCurrency|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {

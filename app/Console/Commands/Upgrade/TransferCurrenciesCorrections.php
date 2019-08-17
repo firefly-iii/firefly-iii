@@ -291,8 +291,6 @@ class TransferCurrenciesCorrections extends Command
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @param TransactionJournal $transfer
      */
     private function updateTransferCurrency(TransactionJournal $transfer): void

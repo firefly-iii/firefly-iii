@@ -236,7 +236,7 @@ class MigrateToGroups extends Command
      * @param TransactionJournal $journal
      *
      * @throws Exception
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {

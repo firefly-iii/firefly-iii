@@ -43,8 +43,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     *
      * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)

@@ -248,8 +248,8 @@ class OtherCurrenciesCorrections extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param TransactionJournal $journal
+     *
      * @return Transaction|null
      */
     private function getLeadTransaction(TransactionJournal $journal): ?Transaction

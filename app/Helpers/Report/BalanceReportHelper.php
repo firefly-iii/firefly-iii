@@ -43,8 +43,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     *
      * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)

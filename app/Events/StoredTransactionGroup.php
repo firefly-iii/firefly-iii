@@ -36,16 +36,15 @@ class StoredTransactionGroup extends Event
 {
     use SerializesModels;
 
+    public $applyRules;
     /** @var TransactionGroup The group that was stored. */
     public $transactionGroup;
-
-    public $applyRules;
 
     /**
      * Create a new event instance.
      *
      * @param TransactionGroup $transactionGroup
-     * @param bool $applyRules
+     * @param bool             $applyRules
      */
     public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true)
     {
