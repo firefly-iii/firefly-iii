@@ -220,7 +220,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($meta as $metaEntry) {
             if ('piggy_bank_id' === $metaEntry->name) {
                 $piggyId = (int)$metaEntry->value;
-                return $this->user->piggyBanks()->where('id', $piggyId)->first(['piggy_banks.*']);
+                return $this->user->piggyBanks()->where('piggy_banks.id', $piggyId)->first(['piggy_banks.*']);
             }
         }
 
