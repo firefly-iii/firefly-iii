@@ -1,4 +1,4 @@
-FROM jc5x/firefly-iii-base-image:test
+FROM jc5x/firefly-iii-base-image:latest
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
 LABEL version="1.5" maintainer="thegrumpydictator@gmail.com"
 
