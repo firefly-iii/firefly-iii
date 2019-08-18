@@ -29,7 +29,7 @@
             <input type="date" class="form-control" :name="name"
                    :title="title" autocomplete="off"
                    ref="date"
-                   :value="value.substr(0,10)" @input="handleInput"
+                   :value="value ? value.substr(0,10): ''" @input="handleInput"
                    :placeholder="title">
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
