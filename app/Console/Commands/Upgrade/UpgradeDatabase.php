@@ -53,6 +53,7 @@ class UpgradeDatabase extends Command
      */
     public function handle(): int
     {
+
         $this->callInitialCommands();
 
 
@@ -71,7 +72,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:back-to-journals',
             'firefly-iii:rename-account-meta',
 
-            // there are 13 verify commands.
+            // there are 14 verify commands.
             'firefly-iii:fix-piggies',
             'firefly-iii:create-link-types',
             'firefly-iii:create-access-tokens',
@@ -85,6 +86,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:delete-empty-groups',
             'firefly-iii:fix-account-types',
             'firefly-iii:rename-meta-fields',
+            'firefly-iii:fix-ob-currencies',
 
             // two report commands
             'firefly-iii:report-empty-objects',
@@ -103,8 +105,8 @@ class UpgradeDatabase extends Command
             $result = Artisan::output();
             echo $result;
         }
-
         // set new DB version.
+        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
         // index will set FF3 version.
         app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
@@ -113,8 +115,21 @@ class UpgradeDatabase extends Command
 
     private function callInitialCommands(): void
     {
-        Artisan::call('migrate', ['--seed' => true]);
+        $this->line('Now seeding the database...');
+        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        $result = Artisan::output();
+        echo $result;
+
+        $this->line('Now decrypting the database (if necessary)...');
         Artisan::call('firefly-iii:decrypt-all');
+        $result = Artisan::output();
+        echo $result;
+
+        $this->line('Now installing OAuth2 keys...');
         Artisan::call('passport:install');
+        $result = Artisan::output();
+        echo $result;
+
+        $this->line('Done!');
     }
 }

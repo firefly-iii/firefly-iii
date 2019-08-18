@@ -243,6 +243,7 @@ trait AccountServiceTrait
                     'destination_id'   => $destId,
                     'destination_name' => $destName,
                     'user'             => $account->user_id,
+                    'currency_id'      => $data['currency_id'],
                     'order'            => 0,
                     'amount'           => $amount,
                     'foreign_amount'   => null,

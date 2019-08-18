@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="this.enabledCurrencies.length > 1">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="this.enabledCurrencies.length > 0">
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]"
                     v-if="this.enabledCurrencies.length > 0" @input="handleInput">
