@@ -931,9 +931,9 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         $existing = $this->user->availableBudgets()
-                               ->where('transaction_currency_id', $data['transaction_currency_id'])
-                               ->where('start_date', $data['start_date']->format('Y-m-d 00:00:00'))
-                               ->where('end_date', $data['end_date']->format('Y-m-d 00:00:00'))
+                               ->where('transaction_currency_id', $data['currency_id'])
+                               ->where('start_date', $data['start']->format('Y-m-d 00:00:00'))
+                               ->where('end_date', $data['end']->format('Y-m-d 00:00:00'))
                                ->where('id', '!=', $availableBudget->id)
                                ->first();
 
@@ -941,8 +941,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             throw new FireflyException(sprintf('An entry already exists for these parameters: available budget object with ID #%d', $existing->id));
         }
         $availableBudget->transaction_currency_id = $data['currency_id'];
-        $availableBudget->start_date              = $data['start_date'];
-        $availableBudget->end_date                = $data['end_date'];
+        $availableBudget->start_date              = $data['start'];
+        $availableBudget->end_date                = $data['end'];
         $availableBudget->amount                  = $data['amount'];
         $availableBudget->save();
 
