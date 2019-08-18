@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -43,21 +45,24 @@ class ReportNewJournalsMail extends Mailable
     /** @var string IP address of user (if known) */
     public $ipAddress;
 
-    /** @var Collection A collection of journals */
-    public $journals;
+    /** @var Collection A collection of groups */
+    public $groups;
+
+    /** @var array All groups, transformed to array. */
+    public $transformed;
 
     /**
      * ConfirmEmailChangeMail constructor.
      *
      * @param string     $email
      * @param string     $ipAddress
-     * @param Collection $journals
+     * @param Collection $groups
      */
-    public function __construct(string $email, string $ipAddress, Collection $journals)
+    public function __construct(string $email, string $ipAddress, Collection $groups)
     {
         $this->email     = $email;
         $this->ipAddress = $ipAddress;
-        $this->journals  = $journals;
+        $this->groups    = $groups;
     }
 
     /**
@@ -67,13 +72,25 @@ class ReportNewJournalsMail extends Mailable
      */
     public function build(): self
     {
-        $subject = 1 === $this->journals->count()
+        $subject           = 1 === $this->groups->count()
             ? 'Firefly III has created a new transaction'
             : sprintf(
-                'Firefly III has created new %d transactions', $this->journals->count()
+                'Firefly III has created new %d transactions', $this->groups->count()
             );
+        $this->transform();
 
         return $this->view('emails.report-new-journals-html')->text('emails.report-new-journals-text')
                     ->subject($subject);
+    }
+
+    private function transform(): void
+    {
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
+
+        /** @var TransactionGroup $group */
+        foreach ($this->groups as $group) {
+            $this->transformed[] = $transformer->transformObject($group);
+        }
     }
 }

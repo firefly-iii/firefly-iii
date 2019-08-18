@@ -55,10 +55,10 @@ class AutomationHandler
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull($event->userId);
-        if (null !== $user && 0 !== $event->journals->count()) {
+        if (null !== $user && 0 !== $event->groups->count()) {
             try {
                 Log::debug('Trying to mail...');
-                Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->journals));
+                Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->groups));
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::debug('Send message failed! :(');

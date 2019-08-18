@@ -60,8 +60,8 @@ class RequestedReportOnJournals
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var Collection The journals to report on. */
-    public $journals;
+    /** @var Collection The transaction groups to report on. */
+    public $groups;
     /** @var int The ID of the user. */
     public $userId;
 
@@ -69,13 +69,13 @@ class RequestedReportOnJournals
      * Create a new event instance.
      *
      * @param int        $userId
-     * @param Collection $journals
+     * @param Collection $groups
      */
-    public function __construct(int $userId, Collection $journals)
+    public function __construct(int $userId, Collection $groups)
     {
         Log::debug('In event RequestedReportOnJournals.');
         $this->userId   = $userId;
-        $this->journals = $journals;
+        $this->groups = $groups;
     }
 
     /**

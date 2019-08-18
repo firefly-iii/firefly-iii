@@ -1,34 +1,83 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {% if journals.count == 1 %}
-        Firefly III has created a transaction for you.
+    {% if transformed|length == 1 %}
+        Firefly III has created a transaction for you. You can find it in your Firefly III installation:
     {% endif %}
-    {% if journals.count > 1 %}
-        Firefly III has created {{ journals.count }} transactions for you.
+    {% if transformed|length > 1 %}
+        Firefly III has created {{ groups.count }} transactions for you. You can find them in your Firefly III installation:
     {% endif %}
 </p>
 
+<!-- loop groups -->
+<ol>
+    {% for group in transformed %}
+        <li>
+            {% set count = group.transactions|length %}
+            <!-- if journals === 1, skip straight to journals. -->
+            {% if 1 == count %}
+                {% set journal = group.transactions[0] %}
+                <a href="{{ route('transactions.show', [group.id]) }}">{{ journal.description }}</a>,
+                <!-- amount -->
+                {% if journal.type == 'deposit' %}
+                    <span style="color:#3c763d;">
+                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                        {% if null != journal.foreign_amount*-1 %}
+                            ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                        {% endif %}
+                  </span>
+                {% elseif journal.type == 'transfer' %}
+                    <span style="color:#31708f">
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                        {% if null != journal.foreign_amount %}
+                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                        {% endif %}
+                </span>
+                {% else %}
+                    <span style="color:#a94442">
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                        {% if null != journal.foreign_amount %}
+                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                        {% endif %}
+                    </span>
 
-{% if journals.count == 1 %}
-    <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-        You can find it in your Firefly III installation:<br />
-        {% for journal in journals %}
-            <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> (AMOUNT TODO)
-        {% endfor %}
-    </p>
-{% endif %}
+                {% endif %}
+                <!-- / amount -->
+            {% else %}
+                <a href="{{ route('transactions.show', [group.id]) }}">{{ group.group_title }}</a>
+                <ol>
+                    {% for journal in group.transactions %}
+                    <li>
+                        {{ journal.description }},
+                        <!-- amount -->
+                        {% if journal.type == 'deposit' %}
+                            <span style="color:#3c763d;">
+                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                {% if null != journal.foreign_amount*-1 %}
+                                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                {% endif %}
+                  </span>
+                        {% elseif journal.type == 'transfer' %}
+                            <span style="color:#31708f">
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                {% if null != journal.foreign_amount %}
+                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                {% endif %}
+                </span>
+                        {% else %}
+                            <span style="color:#a94442">
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                {% if null != journal.foreign_amount %}
+                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                {% endif %}
+                    </span>
 
-{% if journals.count > 1 %}
-    <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-        You can find them in your Firefly III installation:
-    </p>
-    <ul>
-        {% for journal in journals %}
-            <li>
-                <a href="{{ route('transactions.show', journal.id) }}">{{ journal.description }}</a> (AMOUNT TODO)
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
 
 {% include 'emails.footer-html' %}
