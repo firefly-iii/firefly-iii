@@ -30,6 +30,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Log;
 
@@ -58,6 +59,9 @@ class AccountDestroyService
      */
     public function destroy(Account $account, ?Account $moveTo): void
     {
+        // find and delete opening balance journal + opposing account
+        $this->destroyOpeningBalance($account);
+
         if (null !== $moveTo) {
             $this->moveTransactions($account, $moveTo);
             $this->updateRecurrences($account, $moveTo);
@@ -71,6 +75,10 @@ class AccountDestroyService
 
         // delete piggy banks:
         PiggyBank::where('account_id', $account->id)->delete();
+
+        // delete account meta:
+        $account->accountMeta()->delete();
+
 
         // delete account.
         try {
@@ -99,6 +107,43 @@ class AccountDestroyService
                 Log::debug('Call for deletion of journal #' . $journal->id);
                 $service->destroy($journal);
             }
+        }
+    }
+
+    /**
+     * @param Account $account
+     */
+    private function destroyOpeningBalance(Account $account): void
+    {
+        Log::debug(sprintf('Searching for opening balance for account #%d "%s"', $account->id, $account->name));
+        $set = $account->transactions()
+                       ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                       ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                       ->where('transaction_types.type', TransactionType::OPENING_BALANCE)
+                       ->get(['transactions.transaction_journal_id']);
+        if ($set->count() > 0) {
+            $journalId = (int)$set->first()->transaction_journal_id;
+            Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
+
+            // get transactions with this journal (should be just one):
+            $transactions = Transaction
+                ::where('transaction_journal_id', $journalId)
+                ->where('account_id', '!=', $account->id)
+                ->get();
+            /** @var Transaction $transaction */
+            foreach ($transactions as $transaction) {
+                Log::debug(sprintf('Found transaction with ID #%d', $transaction->id));
+                $ibAccount = $transaction->account;
+                Log::debug(sprintf('Connected to account #%d "%s"', $ibAccount->id, $ibAccount->name));
+
+                $ibAccount->accountMeta()->delete();
+                $transaction->delete();
+                $ibAccount->delete();
+            }
+            $journal = TransactionJournal::find($journalId);
+            /** @var JournalDestroyService $service */
+            $service = app(JournalDestroyService::class);
+            $service->destroy($journal);
         }
     }
 
