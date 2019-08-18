@@ -55,6 +55,15 @@ interface CurrencyRepositoryInterface
     public function currencyInUse(TransactionCurrency $currency): bool;
 
     /**
+     * Currency is in use where exactly.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return string|null
+     */
+    public function currencyInUseAt(TransactionCurrency $currency): ?string;
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
