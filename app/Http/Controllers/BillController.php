@@ -54,6 +54,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -124,7 +125,7 @@ class BillController extends Controller
      * Destroy a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -143,7 +144,7 @@ class BillController extends Controller
      * Edit a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -232,35 +233,45 @@ class BillController extends Controller
      * Rescan bills for transactions.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, Bill $bill)
     {
+        $total = 0;
         if (false === $bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
+
+            return redirect(route('bills.show', [$bill->id]));
         }
+        $set = new Collection;
         if (true === $bill->active) {
             $set   = $this->billRepository->getRulesForBill($bill);
             $total = 0;
-            foreach ($set as $rule) {
-                // simply fire off all rules?
-                /** @var TransactionMatcher $matcher */
-                $matcher = app(TransactionMatcher::class);
-                $matcher->setSearchLimit(100000); // large upper limit
-                $matcher->setTriggeredLimit(100000); // large upper limit
-                $matcher->setRule($rule);
-                $matchingTransactions = $matcher->findTransactionsByRule();
-                $total                += count($matchingTransactions);
-                $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
-            }
-
-
-            $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
-            app('preferences')->mark();
         }
+        if (0 === $set->count()) {
+            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
+
+            return redirect(route('bills.show', [$bill->id]));
+        }
+
+        foreach ($set as $rule) {
+            // simply fire off all rules?
+            /** @var TransactionMatcher $matcher */
+            $matcher = app(TransactionMatcher::class);
+            $matcher->setSearchLimit(100000); // large upper limit
+            $matcher->setTriggeredLimit(100000); // large upper limit
+            $matcher->setRule($rule);
+            $matchingTransactions = $matcher->findTransactionsByRule();
+            $total                += count($matchingTransactions);
+            $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
+        }
+
+
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
+        app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));
     }
@@ -269,7 +280,7 @@ class BillController extends Controller
      * Show a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -325,6 +336,7 @@ class BillController extends Controller
                 }
             );
         }
+
         // @codeCoverageIgnoreEnd
 
 
@@ -368,7 +380,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillFormRequest $request
-     * @param Bill $bill
+     * @param Bill            $bill
      *
      * @return RedirectResponse
      */

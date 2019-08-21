@@ -415,10 +415,10 @@ class BillRepository implements BillRepositoryInterface
     {
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
-            [
-                'transaction_journals.id', 'transaction_journals.date',
-                'transaction_journals.transaction_group_id',
-            ]
+                [
+                    'transaction_journals.id', 'transaction_journals.date',
+                    'transaction_journals.transaction_group_id',
+                ]
             );
     }
 
@@ -544,14 +544,14 @@ class BillRepository implements BillRepositoryInterface
     /**
      * Link a set of journals to a bill.
      *
-     * @param Bill       $bill
+     * @param Bill  $bill
      * @param array $transactions
      */
     public function linkCollectionToBill(Bill $bill, array $transactions): void
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $journal          = $transaction->transactionJournal;
+            $journal          = $bill->user->transactionJournals()->find((int)$transaction['transaction_journal_id']);
             $journal->bill_id = $bill->id;
             $journal->save();
             Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
