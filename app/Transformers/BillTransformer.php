@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -109,11 +110,11 @@ class BillTransformer extends AbstractTransformer
         if (0 === $dates->count()) {
             return $default; // @codeCoverageIgnore
         }
-        $latest = $dates->first();
-        /** @var Carbon $date */
-        foreach ($dates as $date) {
-            if ($date->gte($latest)) {
-                $latest = $date;
+        $latest = $dates->first()->date;
+        /** @var TransactionJournal $date */
+        foreach ($dates as $journal) {
+            if ($journal->date->gte($latest)) {
+                $latest = $journal->date;
             }
         }
 
@@ -160,11 +161,6 @@ class BillTransformer extends AbstractTransformer
 
         $set = $this->repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
         Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
-        $simple = $set->map(
-            function (Carbon $date) {
-                return $date->format('Y-m-d');
-            }
-        );
 
         // calculate next expected match:
         $lastPaidDate = $this->lastPaidDate($set, $this->parameters->get('start'));
@@ -173,13 +169,20 @@ class BillTransformer extends AbstractTransformer
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
         }
         $end          = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
-        $journalCount = $this->repository->getPaidDatesInRange($bill, $nextMatch, $end)->count();
-        if ($journalCount > 0) {
+        if ($set->count() > 0) {
             $nextMatch = clone $end;
+        }
+        $result = [];
+        foreach ($set as $entry) {
+            $result[] = [
+                'transaction_group_id'   => (int)$entry->transaction_group_id,
+                'transaction_journal_id' => (int)$entry->id,
+                'date'                   => $entry->date->format('Y-m-d'),
+            ];
         }
 
         return [
-            'paid_dates'          => $simple->toArray(),
+            'paid_dates'          => $result,
             'next_expected_match' => $nextMatch->format('Y-m-d'),
         ];
     }

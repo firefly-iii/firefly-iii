@@ -96,10 +96,10 @@
             Don't care about pay_dates.
             #}
             {% if entry.paid_dates|length > 0 and entry.active %}
-                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0] }}">
-                    {% for transaction_id, date in entry.paid_dates %}
-                        <a href="{{ route('transactions.show',transaction_id) }}">
-                            {{ formatDate(date, monthAndDayFormat) }}
+                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0].date }}">
+                    {% for currentPaid in entry.paid_dates %}
+                        <a href="{{ route('transactions.show',currentPaid.transaction_group_id) }}">
+                            {{ formatDate(currentPaid.date, monthAndDayFormat) }}
                         </a>
                         <br/>
                     {% endfor %}
