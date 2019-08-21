@@ -51,8 +51,8 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class AccountTasker implements AccountTaskerInterface
             $entry['end_balance']   = $endSet[$account->id] ?? '0';
 
             // first journal exists, and is on start, then this is the actual opening balance:
-            if (null !== $first && $first->date->isSameDay($start)) {
+            if (null !== $first && $first->date->isSameDay($start) && TransactionType::OPENING_BALANCE === $first->transactionType->type) {
                 Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
                 Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
@@ -124,8 +124,8 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return array
@@ -159,8 +159,8 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return array
@@ -216,11 +216,11 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId                 = (int)$journal['destination_account_id'];
-            $currencyId               = (int)$journal['currency_id'];
-            $key                      = sprintf('%s-%s', $sourceId, $currencyId);
-            $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
-            $report['accounts'][$key] = $report['accounts'][$key] ?? [
+            $sourceId                        = (int)$journal['destination_account_id'];
+            $currencyId                      = (int)$journal['currency_id'];
+            $key                             = sprintf('%s-%s', $sourceId, $currencyId);
+            $currencies[$currencyId]         = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
+            $report['accounts'][$key]        = $report['accounts'][$key] ?? [
                     'id'                      => $sourceId,
                     'name'                    => $journal['destination_account_name'],
                     'sum'                     => '0',
@@ -255,6 +255,7 @@ class AccountTasker implements AccountTaskerInterface
                 ];
             $report['sums'][$currencyId]['sum'] = bcadd($report['sums'][$currencyId]['sum'], $report['accounts'][$key]['sum']);
         }
+
         return $report;
     }
 
@@ -276,9 +277,9 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId                 = (int)$journal['source_account_id'];
-            $currencyId               = (int)$journal['currency_id'];
-            $key                      = sprintf('%s-%s', $sourceId, $currencyId);
+            $sourceId   = (int)$journal['source_account_id'];
+            $currencyId = (int)$journal['currency_id'];
+            $key        = sprintf('%s-%s', $sourceId, $currencyId);
             if (!isset($report['accounts'][$key])) {
                 $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
                 $report['accounts'][$key] = [
