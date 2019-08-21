@@ -534,20 +534,27 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-        $piggyBank->name         = $data['name'];
-        $piggyBank->account_id   = (int)$data['account_id'];
-        $piggyBank->targetamount = $data['targetamount'];
-        $piggyBank->targetdate   = $data['targetdate'];
+        if (isset($data['name']) && '' !== $data['name']) {
+            $piggyBank->name = $data['name'];
+        }
+        if (isset($data['account_id']) && 0 !== $data['account_id']) {
+            $piggyBank->account_id = (int)$data['account_id'];
+        }
+        if (isset($data['targetamount']) && '' !== $data['targetamount']) {
+            $piggyBank->targetamount = $data['targetamount'];
+        }
+        if (isset($data['targetdate']) && '' !== $data['targetdate']) {
+            $piggyBank->targetdate = $data['targetdate'];
+        }
         $piggyBank->startdate    = $data['startdate'] ?? $piggyBank->startdate;
-
         $piggyBank->save();
 
-        $this->updateNote($piggyBank, $data['notes']);
+        $this->updateNote($piggyBank, $data['notes'] ?? '');
 
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
-        if ($repetition->currentamount > $piggyBank->targetamount) {
+        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount) {
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
 
@@ -560,10 +567,34 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return PiggyBank
+     */
+    public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
+    {
+        $repetition = $this->getRepetition($piggyBank);
+        if (null === $repetition) {
+            return $piggyBank;
+        }
+        $max = $piggyBank->targetamount;
+        if (1 === bccomp($amount, $max)) {
+            $amount = $max;
+        }
+        $repetition->currentamount = $amount;
+        $repetition->save();
+
+        // create event
+        $this->createEvent($piggyBank, $amount);
+
+        return $piggyBank;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
      * @param string $note
      *
      * @return bool
-     * @throws \Exception
      */
     private function updateNote(PiggyBank $piggyBank, string $note): bool
     {
