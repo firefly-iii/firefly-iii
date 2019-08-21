@@ -104,7 +104,7 @@
                                 </td>
                                 <td>
                                     {% for journal in groupArray.transactions %}
-                                        <a href="{{ route('accounts.show',journal.source_id) }}"
+                                        <a href="{{ route('accounts.show',journal.destination_id) }}"
                                            title="{{ journal.destination_iban|default(journal.destination_name) }}">
                                             {{ journal.destination_name }}
                                         </a>
