@@ -35,7 +35,10 @@
         <component
                 :error="error.payment_date"
                 v-model="value.payment_date" v-if="this.fields.payment_date" name="payment_date[]" title="Payment date" v-bind:is="dateComponent"></component>
-        <component v-model="value.invoice_date" v-if="this.fields.invoice_date" name="invoice_date[]" title="Invoice date" v-bind:is="dateComponent"></component>
+
+        <component
+                :error="error.invoice_date"
+                v-model="value.invoice_date" v-if="this.fields.invoice_date" name="invoice_date[]" title="Invoice date" v-bind:is="dateComponent"></component>
 
         <component
                 :error="error.internal_reference"
