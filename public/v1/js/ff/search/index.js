@@ -42,17 +42,6 @@ function presentSearchResults(data) {
     $('.search_box').find('.overlay').remove();
     $('.search_results').html(data.html).show();
 
-    $('.select_all_single').unbind('change').change(function () {
-        countChecked();
-    });
-    // make sure select button works:
-    $('input[name="select_all"]').change(function () {
-        if (this.checked) {
-            checkAll();
-            countChecked();
-        } else {
-            uncheckAll();
-            countChecked();
-        }
-    });
+
+    updateListButtons();
 }
