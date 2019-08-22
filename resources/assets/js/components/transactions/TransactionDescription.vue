@@ -31,7 +31,7 @@
                     ref="descr"
                     autocomplete="off"
                     placeholder="Description"
-                    @input="handleInput"
+                    :value="value" @input="handleInput"
             >
             <typeahead
                     :open-on-empty=true
@@ -61,6 +61,7 @@
             return {
                 descriptionAutoCompleteURI: null,
                 name: null,
+                value: null,
                 description: null,
                 target: null,
             }
@@ -70,7 +71,7 @@
                 return this.error.length > 0;
             },
             handleInput(e) {
-                //this.$emit('input', this.$refs.descr.value);
+                this.$emit('input', this.$refs.descr.value);
             },
             handleEnter: function (e) {
                 // todo feels sloppy
