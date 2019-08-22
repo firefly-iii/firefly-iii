@@ -85,12 +85,14 @@ class BudgetReportHelper implements BudgetReportHelperInterface
             $budgetLimits    = $this->repository->getBudgetLimits($budget, $start, $end);
             $expenses        = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
             $defaultCurrency = app('amount')->getDefaultCurrencyByUser($budget->user);
+            Log::debug(sprintf('Default currency for getBudgetReport is %s', $defaultCurrency->code));
             if (0 === count($expenses)) {
                 // list the budget limits, basic amounts.
                 /** @var BudgetLimit $limit */
                 foreach ($budgetLimits as $limit) {
                     $currency = $limit->transactionCurrency ?? $defaultCurrency;
-                    $row      = [
+                    Log::debug(sprintf('Default currency for limit #%d is %s', $limit->id, $currency->code));
+                    $row = [
                         'limit_id'                => $limit->id,
                         'start_date'              => $limit->start_date,
                         'end_date'                => $limit->end_date,
