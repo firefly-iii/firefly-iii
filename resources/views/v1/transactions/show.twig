@@ -86,10 +86,14 @@
                                 </td>
                                 <td>
                                     {% for journal in groupArray.transactions %}
-                                        <a href="{{ route('accounts.show',journal.source_id) }}"
-                                           title="{{ journal.source_iban|default(journal.source_name) }}">
-                                            {{ journal.source_name }}
-                                        </a>
+                                        {% if 'Cash account' == journal.source_type %}
+                                            <span class="text-success">({{ 'cash'|_ }})</span>
+                                        {% else %}
+                                            <a href="{{ route('accounts.show',journal.source_id) }}"
+                                               title="{{ journal.source_iban|default(journal.source_name) }}">
+                                                {{ journal.source_name }}
+                                            </a>
+                                        {% endif %}
                                         {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
                                     {% endfor %}
                                 </td>
@@ -104,10 +108,14 @@
                                 </td>
                                 <td>
                                     {% for journal in groupArray.transactions %}
-                                        <a href="{{ route('accounts.show',journal.destination_id) }}"
-                                           title="{{ journal.destination_iban|default(journal.destination_name) }}">
-                                            {{ journal.destination_name }}
-                                        </a>
+                                        {% if 'Cash account' == journal.destination_type %}
+                                            <span class="text-success">({{ 'cash'|_ }})</span>
+                                        {% else %}
+                                            <a href="{{ route('accounts.show',journal.destination_id) }}"
+                                               title="{{ journal.destination_iban|default(journal.destination_name) }}">
+                                                {{ journal.destination_name }}
+                                            </a>
+                                        {% endif %}
                                         {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
                                     {% endfor %}
                                 </td>
@@ -172,8 +180,12 @@
                             <tr>
                                 <td colspan="2">
                                     <!-- type is: "{{ type }}" -->
-                                    <a href="{{ route('accounts.show', journal.source_id) }}"
-                                       title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
+                                    {% if 'Cash account' == journal.source_type %}
+                                        <span class="text-success">({{ 'cash'|_ }})</span>
+                                    {% else %}
+                                        <a href="{{ route('accounts.show', journal.source_id) }}"
+                                           title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
+                                    {% endif %}
                                     {% if type == 'Withdrawal' or type == 'Deposit' %}
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                     {% elseif type == 'Transfer' or type == 'Opening balance' %}
@@ -194,8 +206,12 @@
                                     {% endif %}
 
                                     &rarr;
-                                    <a href="{{ route('accounts.show', journal.destination_id) }}"
-                                       title="{{ journal.destination_iban|default(journal.destination_name) }}">{{ journal.destination_name }}</a>
+                                    {% if 'Cash account' == journal.destination_type %}
+                                        <span class="text-success">({{ 'cash'|_ }})</span>
+                                    {% else %}
+                                        <a href="{{ route('accounts.show', journal.destination_id) }}"
+                                           title="{{ journal.destination_iban|default(journal.destination_name) }}">{{ journal.destination_name }}</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% if null != journal.category_id %}
@@ -278,7 +294,8 @@
                                     <tr>
                                         <td style="width:120px;">
                                             <div class="btn-group btn-group-xs">
-                                                <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                                <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i
+                                                            class="fa fa-fw fa-arrows-h"></i></a>
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
