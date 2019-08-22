@@ -40,14 +40,6 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
-     * Set MFA code.
-     *
-     * @param User $user
-     * @param string|null $code
-     */
-    public function setMFACode(User $user, ?string $code): void;
-
-    /**
      * Gives a user a role.
      *
      * @param User   $user
@@ -64,9 +56,9 @@ interface UserRepositoryInterface
      * @param User   $user
      * @param string $newEmail
      *
+     * @return bool
      * @see updateEmail
      *
-     * @return bool
      */
     public function changeEmail(User $user, string $newEmail): bool;
 
@@ -163,6 +155,21 @@ interface UserRepositoryInterface
     public function hasRole(User $user, string $role): bool;
 
     /**
+     * Remove any role the user has.
+     *
+     * @param User $user
+     */
+    public function removeRole(User $user): void;
+
+    /**
+     * Set MFA code.
+     *
+     * @param User        $user
+     * @param string|null $code
+     */
+    public function setMFACode(User $user, ?string $code): void;
+
+    /**
      * @param array $data
      *
      * @return User
@@ -191,9 +198,9 @@ interface UserRepositoryInterface
      * @param User   $user
      * @param string $newEmail
      *
+     * @return bool
      * @see changeEmail
      *
-     * @return bool
      */
     public function updateEmail(User $user, string $newEmail): bool;
 }

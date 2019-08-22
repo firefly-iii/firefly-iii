@@ -24,7 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\UserRequest;
+use FireflyIII\Api\V1\Requests\UserStoreRequest;
+use FireflyIII\Api\V1\Requests\UserUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
@@ -155,11 +156,11 @@ class UserController extends Controller
     /**
      * Store a new user.
      *
-     * @param UserRequest $request
+     * @param UserStoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(UserRequest $request): JsonResponse
+    public function store(UserStoreRequest $request): JsonResponse
     {
         $data = $request->getAll();
         $user = $this->repository->store($data);
@@ -183,12 +184,12 @@ class UserController extends Controller
     /**
      * Update a user.
      *
-     * @param UserRequest $request
+     * @param UserUpdateRequest $request
      * @param User $user
      *
      * @return JsonResponse
      */
-    public function update(UserRequest $request, User $user): JsonResponse
+    public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
         $data = $request->getAll();
         $user = $this->repository->update($user, $data);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * UserRequest.php
+ * UserStoreRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -30,11 +30,9 @@ use FireflyIII\User;
 
 
 /**
- * Class UserRequest
- * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
+ * Class UserStoreRequest
  */
-class UserRequest extends Request
+class UserStoreRequest extends Request
 {
     /**
      * Authorize logged in users.
@@ -68,7 +66,7 @@ class UserRequest extends Request
     public function getAll(): array
     {
         $blocked = false;
-        if (null === $this->get('blocked')) {
+        if (null !== $this->get('blocked')) {
             $blocked = $this->boolean('blocked');
         }
         $data = [
@@ -88,23 +86,12 @@ class UserRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'email'        => 'required|email|unique:users,email,',
             'blocked'      => [new IsBoolean],
             'blocked_code' => 'in:email_changed',
             'role'         => 'in:owner,demo',
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                $user           = $this->route()->parameter('user');
-                $rules['email'] = 'required|email|unique:users,email,' . $user->id;
-                break;
-        }
-
-        return $rules;
     }
 
 }
