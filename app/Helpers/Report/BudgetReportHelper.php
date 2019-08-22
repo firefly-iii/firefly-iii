@@ -102,7 +102,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                         'currency_code'           => $currency->code,
                         'currency_name'           => $currency->name,
                         'currency_symbol'         => $currency->symbol,
-                        'currency_decimal_places' => $currency\->decimal_places,
+                        'currency_decimal_places' => $currency->decimal_places,
                     ];
 
                     $entry['rows'][] = $row;
