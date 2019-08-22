@@ -176,13 +176,7 @@ class AutoCompleteController extends Controller
         $filtered = $result->unique('description');
         $limited  = $filtered->slice(0, 15);
         $array    = $limited->toArray();
-        foreach ($array as $index => $item) {
-            // give another key for consistency
-            $array[$index]['name'] = $item['description'];
-        }
-
-
-        return response()->json($array);
+        return response()->json(array_values($array));
     }
 
     /**

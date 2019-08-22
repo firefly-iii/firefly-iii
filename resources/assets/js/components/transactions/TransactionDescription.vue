@@ -26,11 +26,22 @@
                     class="form-control"
                     name="description[]"
                     title="Description"
+                    v-on:keypress="handleEnter"
+                    v-on:submit.prevent
                     ref="descr"
                     autocomplete="off"
                     placeholder="Description"
-                    :value="value" @input="handleInput"
+                    @input="handleInput"
             >
+            <typeahead
+                    :open-on-empty=true
+                    :open-on-focus=true
+                    v-on:input="selectedItem"
+                    :async-src="descriptionAutoCompleteURI"
+                    v-model="name"
+                    :target="target"
+                    item-key="description"
+            ></typeahead>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -42,13 +53,43 @@
     export default {
         props: ['error', 'value', 'index'],
         name: "TransactionDescription",
+        mounted() {
+            this.target = this.$refs.descr;
+            this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/transaction-journals/all?search=";
+        },
+        data() {
+            return {
+                descriptionAutoCompleteURI: null,
+                name: null,
+                description: null,
+                target: null,
+            }
+        },
         methods: {
             hasError: function () {
                 return this.error.length > 0;
             },
             handleInput(e) {
-                this.$emit('input', this.$refs.descr.value);
-            }
+                //this.$emit('input', this.$refs.descr.value);
+            },
+            handleEnter: function (e) {
+                // todo feels sloppy
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            },
+            selectedItem: function (e) {
+                console.log('selectedItem for descr()');
+                // if (typeof this.name === 'undefined') {
+                //     return;
+                // }
+                // if(typeof this.name === 'string') {
+                //     console.log('Is a string.');
+                // }
+                // // emit the fact that the user selected a type of account
+                // // (influencing the destination)
+                // this.$emit('select:account', this.name);
+            },
         }
     }
 </script>
