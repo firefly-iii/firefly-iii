@@ -80,7 +80,7 @@ class CurrencyRequest extends Request
         $rules = [
             'name'           => 'required|between:1,255|unique:transaction_currencies,name',
             'code'           => 'required|between:3,3|unique:transaction_currencies,code',
-            'symbol'         => 'required|between:1,5|unique:transaction_currencies,symbol',
+            'symbol'         => 'required|between:1,8|unique:transaction_currencies,symbol',
             'decimal_places' => 'between:0,20|numeric|min:0|max:20',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
@@ -94,8 +94,8 @@ class CurrencyRequest extends Request
             case 'PATCH':
                 $currency        = $this->route()->parameter('currency_code');
                 $rules['name']   = 'required|between:1,255|unique:transaction_currencies,name,' . $currency->id;
-                $rules['code']   = 'required|between:1,255|unique:transaction_currencies,code,' . $currency->id;
-                $rules['symbol'] = 'required|between:1,255|unique:transaction_currencies,symbol,' . $currency->id;
+                $rules['code']   = 'required|between:3,3|unique:transaction_currencies,code,' . $currency->id;
+                $rules['symbol'] = 'required|between:1,8|unique:transaction_currencies,symbol,' . $currency->id;
                 break;
         }
 
