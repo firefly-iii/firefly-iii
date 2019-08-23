@@ -24,9 +24,11 @@
          v-bind:class="{ 'has-error': hasError()}"
          v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
         <div class="col-sm-12">
-            <select name="budget[]" ref="budget" @input="handleInput" class="form-control"
+            <select name="budget[]" ref="budget" v-model="value" @input="handleInput" class="form-control"
                     v-if="this.budgets.length > 0">
-                <option v-for="budget in this.budgets" :label="budget.name" :value="budget.id">{{budget.name}}</option>
+                <option v-for="cBudget in this.budgets"  :label="cBudget.name" :value="cBudget.id"
+
+                >{{cBudget.name}}</option>
             </select>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -41,6 +43,8 @@
         props: ['transactionType', 'value', 'error'],
         mounted() {
             this.loadBudgets();
+            console.log('budget value');
+            console.log(this.value);
         },
         data() {
             return {

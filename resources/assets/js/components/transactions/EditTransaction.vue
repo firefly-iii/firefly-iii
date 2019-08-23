@@ -147,13 +147,6 @@
                                             v-model="transaction.category"
                                             :error="transaction.errors.category"
                                     ></category>
-                                    <!--
-                                    <piggy-bank
-                                            :transactionType="transactionType"
-                                            v-model="transaction.piggy_bank"
-                                            :error="transaction.errors.piggy_bank"
-                                    ></piggy-bank>
-                                    -->
                                     <tags
                                             :tags="transaction.tags"
                                             v-model="transaction.tags"

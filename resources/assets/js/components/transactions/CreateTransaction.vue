@@ -369,9 +369,6 @@
             submit(e) {
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
-                if (this.resetFormAfter) {
-                    this.resetTransactions();
-                }
 
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);

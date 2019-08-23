@@ -61,7 +61,6 @@
             return {
                 descriptionAutoCompleteURI: null,
                 name: null,
-                value: null,
                 description: null,
                 target: null,
             }
