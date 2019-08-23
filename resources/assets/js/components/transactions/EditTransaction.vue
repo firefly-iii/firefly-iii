@@ -160,7 +160,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="btn btn-primary" @click="addTransaction">Add another split</button>
+                            <button class="btn btn-primary" type="button" @click="addTransaction">Add another split</button>
                         </div>
                     </div>
                 </div>
