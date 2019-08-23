@@ -1092,7 +1092,7 @@ try {
                 $title = limitStringLength($group->title);
             }
             if('opening balance' === $type) {
-                
+
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
                 return;
             }
