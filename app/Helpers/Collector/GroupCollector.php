@@ -95,10 +95,12 @@ class GroupCollector implements GroupCollectorInterface
             # journal
             'transaction_journals.id as transaction_journal_id',
             'transaction_journals.transaction_type_id',
-            'transaction_types.type as transaction_type_type',
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.order',
+
+            # types
+            'transaction_types.type as transaction_type_type',
 
             # source info (always present)
             'source.id as source_transaction_id',
@@ -122,7 +124,6 @@ class GroupCollector implements GroupCollectorInterface
             'foreign_currency.decimal_places as foreign_currency_decimal_places',
 
             # destination account info (always present)
-            #'destination.id as destination_transaction_id', // not interesting.
             'destination.account_id as destination_account_id',
         ];
     }
