@@ -38,7 +38,6 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -82,7 +81,7 @@ class BillController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -141,11 +140,7 @@ class BillController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $paginator = $this->repository->getPaginator($pageSize);
-        /** @var Collection $bills */
-        $bills = $paginator->getCollection();
-
+        $bills   = $this->repository->getBills();
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -164,7 +159,7 @@ class BillController extends Controller
      * List all of them.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -206,7 +201,7 @@ class BillController extends Controller
      * Show the specified bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -259,7 +254,7 @@ class BillController extends Controller
      *
      * @param Request $request
      *
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -318,7 +313,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillRequest $request
-     * @param Bill $bill
+     * @param Bill        $bill
      *
      * @return JsonResponse
      */

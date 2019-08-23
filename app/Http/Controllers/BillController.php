@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -194,8 +195,7 @@ class BillController extends Controller
     {
         $start           = session('start');
         $end             = session('end');
-        $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
-        $paginator       = $this->billRepository->getPaginator($pageSize);
+        $unfiltered      = $this->billRepository->getBills();
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $parameters      = new ParameterBag();
         $parameters->set('start', $start);
@@ -206,28 +206,34 @@ class BillController extends Controller
         $transformer->setParameters($parameters);
 
         /** @var Collection $bills */
-        $bills = $paginator->getCollection()->map(
+        $bills = $unfiltered->map(
             static function (Bill $bill) use ($transformer, $defaultCurrency) {
-                $return             = $transformer->transform($bill);
-                $return['currency'] = $bill->transactionCurrency ?? $defaultCurrency;
+                $return                            = $transformer->transform($bill);
+                $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
+                $return['currency_id']             = $currency->id;
+                $return['currency_name']           = $currency->name;
+                $return['currency_symbol']         = $currency->symbol;
+                $return['currency_code']           = $currency->code;
+                $return['currency_decimal_places'] = $currency->decimal_places;
 
                 return $return;
             }
         );
 
         // add info about rules:
-        $rules = $this->billRepository->getRulesForBills($paginator->getCollection());
+        $rules = $this->billRepository->getRulesForBills($unfiltered);
         $bills = $bills->map(
-            function (array $bill) use ($rules) {
+            static function (array $bill) use ($rules) {
                 $bill['rules'] = $rules[$bill['id']] ?? [];
 
                 return $bill;
             }
         );
 
-        $paginator->setPath(route('bills.index'));
+        // summarise per currency:
+        $sums = $this->getSums($bills);
 
-        return view('bills.index', compact('bills', 'paginator'));
+        return view('bills.index', compact('bills', 'sums'));
     }
 
     /**
@@ -412,5 +418,36 @@ class BillController extends Controller
         }
 
         return $redirect;
+    }
+
+    /**
+     * @param Collection $bills
+     *
+     * @return array
+     */
+    private function getSums(Collection $bills): array
+    {
+        $sums = [];
+
+        /** @var array $bill */
+        foreach ($bills as $bill) {
+            if (false === $bill['active']) {
+                continue;
+            }
+            /** @var TransactionCurrency $currency */
+            $currencyId                   = $bill['currency_id'];
+            $sums[$currencyId]            = $sums[$currencyId] ?? [
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $bill['currency_code'],
+                    'currency_name'           => $bill['currency_name'],
+                    'currency_symbol'         => $bill['currency_symbol'],
+                    'currency_decimal_places' => $bill['currency_decimal_places'],
+                    'avg'                 => '0',
+                ];
+            $avg                          = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+            $sums[$currencyId]['avg'] = bcadd($sums[$currencyId]['avg'], $avg);
+        }
+
+        return $sums;
     }
 }

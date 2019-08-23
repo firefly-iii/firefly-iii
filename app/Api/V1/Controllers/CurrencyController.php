@@ -223,9 +223,7 @@ class CurrencyController extends Controller
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $paginator  = $repository->getPaginator($pageSize);
-        /** @var Collection $bills */
-        $unfiltered = $paginator->getCollection();
+        $unfiltered  = $repository->getBills();
 
         // filter and paginate list:
         $collection = $unfiltered->filter(

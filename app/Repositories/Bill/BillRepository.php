@@ -172,9 +172,7 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->get();
-
-        return $set;
+        return $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->get();
     }
 
     /**
