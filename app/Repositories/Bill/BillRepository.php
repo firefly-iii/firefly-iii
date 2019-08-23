@@ -399,7 +399,9 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaginator(int $size): LengthAwarePaginator
     {
-        return $this->user->bills()->paginate($size);
+        return $this->user->bills()
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('name', 'ASC')->paginate($size);
     }
 
     /**

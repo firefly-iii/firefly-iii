@@ -206,7 +206,7 @@ class BillController extends Controller
 
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
-            function (Bill $bill) use ($transformer) {
+            static function (Bill $bill) use ($transformer) {
                 $return             = $transformer->transform($bill);
                 $return['currency'] = $bill->transactionCurrency;
 
