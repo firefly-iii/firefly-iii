@@ -253,9 +253,9 @@ return [
     'weekend'                 => 'Week-end',
     'client_secret'           => 'Clé secrète',
 
-    'withdrawal_destination_id' => 'Destination account',
-    'deposit_source_id'         => 'Source account',
-    'expected_on'               => 'Expected on',
-    'paid'                      => 'Paid',
+    'withdrawal_destination_id' => 'Compte de destination',
+    'deposit_source_id'         => 'Compte source',
+    'expected_on'               => 'Prévu le',
+    'paid'                      => 'Payé',
 
 ];

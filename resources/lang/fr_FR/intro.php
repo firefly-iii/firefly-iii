@@ -30,13 +30,13 @@ return [
     'index_help'                                      => 'Si vous avez besoin d’aide avec une page ou un formulaire, appuyez sur ce bouton.',
     'index_outro'                                     => 'La plupart des pages de Firefly III vont commencer avec un petit tour comme celui-ci. Merci de me contacter si vous avez des questions ou des commentaires. Profitez-en !',
     'index_sidebar-toggle'                            => 'Pour créer de nouvelles transactions, comptes ou autres choses, utilisez le menu sous cette icône.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Voici les comptes créés jusqu\'ici. Vous pouvez utilier le compte de trésorerie pour faire le suivi de vos dépenses en espèces, mais ce n\'est pas obligatoire, bien sûr.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_source'           => 'Choisissez votre compte d\'actif ou passif préféré à partir de ce menu déroulant.',
+    'transactions_create_withdrawal_destination'      => 'Sélectionnez un compte de dépenses ici. Laissez-le vide si vous voulez faire une dépense en espèces.',
+    'transactions_create_withdrawal_foreign_currency' => 'Utilisez ce champ pour définir une devise étrangère et un montant.',
+    'transactions_create_withdrawal_more_meta'        => 'Beaucoup d\'autres métadonnées que vous avez définies dans ces champs.',
     'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
 
     // transactions (deposit)
