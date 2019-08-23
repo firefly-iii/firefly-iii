@@ -2,6 +2,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.0.3 (API 0.10.1)] - 2019-08-23
+
+Fixes many other issues in the previous release.
+
+### Added
+- Autocomplete for transaction description.
+
+### Fixed
+- #2438 Some balance issues when working with multiple currencies (a known issue)
+- #2425 Transaction edit/create form is weird with the enter button
+- #2424 auto complete tab doesn't work.
+- #2441 Inconsistent character limit for currencies.
+- #2443 500 error when submitting budgets
+- #2446 Can't update current amount for piggy bank
+- #2440 Errors when interacting with recurring transactions
+- #2439 SQL error in API post new user
+- Transaction report (after import, over email) is mostly empty
+- Mass edit checkboxes doesn't work in a tag overview
+- #2437 CPU issues when viewing accounts, probably run-away queries.
+- #2432 Can't disable all currencies except one / can't disable EUR and switch to something else.
+- Option to edit the budget is gone from edit transaction form.
+- #2453 Search view things
+- #2449 Can't add invoice date.
+- #2448 Bad link in transaction overview
+- #2447 Bad link in bill overview
+
+### API
+- Improvements to various API end-points. Docs are updated.
+
 ## [4.8.0.2 (API 0.10.0)] - 2019-08-17
 
 Fixes many other issues in the previous release.
