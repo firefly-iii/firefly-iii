@@ -50,15 +50,16 @@ class Controller extends BaseController
 
     /**
      * Controller constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
     {
         // for transaction lists:
-        app('view')->share('hideBudgets', false); // TODO add a comma when PHP7.3 hits so everybody will notice it.
-        app('view')->share('hideCategories', false);
-        app('view')->share('hideBills', false);
-        app('view')->share('hideTags', false);
+        app('view')->share('hideBudgets', false,); // Firefly III will break here if you don't have PHP 7.3up
+        app('view')->share('hideCategories', false,);
+        app('view')->share('hideBills', false,);
+        app('view')->share('hideTags', false,);
 
         // is site a demo site?
         $isDemoSite = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;

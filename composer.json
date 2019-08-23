@@ -55,7 +55,7 @@
     "docs": "https://firefly-iii.readthedocs.io/en/latest/"
   },
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.3.0",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
