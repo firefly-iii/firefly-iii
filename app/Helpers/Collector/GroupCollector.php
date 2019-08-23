@@ -32,6 +32,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,6 +43,7 @@ use Log;
 
 /**
  * Class GroupCollector
+ *
  * @codeCoverageIgnore
  */
 class GroupCollector implements GroupCollectorInterface
@@ -95,10 +97,12 @@ class GroupCollector implements GroupCollectorInterface
             # journal
             'transaction_journals.id as transaction_journal_id',
             'transaction_journals.transaction_type_id',
-            'transaction_types.type as transaction_type_type',
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.order',
+
+            # types
+            'transaction_types.type as transaction_type_type',
 
             # source info (always present)
             'source.id as source_transaction_id',
@@ -122,9 +126,165 @@ class GroupCollector implements GroupCollectorInterface
             'foreign_currency.decimal_places as foreign_currency_decimal_places',
 
             # destination account info (always present)
-            #'destination.id as destination_transaction_id', // not interesting.
             'destination.account_id as destination_account_id',
         ];
+    }
+
+    /**
+     * Get transactions with a specific amount.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountIs(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->where('source.amount', app('steam')->negative($amount));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get transactions where the amount is less than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountLess(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->where('destination.amount', '<', app('steam')->positive($amount));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get transactions where the amount is more than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountMore(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->where('destination.amount', '>', app('steam')->positive($amount));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     */
+    public function dumpQuery(): void
+    {
+
+        echo $this->query->toSql();
+        echo '<pre>';
+        print_r($this->query->getBindings());
+        echo '</pre>';
+    }
+
+    /**
+     * These accounts must not be destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * These accounts must not be source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Return the transaction journals without group information. Is useful in some instances.
+     *
+     * @return array
+     */
+    public function getExtractedJournals(): array
+    {
+        $selection = $this->getGroups();
+        $return    = [];
+        /** @var array $group */
+        foreach ($selection as $group) {
+            $count = count($group['transactions']);
+            foreach ($group['transactions'] as $journalId => $journal) {
+                $journal['group_title']       = $group['title'];
+                $journal['journals_in_group'] = $count;
+                $return[$journalId]           = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return the groups.
+     *
+     * @return Collection
+     */
+    public function getGroups(): Collection
+    {
+        $start = microtime(true);
+        /** @var Collection $result */
+        $result = $this->query->get($this->fields);
+        $end    = round(microtime(true) - $start, 5);
+
+        // log info about query time.
+        //Log::info(sprintf('Query took Firefly III %s seconds', $end));
+        //Log::info($this->query->toSql(), $this->query->getBindings());
+
+        // now to parse this into an array.
+        $collection  = $this->parseArray($result);
+        $this->total = $collection->count();
+
+        // now filter the array according to the page and the limit (if necessary)
+        if (null !== $this->limit && null !== $this->page) {
+            $offset = ($this->page - 1) * $this->limit;
+
+            return $collection->slice($offset, $this->limit);
+        }
+
+        return $collection;
+
     }
 
     /**
@@ -140,28 +300,22 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Return the groups.
+     * Return the sum of all journals.
+     * TODO ignores the currency.
      *
-     * @return Collection
+     * @return string
      */
-    public function getGroups(): Collection
+    public function getSum(): string
     {
-        /** @var Collection $result */
-        $result = $this->query->get($this->fields);
-
-        // now to parse this into an array.
-        $collection  = $this->parseArray($result);
-        $this->total = $collection->count();
-
-        // now filter the array according to the page and the limit (if necessary)
-        if (null !== $this->limit && null !== $this->page) {
-        $offset = ($this->page-1) * $this->limit;
-
-        return $collection->slice($offset, $this->limit);
+        $journals = $this->getExtractedJournals();
+        $sum      = '0';
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = (string)$journal['amount'];
+            $sum    = bcadd($sum, $amount);
         }
 
-        return $collection;
-
+        return $sum;
     }
 
     /**
@@ -188,20 +342,146 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Define which accounts can be part of the source and destination transactions.
+     * Collect transactions after a specific date.
      *
-     * @param Collection $accounts
+     * @param Carbon $date
      *
      * @return GroupCollectorInterface
      */
-    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
+    public function setAfter(Carbon $date): GroupCollectorInterface
     {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('source.account_id', $accountIds);
+        $afterStr = $date->format('Y-m-d 00:00:00');
+        $this->query->where('transaction_journals.date', '>=', $afterStr);
+        Log::debug(sprintf('GroupCollector range is now after %s (inclusive)', $afterStr));
 
-            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+        return $this;
+    }
+
+    /**
+     * Collect transactions before a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBefore(Carbon $date): GroupCollectorInterface
+    {
+        $beforeStr = $date->format('Y-m-d 00:00:00');
+        $this->query->where('transaction_journals.date', '<=', $beforeStr);
+        Log::debug(sprintf('GroupCollector range is now before %s (inclusive)', $beforeStr));
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific bill.
+     *
+     * @param Bill $bill
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBill(Bill $bill): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->where('transaction_journals.bill_id', '=', $bill->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific set of bills.
+     *
+     * @param Collection $bills
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBills(Collection $bills): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->whereIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific budget.
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudget(Budget $budget): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->where('budgets.id', $budget->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific set of budgets.
+     *
+     * @param Collection $budgets
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): GroupCollectorInterface
+    {
+        if ($budgets->count() > 0) {
+            $this->withBudgetInformation();
+            $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
         }
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific bunch of categories.
+     *
+     * @param Collection $categories
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategories(Collection $categories): GroupCollectorInterface
+    {
+        if ($categories->count() > 0) {
+            $this->withCategoryInformation();
+            $this->query->whereIn('categories.id', $categories->pluck('id')->toArray());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific category.
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategory(Category $category): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+        $this->query->where('categories.id', $category->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a specific currency, either foreign or normal one.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($currency) {
+                $q->where('source.transaction_currency_id', $currency->id);
+                $q->orWhere('source.foreign_currency_id', $currency->id);
+            }
+        );
 
         return $this;
     }
@@ -226,143 +506,15 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Limit the search to a specific bill.
+     * Limit the result to a specific transaction group.
      *
-     * @param Bill $bill
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBill(Bill $bill): GroupCollectorInterface
-    {
-        $this->withBillInformation();
-        $this->query->where('transaction_journals.bill_id', '=', $bill->id);
-
-        return $this;
-    }
-
-    /**
-     * Will include bill name + ID, if any.
+     * @param TransactionGroup $transactionGroup
      *
      * @return GroupCollectorInterface
      */
-    public function withBillInformation(): GroupCollectorInterface
+    public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
     {
-        if (false === $this->hasBillInformation) {
-            // join bill table
-            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
-            // add fields
-            $this->fields[]           = 'bills.id as bill_id';
-            $this->fields[]           = 'bills.name as bill_name';
-            $this->hasBillInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBudget(Budget $budget): GroupCollectorInterface
-    {
-        $this->withBudgetInformation();
-        $this->query->where('budgets.id', $budget->id);
-
-        return $this;
-    }
-
-    /**
-     * Will include budget ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBudgetInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasBudgetInformation) {
-            // join link table
-            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
-            // add fields
-            $this->fields[]             = 'budgets.id as budget_id';
-            $this->fields[]             = 'budgets.name as budget_name';
-            $this->hasBudgetInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific set of budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBudgets(Collection $budgets): GroupCollectorInterface
-    {
-        if ($budgets->count() > 0) {
-            $this->withBudgetInformation();
-            $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCategory(Category $category): GroupCollectorInterface
-    {
-        $this->withCategoryInformation();
-        $this->query->where('categories.id', $category->id);
-
-        return $this;
-    }
-
-    /**
-     * Will include category ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withCategoryInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasCatInformation) {
-            // join link table
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
-            // add fields
-            $this->fields[]          = 'categories.id as category_id';
-            $this->fields[]          = 'categories.name as category_name';
-            $this->hasCatInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit results to a specific currency, either foreign or normal one.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($currency) {
-                $q->where('source.transaction_currency_id', $currency->id);
-                $q->orWhere('source.foreign_currency_id', $currency->id);
-            }
-        );
+        $this->query->where('transaction_groups.id', $transactionGroup->id);
 
         return $this;
     }
@@ -438,6 +590,58 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSearchWords(array $array): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q1->where('transaction_journals.description', 'LIKE', $keyword);
+                        }
+                    }
+                );
+                $q->orWhere(
+                    function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q2->where('transaction_groups.title', 'LIKE', $keyword);
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('source.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit results to a specific tag.
      *
      * @param Tag $tag
@@ -448,6 +652,21 @@ class GroupCollector implements GroupCollectorInterface
     {
         $this->withTagInformation();
         $this->query->where('tag_transaction_journal.tag_id', $tag->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a specific set of tags.
+     *
+     * @param Collection $tags
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTags(Collection $tags): GroupCollectorInterface
+    {
+        $this->withTagInformation();
+        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         return $this;
     }
@@ -549,33 +768,80 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
+     * Will include bill name + ID, if any.
      *
      * @return GroupCollectorInterface
      */
-    public function setCategories(Collection $categories): GroupCollectorInterface
+    public function withBillInformation(): GroupCollectorInterface
     {
-        if ($categories->count() > 0) {
-            $this->withCategoryInformation();
-            $this->query->whereIn('categories.id', $categories->pluck('id')->toArray());
+        if (false === $this->hasBillInformation) {
+            // join bill table
+            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
+            // add fields
+            $this->fields[]           = 'bills.id as bill_id';
+            $this->fields[]           = 'bills.name as bill_name';
+            $this->hasBillInformation = true;
         }
 
         return $this;
     }
 
     /**
-     * Limit results to a specific set of tags.
-     *
-     * @param Collection $tags
+     * Will include budget ID + name, if any.
      *
      * @return GroupCollectorInterface
      */
-    public function setTags(Collection $tags): GroupCollectorInterface
+    public function withBudgetInformation(): GroupCollectorInterface
     {
-        $this->withTagInformation();
-        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
+        if (false === $this->hasBudgetInformation) {
+            // join link table
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
+            // add fields
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
+            $this->hasBudgetInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Will include category ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategoryInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasCatInformation) {
+            // join link table
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
+            // add fields
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
+            $this->hasCatInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'tags.id as tag_id';
+        $this->fields[] = 'tags.tag as tag_name';
+        $this->fields[] = 'tags.date as tag_date';
+        $this->fields[] = 'tags.description as tag_description';
+        $this->fields[] = 'tags.latitude as tag_latitude';
+        $this->fields[] = 'tags.longitude as tag_longitude';
+        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+
+        $this->joinTagTables();
 
         return $this;
     }
@@ -615,317 +881,22 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     *
+     * Join table to get tag information.
      */
-    public function dumpQuery(): void
+    private function joinTagTables(): void
     {
-
-        echo $this->query->toSql();
-        echo '<pre>';
-        print_r($this->query->getBindings());
-        echo '</pre>';
-    }
-
-    /**
-     * Return the sum of all journals.
-     * TODO ignores the currency.
-     *
-     * @return string
-     */
-    public function getSum(): string
-    {
-        $journals = $this->getExtractedJournals();
-        $sum      = '0';
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $amount = (string)$journal['amount'];
-            $sum    = bcadd($sum, $amount);
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
         }
-
-        return $sum;
     }
 
     /**
-     * Return the transaction journals without group information. Is useful in some instances.
-     *
-     * @return array
-     */
-    public function getExtractedJournals(): array
-    {
-        $selection = $this->getGroups();
-        $return    = [];
-        /** @var array $group */
-        foreach ($selection as $group) {
-            $count = count($group['transactions']);
-            foreach ($group['transactions'] as $journalId => $journal) {
-                $journal['group_title']       = $group['title'];
-                $journal['journals_in_group'] = $count;
-                $return[$journalId]           = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Search for words in descriptions.
-     *
-     * @param array $array
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setSearchWords(array $array): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($array) {
-                $q->where(
-                    function (EloquentBuilder $q1) use ($array) {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q1->where('transaction_journals.description', 'LIKE', $keyword);
-                        }
-                    }
-                );
-                $q->orWhere(
-                    function (EloquentBuilder $q2) use ($array) {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q2->where('transaction_groups.title', 'LIKE', $keyword);
-                        }
-                    }
-                );
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Limit the result to a specific transaction group.
-     *
-     * @param TransactionGroup $transactionGroup
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
-    {
-        $this->query->where('transaction_groups.id', $transactionGroup->id);
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific set of bills.
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBills(Collection $bills): GroupCollectorInterface
-    {
-        $this->withBillInformation();
-        $this->query->whereIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
-
-        return $this;
-    }
-
-    /**
-     * Get transactions with a specific amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountIs(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('source.amount', app('steam')->negative($amount));
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountLess(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '<', app('steam')->positive($amount));
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountMore(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '>', app('steam')->positive($amount));
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions before a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBefore(Carbon $date): GroupCollectorInterface
-    {
-        $beforeStr = $date->format('Y-m-d 00:00:00');
-        $this->query->where('transaction_journals.date', '<=', $beforeStr);
-        Log::debug(sprintf('GroupCollector range is now before %s (inclusive)', $beforeStr));
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions after a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setAfter(Carbon $date): GroupCollectorInterface
-    {
-        $afterStr = $date->format('Y-m-d 00:00:00');
-        $this->query->where('transaction_journals.date', '>=', $afterStr);
-        Log::debug(sprintf('GroupCollector range is now after %s (inclusive)', $afterStr));
-
-        return $this;
-    }
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function withTagInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'tags.id as tag_id';
-        $this->fields[] = 'tags.tag as tag_name';
-        $this->fields[] = 'tags.date as tag_date';
-        $this->fields[] = 'tags.description as tag_description';
-        $this->fields[] = 'tags.latitude as tag_latitude';
-        $this->fields[] = 'tags.longitude as tag_longitude';
-        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
-
-        $this->joinTagTables();
-
-        return $this;
-    }
-
-    /**
-     * @param Collection $collection
-     *
-     * @return Collection
-     */
-    private function parseArray(Collection $collection): Collection
-    {
-        $groups = [];
-        /** @var TransactionGroup $augmentedGroup */
-        foreach ($collection as $augmentedGroup) {
-            $groupId = $augmentedGroup->transaction_group_id;
-
-            if (!isset($groups[$groupId])) {
-                // make new array
-                $parsedGroup                            = $this->parseAugmentedGroup($augmentedGroup);
-                $groupArray                             = [
-                    'id'               => $augmentedGroup->transaction_group_id,
-                    'user_id'          => $augmentedGroup->user_id,
-                    'title'            => $augmentedGroup->transaction_group_title,
-                    'transaction_type' => $parsedGroup['transaction_type_type'],
-                    'count'            => 1,
-                    'sums'             => [],
-                    'transactions'     => [],
-                ];
-                $journalId                              = (int)$augmentedGroup->transaction_journal_id;
-                $groupArray['transactions'][$journalId] = $parsedGroup;
-                $groups[$groupId]                       = $groupArray;
-                continue;
-            }
-            // or parse the rest.
-            $journalId = (int)$augmentedGroup->transaction_journal_id;
-            $groups[$groupId]['count']++;
-
-            if (isset($groups[$groupId]['transactions'][$journalId])) {
-                $groups[$groupId]['transactions'][$journalId] =
-                    $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augmentedGroup);
-            }
-
-            if (!isset($groups[$groupId]['transactions'][$journalId])) {
-                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
-            }
-
-
-        }
-
-        $groups = $this->parseSums($groups);
-
-        return new Collection($groups);
-    }
-
-    /**
-     * @param TransactionGroup $augmentedGroup
-     *
-     * @return array
-     */
-    private function parseAugmentedGroup(TransactionGroup $augmentedGroup): array
-    {
-        $result         = $augmentedGroup->toArray();
-        $result['tags'] = [];
-        try {
-            $result['date']       = new Carbon($result['date']);
-            $result['created_at'] = new Carbon($result['created_at']);
-            $result['updated_at'] = new Carbon($result['updated_at']);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-        $result['reconciled'] = 1 === (int)$result['reconciled'];
-        if (isset($augmentedGroup['tag_id'])) { // assume the other fields are present as well.
-            $tagId   = (int)$augmentedGroup['tag_id'];
-            $tagDate = null;
-            try {
-                $tagDate = Carbon::parse($augmentedGroup['tag_date']);
-            } catch (InvalidDateException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
-            }
-
-            $result['tags'][$tagId] = [
-                'id'          => (int)$result['tag_id'],
-                'name'        => $result['tag_name'],
-                'date'        => $tagDate,
-                'description' => $result['tag_description'],
-                'latitude'    => $result['tag_latitude'],
-                'longitude'   => $result['tag_longitude'],
-                'zoom_level'  => $result['tag_zoom_level'],
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $existingJournal
+     * @param array            $existingJournal
      * @param TransactionGroup $newGroup
+     *
      * @return array
      */
     private function mergeTags(array $existingJournal, TransactionGroup $newGroup): array
@@ -956,6 +927,95 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @param Collection $collection
+     *
+     * @return Collection
+     */
+    private function parseArray(Collection $collection): Collection
+    {
+        $groups = [];
+        /** @var TransactionJournal $augumentedJournal */
+        foreach ($collection as $augumentedJournal) {
+            $groupId = $augumentedJournal->transaction_group_id;
+
+            if (!isset($groups[$groupId])) {
+                // make new array
+                $parsedGroup                            = $this->parseAugmentedGroup($augumentedJournal);
+                $groupArray                             = [
+                    'id'               => $augumentedJournal->transaction_group_id,
+                    'user_id'          => $augumentedJournal->user_id,
+                    'title'            => $augumentedJournal->transaction_group_title,
+                    'transaction_type' => $parsedGroup['transaction_type_type'],
+                    'count'            => 1,
+                    'sums'             => [],
+                    'transactions'     => [],
+                ];
+                $journalId                              = (int)$augumentedJournal->transaction_journal_id;
+                $groupArray['transactions'][$journalId] = $parsedGroup;
+                $groups[$groupId]                       = $groupArray;
+                continue;
+            }
+            // or parse the rest.
+            $journalId = (int)$augumentedJournal->transaction_journal_id;
+            $groups[$groupId]['count']++;
+
+            if (isset($groups[$groupId]['transactions'][$journalId])) {
+                $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
+            }
+
+            if (!isset($groups[$groupId]['transactions'][$journalId])) {
+                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augumentedJournal);
+            }
+
+
+        }
+
+        $groups = $this->parseSums($groups);
+
+        return new Collection($groups);
+    }
+
+    /**
+     * @param TransactionJournal $augumentedJournal
+     *
+     * @return array
+     */
+    private function parseAugmentedGroup(TransactionJournal $augumentedJournal): array
+    {
+        $result         = $augumentedJournal->toArray();
+        $result['tags'] = [];
+        try {
+            $result['date']       = new Carbon($result['date']);
+            $result['created_at'] = new Carbon($result['created_at']);
+            $result['updated_at'] = new Carbon($result['updated_at']);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+        $result['reconciled'] = 1 === (int)$result['reconciled'];
+        if (isset($augumentedJournal['tag_id'])) { // assume the other fields are present as well.
+            $tagId   = (int)$augumentedJournal['tag_id'];
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($augumentedJournal['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $result['tags'][$tagId] = [
+                'id'          => (int)$result['tag_id'],
+                'name'        => $result['tag_name'],
+                'date'        => $tagDate,
+                'description' => $result['tag_description'],
+                'latitude'    => $result['tag_latitude'],
+                'longitude'   => $result['tag_longitude'],
+                'zoom_level'  => $result['tag_zoom_level'],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
      * @param array $groups
      *
      * @return array
@@ -963,7 +1023,7 @@ class GroupCollector implements GroupCollectorInterface
     private function parseSums(array $groups): array
     {
         /**
-         * @var int $groudId
+         * @var int   $groudId
          * @var array $group
          */
         foreach ($groups as $groudId => $group) {
@@ -992,25 +1052,14 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount'] ?? '0');
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd(
+                        $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount'] ?? '0'
+                    );
                 }
             }
         }
 
         return $groups;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    private function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
     }
 
     /**
@@ -1020,8 +1069,11 @@ class GroupCollector implements GroupCollectorInterface
     {
         app('log')->debug('GroupCollector::startQuery');
         $this->query = $this->user
-            ->transactionGroups()
-            ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+            //->transactionGroups()
+            //->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+            ->transactionJournals()
+            ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+
             // join source transaction.
             ->leftJoin(
                 'transactions as source', function (JoinClause $join) {
@@ -1049,43 +1101,5 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
-    }
-
-    /**
-     * These accounts must not be source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereNotIn('source.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
-     * These accounts must not be destination accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereNotIn('destination.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
     }
 }

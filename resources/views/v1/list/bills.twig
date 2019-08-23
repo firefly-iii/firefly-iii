@@ -9,7 +9,7 @@
         <th data-defaultsort="disabled" class="hidden-sm hidden-md hidden-xs">{{ trans('list.linked_to_rules') }}</th>
         <th data-defaultsign="_19" style="text-align: right;">{{ trans('list.matchingAmount') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
-        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
+        <th data-defaultsign="month" data-dateformat="{{ madMomentJS }}" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
         <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr>
     </thead>
@@ -26,7 +26,7 @@
             {% set sum_max = sum_max + entry.amount_max %}
             {% set expected_total = expected_total + ((entry.amount_min + entry.amount_max) / 2) %}
         {% endif %}
-        <tr>
+        <tr{% if not entry.active %} data-disablesort="true"{% endif %}>
             <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i
                                 class="fa fa-fw fa-pencil"></i></a><a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i
@@ -69,11 +69,11 @@
             bill is active.
             #}
             {% if entry.paid_dates|length == 0 and entry.pay_dates|length == 0 and entry.active %}
-                <td class="paid_in_period text-muted" data-value="0001-00-00 00-00-00">
+                <td class="paid_in_period text-muted" data-value="0001-01-01">
                     {{ trans('components.not_expected_period') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
 
@@ -83,11 +83,11 @@
             bill is active
             #}
             {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
-                <td class="paid_in_period text-danger" data-value="0002-00-00 00-00-00">
+                <td class="paid_in_period text-danger" data-value="0002-00-00">
                     {{ trans('components.not_or_not_yet') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
 
@@ -96,26 +96,24 @@
             Don't care about pay_dates.
             #}
             {% if entry.paid_dates|length > 0 and entry.active %}
-                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0] }}">
-                    {% for transaction_id, date in entry.paid_dates %}
-                        <a href="{{ route('transactions.show',transaction_id) }}">
-                            {{ formatDate(date, monthAndDayFormat) }}
+                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0].date }}">
+                    {% for currentPaid in entry.paid_dates %}
+                        <a href="{{ route('transactions.show',currentPaid.transaction_group_id) }}">
+                            {{ formatDate(currentPaid.date, monthAndDayFormat) }}
                         </a>
                         <br/>
                     {% endfor %}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                    {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
                 </td>
             {% endif %}
             {# bill is not active #}
             {% if not entry.active %}
-                <td class="paid_in_period text-muted" data-value="0000-00-00 00-00-00">
+                <td class="paid_in_period text-muted" data-value="3000-01-01">
                     ~
                 </td>
-                <td class="expected_in_period text-muted hidden-sm hidden-xs" data-value="0">
-                    ~
-                </td>
+                <td class="expected_in_period text-muted hidden-sm hidden-xs" data-value="3001-01-01">~</td>
             {% endif %}
             <td class="hidden-sm hidden-xs" data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
                 {{ ('repeat_freq_'~entry.repeat_freq)|_ }}

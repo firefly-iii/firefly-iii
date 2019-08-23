@@ -88,8 +88,13 @@ class BillTransformerTest extends TestCase
 
         // repos should also receive call for dates:
         $list = new Collection(
-            [new Carbon('2018-01-02'), new Carbon('2018-01-09'), new Carbon('2018-01-16'),
-             new Carbon('2018-01-21'), new Carbon('2018-01-30'),
+            [
+
+                (object)['date' => new Carbon('2018-01-02'), 'id' => 1, 'transaction_group_id' => 1,],
+                (object)['date' => new Carbon('2018-01-09'), 'id' => 1, 'transaction_group_id' => 1,],
+                (object)['date' => new Carbon('2018-01-16'), 'id' => 1, 'transaction_group_id' => 1,],
+                (object)['date' => new Carbon('2018-01-21'), 'id' => 1, 'transaction_group_id' => 1,],
+                (object)['date' => new Carbon('2018-01-30'), 'id' => 1, 'transaction_group_id' => 1,],
             ]
         );
         $repository->shouldReceive('getPaidDatesInRange')->atLeast()->once()->andReturn($list);
@@ -112,7 +117,15 @@ class BillTransformerTest extends TestCase
 
         $this->assertEquals('2018-03-01', $result['next_expected_match']);
         $this->assertEquals(['2018-01-01'], $result['pay_dates']);
-        $this->assertEquals(['2018-01-02', '2018-01-09', '2018-01-16', '2018-01-21', '2018-01-30',], $result['paid_dates']);
+        $this->assertEquals(
+            [
+                ['date' => '2018-01-02', 'transaction_group_id' => 1, 'transaction_journal_id' => 1,],
+                ['date' => '2018-01-09', 'transaction_group_id' => 1, 'transaction_journal_id' => 1,],
+                ['date' => '2018-01-16', 'transaction_group_id' => 1, 'transaction_journal_id' => 1,],
+                ['date' => '2018-01-21', 'transaction_group_id' => 1, 'transaction_journal_id' => 1,],
+                ['date' => '2018-01-30', 'transaction_group_id' => 1, 'transaction_journal_id' => 1,],
+            ], $result['paid_dates']
+        );
     }
 
 }

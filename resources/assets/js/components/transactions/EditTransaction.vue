@@ -147,13 +147,6 @@
                                             v-model="transaction.category"
                                             :error="transaction.errors.category"
                                     ></category>
-                                    <!--
-                                    <piggy-bank
-                                            :transactionType="transactionType"
-                                            v-model="transaction.piggy_bank"
-                                            :error="transaction.errors.piggy_bank"
-                                    ></piggy-bank>
-                                    -->
                                     <tags
                                             :tags="transaction.tags"
                                             v-model="transaction.tags"
@@ -167,7 +160,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="btn btn-primary" @click="addTransaction">Add another split</button>
+                            <button class="btn btn-primary" type="button" @click="addTransaction">Add another split</button>
                         </div>
                     </div>
                 </div>

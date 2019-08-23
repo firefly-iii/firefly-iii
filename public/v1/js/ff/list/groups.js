@@ -21,6 +21,9 @@
 var count = 0;
 
 $(document).ready(function () {
+    updateListButtons();
+});
+function updateListButtons() {
     // top button to select all / deselect all:
     $('input[name="select-all"]').change(function () {
         if (this.checked) {
@@ -46,9 +49,7 @@ $(document).ready(function () {
         countChecked();
         updateActionButtons();
     });
-
-
-});
+}
 
 /**
  *

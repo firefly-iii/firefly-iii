@@ -55,7 +55,7 @@ class Controller extends BaseController
     public function __construct()
     {
         // for transaction lists:
-        app('view')->share('hideBudgets', false);
+        app('view')->share('hideBudgets', false); // TODO add a comma when PHP7.3 hits so everybody will notice it.
         app('view')->share('hideCategories', false);
         app('view')->share('hideBills', false);
         app('view')->share('hideTags', false);

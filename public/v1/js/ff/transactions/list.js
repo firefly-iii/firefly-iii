@@ -21,7 +21,7 @@
 /** global: edit_selected_txt, edit_bulk_selected_txt, delete_selected_txt, token */
 
 /**
- *
+ * @deprecated
  */
 $(document).ready(function () {
     "use strict";

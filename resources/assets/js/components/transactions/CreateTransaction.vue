@@ -19,8 +19,7 @@
   -->
 
 <template>
-    <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" id="store"
-          enctype="multipart/form-data">
+    <form accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
         <div class="row" v-if="error_message !== ''">
             <div class="col-lg-12">
@@ -164,7 +163,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="split_add_btn btn btn-primary" @click="addTransactionToArray">Add another split</button>
+                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">Add another split</button>
                         </div>
                     </div>
                 </div>
@@ -369,9 +368,6 @@
             submit(e) {
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
-                if (this.resetFormAfter) {
-                    this.resetTransactions();
-                }
 
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);

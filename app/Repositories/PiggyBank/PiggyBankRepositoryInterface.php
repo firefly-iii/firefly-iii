@@ -39,6 +39,14 @@ interface PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
+     * @return PiggyBank
+     */
+    public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
      * @return bool
      */
     public function addAmount(PiggyBank $piggyBank, string $amount): bool;

@@ -123,7 +123,8 @@
         var searchQuery = "{{ fullQuery|escape('js') }}";
         var searchUri = "{{ route('search.search') }}";
     </script>
-    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_VERSION }}"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_VERSION }}"></script>
+
 {% endblock %}

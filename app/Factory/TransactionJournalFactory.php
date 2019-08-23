@@ -297,9 +297,9 @@ class TransactionJournalFactory
             $foreignCurrency = $this->getCurrency($foreignCurrency, $destinationAccount);
 
             $sourceCurrency        = $currency;
-            $destCurrency          = $foreignCurrency;
+            $destCurrency          = $currency;
             $sourceForeignCurrency = $foreignCurrency;
-            $destForeignCurrency   = $currency;
+            $destForeignCurrency   = $foreignCurrency;
         }
 
         /** Create a basic journal. */

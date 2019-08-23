@@ -82,12 +82,16 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 'rows'        => [],
             ];
             // get multi currency expenses first:
-            $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
-            $expenses     = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
+            $budgetLimits    = $this->repository->getBudgetLimits($budget, $start, $end);
+            $expenses        = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
+            $defaultCurrency = app('amount')->getDefaultCurrencyByUser($budget->user);
+            Log::debug(sprintf('Default currency for getBudgetReport is %s', $defaultCurrency->code));
             if (0 === count($expenses)) {
                 // list the budget limits, basic amounts.
                 /** @var BudgetLimit $limit */
                 foreach ($budgetLimits as $limit) {
+                    $currency = $limit->transactionCurrency ?? $defaultCurrency;
+                    Log::debug(sprintf('Default currency for limit #%d is %s', $limit->id, $currency->code));
                     $row = [
                         'limit_id'                => $limit->id,
                         'start_date'              => $limit->start_date,
@@ -96,11 +100,11 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                         'spent'                   => '0',
                         'left'                    => $limit->amount,
                         'overspent'               => null,
-                        'currency_id'             => $limit->transactionCurrency->id,
-                        'currency_code'           => $limit->transactionCurrency->code,
-                        'currency_name'           => $limit->transactionCurrency->name,
-                        'currency_symbol'         => $limit->transactionCurrency->symbol,
-                        'currency_decimal_places' => $limit->transactionCurrency->decimal_places,
+                        'currency_id'             => $currency->id,
+                        'currency_code'           => $currency->code,
+                        'currency_name'           => $currency->name,
+                        'currency_symbol'         => $currency->symbol,
+                        'currency_decimal_places' => $currency->decimal_places,
                     ];
 
                     $entry['rows'][] = $row;
@@ -169,8 +173,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         foreach ($array['budgets'] as $budget) {
             /** @var array $row */
             foreach ($budget['rows'] as $row) {
-                $currencyId                        = $row['currency_id'];
-                $array['sums'][$currencyId]        = $array['sums'][$currencyId] ?? [
+                $currencyId                              = $row['currency_id'];
+                $array['sums'][$currencyId]              = $array['sums'][$currencyId] ?? [
                         'currency_id'             => $row['currency_id'],
                         'currency_code'           => $row['currency_code'],
                         'currency_name'           => $row['currency_name'],
@@ -181,12 +185,13 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                         'left'                    => '0',
                         'overspent'               => '0',
                     ];
-                $array['sums'][$currencyId]['budgeted'] = bcadd($array['sums'][$currencyId]['budgeted'], $row['budgeted'] ?? '0');
-                $array['sums'][$currencyId]['spent'] = bcadd($array['sums'][$currencyId]['spent'], $row['spent'] ?? '0');
-                $array['sums'][$currencyId]['left'] = bcadd($array['sums'][$currencyId]['left'], $row['left'] ?? '0');
+                $array['sums'][$currencyId]['budgeted']  = bcadd($array['sums'][$currencyId]['budgeted'], $row['budgeted'] ?? '0');
+                $array['sums'][$currencyId]['spent']     = bcadd($array['sums'][$currencyId]['spent'], $row['spent'] ?? '0');
+                $array['sums'][$currencyId]['left']      = bcadd($array['sums'][$currencyId]['left'], $row['left'] ?? '0');
                 $array['sums'][$currencyId]['overspent'] = bcadd($array['sums'][$currencyId]['overspent'], $row['overspent'] ?? '0');
             }
         }
+
         return $array;
     }
 

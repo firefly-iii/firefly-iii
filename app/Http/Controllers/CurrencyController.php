@@ -212,7 +212,11 @@ class CurrencyController extends Controller
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_disable_currency', ['name' => e($currency->name)]));
+
+            $location = $this->repository->currencyInUseAt($currency);
+            $message  = (string)trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+
+            $request->session()->flash('error', $message);
             Log::channel('audit')->info(sprintf('Tried to disable currency %s but is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -231,6 +235,10 @@ class CurrencyController extends Controller
             $this->repository->enable($first);
             app('preferences')->set('currencyPreference', $first->code);
             app('preferences')->mark();
+        }
+
+        if ('EUR' === $currency->code) {
+            session()->flash('warning', (string)trans('firefly.disable_EUR_side_effects'));
         }
 
         session()->flash('success', (string)trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));

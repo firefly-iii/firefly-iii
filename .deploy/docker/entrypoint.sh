@@ -70,7 +70,7 @@ php artisan firefly-iii:cc-liabilities
 php artisan firefly-iii:back-to-journals
 php artisan firefly-iii:rename-account-meta
 
-# there are 13 verify commands
+# there are 14 verify commands
 php artisan firefly-iii:fix-piggies
 php artisan firefly-iii:create-link-types
 php artisan firefly-iii:create-access-tokens
@@ -80,10 +80,11 @@ php artisan firefly-iii:fix-transfer-budgets
 php artisan firefly-iii:fix-uneven-amount
 php artisan firefly-iii:delete-zero-amount
 php artisan firefly-iii:delete-orphaned-transactions
-    php artisan firefly-iii:delete-empty-journals
+php artisan firefly-iii:delete-empty-journals
 php artisan firefly-iii:delete-empty-groups
 php artisan firefly-iii:fix-account-types
 php artisan firefly-iii:rename-meta-fields
+php artisan firefly-iii:fix-ob-currencies
 
 # report commands
 php artisan firefly-iii:report-empty-objects

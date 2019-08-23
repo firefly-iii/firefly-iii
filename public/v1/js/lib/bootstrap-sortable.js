@@ -1,7 +1,7 @@
 /**
  * adding sorting ability to HTML tables with Bootstrap styling
  * @summary HTML tables sorting ability
- * @version 2.0.0
+ * @version 2.0.1
  * @requires tinysort, moment.js, jQuery
  * @license MIT
  * @author Matus Brlit (drvic10k)
@@ -11,15 +11,21 @@
 /**
  * TinySort is a small script that sorts HTML elements. It sorts by text- or attribute value, or by that of one of it's children.
  * @summary A nodeElement sorting script.
- * @version 2.2.0
- * @license MIT/GPL
+ * @version 2.3.6
+ * @license MIT
  * @author Ron Valstar <ron@ronvalstar.nl>
  * @copyright Ron Valstar <ron@ronvalstar.nl>
  * @namespace tinysort
  */
-!function (a, b) { "use strict"; function c() { return b } "function" == typeof define && define.amd ? define("tinysort", c) : a.tinysort = b }(this, function () { "use strict"; function a(a, f) { function j() { 0 === arguments.length ? s({}) : d(arguments, function (a) { s(c(a) ? { selector: a } : a) }), p = D.length } function s(a) { var b = !!a.selector, c = b && ":" === a.selector[0], d = e(a || {}, r); D.push(e({ hasSelector: b, hasAttr: !(d.attr === i || "" === d.attr), hasData: d.data !== i, hasFilter: c, sortReturnNumber: "asc" === d.order ? 1 : -1 }, d)) } function t() { d(a, function (a, b) { y ? y !== a.parentNode && (E = !1) : y = a.parentNode; var c = D[0], d = c.hasFilter, e = c.selector, f = !e || d && a.matchesSelector(e) || e && a.querySelector(e), g = f ? B : C, h = { elm: a, pos: b, posn: g.length }; A.push(h), g.push(h) }), x = B.slice(0) } function u() { B.sort(v) } function v(a, e) { var f = 0; for (0 !== q && (q = 0) ; 0 === f && p > q;) { var i = D[q], j = i.ignoreDashes ? n : m; if (d(o, function (a) { var b = a.prepare; b && b(i) }), i.sortFunction) f = i.sortFunction(a, e); else if ("rand" == i.order) f = Math.random() < .5 ? 1 : -1; else { var k = h, r = b(a, i), s = b(e, i), t = "" === r || r === g, u = "" === s || s === g; if (r === s) f = 0; else if (i.emptyEnd && (t || u)) f = t && u ? 0 : t ? 1 : -1; else { if (!i.forceStrings) { var v = c(r) ? r && r.match(j) : h, w = c(s) ? s && s.match(j) : h; if (v && w) { var x = r.substr(0, r.length - v[0].length), y = s.substr(0, s.length - w[0].length); x == y && (k = !h, r = l(v[0]), s = l(w[0])) } } f = r === g || s === g ? 0 : s > r ? -1 : r > s ? 1 : 0 } } d(o, function (a) { var b = a.sort; b && (f = b(i, k, r, s, f)) }), f *= i.sortReturnNumber, 0 === f && q++ } return 0 === f && (f = a.pos > e.pos ? 1 : -1), f } function w() { var a = B.length === A.length; E && a ? F ? B.forEach(function (a, b) { a.elm.style.order = b }) : (B.forEach(function (a) { z.appendChild(a.elm) }), y.appendChild(z)) : (B.forEach(function (a) { var b = a.elm, c = k.createElement("div"); a.ghost = c, b.parentNode.insertBefore(c, b) }), B.forEach(function (a, b) { var c = x[b].ghost; c.parentNode.insertBefore(a.elm, c), c.parentNode.removeChild(c) })) } c(a) && (a = k.querySelectorAll(a)), 0 === a.length && console.warn("No elements to sort"); var x, y, z = k.createDocumentFragment(), A = [], B = [], C = [], D = [], E = !0, F = a.length && (f === g || f.useFlex !== !1) && -1 !== getComputedStyle(a[0].parentNode, null).display.indexOf("flex"); return j.apply(i, Array.prototype.slice.call(arguments, 1)), t(), u(), w(), B.map(function (a) { return a.elm }) } function b(a, b) { var d, e = a.elm; return b.selector && (b.hasFilter ? e.matchesSelector(b.selector) || (e = i) : e = e.querySelector(b.selector)), b.hasAttr ? d = e.getAttribute(b.attr) : b.useVal ? d = e.value || e.getAttribute("value") : b.hasData ? d = e.getAttribute("data-" + b.data) : e && (d = e.textContent), c(d) && (b.cases || (d = d.toLowerCase()), d = d.replace(/\s+/g, " ")), d } function c(a) { return "string" == typeof a } function d(a, b) { for (var c, d = a.length, e = d; e--;) c = d - e - 1, b(a[c], c) } function e(a, b, c) { for (var d in b) (c || a[d] === g) && (a[d] = b[d]); return a } function f(a, b, c) { o.push({ prepare: a, sort: b, sortBy: c }) } var g, h = !1, i = null, j = window, k = j.document, l = parseFloat, m = /(-?\d+\.?\d*)\s*$/g, n = /(\d+\.?\d*)\s*$/g, o = [], p = 0, q = 0, r = { selector: i, order: "asc", attr: i, data: i, useVal: h, place: "start", returns: h, cases: h, forceStrings: h, ignoreDashes: h, sortFunction: i, useFlex: h, emptyEnd: h }; return j.Element && function (a) { a.matchesSelector = a.matchesSelector || a.mozMatchesSelector || a.msMatchesSelector || a.oMatchesSelector || a.webkitMatchesSelector || function (a) { for (var b = this, c = (b.parentNode || b.document).querySelectorAll(a), d = -1; c[++d] && c[d] != b;); return !!c[d] } }(Element.prototype), e(f, { loop: d }), e(a, { plugin: f, defaults: r }) }());
+!function (e, t) { "use strict"; function r() { return t } "function" == typeof define && define.amd ? define("tinysort", r) : e.tinysort = t }(this, function () { "use strict"; function e(e, n) { function s() { 0 === arguments.length ? v({}) : t(arguments, function (e) { v(x(e) ? { selector: e } : e) }), d = $.length } function v(e) { var t = !!e.selector, n = t && ":" === e.selector[0], o = r(e || {}, m); $.push(r({ hasSelector: t, hasAttr: !(o.attr === l || "" === o.attr), hasData: o.data !== l, hasFilter: n, sortReturnNumber: "asc" === o.order ? 1 : -1 }, o)) } function S() { t(e, function (e, t) { M ? M !== e.parentNode && (k = !1) : M = e.parentNode; var r = $[0], n = r.hasFilter, o = r.selector, a = !o || n && e.matchesSelector(o) || o && e.querySelector(o), l = a ? R : V, s = { elm: e, pos: t, posn: l.length }; B.push(s), l.push(s) }), D = R.slice(0) } function y(e, t, r) { for (var n = r(e.toString()), o = r(t.toString()), a = 0; n[a] && o[a]; a++) if (n[a] !== o[a]) { var l = Number(n[a]), s = Number(o[a]); return l == n[a] && s == o[a] ? l - s : n[a] > o[a] ? 1 : -1 } return n.length - o.length } function N(e) { for (var t, r, n = [], o = 0, a = -1, l = 0; t = (r = e.charAt(o++)).charCodeAt(0) ;) { var s = 46 == t || t >= 48 && 57 >= t; s !== l && (n[++a] = "", l = s), n[a] += r } return n } function C(e, r) { var n = 0; for (0 !== p && (p = 0) ; 0 === n && d > p;) { var l = $[p], s = l.ignoreDashes ? f : u; if (t(h, function (e) { var t = e.prepare; t && t(l) }), l.sortFunction) n = l.sortFunction(e, r); else if ("rand" == l.order) n = Math.random() < .5 ? 1 : -1; else { var c = a, g = w(e, l), m = w(r, l), v = "" === g || g === o, S = "" === m || m === o; if (g === m) n = 0; else if (l.emptyEnd && (v || S)) n = v && S ? 0 : v ? 1 : -1; else { if (!l.forceStrings) { var C = x(g) ? g && g.match(s) : a, b = x(m) ? m && m.match(s) : a; if (C && b) { var A = g.substr(0, g.length - C[0].length), F = m.substr(0, m.length - b[0].length); A == F && (c = !a, g = i(C[0]), m = i(b[0])) } } n = g === o || m === o ? 0 : l.natural && (isNaN(g) || isNaN(m)) ? y(g, m, N) : m > g ? -1 : g > m ? 1 : 0 } } t(h, function (e) { var t = e.sort; t && (n = t(l, c, g, m, n)) }), n *= l.sortReturnNumber, 0 === n && p++ } return 0 === n && (n = e.pos > r.pos ? 1 : -1), n } function b() { var e = R.length === B.length; if (k && e) O ? R.forEach(function (e, t) { e.elm.style.order = t }) : M ? M.appendChild(A()) : console.warn("parentNode has been removed"); else { var t = $[0], r = t.place, n = "org" === r, o = "start" === r, a = "end" === r, l = "first" === r, s = "last" === r; if (n) R.forEach(F), R.forEach(function (e, t) { E(D[t], e.elm) }); else if (o || a) { var c = D[o ? 0 : D.length - 1], i = c && c.elm.parentNode, u = i && (o && i.firstChild || i.lastChild); u && (u !== c.elm && (c = { elm: u }), F(c), a && i.appendChild(c.ghost), E(c, A())) } else if (l || s) { var f = D[l ? 0 : D.length - 1]; E(F(f), A()) } } } function A() { return R.forEach(function (e) { q.appendChild(e.elm) }), q } function F(e) { var t = e.elm, r = c.createElement("div"); return e.ghost = r, t.parentNode.insertBefore(r, t), e } function E(e, t) { var r = e.ghost, n = r.parentNode; n.insertBefore(t, r), n.removeChild(r), delete e.ghost } function w(e, t) { var r, n = e.elm; return t.selector && (t.hasFilter ? n.matchesSelector(t.selector) || (n = l) : n = n.querySelector(t.selector)), t.hasAttr ? r = n.getAttribute(t.attr) : t.useVal ? r = n.value || n.getAttribute("value") : t.hasData ? r = n.getAttribute("data-" + t.data) : n && (r = n.textContent), x(r) && (t.cases || (r = r.toLowerCase()), r = r.replace(/\s+/g, " ")), null === r && (r = g), r } function x(e) { return "string" == typeof e } x(e) && (e = c.querySelectorAll(e)), 0 === e.length && console.warn("No elements to sort"); var D, M, q = c.createDocumentFragment(), B = [], R = [], V = [], $ = [], k = !0, z = e.length && e[0].parentNode, L = z.rootNode !== document, O = e.length && (n === o || n.useFlex !== !1) && !L && -1 !== getComputedStyle(z, null).display.indexOf("flex"); return s.apply(l, Array.prototype.slice.call(arguments, 1)), S(), R.sort(C), b(), R.map(function (e) { return e.elm }) } function t(e, t) { for (var r, n = e.length, o = n; o--;) r = n - o - 1, t(e[r], r) } function r(e, t, r) { for (var n in t) (r || e[n] === o) && (e[n] = t[n]); return e } function n(e, t, r) { h.push({ prepare: e, sort: t, sortBy: r }) } var o, a = !1, l = null, s = window, c = s.document, i = parseFloat, u = /(-?\d+\.?\d*)\s*$/g, f = /(\d+\.?\d*)\s*$/g, h = [], d = 0, p = 0, g = String.fromCharCode(4095), m = { selector: l, order: "asc", attr: l, data: l, useVal: a, place: "org", returns: a, cases: a, natural: a, forceStrings: a, ignoreDashes: a, sortFunction: l, useFlex: a, emptyEnd: a }; return s.Element && function (e) { e.matchesSelector = e.matchesSelector || e.mozMatchesSelector || e.msMatchesSelector || e.oMatchesSelector || e.webkitMatchesSelector || function (e) { for (var t = this, r = (t.parentNode || t.document).querySelectorAll(e), n = -1; r[++n] && r[n] != t;); return !!r[n] } }(Element.prototype), r(n, { loop: t }), r(e, { plugin: n, defaults: m }) }());
 
-(function ($) {
+(function (global, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery', 'tinysort', 'moment'], factory);
+    } else {
+        factory(global.jQuery, global.tinysort, global.moment || undefined);
+    }
+})(this, function ($, tinysort, moment) {
 
     var $document = $(document),
         signClass,
@@ -31,7 +37,7 @@
             initialize({});
         }
         else if (options.constructor === Boolean) {
-            initialize({applyLast: options});
+            initialize({ applyLast: options });
         }
         else if (options.sortingHeader !== undefined) {
             sortByColumn(options.sortingHeader);
@@ -62,15 +68,15 @@
             $this.find('span.sign').remove();
 
             // Add placeholder cells for colspans
-            $this.find('thead [colspan]').each(function () {
+            $this.find('> thead [colspan]').each(function () {
                 var colspan = parseFloat($(this).attr('colspan'));
                 for (var i = 1; i < colspan; i++) {
                     $(this).after('<th class="colspan-compensate">');
                 }
             });
 
-            // Add placeholder cells for rowspans
-            $this.find('thead [rowspan]').each(function () {
+            // Add placeholder cells for rowspans in header
+            $this.find('> thead [rowspan]').each(function () {
                 var $cell = $(this);
                 var rowspan = parseFloat($cell.attr('rowspan'));
                 for (var i = 1; i < rowspan; i++) {
@@ -82,7 +88,7 @@
             });
 
             // Set indexes to header cells
-            $this.find('thead tr').each(function (rowIndex) {
+            $this.find('> thead tr').each(function (rowIndex) {
                 $(this).find('th').each(function (columnIndex) {
                     var $header = $(this);
                     $header.addClass('nosort').removeClass('up down');
@@ -92,7 +98,7 @@
             });
 
             // Cleanup placeholder cells
-            $this.find('thead .rowspan-compensate, .colspan-compensate').remove();
+            $this.find('> thead .rowspan-compensate, .colspan-compensate').remove();
 
             // Initialize sorting values specified in header
             $this.find('th').each(function () {
@@ -128,9 +134,9 @@
             });
 
             var context = lookupSortContext($this),
-                bsSort  = context.bsSort;
+                bsSort = context.bsSort;
 
-            $this.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
+            $this.find('> thead th[data-defaultsort!="disabled"]').each(function (index) {
                 var $header = $(this);
                 var $sortTable = $header.closest('table.sortable');
                 $header.data('sortTable', $sortTable);
@@ -142,7 +148,52 @@
                     doSort($header, $sortTable);
                 }
             });
-            $this.trigger('sorted');
+        });
+    }
+
+    // Clean up placeholder cells for rowspans in body
+    function removeRowspanPlaceholders(table) {
+        table.find('> tbody [rowspan-group]').each(function () {
+            var $this = $(this);
+            var id = $this.attr('rowspan-group');
+            var parentRow = $this.parent('tr');
+            var index = parentRow.children().index($this);
+
+            while(true) {
+                var nextRow = parentRow.next('tr');
+                if (!nextRow.is('tr'))
+                    break;
+                var nextCell = nextRow.children().eq(index);
+
+                if (nextCell.attr('rowspan-group') === id) {
+                    var rowspan = parseFloat($this.attr('rowspan')) || 1;
+                    $this.attr('rowspan', rowspan + 1);
+                    nextCell.remove();
+                } else {
+                    break;
+                }
+                parentRow = nextRow;
+            }
+        });
+    }
+
+    // Add placeholder cells for rowspans in body
+    function addRowspanPlaceholders(table) {
+        table.find('> tbody [rowspan]').each(function () {
+            var $cell = $(this);
+            var rowspan = parseFloat($cell.attr('rowspan'));
+            $cell.removeAttr('rowspan');
+            var rowSpanId = $cell.attr('rowspan-group') || guid();
+            $cell.attr('rowspan-group', rowSpanId);
+            $cell.attr('rowspan-value', rowspan);
+            var parentRow = $cell.parent('tr');
+            var index = parentRow.children().index($cell);
+            for (var i = 1; i < rowspan; i++) {
+                var compemnsationCell = $cell.clone(false);
+                var nextRow = parentRow.next('tr');
+                nextRow.children().eq(index).before(compemnsationCell);
+                parentRow = nextRow;
+            }
         });
     }
 
@@ -154,9 +205,7 @@
     // element is the header of the column to sort (the clicked header)
     function sortByColumn(element) {
         var $this = $(element), $table = $this.data('sortTable') || $this.closest('table.sortable');
-        $table.trigger('before-sort');
         doSort($this, $table);
-        $table.trigger('sorted');
     }
 
     // Look up sorting data appropriate for the specified table (jQuery element).
@@ -164,8 +213,8 @@
     function lookupSortContext($table) {
         var context = $table.data("bootstrap-sortable-context");
         if (context === undefined) {
-            context = {bsSort: [], lastSort: undefined};
-            $table.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
+            context = { bsSort: [], lastSort: undefined };
+            $table.find('> thead th[data-defaultsort!="disabled"]').each(function (index) {
                 var $this = $(this);
                 var sortKey = $this.attr('data-sortkey');
                 context.bsSort[sortKey] = $this.attr('data-defaultsort');
@@ -184,9 +233,13 @@
 
     // Sorting mechanism separated
     function doSort($this, $table) {
+        $table.trigger('before-sort');
+
+        addRowspanPlaceholders($table);
+
         var sortColumn = parseFloat($this.attr('data-sortcolumn')),
-            context    = lookupSortContext($table),
-            bsSort     = context.bsSort;
+            context = lookupSortContext($table),
+            bsSort = context.bsSort;
 
         var colspan = $this.attr('colspan');
         if (colspan) {
@@ -194,7 +247,7 @@
             var rowIndex = parseFloat($this.data('sortkey').split('-').pop());
 
             // If there is one more row in header, delve deeper
-            if ($table.find('thead tr').length - 1 > rowIndex) {
+            if ($table.find('> thead tr').length - 1 > rowIndex) {
                 doSort($table.find('[data-sortkey="' + (sortColumn + mainSort) + '-' + (rowIndex + 1) + '"]'), $table);
                 return;
             }
@@ -205,12 +258,12 @@
         var localSignClass = $this.attr('data-defaultsign') || signClass;
 
         // update arrow icon
-        $table.find('th').each(function () {
+        $table.find('> thead th').each(function () {
             $(this).removeClass('up').removeClass('down').addClass('nosort');
         });
 
         if ($.browser.mozilla) {
-            var moz_arrow = $table.find('div.mozilla');
+            var moz_arrow = $table.find('> thead div.mozilla');
             if (moz_arrow !== undefined) {
                 moz_arrow.find('.sign').remove();
                 moz_arrow.parent().html(moz_arrow.html());
@@ -219,7 +272,7 @@
             $this.children().eq(0).append('<span class="sign ' + localSignClass + '"></span>');
         }
         else {
-            $table.find('span.sign').remove();
+            $table.find('> thead span.sign').remove();
             $this.append('<span class="sign ' + localSignClass + '"></span>');
         }
 
@@ -246,7 +299,7 @@
         var fixedRows = [];
         $(rows.filter('[data-disablesort="true"]').get().reverse()).each(function (index, fixedRow) {
             var $fixedRow = $(fixedRow);
-            fixedRows.push({index: rows.index($fixedRow), row: $fixedRow});
+            fixedRows.push({ index: rows.index($fixedRow), row: $fixedRow });
             $fixedRow.remove();
         });
 
@@ -254,7 +307,7 @@
         var rowsToSort = rows.not('[data-disablesort="true"]');
         if (rowsToSort.length != 0) {
             var emptySorting = bsSort[sortKey] === 'asc' ? emptyEnd : false;
-            sortEngine(rowsToSort, {emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value'});
+            sortEngine(rowsToSort, { emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value' });
         }
 
         // add back the fixed rows
@@ -267,27 +320,36 @@
         });
 
         // add class to sorted column cells
-        $table.find('td.sorted, th.sorted').removeClass('sorted');
+        $table.find('> tbody > tr > td.sorted,> thead th.sorted').removeClass('sorted');
         rowsToSort.find('td:eq(' + sortColumn + ')').addClass('sorted');
         $this.addClass('sorted');
+
+        removeRowspanPlaceholders($table);
+        $table.trigger('sorted');
     }
 
     // jQuery 1.9 removed this object
     if (!$.browser) {
-        $.browser = {chrome: false, mozilla: false, opera: false, msie: false, safari: false};
+        $.browser = { chrome: false, mozilla: false, opera: false, msie: false, safari: false };
         var ua = navigator.userAgent;
         $.each($.browser, function (c) {
             $.browser[c] = ((new RegExp(c, 'i').test(ua))) ? true : false;
-            if ($.browser.mozilla && c === 'mozilla') {
-                $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false;
-            }
-            if ($.browser.chrome && c === 'safari') {
-                $.browser.safari = false;
-            }
+            if ($.browser.mozilla && c === 'mozilla') { $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false; }
+            if ($.browser.chrome && c === 'safari') { $.browser.safari = false; }
         });
+    }
+
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+               s4() + '-' + s4() + s4() + s4();
     }
 
     // Initialise on DOM ready
     $($.bootstrapSortable);
 
-}(jQuery));
+});

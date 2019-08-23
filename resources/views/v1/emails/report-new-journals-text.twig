@@ -1,25 +1,17 @@
 {% include 'emails.header-text' %}
-{% if journals.count == 1 %}
-Firefly III has created a transaction for you.
+{% if transformed|length == 1 %}Firefly III has created a transaction for you. You can find it in your Firefly III installation:{% endif %}
+{% if transformed|length > 1 %}Firefly III has created {{ groups.count }} transactions for you. You can find them in your Firefly III installation:{% endif %}
 
-{% endif %}
-{% if journals.count > 1 %}
-Firefly III has created {{ journals.count }} transactions for you.
-{% endif %}
-{% if journals.count == 1 %}
-You can find in in your Firefly III installation:
 
-{% for journal in journals %}
-{{ journal.description }}: {{ route('transactions.show', journal.id) }} (AMOUNT TODO)
+{% for group in transformed %}
+{% set count = group.transactions|length %}
+{% if 1 == count %}{% set journal = group.transactions[0] %}
+- {{ journal.description }}, {% if journal.type == 'deposit' %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount*-1 %} ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% elseif journal.type == 'transfer' %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount %} ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% else %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount %} ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% endif %}
+
+{% else %}- {{ group.group_title }}
+{% for journal in group.transactions %}--  {{ journal.description }}, {% if journal.type == 'deposit' %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount*-1 %} ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% elseif journal.type == 'transfer' %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount %} ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% else %}{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}{% if null != journal.foreign_amount %} ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }}){% endif %}{% endif %}
+
 {% endfor %}
 {% endif %}
-
-{% if journals.count > 1 %}
-You can find them in your Firefly III installation:
-
-{% for journal in journals %}
-- {{ journal.description }}: {{ route('transactions.show', journal.id) }} (AMOUNT TODO)
 {% endfor %}
-{% endif %}
-
 {% include 'emails.footer-text' %}
