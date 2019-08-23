@@ -65,6 +65,8 @@ class CreateController extends Controller
      */
     public function create(?string $objectType)
     {
+        app('preferences')->mark();
+
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
