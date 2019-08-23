@@ -267,6 +267,8 @@ class CurrencyControllerTest extends TestCase
 
         $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
         $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInUseAt')->atLeast()->once()->andReturn('accounts');
+
         $repository->shouldNotReceive('disable');
         Preferences::shouldReceive('mark')->atLeast()->once();
 

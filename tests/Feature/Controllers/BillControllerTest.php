@@ -151,12 +151,13 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\BillController
-     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testIndex(): void
     {
         $this->mockDefaultSession();
         $this->mockIntroPreference('shown_demo_bills_index');
+
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($this->getEuro());
 
         // mock stuff
         $this->mock(AttachmentHelperInterface::class);

@@ -192,11 +192,12 @@ class BillController extends Controller
      */
     public function index()
     {
-        $start      = session('start');
-        $end        = session('end');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $paginator  = $this->billRepository->getPaginator($pageSize);
-        $parameters = new ParameterBag();
+        $start           = session('start');
+        $end             = session('end');
+        $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
+        $paginator       = $this->billRepository->getPaginator($pageSize);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $parameters      = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 
@@ -206,9 +207,9 @@ class BillController extends Controller
 
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
-            static function (Bill $bill) use ($transformer) {
+            static function (Bill $bill) use ($transformer, $defaultCurrency) {
                 $return             = $transformer->transform($bill);
-                $return['currency'] = $bill->transactionCurrency;
+                $return['currency'] = $bill->transactionCurrency ?? $defaultCurrency;
 
                 return $return;
             }
