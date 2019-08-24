@@ -284,13 +284,13 @@ class AccountController extends Controller
      * Update account.
      *
      * @param AccountUpdateRequest $request
-     * @param Account $account
+     * @param Account              $account
      *
      * @return JsonResponse
      */
     public function update(AccountUpdateRequest $request, Account $account): JsonResponse
     {
-        $data         = $request->getAllAccountData();
+        $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
         $manager = new Manager;

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
@@ -57,10 +58,21 @@ class AccountRepository implements AccountRepositoryInterface
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
+
+    /**
+     * @param array $types
+     *
+     * @return int
+     */
+    public function count(array $types): int
+    {
+        return $this->user->accounts()->accountTypeIn($types)->count();
+    }
+
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -76,20 +88,9 @@ class AccountRepository implements AccountRepositoryInterface
         return true;
     }
 
-
-    /**
-     * @param array $types
-     *
-     * @return int
-     */
-    public function count(array $types): int
-    {
-        return $this->user->accounts()->accountTypeIn($types)->count();
-    }
-
     /**
      * @param string $number
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -116,7 +117,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -144,7 +145,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -307,21 +308,19 @@ class AccountRepository implements AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string $field
+     * @param string  $field
      *
      * @return null|string
      */
     public function getMetaValue(Account $account, string $field): ?string
     {
-        // TODO no longer need to loop like this
-
-        foreach ($account->accountMeta as $meta) {
-            if ($meta->name === $field) {
-                return (string)$meta->data;
-            }
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name', $field)->first();
+        if (null === $meta) {
+            return null;
         }
 
-        return null;
+        return (string)$meta->data;
     }
 
     /**
@@ -340,6 +339,20 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $note->text;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal
+    {
+        return TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
     }
 
     /**
@@ -385,6 +398,22 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal->date->format('Y-m-d');
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
+    {
+        $journal = $this->getOpeningBalance($account);
+        $group   = null;
+        if (null !== $journal) {
+            $group = $journal->transactionGroup;
+        }
+
+        return $group;
     }
 
     /**
@@ -483,7 +512,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array $types
+     * @param array  $types
      *
      * @return Collection
      */
@@ -527,7 +556,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return Account
      * @throws FireflyException
@@ -541,33 +570,5 @@ class AccountRepository implements AccountRepositoryInterface
         $account = $service->update($account, $data);
 
         return $account;
-    }
-
-    /**
-     * @param Account $account
-     * @return TransactionJournal|null
-     */
-    public function getOpeningBalance(Account $account): ?TransactionJournal
-    {
-        return TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
-    }
-
-    /**
-     * @param Account $account
-     * @return TransactionGroup|null
-     */
-    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
-    {
-        $journal = $this->getOpeningBalance($account);
-        $group   = null;
-        if (null !== $journal) {
-            $group = $journal->transactionGroup;
-        }
-
-        return $group;
     }
 }

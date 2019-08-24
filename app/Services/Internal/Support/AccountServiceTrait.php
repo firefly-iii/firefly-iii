@@ -95,12 +95,13 @@ trait AccountServiceTrait
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+        if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
+
             $factory->crud($account, $field, (string)($data[$field] ?? ''));
         }
     }

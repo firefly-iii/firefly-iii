@@ -178,6 +178,37 @@ class Request extends FormRequest
     }
 
     /**
+     * Return integer value, or NULL when it's not set.
+     *
+     * @param string $field
+     *
+     * @return int|null
+     */
+    public function nullableInteger(string $field): ?int
+    {
+        $value = (string)$this->get($field);
+        if ('' === $value) {
+            return null;
+        }
+
+        return (int)$value;
+    }
+
+    /**
+     * Return string value, or NULL if empty.
+     *
+     * @param string $field
+     *
+     * @return string|null
+     */
+    public function nullableString(string $field): ?string
+    {
+        $string = app('steam')->cleanString((string)($this->get($field) ?? ''));
+
+        return '' === $string ? null : $string;
+    }
+
+    /**
      * Return string value.
      *
      * @param string $field
