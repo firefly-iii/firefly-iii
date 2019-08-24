@@ -145,6 +145,11 @@ class BillController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
+        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $count     = $bills->count();
+        $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
+
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
