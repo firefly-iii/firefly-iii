@@ -44,6 +44,13 @@ class AccountUpdateService
     /** @var User */
     private $user;
 
+    /** @var array */
+    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+
     /**
      * Constructor.
      */
@@ -71,20 +78,16 @@ class AccountUpdateService
         $this->user = $account->user;
 
         // update the account itself:
-
         $account->name   = $data['name'] ?? $account->name;
         $account->active = $data['active'] ?? $account->active;
+        $account->iban = $data['iban'] ?? $account->iban;
+
+        // update virtual balance (could be set to zero if empty string).
         if (null !== $data['virtual_balance']) {
             $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
         }
-        $account->iban = $data['iban'] ?? $account->iban;
+
         $account->save();
-
-
-        if (isset($data['currency_id']) && null !== $data['currency_id'] && 0 === $data['currency_id']) {
-            unset($data['currency_id']);
-        }
-
 
         // find currency, or use default currency instead.
         if (null !== $data['currency_id'] || null !== $data['currency_code']) {
@@ -93,13 +96,6 @@ class AccountUpdateService
             $data['currency_id'] = $currency->id;
         }
 
-        if (null === $data['currency_id']) {
-            $data['currency_id'] = $this->accountRepository->getMetaValue($account, 'currency_id');
-        }
-
-        if (null === $data['account_role']) {
-            $data['account_role'] = $this->accountRepository->getMetaValue($account, 'account_role');
-        }
         // update all meta data:
         $this->updateMetaData($account, $data);
 
