@@ -58,6 +58,7 @@ class RuleTransformer extends AbstractTransformer
      * @param Rule $rule
      *
      * @return array
+     * @throws FireflyException
      */
     public function transform(Rule $rule): array
     {
@@ -74,7 +75,7 @@ class RuleTransformer extends AbstractTransformer
             'active'          => $rule->active,
             'strict'          => $rule->strict,
             'stop_processing' => $rule->stop_processing,
-            'moment'          => $this->getRuleMoment($rule),
+            'trigger'          => $this->getRuleTrigger($rule),
             'triggers'        => $this->triggers($rule),
             'actions'         => $this->actions($rule),
             'links'           => [
@@ -120,7 +121,7 @@ class RuleTransformer extends AbstractTransformer
      * @return string
      * @throws FireflyException
      */
-    private function getRuleMoment(Rule $rule): string
+    private function getRuleTrigger(Rule $rule): string
     {
         $moment   = null;
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
