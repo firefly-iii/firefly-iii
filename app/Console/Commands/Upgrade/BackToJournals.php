@@ -85,10 +85,18 @@ class BackToJournals extends Command
     private function getIdsForBudgets(): array
     {
         $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 50);
 
-        return DB::table('transactions')
-                 ->whereIn('transactions.id', $transactions)
-                 ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        foreach ($chunks as $chunk) {
+            $set = DB::table('transactions')
+                     ->whereIn('transactions.id', $chunk)
+                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            /** @noinspection SlowArrayOperationsInLoopInspection */
+            $array = array_merge($array, $set);
+        }
+
+        return $array;
     }
 
     /**
@@ -97,10 +105,16 @@ class BackToJournals extends Command
     private function getIdsForCategories(): array
     {
         $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 50);
 
-        return DB::table('transactions')
-                 ->whereIn('transactions.id', $transactions)
-                 ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        foreach ($chunks as $chunk) {
+            $set = DB::table('transactions')
+                     ->whereIn('transactions.id', $transactions)
+                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        }
+
+        return $array;
     }
 
     /**
