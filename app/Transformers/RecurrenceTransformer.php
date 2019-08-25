@@ -207,40 +207,33 @@ class RecurrenceTransformer extends AbstractTransformer
 
     /**
      * @param RecurrenceTransaction $transaction
+     * @param array $array
      *
      * @return array
      */
-    private function getTransactionMeta(RecurrenceTransaction $transaction): array
+    private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
     {
-        $return = [];
-        // get meta data for each transaction:
         /** @var RecurrenceTransactionMeta $transactionMeta */
         foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
-            $transactionMetaArray = [
-                'name'  => $transactionMeta->name,
-                'value' => $transactionMeta->value,
-            ];
             switch ($transactionMeta->name) {
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
-                        $transactionMetaArray['category_id']   = $category->id;
-                        $transactionMetaArray['category_name'] = $category->name;
+                        $array['category_id']   = $category->id;
+                        $array['category_name'] = $category->name;
                     }
                     break;
                 case 'budget_id':
                     $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
                     if (null !== $budget) {
-                        $transactionMetaArray['budget_id']   = $budget->id;
-                        $transactionMetaArray['budget_name'] = $budget->name;
+                        $array['budget_id']   = $budget->id;
+                        $array['budget_name'] = $budget->name;
                     }
                     break;
             }
-            // store transaction meta data in transaction
-            $return[] = $transactionMetaArray;
         }
 
-        return $return;
+        return $array;
     }
 
     /**
@@ -315,8 +308,8 @@ class RecurrenceTransformer extends AbstractTransformer
                 'amount'                          => $amount,
                 'foreign_amount'                  => $foreignAmount,
                 'description'                     => $transaction->description,
-                'meta'                            => $this->getTransactionMeta($transaction),
             ];
+            $transactionArray = $this->getTransactionMeta($transaction, $transactionArray);
             if (null !== $transaction->foreign_currency_id) {
                 $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
                 $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
