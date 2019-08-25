@@ -186,6 +186,10 @@ class Request extends FormRequest
      */
     public function nullableInteger(string $field): ?int
     {
+        if (!$this->has($field)) {
+            return null;
+        }
+
         $value = (string)$this->get($field);
         if ('' === $value) {
             return null;
@@ -203,9 +207,10 @@ class Request extends FormRequest
      */
     public function nullableString(string $field): ?string
     {
-        $string = app('steam')->cleanString((string)($this->get($field) ?? ''));
-
-        return '' === $string ? null : $string;
+        if (!$this->has($field)) {
+            return null;
+        }
+        return app('steam')->cleanString((string)($this->get($field) ?? ''));
     }
 
     /**

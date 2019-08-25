@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\RuleRequest;
+use FireflyIII\Api\V1\Requests\RuleStoreRequest;
 use FireflyIII\Api\V1\Requests\RuleTestRequest;
 use FireflyIII\Api\V1\Requests\RuleTriggerRequest;
+use FireflyIII\Api\V1\Requests\RuleUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
@@ -59,6 +61,7 @@ class RuleController extends Controller
 
     /**
      * RuleController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -136,10 +139,58 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param Rule    $rule
+     *
+     * @return JsonResponse
+     */
+    public function moveDown(Request $request, Rule $rule): JsonResponse
+    {
+        $this->ruleRepository->moveDown($rule);
+        $rule    = $this->ruleRepository->find($rule->id);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
+     * @param Request $request
+     * @param Rule    $rule
+     *
+     * @return JsonResponse
+     */
+    public function moveUp(Request $request, Rule $rule): JsonResponse
+    {
+        $this->ruleRepository->moveUp($rule);
+        $rule    = $this->ruleRepository->find($rule->id);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
      * List single resource.
      *
      * @param Request $request
-     * @param Rule $rule
+     * @param Rule    $rule
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -163,11 +214,11 @@ class RuleController extends Controller
     /**
      * Store new object.
      *
-     * @param RuleRequest $request
+     * @param RuleStoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(RuleRequest $request): JsonResponse
+    public function store(RuleStoreRequest $request): JsonResponse
     {
         $rule    = $this->ruleRepository->store($request->getAll());
         $manager = new Manager();
@@ -185,7 +236,7 @@ class RuleController extends Controller
 
     /**
      * @param RuleTestRequest $request
-     * @param Rule $rule
+     * @param Rule            $rule
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -231,7 +282,7 @@ class RuleController extends Controller
      * Execute the given rule group on a set of existing transactions.
      *
      * @param RuleTriggerRequest $request
-     * @param Rule $rule
+     * @param Rule               $rule
      *
      * @return JsonResponse
      */
@@ -268,14 +319,15 @@ class RuleController extends Controller
     /**
      * Update a rule.
      *
-     * @param RuleRequest $request
-     * @param Rule $rule
+     * @param RuleUpdateRequest $request
+     * @param Rule              $rule
      *
      * @return JsonResponse
      */
-    public function update(RuleRequest $request, Rule $rule): JsonResponse
+    public function update(RuleUpdateRequest $request, Rule $rule): JsonResponse
     {
-        $rule = $this->ruleRepository->update($rule, $request->getAll());
+        $data = $request->getAll();
+        $rule = $this->ruleRepository->update($rule, $data);
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -288,51 +340,5 @@ class RuleController extends Controller
         $resource = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @param Request $request
-     * @param Rule $rule
-     * @return JsonResponse
-     */
-    public function moveDown(Request $request, Rule $rule): JsonResponse
-    {
-        $this->ruleRepository->moveDown($rule);
-        $rule    = $this->ruleRepository->find($rule->id);
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        /** @var RuleTransformer $transformer */
-        $transformer = app(RuleTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($rule, $transformer, 'rules');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
-    }
-
-    /**
-     * @param Request $request
-     * @param Rule $rule
-     * @return JsonResponse
-     */
-    public function moveUp(Request $request, Rule $rule): JsonResponse
-    {
-        $this->ruleRepository->moveUp($rule);
-        $rule    = $this->ruleRepository->find($rule->id);
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        /** @var RuleTransformer $transformer */
-        $transformer = app(RuleTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($rule, $transformer, 'rules');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 }
