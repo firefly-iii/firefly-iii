@@ -28,6 +28,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 /**
  * Class BackToJournals
@@ -154,9 +155,13 @@ class BackToJournals extends Command
      */
     private function migrateBudgets(): void
     {
-
-        $journalIds = $this->getIdsForBudgets();
-        $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
+        $journals = new Collection;
+        $allIds   = $this->getIdsForBudgets();
+        $chunks   = array_chunk($allIds, 50);
+        foreach ($chunks as $journalIds) {
+            $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
+            $journals  = $journals->merge($collected);
+        }
         $this->line(sprintf('Check %d transaction journal(s) for budget info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -205,8 +210,13 @@ class BackToJournals extends Command
      */
     private function migrateCategories(): void
     {
-        $journalIds = $this->getIdsForCategories();
-        $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
+        $journals = new Collection;
+        $allIds   = $this->getIdsForCategories();
+        $chunks   = array_chunk($allIds, 50);
+        foreach ($chunks as $journalIds) {
+            $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
+            $journals  = $journals->merge($collected);
+        }
         $this->line(sprintf('Check %d transaction journal(s) for category info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
