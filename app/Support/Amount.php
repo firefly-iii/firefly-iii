@@ -343,7 +343,7 @@ class Amount
     private function tryDecrypt(string $value): string
     {
         try {
-            $value = Crypt::decrypt($value);
+            $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
             Log::debug(sprintf('Could not decrypt "%s". %s', $value, $e->getMessage()));
         }

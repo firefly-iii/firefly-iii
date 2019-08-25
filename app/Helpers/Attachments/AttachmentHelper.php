@@ -84,15 +84,20 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
-
+        $encryptedData = '';
         try {
-            $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
+            $encryptedData = $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
+        } catch (FileNotFoundException $e) {
+            Log::error($e->getMessage());
+        }
+        try {
+            $unencryptedData = Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
-            $content = '';
+            $unencryptedData = $encryptedData;
         }
 
-        return $content;
+        return $unencryptedData;
     }
 
     /**
@@ -167,9 +172,8 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             return false;
         }
-        // is allowed? Save the file!
-        $encrypted = Crypt::encrypt($content);
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        // is allowed? Save the file, without encryption.
+        $this->uploadDisk->put($attachment->fileName(), $content);
 
         // update attachment.
         $attachment->md5      = md5_file($path);
@@ -275,12 +279,10 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
 
             $content   = $fileObject->fread($file->getSize());
-            $encrypted = Crypt::encrypt($content);
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
-            Log::debug(sprintf('Encrypted content is %d', strlen($encrypted)));
 
             // store it:
-            $this->uploadDisk->put($attachment->fileName(), $encrypted);
+            $this->uploadDisk->put($attachment->fileName(), $content);
             $attachment->uploaded = true; // update attachment
             $attachment->save();
             $this->attachments->push($attachment);

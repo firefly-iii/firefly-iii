@@ -30,6 +30,7 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Log;
 use Storage;
 
 /**
@@ -51,7 +52,7 @@ class ScanAttachments extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:scan-attachments';
+    protected $signature = 'firefly-iii:scan-attachments';
 
     /**
      * Execute the console command.
@@ -62,21 +63,22 @@ class ScanAttachments extends Command
         $disk        = Storage::disk('upload');
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
-            $fileName = $attachment->fileName();
+            $fileName         = $attachment->fileName();
+            $decryptedContent = '';
             try {
-                $content = $disk->get($fileName);
+                $encryptedContent = $disk->get($fileName);
             } catch (FileNotFoundException $e) {
                 $this->error(sprintf('Could not find data for attachment #%d: %s', $attachment->id, $e->getMessage()));
                 continue;
             }
             try {
-                $decrypted = Crypt::decrypt($content);
+                $decryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                $this->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
-                continue;
+                Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+                $decryptedContent = $encryptedContent;
             }
             $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
-            file_put_contents($tempFileName, $decrypted);
+            file_put_contents($tempFileName, $decryptedContent);
             $md5              = md5_file($tempFileName);
             $mime             = mime_content_type($tempFileName);
             $attachment->md5  = $md5;

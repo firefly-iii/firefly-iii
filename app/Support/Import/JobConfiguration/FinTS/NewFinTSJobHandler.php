@@ -57,7 +57,7 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_port']      = (int)($data['fints_port'] ?? '');
         $config['fints_bank_code'] = (string)($data['fints_bank_code'] ?? '');
         $config['fints_username']  = (string)($data['fints_username'] ?? '');
-        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
+        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? ''); // verified
         $config['apply-rules']     = 1 === (int)$data['apply_rules'];
 
         // sanitize FinTS URL.
