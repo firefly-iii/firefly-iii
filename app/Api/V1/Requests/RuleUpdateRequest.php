@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use Illuminate\Validation\Validator;
 use function is_array;
 
 
@@ -114,6 +115,57 @@ class RuleUpdateRequest extends Request
         ];
 
         return $rules;
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $this->atLeastOneTrigger($validator);
+                $this->atLeastOneAction($validator);
+            }
+        );
+    }
+
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    protected function atLeastOneAction(Validator $validator): void
+    {
+        $data    = $validator->getData();
+        $actions = $data['actions'] ?? null;
+        if (is_array($actions)) {
+            // need at least one action
+            if (0 === count($actions)) {
+                $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
+            }
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    protected function atLeastOneTrigger(Validator $validator): void
+    {
+        $data     = $validator->getData();
+        $triggers = $data['triggers'] ?? null;
+        if (is_array($triggers)) {
+            // need at least one trigger
+            if (0 === count($triggers)) {
+                $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
+            }
+        }
     }
 
     /**
