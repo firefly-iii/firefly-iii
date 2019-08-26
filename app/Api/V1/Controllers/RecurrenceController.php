@@ -274,7 +274,7 @@ class RecurrenceController extends Controller
      */
     public function update(RecurrenceUpdateRequest $request, Recurrence $recurrence): JsonResponse
     {
-        $data     = $request->getAllRecurrenceData();
+        $data     = $request->getAll();
         $category = $this->repository->update($recurrence, $data);
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';

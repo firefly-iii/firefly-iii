@@ -74,8 +74,8 @@ class RecurrenceStoreRequest extends Request
                 'apply_rules'  => $applyRules,
                 'active'       => $active,
             ],
-            'transactions' => $this->getRecurrenceTransactionData(),
-            'repetitions'  => $this->getRecurrenceRepetitionData(),
+            'transactions' => $this->getTransactionData(),
+            'repetitions'  => $this->getRepetitionData(),
         ];
 
         return $return;
@@ -120,10 +120,9 @@ class RecurrenceStoreRequest extends Request
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.piggy_bank_id'         => ['numeric', 'mustExist:piggy_banks,id', new BelongsUser],
-
-            'transactions.*.tags' => 'between:1,64000',
+            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.tags'                  => 'between:1,64000',
 
 
         ];
@@ -148,5 +147,77 @@ class RecurrenceStoreRequest extends Request
                 $this->validateAccountInformation($validator);
             }
         );
+    }
+
+    /**
+     * Returns the repetition data as it is found in the submitted data.
+     *
+     * @return array
+     */
+    private function getRepetitionData(): array
+    {
+        $return = [];
+        // repetition data:
+        /** @var array $repetitions */
+        $repetitions = $this->get('repetitions');
+        if (null === $repetitions) {
+            return [];
+        }
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $return[] = [
+                'type'    => $repetition['type'],
+                'moment'  => $repetition['moment'],
+                'skip'    => (int)$repetition['skip'],
+                'weekend' => (int)$repetition['weekend'],
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
+     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
+     *
+     * @return array
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+        // transaction data:
+        /** @var array $transactions */
+        $transactions = $this->get('transactions');
+        if (null === $transactions) {
+            return [];
+        }
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = [
+                'amount'                => $transaction['amount'],
+                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
+                'currency_code'         => $transaction['currency_code'] ?? null,
+                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
+                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
+                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
+                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
+                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
+                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
+                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
+                'description'           => $transaction['description'],
+                'type'                  => $this->string('type'),
+
+                // new and updated fields:
+                'piggy_bank_id'         => isset($transaction['piggy_bank_id']) ? (int)$transaction['piggy_bank_id'] : null,
+                'piggy_bank_name'       => $transaction['piggy_bank_name'] ?? null,
+                'tags'                  => $transaction['tags'],
+                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
+                'budget_name'           => $transaction['budget_name'] ?? null,
+                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
+                'category_name'         => $transaction['category_name'] ?? null,
+            ];
+        }
+
+        return $return;
     }
 }

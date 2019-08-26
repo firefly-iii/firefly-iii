@@ -31,6 +31,7 @@ use FireflyIII\User;
 
 /**
  * Class RecurrenceUpdateService
+ *
  * @codeCoverageIgnore
  */
 class RecurrenceUpdateService
@@ -52,7 +53,10 @@ class RecurrenceUpdateService
     public function update(Recurrence $recurrence, array $data): Recurrence
     {
         $this->user      = $recurrence->user;
-        $transactionType = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+        $transactionType = $recurrence->transactionType;
+        if (isset($data['recurrence']['type'])) {
+            $transactionType = $this->findTransactionType(ucfirst($data['recurrence']['type']));
+        }
         // update basic fields first:
         $recurrence->transaction_type_id = $transactionType->id;
         $recurrence->title               = $data['recurrence']['title'] ?? $recurrence->title;
@@ -75,15 +79,19 @@ class RecurrenceUpdateService
         $recurrence->save();
 
         // update all meta data:
-        $this->updateMetaData($recurrence, $data);
+        //$this->updateMetaData($recurrence, $data);
 
         // update all repetitions
-        $this->deleteRepetitions($recurrence);
-        $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
+        if (null !== $data['repetitions']) {
+            $this->deleteRepetitions($recurrence);
+            $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
+        }
 
         // update all transactions (and associated meta-data);
-        $this->deleteTransactions($recurrence);
-        $this->createTransactions($recurrence, $data['transactions'] ?? []);
+        if (null !== $data['transactions']) {
+            $this->deleteTransactions($recurrence);
+            $this->createTransactions($recurrence, $data['transactions'] ?? []);
+        }
 
         return $recurrence;
     }

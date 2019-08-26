@@ -53,6 +53,24 @@ trait RecurrenceValidation
     }
 
     /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    public function validateOneRepetitionUpdate(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['repetitions'] ?? null;
+        if (null === $repetitions) {
+            return;
+        }
+        // need at least one transaction
+        if (0 === count($repetitions)) {
+            $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
+        }
+    }
+
+    /**
      * Validates that the recurrence has valid repetition information. It either doesn't stop,
      * or stops after X times or at X date. Not both of them.,
      *
