@@ -20,11 +20,11 @@
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.number('skip', array.recurrence_repetitions[0].skip) }}
-                        {{ ExpandedForm.select('weekend', weekendResponses, array.recurrence_repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
+                        {{ ExpandedForm.number('skip', array.repetitions[0].skip) }}
+                        {{ ExpandedForm.select('weekend', weekendResponses, array.repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
                         {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
-                        {{ ExpandedForm.number('repetitions', array.repetitions) }}
+                        {{ ExpandedForm.number('repetitions', array.nr_of_repetitions) }}
 
                         {# calendar in popup #}
                         <div class="form-group" id="calendar_holder">
@@ -90,17 +90,11 @@
                         {# source account if withdrawal, or if transfer: #}
                         {{ AccountForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
 
-                        {# source account name for deposits: #}
-                        {#{{ ExpandedForm.text('source_name', array.transactions[0].source_name, {label: trans('form.revenue_account')}) }}#}
-
                         {# NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage #}
                         {{ AccountForm.activeDepositDestinations('deposit_source_id', preFilled.deposit_source_id, {label: trans('form.deposit_source_id')}) }}
 
                         {# destination if deposit or transfer: #}
                         {{ AccountForm.longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
-
-                        {# destination account name for withdrawals #}
-                        {# {{ ExpandedForm.text('destination_name', array.transactions[0].destination_name, {label: trans('form.expense_account')}) }}#}
 
                         {# NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
                         {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', preFilled.withdrawal_destination_id, {label: trans('form.withdrawal_destination_id')}) }}
@@ -120,26 +114,15 @@
                         {{ ExpandedForm.amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
-                        {% set budgetId = 0 %}
-                        {% set categoryName = '' %}
-                        {% for metaValue in array.transactions[0].meta %}
-                            {% if metaValue.name == 'budget_id' %}
-                                {% set budgetId = metaValue.value %}
-                            {% endif %}
-                            {% if metaValue.name == 'category_name' %}
-                                {% set categoryName = metaValue.value %}
-                            {% endif %}
-                        {% endfor %}
-
                         {% if budgets|length > 1 %}
-                            {{ ExpandedForm.select('budget_id', budgets, budgetId) }} {##}
+                            {{ ExpandedForm.select('budget_id', budgets, array.transactions[0].budget_id) }}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, budgetId, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
+                            {{ ExpandedForm.select('budget_id', budgets, array.transactions[0].budget_id, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
                             {#budgets#}
                         {% endif %}
 
                         {# CATEGORY ALWAYS #}
-                        {{ ExpandedForm.text('category',categoryName) }}
+                        {{ ExpandedForm.text('category',array.transactions[0].category_name) }}
 
                         {# TAGS #}
                         {% set tags = '' %}

@@ -206,15 +206,45 @@ class RecurrenceTransformer extends AbstractTransformer
 
     /**
      * @param RecurrenceTransaction $transaction
-     * @param array $array
+     * @param array                 $array
      *
      * @return array
+     * @throws FireflyException
      */
     private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
     {
+        $array['tags']            = [];
+        $array['bill_id']         = null;
+        $array['bill_name']       = null;
+        $array['category_id']     = null;
+        $array['category_name']   = null;
+        $array['budget_id']       = null;
+        $array['budget_name']     = null;
+        $array['piggy_bank_id']   = null;
+        $array['piggy_bank_name'] = null;
+        
         /** @var RecurrenceTransactionMeta $transactionMeta */
         foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
             switch ($transactionMeta->name) {
+                default:
+                    throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
+                case 'tags':
+                    $array['tags'] = explode(',', $transactionMeta->value);
+                    break;
+                case 'bill_id':
+                    $bill = $this->billRepos->find((int)$transactionMeta->value);
+                    if (null !== $bill) {
+                        $array['bill_id']   = $bill->id;
+                        $array['bill_name'] = $bill->name;
+                    }
+                    break;
+                case 'piggy_bank_id':
+                    $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
+                    if (null !== $piggy) {
+                        $array['piggy_bank_id']   = $piggy->id;
+                        $array['piggy_bank_name'] = $piggy->name;
+                    }
+                    break;
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
