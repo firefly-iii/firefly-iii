@@ -66,8 +66,6 @@ class RecurrenceStoreRequest extends Request
             'active'                               => [new IsBoolean],
             'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
             'nr_of_repetitions'                    => 'numeric|between:1,31',
-            'tags'                                 => 'between:1,64000',
-            'piggy_bank_id'                        => 'numeric',
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
             'repetitions.*.skip'                   => 'required|numeric|between:0,31',
@@ -79,12 +77,18 @@ class RecurrenceStoreRequest extends Request
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
+
+            // new and updated fields:
+            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
+            'transactions.*.budget_name'           => 'between:1,255|nullable',
+            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
+            'transactions.*.category_name'         => 'between:1,255|nullable',
+            'transactions.*.tags'                  => 'between:1,64000',
+            'transactions.*.piggy_bank_id'         => ['numeric', 'mustExist:piggy_banks,id', new BelongsUser],
         ];
     }
 
