@@ -109,7 +109,6 @@ class RecurrenceTransformer extends AbstractTransformer
             'notes'             => $this->repository->getNoteText($recurrence),
             'repetitions'       => $this->getRepetitions($recurrence),
             'transactions'      => $this->getTransactions($recurrence),
-            'meta'              => $this->getMeta($recurrence),
             'links'             => [
                 [
                     'rel' => 'self',
