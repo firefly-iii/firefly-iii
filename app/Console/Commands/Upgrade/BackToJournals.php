@@ -86,7 +86,7 @@ class BackToJournals extends Command
     {
         $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
         $array        = [];
-        $chunks       = array_chunk($transactions, 50);
+        $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
             $set = DB::table('transactions')
@@ -106,7 +106,7 @@ class BackToJournals extends Command
     {
         $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
         $array        = [];
-        $chunks       = array_chunk($transactions, 50);
+        $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
             $set = DB::table('transactions')
@@ -171,7 +171,7 @@ class BackToJournals extends Command
     {
         $journals = new Collection;
         $allIds   = $this->getIdsForBudgets();
-        $chunks   = array_chunk($allIds, 50);
+        $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $journalIds) {
             $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
             $journals  = $journals->merge($collected);
@@ -226,7 +226,7 @@ class BackToJournals extends Command
     {
         $journals = new Collection;
         $allIds   = $this->getIdsForCategories();
-        $chunks   = array_chunk($allIds, 50);
+        $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $journalIds) {
             $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
             $journals  = $journals->merge($collected);
