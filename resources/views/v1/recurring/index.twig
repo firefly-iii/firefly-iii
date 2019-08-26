@@ -55,8 +55,8 @@
                                     </td>
                                     <td data-value="{{ rt.title }}">
                                         {% if rt.active == false %}<s>{% endif %}
-                                        {{ rt.transaction_type|_ }}:
-                                        <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>
+                                            {{ rt.type|_ }}:
+                                            <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>
                                         {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }}){% endif %}
                                         {% if rt.description|length > 0 %}
                                             <small><br>{{ rt.description }}</small>
@@ -84,7 +84,7 @@
                                     </td>
                                     <td>
                                         <ul>
-                                            {% for rep in rt.recurrence_repetitions %}
+                                            {% for rep in rt.repetitions %}
                                                 <li>{{ rep.description }}
                                                 {% if rep.repetition_skip == 1 %}
                                                     ({{ trans('firefly.recurring_skips_one')|lower }}).
@@ -111,8 +111,8 @@
                                             {% if null != rt.repeat_until and rt.repetitions == 0 %}
                                                 {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}.
                                             {% endif %}
-                                            {% if null == rt.repeat_until and rt.repetitions != 0 %}
-                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.repetitions}) }}.
+                                            {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
+                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.nr_of_repetitions}) }}.
                                             {% endif %}
 
                                         </p>
