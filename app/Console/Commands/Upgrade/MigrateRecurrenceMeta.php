@@ -110,12 +110,18 @@ class MigrateRecurrenceMeta extends Command
         if (null === $firstTransaction) {
             return 0;
         }
+        $value = $meta->value;
+
+        if ('tags' === $meta->name) {
+            $array = explode(',', $meta->value);
+            $value = json_encode($array);
+        }
 
         RecurrenceTransactionMeta::create(
             [
                 'rt_id' => $firstTransaction->id,
                 'name'  => $meta->name,
-                'value' => $meta->value,
+                'value' => $value,
             ]
         );
         $meta->forceDelete();
