@@ -48,7 +48,7 @@ trait RecurrenceValidation
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
         if (0 === count($repetitions)) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
+            $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
         }
     }
 
