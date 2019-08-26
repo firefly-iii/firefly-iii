@@ -36,7 +36,7 @@ class CCLiabilities extends Command
 {
 
 
-    public const CONFIG_NAME = '4780_cc_liabilities';
+    public const CONFIG_NAME = '480_cc_liabilities';
     /**
      * The console command description.
      *

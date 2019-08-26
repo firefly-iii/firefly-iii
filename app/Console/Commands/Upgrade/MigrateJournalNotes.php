@@ -35,7 +35,7 @@ use Log;
  */
 class MigrateJournalNotes extends Command
 {
-    public const CONFIG_NAME = '4780_migrate_notes';
+    public const CONFIG_NAME = '480_migrate_notes';
     /**
      * The console command description.
      *

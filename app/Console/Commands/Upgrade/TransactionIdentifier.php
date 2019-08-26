@@ -36,7 +36,7 @@ use Schema;
  */
 class TransactionIdentifier extends Command
 {
-    public const CONFIG_NAME = '4780_transaction_identifier';
+    public const CONFIG_NAME = '480_transaction_identifier';
     /**
      * The console command description.
      *

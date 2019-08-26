@@ -35,7 +35,7 @@ use Illuminate\Support\Collection;
  */
 class BackToJournals extends Command
 {
-    public const CONFIG_NAME = '4780_back_to_journals';
+    public const CONFIG_NAME = '480_back_to_journals';
     /**
      * The console command description.
      *

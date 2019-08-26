@@ -41,7 +41,7 @@ use Log;
 class TransferCurrenciesCorrections extends Command
 {
 
-    public const CONFIG_NAME = '4780_transfer_currencies';
+    public const CONFIG_NAME = '480_transfer_currencies';
     /**
      * The console command description.
      *

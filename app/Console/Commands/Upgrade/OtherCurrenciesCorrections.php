@@ -41,7 +41,7 @@ use Illuminate\Console\Command;
 class OtherCurrenciesCorrections extends Command
 {
 
-    public const CONFIG_NAME = '4780_other_currencies';
+    public const CONFIG_NAME = '480_other_currencies';
     /**
      * The console command description.
      *

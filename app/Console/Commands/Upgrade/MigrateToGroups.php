@@ -43,7 +43,7 @@ use Log;
  */
 class MigrateToGroups extends Command
 {
-    public const CONFIG_NAME = '4780_migrated_to_groups';
+    public const CONFIG_NAME = '480_migrated_to_groups';
     /**
      * The console command description.
      *

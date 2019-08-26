@@ -34,7 +34,7 @@ use Log;
  */
 class MigrateAttachments extends Command
 {
-    public const CONFIG_NAME = '4780_migrate_attachments';
+    public const CONFIG_NAME = '480_migrate_attachments';
     /**
      * The console command description.
      *

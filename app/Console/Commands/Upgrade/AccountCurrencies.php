@@ -38,7 +38,7 @@ use Log;
  */
 class AccountCurrencies extends Command
 {
-    public const CONFIG_NAME = '4780_account_currencies';
+    public const CONFIG_NAME = '480_account_currencies';
     /**
      * The console command description.
      *
