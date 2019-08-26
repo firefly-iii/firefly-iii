@@ -133,7 +133,7 @@ class RecurrenceController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
@@ -165,7 +165,8 @@ class RecurrenceController extends Controller
      */
     public function store(RecurrenceStoreRequest $request): JsonResponse
     {
-        $recurrence = $this->repository->store($request->getAllRecurrenceData());
+        $data       = $request->getAll();
+        $recurrence = $this->repository->store($data);
         $manager    = new Manager();
         $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -182,7 +183,7 @@ class RecurrenceController extends Controller
     /**
      * Show transactions for this recurrence.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
@@ -267,7 +268,7 @@ class RecurrenceController extends Controller
      * Update single recurrence.
      *
      * @param RecurrenceUpdateRequest $request
-     * @param Recurrence $recurrence
+     * @param Recurrence              $recurrence
      *
      * @return JsonResponse
      */

@@ -24,10 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
-use FireflyIII\Rules\BelongsUser;
-use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class Request.
@@ -112,7 +109,7 @@ class Request extends FireflyIIIRequest
             'meta'         => [
                 'piggy_bank_id'   => $this->integer('piggy_bank_id'),
                 'piggy_bank_name' => $this->string('piggy_bank_name'),
-                'tags'            => explode(',', $this->string('tags')),
+                'tags'            => $this->get('tags'),
             ],
             'transactions' => $this->getRecurrenceTransactionData(),
             'repetitions'  => $this->getRecurrenceRepetitionData(),
@@ -167,16 +164,21 @@ class Request extends FireflyIIIRequest
                 'foreign_amount'        => $transaction['foreign_amount'] ?? null,
                 'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
                 'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
                 'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
                 'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
                 'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
                 'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
                 'description'           => $transaction['description'],
                 'type'                  => $this->string('type'),
+
+                // new and updated fields:
+                'piggy_bank_id'         => isset($transaction['piggy_bank_id']) ? (int)$transaction['piggy_bank_id'] : null,
+                'piggy_bank_name'       => $transaction['piggy_bank_name'] ?? null,
+                'tags'                  => $transaction['tags'],
+                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
+                'budget_name'           => $transaction['budget_name'] ?? null,
+                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
+                'category_name'         => $transaction['category_name'] ?? null,
             ];
         }
 

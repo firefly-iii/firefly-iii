@@ -222,14 +222,14 @@ class RecurrenceTransformer extends AbstractTransformer
         $array['budget_name']     = null;
         $array['piggy_bank_id']   = null;
         $array['piggy_bank_name'] = null;
-        
+
         /** @var RecurrenceTransactionMeta $transactionMeta */
         foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
             switch ($transactionMeta->name) {
                 default:
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
                 case 'tags':
-                    $array['tags'] = explode(',', $transactionMeta->value);
+                    $array['tags'] = json_decode($transactionMeta->value);
                     break;
                 case 'bill_id':
                     $bill = $this->billRepos->find((int)$transactionMeta->value);

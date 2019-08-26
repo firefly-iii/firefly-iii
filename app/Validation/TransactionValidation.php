@@ -172,7 +172,7 @@ trait TransactionValidation
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
         if (0 === count($transactions)) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
+            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
         }
     }
 

@@ -96,7 +96,7 @@ class RecurrenceFactory
         );
         $recurrence->save();
 
-        $this->updateMetaData($recurrence, $data);
+        //$this->updateMetaData($recurrence, $data);
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);

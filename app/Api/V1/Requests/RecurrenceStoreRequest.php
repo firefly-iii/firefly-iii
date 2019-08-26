@@ -49,6 +49,39 @@ class RecurrenceStoreRequest extends Request
     }
 
     /**
+     * Get all data from the request.
+     *
+     * @return array
+     */
+    public function getAll(): array
+    {
+        $active     = true;
+        $applyRules = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('apply_rules')) {
+            $applyRules = $this->boolean('apply_rules');
+        }
+        $return = [
+            'recurrence'   => [
+                'type'         => $this->string('type'),
+                'title'        => $this->string('title'),
+                'description'  => $this->string('description'),
+                'first_date'   => $this->date('first_date'),
+                'repeat_until' => $this->date('repeat_until'),
+                'repetitions'  => $this->integer('nr_of_repetitions'),
+                'apply_rules'  => $applyRules,
+                'active'       => $active,
+            ],
+            'transactions' => $this->getRecurrenceTransactionData(),
+            'repetitions'  => $this->getRecurrenceRepetitionData(),
+        ];
+
+        return $return;
+    }
+
+    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
@@ -84,11 +117,15 @@ class RecurrenceStoreRequest extends Request
 
             // new and updated fields:
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'           => 'between:1,255|nullable',
+            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.tags'                  => 'between:1,64000',
+            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.piggy_bank_id'         => ['numeric', 'mustExist:piggy_banks,id', new BelongsUser],
+
+            'transactions.*.tags' => 'between:1,64000',
+
+
         ];
     }
 
