@@ -170,6 +170,9 @@ class TransactionLinkController extends Controller
     public function store(TransactionLinkRequest $request): JsonResponse
     {
         $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
         $data    = $request->getAll();
         $inward  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $outward = $this->journalRepository->findNull($data['outward_id'] ?? 0);
@@ -187,7 +190,6 @@ class TransactionLinkController extends Controller
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -202,6 +204,8 @@ class TransactionLinkController extends Controller
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
         $manager         = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $data            = $request->getAll();
         $data['inward']  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $data['outward'] = $this->journalRepository->findNull($data['outward_id'] ?? 0);
