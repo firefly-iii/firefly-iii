@@ -69,7 +69,7 @@
                                 <span v-if="transactions.length === 1">Transaction information</span>
                             </h3>
                             <div class="box-tools pull-right" v-if="transactions.length > 1" x>
-                                <button v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
+                                <button  type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
                                         class="fa fa-trash"></i></button>
                             </div>
                         </div>
