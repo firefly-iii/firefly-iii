@@ -37,6 +37,57 @@ use Log;
  */
 trait RecurrenceValidation
 {
+
+
+    /**
+     * Validate account information input for recurrences which are being updated.
+     *
+     * TODO must always trigger when the type of the recurrence changes.
+     *
+     * @param Validator $validator
+     */
+    public function valUpdateAccountInfo(Validator $validator): void
+    {
+        //Log::debug('Now in validateAccountInformation()');
+        $data = $validator->getData();
+
+        $transactionType = $data['type'] ?? 'invalid';
+        $transactions    = $data['transactions'] ?? [];
+
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+
+        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
+        foreach ($transactions as $index => $transaction) {
+            $transactionType = $transaction['type'] ?? $transactionType;
+            $accountValidator->setTransactionType($transactionType);
+
+            // validate source account.
+            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
+            $sourceName  = $transaction['source_name'] ?? null;
+            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+
+            // do something with result:
+            if (false === $validSource) {
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+
+                return;
+            }
+            // validate destination account
+            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
+            $destinationName  = $transaction['destination_name'] ?? null;
+            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+            // do something with result:
+            if (false === $validDestination) {
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+
+                return;
+            }
+        }
+    }
+
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *

@@ -69,6 +69,7 @@ class RecurrenceUpdateRequest extends Request
                 'title'             => $this->nullableString('title'),
                 'description'       => $this->nullableString('description'),
                 'first_date'        => $this->date('first_date'),
+                'notes'             => $this->nullableString('notes'),
                 'repeat_until'      => $this->date('repeat_until'),
                 'nr_of_repetitions' => $this->nullableInteger('nr_of_repetitions'),
                 'apply_rules'       => $applyRules,
@@ -90,22 +91,21 @@ class RecurrenceUpdateRequest extends Request
     {
         /** @var Recurrence $recurrence */
         $recurrence = $this->route()->parameter('recurrence');
-        $first      = clone $recurrence->first_date;
-        $first->subDay();
 
         return [
             'type'                                 => 'in:withdrawal,transfer,deposit',
             'title'                                => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
             'description'                          => 'between:1,65000',
-            'first_date'                           => sprintf('date|after:%s', $first->format('Y-m-d')),
+            'first_date'                           => 'date',
             'apply_rules'                          => [new IsBoolean],
             'active'                               => [new IsBoolean],
-            'repeat_until'                         => sprintf('date|after:%s', $first->format('Y-m-d')),
+            'repeat_until'                         => 'date',
             'nr_of_repetitions'                    => 'numeric|between:1,31',
             'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
             'repetitions.*.skip'                   => 'required|numeric|between:0,31',
             'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
+
             'transactions.*.description'           => 'required|between:1,255',
             'transactions.*.amount'                => 'required|numeric|more:0',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
@@ -146,7 +146,7 @@ class RecurrenceUpdateRequest extends Request
                 $this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
                 $this->validateForeignCurrencyInformation($validator);
-                $this->validateAccountInformation($validator);
+                $this->valUpdateAccountInfo($validator);
             }
         );
     }
