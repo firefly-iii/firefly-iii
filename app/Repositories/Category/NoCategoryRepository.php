@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Navigation;
 
 /**
  *
@@ -51,62 +52,9 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-
-    /**
-     * A very cryptic method name that means:
-     *
-     * Get me the amount earned in this period, grouped per currency, where no category was set.
-     *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-        $journals = $collector->getExtractedJournals();
-        $return   = [];
-
-        foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            if (!isset($return[$currencyId])) {
-                $return[$currencyId] = [
-                    'earned'                  => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $return[$currencyId]['earned'] = bcadd($return[$currencyId]['earned'], $journal['amount']);
-        }
-
-        return $return;
-    }
-
-
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -140,11 +88,10 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         return $result;
     }
 
-
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -173,7 +120,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], bcmul($journal['amount'],'-1'));
+            $result['entries'][$date] = bcadd($result['entries'][$date], bcmul($journal['amount'], '-1'));
         }
         Log::debug('Done looping transactions..');
         Log::debug('Finished periodIncomeNoCategory()');
@@ -181,6 +128,13 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         return $result;
     }
 
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
 
     /**
      * A very cryptic method name that means:
@@ -188,8 +142,8 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
      * Get me the amount spent in this period, grouped per currency, where no category was set.
      *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -225,4 +179,41 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         return $return;
     }
 
+    /**
+     * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+        }
+
+        return $array;
+    }
 }

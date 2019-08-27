@@ -372,4 +372,17 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         return $return;
     }
+
+    /**
+     * Returns a list of all the categories belonging to a user.
+     *
+     * @return Collection
+     */
+    private function getCategories(): Collection
+    {
+        /** @var Collection $set */
+        $set = $this->user->categories()->get();
+
+        return $set;
+    }
 }

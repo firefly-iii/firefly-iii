@@ -41,12 +41,10 @@ class CategoryController extends Controller
 {
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-
     /** @var NoCategoryRepositoryInterface */
     private $noCatRepository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * AccountController constructor.
@@ -62,7 +60,7 @@ class CategoryController extends Controller
                 $user                     = auth()->user();
                 $this->categoryRepository = app(CategoryRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
-                $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
+                $this->noCatRepository    = app(NoCategoryRepositoryInterface::class);
                 $this->categoryRepository->setUser($user);
                 $this->opsRepository->setUser($user);
                 $this->noCatRepository->setUser($user);
@@ -123,7 +121,8 @@ class CategoryController extends Controller
         }
 
         // earned with no category:
-        $noCategory = $this->noCatRepository->earnedInPeriodPcWoCategory(new Collection, $start, $end);
+        $noCategory = $this->noCatRepository->sumIncome($start, $end);
+
         foreach ($noCategory as $currencyId => $income) {
             $categoryName = (string)trans('firefly.no_category');
             // find or make set for currency:
@@ -131,7 +130,7 @@ class CategoryController extends Controller
             $decimalPlaces = $income['currency_decimal_places'];
             if (!isset($tempData[$key])) {
                 $tempData[$key] = [
-                    'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_symbol']]),
+                    'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_name']]),
                     'currency_id'             => $income['currency_id'],
                     'currency_code'           => $income['currency_code'],
                     'currency_symbol'         => $income['currency_symbol'],
@@ -141,10 +140,9 @@ class CategoryController extends Controller
                     'entries'                 => [],
                 ];
             }
-            $amount                    = round($income['earned'], $decimalPlaces);
-            $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
-            $tempData[$key]['entries'][$categoryName]
-                                       = $amount;
+            $amount                                   = round($income['sum'], $decimalPlaces);
+            $categories[$categoryName]                = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
+            $tempData[$key]['entries'][$categoryName] = $amount;
         }
 
 
