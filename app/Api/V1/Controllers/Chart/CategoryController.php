@@ -28,6 +28,8 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -40,8 +42,15 @@ class CategoryController extends Controller
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
 
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
+
+    /** @var NoCategoryRepositoryInterface */
+    private $noCatRepository;
+
     /**
      * AccountController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -52,7 +61,11 @@ class CategoryController extends Controller
                 /** @var User $user */
                 $user                     = auth()->user();
                 $this->categoryRepository = app(CategoryRepositoryInterface::class);
+                $this->opsRepository      = app(OperationsRepositoryInterface::class);
+                $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
                 $this->categoryRepository->setUser($user);
+                $this->opsRepository->setUser($user);
+                $this->noCatRepository->setUser($user);
 
                 return $next($request);
             }
@@ -78,8 +91,8 @@ class CategoryController extends Controller
 
 
         $tempData   = [];
-        $spent      = $this->categoryRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);
-        $earned     = $this->categoryRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
+        $spent      = $this->opsRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);
+        $earned     = $this->opsRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
         $categories = [];
 
         // earned:
@@ -110,7 +123,7 @@ class CategoryController extends Controller
         }
 
         // earned with no category:
-        $noCategory = $this->categoryRepository->earnedInPeriodPcWoCategory(new Collection, $start, $end);
+        $noCategory = $this->noCatRepository->earnedInPeriodPcWoCategory(new Collection, $start, $end);
         foreach ($noCategory as $currencyId => $income) {
             $categoryName = (string)trans('firefly.no_category');
             // find or make set for currency:
@@ -164,7 +177,9 @@ class CategoryController extends Controller
         }
 
         // spent with no category
-        $noCategory = $this->categoryRepository->spentInPeriodPcWoCategory(new Collection, $start, $end);
+        $noCategory = $this->noCatRepository->spentInPeriodPcWoCategory(new Collection, $start, $end);
+
+
         foreach ($noCategory as $currencyId => $expense) {
             $categoryName = (string)trans('firefly.no_category');
             // find or make set for currency:

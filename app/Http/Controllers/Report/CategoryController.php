@@ -26,6 +26,8 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Support\Collection;
@@ -60,9 +62,13 @@ class CategoryController extends Controller
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         $categories = $repository->getCategories();
-        $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
-        $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
+        $data       = $opsRepository->periodExpenses($categories, $accounts, $start, $end);
+        $data[0]    = $opsRepository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterPeriodReport($data);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -114,9 +120,16 @@ class CategoryController extends Controller
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+        /** @var NoCategoryRepositoryInterface $noCatRepository */
+        $noCatRepository = app(NoCategoryRepositoryInterface::class);
+
         $categories = $repository->getCategories();
-        $data       = $repository->periodIncome($categories, $accounts, $start, $end);
-        $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
+        $data       = $opsRepository->periodIncome($categories, $accounts, $start, $end);
+        $data[0]    = $noCatRepository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterPeriodReport($data);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -169,6 +182,10 @@ class CategoryController extends Controller
 
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         $categories = $repository->getCategories();
         $report     = [
             'categories' => [],
@@ -176,8 +193,8 @@ class CategoryController extends Controller
         ];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent      = $repository->spentInPeriod($category, $accounts, $start, $end);
-            $earned     = $repository->earnedInPeriod($category, $accounts, $start, $end);
+            $spent      = $opsRepository->spentInPeriod($category, $accounts, $start, $end);
+            $earned     = $opsRepository->earnedInPeriod($category, $accounts, $start, $end);
             if (0 === count($spent) && 0 === count($earned)) {
                 continue;
             }

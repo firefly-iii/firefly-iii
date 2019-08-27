@@ -27,6 +27,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 
 /**
  * Class WholePeriodChartGenerator
@@ -45,6 +46,9 @@ class WholePeriodChartGenerator
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
 
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
@@ -61,8 +65,8 @@ class WholePeriodChartGenerator
         while ($current <= $end) {
             $key          = $current->format('Y-m-d');
             $currentEnd   = app('navigation')->endOfPeriod($current, $step);
-            $spent[$key]  = $repository->spentInPeriod($category, $accounts, $current, $currentEnd);
-            $earned[$key] = $repository->earnedInPeriod($category, $accounts, $current, $currentEnd);
+            $spent[$key]  = $opsRepository->spentInPeriod($category, $accounts, $current, $currentEnd);
+            $earned[$key] = $opsRepository->earnedInPeriod($category, $accounts, $current, $currentEnd);
             $current      = app('navigation')->addPeriod($current, $step, 0);
         }
         $currencies = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);

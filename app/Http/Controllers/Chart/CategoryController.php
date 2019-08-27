@@ -31,6 +31,8 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Chart\Category\WholePeriodChartGenerator;
@@ -52,6 +54,7 @@ class CategoryController extends Controller
 
     /**
      * CategoryController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -81,10 +84,10 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $start    = $repository->firstUseDate($category) ?? $this->getDate();
-        $range    = app('preferences')->get('viewRange', '1M')->data;
-        $start    = app('navigation')->startOfPeriod($start, $range);
-        $end      = $this->getDate();
+        $start = $repository->firstUseDate($category) ?? $this->getDate();
+        $range = app('preferences')->get('viewRange', '1M')->data;
+        $start = app('navigation')->startOfPeriod($start, $range);
+        $end   = $this->getDate();
 
         Log::debug(sprintf('Full range is %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
@@ -101,12 +104,9 @@ class CategoryController extends Controller
     /**
      * Shows the category chart on the front page.
      *
-     * @param CategoryRepositoryInterface $repository
-     * @param AccountRepositoryInterface  $accountRepository
-     *
      * @return JsonResponse
      */
-    public function frontPage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository): JsonResponse
+    public function frontPage(): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -122,7 +122,19 @@ class CategoryController extends Controller
         // currency repos:
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
-        $currencies         = [];
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+        /** @var NoCategoryRepositoryInterface $noCatRepository */
+        $noCatRepository = app(NoCategoryRepositoryInterface::class);
+
+        $currencies = [];
 
 
         $chartData  = [];
@@ -132,7 +144,7 @@ class CategoryController extends Controller
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spentArray = $repository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
+            $spentArray = $opsRepository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
             foreach ($spentArray as $categoryId => $spentInfo) {
                 foreach ($spentInfo['spent'] as $currencyId => $row) {
                     $spent = $row['spent'];
@@ -150,7 +162,7 @@ class CategoryController extends Controller
         }
 
         // no category per currency:
-        $noCategory = $repository->spentInPeriodPcWoCategory(new Collection, $start, $end);
+        $noCategory = $noCatRepository->spentInPeriodPcWoCategory(new Collection, $start, $end);
         foreach ($noCategory as $currencyId => $spent) {
             $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
             $tempData[]              = [
@@ -212,13 +224,16 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-             return response()->json($cache->get());// @codeCoverageIgnore
+            return response()->json($cache->get());// @codeCoverageIgnore
         }
-        $repository = app(CategoryRepositoryInterface::class);
-        $expenses   = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
-        $income     = $repository->periodIncome(new Collection([$category]), $accounts, $start, $end);
-        $periods    = app('navigation')->listOfPeriods($start, $end);
-        $chartData  = [
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+        $expenses  = $opsRepository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
+        $income    = $opsRepository->periodIncome(new Collection([$category]), $accounts, $start, $end);
+        $periods   = app('navigation')->listOfPeriods($start, $end);
+        $chartData = [
             [
                 'label'           => (string)trans('firefly.spent'),
                 'entries'         => [],
@@ -256,8 +271,6 @@ class CategoryController extends Controller
     }
 
 
-
-
     /**
      * Chart for period for transactions without a category.
      *
@@ -279,11 +292,14 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $repository = app(CategoryRepositoryInterface::class);
-        $expenses   = $repository->periodExpensesNoCategory($accounts, $start, $end);
-        $income     = $repository->periodIncomeNoCategory($accounts, $start, $end);
-        $periods    = app('navigation')->listOfPeriods($start, $end);
-        $chartData  = [
+
+        /** @var NoCategoryRepositoryInterface $noCatRepository */
+        $noCatRepository = app(NoCategoryRepositoryInterface::class);
+
+        $expenses  = $noCatRepository->periodExpensesNoCategory($accounts, $start, $end);
+        $income    = $noCatRepository->periodIncomeNoCategory($accounts, $start, $end);
+        $periods   = app('navigation')->listOfPeriods($start, $end);
+        $chartData = [
             [
                 'label'           => (string)trans('firefly.spent'),
                 'entries'         => [],

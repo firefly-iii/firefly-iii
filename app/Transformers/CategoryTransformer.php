@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -34,6 +35,8 @@ use Log;
  */
 class CategoryTransformer extends AbstractTransformer
 {
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var CategoryRepositoryInterface */
     private $repository;
 
@@ -44,7 +47,8 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(CategoryRepositoryInterface::class);
+        $this->repository    = app(CategoryRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -60,13 +64,15 @@ class CategoryTransformer extends AbstractTransformer
     public function transform(Category $category): array
     {
         $this->repository->setUser($category->user);
+        $this->opsRepository->setUser($category->user);
+
         $spent  = [];
         $earned = [];
         $start  = $this->parameters->get('start');
         $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $earned = array_values($this->repository->earnedInPeriod($category, new Collection, $start, $end));
-            $spent  = array_values($this->repository->spentInPeriod($category, new Collection, $start, $end));
+            $earned = array_values($this->opsRepository->earnedInPeriod($category, new Collection, $start, $end));
+            $spent  = array_values($this->opsRepository->spentInPeriod($category, new Collection, $start, $end));
         }
         $data = [
             'id'         => (int)$category->id,
