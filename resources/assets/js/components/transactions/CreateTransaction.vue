@@ -401,6 +401,8 @@
                     this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
                     this.error_message = '';
                     if (this.resetFormAfter) {
+                        // also clear form.
+                        this.resetTransactions();
                         this.addTransactionToArray();
                     }
                     if (button) {
@@ -409,7 +411,6 @@
                 } else {
                     console.log('Will redirect to previous URL. (' + previousUri + ')');
                     window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=created';
-                    //window.location.href = 'transactions/show/' + groupId + '?message=created';
                 }
             },
 
