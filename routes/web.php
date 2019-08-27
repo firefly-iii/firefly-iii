@@ -657,7 +657,7 @@ Route::group(
 
     Route::get('', ['uses' => 'Recurring\IndexController@index', 'as' => 'index']);
 
-    Route::get('show/{recurrence}', ['uses' => 'Recurring\IndexController@show', 'as' => 'show']);
+    Route::get('show/{recurrence}', ['uses' => 'Recurring\ShowController@show', 'as' => 'show']);
     Route::get('create', ['uses' => 'Recurring\CreateController@create', 'as' => 'create']);
     Route::get('edit/{recurrence}', ['uses' => 'Recurring\EditController@edit', 'as' => 'edit']);
     Route::get('delete/{recurrence}', ['uses' => 'Recurring\DeleteController@delete', 'as' => 'delete']);

@@ -125,20 +125,10 @@
                         {{ ExpandedForm.text('category',array.transactions[0].category_name) }}
 
                         {# TAGS #}
-                        {% set tags = '' %}
-                        {% set piggyBankId = 0 %}
-                        {% for metaValue in array.meta %}
-                            {% if metaValue.name == 'tags' %}
-                                {% set tags = metaValue.value %}
-                            {% endif %}
-                            {% if metaValue.name == 'piggy_bank_id' %}
-                                {% set piggyBankId = metaValue.value %}
-                            {% endif %}
-                        {% endfor %}
-                        {{ ExpandedForm.text('tags', tags) }}
+                        {{ ExpandedForm.text('tags', array.transactions[0].tags) }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ PiggyBankForm.piggyBankList('piggy_bank_id',piggyBankId) }}
+                        {{ PiggyBankForm.piggyBankList('piggy_bank_id',array.transactions[0].piggy_bank_id) }}
                     </div>
                 </div>
             </div>

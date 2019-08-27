@@ -1,7 +1,7 @@
 <?php
 /**
- * IndexController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * ShowController.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpMethodParametersCountMismatchInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
@@ -31,16 +31,13 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Transformers\RecurrenceTransformer;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *
- * Class IndexController
+ * Class ShowController
  */
-class IndexController extends Controller
+class ShowController extends Controller
 {
     use GetConfigurationData;
     /** @var RecurringRepositoryInterface Recurring repository */
@@ -67,46 +64,33 @@ class IndexController extends Controller
         );
     }
 
+
     /**
-     * TODO the notes of a recurrence are pretty pointless at this moment.
-     * Show all recurring transactions.
+     * Show a single recurring transaction.
      *
-     * @param Request $request
+     * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \FireflyIII\Exceptions\FireflyException
-     *
+     * @throws FireflyException
      */
-    public function index(Request $request)
+    public function show(Recurrence $recurrence)
     {
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $collection = $this->recurring->get();
-
-        // split collection
-        $total = $collection->count();
-        /** @var Collection $recurrences */
-        $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
-
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        $recurring = [];
-        /** @var Recurrence $recurrence */
-        foreach ($recurrences as $recurrence) {
-            $array                 = $transformer->transform($recurrence);
-            $array['first_date']   = new Carbon($array['first_date']);
-            $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
-            $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
-            $recurring[]           = $array;
+        $array  = $transformer->transform($recurrence);
+        $groups = $this->recurring->getTransactions($recurrence);
+
+        // transform dates back to Carbon objects:
+        foreach ($array['repetitions'] as $index => $repetition) {
+            foreach ($repetition['occurrences'] as $item => $occurrence) {
+                $array['repetitions'][$index]['occurrences'][$item] = new Carbon($occurrence);
+            }
         }
-        $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
-        $paginator->setPath(route('recurring.index'));
 
-        $this->verifyRecurringCronJob();
+        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
+        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups'));
     }
-
 }

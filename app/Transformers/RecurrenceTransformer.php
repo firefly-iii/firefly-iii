@@ -178,6 +178,8 @@ class RecurrenceTransformer extends AbstractTransformer
             switch ($transactionMeta->name) {
                 default:
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
+                case 'bill_id':
+                    break;
                 case 'tags':
                     $array['tags'] = json_decode($transactionMeta->value);
                     break;

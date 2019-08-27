@@ -5,188 +5,153 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <!-- basic info -->
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ array.title }}
+<div class="row">
+    <!-- basic info -->
+    <div class="col-lg-8 col-md-12 col-sm-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    {{ array.title }}
 
-                        ({{ array.transaction_type }})
-
-                        {% if array.active == false %}
-                        ({{ 'inactive'|_|lower }})
-                        {% endif %}
-                    </h3>
-                </div>
-                <div class="box-body">
-                    <p><em>{{ array.description }}</em></p>
+                    ({{ array.type }})
 
                     {% if array.active == false %}
-                        <p>
-                            {{ 'recurrence_is_inactive'|_ }}
-                        </p>
+                        ({{ 'inactive'|_|lower }})
                     {% endif %}
-
-                    <ul>
-                        {% for rep in array.repetitions %}
-                            <li>{{ rep.description }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="box-footer">
-                    <div class="btn-group">
-                        <a href="{{ route('recurring.edit', [array.id]) }}" class="btn btn-sm btn-default"><i class="fa fa-pencil"></i> {{ 'edit'|_ }}</a>
-                        <a href="{{ route('recurring.delete', [array.id]) }}" class="btn btn-sm btn-danger">{{ 'delete'|_ }} <i class="fa fa-trash"></i></a>
-                    </div>
-                </div>
+                </h3>
             </div>
-        </div>
-        <!-- next and previous repetitions -->
-        <div class="col-lg-4 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ ('expected_'~array.transaction_type~'s')|_ }}
-                    </h3>
-                </div>
-                <div class="box-body">
+            <div class="box-body">
+                <p><em>{{ array.description }}</em></p>
 
-                    <ul>
-                        {% for rep in array.recurrence_repetitions %}
-                            <li>
-                                {{ rep.description }}
-                                {% if rep.repetition_skip == 1 %}
-                                    ({{ trans('firefly.recurring_skips_one')|lower }})
-                                {% endif %}
-                                {% if rep.repetition_skip > 1 %}
-                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
-                                {% endif %}
-                                <ul>
-                                    {% for occ in rep.occurrences %}
-                                        <li>{{ occ.formatLocalized(trans('config.month_and_date_day')) }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="box-footer">
-                    <small>
-                        <em>{{ 'warning_duplicates_repetitions'|_ }}</em>
-                    </small>
+                {% if array.active == false %}
+                    <p>
+                        {{ 'recurrence_is_inactive'|_ }}
+                    </p>
+                {% endif %}
+
+                <ul>
+                    {% for rep in array.repetitions %}
+                        <li>{{ rep.description }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="box-footer">
+                <div class="btn-group">
+                    <a href="{{ route('recurring.edit', [array.id]) }}" class="btn btn-sm btn-default"><i class="fa fa-pencil"></i> {{ 'edit'|_ }}</a>
+                    <a href="{{ route('recurring.delete', [array.id]) }}" class="btn btn-sm btn-danger">{{ 'delete'|_ }} <i class="fa fa-trash"></i></a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <!-- transactions -->
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ 'transaction_data'|_ }}
-                    </h3>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-hover sortable">
-                        <thead>
+    <!-- next and previous repetitions -->
+    <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    {{ ('expected_'~array.type~'s')|_ }}
+                </h3>
+            </div>
+            <div class="box-body">
+
+                <ul>
+                    {% for rep in array.repetitions %}
+                        <li>
+                            {{ rep.description }}
+                            {% if rep.repetition_skip == 1 %}
+                                ({{ trans('firefly.recurring_skips_one')|lower }})
+                            {% endif %}
+                            {% if rep.repetition_skip > 1 %}
+                                ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                            {% endif %}
+                            <ul>
+                                {% for occ in rep.occurrences %}
+                                    <li>{{ occ.formatLocalized(trans('config.month_and_date_day')) }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="box-footer">
+                <small>
+                    <em>{{ 'warning_duplicates_repetitions'|_ }}</em>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- transactions -->
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    {{ 'transaction_data'|_ }}
+                </h3>
+            </div>
+            <div class="box-body no-padding">
+                <table class="table table-hover sortable">
+                    <thead>
+                    <tr>
                         <th data-defaultsign="az">{{ trans('list.description') }}</th>
                         <th data-defaultsign="az">{{ trans('list.source') }}</th>
                         <th data-defaultsign="az">{{ trans('list.destination') }}</th>
                         <th data-defaultsign="_19">{{ trans('list.amount') }}</th>
                         <th data-defaultsign="az">{{ trans('list.category') }}</th>
                         <th data-defaultsign="az">{{ trans('list.budget') }}</th>
-                        </thead>
-                        <tbody>
-                        {% for transaction in array.transactions %}
-                            <tr>
-                                <td data-value="{{ transaction.description }}">
-                                    {{ transaction.description }}
-                                </td>
-                                <td data-value="{{ transaction.source_name }}">
-                                    <a href="{{ route('accounts.show', [transaction.source_id]) }}">{{ transaction.source_name }}</a>
-                                </td>
-                                <td data-value="{{ transaction.destination_name }}">
-                                    <a href="{{ route('accounts.show', [transaction.destination_id]) }}">{{ transaction.destination_name }}</a>
-                                </td>
-                                <td>
-                                    {{ formatAmountBySymbol(transaction.amount,transaction.currency_symbol,transaction.currency_decimal_places) }}
-                                    {% if null != transaction.foreign_amount %}
-                                        ({{ formatAmountBySymbol(transaction.foreign_amount,transaction.foreign_currency_symbol,transaction.foreign_currency_decimal_places) }})
-                                    {% endif %}
-                                </td>
-                                <td data-value="{% for meta in transaction.meta %}{% if meta.name == 'category_name' %}{{ meta.category_id }}{% endif %}{% endfor %}">
-                                    {% for meta in transaction.meta %}
-                                        {% if meta.name == 'category_name' %}
-                                            <a href="{{ route('categories.show', [meta.category_id]) }}">
-                                                {{ meta.category_name }}
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td data-value="{% for meta in transaction.meta %}{% if meta.name == 'budget_id' %}{{ meta.budget_id }}{% endif %}{% endfor %}">
-                                    {% for meta in transaction.meta %}
-                                        {% if meta.name == 'budget_id' %}
-                                            <a href="{{ route('budgets.show', [meta.budget_id]) }}">
-                                                {{ meta.budget_name }}
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                        <th>{{ trans('list.other_meta_data') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in array.transactions %}
+                        <tr>
+                            <td data-value="{{ transaction.description }}">
+                                {{ transaction.description }}
+                            </td>
+                            <td data-value="{{ transaction.source_name }}">
+                                <a href="{{ route('accounts.show', [transaction.source_id]) }}">{{ transaction.source_name }}</a>
+                            </td>
+                            <td data-value="{{ transaction.destination_name }}">
+                                <a href="{{ route('accounts.show', [transaction.destination_id]) }}">{{ transaction.destination_name }}</a>
+                            </td>
+                            <td>
+                                {{ formatAmountBySymbol(transaction.amount,transaction.currency_symbol,transaction.currency_decimal_places) }}
+                                {% if null != transaction.foreign_amount %}
+                                    ({{ formatAmountBySymbol(transaction.foreign_amount,transaction.foreign_currency_symbol,transaction.foreign_currency_decimal_places) }})
+                                {% endif %}
+                            </td>
+                            <td data-value="{{ transaction.category_id|default(0) }}">
+                                {% if '' != transaction.category_name %}
+                                    <a href="{{ route('categories.show', [transaction.category_id]) }}">
+                                        {{ transaction.category_name }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td data-value="{{ transaction.budget_id|default(0) }}">
+                                {% if '' != transaction.budget_name %}
+                                    <a href="{{ route('budgets.show', [transaction.budget_id]) }}">
+                                        {{ transaction.budget_name }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if transaction.tags|length > 0 %}
+                                    <p>
+                                        {% for tag in transaction.tags %}
+                                            <span class="label label-success">{{ tag }}</span>
+                                        {% endfor %}
+                                    </p>
+                                {% endif %}
+                                {% if 0 != transaction.piggy_bank_id and array.type == 'Transfer' %}
+                                    <a href="{{ route('piggy-banks.show', [transaction.piggy_bank_id]) }}">{{ transaction.piggy_bank_name }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <!-- meta data -->
-        {% if array.meta|length > 0 %}
-            <div class="col-lg-4 col-md-12 col-sm-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            {{ 'meta_data'|_ }}
-                        </h3>
-                    </div>
-                    <div class="box-body no-padding">
-                        <table class="table table-hover sortable">
-                            <thead>
-                            <th style="width:30%;" data-defaultsign="az">{{ trans('list.field') }}</th>
-                            <th data-defaultsign="az">{{ trans('list.value') }}</th>
-                            </thead>
-                            <tbody>
-                            {% for meta in array.meta %}
-                                <tr>
-                                    <td>{{ trans('firefly.recurring_meta_field_'~meta.name) }}</td>
-                                    <td>
-                                        {% if meta.name == 'tags' %}
-                                            {% for tag in meta.tags %}
-                                                <span class="label label-info">{{ tag }}</span>
-                                            {% endfor %}
-                                        {% endif %}
-                                        {% if meta.name == 'notes' %}
-                                            {{ meta.value|markdown }}
-                                        {% endif %}
-                                        {% if meta.name == 'bill_id' %}
-                                            <a href="{{ route('bills.show', [meta.bill_id]) }}">{{ meta.bill_name }}</a>
-                                        {% endif %}
-                                        {% if meta.name == 'piggy_bank_id' %}
-                                            <a href="{{ route('piggy-banks.show', [meta.piggy_bank_id]) }}">{{ meta.piggy_bank_name }}</a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
     <div class="row">
         <!-- meta data -->
@@ -203,14 +168,14 @@
             </div>
         </div>
     </div>
-{% endblock %}
+    {% endblock %}
 
-{% block styles %}
-    <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
-{% endblock %}
+    {% block styles %}
+        <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+    {% endblock %}
 
-{% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
-    {# required for groups.twig #}
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
-{% endblock %}
+    {% block scripts %}
+        <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+        {# required for groups.twig #}
+        <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
+    {% endblock %}
