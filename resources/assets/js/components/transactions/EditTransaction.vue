@@ -852,6 +852,12 @@
                                     break;
                             }
                         }
+                        // unique some things
+                        this.transactions[transactionIndex].errors.source_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
+                        this.transactions[transactionIndex].errors.destination_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
+
                     }
                 }
             },

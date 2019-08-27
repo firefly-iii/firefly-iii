@@ -415,7 +415,7 @@
                     }
                 } else {
                     console.log('Will redirect to previous URL. (' + previousUri + ')');
-                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=created';
+                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
                 }
             },
 
@@ -597,6 +597,11 @@
                                     break;
                             }
                         }
+                        // unique some things
+                        this.transactions[transactionIndex].errors.source_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
+                        this.transactions[transactionIndex].errors.destination_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
                     }
                 }
             },
@@ -605,73 +610,73 @@
             },
             addTransactionToArray: function (e) {
                 this.transactions.push({
-                    description: "",
-                    date: "",
-                    amount: "",
-                    category: "",
-                    piggy_bank: 0,
-                    errors: {
-                        source_account: [],
-                        destination_account: [],
-                        description: [],
-                        amount: [],
-                        date: [],
-                        budget_id: [],
-                        foreign_amount: [],
-                        category: [],
-                        piggy_bank: [],
-                        tags: [],
-                        // custom fields:
-                        custom_errors: {
-                            interest_date: [],
-                            book_date: [],
-                            process_date: [],
-                            due_date: [],
-                            payment_date: [],
-                            invoice_date: [],
-                            internal_reference: [],
-                            notes: [],
-                            attachments: [],
-                        },
-                    },
-                    budget: 0,
-                    tags: [],
-                    custom_fields: {
-                        "interest_date": "",
-                        "book_date": "",
-                        "process_date": "",
-                        "due_date": "",
-                        "payment_date": "",
-                        "invoice_date": "",
-                        "internal_reference": "",
-                        "notes": "",
-                        "attachments": []
-                    },
-                    foreign_amount: {
-                        amount: "",
-                        currency_id: 0
-                    },
-                    source_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    },
-                    destination_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    }
-                });
+                                           description: "",
+                                           date: "",
+                                           amount: "",
+                                           category: "",
+                                           piggy_bank: 0,
+                                           errors: {
+                                               source_account: [],
+                                               destination_account: [],
+                                               description: [],
+                                               amount: [],
+                                               date: [],
+                                               budget_id: [],
+                                               foreign_amount: [],
+                                               category: [],
+                                               piggy_bank: [],
+                                               tags: [],
+                                               // custom fields:
+                                               custom_errors: {
+                                                   interest_date: [],
+                                                   book_date: [],
+                                                   process_date: [],
+                                                   due_date: [],
+                                                   payment_date: [],
+                                                   invoice_date: [],
+                                                   internal_reference: [],
+                                                   notes: [],
+                                                   attachments: [],
+                                               },
+                                           },
+                                           budget: 0,
+                                           tags: [],
+                                           custom_fields: {
+                                               "interest_date": "",
+                                               "book_date": "",
+                                               "process_date": "",
+                                               "due_date": "",
+                                               "payment_date": "",
+                                               "invoice_date": "",
+                                               "internal_reference": "",
+                                               "notes": "",
+                                               "attachments": []
+                                           },
+                                           foreign_amount: {
+                                               amount: "",
+                                               currency_id: 0
+                                           },
+                                           source_account: {
+                                               id: 0,
+                                               name: "",
+                                               type: "",
+                                               currency_id: 0,
+                                               currency_name: '',
+                                               currency_code: '',
+                                               currency_decimal_places: 2,
+                                               allowed_types: []
+                                           },
+                                           destination_account: {
+                                               id: 0,
+                                               name: "",
+                                               type: "",
+                                               currency_id: 0,
+                                               currency_name: '',
+                                               currency_code: '',
+                                               currency_decimal_places: 2,
+                                               allowed_types: []
+                                           }
+                                       });
                 if (this.transactions.length === 1) {
                     // set first date.
                     let today = new Date();
