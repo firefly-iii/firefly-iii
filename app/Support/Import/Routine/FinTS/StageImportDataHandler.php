@@ -163,6 +163,7 @@ class StageImportDataHandler
             'transactions'       => [
                 // single transaction:
                 [
+                    'type'                  => $type,
                     'description'           => null,
                     'amount'                => $amount,
                     'currency_id'           => null,
