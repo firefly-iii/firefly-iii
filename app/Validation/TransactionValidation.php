@@ -95,7 +95,7 @@ trait TransactionValidation
         $accountValidator = app(AccountValidator::class);
 
         foreach ($transactions as $index => $transaction) {
-            $originalType    = $this->getOriginalType($transaction['transaction_journal_id'] ?? 0);
+            $originalType    = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
             $originalData    = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
             $transactionType = $transaction['type'] ?? $originalType;
             $accountValidator->setTransactionType($transactionType);
