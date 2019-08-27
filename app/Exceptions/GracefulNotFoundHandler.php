@@ -51,10 +51,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         $route = $request->route();
-        if(null === $route) {
+        if (null === $route) {
             return parent::render($request, $exception);
         }
-        $name  = $route->getName();
+        $name = $route->getName();
         if (!auth()->check()) {
             return parent::render($request, $exception);
         }
@@ -99,6 +99,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
                 return redirect(route('recurring.index'));
                 break;
+            case 'tags.show.all':
             case 'tags.show':
                 $request->session()->reflash();
 
