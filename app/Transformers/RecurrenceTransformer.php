@@ -28,11 +28,9 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -44,8 +42,6 @@ use Log;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
-    /** @var BillRepositoryInterface */
-    private $billRepos;
     /** @var BudgetRepositoryInterface */
     private $budgetRepos;
     /** @var CategoryFactory */
@@ -63,7 +59,6 @@ class RecurrenceTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->repository  = app(RecurringRepositoryInterface::class);
-        $this->billRepos   = app(BillRepositoryInterface::class);
         $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
         $this->factory     = app(CategoryFactory::class);
         $this->budgetRepos = app(BudgetRepositoryInterface::class);
@@ -85,7 +80,6 @@ class RecurrenceTransformer extends AbstractTransformer
     {
         Log::debug('Now in Recurrence::transform()');
         $this->repository->setUser($recurrence->user);
-        $this->billRepos->setUser($recurrence->user);
         $this->piggyRepos->setUser($recurrence->user);
         $this->factory->setUser($recurrence->user);
         $this->budgetRepos->setUser($recurrence->user);
@@ -117,48 +111,6 @@ class RecurrenceTransformer extends AbstractTransformer
             ],
         ];
 
-
-        return $return;
-    }
-
-    /**
-     * @param Recurrence $recurrence
-     *
-     * @return array
-     */
-    private function getMeta(Recurrence $recurrence): array
-    {
-        $return     = [];
-        $collection = $recurrence->recurrenceMeta;
-        Log::debug(sprintf('Meta collection length = %d', $collection->count()));
-        /** @var RecurrenceMeta $recurrenceMeta */
-        foreach ($collection as $recurrenceMeta) {
-            $recurrenceMetaArray = [
-                'name'  => $recurrenceMeta->name,
-                'value' => $recurrenceMeta->value,
-            ];
-            switch ($recurrenceMeta->name) {
-                case 'tags':
-                    $recurrenceMetaArray['tags'] = explode(',', $recurrenceMeta->value);
-                    break;
-                case 'bill_id':
-                    $bill = $this->billRepos->find((int)$recurrenceMeta->value);
-                    if (null !== $bill) {
-                        $recurrenceMetaArray['bill_id']   = $bill->id;
-                        $recurrenceMetaArray['bill_name'] = $bill->name;
-                    }
-                    break;
-                case 'piggy_bank_id':
-                    $piggy = $this->piggyRepos->findNull((int)$recurrenceMeta->value);
-                    if (null !== $piggy) {
-                        $recurrenceMetaArray['piggy_bank_id']   = $piggy->id;
-                        $recurrenceMetaArray['piggy_bank_name'] = $piggy->name;
-                    }
-                    break;
-            }
-            // store meta date in recurring array
-            $return[] = $recurrenceMetaArray;
-        }
 
         return $return;
     }
@@ -214,8 +166,6 @@ class RecurrenceTransformer extends AbstractTransformer
     private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
     {
         $array['tags']            = [];
-        $array['bill_id']         = null;
-        $array['bill_name']       = null;
         $array['category_id']     = null;
         $array['category_name']   = null;
         $array['budget_id']       = null;
@@ -230,13 +180,6 @@ class RecurrenceTransformer extends AbstractTransformer
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
                 case 'tags':
                     $array['tags'] = json_decode($transactionMeta->value);
-                    break;
-                case 'bill_id':
-                    $bill = $this->billRepos->find((int)$transactionMeta->value);
-                    if (null !== $bill) {
-                        $array['bill_id']   = $bill->id;
-                        $array['bill_name'] = $bill->name;
-                    }
                     break;
                 case 'piggy_bank_id':
                     $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
