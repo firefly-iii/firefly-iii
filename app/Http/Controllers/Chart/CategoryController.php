@@ -274,8 +274,6 @@ class CategoryController extends Controller
     /**
      * Chart for period for transactions without a category.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -290,35 +288,156 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            // return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var NoCategoryRepositoryInterface $noCatRepository */
         $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
-        $expenses  = $noCatRepository->periodExpensesNoCategory($accounts, $start, $end);
-        $income    = $noCatRepository->periodIncomeNoCategory($accounts, $start, $end);
-        $periods   = app('navigation')->listOfPeriods($start, $end);
-        $chartData = [
-            [
-                'label'           => (string)trans('firefly.spent'),
+        // this gives us all currencies
+        $expenses   = $noCatRepository->listExpenses($start, $end);
+        $income     = $noCatRepository->listIncome($start, $end);
+        $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
+        $periods    = app('navigation')->listOfPeriods($start, $end);
+        $format     = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $chartData  = [];
+        // make empty data array:
+        // double foreach (bad) to make empty array:
+        foreach ($currencies as $currencyId) {
+            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
+            $outKey       = sprintf('%d-out', $currencyId);
+            $inKey        = sprintf('%d-in', $currencyId);
+
+            $chartData[$outKey]
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-            ],
-            [
-                'label'           => (string)trans('firefly.earned'),
+            ];
+
+            $chartData[$inKey]
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-            ],
-            [
-                'label'   => (string)trans('firefly.sum'),
-                'entries' => [],
-                'type'    => 'line',
-                'fill'    => false,
-            ],
-        ];
+            ];
+
+            // loop empty periods:
+            foreach (array_keys($periods) as $period) {
+                $label                                 = $periods[$period];
+                $chartData[$outKey]['entries'][$label] = '0';
+                $chartData[$inKey]['entries'][$label]  = '0';
+            }
+            // loop income and expenses:
+            $outSet = $expenses[$currencyId] ?? ['transaction_journals' => []];
+            foreach ($outSet['transaction_journals'] as $journal) {
+                $date                                 = $journal['date']->formatLocalized($format);
+                $chartData[$outKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$outKey]['entries'][$date]);
+            }
+
+            $inSet = $income[$currencyId] ?? ['transaction_journals' => []];
+            foreach ($inSet['transaction_journals'] as $journal) {
+                $date                                 = $journal['date']->formatLocalized($format);
+                $chartData[$inKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$inKey]['entries'][$date]);
+            }
+        }
+        $data = $this->generator->multiSet($chartData);
+        $cache->store($data);
+
+        return response()->json($data);
+        var_dump($chartData);
+        var_dump(array_values($chartData));
+        exit;
+
+
+        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $chartData = [];
+
+        // double foreach (bad) to make empty array:
+        foreach ($currencies as $currencyId) {
+            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
+
+            $spentArray
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+            ];
+            $incomeArray
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+            ];
+
+            foreach (array_keys($periods) as $period) {
+                $label                          = $periods[$period];
+                $spentArray['entries'][$label]  = '0';
+                $incomeArray['entries'][$label] = '0';
+
+                // then loop income and then loop expenses, maybe?
+                $currencyExpenses = $expenses[$currencyId] ?? ['transaction_journals' => []];
+                foreach ($currencyExpenses['transaction_journals'] as $row) {
+
+                }
+            }
+            $chartData[] = $spentArray;
+            $chartData[] = $incomeArray;
+        }
+        var_dump($chartData);
+        exit;
+
+
+        foreach ($currencies as $currencyId) {
+            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
+            // loop expenses[$currencyId], if set
+            $spentArray
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+            ];
+
+            $current = $expenses[$currencyId] ?? ['transaction_journals' => []];
+            foreach ($current['transaction_journals'] as $row) {
+                $thisPeriod                         = $row['date']->formatLocalized($format);
+                $spentArray['entries'][$thisPeriod] = $spentArray['entries'][$thisPeriod] ?? '0';
+                $spentArray['entries'][$thisPeriod] = bcadd($spentArray['entries'][$thisPeriod], $row['amount']);
+            }
+            $chartData[] = $spentArray;
+
+            // loop income[$currencyId], if set
+            $incomeArray
+                = [
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+            ];
+
+            $current = $income[$currencyId] ?? ['transaction_journals' => []];
+            foreach ($current['transaction_journals'] as $row) {
+                $thisPeriod                          = $row['date']->formatLocalized($format);
+                $incomeArray['entries'][$thisPeriod] = $incomeArray['entries'][$thisPeriod] ?? '0';
+                $incomeArray['entries'][$thisPeriod] = bcadd($incomeArray['entries'][$thisPeriod], $row['amount']);
+            }
+            $chartData[] = $incomeArray;
+
+            //            $chartData[]  = [
+            //                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+            //                'entries'         => [],
+            //                'type'            => 'bar',
+            //                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+            //            ];
+        }
+        echo '<pre>';
+        print_r($chartData);
+        exit;
 
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];

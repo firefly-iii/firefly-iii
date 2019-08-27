@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Navigation;
 
 /**
  *

@@ -58,7 +58,7 @@ interface NoCategoryRepositoryInterface
      *
      * @return array
      */
-    //public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
     /**
      * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
@@ -69,7 +69,7 @@ interface NoCategoryRepositoryInterface
      *
      * @return array
      */
-    //public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
     /**
      * TODO not multi-currency
@@ -113,6 +113,19 @@ interface NoCategoryRepositoryInterface
      * @return array
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+
+    /**
+     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
+     * which have no category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
 
 }

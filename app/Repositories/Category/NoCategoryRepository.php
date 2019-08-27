@@ -52,6 +52,96 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     }
 
     /**
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have no category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId         = (int)$journal['currency_id'];
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'transaction_journals'    => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId                                              = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['transaction_journals'][$journalId] = [
+                'amount' => app('steam')->negative($journal['amount']),
+                'date'   => $journal['date'],
+            ];
+
+        }
+
+        return $array;
+    }
+
+    /**
+     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
+     * which have no category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId         = (int)$journal['currency_id'];
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'transaction_journals'    => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId                                              = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['transaction_journals'][$journalId] = [
+                'amount' => app('steam')->positive($journal['amount']),
+                'date'   => $journal['date'],
+            ];
+
+        }
+
+        return $array;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -192,7 +282,6 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
@@ -212,6 +301,43 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+        }
+
+        return $array;
+    }
+
+    /**
+     * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
         }
 
         return $array;

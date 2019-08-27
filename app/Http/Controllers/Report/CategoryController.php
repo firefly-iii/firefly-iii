@@ -58,7 +58,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-expenses-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -66,9 +66,14 @@ class CategoryController extends Controller
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
 
+        /** @var NoCategoryRepositoryInterface $noCatRepos */
+        $noCatRepos = app(NoCategoryRepositoryInterface::class);
+
+        $periods    = app('navigation')->listOfPeriods($start, $end);
+        $data       = [];
         $categories = $repository->getCategories();
         $data       = $opsRepository->periodExpenses($categories, $accounts, $start, $end);
-        $data[0]    = $opsRepository->periodExpensesNoCategory($accounts, $start, $end);
+        $data[0]    = $noCatRepos->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterPeriodReport($data);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -82,7 +87,7 @@ class CategoryController extends Controller
             $start->startOfMonth();
         }
 
-        $periods    = app('navigation')->listOfPeriods($start, $end);
+
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
@@ -143,7 +148,7 @@ class CategoryController extends Controller
             $start->startOfMonth();
         }
 
-        $periods    = app('navigation')->listOfPeriods($start, $end);
+        $periods = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
@@ -193,8 +198,8 @@ class CategoryController extends Controller
         ];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent      = $opsRepository->spentInPeriod($category, $accounts, $start, $end);
-            $earned     = $opsRepository->earnedInPeriod($category, $accounts, $start, $end);
+            $spent  = $opsRepository->spentInPeriod($category, $accounts, $start, $end);
+            $earned = $opsRepository->earnedInPeriod($category, $accounts, $start, $end);
             if (0 === count($spent) && 0 === count($earned)) {
                 continue;
             }
@@ -210,7 +215,7 @@ class CategoryController extends Controller
                     'currency_id'             => $currencyInfo['currency_id'],
                     'currency_code'           => $currencyInfo['currency_code'],
                     'currency_symbol'         => $currencyInfo['currency_symbol'],
-                    'currency_name'         => $currencyInfo['currency_name'],
+                    'currency_name'           => $currencyInfo['currency_name'],
                     'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
                 ];
 
@@ -228,17 +233,17 @@ class CategoryController extends Controller
 
         // get sums:
         foreach ($report['categories'] as $entry) {
-            $currencyId                  = $entry['currency_id'];
-            $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
-                    'spent'                     => '0',
-                    'earned'                     => '0',
+            $currencyId                            = $entry['currency_id'];
+            $report['sums'][$currencyId]           = $report['sums'][$currencyId] ?? [
+                    'spent'                   => '0',
+                    'earned'                  => '0',
                     'currency_id'             => $entry['currency_id'],
                     'currency_code'           => $entry['currency_code'],
                     'currency_symbol'         => $entry['currency_symbol'],
-                    'currency_name'         => $entry['currency_name'],
+                    'currency_name'           => $entry['currency_name'],
                     'cyrrency_decimal_places' => $entry['currency_decimal_places'],
                 ];
-            $report['sums'][$currencyId]['spent'] = bcadd($report['sums'][$currencyId]['spent'], $entry['spent']);
+            $report['sums'][$currencyId]['spent']  = bcadd($report['sums'][$currencyId]['spent'], $entry['spent']);
             $report['sums'][$currencyId]['earned'] = bcadd($report['sums'][$currencyId]['earned'], $entry['earned']);
         }
 
