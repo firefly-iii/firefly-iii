@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <form method="POST" action="transactions/update" accept-charset="UTF-8" class="form-horizontal" id="store"
+    <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
         <div class="row" v-if="error_message !== ''">

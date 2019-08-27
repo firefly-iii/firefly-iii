@@ -79,16 +79,14 @@
                 }
             },
             selectedItem: function (e) {
-                console.log('selectedItem for descr()');
-                // if (typeof this.name === 'undefined') {
-                //     return;
-                // }
-                // if(typeof this.name === 'string') {
-                //     console.log('Is a string.');
-                // }
-                // // emit the fact that the user selected a type of account
-                // // (influencing the destination)
-                // this.$emit('select:account', this.name);
+                if (typeof this.name === 'undefined') {
+                    return;
+                }
+                if (typeof this.name === 'string') {
+                    return;
+                }
+                this.$refs.descr.value = this.name.description;
+                this.$emit('input', this.$refs.descr.value);
             },
         }
     }
