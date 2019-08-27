@@ -42,13 +42,15 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class TransactionGroupRepository
  */
-class   TransactionGroupRepository implements TransactionGroupRepositoryInterface
+class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
+    /** @var User */
     private $user;
 
     /**
@@ -59,6 +61,28 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
         if ('testing' === config('app.env')) {
             app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
+    }
+
+    /**
+     * @param TransactionGroup $group
+     */
+    public function destroy(TransactionGroup $group): void
+    {
+        /** @var TransactionGroupDestroyService $service */
+        $service = new TransactionGroupDestroyService;
+        $service->destroy($group);
+    }
+
+    /**
+     * Find a transaction group by its ID.
+     *
+     * @param int $groupId
+     *
+     * @return TransactionGroup|null
+     */
+    public function find(int $groupId): ?TransactionGroup
+    {
+        return $this->user->transactionGroups()->where('id', $groupId)->first();
     }
 
     /**
@@ -148,7 +172,7 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
     /**
      * Return object with all found meta field things as Carbon objects.
      *
-     * @param int $journalId
+     * @param int   $journalId
      * @param array $fields
      *
      * @return NullArrayObject
@@ -174,7 +198,7 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
     /**
      * Return object with all found meta field things.
      *
-     * @param int $journalId
+     * @param int   $journalId
      * @param array $fields
      *
      * @return NullArrayObject
@@ -278,9 +302,9 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
      */
-    public function setUser($user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -301,7 +325,7 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
 
     /**
      * @param TransactionGroup $transactionGroup
-     * @param array $data
+     * @param array            $data
      *
      * @return TransactionGroup
      *
@@ -310,7 +334,8 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {
         /** @var GroupUpdateService $service */
-        $service      = app(GroupUpdateService::class);
+        $service = app(GroupUpdateService::class);
+
         return $service->update($transactionGroup, $data);
     }
 
@@ -362,15 +387,5 @@ class   TransactionGroupRepository implements TransactionGroupRepositoryInterfac
         }
 
         return $return;
-    }
-
-    /**
-     * @param TransactionGroup $group
-     */
-    public function destroy(TransactionGroup $group): void
-    {
-        /** @var TransactionGroupDestroyService $service */
-        $service = new TransactionGroupDestroyService;
-        $service->destroy($group);
     }
 }

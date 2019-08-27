@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionGroup;
 
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 
@@ -35,6 +34,20 @@ interface TransactionGroupRepositoryInterface
 {
 
     /**
+     * @param TransactionGroup $group
+     */
+    public function destroy(TransactionGroup $group): void;
+
+    /**
+     * Find a transaction group by its ID.
+     *
+     * @param int $groupId
+     *
+     * @return TransactionGroup|null
+     */
+    public function find(int $groupId): ?TransactionGroup;
+
+    /**
      * Return all attachments for all journals in the group.
      *
      * @param TransactionGroup $group
@@ -42,11 +55,6 @@ interface TransactionGroupRepositoryInterface
      * @return array
      */
     public function getAttachments(TransactionGroup $group): array;
-
-    /**
-     * @param TransactionGroup $group
-     */
-    public function destroy(TransactionGroup $group): void;
 
     /**
      * Return all journal links for all journals in the group.
