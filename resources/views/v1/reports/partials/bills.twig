@@ -10,7 +10,7 @@
             </thead>
             <tbody>
             {% for bill in report.bills %}
-                {% if bill.expected_dates|length > 0 and bill.paid_moments|length > 0 and bill.active %}
+                {% if (bill.expected_dates|length > 0 or bill.paid_moments|length > 0) and bill.active %}
                     <tr>
                         <td>
                             <a href="{{ route('bills.show',bill.id) }}">{{ bill.name }}</a>

@@ -100,7 +100,8 @@ class BudgetController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
         $budgets    = $repository->getBudgets();
         $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
-        $data[0]    = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
+        $noBudget   = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
+        $data       = array_merge($data, $noBudget);
         $report     = $this->filterPeriodReport($data);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -114,7 +115,7 @@ class BudgetController extends Controller
             $start->startOfMonth();
         }
 
-        $periods    = app('navigation')->listOfPeriods($start, $end);
+        $periods = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart

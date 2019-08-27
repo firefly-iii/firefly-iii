@@ -9,32 +9,33 @@
     </tr>
     </thead>
     <tbody>
-    {% for id, info in report %}
+    {% for key, info in report %}
         <tr>
             <td>
-                {% if id != 0 %}
-                    <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [id]) }}"><i class="fa fa-external-link"></i></a>
+                {% if info.id != 0 %}
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [info.id]) }}"><i class="fa fa-external-link"></i></a>
                 {% else %}
                     <a class="btn btn-default btn-xs" href="{{ route('budgets.no-budget') }}"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </td>
             <td data-value="{{ info.name }}">
-                <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
+                <a title="{{ info.name }}" href="#" data-budget="{{ info.id }}" data-currency="{{ info.currency_id }}" class="budget-chart-activate">{{ info.name }}</a>
             </td>
             {% for key, period in periods %}
                 {% if(info.entries[key]) %}
                     <td data-value="{{ info.entries[key] }}" style="text-align: right;">
-                        {{ info.entries[key]|formatAmount }}
+                        {{ formatAmountBySymbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 {% else %}
                     <td data-value="0" style="text-align: right;">
-                        {{ 0|formatAmount }}
+                        {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
+
                     </td>
                 {% endif %}
 
             {% endfor %}
             <td data-value="{{ info.sum }}" style="text-align: right;">
-                {{ info.sum|formatAmount }}
+                {{ formatAmountBySymbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
             </td>
         </tr>
     {% endfor %}

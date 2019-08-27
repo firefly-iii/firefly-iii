@@ -563,17 +563,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        $data         = [];
 
-        $data = [];
-        // prep data array:
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $data[$budget->id] = [
-                'name'    => $budget->name,
-                'sum'     => '0',
-                'entries' => [],
-            ];
-        }
 
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
@@ -585,9 +576,25 @@ class BudgetRepository implements BudgetRepositoryInterface
         // loop transactions:
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $budgetId                          = (int)$journal['budget_id'];
-            $date                              = $journal['date']->format($carbonFormat);
-            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
+            // prep data array for currency:
+            $budgetId   = (int)$journal['budget_id'];
+            $budgetName = $journal['budget_name'];
+            $currencyId = (int)$journal['currency_id'];
+            $key        = sprintf('%d-%d', $budgetId, $currencyId);
+
+            $data[$key]                   = $data[$key] ?? [
+                    'id'                      => $budgetId,
+                    'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'entries'                 => [],
+                ];
+            $date                         = $journal['date']->format($carbonFormat);
+            $data[$key]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
         }
 
         return $data;
@@ -647,23 +654,32 @@ class BudgetRepository implements BudgetRepositoryInterface
         $collector->setTypes([TransactionType::WITHDRAWAL]);
         $collector->withoutBudget();
         $journals = $collector->getExtractedJournals();
-        $result   = [
-            'entries' => [],
-            'name'    => (string)trans('firefly.no_budget'),
-            'sum'     => '0',
-        ];
+        $data     = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $date = $journal['date']->format($carbonFormat);
+            $currencyId = (int)$journal['currency_id'];
 
-            if (!isset($result['entries'][$date])) {
-                $result['entries'][$date] = '0';
+            $data[$currencyId] = $data[$currencyId] ?? [
+                    'id'                      => 0,
+                    'name'                    => sprintf('%s (%s)', trans('firefly.no_budget'), $journal['currency_name']),
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'entries'                 => [],
+                ];
+            $date              = $journal['date']->format($carbonFormat);
+
+            if (!isset($data[$currencyId]['entries'][$date])) {
+                $data[$currencyId]['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
+            $data[$currencyId]['entries'][$date] = bcadd($data[$currencyId]['entries'][$date], $journal['amount']);
         }
 
-        return $result;
+        return $data;
     }
 
     /**
