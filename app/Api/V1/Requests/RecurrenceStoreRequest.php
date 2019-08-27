@@ -94,7 +94,7 @@ class RecurrenceStoreRequest extends Request
             'type'                                 => 'required|in:withdrawal,transfer,deposit',
             'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'description'                          => 'between:1,65000',
-            'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
+            'first_date'                           => 'required|date',
             'apply_rules'                          => [new IsBoolean],
             'active'                               => [new IsBoolean],
             'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
