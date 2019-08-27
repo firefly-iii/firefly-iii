@@ -397,6 +397,7 @@
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
                     console.log('Will create another.');
+
                     // do message:
                     this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
                     this.error_message = '';
@@ -405,6 +406,10 @@
                         this.resetTransactions();
                         this.addTransactionToArray();
                     }
+
+                    // clear errors:
+                    this.setDefaultErrors();
+
                     if (button) {
                         button.prop("disabled", false);
                     }
@@ -517,6 +522,8 @@
             setDefaultErrors: function () {
                 for (const key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        console.log('Set default errors for key ' + key);
+                        //this.transactions[key].description
                         this.transactions[key].errors = {
                             source_account: [],
                             destination_account: [],
