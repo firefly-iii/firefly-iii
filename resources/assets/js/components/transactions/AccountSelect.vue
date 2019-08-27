@@ -138,12 +138,15 @@
                     }
                 },
                 selectedItem: function (e) {
-                    console.log('selectedItem()');
+                    //console.log('In SelectedItem()');
                     if (typeof this.name === 'undefined') {
+                        //console.log('Is undefined');
                         return;
                     }
                     if(typeof this.name === 'string') {
-                        console.log('Is a string.');
+                        //console.log('Is a string.');
+                        //this.trType = null;
+                        this.$emit('clear:value');
                     }
                     // emit the fact that the user selected a type of account
                     // (influencing the destination)
