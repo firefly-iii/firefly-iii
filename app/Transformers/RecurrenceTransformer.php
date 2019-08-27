@@ -276,7 +276,7 @@ class RecurrenceTransformer extends AbstractTransformer
         $return = [];
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
+        foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
 
             $sourceAccount         = $transaction->sourceAccount;
             $destinationAccount    = $transaction->destinationAccount;

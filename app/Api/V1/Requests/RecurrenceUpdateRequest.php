@@ -212,7 +212,7 @@ class RecurrenceUpdateRequest extends Request
                 // new and updated fields:
                 'piggy_bank_id'         => isset($transaction['piggy_bank_id']) ? (int)$transaction['piggy_bank_id'] : null,
                 'piggy_bank_name'       => $transaction['piggy_bank_name'] ?? null,
-                'tags'                  => $transaction['tags'],
+                'tags'                  => $transaction['tags'] ?? [],
                 'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
                 'budget_name'           => $transaction['budget_name'] ?? null,
                 'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
