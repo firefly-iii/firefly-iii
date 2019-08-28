@@ -211,6 +211,8 @@ return [
     'specific_belfius_descr'          => 'Risolve possibili problemi con file di Belfius',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Risolve possibili problemi con i file di ING Belgium',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configurazione di importazione (3/4) - Definisci il ruolo di ogni colonna',
     'job_config_roles_text'           => 'Ogni colonna nel tuo file CSV contiene determinati dati. Si prega di indicare il tipo di dati che l\'importatore dovrebbe aspettarsi. L\'opzione per "mappare" i dati significa che collegherete ogni voce trovata nella colonna con un valore nel vostro database. Una colonna spesso mappata è la colonna che contiene l\'IBAN del conto. Questo può essere facilmente abbinato all\'IBAN già presente nel tuo database.',

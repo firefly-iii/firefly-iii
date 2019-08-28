@@ -211,6 +211,8 @@ return [
     'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => '导入设定 (3/4) - 定义每个栏的角色',
     'job_config_roles_text'           => '在您 CSV 档案中的每个栏均含某些资料，请说明系核种资料供导入器参照。用以「映射」资料的选项，即您将连结每个栏中的资料至您资料库的一个值。一个常见的「已映射」的栏，是包含 IBAN 相对帐户的栏，这便可轻易地媒合至您资料库既存的 IBAN 帐户。',

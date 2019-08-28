@@ -211,6 +211,8 @@ return [
     'specific_belfius_descr'          => 'Javítja a Belfius fájlok lehetséges problémáit',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importálási beállítás (3/4) - Egyes oszlopok szerepeinek meghatározása',
     'job_config_roles_text'           => 'A CSV fájl minden oszlopa bizonyos adatot tartalmaz. Meg kell adni, hogy az importáló milyen adatokra számíthat. Az adat „hozzárendelése” azt jelenti, hogy az oszlopokban talált adatokat hozzá lehet kötni egy értékhez az adatbázisban. Egy gyakran hozzárendelt oszlop az az oszlop ami az ellenszámla IBAN kódját tartalmazza. Ez mér könnyen megfeleltethető lesz az adatbázisban már szereplő IBAN kódoknak.',

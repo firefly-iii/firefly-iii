@@ -211,6 +211,8 @@ return [
     'specific_belfius_descr'          => 'Corrige los posibles problemas con archivos de Belfius',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configuración de importación (3/4) - Definir el rol de cada columna',
     'job_config_roles_text'           => 'Cada columna en su archivo CSV contiene ciertos datos. Indique qué tipo de datos debe esperar el importador. La opción de "mapear" datos significa que enlazará cada entrada encontrada en la columna con un valor en su base de datos. Una columna a menudo mapeada es la columna que contiene el IBAN de la cuenta de contrapartida. Eso puede enlazarse fácilmente con cuentas IBAN ya presentes en su base de datos.',

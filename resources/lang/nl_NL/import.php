@@ -211,6 +211,8 @@ return [
     'specific_belfius_descr'          => 'Lost mogelijke problemen op met Belfius-bestanden',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Lost mogelijke problemen op met ING België bestanden',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
     'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',

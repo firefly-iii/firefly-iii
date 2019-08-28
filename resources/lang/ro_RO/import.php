@@ -212,6 +212,8 @@ Creați descrieri mai bune în exporturile ING',
     'specific_belfius_descr'          => 'Remediază posibile probleme cu fișierele Belfius',
     'specific_ingbelgium_name'        => 'ING BE',
     'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_hash_name'              => 'Append Fingerprint',
+    'specific_hash_descr'             => 'Adds a column with transaction specific fingerprint unique per line',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configurarea importului (3/4) - Definiți rolul fiecărei coloane',
     'job_config_roles_text'           => 'Fiecare coloană din fișierul dvs. CSV conține anumite date. Vă rugăm să indicați ce fel de date ar trebui să aștepte importatorul. Opțiunea de a "mapa" datele înseamnă că veți conecta fiecare intrare găsită în coloană cu o valoare din baza dvs. de date. O coloană desenată de multe ori este coloana care conține IBAN-ul contului opus. Acest lucru poate fi ușor comparat cu prezența IBAN în baza dvs. de date.',
