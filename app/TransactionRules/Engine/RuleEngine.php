@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * RuleEngine.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -45,19 +46,18 @@ class RuleEngine
     public const TRIGGER_STORE = 1;
     /** @var int */
     public const TRIGGER_UPDATE = 2;
-
+    /** @var bool */
+    private $allRules;
+    /** @var RuleGroupRepository */
+    private $ruleGroupRepository;
     /** @var Collection */
     private $ruleGroups;
     /** @var array */
     private $rulesToApply;
-    /** @var bool */
-    private $allRules;
-    /** @var User */
-    private $user;
-    /** @var RuleGroupRepository */
-    private $ruleGroupRepository;
     /** @var int */
     private $triggerMode;
+    /** @var User */
+    private $user;
 
     /**
      * RuleEngine constructor.
@@ -70,94 +70,6 @@ class RuleEngine
         $this->allRules            = false;
         $this->ruleGroupRepository = app(RuleGroupRepository::class);
         $this->triggerMode         = self::TRIGGER_STORE;
-    }
-
-    /**
-     * @param int $triggerMode
-     */
-    public function setTriggerMode(int $triggerMode): void
-    {
-        $this->triggerMode = $triggerMode;
-    }
-
-    /**
-     * @param bool $allRules
-     */
-    public function setAllRules(bool $allRules): void
-    {
-        Log::debug('RuleEngine will apply ALL rules.');
-        $this->allRules = $allRules;
-    }
-
-
-    /**
-     * @param array $rulesToApply
-     */
-    public function setRulesToApply(array $rulesToApply): void
-    {
-        Log::debug('RuleEngine will try rules', $rulesToApply);
-        $this->rulesToApply = $rulesToApply;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->ruleGroupRepository->setUser($user);
-        $this->ruleGroups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    /**
-     * @param TransactionJournal $transactionJournal
-     */
-    public function processTransactionJournal(TransactionJournal $transactionJournal): void
-    {
-        Log::debug(sprintf('Will process transaction journal #%d ("%s")', $transactionJournal->id, $transactionJournal->description));
-        /** @var RuleGroup $group */
-        foreach ($this->ruleGroups as $group) {
-            Log::debug(sprintf('Now at rule group #%d', $group->id));
-            $groupTriggered = false;
-            /** @var Rule $rule */
-            foreach ($group->rules as $rule) {
-                Log::debug(sprintf('Now at rule #%d from rule group #%d', $rule->id, $group->id));
-                $ruleTriggered = false;
-                // if in rule selection, or group in selection or all rules, it's included.
-                if ($this->includeRule($rule)) {
-                    Log::debug(sprintf('Rule #%d is included.', $rule->id));
-                    /** @var Processor $processor */
-                    $processor     = app(Processor::class);
-                    $ruleTriggered = false;
-                    try {
-                        $processor->make($rule, true);
-                        $ruleTriggered = $processor->handleTransactionJournal($transactionJournal);
-                    } catch (FireflyException $e) {
-                        Log::error($e->getMessage());
-                    }
-
-                    if ($ruleTriggered) {
-                        Log::debug('The rule was triggered, so the group is as well!');
-                        $groupTriggered = true;
-                    }
-                }
-                if (!$this->includeRule($rule)) {
-                    Log::debug(sprintf('Rule #%d is not included.', $rule->id));
-                }
-
-                // if the rule is triggered and stop processing is true, cancel the entire group.
-                if ($ruleTriggered && $rule->stop_processing) {
-                    Log::info(sprintf('Break out group #%d because rule #%d was triggered.', $group->id, $rule->id));
-                    break;
-                }
-            }
-            // if group is triggered and stop processing is true, cancel the whole thing.
-            if ($groupTriggered && $group->stop_processing) {
-                Log::info(sprintf('Break out ALL because group #%d was triggered.', $group->id));
-                break;
-            }
-        }
-        Log::debug('Done processing this transaction journal.');
     }
 
     /**
@@ -213,7 +125,95 @@ class RuleEngine
     }
 
     /**
+     * @param TransactionJournal $transactionJournal
+     */
+    public function processTransactionJournal(TransactionJournal $transactionJournal): void
+    {
+        Log::debug(sprintf('Will process transaction journal #%d ("%s")', $transactionJournal->id, $transactionJournal->description));
+        /** @var RuleGroup $group */
+        foreach ($this->ruleGroups as $group) {
+            Log::debug(sprintf('Now at rule group #%d', $group->id));
+            $groupTriggered = false;
+            /** @var Rule $rule */
+            foreach ($group->rules as $rule) {
+                Log::debug(sprintf('Now at rule #%d from rule group #%d', $rule->id, $group->id));
+                $ruleTriggered = false;
+                // if in rule selection, or group in selection or all rules, it's included.
+                if ($this->includeRule($rule)) {
+                    Log::debug(sprintf('Rule #%d is included.', $rule->id));
+                    /** @var Processor $processor */
+                    $processor     = app(Processor::class);
+                    $ruleTriggered = false;
+                    try {
+                        $processor->make($rule, true);
+                        $ruleTriggered = $processor->handleTransactionJournal($transactionJournal);
+                    } catch (FireflyException $e) {
+                        Log::error($e->getMessage());
+                    }
+
+                    if ($ruleTriggered) {
+                        Log::debug('The rule was triggered, so the group is as well!');
+                        $groupTriggered = true;
+                    }
+                }
+                if (!$this->includeRule($rule)) {
+                    Log::debug(sprintf('Rule #%d is not included.', $rule->id));
+                }
+
+                // if the rule is triggered and stop processing is true, cancel the entire group.
+                if ($ruleTriggered && $rule->stop_processing) {
+                    Log::info(sprintf('Break out group #%d because rule #%d was triggered.', $group->id, $rule->id));
+                    break;
+                }
+            }
+            // if group is triggered and stop processing is true, cancel the whole thing.
+            if ($groupTriggered && $group->stop_processing) {
+                Log::info(sprintf('Break out ALL because group #%d was triggered.', $group->id));
+                break;
+            }
+        }
+        Log::debug('Done processing this transaction journal.');
+    }
+
+    /**
+     * @param bool $allRules
+     */
+    public function setAllRules(bool $allRules): void
+    {
+        Log::debug('RuleEngine will apply ALL rules.');
+        $this->allRules = $allRules;
+    }
+
+    /**
+     * @param array $rulesToApply
+     */
+    public function setRulesToApply(array $rulesToApply): void
+    {
+        Log::debug('RuleEngine will try rules', $rulesToApply);
+        $this->rulesToApply = $rulesToApply;
+    }
+
+    /**
+     * @param int $triggerMode
+     */
+    public function setTriggerMode(int $triggerMode): void
+    {
+        $this->triggerMode = $triggerMode;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->ruleGroupRepository->setUser($user);
+        $this->ruleGroups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    /**
      * @param Rule $rule
+     *
      * @return bool
      */
     private function includeRule(Rule $rule): bool
@@ -224,8 +224,8 @@ class RuleEngine
             return false;
         }
 
-        $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode) ||
-                        ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);
+        $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode)
+                        || ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);
 
         return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true));
     }

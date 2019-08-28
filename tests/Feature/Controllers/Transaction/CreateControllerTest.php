@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CreateControllerTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -32,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class CreateControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateControllerTest extends TestCase
 {
@@ -50,6 +54,7 @@ class CreateControllerTest extends TestCase
     public function testCreate(): void
     {
         $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_transactions_create_withdrawal');
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $cash         = $this->getRandomAsset();
@@ -63,7 +68,7 @@ class CreateControllerTest extends TestCase
 
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.create'));
+        $response = $this->get(route('transactions.create', ['withdrawal']));
         $response->assertStatus(200);
     }
 }

@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class PiggyBankEventTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankEventTransformerTest extends TestCase
 {
@@ -56,9 +59,6 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -70,17 +70,19 @@ class PiggyBankEventTransformerTest extends TestCase
 
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($this->getEuro());
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
+
+
+
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 
@@ -91,9 +93,6 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testNoCurrency(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -106,18 +105,17 @@ class PiggyBankEventTransformerTest extends TestCase
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
 
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->atLeast()->once();
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 }

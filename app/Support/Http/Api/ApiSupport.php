@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * ApiSupport.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -26,6 +27,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Trait ApiSupport
+ * @codeCoverageIgnore
  */
 trait ApiSupport
 {

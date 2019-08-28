@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CreateRecurringTransactionsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -38,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class CreateRecurringTransactionsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateRecurringTransactionsTest extends TestCase
 {
@@ -80,12 +84,23 @@ class CreateRecurringTransactionsTest extends TestCase
     /**
      * Submit one, but offer no occurrences.
      *
+     * TODO there is a random element in this test that breaks the test.
+     *
      * @covers \FireflyIII\Jobs\CreateRecurringTransactions
      */
     public function testSingle(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock classes
-        $recurrence     = $this->getRandomRecurrence();
+        $date = new Carbon;
+        $date->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
+        $recurrence->latest_date = null;
+        $recurrence->first_date  = $date;
+        $recurrence->save();
+
+        Log::debug(sprintf('Test is going to use Recurrence #%d', $recurrence->id), $recurrence->toArray());
+
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $groupRepos     = $this->mock(TransactionGroupRepositoryInterface::class);
@@ -308,7 +323,14 @@ class CreateRecurringTransactionsTest extends TestCase
         $date = new Carbon();
         $this->expectsEvents([StoredTransactionGroup::class]);
 
-        $recurrence = $this->getRandomRecurrence();
+        // mock classes
+        $carbon = new Carbon;
+        $carbon->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
+        $recurrence->latest_date = null;
+        $recurrence->first_date  = $carbon;
+        $recurrence->save();
+
         $group      = $this->getRandomWithdrawalGroup();
 
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
@@ -359,11 +381,21 @@ class CreateRecurringTransactionsTest extends TestCase
      */
     public function testForced(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Event::fake();
         $date = new Carbon();
         $this->expectsEvents([StoredTransactionGroup::class]);
 
-        $recurrence = $this->getRandomRecurrence();
+        // overrule some fields in the recurrence.
+        $carbon = new Carbon;
+        $carbon->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
+        $recurrence->latest_date = null;
+        $recurrence->first_date  = $carbon;
+        $recurrence->save();
+
+
+
         $group      = $this->getRandomWithdrawalGroup();
 
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
@@ -418,11 +450,12 @@ class CreateRecurringTransactionsTest extends TestCase
         Event::fake();
         $date = new Carbon();
 
-        $recurrence = $this->getRandomRecurrence();
-        $group      = $this->getRandomWithdrawalGroup();
-
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
+        $carbon = new Carbon;
+        $carbon->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
         $recurrence->latest_date = null;
+        $recurrence->first_date  = $carbon;
         $recurrence->save();
 
         // mock classes
@@ -459,11 +492,12 @@ class CreateRecurringTransactionsTest extends TestCase
         $tomorrow = new Carbon();
         $tomorrow->addDays(2);
 
-        $recurrence = $this->getRandomRecurrence();
-        $group      = $this->getRandomWithdrawalGroup();
-
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
+        $carbon = new Carbon;
+        $carbon->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
         $recurrence->latest_date = null;
+        $recurrence->first_date  = $carbon;
         $recurrence->save();
 
         // mock classes
@@ -503,12 +537,16 @@ class CreateRecurringTransactionsTest extends TestCase
         $date = new Carbon();
         $this->expectsEvents([StoredTransactionGroup::class]);
 
-        $recurrence = $this->getRandomRecurrence();
+
         $group      = $this->getRandomWithdrawalGroup();
         $piggy = $this->getRandomPiggyBank();
 
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
+        $carbon = new Carbon;
+        $carbon->subDays(4);
+        $recurrence              = $this->getRandomRecurrence();
         $recurrence->latest_date = null;
+        $recurrence->first_date  = $carbon;
         $recurrence->save();
 
         // mock classes

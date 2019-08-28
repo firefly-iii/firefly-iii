@@ -77,8 +77,6 @@ class EditController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \FireflyIII\Exceptions\FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Recurrence $recurrence)
     {

@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class NewCustomerRequest
+ * @codeCoverageIgnore
  */
 class NewCustomerRequest extends SpectreRequest
 {

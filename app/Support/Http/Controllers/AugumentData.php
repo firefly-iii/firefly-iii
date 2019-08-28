@@ -79,8 +79,8 @@ trait AugumentData
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -352,7 +352,7 @@ trait AugumentData
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -397,7 +397,7 @@ trait AugumentData
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      *
      */
     protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
@@ -575,7 +575,7 @@ trait AugumentData
         return $grouped;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent by budget.
@@ -586,8 +586,8 @@ trait AugumentData
      * @param Carbon $end
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -635,7 +635,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent by category.
@@ -647,8 +647,8 @@ trait AugumentData
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -696,7 +696,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Spent in a period.
@@ -744,7 +744,7 @@ trait AugumentData
         return $sum;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Returns an array with the following values:

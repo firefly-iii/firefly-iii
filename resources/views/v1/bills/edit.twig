@@ -18,7 +18,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
-                    {{ ExpandedForm.currencyList('transaction_currency_id') }}
+                    {{ CurrencyForm.currencyList('transaction_currency_id') }}
                     {{ ExpandedForm.amountNoCurrency('amount_min') }}
                     {{ ExpandedForm.amountNoCurrency('amount_max') }}
                     {{ ExpandedForm.date('date',bill.date.format('Y-m-d')) }}

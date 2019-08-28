@@ -48,9 +48,7 @@ class Handler extends ExceptionHandler
      *
      * @param Request   $request
      * @param Exception $exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      *
      * @return mixed
      */
@@ -92,6 +90,12 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
         }
 
+        if($exception instanceof NotFoundHttpException) {
+            $handler = app(GracefulNotFoundHandler::class);
+            return $handler->render($request, $exception);
+        }
+
+
         if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
             $isDebug = config('app.debug');
 
@@ -106,7 +110,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry etc.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
+     *  // it's five its fine.
      *
      * @param Exception $exception
      *

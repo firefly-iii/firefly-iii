@@ -86,26 +86,23 @@
 
                         {{ ExpandedForm.text('transaction_description') }}
                         {# transaction information (mandatory) #}
-                        {{ ExpandedForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
                         {{ ExpandedForm.amountNoCurrency('amount', []) }}
 
                         {# source account if withdrawal, or if transfer: #}
-                        {{ ExpandedForm.activeLongAccountList('source_id', null, {label: trans('form.asset_source_account')}) }}
-
-                        {# source account name for deposits: #}
-                        {#{{ ExpandedForm.text('source_name', null, {label: trans('form.revenue_account')}) }}#}
+                        {{ AccountForm.activeLongAccountList('source_id', null, {label: trans('form.asset_source_account')}) }}
 
                         {# for deposits, a drop down with revenue accounts, loan debt cash and mortgage #}
-                        {{ ExpandedForm.activeDepositDestinations('deposit_source_id', null, {label: trans('form.deposit_source_id')}) }}
+                        {{ AccountForm.activeDepositDestinations('deposit_source_id', null, {label: trans('form.deposit_source_id')}) }}
 
                         {# destination if deposit or transfer: #}
-                        {{ ExpandedForm.activeLongAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
+                        {{ AccountForm.activeLongAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
                         {#{{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }} #}
 
                         {# for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
-                        {{ ExpandedForm.activeWithdrawalDestinations('withdrawal_destination_id', null, {label: trans('form.withdrawal_destination_id')}) }}
+                        {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', null, {label: trans('form.withdrawal_destination_id')}) }}
                     </div>
                 </div>
             </div>
@@ -118,7 +115,7 @@
                     </div>
                     <div class="box-body">
                         {# transaction information (optional) #}
-                        {{ ExpandedForm.currencyListEmpty('foreign_currency_id', 0) }}
+                        {{ CurrencyForm.currencyListEmpty('foreign_currency_id', 0) }}
                         {{ ExpandedForm.amountNoCurrency('foreign_amount', []) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
@@ -135,7 +132,7 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
+                        {{ PiggyBankForm.piggyBankList('piggy_bank_id',0) }}
                     </div>
                 </div>
             </div>

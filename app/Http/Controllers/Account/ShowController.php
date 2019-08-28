@@ -28,7 +28,6 @@ use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -40,7 +39,7 @@ use View;
 /**
  * Class ShowController
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ShowController extends Controller
 {
@@ -73,7 +72,7 @@ class ShowController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show an account.
      *
@@ -87,8 +86,8 @@ class ShowController extends Controller
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
-        if (in_array($account->accountType->type, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION], true)) {
-            return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
 
         /** @var Carbon $start */
@@ -139,15 +138,14 @@ class ShowController extends Controller
      * @param Request $request
      * @param Account $account
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     *
-     *
      * @throws Exception
      */
     public function showAll(Request $request, Account $account)
     {
-        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
+
         $isLiability  = $this->repository->isLiability($account);
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = new Carbon;

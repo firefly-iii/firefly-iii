@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToWithdrawalTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToWithdrawalTest extends TestCase
 {
@@ -55,11 +58,8 @@ class ConvertToWithdrawalTest extends TestCase
      */
     public function testActDeposit()
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $expense = $this->getRandomExpense();
-        $name    = 'Random expense #' . random_int(1, 10000);
+        $name    = 'Random expense #' . $this->randomInt();
         $deposit = $this->getRandomDeposit();
 
         // journal is a deposit:
@@ -78,6 +78,8 @@ class ConvertToWithdrawalTest extends TestCase
         try {
             $result = $action->act($deposit);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -94,15 +96,9 @@ class ConvertToWithdrawalTest extends TestCase
      */
     public function testActTransfer()
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $expense  = $this->getRandomExpense();
-        $name     = 'Random expense #' . random_int(1, 10000);
+        $name     = 'Random expense #' . $this->randomInt();
         $transfer = $this->getRandomTransfer();
-
-        // journal is a transfer:
-        $this->assertEquals(TransactionType::TRANSFER, $transfer->transactionType->type);
 
         // mock used stuff:
         $factory = $this->mock(AccountFactory::class);
@@ -117,6 +113,8 @@ class ConvertToWithdrawalTest extends TestCase
         try {
             $result = $action->act($transfer);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

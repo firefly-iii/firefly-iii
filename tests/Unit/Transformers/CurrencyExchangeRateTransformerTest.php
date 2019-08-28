@@ -35,6 +35,9 @@ use Tests\TestCase;
 /**
  *
  * Class CurrencyExchangeRateTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CurrencyExchangeRateTransformerTest extends TestCase
 {

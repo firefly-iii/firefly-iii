@@ -48,6 +48,7 @@ use Log;
  * Class to centralise code that updates a journal given the input by system.
  *
  * Class JournalUpdateService
+ * TODO test me
  */
 class JournalUpdateService
 {
@@ -164,6 +165,7 @@ class JournalUpdateService
             $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
         }
         // update tags
+
         if ($this->hasFields(['tags'])) {
             Log::debug('Will update tags.');
             $tags = $this->data['tags'] ?? null;

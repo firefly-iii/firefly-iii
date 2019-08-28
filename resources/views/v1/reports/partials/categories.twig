@@ -2,17 +2,14 @@
     <thead>
     <tr>
         <th>{{ 'category'|_ }}</th>
-        <th style="text-align: right;">{{ 'earned'|_ }}</th>
         <th style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th style="text-align: right;">{{ 'earned'|_ }}</th>
         <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
-    {% set sumSpent = 0 %}
-    {% set sumEarned = 0 %}
-    {% for index, category in report %}
-        {% set sumSpent = sumSpent + category.spent %}
-        {% set sumEarned = sumEarned + category.earned %}
+
+    {% for index, category in report.categories %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
@@ -21,11 +18,11 @@
         <td>
             <a href="{{ route('categories.show', category.id) }}">{{ category.name }}</a>
         </td>
-        <td style="text-align: right;">{{ category.earned|formatAmount }}</td>
-        <td style="text-align: right;">{{ category.spent|formatAmount }}</td>
+        <td style="text-align: right;">{{ formatAmountBySymbol(category.spent, category.currency_symbol, category.currency_decimal_places, true) }}</td>
+        <td style="text-align: right;">{{ formatAmountBySymbol(category.earned, category.currency_symbol, category.currency_decimal_places, true) }}</td>
         <td style="width:20px;">
             <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
-               data-location="category-entry" data-category-id="{{ category.id }}"
+               data-location="category-entry" data-category-id="{{ category.id }}" data-currency-id="{{ category.currency_id }}"
             ></i>
         </td>
         </tr>
@@ -34,17 +31,31 @@
     <tfoot>
     {% if report|length > listLength %}
         <tr>
-            <td colspan="3" class="active">
+            <td colspan="4" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
             </td>
         </tr>
     {% endif %}
-
+    {% for sum in report.sums %}
+    <tr>
+        <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td></td>
+    </tr>
+    {% endfor %}
+    {#
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
         <td style="text-align: right;">{{ sumEarned|formatAmount }}</td>
         <td style="text-align: right;">{{ sumSpent|formatAmount }}</td>
         <td>&nbsp;</td>
     </tr>
+    TODO fix the sum here.
+    #}
     </tfoot>
 </table>

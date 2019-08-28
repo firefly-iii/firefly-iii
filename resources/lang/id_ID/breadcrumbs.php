@@ -39,6 +39,7 @@ return [
     'reports'                => 'Laporan',
     'search_result'          => 'Hasil pencarian untuk ":query"',
     'withdrawal_list'        => 'Pengeluaran',
+    'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Pendapatan, pemasukan, dan deposit',
     'transfer_list'          => 'Transfer',
     'transfers_list'         => 'Transfer',

@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class UserControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UserControllerTest extends TestCase
 {
@@ -106,14 +109,6 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(3)->andReturn(true);
         $user = $this->user();
         $repository->shouldReceive('all')->andReturn(new Collection([$user]));
-
-        Preferences::shouldReceive('getArrayForUser')->atLeast()->once()->andReturn(
-            [
-                'twoFactorAuthEnabled' => false,
-                'twoFactorAuthSecret'  => null,
-            ]
-        );
-
         $this->mockDefaultSession();
 
         $this->be($user);

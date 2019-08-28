@@ -52,7 +52,9 @@ use Tests\TestCase;
  * With the correct types.
  *
  * Class RecurrenceFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RecurrenceFactoryTest extends TestCase
 {
@@ -415,7 +417,7 @@ class RecurrenceFactoryTest extends TestCase
         $validator       = $this->mock(AccountValidator::class);
 
         // mock calls:
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->once();
         $piggyFactory->shouldReceive('setUser')->once();
         $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn($piggyBank);
 
@@ -521,7 +523,7 @@ class RecurrenceFactoryTest extends TestCase
         $validator       = $this->mock(AccountValidator::class);
 
         // mock calls:
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->once();
         $piggyFactory->shouldReceive('setUser')->once();
         $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn(null);
 
@@ -625,7 +627,7 @@ class RecurrenceFactoryTest extends TestCase
         $validator       = $this->mock(AccountValidator::class);
 
         // mock calls:
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->once();
         $piggyFactory->shouldReceive('setUser')->once();
         $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn($piggyBank);
 
@@ -730,7 +732,7 @@ class RecurrenceFactoryTest extends TestCase
         $accountFactory  = $this->mock(AccountFactory::class);
 
         // mock calls:
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->once();
         $piggyFactory->shouldReceive('setUser')->once();
         $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn($piggyBank);
 

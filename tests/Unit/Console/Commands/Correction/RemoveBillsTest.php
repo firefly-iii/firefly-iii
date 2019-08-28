@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * RemoveBillsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -28,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class RemoveBillsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveBillsTest extends TestCase
 {

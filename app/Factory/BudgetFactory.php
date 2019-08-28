@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -53,7 +52,7 @@ class BudgetFactory
      * @param null|string $budgetName
      *
      * @return Budget|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
@@ -90,16 +89,7 @@ class BudgetFactory
      */
     public function findByName(string $name): ?Budget
     {
-        /** @var Collection $collection */
-        $collection = $this->user->budgets()->get();
-        /** @var Budget $budget */
-        foreach ($collection as $budget) {
-            if ($budget->name === $name) {
-                return $budget;
-            }
-        }
-
-        return null;
+        return $this->user->budgets()->where('name', $name)->first();
     }
 
     /**

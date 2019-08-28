@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection MoreThanThreeArgumentsInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -64,7 +64,7 @@ class ExpenseReportController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
@@ -77,9 +77,7 @@ class ExpenseReportController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {

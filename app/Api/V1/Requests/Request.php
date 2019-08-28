@@ -122,48 +122,6 @@ class Request extends FireflyIIIRequest
     }
 
     /**
-     * The rules that the incoming request must be matched against.
-     *
-     * @return array
-     */
-    protected function rulesRecurrence(): array
-    {
-        $today = Carbon::now()->addDay();
-
-        return [
-            'type'                                 => 'required|in:withdrawal,transfer,deposit',
-            'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'description'                          => 'between:1,65000',
-            'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
-            'apply_rules'                          => [new IsBoolean],
-            'active'                               => [new IsBoolean],
-            'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
-            'nr_of_repetitions'                    => 'numeric|between:1,31',
-            'tags'                                 => 'between:1,64000',
-            'piggy_bank_id'                        => 'numeric',
-            'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => 'between:0,10',
-            'repetitions.*.skip'                   => 'required|numeric|between:0,31',
-            'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
-            'transactions.*.description'           => 'required|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.foreign_amount'        => 'numeric|more:0',
-            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.source_name'           => 'between:1,255|nullable',
-            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.destination_name'      => 'between:1,255|nullable',
-
-
-        ];
-    }
-
-    /**
      * Returns the repetition data as it is found in the submitted data.
      *
      * @return array

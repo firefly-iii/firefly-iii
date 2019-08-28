@@ -26,11 +26,8 @@ namespace FireflyIII\Support\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -50,8 +47,8 @@ trait ChartGeneration
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
@@ -78,6 +75,7 @@ trait ChartGeneration
         $chartData = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
+            // TODO we can use getAccountCurrency() instead
             $currency = $repository->findNull((int)$accountRepos->getMetaValue($account, 'currency_id'));
             if (null === $currency) {
                 $currency = $default;
@@ -115,8 +113,6 @@ trait ChartGeneration
      * @param Carbon     $end
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function getChartData(Collection $accounts, Carbon $start, Carbon $end): array // chart helper function
     {
@@ -140,25 +136,24 @@ trait ChartGeneration
             $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
             $earned     = (string)array_sum(
                 array_map(
-                    function ($item) {
+                    static function ($item) {
                         return $item['sum'];
                     },
-                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
+                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)['accounts']
                 )
             );
-
             $spent = (string)array_sum(
                 array_map(
-                    function ($item) {
+                    static function ($item) {
                         return $item['sum'];
                     },
-                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
+                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)['accounts']
                 )
             );
 
             $label               = $currentStart->format('Y-m') . '-01';
             $spentArray[$label]  = bcmul($spent, '-1');
-            $earnedArray[$label] = $earned;
+            $earnedArray[$label] = bcmul($earned, '-1');
             $currentStart        = app('navigation')->addPeriod($currentStart, '1M', 0);
         }
         $result = [
@@ -169,96 +164,4 @@ trait ChartGeneration
 
         return $result;
     }
-
-    /**
-     * Chart for a specific period (start and end).
-     *
-     *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function makePeriodChart(Category $category, Carbon $start, Carbon $end): array // chart helper method.
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($category->id);
-        $cache->addProperty('chart.category.period-chart');
-
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $repository        = app(CategoryRepositoryInterface::class);
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-
-        // chart data
-        $chartData = [
-            [
-                'label'           => (string)trans('firefly.spent'),
-                'entries'         => [],
-                'type'            => 'bar',
-                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-            ],
-            [
-                'label'           => (string)trans('firefly.earned'),
-                'entries'         => [],
-                'type'            => 'bar',
-                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-            ],
-            [
-                'label'   => (string)trans('firefly.sum'),
-                'entries' => [],
-                'type'    => 'line',
-                'fill'    => false,
-            ],
-        ];
-
-        $step = $this->calculateStep($start, $end);
-
-
-        while ($start <= $end) {
-            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $sum                             = bcadd($spent, $earned);
-            $label                           = trim(app('navigation')->periodShow($start, $step));
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
-            $chartData[1]['entries'][$label] = round($earned, 12);
-            $chartData[2]['entries'][$label] = round($sum, 12);
-
-            // @codeCoverageIgnoreStart
-            switch ($step) {
-                default:
-                case '1D':
-                    $start->addDay();
-                    break;
-                case '1W':
-                    $start->addDays(7);
-                    break;
-                case '1M':
-                    $start->addMonth();
-                    break;
-                case '1Y':
-                    $start->addYear();
-                    break;
-            }
-            // @codeCoverageIgnoreEnd
-        }
-
-        $data = $generator->multiSet($chartData);
-        $cache->store($data);
-
-        return $data;
-    }
-
 }

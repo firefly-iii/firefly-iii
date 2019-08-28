@@ -27,6 +27,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 /**
  * Class ValidRecurrenceRepetitionType
+ * @codeCoverageIgnore
  */
 class ValidRecurrenceRepetitionType implements Rule
 {
@@ -48,8 +49,8 @@ class ValidRecurrenceRepetitionType implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     *
      */
     public function passes($attribute, $value): bool
     {

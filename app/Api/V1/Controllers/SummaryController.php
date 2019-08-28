@@ -95,6 +95,7 @@ class SummaryController extends Controller
         $dates = $request->getAll();
         $start = $dates['start'];
         $end   = $dates['end'];
+        $code  = $request->get('currency_code');
 
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
@@ -103,9 +104,15 @@ class SummaryController extends Controller
         $networthData = $this->getNetWorthInfo($start, $end);
         $total        = array_merge($balanceData, $billData, $spentData, $networthData);
 
-        // TODO: liabilities with icon line-chart
+        // give new keys
+        $return = [];
+        foreach ($total as $entry) {
+            if (null === $code || (null !== $code && $code === $entry['currency_code'])) {
+                $return[$entry['key']] = $entry;
+            }
+        }
 
-        return response()->json($total);
+        return response()->json($return);
 
     }
 

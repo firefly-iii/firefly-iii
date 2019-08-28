@@ -30,6 +30,7 @@ use RuntimeException;
 
 /**
  * Class YnabRequest
+ * @codeCoverageIgnore
  */
 abstract class YnabRequest
 {

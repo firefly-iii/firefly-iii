@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class MappedValuesValidatorTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class MappedValuesValidatorTest extends TestCase
 {
@@ -122,14 +125,14 @@ class MappedValuesValidatorTest extends TestCase
     }
 
     /**
-     * @param int $id
+     * @param int $objectId
      *
      * @return stdClass
      */
-    private function objectWithId(int $id): stdClass
+    private function objectWithId(int $objectId): stdClass
     {
         $obj     = new stdClass();
-        $obj->id = $id;
+        $obj->id = $objectId;
 
         return $obj;
     }

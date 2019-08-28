@@ -36,6 +36,7 @@ class IsAssetAccountId implements Rule
      * Get the validation error message. This is not translated because only the API uses it.
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function message(): string
     {
@@ -49,8 +50,6 @@ class IsAssetAccountId implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value): bool
     {

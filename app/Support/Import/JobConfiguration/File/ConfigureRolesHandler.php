@@ -58,7 +58,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
      * @param array $config
      *
      * @return MessageBag
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function configurationComplete(array $config): MessageBag
     {

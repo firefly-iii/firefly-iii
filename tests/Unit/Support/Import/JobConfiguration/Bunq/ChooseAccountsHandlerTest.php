@@ -41,6 +41,9 @@ use Tests\TestCase;
 
 /**
  * Class ChooseAccountsHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseAccountsHandlerTest extends TestCase
 {
@@ -60,7 +63,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'caha' . random_int(1, 10000);
+        $job->key           = 'caha' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -91,7 +94,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahb' . random_int(1, 10000);
+        $job->key           = 'cahb' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -124,7 +127,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahc' . random_int(1, 10000);
+        $job->key           = 'cahc' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -179,7 +182,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahd' . random_int(1, 10000);
+        $job->key           = 'cahd' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -234,7 +237,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahe' . random_int(1, 10000);
+        $job->key           = 'cahe' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -289,7 +292,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahf' . random_int(1, 10000);
+        $job->key           = 'cahf' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -335,7 +338,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahg' . random_int(1, 10000);
+        $job->key           = 'cahg' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -398,7 +401,7 @@ class ChooseAccountsHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cahg' . random_int(1, 10000);
+        $job->key           = 'cahg' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';

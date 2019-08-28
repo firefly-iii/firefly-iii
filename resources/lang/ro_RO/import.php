@@ -210,6 +210,8 @@ Creați descrieri mai bune în exporturile ING',
     'specific_pres_descr'             => 'Remediază posibile probleme cu fișierele PC',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Remediază posibile probleme cu fișierele Belfius',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configurarea importului (3/4) - Definiți rolul fiecărei coloane',
     'job_config_roles_text'           => 'Fiecare coloană din fișierul dvs. CSV conține anumite date. Vă rugăm să indicați ce fel de date ar trebui să aștepte importatorul. Opțiunea de a "mapa" datele înseamnă că veți conecta fiecare intrare găsită în coloană cu o valoare din baza dvs. de date. O coloană desenată de multe ori este coloana care conține IBAN-ul contului opus. Acest lucru poate fi ușor comparat cu prezența IBAN în baza dvs. de date.',
@@ -308,5 +310,8 @@ Creați descrieri mai bune în exporturile ING',
     'column_opposing-number'          => 'Cont opus (numărul contului)',
     'column_note'                     => 'Notițe',
     'column_internal-reference'       => 'Referință internă',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

@@ -101,7 +101,6 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     public function transformObject(TransactionGroup $group): array
     {
-        //$first = $group->transactionJournals->first();
         $result = [
             'id'           => (int)$group->id,
             'created_at'   => $group->created_at->toAtomString(),
@@ -174,11 +173,13 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             // get foreign amount:
             $foreignAmount = null;
+            // @codeCoverageIgnoreStart
             if (null !== $source->foreign_amount) {
                 $foreignAmount = TransactionType::WITHDRAWAL !== $type
                     ? app('steam')->negative($source->foreign_amount)
                     : app('steam')->positive($source->foreign_amount);
             }
+            // @codeCoverageIgnoreEnd
 
             $metaFieldData = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
             $metaDateData  = $this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields);
@@ -280,7 +281,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             }
             $foreignAmount = null;
             if (null !== $row['foreign_amount']) {
-                $foreignAmount = TransactionType::WITHDRAWAL !== $type ? bcmul($row['foreign_amount'], '-1') : $row['foreign_amount'];
+                $foreignAmount = TransactionType::WITHDRAWAL !== $type ? bcmul($row['foreign_amount'], '-1') : $row['foreign_amount']; // @codeCoverageIgnore
             }
 
             $metaFieldData = $this->groupRepos->getMetaFields((int)$row['transaction_journal_id'], $this->metaFields);

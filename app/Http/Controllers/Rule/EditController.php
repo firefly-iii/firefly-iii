@@ -70,8 +70,6 @@ class EditController extends Controller
      * @param Rule    $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Rule $rule)
     {

@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class HasAnyTagTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class HasAnyTagTest extends TestCase
 {
@@ -36,7 +39,7 @@ class HasAnyTagTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $tag     = $journal->user->tags()->first();
         $journal->tags()->detach();
         $journal->tags()->save($tag);
@@ -52,7 +55,7 @@ class HasAnyTagTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->tags()->detach();
         $this->assertEquals(0, $journal->tags()->count());
         $trigger = HasAnyTag::makeFromStrings('', false);

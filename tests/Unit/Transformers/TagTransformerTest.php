@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class TagTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagTransformerTest extends TestCase
 {
@@ -44,7 +47,7 @@ class TagTransformerTest extends TestCase
         $tag         = Tag::create(
             [
                 'user_id'     => $this->user()->id,
-                'tag'         => 'Some tag ' . random_int(1, 10000),
+                'tag'         => 'Some tag ' . $this->randomInt(),
                 'tagMode'     => 'nothing',
                 'date'        => '2018-01-01',
                 'description' => 'Some tag',

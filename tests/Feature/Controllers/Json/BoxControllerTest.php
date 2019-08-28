@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class BoxControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BoxControllerTest extends TestCase
 {
@@ -191,7 +194,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -205,7 +208,7 @@ class BoxControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
@@ -224,7 +227,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -237,7 +240,7 @@ class BoxControllerTest extends TestCase
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
@@ -261,7 +264,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -274,7 +277,7 @@ class BoxControllerTest extends TestCase
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
@@ -297,7 +300,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -328,7 +331,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -341,7 +344,7 @@ class BoxControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('0');
@@ -360,7 +363,7 @@ class BoxControllerTest extends TestCase
         $this->mockDefaultSession();
         $result = [
             [
-                'currency' => TransactionCurrency::find(1),
+                'currency' => $this->getEuro(),
                 'balance'  => '3',
             ],
         ];
@@ -375,7 +378,7 @@ class BoxControllerTest extends TestCase
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro());
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');

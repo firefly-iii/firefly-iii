@@ -46,9 +46,9 @@ use Navigation;
 /**
  * Class BudgetRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ *
+ *
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
@@ -97,15 +97,49 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @return bool
+     *  // it's 5.
+     */
+    public function cleanupBudgets(): bool
+    {
+        // delete limits with amount 0:
+        try {
+            BudgetLimit::where('amount', 0)->delete();
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+        }
+        Budget::where('order', 0)->update(['order' => 100]);
+
+        // do the clean up by hand because Sqlite can be tricky with this.
+        $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
+        $count        = [];
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($budgetLimits as $budgetLimit) {
+            $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
+            if (isset($count[$key])) {
+                // delete it!
+                try {
+                    BudgetLimit::find($budgetLimit->id)->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+                }
+            }
+            $count[$key] = true;
+        }
+
+        return true;
+    }
+
+    /**
      * This method collects various info on budgets, used on the budget page and on the index.
      *
      * @param Collection $budgets
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
@@ -141,95 +175,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-
-        return $collector->getSum();
-
-    }
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
-    {
-        if (null === $end && null === $start) {
-            return $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
-        }
-        if (null === $end xor null === $start) {
-            $query = $budget->budgetlimits()->orderBy('budget_limits.start_date', 'DESC');
-            // one of the two is null
-            if (null !== $end) {
-                // end date must be before $end.
-                $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
-            }
-            if (null !== $start) {
-                // start date must be after $start.
-                $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
-            }
-            $set = $query->get(['budget_limits.*']);
-
-            return $set;
-        }
-
-        // when both dates are set:
-        $set = $budget->budgetlimits()
-                      ->where(
-                          function (Builder $q5) use ($start, $end) {
-                              $q5->where(
-                                  function (Builder $q1) use ($start, $end) {
-                                      // budget limit ends within period
-                                      $q1->where(
-                                          function (Builder $q2) use ($start, $end) {
-                                              $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
-                                          }
-                                      )
-                                          // budget limit start within period
-                                         ->orWhere(
-                                              function (Builder $q3) use ($start, $end) {
-                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
-                                              }
-                                          );
-                                  }
-                              )
-                                 ->orWhere(
-                                     function (Builder $q4) use ($start, $end) {
-                                         // or start is before start AND end is after end.
-                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
-                                         $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
-                                     }
-                                 );
-                          }
-                      )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
-
-        return $set;
     }
 
     /**
@@ -273,7 +218,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @param int|null $budgetId
+     * @param int|null    $budgetId
      * @param string|null $budgetName
      *
      * @return Budget|null
@@ -296,22 +241,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Find a budget or return NULL
-     *
-     * @param int $budgetId |null
-     *
-     * @return Budget|null
-     */
-    public function findNull(int $budgetId = null): ?Budget
-    {
-        if (null === $budgetId) {
-            return null;
-        }
-
-        return $this->user->budgets()->find($budgetId);
-    }
-
-    /**
      * Find budget by name.
      *
      * @param string|null $name
@@ -329,14 +258,30 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Find a budget or return NULL
+     *
+     * @param int $budgetId |null
+     *
+     * @return Budget|null
+     */
+    public function findNull(int $budgetId = null): ?Budget
+    {
+        if (null === $budgetId) {
+            return null;
+        }
+
+        return $this->user->budgets()->find($budgetId);
+    }
+
+    /**
      * This method returns the oldest journal or transaction date known to this budget.
      * Will cache result.
      *
      * @param Budget $budget
      *
      * @return Carbon
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {
@@ -377,8 +322,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
     {
@@ -448,8 +393,24 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
+    {
+        return $this->getAllBudgetLimits($start, $end)->filter(
+            function (BudgetLimit $budgetLimit) use ($currency) {
+                return $budgetLimit->transaction_currency_id === $currency->id;
+            }
+        );
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return string
      */
@@ -467,7 +428,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $amount;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Carbon $start
@@ -490,33 +450,103 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Calculate the average amount in the budgets available in this period.
-     * Grouped by day.
+     * Returns all available budget objects.
      *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
+    {
+        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
+    }
+
+    /**
+     * Returns all available budget objects.
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     *
+     */
+    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
+    {
+        $query = $this->user->availableBudgets();
+
+        if (null !== $start) {
+            $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
+        }
+        if (null !== $end) {
+            $query->where('end_date', '<=', $end->format('Y-m-d H:i:s'));
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return string
+     * @return Collection
+     *
+     *
      */
-    public function getAverageAvailable(Carbon $start, Carbon $end): string
+    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
-        /** @var Collection $list */
-        $list = $this->user->availableBudgets()
-                           ->where('start_date', '>=', $start->format('Y-m-d 00:00:00'))
-                           ->where('end_date', '<=', $end->format('Y-m-d 00:00:00'))
-                           ->get();
-        if (0 === $list->count()) {
-            return '0';
+        if (null === $end && null === $start) {
+            return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
         }
-        $total = '0';
-        $days  = 0;
-        /** @var AvailableBudget $availableBudget */
-        foreach ($list as $availableBudget) {
-            $total = bcadd($availableBudget->amount, $total);
-            $days  += $availableBudget->start_date->diffInDays($availableBudget->end_date);
+        if (null === $end xor null === $start) {
+            $query = $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC');
+            // one of the two is null
+            if (null !== $end) {
+                // end date must be before $end.
+                $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
+            }
+            if (null !== $start) {
+                // start date must be after $start.
+                $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
+            }
+            $set = $query->get(['budget_limits.*']);
+
+            return $set;
         }
 
-        return bcdiv($total, (string)$days);
+        // when both dates are set:
+        $set = $budget->budgetlimits()
+                      ->where(
+                          function (Builder $q5) use ($start, $end) {
+                              $q5->where(
+                                  function (Builder $q1) use ($start, $end) {
+                                      // budget limit ends within period
+                                      $q1->where(
+                                          function (Builder $q2) use ($start, $end) {
+                                              $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                          }
+                                      )
+                                          // budget limit start within period
+                                         ->orWhere(
+                                              function (Builder $q3) use ($start, $end) {
+                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              }
+                                          );
+                                  }
+                              )
+                                 ->orWhere(
+                                     function (Builder $q4) use ($start, $end) {
+                                         // or start is before start AND end is after end.
+                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                         $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                                     }
+                                 );
+                          }
+                      )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
+
+        return $set;
     }
 
     /**
@@ -525,15 +555,16 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @param Collection $budgets
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        $data         = [];
+
+        $data = [];
         // prep data array:
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
@@ -547,7 +578,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
         $journals = $collector->getExtractedJournals();
@@ -575,8 +605,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Get all budgets with these ID's.
      *
@@ -601,12 +629,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -658,9 +684,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $amount
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
      *
      * @return AvailableBudget
      */
@@ -685,7 +711,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param int $order
+     * @param int    $order
      */
     public function setBudgetOrder(Budget $budget, int $order): void
     {
@@ -704,8 +730,32 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param Collection $budgets
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+
+        return $collector->getSum();
+
+    }
+
+    /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      * TODO refactor me.
      *
      * @return array
@@ -735,6 +785,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                         'id'             => $transaction['currency_id'],
                         'decimal_places' => $transaction['currency_decimal_places'],
                         'code'           => $transaction['currency_code'],
+                        'name'           => $transaction['currency_name'],
                         'symbol'         => $transaction['currency_symbol'],
                     ];
                 }
@@ -751,9 +802,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
@@ -762,8 +814,8 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      */
@@ -784,8 +836,8 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -823,9 +875,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[] = [
                 'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => round($spent, $currency['decimal_places']),
+                'amount'                  => $spent,
             ];
         }
 
@@ -849,8 +902,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $newBudget;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param array $data
@@ -897,42 +948,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
-     */
-    public function cleanupBudgets(): bool
-    {
-        // delete limits with amount 0:
-        try {
-            BudgetLimit::where('amount', 0)->delete();
-        } catch (Exception $e) {
-            Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
-        }
-        Budget::where('order', 0)->update(['order' => 100]);
-
-        // do the clean up by hand because Sqlite can be tricky with this.
-        $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
-        $count        = [];
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($budgetLimits as $budgetLimit) {
-            $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
-            if (isset($count[$key])) {
-                // delete it!
-                try {
-                    BudgetLimit::find($budgetLimit->id)->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
-                }
-            }
-            $count[$key] = true;
-        }
-
-        return true;
-    }
-
-    /**
      * @param Budget $budget
-     * @param array $data
+     * @param array  $data
      *
      * @return Budget
      */
@@ -950,8 +967,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * TODO only used in the API.
+     *
      * @param AvailableBudget $availableBudget
-     * @param array $data
+     * @param array           $data
      *
      * @return AvailableBudget
      * @throws FireflyException
@@ -959,9 +978,9 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         $existing = $this->user->availableBudgets()
-                               ->where('transaction_currency_id', $data['transaction_currency_id'])
-                               ->where('start_date', $data['start_date']->format('Y-m-d 00:00:00'))
-                               ->where('end_date', $data['end_date']->format('Y-m-d 00:00:00'))
+                               ->where('transaction_currency_id', $data['currency_id'])
+                               ->where('start_date', $data['start']->format('Y-m-d 00:00:00'))
+                               ->where('end_date', $data['end']->format('Y-m-d 00:00:00'))
                                ->where('id', '!=', $availableBudget->id)
                                ->first();
 
@@ -969,8 +988,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             throw new FireflyException(sprintf('An entry already exists for these parameters: available budget object with ID #%d', $existing->id));
         }
         $availableBudget->transaction_currency_id = $data['currency_id'];
-        $availableBudget->start_date              = $data['start_date'];
-        $availableBudget->end_date                = $data['end_date'];
+        $availableBudget->start_date              = $data['start'];
+        $availableBudget->end_date                = $data['end'];
         $availableBudget->amount                  = $data['amount'];
         $availableBudget->save();
 
@@ -980,7 +999,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param BudgetLimit $budgetLimit
-     * @param array $data
+     * @param array       $data
      *
      * @return BudgetLimit
      * @throws Exception
@@ -1020,8 +1039,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit
     {
@@ -1085,52 +1104,24 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     * @return Collection
-     *
+     * @param string $oldName
+     * @param string $newName
      */
-    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
+    private function updateRuleActions(string $oldName, string $newName): void
     {
-        $query = $this->user->availableBudgets();
-
-        if (null !== $start) {
-            $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
+        $types   = ['set_budget',];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+                             ->where('rules.user_id', $this->user->id)
+                             ->whereIn('rule_actions.action_type', $types)
+                             ->where('rule_actions.action_value', $oldName)
+                             ->get(['rule_actions.*']);
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            $action->action_value = $newName;
+            $action->save();
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
-        if (null !== $end) {
-            $query->where('emd_date', '<=', $end->format('Y-m-d H:i:s'));
-        }
-
-        return $query->get();
-    }
-
-    /**
-     * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     * @return Collection
-     */
-    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
-    {
-        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
-    }
-
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
-    {
-        return $this->getAllBudgetLimits($start, $end)->filter(
-            function (BudgetLimit $budgetLimit) use ($currency) {
-                return $budgetLimit->transaction_currency_id === $currency->id;
-            }
-        );
     }
 
     /**
@@ -1151,27 +1142,6 @@ class BudgetRepository implements BudgetRepositoryInterface
             $trigger->trigger_value = $newName;
             $trigger->save();
             Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
-        }
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
-    private function updateRuleActions(string $oldName, string $newName): void
-    {
-        $types   = ['set_budget',];
-        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                             ->where('rules.user_id', $this->user->id)
-                             ->whereIn('rule_actions.action_type', $types)
-                             ->where('rule_actions.action_value', $oldName)
-                             ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            $action->action_value = $newName;
-            $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
     }
 }

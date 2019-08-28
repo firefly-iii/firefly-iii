@@ -28,9 +28,6 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @codeCoverageIgnore
  * Class ExpandedForm.
- *
- * @method array makeSelectList(Collection $set)
- * @method array makeSelectListWithEmpty(Collection $set)
  */
 class ExpandedForm extends Facade
 {

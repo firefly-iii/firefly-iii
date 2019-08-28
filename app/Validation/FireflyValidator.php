@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Carbon\Carbon;
 use Config;
 use DB;
 use FireflyIII\Models\Account;
@@ -47,8 +46,6 @@ use Illuminate\Validation\Validator;
 class FireflyValidator extends Validator
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -66,8 +63,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -87,8 +82,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -109,8 +102,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -192,8 +183,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @return bool
      */
     public function validateLess($attribute, $value, $parameters): bool
@@ -208,8 +197,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @return bool
      */
     public function validateMore($attribute, $value, $parameters): bool
@@ -221,8 +208,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -269,6 +254,7 @@ class FireflyValidator extends Validator
             $repository = app(BudgetRepositoryInterface::class);
             $budgets    = $repository->getBudgets();
             // count budgets, should have at least one
+            // TODO no longer need to loop like this
             $count = $budgets->filter(
                 function (Budget $budget) use ($value) {
                     return $budget->name === $value;
@@ -381,8 +367,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -415,8 +399,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -433,7 +415,7 @@ class FireflyValidator extends Validator
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                             ->whereNull('accounts.deleted_at')
                             ->where('accounts.user_id', auth()->user()->id)
-                            ->where('account_meta.name', 'accountNumber');
+                            ->where('account_meta.name', 'account_number');
 
         if ($accountId > 0) {
             // exclude current account from check.
@@ -452,7 +434,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Validate an object and its unicity. Checks for encryption / encrypted values as well.
      *
      * parameter 0: the table
@@ -496,8 +478,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -540,6 +520,7 @@ class FireflyValidator extends Validator
         $value = $this->data['name'];
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -565,6 +546,7 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -588,6 +570,7 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             // TODO no longer need to loop like this.
@@ -621,6 +604,7 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
         $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {

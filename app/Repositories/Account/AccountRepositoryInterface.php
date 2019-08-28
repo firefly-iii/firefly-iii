@@ -40,7 +40,9 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
+     *
      * @return TransactionJournal|null
+     *
      */
     public function getOpeningBalance(Account $account): ?TransactionJournal;
 
@@ -152,13 +154,6 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
-     * @param $account
-     *
-     * @return string
-     */
-    public function getInterestPerDay(Account $account): string;
-
-    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
@@ -211,12 +206,6 @@ interface AccountRepositoryInterface
      */
     public function getReconciliation(Account $account): ?Account;
 
-    /**
-     * @param Account $account
-     *
-     * @return bool
-     */
-    public function isAsset(Account $account): bool;
 
     /**
      * @param Account $account
@@ -225,23 +214,6 @@ interface AccountRepositoryInterface
      */
     public function isLiability(Account $account): bool;
 
-    /**
-     * Returns the date of the very first transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
-    public function latestJournal(Account $account): ?TransactionJournal;
-
-    /**
-     * Returns the date of the very last transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function latestJournalDate(Account $account): ?Carbon;
 
     /**
      * Returns the date of the very first transaction in this account.

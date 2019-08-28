@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class AbnAmroDescriptionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AbnAmroDescriptionTest extends TestCase
 {

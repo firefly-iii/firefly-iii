@@ -143,6 +143,9 @@ class TransactionJournalFactory
             if (null !== $journal) {
                 $collection->push($journal);
             }
+            if(null === $journal) {
+                Log::error('The createJournal() method returned NULL. This may indicate an error.');
+            }
         }
 
         return $collection;
@@ -245,13 +248,16 @@ class TransactionJournalFactory
             /** create or get source and destination accounts  */
             $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
             $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+            // @codeCoverageIgnoreStart
         } catch (FireflyException $e) {
+            Log::error('Could not validate source or destination.');
             Log::error($e->getMessage());
 
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
-        // TODO After 4.8.0 better handling below:
+        // TODO AFTER 4.8,0 better handling below:
 
         /** double check currencies. */
         $sourceCurrency        = $currency;
@@ -259,7 +265,7 @@ class TransactionJournalFactory
         $sourceForeignCurrency = $foreignCurrency;
         $destForeignCurrency   = $foreignCurrency;
 
-        if ('Withdrawal' === $type->type) {
+        if (TransactionType::WITHDRAWAL === $type->type) {
             // make sure currency is correct.
             $currency = $this->getCurrency($currency, $sourceAccount);
             // make sure foreign currency != currency.
@@ -271,7 +277,7 @@ class TransactionJournalFactory
             $sourceForeignCurrency = $foreignCurrency;
             $destForeignCurrency   = $foreignCurrency;
         }
-        if ('Deposit' === $type->type) {
+        if (TransactionType::DEPOSIT === $type->type) {
             // make sure currency is correct.
             $currency = $this->getCurrency($currency, $destinationAccount);
             // make sure foreign currency != currency.
@@ -285,15 +291,15 @@ class TransactionJournalFactory
             $destForeignCurrency   = $foreignCurrency;
         }
 
-        if ('Transfer' === $type->type) {
+        if (TransactionType::TRANSFER === $type->type) {
             // get currencies
             $currency        = $this->getCurrency($currency, $sourceAccount);
             $foreignCurrency = $this->getCurrency($foreignCurrency, $destinationAccount);
 
             $sourceCurrency        = $currency;
-            $destCurrency          = $foreignCurrency;
+            $destCurrency          = $currency;
             $sourceForeignCurrency = $foreignCurrency;
-            $destForeignCurrency   = $currency;
+            $destForeignCurrency   = $foreignCurrency;
         }
 
         /** Create a basic journal. */
@@ -382,13 +388,14 @@ class TransactionJournalFactory
      */
     private function hashArray(NullArrayObject $row): string
     {
-        $row['import_hash_v2']  = null;
-        $row['original_source'] = null;
-        $json                   = json_encode($row);
+        $dataRow = $row->getArrayCopy();
+
+        unset($dataRow['import_hash_v2'], $dataRow['original_source']);
+        $json                   = json_encode($dataRow);
         if (false === $json) {
             // @codeCoverageIgnoreStart
             $json = json_encode((string)microtime());
-            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $row->getArrayCopy());
+            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
             // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json);

@@ -34,6 +34,9 @@ use Tests\TestCase;
 /**
  *
  * Class AttachmentFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AttachmentFactoryTest extends TestCase
 {

@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class StoredGroupEventHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StoredGroupEventHandlerTest extends TestCase
 {

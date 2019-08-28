@@ -39,6 +39,9 @@ use Tests\TestCase;
 /**
  *
  * Class ReconcileControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ReconcileControllerTest extends TestCase
 {
@@ -121,7 +124,7 @@ class ReconcileControllerTest extends TestCase
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+        //$accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
 
         $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();

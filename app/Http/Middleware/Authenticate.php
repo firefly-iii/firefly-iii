@@ -83,8 +83,6 @@ class Authenticate
      * @return mixed
      * @throws AuthenticationException
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function authenticate($request, array $guards)
     {

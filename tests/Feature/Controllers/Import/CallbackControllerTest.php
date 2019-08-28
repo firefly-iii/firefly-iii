@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class CallbackControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CallbackControllerTest extends TestCase
 {

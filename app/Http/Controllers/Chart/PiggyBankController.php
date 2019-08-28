@@ -63,8 +63,6 @@ class PiggyBankController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {

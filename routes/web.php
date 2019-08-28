@@ -45,6 +45,7 @@ Route::group(
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Auth\LoginController@login');
 
+
     // Registration Routes...
     Route::get('register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
     Route::post('register', 'Auth\RegisterController@register');
@@ -75,16 +76,17 @@ Route::group(
 }
 );
 
-/**
- * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
- *
- */
+
+///**
+// * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+// *
+// */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'], function () {
-    Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
+    Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
     Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-
+    //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
+    //
 }
 );
 
@@ -642,6 +644,7 @@ Route::group(
     Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
     Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+    Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
 
 }
 );
@@ -695,6 +698,16 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account.'],
     function () {
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general']);
+    }
+);
+
+/**
+ * Report Data Bill Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/bill', 'as' => 'report-data.bills.'],
+    static function () {
+        Route::get('overview/{accountList}/{start_date}/{end_date}', ['uses' => 'BillController@overview', 'as' => 'overview']);
     }
 );
 
@@ -844,8 +857,8 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
-    Route::get('show/{tag}/{start_date?}/{end_date?}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tagOrId}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
+    Route::get('show/{tagOrId}/{start_date?}/{end_date?}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);
@@ -871,7 +884,7 @@ Route::group(
     );
 
     // create group:
-    Route::get('create', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
+    Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
     // edit group

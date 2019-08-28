@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class AppendNotesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AppendNotesTest extends TestCase
 {
@@ -49,7 +52,7 @@ class AppendNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal some notes.
-        $journal  = TransactionJournal::find(3);
+        $journal  = $this->getRandomWithdrawal();
         $note     = $journal->notes()->first();
         $start    = 'Default note text';
         $toAppend = 'This is appended';

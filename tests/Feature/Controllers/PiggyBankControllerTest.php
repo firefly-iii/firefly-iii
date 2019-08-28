@@ -74,7 +74,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
 
 
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
@@ -102,7 +102,7 @@ class PiggyBankControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
 
 
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
@@ -292,7 +292,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         Preferences::shouldReceive('mark')->atLeast()->once();
 
@@ -322,7 +322,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 
 
@@ -349,7 +349,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         Preferences::shouldReceive('mark')->atLeast()->once();
 
@@ -377,7 +377,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 
         $repository->shouldReceive('canRemoveAmount')->once()->andReturn(false);
@@ -404,7 +404,7 @@ class PiggyBankControllerTest extends TestCase
         $repetition    = PiggyBankRepetition::first();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         $piggyRepos->shouldReceive('getRepetition')->once()->andReturn($repetition);
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 
@@ -428,7 +428,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 

@@ -35,6 +35,9 @@ use Tests\TestCase;
 /**
  *
  * Class HelpTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class HelpTest extends TestCase
 {

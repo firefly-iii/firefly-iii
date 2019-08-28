@@ -112,16 +112,11 @@ class ImportableConverter
 
         $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
         $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
-        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
-        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
 
-        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
-
-
-        // amount is positive? Then switch:
+        // if the amount is positive, switch source and destination (account and opposing account)
         if (1 === bccomp($amount, '0')) {
-
-            [$destination, $source] = [$source, $destination];
+            $source          = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+            $destination     = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
@@ -129,6 +124,12 @@ class ImportableConverter
                 )
             );
         }
+
+        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
+
+        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
+
 
         if ($destination->id === $source->id) {
             throw new FireflyException(
@@ -156,7 +157,7 @@ class ImportableConverter
             'transactions' => [
                 [
                     'user'  => $this->importJob->user_id,
-                    'type'  => $transactionType,
+                    'type'  => strtolower($transactionType),
                     'date'  => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
                     'order' => 0,
 
@@ -228,19 +229,12 @@ class ImportableConverter
     {
         $type = 'unknown';
 
-        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $type = 'transfer';
-        }
-        if ($source === AccountType::REVENUE) {
-            Log::debug('Source is a revenue account. This is a deposit.');
-            $type = 'deposit';
-        }
-        if ($destination === AccountType::EXPENSE) {
-            Log::debug('Destination is an expense account. This is a withdrawal.');
-            $type = 'withdrawal';
-        }
+        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
+        if (null !== $newType) {
+            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
 
+            return (string)$newType;
+        }
         return $type;
     }
 

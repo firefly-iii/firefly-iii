@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\Rule;
@@ -46,16 +47,19 @@ class IsValidAttachmentModel implements Rule
     /**
      * IsValidAttachmentModel constructor.
      *
+     * @codeCoverageIgnore
+     *
      * @param string $model
      */
     public function __construct(string $model)
     {
+        $model       = $this->normalizeModel($model);
         $this->model = $model;
     }
 
     /**
      * Get the validation error message.
-     *
+     * @codeCoverageIgnore
      * @return string
      */
     public function message(): string
@@ -70,17 +74,15 @@ class IsValidAttachmentModel implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value): bool
     {
         if (!auth()->check()) {
             return false;
         }
-        $model = false === strpos('FireflyIII', $this->model) ? 'FireflyIII\\Models\\' . $this->model : $this->model;
 
-        if (Bill::class === $model) {
+
+        if (Bill::class === $this->model) {
             /** @var BillRepositoryInterface $repository */
             $repository = app(BillRepositoryInterface::class);
             /** @var User $user */
@@ -91,7 +93,7 @@ class IsValidAttachmentModel implements Rule
             return null !== $bill;
         }
 
-        if (ImportJob::class === $model) {
+        if (ImportJob::class === $this->model) {
             /** @var ImportJobRepositoryInterface $repository */
             $repository = app(ImportJobRepositoryInterface::class);
             /** @var User $user */
@@ -102,9 +104,10 @@ class IsValidAttachmentModel implements Rule
             return null !== $importJob;
         }
 
-        if (Transaction::class === $model) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
+        if (Transaction::class === $this->model) {
+            /** @var JournalAPIRepositoryInterface $repository */
+            $repository = app(JournalAPIRepositoryInterface::class);
+
             /** @var User $user */
             $user = auth()->user();
             $repository->setUser($user);
@@ -113,7 +116,7 @@ class IsValidAttachmentModel implements Rule
             return null !== $transaction;
         }
 
-        if (TransactionJournal::class === $model) {
+        if (TransactionJournal::class === $this->model) {
             $repository = app(JournalRepositoryInterface::class);
             $user       = auth()->user();
             $repository->setUser($user);
@@ -121,8 +124,23 @@ class IsValidAttachmentModel implements Rule
 
             return null !== $result;
         }
-        Log::error(sprintf('No model was recognized from string "%s"', $model));
+        Log::error(sprintf('No model was recognized from string "%s"', $this->model));
 
         return false;
+    }
+
+    /**
+     * @param string $model
+     *
+     * @return string
+     */
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        $model = sprintf('FireflyIII\Models\%s', $model);
+        return $model;
     }
 }

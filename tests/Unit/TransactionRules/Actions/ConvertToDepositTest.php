@@ -36,6 +36,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToDepositTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToDepositTest extends TestCase
 {
@@ -53,13 +56,10 @@ class ConvertToDepositTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActTransfer()
+    public function testActTransfer(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
+        $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomTransfer();
 
         // journal is a transfer:
@@ -78,6 +78,8 @@ class ConvertToDepositTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -92,13 +94,10 @@ class ConvertToDepositTest extends TestCase
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActWithdrawal()
+    public function testActWithdrawal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . random_int(1, 10000);
+        $name    = 'Random revenue #' . $this->randomInt();
         $journal = $this->getRandomWithdrawal();
 
         // journal is a withdrawal:
@@ -117,6 +116,8 @@ class ConvertToDepositTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

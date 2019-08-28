@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class PiggyBankFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankFactoryTest extends TestCase
 {
@@ -102,6 +105,6 @@ class PiggyBankFactoryTest extends TestCase
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
         $factory->setUser($this->user());
-        $this->assertNull($factory->find(null, 'I dont exist.' . random_int(1, 10000)));
+        $this->assertNull($factory->find(null, 'I dont exist.' . $this->randomInt()));
     }
 }

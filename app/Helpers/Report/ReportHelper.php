@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Bill as BillCollection;
-use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
@@ -45,8 +43,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     *
      * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)
@@ -66,64 +62,57 @@ class ReportHelper implements ReportHelperInterface
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @param Carbon $start
      * @param Carbon $end
      * @param Collection $accounts
      *
-     * @return BillCollection
+     * @return array
      */
-    public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection
+    public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-
-        $collection = new BillCollection;
-        $collection->setStartDate($start);
-        $collection->setEndDate($end);
+        $report     = [
+            'bills' => [],
+        ];
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
-            foreach ($expectedDates as $payDate) {
-                $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
+            $billId        = $bill->id;
+            $currency      = $bill->transactionCurrency;
+            $current       = [
+                'id'                      => $bill->id,
+                'name'                    => $bill->name,
+                'active'                  => $bill->active,
+                'amount_min'              => $bill->amount_min,
+                'amount_max'              => $bill->amount_max,
+                'currency_id'             => $bill->transaction_currency_id,
+                'currency_code'           => $currency->code,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'expected_dates'          => $expectedDates->toArray(),
+                'paid_moments'            => [],
+            ];
 
+            /** @var Carbon $start */
+            foreach ($expectedDates as $expectedStart) {
+                $expectedEnd = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
 
+                // is paid in this period maybe?
                 /** @var GroupCollectorInterface $collector */
                 $collector = app(GroupCollectorInterface::class);
-                $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBill($bill);
-                $journals = $collector->getExtractedJournals();
-
-                $billLine = new BillLine;
-                $billLine->setBill($bill);
-                $billLine->setCurrency($bill->transactionCurrency);
-                $billLine->setPayDate($payDate);
-                $billLine->setEndOfPayDate($endOfPayPeriod);
-                $billLine->setMin((string)$bill->amount_min);
-                $billLine->setMax((string)$bill->amount_max);
-                $billLine->setHit(false);
-                /** @var array $first */
-                $first = null;
-                if (count($journals) > 0) {
-                    $first = reset($journals);
-                }
-                if (null !== $first) {
-                    $billLine->setTransactionJournalId($first['transaction_journal_id']);
-                    $billLine->setAmount($first['amount']);
-                    $billLine->setLastHitDate($first['date']);
-                    $billLine->setHit(true);
-                }
-                if ($billLine->isActive() || $billLine->isHit()) {
-                    $collection->addBill($billLine);
-                }
+                $collector->setAccounts($accounts)->setRange($expectedStart, $expectedEnd)->setBill($bill);
+                $current['paid_moments'][] = $collector->getExtractedJournals();
             }
-        }
-        $collection->filterBills();
 
-        return $collection;
+            // append to report:
+            $report['bills'][$billId] = $current;
+        }
+
+        return $report;
     }
 
     /**

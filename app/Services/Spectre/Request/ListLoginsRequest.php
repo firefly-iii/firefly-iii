@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class ListLoginsRequest
+ * @codeCoverageIgnore
  */
 class ListLoginsRequest extends SpectreRequest
 {
@@ -42,7 +43,7 @@ class ListLoginsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function call(): void
     {
@@ -72,7 +73,7 @@ class ListLoginsRequest extends SpectreRequest
             }
             // sort logins by date created:
             $sorted       = $collection->sortByDesc(
-                function (Login $login) {
+                static function (Login $login) {
                     return $login->getUpdatedAt()->timestamp;
                 }
             );

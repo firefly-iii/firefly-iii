@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class ListCustomersRequest
+ * @codeCoverageIgnore
  */
 class ListCustomersRequest extends SpectreRequest
 {
@@ -38,7 +39,7 @@ class ListCustomersRequest extends SpectreRequest
     /**
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function call(): void
     {

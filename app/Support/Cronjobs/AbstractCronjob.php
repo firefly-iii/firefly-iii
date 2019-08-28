@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Cronjobs;
 
 /**
  * Class AbstractCronjob
+ * @codeCoverageIgnore
  */
 abstract class AbstractCronjob
 {

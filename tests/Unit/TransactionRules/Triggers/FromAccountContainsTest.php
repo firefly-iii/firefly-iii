@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class FromAccountContainsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FromAccountContainsTest extends TestCase
 {

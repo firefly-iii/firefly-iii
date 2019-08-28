@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class AmountLessTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AmountLessTest extends TestCase
 {

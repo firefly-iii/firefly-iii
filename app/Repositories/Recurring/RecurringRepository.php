@@ -151,7 +151,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      *
-     * @param Recurrence $recurrence
+     * @param Recurrence  $recurrence
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -210,33 +210,14 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @return PiggyBank|null
-     */
-    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank
-    {
-        $meta = $recurrence->recurrenceMeta;
-        /** @var RecurrenceMeta $metaEntry */
-        foreach ($meta as $metaEntry) {
-            if ('piggy_bank_id' === $metaEntry->name) {
-                $piggyId = (int)$metaEntry->value;
-                return $this->user->piggyBanks()->where('id', $piggyId)->first(['piggy_banks.*']);
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Generate events in the date range.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon $start
-     * @param Carbon $end
-     *
+     * @param Carbon               $start
+     * @param Carbon               $end
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
@@ -271,6 +252,26 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * @param Recurrence $recurrence
+     *
+     * @return PiggyBank|null
+     */
+    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank
+    {
+        $meta = $recurrence->recurrenceMeta;
+        /** @var RecurrenceMeta $metaEntry */
+        foreach ($meta as $metaEntry) {
+            if ('piggy_bank_id' === $metaEntry->name) {
+                $piggyId = (int)$metaEntry->value;
+
+                return $this->user->piggyBanks()->where('piggy_banks.id', $piggyId)->first(['piggy_banks.*']);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get the tags from the recurring transaction.
      *
      * @param Recurrence $recurrence
@@ -292,8 +293,8 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * @param Recurrence $recurrence
-     * @param int $page
-     * @param int $pageSize
+     * @param int        $page
+     * @param int        $pageSize
      *
      * @return LengthAwarePaginator
      */
@@ -337,14 +338,12 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
 
-
-
         foreach ($journalMeta as $journalId) {
             $search[] = (int)$journalId;
         }
         if (0 === count($search)) {
 
-            return [];
+            return new Collection;
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -362,11 +361,11 @@ class RecurringRepository implements RecurringRepositoryInterface
      * Calculate the next X iterations starting on the date given in $date.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon $date
-     * @param int $count
+     * @param Carbon               $date
+     * @param int                  $count
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
@@ -400,7 +399,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceRepetition $repetition
      *
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
@@ -473,7 +472,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * Update a recurring transaction.
      *
      * @param Recurrence $recurrence
-     * @param array $data
+     * @param array      $data
      *
      * @return Recurrence
      * @throws FireflyException

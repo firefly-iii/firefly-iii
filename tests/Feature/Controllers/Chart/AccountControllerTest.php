@@ -435,7 +435,7 @@ class AccountControllerTest extends TestCase
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
 
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
+        $currencyRepos->shouldReceive('findNull')->andReturn($this->getEuro(), null);
 
         $generator->shouldReceive('multiSet')->andReturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
@@ -482,7 +482,7 @@ class AccountControllerTest extends TestCase
         Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);
 
         // currency should be looking for the currency ID's:
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn($this->getEuro());
         $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn(TransactionCurrency::find(2));
 
         $generator->shouldReceive('multiSet')->andReturn([])->once();

@@ -33,16 +33,16 @@ interface AccountTaskerInterface
 {
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return array
@@ -50,8 +50,8 @@ interface AccountTaskerInterface
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      * @param Collection $accounts
      *
      * @return array

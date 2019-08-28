@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * BudgetLimitCurrencyTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -22,6 +23,7 @@
 namespace Tests\Unit\Console\Commands\Upgrade;
 
 
+use Amount;
 use FireflyConfig;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Configuration;
@@ -30,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetLimitCurrencyTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetLimitCurrencyTest extends TestCase
 {
@@ -48,6 +53,11 @@ class BudgetLimitCurrencyTest extends TestCase
     public function testHandle(): void
     {
         BudgetLimit::whereNull('transaction_currency_id')->forceDelete();
+
+        $false       = new Configuration;
+        $false->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
 
         $this->artisan('firefly-iii:bl-currency')
              ->expectsOutput('All budget limits are correct.')
@@ -73,6 +83,9 @@ class BudgetLimitCurrencyTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
         FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
+
+        $currency = $this->getEuro();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
 
         $this->artisan('firefly-iii:bl-currency')
              ->expectsOutput(

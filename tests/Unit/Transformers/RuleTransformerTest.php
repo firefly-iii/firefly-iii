@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class RuleTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleTransformerTest extends TestCase
 {

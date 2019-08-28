@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class BelfiusTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BelfiusTest extends TestCase
 {

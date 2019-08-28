@@ -102,18 +102,12 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="categoryReport">
-                </div>
+                <div class="box-body table-responsive no-padding" id="categoryReport"></div>
                 {# loading indicator #}
                 <div class="overlay">
                     <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-
         </div>
     </div>
     <div class="row">
@@ -134,10 +128,19 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'reports/partials/bills' %}
-
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'bills'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="billReport"></div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
         </div>
     </div>
+    {#{% include 'reports/partials/bills' %}#}
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
@@ -166,6 +169,7 @@
         var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var billReportUri = '{{ route('report-data.bills.overview', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // uri's for charts:
         var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';

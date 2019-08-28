@@ -119,7 +119,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
 
             Log::debug(sprintf('IBAN for bunq account #%d is "%s"', $bunqId, $bunqIban));
             if (null !== $bunqIban) {
-                $ibanToAsset[$bunqIban] = $accountId;
+                $ibanToAsset[$bunqIban] = $accountId; // @codeCoverageIgnore
             }
             $final[$bunqId] = $accountId;
         }
@@ -154,6 +154,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         /** @var AccountModel $localAccount */
         foreach ($collection as $localAccount) {
             $accountId                 = $localAccount->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId                = (int)$this->accountRepository->getMetaValue($localAccount, 'currency_id');
             $currency                  = $this->getCurrency($currencyId);
             $localAccounts[$accountId] = [

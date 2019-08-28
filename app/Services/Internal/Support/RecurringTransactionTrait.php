@@ -205,6 +205,8 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
+     *
+     * @codeCoverageIgnore
      */
     protected function deleteRepetitions(Recurrence $recurrence): void
     {
@@ -213,6 +215,8 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
+     *
+     * @codeCoverageIgnore
      */
     protected function deleteTransactions(Recurrence $recurrence): void
     {

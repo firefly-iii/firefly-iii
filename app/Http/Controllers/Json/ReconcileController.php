@@ -201,11 +201,16 @@ class ReconcileController extends Controller
                 $inverse = true;
             }
             // transfer to this account? then positive amount:
-            if (TransactionType::TRANSFER === $journal['transaction_type_type']
-                && $account->id === $journal['destination_account_id']
-            ) {
+            if (TransactionType::TRANSFER === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
                 $inverse = true;
             }
+
+            // opening balance into account? then positive amount:
+            if (TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                && $account->id === $journal['destination_account_id']) {
+                $inverse = true;
+            }
+
             if (true === $inverse) {
                 $journal['amount'] = app('steam')->positive($journal['amount']);
                 if (null !== $journal['foreign_amount']) {

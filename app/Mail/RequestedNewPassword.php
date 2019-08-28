@@ -30,6 +30,8 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Sends user link for new password.
  * Class RequestedNewPassword
+ *
+ * @codeCoverageIgnore
  */
 class RequestedNewPassword extends Mailable
 {

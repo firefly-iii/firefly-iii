@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class IngBelgiumTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class IngBelgiumTest extends TestCase
 {

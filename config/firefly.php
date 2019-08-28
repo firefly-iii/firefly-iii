@@ -120,13 +120,13 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration'                => [
+    'configuration'          => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.0',
-    'api_version'                  => '0.10.0',
+    'version'                      => '4.8.0.3',
+    'api_version'                  => '0.10.1',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -292,11 +292,13 @@ return [
     ],
     'languages'                    => [
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 35%
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'], // 92%
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],  // 100%
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'], // 100%
         //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 65%
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 100%
+        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 100%
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 87%
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 80%
@@ -304,15 +306,13 @@ return [
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 83%
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 100%
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 99%
-
+        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 40%
+        // hungarian!
 
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
-        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 0%
         //'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'], // 0%
-        //'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 35%
         //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2%
-        //'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 40%
         //'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'], // 1%
         //'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'], // 0%
         //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 10%
@@ -513,7 +513,7 @@ return [
     'default_currency'          => 'EUR',
     'default_language'          => 'en_US',
     'search_modifiers'          => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after'],
+                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after','from','to'],
     // tag notes has_attachments
     'cer_providers'             => [
         'fixer'    => FixerIOv2::class,

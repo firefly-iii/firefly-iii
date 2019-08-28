@@ -20,9 +20,9 @@
             <td style="text-align: right;" data-value="{{ transaction.amount}}"><span
                         style="margin-right:5px;">
 
-                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                     {% if null != transaction.foreign_amount %}
-                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                     {% endif %}
                 </span></td>
         </tr>

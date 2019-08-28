@@ -39,6 +39,9 @@ use Tests\TestCase;
 /**
  *
  * Class NetWorthTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NetWorthTest extends TestCase
 {
@@ -69,7 +72,7 @@ class NetWorthTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls to facades
-        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn(TransactionCurrency::find(1));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn($this->getEuro());
         Steam::shouldReceive('balancesByAccounts')->once()->withAnyArgs()->andReturn($balanceInfo);
 
         // mock other calls:
@@ -77,7 +80,7 @@ class NetWorthTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset');
         $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->times(1);
 
 
         $helper = new NetWorth();
@@ -106,7 +109,7 @@ class NetWorthTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls to facades
-        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn(TransactionCurrency::find(1));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn($this->getEuro());
         Steam::shouldReceive('balancesByAccounts')->once()->withAnyArgs()->andReturn($balanceInfo);
 
         // mock other calls:
@@ -114,7 +117,7 @@ class NetWorthTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset', 'ccAsset');
         $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->times(1);
 
 
         $helper = new NetWorth();

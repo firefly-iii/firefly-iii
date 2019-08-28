@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * EditController.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -105,7 +106,6 @@ class EditController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(RuleGroup $ruleGroup)
     {

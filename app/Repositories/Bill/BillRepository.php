@@ -41,7 +41,7 @@ use Log;
 
 /**
  * Class BillRepository.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BillRepository implements BillRepositoryInterface
 {
@@ -128,6 +128,8 @@ class BillRepository implements BillRepositoryInterface
     {
         $bills = $this->user->bills()->get(['bills.*']);
 
+        // TODO no longer need to loop like this
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             if ($bill->name === $name) {
@@ -190,13 +192,13 @@ class BillRepository implements BillRepositoryInterface
         $set    = $this->user->bills()
                              ->leftJoin(
                                  'transaction_journals',
-                                 function (JoinClause $join) {
+                                 static function (JoinClause $join) {
                                      $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
                                  }
                              )
                              ->leftJoin(
                                  'transactions',
-                                 function (JoinClause $join) {
+                                 static function (JoinClause $join) {
                                      $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
                                  }
                              )
@@ -397,7 +399,9 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaginator(int $size): LengthAwarePaginator
     {
-        return $this->user->bills()->paginate($size);
+        return $this->user->bills()
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('name', 'ASC')->paginate($size);
     }
 
     /**
@@ -411,13 +415,13 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        $dates = $bill->transactionJournals()->before($end)->after($start)->get(
-            [
-                'transaction_journals.id', 'transaction_journals.date',
-            ]
-        )->pluck('date', 'id');
-
-        return $dates;
+        return $bill->transactionJournals()
+                    ->before($end)->after($start)->get(
+                [
+                    'transaction_journals.id', 'transaction_journals.date',
+                    'transaction_journals.transaction_group_id',
+                ]
+            );
     }
 
     /**
@@ -542,14 +546,14 @@ class BillRepository implements BillRepositoryInterface
     /**
      * Link a set of journals to a bill.
      *
-     * @param Bill       $bill
+     * @param Bill  $bill
      * @param array $transactions
      */
     public function linkCollectionToBill(Bill $bill, array $transactions): void
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $journal          = $transaction->transactionJournal;
+            $journal          = $bill->user->transactionJournals()->find((int)$transaction['transaction_journal_id']);
             $journal->bill_id = $bill->id;
             $journal->save();
             Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
@@ -576,12 +580,12 @@ class BillRepository implements BillRepositoryInterface
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
-        Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Start is ' . $start->format('Y-m-d'));
 
         while ($start < $date) {
-            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
+            //Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-            Log::debug('Start is now ' . $start->format('Y-m-d'));
+            //Log::debug('Start is now ' . $start->format('Y-m-d'));
         }
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);

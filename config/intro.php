@@ -27,27 +27,53 @@ declare(strict_types=1);
 
 return [
     // index
-    'index'                          => [
+    'index'                  => [
         'intro'          => [],
         'accounts-chart' => ['element' => '#accounts-chart'],
         'box_out_holder' => ['element' => '#box_out_holder'],
         'help'           => ['element' => '#help', 'position' => 'bottom'],
         'sidebar-toggle' => ['element' => '#sidebar-toggle', 'position' => 'bottom'],
+        'cash_account' => ['element' => '#all_transactions','position' => 'left'],
         'outro'          => [],
     ],
     // accounts: create
-    'accounts_create'                => [
+    'accounts_create'        => [
         'iban' => ['element' => '#ffInput_iban'],
     ],
+    // transactions: create
+    'transactions_create_withdrawal'    => [
+        'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
+        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
+        'more_meta'        => ['element' => 'input[name="category[]"]'],
+        'split_add'        => ['element' => '.split_add_btn'],
+    ],
+
+    'transactions_create_deposit'    => [
+        'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
+        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
+        'more_meta'        => ['element' => 'input[name="category[]"]'],
+        'split_add'        => ['element' => '.split_add_btn'],
+    ],
+
+    'transactions_create_transfer'    => [
+        'source'           => ['element' => 'input[name="source[]"]'],
+        'destination'           => ['element' => 'input[name="destination[]"]'],
+        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
+        'more_meta'        => ['element' => 'input[name="category[]"]'],
+        'split_add'        => ['element' => '.split_add_btn'],
+    ],
+
     // extra text for asset account creation.
-    'accounts_create_asset'          => [
+    'accounts_create_asset'  => [
         'opening_balance' => ['element' => '#ffInput_opening_balance'],
         'currency'        => ['element' => '#ffInput_currency_id'],
         'virtual'         => ['element' => '#ffInput_virtual_balance'],
     ],
 
     // budgets: index
-    'budgets_index'                  => [
+    'budgets_index'          => [
         'intro'            => [],
         'set_budget'       => ['element' => '#availableBar',],
         'see_expenses_bar' => ['element' => '#spentBar'],
@@ -58,17 +84,17 @@ return [
 
     ],
     // reports: index, default report, audit, budget, cat, tag
-    'reports_index'                  => [
+    'reports_index'          => [
         'intro'               => [],
         'inputReportType'     => ['element' => '#inputReportType'],
         'inputAccountsSelect' => ['element' => '#inputAccountsSelect'],
         'inputDateRange'      => ['element' => '#inputDateRange'],
         'extra-options-box'   => ['element' => '#extra-options-box', 'position' => 'top'],
     ],
-    'reports_report_default'         => [
+    'reports_report_default' => [
         'intro' => [],
     ],
-    'reports_report_audit'           => [
+    'reports_report_audit'   => [
         'intro'      => [],
         'optionsBox' => ['element' => '#optionsBox'],
     ],

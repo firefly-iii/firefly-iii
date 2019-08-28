@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class CurrencyDestroyService
+ * @codeCoverageIgnore
  */
 class CurrencyDestroyService
 {

@@ -96,7 +96,7 @@ class AccountFormRequest extends Request
             'name'                               => 'required|min:1|uniqueAccountForUser',
             'opening_balance'                    => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
-            'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->string('what'))],
+            'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->string('objectType'))],
             'BIC'                                => 'bic|nullable',
             'virtual_balance'                    => 'numeric|nullable',
             'currency_id'                        => 'exists:transaction_currencies,id',

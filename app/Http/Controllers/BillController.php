@@ -39,12 +39,11 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use URL;
 
 /**
  * Class BillController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BillController extends Controller
 {
@@ -55,6 +54,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -125,7 +125,7 @@ class BillController extends Controller
      * Destroy a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -144,7 +144,7 @@ class BillController extends Controller
      * Edit a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -192,11 +192,12 @@ class BillController extends Controller
      */
     public function index()
     {
-        $start      = session('start');
-        $end        = session('end');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $paginator  = $this->billRepository->getPaginator($pageSize);
-        $parameters = new ParameterBag();
+        $start           = session('start');
+        $end             = session('end');
+        $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
+        $paginator       = $this->billRepository->getPaginator($pageSize);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $parameters      = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 
@@ -206,9 +207,9 @@ class BillController extends Controller
 
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
-            function (Bill $bill) use ($transformer) {
+            static function (Bill $bill) use ($transformer, $defaultCurrency) {
                 $return             = $transformer->transform($bill);
-                $return['currency'] = $bill->transactionCurrency;
+                $return['currency'] = $bill->transactionCurrency ?? $defaultCurrency;
 
                 return $return;
             }
@@ -233,44 +234,54 @@ class BillController extends Controller
      * Rescan bills for transactions.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function rescan(Request $request, Bill $bill)
     {
+        $total = 0;
         if (false === $bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
+
+            return redirect(route('bills.show', [$bill->id]));
         }
+        $set = new Collection;
         if (true === $bill->active) {
             $set   = $this->billRepository->getRulesForBill($bill);
             $total = 0;
-            foreach ($set as $rule) {
-                // simply fire off all rules?
-                /** @var TransactionMatcher $matcher */
-                $matcher = app(TransactionMatcher::class);
-                $matcher->setSearchLimit(100000); // large upper limit
-                $matcher->setTriggeredLimit(100000); // large upper limit
-                $matcher->setRule($rule);
-                $matchingTransactions = $matcher->findTransactionsByRule();
-                $total                += count($matchingTransactions);
-                $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
-            }
+        }
+        if (0 === $set->count()) {
+            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 
-
-            $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
-            app('preferences')->mark();
+            return redirect(route('bills.show', [$bill->id]));
         }
 
-        return redirect(URL::previous());
+        foreach ($set as $rule) {
+            // simply fire off all rules?
+            /** @var TransactionMatcher $matcher */
+            $matcher = app(TransactionMatcher::class);
+            $matcher->setSearchLimit(100000); // large upper limit
+            $matcher->setTriggeredLimit(100000); // large upper limit
+            $matcher->setRule($rule);
+            $matchingTransactions = $matcher->findTransactionsByRule();
+            $total                += count($matchingTransactions);
+            $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
+        }
+
+
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
+        app('preferences')->mark();
+
+        return redirect(route('bills.show', [$bill->id]));
     }
 
     /**
      * Show a bill.
      *
      * @param Request $request
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -326,6 +337,7 @@ class BillController extends Controller
                 }
             );
         }
+
         // @codeCoverageIgnoreEnd
 
 
@@ -340,8 +352,6 @@ class BillController extends Controller
      *
      * @return RedirectResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(BillFormRequest $request): RedirectResponse
     {
@@ -371,7 +381,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillFormRequest $request
-     * @param Bill $bill
+     * @param Bill            $bill
      *
      * @return RedirectResponse
      */

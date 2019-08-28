@@ -35,6 +35,10 @@ use Tests\TestCase;
 
 /**
  * Class UpdateControllerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UpdateControllerTest extends TestCase
 {

@@ -3,8 +3,6 @@
 # build image
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-
-
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     echo "Build develop amd64"
     docker build -t jc5x/firefly-iii:develop-amd64 -f Dockerfile.amd64 .

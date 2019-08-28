@@ -27,10 +27,12 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Log;
 
 /**
  * Class GroupUpdateService
+ * TODO test.
  */
 class GroupUpdateService
 {
@@ -66,6 +68,9 @@ class GroupUpdateService
 
         Log::debug('Going to update split group.');
 
+        $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
+        $updated  = [];
+
         /**
          * @var int $index
          * @var array $transaction
@@ -95,7 +100,18 @@ class GroupUpdateService
             if (null !== $journal) {
                 Log::debug('Call updateTransactionJournal');
                 $this->updateTransactionJournal($transactionGroup, $journal, $transaction);
+                $updated[] = $journal->id;
                 Log::debug('Done calling updateTransactionJournal');
+            }
+        }
+        $result = array_diff($existing, $updated);
+        if (count($result) > 0) {
+            /** @var string $deletedId */
+            foreach ($result as $deletedId) {
+                $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
+                /** @var JournalDestroyService $service */
+                $service = app(JournalDestroyService::class);
+                $service->destroy($journal);
             }
         }
 

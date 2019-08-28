@@ -32,7 +32,7 @@ use Log;
 
 /**
  * Trait GetSpectreCustomerTrait
- *
+ * @codeCoverageIgnore
  */
 trait GetSpectreCustomerTrait
 {

@@ -24,6 +24,10 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Helpers\Collector\GroupCollector;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Repositories\Journal\JournalAPIRepository;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalCLIRepository;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
@@ -61,7 +65,7 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             GroupCollectorInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var GroupCollectorInterface $collector */
                 $collector = app(GroupCollector::class);
                 if ($app->auth->check()) {
@@ -80,7 +84,7 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             TransactionGroupRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var TransactionGroupRepositoryInterface $repository */
                 $repository = app(TransactionGroupRepository::class);
                 if ($app->auth->check()) {
@@ -99,9 +103,37 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             JournalRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // also bind new API repository
+        $this->app->bind(
+            JournalAPIRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var JournalAPIRepositoryInterface $repository */
+                $repository = app(JournalAPIRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // also bind new CLI repository
+        $this->app->bind(
+            JournalCLIRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var JournalCLIRepositoryInterface $repository */
+                $repository = app(JournalCLIRepository::class);
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }

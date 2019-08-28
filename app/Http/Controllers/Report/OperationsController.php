@@ -78,10 +78,10 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $type    = 'expense-entry';
+        $report = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $type   = 'expense-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
@@ -113,17 +113,16 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $type    = 'income-entry';
+        $report = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $type   = 'income-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
         // @codeCoverageIgnoreEnd
-
         $cache->store($result);
 
         return $result;
@@ -150,32 +149,34 @@ class OperationsController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $incomes   = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $expenses  = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $incomeSum = array_sum(
-            array_map(
-                function ($item) {
-                    return $item['sum'];
-                },
-                $incomes
-            )
-        );
+        $incomes  = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $expenses = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $sums     = [];
+        $keys     = array_unique(array_merge(array_keys($incomes['sums']), array_keys($expenses['sums'])));
 
-        $expensesSum = array_sum(
-            array_map(
-                function ($item) {
-                    return $item['sum'];
-                },
-                $expenses
-            )
-        );
-        try {
-            $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+        /** @var int $currencyId */
+        foreach ($keys as $currencyId) {
+            $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
+            $sums[$currencyId]        = $sums[$currencyId] ?? [
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $currencyInfo['currency_name'],
+                    'currency_code'           => $currencyInfo['currency_code'],
+                    'currency_symbol'         => $currencyInfo['currency_symbol'],
+                    'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                    'in'                      => $incomes['sums'][$currencyId]['sum'] ?? '0',
+                    'out'                     => $expenses['sums'][$currencyId]['sum'] ?? '0',
+                    'sum'                     => '0',
+                ];
+            $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['in'], $sums[$currencyId]['out']);
         }
+
+        //try {
+            $result = view('reports.partials.operations', compact('sums'))->render();
+            // @codeCoverageIgnoreStart
+//        } catch (Throwable $e) {
+//            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+//            $result = 'Could not render view.';
+//        }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
 

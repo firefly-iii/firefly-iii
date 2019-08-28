@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class TagFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagFactoryTest extends TestCase
 {
@@ -62,7 +65,7 @@ class TagFactoryTest extends TestCase
      */
     public function testFindOrCreateNew(): void
     {
-        $tag = sprintf('Some new tag #%d', $this->randomInt());
+        $tag = sprintf('Some new tag %d', $this->randomInt());
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
         $factory->setUser($this->user());

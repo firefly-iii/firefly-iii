@@ -41,6 +41,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigureMappingHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  *
  */
 class ConfigureMappingHandlerTest extends TestCase
@@ -63,7 +66,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapG' . random_int(1, 10000);
+        $job->key           = 'mapG' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -131,7 +134,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapA' . random_int(1, 10000);
+        $job->key           = 'mapA' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -165,7 +168,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapE' . random_int(1, 10000);
+        $job->key           = 'mapE' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -230,7 +233,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapC' . random_int(1, 10000);
+        $job->key           = 'mapC' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -260,7 +263,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapH' . random_int(1, 10000);
+        $job->key           = 'mapH' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -343,7 +346,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapD' . random_int(1, 10000);
+        $job->key           = 'mapD' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -372,7 +375,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapF' . random_int(1, 10000);
+        $job->key           = 'mapF' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -461,7 +464,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 10000);
+        $job->key           = 'mapB' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -491,7 +494,7 @@ class ConfigureMappingHandlerTest extends TestCase
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 10000);
+        $job->key           = 'mapB' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

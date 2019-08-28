@@ -39,6 +39,7 @@ return [
     'reports'                => 'Resoconti',
     'search_result'          => 'Risultati di ricerca per ":query"',
     'withdrawal_list'        => 'Spese, uscite e prelievi',
+    'Withdrawal_list'        => 'Uscite',
     'deposit_list'           => 'Redditi, entrate e depositi',
     'transfer_list'          => 'Trasferimenti',
     'transfers_list'         => 'Trasferimenti',

@@ -44,6 +44,9 @@ use Tests\TestCase;
 
 /**
  * Class ChooseAccountsHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseAccountsHandlerTest extends TestCase
 {
@@ -64,7 +67,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-A' . random_int(1, 10000);
+        $job->key           = 'sca-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -99,7 +102,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-B' . random_int(1, 10000);
+        $job->key           = 'sca-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -138,7 +141,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-c' . random_int(1, 10000);
+        $job->key           = 'sca-c' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -197,7 +200,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-E' . random_int(1, 10000);
+        $job->key           = 'sca-E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -256,7 +259,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-D' . random_int(1, 10000);
+        $job->key           = 'sca-D' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -313,7 +316,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-E' . random_int(1, 10000);
+        $job->key           = 'sca-E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -443,7 +446,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-F' . random_int(1, 10000);
+        $job->key           = 'sca-F' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -596,7 +599,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-F' . random_int(1, 10000);
+        $job->key           = 'sca-F' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

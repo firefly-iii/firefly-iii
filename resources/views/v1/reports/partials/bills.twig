@@ -1,19 +1,51 @@
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">{{ 'bills'|_ }}</h3>
-    </div>
-    <div class="box-body table-responsive no-padding">
         <table class="table table-hover sortable">
             <thead>
             <tr>
                 <th data-defaultsign="az">{{ trans('form.name') }}</th>
                 <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_min') }}</th>
                 <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_max') }}</th>
-                <th data-defaultsign="_19" style="text-align: right;">{{ trans('form.amount') }}</th>
-                <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.under') }}</th>
+                <th data-defaultsign="_19">{{ trans('form.expected_on') }}</th>
+                <th data-defaultsign="_19" style="text-align: right;">{{ trans('form.paid') }}</th>
             </tr>
             </thead>
             <tbody>
+            {% for bill in report.bills %}
+                {% if bill.expected_dates|length > 0 and bill.paid_moments|length > 0 and bill.active %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('bills.show',bill.id) }}">{{ bill.name }}</a>
+                        </td>
+                        <td style="text-align:right;">
+                            {{ formatAmountBySymbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
+                        </td>
+                        <td style="text-align:right;">
+                            {{ formatAmountBySymbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
+                        </td>
+                        <td>
+                            {% for date in bill.expected_dates %}
+                                {{ date.formatLocalized(monthAndDayFormat) }}<br/>
+                            {% endfor %}
+                        </td>
+                        <td style="text-align:right;">
+                            {% set hitCount = 0 %}
+                            {% for journals in bill.paid_moments %}
+                                {% for journal in journals %}
+                                    {% set hitCount = hitCount+1 %}
+                                    <a title="{{ journal.date.formatLocalized(monthAndDayFormat) }}"
+                                       href="{{ route('transactions.show', [journal.transaction_group_id]) }}">{{ journal.description }}</a>,
+                                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                                    <br/>
+                                {% endfor %}
+                            {% endfor %}
+                            {% if hitCount == 0 %}
+                                <em>{{ 'notCharged'|_ }}</em>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+
             {% for line in bills.getBills %}
                 <tr>
                     <td data-value="{{ line.getBill.name }}">
@@ -50,5 +82,3 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-</div>

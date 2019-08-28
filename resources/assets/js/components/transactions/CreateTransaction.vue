@@ -19,8 +19,7 @@
   -->
 
 <template>
-    <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" id="store"
-          enctype="multipart/form-data">
+    <form accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
         <div class="row" v-if="error_message !== ''">
             <div class="col-lg-12">
@@ -76,6 +75,12 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-lg-4">
+                                    <transaction-description
+                                            v-model="transaction.description"
+                                            :index="index"
+                                            :error="transaction.errors.description"
+                                    >
+                                    </transaction-description>
                                     <account-select
                                             inputName="source[]"
                                             title="Source account"
@@ -98,12 +103,6 @@
                                             v-on:select:account="selectedDestinationAccount(index, $event)"
                                             :error="transaction.errors.destination_account"
                                     ></account-select>
-                                    <transaction-description
-                                            v-model="transaction.description"
-                                            :index="index"
-                                            :error="transaction.errors.description"
-                                    >
-                                    </transaction-description>
                                     <standard-date
                                             v-model="transaction.date"
                                             :index="index"
@@ -164,7 +163,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="btn btn-primary" @click="addTransactionToArray">Add another split</button>
+                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">Add another split</button>
                         </div>
                     </div>
                 </div>
@@ -297,7 +296,7 @@
                 foreignCurrency = null;
                 // loop tags
                 for (let tagKey in row.tags) {
-                    if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
+                    if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && tagKey <= 4294967294) {
                         tagList.push(row.tags[tagKey].text);
                     }
                 }
@@ -369,9 +368,6 @@
             submit(e) {
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
-                if (this.resetFormAfter) {
-                    this.resetTransactions();
-                }
 
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);
@@ -405,14 +401,15 @@
                     this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
                     this.error_message = '';
                     if (this.resetFormAfter) {
-                        this.addTransaction();
+                        this.addTransactionToArray();
                     }
                     if (button) {
                         button.prop("disabled", false);
                     }
                 } else {
-                    console.log('Will redirect to transaction.');
-                    window.location.href = 'transactions/show/' + groupId + '?message=created';
+                    console.log('Will redirect to previous URL. (' + previousUri + ')');
+                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=created';
+                    //window.location.href = 'transactions/show/' + groupId + '?message=created';
                 }
             },
 

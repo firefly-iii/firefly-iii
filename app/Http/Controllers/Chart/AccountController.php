@@ -43,9 +43,9 @@ use Log;
 /**
  * Class AccountController.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ *
+ *
  */
 class AccountController extends Controller
 {
@@ -436,8 +436,6 @@ class AccountController extends Controller
      * @param Carbon $end
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {

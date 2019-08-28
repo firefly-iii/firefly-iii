@@ -31,6 +31,8 @@ use Illuminate\Queue\SerializesModels;
  * Sends newly registered user an email message.
  *
  * Class RegisteredUser
+ *
+ * @codeCoverageIgnore
  */
 class RegisteredUser extends Mailable
 {

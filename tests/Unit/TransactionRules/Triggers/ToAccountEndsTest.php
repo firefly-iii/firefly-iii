@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class ToAccountEndsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ToAccountEndsTest extends TestCase
 {
@@ -82,7 +85,7 @@ class ToAccountEndsTest extends TestCase
         $collection = new Collection([$account]);
         $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
-        $trigger = ToAccountEnds::makeFromStrings((string)random_int(1, 1234), false);
+        $trigger = ToAccountEnds::makeFromStrings((string)$this->randomInt(), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

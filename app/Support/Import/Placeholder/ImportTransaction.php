@@ -33,6 +33,7 @@ use Log;
 
 /**
  * Class ImportTransaction
+ * @codeCoverageIgnore
  */
 class ImportTransaction
 {
@@ -131,7 +132,7 @@ class ImportTransaction
      * @param ColumnValue $columnValue
      *
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function addColumnValue(ColumnValue $columnValue): void
     {
@@ -179,7 +180,7 @@ class ImportTransaction
             'date-process'       => 'date_process',
             'date-due'           => 'date_due',
         ];
-        if (in_array($role, array_keys($replaceOldRoles))) {
+        if (array_key_exists($role, $replaceOldRoles)) {
             $role = $replaceOldRoles[$role];
         }
 

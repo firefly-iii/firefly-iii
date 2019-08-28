@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class NewBunqJobHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NewBunqJobHandlerTest extends TestCase
 {
@@ -51,7 +54,7 @@ class NewBunqJobHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'cXha' . random_int(1, 10000);
+        $job->key           = 'cXha' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';

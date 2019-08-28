@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Twig\Extension;
+namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use DB;

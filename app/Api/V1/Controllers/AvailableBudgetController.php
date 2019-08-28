@@ -42,7 +42,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class AvailableBudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AvailableBudgetController extends Controller
 {

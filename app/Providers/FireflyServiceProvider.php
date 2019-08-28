@@ -50,18 +50,22 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\IP\IpifyOrg;
 use FireflyIII\Services\IP\IPRetrievalInterface;
-use FireflyIII\Services\Password\PwndVerifierV2;
+use FireflyIII\Services\Password\PwndVerifierV3;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
+use FireflyIII\Support\Form\AccountForm;
+use FireflyIII\Support\Form\CurrencyForm;
+use FireflyIII\Support\Form\PiggyBankForm;
+use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
-use FireflyIII\Support\Twig\Extension\TransactionGroupTwig;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Rule;
+use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
@@ -76,7 +80,7 @@ use Validator;
  * Class FireflyServiceProvider.
  *
  * @codeCoverageIgnore
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class FireflyServiceProvider extends ServiceProvider
 {
@@ -86,7 +90,7 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Validator::resolver(
-        /** @noinspection MoreThanThreeArgumentsInspection */
+
             function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
@@ -104,7 +108,7 @@ class FireflyServiceProvider extends ServiceProvider
     /**
      * Register stuff.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function register(): void
     {
@@ -142,8 +146,35 @@ class FireflyServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             'expandedform',
-            function () {
+            static function () {
                 return new ExpandedForm;
+            }
+        );
+
+        $this->app->bind(
+            'accountform',
+            static function () {
+                return new AccountForm;
+            }
+        );
+        $this->app->bind(
+            'currencyform',
+            static function () {
+                return new CurrencyForm;
+            }
+        );
+
+        $this->app->bind(
+            'piggybankform',
+            static function () {
+                return new PiggyBankForm;
+            }
+        );
+
+        $this->app->bind(
+            'ruleform',
+            static function () {
+                return new RuleForm;
             }
         );
 
@@ -183,7 +214,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ExchangeRateInterface::class, $class);
 
         // password verifier thing
-        $this->app->bind(Verifier::class, PwndVerifierV2::class);
+        $this->app->bind(Verifier::class, PwndVerifierV3::class);
 
         // IP thing:
         $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);

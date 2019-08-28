@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 
@@ -61,6 +62,8 @@ class OtherCurrenciesCorrections extends Command
     private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $journalRepos;
+    /** @var JournalCLIRepositoryInterface */
+    private $cliRepos;
     /** @var int */
     private $count;
 
@@ -105,6 +108,7 @@ class OtherCurrenciesCorrections extends Command
         $this->accountRepos      = app(AccountRepositoryInterface::class);
         $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->journalRepos      = app(JournalRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
 
     /**
@@ -121,6 +125,7 @@ class OtherCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);
         if (null === $result) {
@@ -166,6 +171,7 @@ class OtherCurrenciesCorrections extends Command
         $this->accountRepos->setUser($journal->user);
         $this->journalRepos->setUser($journal->user);
         $this->currencyRepos->setUser($journal->user);
+        $this->cliRepos->setUser($journal->user);
 
         $leadTransaction = $this->getLeadTransaction($journal);
 
@@ -223,7 +229,7 @@ class OtherCurrenciesCorrections extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set =
-            $this->journalRepos->getAllJournals(
+            $this->cliRepos->getAllJournals(
                 [
                     TransactionType::WITHDRAWAL,
                     TransactionType::DEPOSIT,
@@ -242,8 +248,8 @@ class OtherCurrenciesCorrections extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param TransactionJournal $journal
+     *
      * @return Transaction|null
      */
     private function getLeadTransaction(TransactionJournal $journal): ?Transaction

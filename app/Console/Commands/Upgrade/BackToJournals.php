@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * BackToJournals.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -60,7 +61,7 @@ class BackToJournals extends Command
             $this->error('Please run firefly-iii:migrate-to-groups first.');
         }
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('This command has been executed already.');
+            $this->info('This command has already been executed.');
 
             return 0;
         }

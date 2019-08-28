@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class ListAccountsRequest
+ * @codeCoverageIgnore
  */
 class ListAccountsRequest extends SpectreRequest
 {
@@ -40,7 +41,7 @@ class ListAccountsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function call(): void
     {

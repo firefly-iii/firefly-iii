@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
+use FireflyIII\User;
 use Log;
 
 /**
@@ -43,6 +44,8 @@ class AccountUpdateService
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
 
+    /** @var User */
+    private $user;
     /**
      * Constructor.
      */
@@ -67,6 +70,7 @@ class AccountUpdateService
     public function update(Account $account, array $data): Account
     {
         $this->accountRepository->setUser($account->user);
+        $this->user = $account->user;
 
         // update the account itself:
         $account->name            = $data['name'];
@@ -91,10 +95,13 @@ class AccountUpdateService
         // has valid initial balance (IB) data?
         $type = $account->accountType;
         // if it can have a virtual balance, it can also have an opening balance.
+
         if (in_array($type->type, $this->canHaveVirtual, true)) {
+
             if ($this->validOBData($data)) {
                 $this->updateOBGroup($account, $data);
             }
+
             if (!$this->validOBData($data)) {
                 $this->deleteOBGroup($account);
             }

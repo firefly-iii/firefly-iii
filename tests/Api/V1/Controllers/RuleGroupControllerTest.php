@@ -24,18 +24,23 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
+use Preferences;
 use Queue;
 use Tests\TestCase;
 
@@ -87,6 +92,8 @@ class RuleGroupControllerTest extends TestCase
 
         $ruleGroupRepos->shouldReceive('store')->once()->andReturn($ruleGroup);
 
+
+
         // test API
         $response = $this->post(route('api.v1.rule_groups.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
@@ -131,6 +138,13 @@ class RuleGroupControllerTest extends TestCase
         $matcher->shouldReceive('setAccounts')->once();
         $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn([]);
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 50;
+
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+
         // call API
         $response = $this->get(route('api.v1.rule_groups.test', [$group->id]) . '?accounts=1,2,3');
         $response->assertStatus(200);
@@ -148,6 +162,13 @@ class RuleGroupControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection);
+
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 50;
+
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         // call API
         $group    = $this->user()->ruleGroups()->first();
@@ -171,6 +192,21 @@ class RuleGroupControllerTest extends TestCase
         $repository     = $this->mock(AccountRepositoryInterface::class);
         $matcher        = $this->mock(TransactionMatcher::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $ruleEngine = $this->mock(RuleEngine::class);
+
+
+        // new mocks for ruleEngine
+        $ruleEngine->shouldReceive('setUser')->atLeast()->once();
+        $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once();
+        $ruleEngine->shouldReceive('processJournalArray')->atLeast()->once();
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once();
+        $collector->shouldReceive('setRange')->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([['x']]);
+
+
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection([$rule]));
@@ -181,16 +217,11 @@ class RuleGroupControllerTest extends TestCase
         $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
         $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
 
-        Queue::fake();
+
+
         $response = $this->post(route('api.v1.rule_groups.trigger', [$group->id]) . '?accounts=1,2,3&start_date=2019-01-01&end_date=2019-01-02');
         $response->assertStatus(204);
 
-
-        Queue::assertPushed(
-            ExecuteRuleOnExistingTransactions::class, function (Job $job) use ($rule) {
-            return $job->getRule()->id === $rule->id;
-        }
-        );
     }
 
     /**

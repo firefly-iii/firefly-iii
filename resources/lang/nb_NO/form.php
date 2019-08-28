@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Taggmodus',
     'tag_position'                => 'Stedtagg',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Målbeløp',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -252,5 +252,10 @@ return [
     'calendar'                => 'Kalender',
     'weekend'                 => 'Helg',
     'client_secret'           => 'Client Secret',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
+    'expected_on'               => 'Expected on',
+    'paid'                      => 'Paid',
 
 ];

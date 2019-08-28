@@ -267,6 +267,8 @@ class CurrencyControllerTest extends TestCase
 
         $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
         $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInUseAt')->atLeast()->once()->andReturn('accounts');
+
         $repository->shouldNotReceive('disable');
         Preferences::shouldReceive('mark')->atLeast()->once();
 
@@ -509,6 +511,7 @@ class CurrencyControllerTest extends TestCase
 
         $repository->shouldReceive('update')->andReturn(new TransactionCurrency);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $repository->shouldReceive('currencyInUse')->atLeast()->once()->andReturn(true);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['currencies.edit.uri' => 'http://localhost']);

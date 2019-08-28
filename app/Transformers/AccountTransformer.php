@@ -105,7 +105,7 @@ class AccountTransformer extends AbstractTransformer
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
             'credit_card_type'        => $creditCardType,
-            'account_number'          => $this->repository->getMetaValue($account, 'accountNumber'),
+            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'         => round($account->virtual_balance, $decimalPlaces),

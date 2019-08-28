@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferCurrenciesCorrectionsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -29,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -37,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class TransferCurrenciesCorrectionsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransferCurrenciesCorrectionsTest extends TestCase
 {
@@ -60,9 +65,10 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection);
 
@@ -89,11 +95,12 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -130,6 +137,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos                      = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos                     = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos                      = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer                          = $this->getRandomTransfer();
         $euro                              = $this->getEuro();
         $dollar                            = $this->getDollar();
@@ -137,7 +145,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $transfer->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -175,6 +183,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
         $dollar        = $this->getDollar();
@@ -188,7 +197,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $source = $transfer->transactions()->where('amount', '<', 0)->first();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -233,6 +242,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
         $dollar        = $this->getDollar();
@@ -248,7 +258,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $source->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -293,6 +303,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
         $dollar        = $this->getDollar();
@@ -307,7 +318,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $dest->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -356,6 +367,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
 
         // get source transaction and remove currency:
         /** @var Transaction $source */
@@ -364,7 +376,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $source->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -403,6 +415,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
 
@@ -413,7 +426,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $destination->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -451,6 +464,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
 
@@ -462,7 +476,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $source->save();
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
@@ -503,6 +517,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $cliRepos      = $this->mock(JournalCLIRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
         $dollar        = $this->getDollar();
@@ -521,7 +536,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         Log::debug(sprintf('Gave transaction #%d currency USD', $destination->id));
 
         // mock calls:
-        $journalRepos->shouldReceive('getAllJournals')
+        $cliRepos->shouldReceive('getAllJournals')
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 

@@ -27,6 +27,7 @@ use FireflyIII\Models\AccountType;
 
 /**
  * Trait AccountFilter
+ * @codeCoverageIgnore
  */
 trait AccountFilter
 {
@@ -78,10 +79,8 @@ trait AccountFilter
             'credit-card'                => [AccountType::CREDITCARD],
             'creditcard'                 => [AccountType::CREDITCARD],
             'cc'                         => [AccountType::CREDITCARD],
-
         ];
-        $return = $types[$type] ?? $types['all'];
 
-        return $return; // @codeCoverageIgnore
+        return $types[$type] ?? $types['all'];
     }
 }

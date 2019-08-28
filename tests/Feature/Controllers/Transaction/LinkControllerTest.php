@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class LinkControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkControllerTest extends TestCase
 {
@@ -133,7 +136,7 @@ class LinkControllerTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+        $response->assertRedirect(route('transactions.show', [$withdrawal->transaction_group_id]));
     }
 
     /**

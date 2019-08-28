@@ -49,9 +49,7 @@ use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Factory\PiggyBankEventFactory;
-use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionGroup;
@@ -69,7 +67,7 @@ use Log;
 
 /**
  * Class CreateRecurringTransactions.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  *
  */
 class CreateRecurringTransactions implements ShouldQueue
@@ -95,15 +93,26 @@ class CreateRecurringTransactions implements ShouldQueue
     public $created;
 
     /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $date->startOfDay();
+        $this->date = $date;
+    }
+
+    /**
      * Create a new job instance.
      * @codeCoverageIgnore
      *
      * @param Carbon $date
      */
-    public function __construct(Carbon $date)
+    public function __construct(?Carbon $date)
     {
-        $date->startOfDay();
-        $this->date              = $date;
+        if (null !== $date) {
+            $date->startOfDay();
+            $this->date = $date;
+        }
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->groupRepository   = app(TransactionGroupRepositoryInterface::class);
@@ -219,7 +228,7 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon $date
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     private function getTransactionData(Recurrence $recurrence, Carbon $date): array
     {
@@ -293,8 +302,9 @@ class CreateRecurringTransactions implements ShouldQueue
     private function handleOccurrence(Recurrence $recurrence, Carbon $date): ?TransactionGroup
     {
         Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
+        $date->startOfDay();
         if ($date->ne($this->date)) {
-            Log::debug(sprintf('%s is not not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
+            Log::debug(sprintf('%s is not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
             return null;
         }
@@ -431,8 +441,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     *
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {

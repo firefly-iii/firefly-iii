@@ -127,6 +127,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         /** @var Account $account */
         foreach ($ffAccounts as $account) {
             $accountId         = $account->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId        = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currency          = $this->getCurrency($currencyId);
             $array[$accountId] = [

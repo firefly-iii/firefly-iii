@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class FakePrerequisitesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FakePrerequisitesTest extends TestCase
 {

@@ -2,8 +2,6 @@
 
 echo "Now in entrypoint.sh for Firefly III"
 
-lscpu
-
 # make sure the correct directories exists (suggested by @chrif):
 echo "Making directories..."
 mkdir -p $FIREFLY_PATH/storage/app/public
@@ -37,15 +35,12 @@ chmod -R 775 $FIREFLY_PATH/storage
 echo "Remove log file..."
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 
-#echo "Map environment variables on .env file..."
-#cat $FIREFLY_PATH/.deploy/docker/.env.docker | envsubst > $FIREFLY_PATH/.env
 echo "Dump auto load..."
 composer dump-autoload
 echo "Discover packages..."
 php artisan package:discover
 
 echo "Run various artisan commands..."
-#. $FIREFLY_PATH/.env
 if [[ -z "$DB_PORT" ]]; then
   if [[ $DB_CONNECTION == "pgsql" ]]; then
     DB_PORT=5432
@@ -75,7 +70,7 @@ php artisan firefly-iii:cc-liabilities
 php artisan firefly-iii:back-to-journals
 php artisan firefly-iii:rename-account-meta
 
-# there are 13 verify commands
+# there are 14 verify commands
 php artisan firefly-iii:fix-piggies
 php artisan firefly-iii:create-link-types
 php artisan firefly-iii:create-access-tokens
@@ -85,10 +80,11 @@ php artisan firefly-iii:fix-transfer-budgets
 php artisan firefly-iii:fix-uneven-amount
 php artisan firefly-iii:delete-zero-amount
 php artisan firefly-iii:delete-orphaned-transactions
-    php artisan firefly-iii:delete-empty-journals
+php artisan firefly-iii:delete-empty-journals
 php artisan firefly-iii:delete-empty-groups
 php artisan firefly-iii:fix-account-types
 php artisan firefly-iii:rename-meta-fields
+php artisan firefly-iii:fix-ob-currencies
 
 # report commands
 php artisan firefly-iii:report-empty-objects

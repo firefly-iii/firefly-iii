@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -38,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class ReportControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ReportControllerTest extends TestCase
 {
@@ -113,8 +115,12 @@ class ReportControllerTest extends TestCase
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $income  = [1 => ['sum' => '100']];
-        $expense = [2 => ['sum' => '-100']];
+        $income  = [
+            'accounts' => [
+                1 => ['sum' => '100']]];
+        $expense = [
+            'accounts' => [
+                2 => ['sum' => '-100']]];
         $tasker->shouldReceive('getIncomeReport')->once()->andReturn($income);
         $tasker->shouldReceive('getExpenseReport')->once()->andReturn($expense);
         $generator->shouldReceive('multiSet')->andReturn([]);
@@ -141,8 +147,12 @@ class ReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $income  = [];
-        $expense = [];
+        $income  = [
+            'accounts' => [
+                1 => ['sum' => '100']]];
+        $expense = [
+            'accounts' => [
+                2 => ['sum' => '-100']]];
         $tasker->shouldReceive('getIncomeReport')->andReturn($income)->times(1);
         $tasker->shouldReceive('getExpenseReport')->andReturn($expense)->times(1);
 

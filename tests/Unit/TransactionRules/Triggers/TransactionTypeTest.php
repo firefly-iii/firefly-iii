@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionTypeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionTypeTest extends TestCase
 {
@@ -36,7 +39,7 @@ class TransactionTypeTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $type    = $journal->transactionType->type;
         $trigger = TransactionType::makeFromStrings($type, false);
         $result  = $trigger->triggered($journal);
@@ -48,7 +51,7 @@ class TransactionTypeTest extends TestCase
      */
     public function testTriggeredFalse(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $trigger = TransactionType::makeFromStrings('NonExisting', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);

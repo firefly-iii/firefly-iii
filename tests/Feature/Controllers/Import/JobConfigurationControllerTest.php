@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class JobConfigurationControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class JobConfigurationControllerTest extends TestCase
 {

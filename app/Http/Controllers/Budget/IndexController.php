@@ -74,8 +74,6 @@ class IndexController extends Controller
      * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {

@@ -189,7 +189,7 @@ class AccountFactory
      * @param null|string $accountType
      *
      * @return AccountType|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
     {

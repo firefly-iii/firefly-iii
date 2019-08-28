@@ -47,7 +47,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class BudgetController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BudgetController extends Controller
 {
@@ -79,8 +79,6 @@ class BudgetController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     *
      * @param Request $request
      * @param Budget $budget
      *

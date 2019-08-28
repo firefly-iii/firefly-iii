@@ -76,6 +76,7 @@ class CurrencyControllerTest extends TestCase
 
         // mock facades.
         Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
+        Preferences::shouldReceive('mark');
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -110,6 +111,9 @@ class CurrencyControllerTest extends TestCase
         $transformer    = $this->mock(CurrencyTransformer::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
 
+        // mock facades.
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
+
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
         $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
@@ -124,8 +128,8 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('store')->andReturn($currency);
         Preferences::shouldReceive('set')->withArgs(['currencyPreference', 'EUR'])->once();
         Preferences::shouldReceive('mark')->once();
-        Preferences::shouldReceive('lastActivity')->once();
-        Preferences::shouldReceive('getForUser')->once()->andReturn($preference);
+        //Preferences::shouldReceive('lastActivity')->once();
+        //Preferences::shouldReceive('getForUser')->once()->andReturn($preference);
 
         // data to submit:
         $data = [
@@ -162,6 +166,8 @@ class CurrencyControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        Preferences::shouldReceive('mark');
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -210,8 +216,9 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('update')->andReturn($currency);
         Preferences::shouldReceive('set')->withArgs(['currencyPreference', 'EUR'])->once();
         Preferences::shouldReceive('mark')->once();
-        Preferences::shouldReceive('lastActivity')->once();
-        Preferences::shouldReceive('getForUser')->once()->andReturn($preference);
+        //Preferences::shouldReceive('lastActivity')->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
+        //Preferences::shouldReceive('getForUser')->once()->andReturn($preference);
 
         // data to submit:
         $data = [

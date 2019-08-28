@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class AdminEventHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AdminEventHandlerTest extends TestCase
 {

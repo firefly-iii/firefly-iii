@@ -39,6 +39,7 @@ return [
     'reports'                => 'Отчёты',
     'search_result'          => 'Результаты поиска для ":query"',
     'withdrawal_list'        => 'Мои расходы',
+    'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Мои доходы',
     'transfer_list'          => 'Переводы',
     'transfers_list'         => 'Переводы',

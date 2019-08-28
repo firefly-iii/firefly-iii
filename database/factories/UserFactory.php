@@ -21,6 +21,7 @@
  */
 
 declare(strict_types=1);
+
 /**
  * UserFactory.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com

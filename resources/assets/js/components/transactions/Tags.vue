@@ -52,9 +52,9 @@
         data() {
             return {
                 tag: '',
-                tags: [],
                 autocompleteItems: [],
                 debounce: null,
+                tags: this.value,
             };
         },
         watch: {
@@ -70,10 +70,11 @@
                 return this.error.length > 0;
             },
             initItems() {
+                console.log('Now in initItems');
                 if (this.tag.length < 2) {
                     return;
                 }
-                const url = document.getElementsByTagName('base')[0].href + `json/tags?query=${this.tag}`;
+                const url = document.getElementsByTagName('base')[0].href + `json/tags?search=${this.tag}`;
 
                 clearTimeout(this.debounce);
                 this.debounce = setTimeout(() => {

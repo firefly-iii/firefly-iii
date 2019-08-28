@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Class Controller.
  *
  * @codeCoverageIgnore
- * @SuppressWarnings(PHPMD.NumberOfChildren)
+ *
  */
 class Controller extends BaseController
 {

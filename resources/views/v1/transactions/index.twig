@@ -10,7 +10,7 @@
     {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index.all',[transactionType]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all',[objectType]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -24,7 +24,7 @@
                 </div>
                 <div class="box-body no-padding">
                     <div style="padding:8px;">
-                        <a href="{{ route('transactions.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
+                        <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {# actual list #}
                     {% include 'list.groups' %}
@@ -34,12 +34,12 @@
                     {% if periods|length > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('transactions.index.all', [transactionType]) }}">{{ 'show_all_no_filter'|_ }}</a>
+                            <a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('transactions.index', [transactionType]) }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
+                            <a href="{{ route('transactions.index', [objectType]) }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
                         </p>
                     {% endif %}
                 </div>
@@ -59,18 +59,13 @@
     {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index.all',[transactionType]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
 
 {% endblock %}
 {% block scripts %}
-    {# old list script #}
-    {# <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script> #}
-    <script type="text/javascript">
-
-
-    </script>
+    {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

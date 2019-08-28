@@ -24,7 +24,6 @@ namespace FireflyIII\Generator\Report\Standard;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -50,17 +49,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        /** @var ReportHelperInterface $helper */
-        $helper     = app(ReportHelperInterface::class);
-        $bills      = $helper->getBillReport($this->start, $this->end, $this->accounts);
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 
         try {
-            return view(
-                'reports.default.month',
-                compact('bills', 'accountIds', 'reportType')
-            )->with('start', $this->start)->with('end', $this->end)->render();
+            return view('reports.default.month', compact('accountIds', 'reportType'))->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.default.month: %s', $e->getMessage()));
             $result = 'Could not render report view.';

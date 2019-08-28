@@ -1,3 +1,114 @@
+# 4.8.0.3 (API 0.10.1)
+
+- #2438 Some balance issues when working with multiple currencies (a known issue)
+- #2425 Transaction edit/create form is weird with the enter button
+- #2424 auto complete tab doesn't work.
+- #2441 Inconsistent character limit for currencies.
+- #2443 500 error when submitting budgets
+- #2446 Can't update current amount for piggy bank
+- #2440 Errors when interacting with recurring transactions
+- #2439 SQL error in API post new user
+- Transaction report (after import, over email) is mostly empty
+- Mass edit checkboxes doesn't work in a tag overview
+- #2437 CPU issues when viewing accounts, probably run-away queries.
+- #2432 Can't disable all currencies except one / can't disable EUR and switch to something else.
+- Option to edit the budget is gone from edit transaction form.
+- #2453 Search view things
+- #2449 Can't add invoice date.
+- #2448 Bad link in transaction overview
+- #2447 Bad link in bill overview
+- Improvements to various API end-points. Docs are updated.
+
+# 4.8.0.2 (API 0.10.0)
+
+- [Issue 2203](https://github.com/firefly-iii/firefly-iii/issues/2203) Reconciliation inconsistencies.
+- [Issue 2392](https://github.com/firefly-iii/firefly-iii/issues/2392) Bad namespace leads to installation errors.
+- [Issue 2393](https://github.com/firefly-iii/firefly-iii/issues/2393) Missing budget selector.
+- [Issue 2402](https://github.com/firefly-iii/firefly-iii/issues/2402) bad amounts in default report
+- [Issue 2405](https://github.com/firefly-iii/firefly-iii/issues/2405) Due date can't be edited.
+- [Issue 2404](https://github.com/firefly-iii/firefly-iii/issues/2404) bad page indicator in the "no category" transaction overview.
+- [Issue 2407](https://github.com/firefly-iii/firefly-iii/issues/2407) Fix recurring transaction dates
+- [Issue 2410](https://github.com/firefly-iii/firefly-iii/issues/2410) Transaction links inconsistent
+- [Issue 2414](https://github.com/firefly-iii/firefly-iii/issues/2414) Can't edit recurring transactions
+- [Issue 2415](https://github.com/firefly-iii/firefly-iii/issues/2415) Return here + reset form results in empty transaction form
+- [Issue 2416](https://github.com/firefly-iii/firefly-iii/issues/2416) Some form inconsistencies.
+- [Issue 2418](https://github.com/firefly-iii/firefly-iii/issues/2418) Reports are inaccurate or broken.
+- [Issue 2422](https://github.com/firefly-iii/firefly-iii/issues/2422) PHP error when matching transactions.
+- [Issue 2423](https://github.com/firefly-iii/firefly-iii/issues/2423) Reports are inaccurate or broken.
+- [Issue 2426](https://github.com/firefly-iii/firefly-iii/issues/2426) Inconsistent documentation and instructions.
+- [Issue 2427](https://github.com/firefly-iii/firefly-iii/issues/2427) Deleted account and "initial balance" accounts may appear in dropdowns.
+- [Issue 2428](https://github.com/firefly-iii/firefly-iii/issues/2428) Reports are inaccurate or broken. 
+- [Issue 2429](https://github.com/firefly-iii/firefly-iii/issues/2429) Typo leads to SQL errors in available budgets API
+- [Issue 2431](https://github.com/firefly-iii/firefly-iii/issues/2431) Issues creating new recurring transactions.
+- [Issue 2434](https://github.com/firefly-iii/firefly-iii/issues/2434) You can edit the initial balance transaction but it fails to save.
+- ARM build should work now.
+
+# 4.8.0.1 (API 0.10.0)
+
+- The balance box on the dashboard shows only negative numbers, skewing the results.
+- Selecting or using tags in new transactions results in an error.
+- Editing a transaction with tags will drop the tags from the transaction.
+- [Issue 2382](https://github.com/firefly-iii/firefly-iii/issues/2382) Ranger config
+- [Issue 2384](https://github.com/firefly-iii/firefly-iii/issues/2384) When upgrading manually, you may see: `The command "generate-keys" does not exist.`
+- [Issue 2385](https://github.com/firefly-iii/firefly-iii/issues/2385) When upgrading manually, the firefly:verify command may fail to run.
+- [Issue 2388](https://github.com/firefly-iii/firefly-iii/issues/2388) When registering as a new user, leaving the opening balance at 0 will give you an error.
+- [Issue 2395](https://github.com/firefly-iii/firefly-iii/issues/2395) Editing split transactions is broken.
+- [Issue 2397](https://github.com/firefly-iii/firefly-iii/issues/2397) Transfers are stored the wrong way around.
+- [Issue 2399](https://github.com/firefly-iii/firefly-iii/issues/2399) Not all account balances are updated after you create a new transaction.
+- [Issue 2401](https://github.com/firefly-iii/firefly-iii/issues/2401) Could not delete a split from a split transaction.
+
+# 4.8.0 (API 0.10.0)
+
+- Hungarian translation!
+- New database model that changes the concept of "split transactions";
+- New installation routine with rewritten database integrity tests and upgrade code;
+- Rewritten screen to create transactions which will now completely rely on the API;
+- Most terminal commands now have the prefix `firefly-iii`.
+- New MFA code that will generate backup codes for you and is more robust. MFA will have to be re-enabled for ALL users.
+- This will probably be the last Firefly III version to have import routines for files, Bunq and others. These will be moved to separate applications that use the Firefly III API.
+- The export function has been removed.
+- [Issue 1652](https://github.com/firefly-iii/firefly-iii/issues/1652), new strings to use during the import.
+- [Issue 1860](https://github.com/firefly-iii/firefly-iii/issues/1860), fixing the default currency not being on top in a JSON box.
+- [Issue 2031](https://github.com/firefly-iii/firefly-iii/issues/2031), a fix for Triodos imports.
+- [Issue 2153](https://github.com/firefly-iii/firefly-iii/issues/2153), problems with editing credit cards.
+- [Issue 2179](https://github.com/firefly-iii/firefly-iii/issues/2179), consistent and correct redirect behavior.
+- [Issue 2180](https://github.com/firefly-iii/firefly-iii/issues/2180), API issues with foreign amounts.
+- [Issue 2187](https://github.com/firefly-iii/firefly-iii/issues/2187), bulk editing reconciled transactions was broken.
+- [Issue 2188](https://github.com/firefly-iii/firefly-iii/issues/2188), redirect loop in bills
+- [Issue 2189](https://github.com/firefly-iii/firefly-iii/issues/2189), bulk edit could not handle tags.
+- [Issue 2203](https://github.com/firefly-iii/firefly-iii/issues/2203), [issue 2208](https://github.com/firefly-iii/firefly-iii/issues/2208), [issue 2352](https://github.com/firefly-iii/firefly-iii/issues/2352), reconciliation fixes
+- [Issue 2204](https://github.com/firefly-iii/firefly-iii/issues/2204), transaction type fix
+- [Issue 2211](https://github.com/firefly-iii/firefly-iii/issues/2211), mass edit fixes.
+- [Issue 2212](https://github.com/firefly-iii/firefly-iii/issues/2212), bug in the API when deleting objects.
+- [Issue 2214](https://github.com/firefly-iii/firefly-iii/issues/2214), could not view attachment.
+- [Issue 2219](https://github.com/firefly-iii/firefly-iii/issues/2219), max amount was a little low.
+- [Issue 2239](https://github.com/firefly-iii/firefly-iii/issues/2239), fixed ordering issue.
+- [Issue 2246](https://github.com/firefly-iii/firefly-iii/issues/2246), could not disable EUR.
+- [Issue 2268](https://github.com/firefly-iii/firefly-iii/issues/2268), could not import into liability accounts.
+- [Issue 2293](https://github.com/firefly-iii/firefly-iii/issues/2293), could not trigger rule on deposits in some circumstances
+- [Issue 2314](https://github.com/firefly-iii/firefly-iii/issues/2314), could not trigger rule on transfers in some circumstances
+- [Issue 2325](https://github.com/firefly-iii/firefly-iii/issues/2325), some balance issues on the frontpage.
+- [Issue 2328](https://github.com/firefly-iii/firefly-iii/issues/2328), some date range issues in reports
+- [Issue 2331](https://github.com/firefly-iii/firefly-iii/issues/2331), some broken fields in reports.
+- [Issue 2333](https://github.com/firefly-iii/firefly-iii/issues/2333), API issues with piggy banks.
+- [Issue 2355](https://github.com/firefly-iii/firefly-iii/issues/2355), configuration issues with LDAP
+- [Issue 2361](https://github.com/firefly-iii/firefly-iii/issues/2361), some ordering issues.
+- Updated API to reflect the changes in the database.
+- New API end-point for a summary of your data.
+- Some new API charts.
+
+# 4.7.17.6 (API 0.9.2)
+
+- XSS issue in liability account redirect, found by [@0x2500](https://github.com/0x2500).
+
+# 4.7.17.5 (API 0.9.2)
+
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
+
+# 4.7.17.4 (API 0.9.2)
+
+- Several XSS issues, found by [@0x2500](https://github.com/0x2500).
+
 # 4.7.17.3 (API 0.9.2)
 
 - XSS bug in file uploads (x2), found by [@dayn1ne](https://github.com/dayn1ne).

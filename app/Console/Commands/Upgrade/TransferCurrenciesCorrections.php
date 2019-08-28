@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferCurrenciesCorrections.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -29,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Log;
@@ -60,6 +62,8 @@ class TransferCurrenciesCorrections extends Command
     private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $journalRepos;
+    /** @var JournalCLIRepositoryInterface */
+    private $cliRepos;
     /** @var int */
     private $count;
 
@@ -125,6 +129,7 @@ class TransferCurrenciesCorrections extends Command
         $this->accountRepos      = app(AccountRepositoryInterface::class);
         $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->journalRepos      = app(JournalRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
         $this->accountCurrencies = [];
         $this->resetInformation();
     }
@@ -143,6 +148,7 @@ class TransferCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
+        // TODO we can use getAccountCurrency() instead
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);
         if (null === $result) {
@@ -238,7 +244,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function startUpdateRoutine(): void
     {
-        $set = $this->journalRepos->getAllJournals([TransactionType::TRANSFER]);
+        $set = $this->cliRepos->getAllJournals([TransactionType::TRANSFER]);
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $this->updateTransferCurrency($journal);
@@ -286,8 +292,6 @@ class TransferCurrenciesCorrections extends Command
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      * @param TransactionJournal $transfer
      */
     private function updateTransferCurrency(TransactionJournal $transfer): void

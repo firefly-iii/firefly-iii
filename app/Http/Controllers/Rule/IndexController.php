@@ -135,7 +135,6 @@ class IndexController extends Controller
      * @param Rule $rule
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(Rule $rule)
     {

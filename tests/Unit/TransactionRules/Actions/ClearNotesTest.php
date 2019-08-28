@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class ClearNotesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearNotesTest extends TestCase
 {
@@ -51,7 +54,7 @@ class ClearNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal a note:
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $note    = $journal->notes()->first();
         if (null === $note) {
             $note = new Note;
@@ -68,6 +71,8 @@ class ClearNotesTest extends TestCase
         try {
             $result = $action->act($journal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

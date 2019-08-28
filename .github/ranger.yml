@@ -1,6 +1,8 @@
 # in .github/ranger.yml
-comments:
-  - action: delete_comment
-    pattern: +1
-  - action: delete_comment
-      pattern: ":+1:"
+comments: 
+  - 
+    action: delete_comment
+    pattern: 1
+  - 
+    action: delete_comment
+    pattern: ":+1:"

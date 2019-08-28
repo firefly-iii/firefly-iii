@@ -82,7 +82,7 @@ trait RecurrenceValidation
          * @var array $repetition
          */
         foreach ($repetitions as $index => $repetition) {
-            switch ($repetition['type']) {
+            switch ($repetition['type'] ?? 'empty') {
                 default:
                     $validator->errors()->add(sprintf('repetitions.%d.type', $index), (string)trans('validation.valid_recurrence_rep_type'));
 

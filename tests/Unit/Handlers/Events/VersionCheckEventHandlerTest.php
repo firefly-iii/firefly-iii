@@ -38,6 +38,9 @@ use Tests\TestCase;
 
 /**
  * Class VersionCheckEventHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class VersionCheckEventHandlerTest extends TestCase
 {

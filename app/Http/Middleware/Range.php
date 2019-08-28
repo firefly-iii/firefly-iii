@@ -95,6 +95,10 @@ class Range
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
+        // also format for moment JS:
+        $madMomentJS = (string)trans('config.month_and_day_moment_js');
+
+        app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);
         app('view')->share('dateTimeFormat', $dateTimeFormat);
         app('view')->share('defaultCurrency', $defaultCurrency);
@@ -118,8 +122,6 @@ class Range
 
     /**
      * Set the range for the current view.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setRange(): void
     {

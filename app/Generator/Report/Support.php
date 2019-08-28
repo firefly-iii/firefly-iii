@@ -112,7 +112,7 @@ class Support
     /**
      * Summarize collection by earned and spent data.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     *  // it's exactly five.
      *
      * @param array $spent
      * @param array $earned

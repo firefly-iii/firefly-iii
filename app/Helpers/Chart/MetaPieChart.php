@@ -98,7 +98,7 @@ class MetaPieChart implements MetaPieChartInterface
      * @param string $group
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function generate(string $direction, string $group): array
     {
@@ -180,8 +180,6 @@ class MetaPieChart implements MetaPieChartInterface
      * @param array $fields
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      */
     protected function groupByFields(array $array, array $fields): array

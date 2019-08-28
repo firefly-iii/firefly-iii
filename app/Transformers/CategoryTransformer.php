@@ -24,10 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -68,8 +65,8 @@ class CategoryTransformer extends AbstractTransformer
         $start  = $this->parameters->get('start');
         $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $spent  = $this->getSpentInformation($category, $start, $end);
-            $earned = $this->getEarnedInformation($category, $start, $end);
+            $earned = array_values($this->repository->earnedInPeriod($category, new Collection, $start, $end));
+            $spent  = array_values($this->repository->spentInPeriod($category, new Collection, $start, $end));
         }
         $data = [
             'id'         => (int)$category->id,
@@ -88,77 +85,4 @@ class CategoryTransformer extends AbstractTransformer
 
         return $data;
     }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     */
-    private function getEarnedInformation(Category $category, Carbon $start, Carbon $end): array
-    {
-        $collection = $this->repository->earnedInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $code = $transaction->transaction_currency_code;
-            if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
-            }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
-        }
-        foreach ($total as $code => $earned) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => $currency->id,
-                'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($earned, $currency->decimal_places),
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     */
-    private function getSpentInformation(Category $category, Carbon $start, Carbon $end): array
-    {
-        $collection = $this->repository->spentInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $code = $transaction->transaction_currency_code;
-            if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
-            }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
-        }
-        foreach ($total as $code => $spent) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => $currency->id,
-                'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($spent, $currency->decimal_places),
-            ];
-        }
-
-        return $return;
-    }
-
 }

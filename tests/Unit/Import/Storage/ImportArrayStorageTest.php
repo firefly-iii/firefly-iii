@@ -47,6 +47,11 @@ use Tests\TestCase;
 
 /**
  * Class ImportArrayStorageTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ *
  */
 class ImportArrayStorageTest extends TestCase
 {
@@ -82,7 +87,8 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
+
 
 
         // make fake job
@@ -156,7 +162,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -250,7 +256,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -358,7 +364,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -469,7 +475,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -582,7 +588,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -700,7 +706,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -788,7 +794,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -867,7 +873,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
         $meta                         = new TransactionJournalMeta;
         $meta->transaction_journal_id = 1;
@@ -954,7 +960,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job
@@ -1047,7 +1053,7 @@ class ImportArrayStorageTest extends TestCase
 
         $language       = new Preference;
         $language->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($language)->atLeast()->once();
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($language)->atLeast()->once();
 
 
         // make fake job

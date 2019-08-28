@@ -34,6 +34,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -50,7 +51,7 @@ use Log;
  *
  * Class ImportArrayStorage
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ImportArrayStorage
 {
@@ -93,7 +94,7 @@ class ImportArrayStorage
 
         // get language of user.
         /** @var Preference $pref */
-        $pref           = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
+        $pref           = app('preferences')->getForUser($importJob->user, 'language', config('firefly.default_language', 'en_US'));
         $this->language = $pref->data;
 
         Log::debug('Constructed ImportArrayStorage()');
@@ -200,8 +201,8 @@ class ImportArrayStorage
      * @return Collection
      * @throws FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     *
      */
     private function storeGroupArray(): Collection
     {
@@ -233,19 +234,21 @@ class ImportArrayStorage
     private function storeGroup(int $index, array $group): ?TransactionGroup
     {
 
+
+
+        Log::debug(sprintf('Going to store entry #%d', $index + 1));
+
+        // do some basic error catching.
+        foreach ($group['transactions'] as $groupIndex => $transaction) {
+            $group['transactions'][$groupIndex]['date']        = Carbon::parse($transaction['date'], config('app.timezone'));
+            $group['transactions'][$groupIndex]['description'] = '' === $transaction['description'] ? '(empty description)' : $transaction['description'];
+        }
+
         // do duplicate detection!
         if ($this->duplicateDetected($index, $group)) {
             Log::warning(sprintf('Row #%d seems to be a imported already and will be ignored.', $index));
 
             return null;
-        }
-
-        Log::debug(sprintf('Going to store entry #%d', $index + 1));
-
-        // do some basic error catching.
-        foreach ($group['transactions'] as $index => $transaction) {
-            $group['transactions'][$index]['date']        = Carbon::parse($transaction['date'], config('app.timezone'));
-            $group['transactions'][$index]['description'] = '' === $transaction['description'] ? '(empty description)' : $transaction['description'];
         }
 
         // store the group
@@ -385,9 +388,9 @@ class ImportArrayStorage
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
+     *
+     *
      */
     private function transferExists(array $transaction): bool
     {
@@ -456,8 +459,9 @@ class ImportArrayStorage
 
             // compare date:
             $transferDate = $transfer['date']->format('Y-m-d H:i:s');
-            Log::debug(sprintf('Comparing dates "%s" to "%s"', $transaction['date'], $transferDate));
-            if ($transaction['date'] !== $transferDate) {
+            $transactionDate = $transaction['date']->format('Y-m-d H:i:s');
+            Log::debug(sprintf('Comparing dates "%s" to "%s"', $transactionDate, $transferDate));
+            if ($transactionDate !== $transferDate) {
                 Log::debug('Date is not a match, continue with next transfer.');
                 continue; // @codeCoverageIgnore
             }
@@ -568,22 +572,29 @@ class ImportArrayStorage
         $tag  = $repository->store($data);
 
         Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
-        Log::debug('Looping journals...');
-        $journalIds = $collection->pluck('id')->toArray();
-        $tagId      = $tag->id;
-        foreach ($journalIds as $journalId) {
-            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
-            // @codeCoverageIgnoreStart
-            try {
-                DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
-            } catch (QueryException $e) {
-                Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
-                Log::error($e->getTraceAsString());
-            }
-            // @codeCoverageIgnoreEnd
-        }
-        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
+        Log::debug('Looping groups...');
 
+        // TODO double loop.
+
+        /** @var TransactionGroup $group */
+        foreach ($collection as $group) {
+            Log::debug(sprintf('Looping journals in group #%d', $group->id));
+            /** @var TransactionJournal $journal */
+            $journalIds = $group->transactionJournals->pluck('id')->toArray();
+            $tagId      = $tag->id;
+            foreach ($journalIds as $journalId) {
+                Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
+                // @codeCoverageIgnoreStart
+                try {
+                    DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+                } catch (QueryException $e) {
+                    Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
+                    Log::error($e->getTraceAsString());
+                }
+                // @codeCoverageIgnoreEnd
+            }
+            Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $collection->count(), $tag->id, $tag->tag));
+        }
         $this->repository->setTag($this->importJob, $tag);
 
     }

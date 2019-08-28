@@ -32,6 +32,7 @@ use RuntimeException;
 
 /**
  * Class SpectreRequest
+ * @codeCoverageIgnore
  */
 abstract class SpectreRequest
 {

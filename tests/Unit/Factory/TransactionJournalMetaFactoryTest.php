@@ -31,6 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionJournalMetaFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionJournalMetaFactoryTest extends TestCase
 {

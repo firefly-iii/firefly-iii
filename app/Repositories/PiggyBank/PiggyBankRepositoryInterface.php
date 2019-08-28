@@ -39,6 +39,14 @@ interface PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
+     * @return PiggyBank
+     */
+    public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
      * @return bool
      */
     public function addAmount(PiggyBank $piggyBank, string $amount): bool;
@@ -198,13 +206,6 @@ interface PiggyBankRepositoryInterface
      * @return string
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
-
-    /**
-     * @param PiggyBankEvent $event
-     *
-     * @return int|null
-     */
-    public function getTransactionWithEvent(PiggyBankEvent $event): ?int;
 
     /**
      * Get for piggy account what is left to put in piggies.

@@ -105,7 +105,6 @@ class HomeController extends Controller
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
-
         Log::channel('audit')->info('User visits homepage.');
 
         if (0 === $count) {
@@ -127,7 +126,6 @@ class HomeController extends Controller
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
-
         foreach ($accounts as $account) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);

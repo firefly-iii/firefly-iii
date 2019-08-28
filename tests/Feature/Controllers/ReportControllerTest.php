@@ -52,6 +52,7 @@ use Tests\TestCase;
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class ReportControllerTest extends TestCase
 {

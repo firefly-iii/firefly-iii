@@ -47,7 +47,6 @@ class BalanceController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -58,9 +57,10 @@ class BalanceController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
         $helper  = app(BalanceReportHelperInterface::class);
-        $balance = $helper->getBalanceReport($accounts, $start, $end);
+        $report = $helper->getBalanceReport($accounts, $start, $end);
+        // TODO no budget.
         try {
-            $result = view('reports.partials.balance', compact('balance'))->render();
+            $result = view('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));

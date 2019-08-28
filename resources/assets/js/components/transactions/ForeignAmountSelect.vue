@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="this.enabledCurrencies.length > 0">
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]"
                     v-if="this.enabledCurrencies.length > 0" @input="handleInput">
@@ -136,8 +136,10 @@
                     ];
                     for (const key in res.data) {
                         if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                            this.currencies.push(res.data[key]);
-                            this.enabledCurrencies.push(res.data[key]);
+                            if (res.data[key].enabled) {
+                                this.currencies.push(res.data[key]);
+                                this.enabledCurrencies.push(res.data[key]);
+                            }
                         }
                     }
                 });

@@ -81,6 +81,7 @@ class StageImportDataHandler
         }
         $totalSet = array_merge(...$totalSet);
         Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
+
         $this->repository->setTransactions($this->importJob, $totalSet);
     }
 
@@ -107,7 +108,7 @@ class StageImportDataHandler
      * @param LocalAccount   $originalSource
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function convertToArray(array $transactions, SpectreAccount $spectreAccount, LocalAccount $originalSource): array
     {
@@ -174,35 +175,33 @@ class StageImportDataHandler
             }
 
             $entry   = [
-                'type'            => $type,
-                'date'            => $transaction->getMadeOn()->format('Y-m-d'),
-                'tags'            => $tags,
-                'user'            => $this->importJob->user_id,
-                'notes'           => $notes,
-
-                // all custom fields:
-                'external_id'     => (string)$transaction->getId(),
-
-                // journal data:
-                'description'     => $transaction->getDescription(),
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-
                 // transaction data:
                 'transactions'    => [
                     [
-                        'currency_id'           => null,
-                        'currency_code'         => $currencyCode,
-                        'description'           => null,
-                        'amount'                => $amount,
-                        'budget_id'             => null,
-                        'budget_name'           => null,
-                        'category_id'           => null,
-                        'category_name'         => $transaction->getCategory(),
-                        'source_id'             => $source->id,
+                        'date'            => $transaction->getMadeOn()->format('Y-m-d'),
+                        'tags'            => $tags,
+                        'user'            => $this->importJob->user_id,
+                        'notes'           => $notes,
+
+                        // all custom fields:
+                        'external_id'     => (string)$transaction->getId(),
+
+                        // journal data:
+                        'description'     => $transaction->getDescription(),
+                        'piggy_bank_id'   => null,
+                        'piggy_bank_name' => null,
+                        'bill_id'         => null,
+                        'bill_name'       => null,
+                        'original-source' => sprintf('spectre-v%s', config('firefly.version')),
+                        'type'            => $type,
+                        'currency_id'     => null,
+                        'currency_code'   => $currencyCode,
+                        'amount'          => $amount,
+                        'budget_id'       => null,
+                        'budget_name'     => null,
+                        'category_id'     => null,
+                        'category_name'   => $transaction->getCategory(),
+                        'source_id'       => $source->id,
                         'source_name'           => null,
                         'destination_id'        => $destination->id,
                         'destination_name'      => null,

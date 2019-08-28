@@ -16,7 +16,6 @@
                         <h3 class="box-title">{{ ('convert_options_'~sourceType.type~destinationType.type)|_ }}</h3>
                     </div>
                     <div class="box-body">
-
                         <p>
                             {# ONE: WITHDRAWAL TO DEPOSIT #}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
@@ -99,6 +98,7 @@
 
                                         {# TWO: WITHDRAWAL TO TRANSFER #}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+
                                             <a href="{{ route('accounts.show', [transaction.source_id]) }}"
                                                title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
                                             {# hide source in hidden input #}
@@ -254,19 +254,19 @@
                                     </td>
                                     <td>
                                         {% if transaction.transaction_type_type == 'Deposit' %}
-                                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                             {% if null != transaction.foreign_amount %}
-                                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                                             {% endif %}
                                         {% elseif transaction.transaction_type_type == 'Transfer' %}
-                                            <span class="text-info">{{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places, false) }}
+                                            <span class="text-info">{{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                                                 {% if null != transaction.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places, false) }})
+                                                    ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                                                 {% endif %}</span>
                                         {% else %}
-                                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                             {% if null != transaction.foreign_amount %}
-                                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_symbol_decimal_places) }})
+                                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                                             {% endif %}
                                         {% endif %}
                                     </td>
@@ -283,198 +283,23 @@
                             {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
                         #}
                         {# in case of withdrawal #}
-                        {#
-                        {% if journalType.type == "Withdrawal" %}
-                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
-                            <!-- if destination is cash, show (cash) -->
+
+                        {% if sourceType.type == "Withdrawal" %}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
+                            {# if destination is cash, show (cash) #}
                             {% if destinationAccount.accountType.type == "Cash account" %}
                                 {{ ExpandedForm.staticText('destination_account_expense', '<span class="text-success">(cash)</a>') }}
                             {% else %}
-                                {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                                {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                             {% endif %}
 
-                        {% endif %}
-                        #}
-                        {# in case of deposit #}
-                        {#
-                        {% if journalType.type == "Deposit" %}
-                            <!-- if source is cash, show (cash) -->
-                            {% if sourceAccount.accountType.type == "Cash account" %}
-                                {{ ExpandedForm.staticText('source_account_revenue', '<span class="text-success">(cash)</a>') }}
-                            {% else %}
-                                {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
-                            {% endif %}
-                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
                         {% endif %}
                         #}
 
                         {# in case of transfer #}
-                        {#
-                        {% if journalType.type == "Transfer" %}
-                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
-                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
-                        {% endif %}
-                        #}
-
-                        {# ONE #}
-                        {#
-                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                            ONE
-                        {% endif %}
-                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                            <p><em>
-                                    {{ trans('firefly.convert_explanation_withdrawal_deposit',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em>
-                            </p>
-                            <p><em>
-                                    {{ 'convert_please_set_revenue_source'|_ }}
-                                </em>
-                            </p>
-                            {% if destinationAccount.accountType.type == "Cash account" %}
-                                {{ ExpandedForm.text('source_account_revenue', '') }}
-                            {% else %}
-                                {{ ExpandedForm.text('source_account_revenue', destinationAccount.name) }}
-                            {% endif %}
-                        {% endif %}
-                        #}
-                        {# TWO #}
-                        {#
-                        {% if journalType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
-                            <p><em>
-                                    {{ trans('firefly.convert_explanation_withdrawal_transfer',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em></p>
-
-                            <p>
-                                <em>
-                                    {{ 'convert_please_set_asset_destination'|_ }}
-
-                                </em>
-                            </p>
-                            {{ ExpandedForm.activeLongAccountList('destination_account_asset', null) }}
-
-                        {% endif %}
-                        #}
-                        {# THREE #}
-                        {#
-                        {% if journalType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
-                            <p>
-                                <em>
-                                    {{ trans('firefly.convert_explanation_deposit_withdrawal',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em>
-                            </p>
-                            <p>
-                                <em>
-                                    {{ 'convert_please_set_expense_destination'|_ }}
-
-                                </em>
-                            </p>
-                            {% if sourceAccount.accountType.type == "Cash account" %}
-                                {{ ExpandedForm.text('destination_account_expense', '') }}
-                            {% else %}
-                                {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
-                            {% endif %}
-
-                        {% endif %}
-                        #}
-                        {# FOUR #}
-                        {#
-                        {% if journalType.type == 'Deposit' and destinationType.type == 'Transfer' %}
-
-                            <p>
-                                <em>
-                                    {{ trans('firefly.convert_explanation_deposit_transfer',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em>
-                            </p>
-                            <p>
-                                <em>
-                                    {{ 'convert_please_set_asset_source'|_ }}
-
-                                </em>
-                            </p>
-                            {{ ExpandedForm.activeLongAccountList('source_account_asset', null) }}
-                        {% endif %}
-                        #}
-                        {# FIVE #}
-                        {#
-                        {% if journalType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
-
-                            <p>
-                                <em>
-                                    {{ trans('firefly.convert_explanation_transfer_withdrawal',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em>
-                            </p>
-
-                            <p>
-                                <em>
-                                    {{ 'convert_please_set_expense_destination'|_ }}
-                                </em>
-                            </p>
-
-                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
-
-                        {% endif %}
-                        #}
-                        {# SIX #}
-                        {#
-                        {% if journalType.type == 'Transfer' and destinationType.type == 'Deposit' %}
-
-
-                            <p>
-                                <em>
-                                    {{ trans('firefly.convert_explanation_transfer_deposit',
-                                        {
-                                            amount: positiveAmount|formatAmount,
-                                            sourceRoute: route('accounts.show', [sourceAccount.id]),
-                                            sourceName: sourceAccount.name,
-                                            destinationRoute: route('accounts.show', [destinationAccount.id]),
-                                            destinationName: destinationAccount.name,
-                                        })|raw }}
-                                </em>
-                            </p>
-
-                            <p>
-                                <em>
-                                    {{ 'convert_please_set_revenue_source'|_ }}
-                                </em>
-                            </p>
-
-                            {{ ExpandedForm.text('source_account_revenue', sourceAccount.name) }}
-
+                        {% if sourceType.type == "Transfer" %}
+                            {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
+                            {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
                         #}
                     </div>

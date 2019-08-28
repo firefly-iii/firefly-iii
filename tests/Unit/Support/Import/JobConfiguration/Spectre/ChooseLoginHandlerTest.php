@@ -42,6 +42,9 @@ use Tests\TestCase;
 
 /**
  * Class ChooseLoginHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseLoginHandlerTest extends TestCase
 {
@@ -62,7 +65,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-A' . random_int(1, 10000);
+        $job->key           = 'slh-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -85,7 +88,7 @@ class ChooseLoginHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-B' . random_int(1, 10000);
+        $job->key           = 'slh-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -109,7 +112,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -139,9 +142,9 @@ class ChooseLoginHandlerTest extends TestCase
     public function testConfigureJobCustomer(): void
     {
         // fake Spectre customer:
-        $fakeCustomerPreference       = new Preference;
-        $fakeCustomerPreference->name = 'spectre_customer';
-        $fakeCustomerPreference->data = [
+        $fakePref       = new Preference;
+        $fakePref->name = 'spectre_customer';
+        $fakePref->data = [
             'id'         => 1,
             'identifier' => 'fake',
             'secret'     => 'Dumbledore dies',
@@ -149,7 +152,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -164,7 +167,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         // should try to grab customer from preferences:
         Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'spectre_customer', null])
-                   ->andReturn($fakeCustomerPreference)->once();
+                   ->andReturn($fakePref)->once();
 
         // mock stuff
         $ctRequest  = $this->mock(CreateTokenRequest::class);
@@ -269,7 +272,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 10000);
+        $job->key           = 'slh-C' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

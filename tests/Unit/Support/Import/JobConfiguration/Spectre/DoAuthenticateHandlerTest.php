@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class DoAuthenticateHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DoAuthenticateHandlerTest extends TestCase
 {
@@ -62,7 +65,7 @@ class DoAuthenticateHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sda-A' . random_int(1, 10000);
+        $job->key           = 'sda-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

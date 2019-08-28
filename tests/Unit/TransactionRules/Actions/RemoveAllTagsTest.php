@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class RemoveAllTagsTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveAllTagsTest extends TestCase
 {

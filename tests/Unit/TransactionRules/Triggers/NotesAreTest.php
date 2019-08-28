@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class NotesAreTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NotesAreTest extends TestCase
 {
@@ -37,7 +40,7 @@ class NotesAreTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -53,7 +56,7 @@ class NotesAreTest extends TestCase
      */
     public function testTriggeredDifferent(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -69,7 +72,7 @@ class NotesAreTest extends TestCase
      */
     public function testTriggeredEmpty(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $note = new Note();
         $note->noteable()->associate($journal);
@@ -85,7 +88,7 @@ class NotesAreTest extends TestCase
      */
     public function testTriggeredNone(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $journal->notes()->delete();
         $trigger = NotesAre::makeFromStrings('Bla bla', false);
         $result  = $trigger->triggered($journal);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * ApplyRulesTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -23,6 +24,7 @@ namespace Tests\Unit\Console\Commands\Tools;
 
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -31,10 +33,15 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
  * Class ApplyRulesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ApplyRulesTest extends TestCase
 {
@@ -100,6 +107,11 @@ class ApplyRulesTest extends TestCase
             '--all_rules',
         ];
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
+
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('Will apply 1 rule(s) to 3 transaction(s).')
              ->expectsOutput('Done!')
@@ -159,6 +171,11 @@ class ApplyRulesTest extends TestCase
             '--all_rules',
         ];
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
+
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('No rules or rule groups have been included.')
              ->expectsOutput('Done!')
@@ -217,6 +234,11 @@ class ApplyRulesTest extends TestCase
             '--start_date=2019-01-31',
             '--end_date=2019-01-01',
         ];
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
 
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('Will apply 1 rule(s) to 3 transaction(s).')
@@ -281,6 +303,11 @@ class ApplyRulesTest extends TestCase
             sprintf('--rules=%d,%d', $activeRule->id, $inactiveRule->id),
         ];
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
+
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('Will apply 1 rule(s) to 3 transaction(s).')
              ->expectsOutput('Done!')
@@ -343,6 +370,11 @@ class ApplyRulesTest extends TestCase
             sprintf('--rule_groups=%d,%d', $activeGroup->id, $inactiveGroup->id),
         ];
 
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
+
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Will ignore inactive rule group #%d ("%s")', $inactiveGroup->id, $inactiveGroup->title))
             // one rule out of 2 groups:
@@ -378,6 +410,11 @@ class ApplyRulesTest extends TestCase
             '--accounts=',
             '--all_rules',
         ];
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
 
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('Please use the --accounts option to indicate the accounts to apply rules to.')
@@ -416,6 +453,11 @@ class ApplyRulesTest extends TestCase
             '--accounts=' . $expense->id,
             '--all_rules',
         ];
+
+        // mock Preferences Facade:
+        $pref = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token',null])->atLeast()->once()->andReturn($pref);
 
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('Please make sure all accounts in --accounts are asset accounts or liabilities.')

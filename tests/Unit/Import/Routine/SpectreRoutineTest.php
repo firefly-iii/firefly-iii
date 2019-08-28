@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class SpectreRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SpectreRoutineTest extends TestCase
 {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * DeleteEmptyJournalsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -27,6 +28,13 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 use Tests\TestCase;
 
+/**
+ * Class DeleteEmptyJournalsTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class DeleteEmptyJournalsTest extends TestCase
 {
     /**

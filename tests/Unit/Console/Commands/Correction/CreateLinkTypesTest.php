@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CreateLinkTypesTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -28,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class CreateLinkTypesTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateLinkTypesTest extends TestCase
 {

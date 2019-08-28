@@ -43,7 +43,7 @@ use Log;
  *
  * TODO autocomplete for transaction types.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AutoCompleteController extends Controller
 {
@@ -68,7 +68,10 @@ class AutoCompleteController extends Controller
                 $filteredAccountTypes[] = $type;
             }
         }
-        Log::debug('Now in accounts(). Filtering results.', $filteredAccountTypes);
+        if (0 === count($filteredAccountTypes)) {
+            $filteredAccountTypes = $allowedAccountTypes;
+        }
+        Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
 
         $return          = [];
         $result          = $repository->searchAccount((string)$search, $filteredAccountTypes);
@@ -107,7 +110,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes = [AccountType::REVENUE];
-        Log::debug('Now in accounts(). Filtering results.', $allowedAccountTypes);
+        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
 
         $return = [];
         $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
@@ -138,7 +141,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes = [AccountType::EXPENSE];
-        Log::debug('Now in accounts(). Filtering results.', $allowedAccountTypes);
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
 
         $return = [];
         $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
@@ -173,13 +176,7 @@ class AutoCompleteController extends Controller
         $filtered = $result->unique('description');
         $limited  = $filtered->slice(0, 15);
         $array    = $limited->toArray();
-        foreach ($array as $index => $item) {
-            // give another key for consistency
-            $array[$index]['name'] = $item['description'];
-        }
-
-
-        return response()->json($array);
+        return response()->json(array_values($array));
     }
 
     /**
@@ -211,7 +208,7 @@ class AutoCompleteController extends Controller
         $array    = array_merge($array, $limited->toArray());
         foreach ($array as $index => $item) {
             // give another key for consistency
-            $array[$index]['name'] = sprintf('#%d: %s', $item['id'], $item['description']);
+            $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
         }
 
 

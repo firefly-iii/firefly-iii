@@ -32,6 +32,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionLinkTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionLinkTransformerTest extends TestCase
 {
@@ -42,9 +45,6 @@ class TransactionLinkTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $repository = $this->mock(JournalRepositoryInterface::class);
 
         $repository->shouldReceive('getLinkNoteText')->atLeast()->once()->andReturn('abc');

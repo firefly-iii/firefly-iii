@@ -32,6 +32,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
@@ -61,6 +62,9 @@ class TransactionController extends Controller
     /** @var JournalRepositoryInterface The journal repository */
     private $repository;
 
+    /** @var JournalAPIRepositoryInterface Journal API repos */
+    private $journalAPIRepository;
+
     /**
      * TransactionController constructor.
      *
@@ -74,10 +78,12 @@ class TransactionController extends Controller
                 /** @var User $admin */
                 $admin = auth()->user();
 
-                $this->repository      = app(JournalRepositoryInterface::class);
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+                $this->repository           = app(JournalRepositoryInterface::class);
+                $this->groupRepository      = app(TransactionGroupRepositoryInterface::class);
+                $this->journalAPIRepository = app(JournalAPIRepositoryInterface::class);
                 $this->repository->setUser($admin);
                 $this->groupRepository->setUser($admin);
+                $this->journalAPIRepository->setUser($admin);
 
                 return $next($request);
             }
@@ -97,7 +103,7 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $attachments = $this->repository->getAttachments($transactionJournal);
+        $attachments = $this->journalAPIRepository->getAttachments($transactionJournal);
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -206,7 +212,7 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $events = $this->repository->getPiggyBankEvents($transactionJournal);
+        $events = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal);
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);

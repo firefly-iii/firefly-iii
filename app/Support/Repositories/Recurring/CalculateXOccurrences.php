@@ -32,7 +32,7 @@ use Carbon\Carbon;
  */
 trait CalculateXOccurrences
 {
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -61,7 +61,7 @@ trait CalculateXOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
@@ -100,7 +100,7 @@ trait CalculateXOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -139,7 +139,7 @@ trait CalculateXOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
@@ -183,7 +183,7 @@ trait CalculateXOccurrences
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
 
     /**
      * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip

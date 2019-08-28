@@ -27,6 +27,7 @@ namespace Tests\Unit\TransactionRules\Actions;
 use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -37,6 +38,9 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToTransferTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToTransferTest extends TestCase
 {
@@ -56,29 +60,33 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActDeposit(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $deposit = $this->getRandomDeposit();
-        /** @var Account $asset */
-        $asset = $this->user()->accounts()->where('name', 'Bitcoin Account')->first();
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::DEPOSIT, $deposit->transactionType->type);
+
+        // make sure that $asset is not the destination account of $deposit:
+        $forbiddenId = (int)$deposit->transactions()->where('amount', '>', 0)->first()->account_id;
+        $asset       = $this->getRandomAsset($forbiddenId);
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])
-                     ->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs(
+            [$asset->name,
+             [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]]
+        )->andReturn($asset);
 
         // fire the action:
+        $rule                     = new Rule;
+        $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $asset->name;
+        $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {
             $result = $action->act($deposit);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
@@ -95,29 +103,30 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActWithdrawal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $withdrawal = $this->getRandomWithdrawal();
-        /** @var Account $asset */
-        $asset = $this->user()->accounts()->where('name', 'Bitcoin Account')->first();
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::WITHDRAWAL, $withdrawal->transactionType->type);
+
+        // make sure that $asset is not the source account of $withdrawal:
+        $forbiddenId = (int)$withdrawal->transactions()->where('amount', '<', 0)->first()->account_id;
+        $asset       = $this->getRandomAsset($forbiddenId);
 
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])
-                     ->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
 
         // fire the action:
+        $rule                     = new Rule;
+        $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $asset->name;
+        $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {
             $result = $action->act($withdrawal);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);

@@ -48,7 +48,7 @@ use Log;
 
 /**
  * Class RuleController
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class RuleController extends Controller
 {

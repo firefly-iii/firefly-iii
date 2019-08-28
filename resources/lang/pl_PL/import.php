@@ -193,7 +193,7 @@ return [
 
     'job_config_fints_url_help'       => 'E.g. https://banking-dkb.s-fints-pt-dkb.de/fints30',
     'job_config_fints_username_help'  => 'Dla wielu banków jest to numer twojego konta.',
-    'job_config_fints_port_help'      => 'The default port is 443.',
+    'job_config_fints_port_help'      => 'Domyślny port to 443.',
     'job_config_fints_account_help'   => 'Wybierz konto bankowe, dla którego chcesz importować transakcje.',
     'job_config_local_account_help'   => 'Wybierz konto Firefly III odpowiadające wybranemu powyżej kontu bankowemu.',
     // specifics:
@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Fixes potential problems with PC files',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     'specific_hash_name'              => 'Dodaj sygnature',
     'specific_hash_descr'             => 'Dodaj kolumnę z sygnaturą transakcji, unikatową dla tej linii',
     // job configuration for file provider (stage: roles)
@@ -309,5 +311,8 @@ return [
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
     'column_note'                     => 'Notatki',
     'column_internal-reference'       => 'Internal reference',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

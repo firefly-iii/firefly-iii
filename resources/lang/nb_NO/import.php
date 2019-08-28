@@ -209,6 +209,8 @@ return [
     'specific_pres_descr'             => 'Fikser potensielle problemer med PC filer',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Fikser potensielle problemer med Belfius filer',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importoppsett (3/4) - Definer hver kolonnes rolle',
     'job_config_roles_text'           => 'Hver kolonne i CSV filen inneholder visse data. Vennligst indiker hvilken type data importen kan forvente. "Map" valget indikerer at du vil knytte hver oppføring funnet i kolonnen til en verdi in databasen. En ofte knyttet kolonne is kolonnen som inneholder IBAN til motstående konto. Dette kan enkelt matches mot IBAN verdier som er i databasen allerede.',
@@ -307,5 +309,8 @@ return [
     'column_opposing-number'          => 'Motkonto (kontonummer)',
     'column_note'                     => 'Notat(er)',
     'column_internal-reference'       => 'Intern referanse',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

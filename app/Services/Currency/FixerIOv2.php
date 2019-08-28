@@ -55,6 +55,7 @@ class FixerIOv2 implements ExchangeRateInterface
      * @param Carbon              $date
      *
      * @return CurrencyExchangeRate
+     * @throws Exception
      */
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {

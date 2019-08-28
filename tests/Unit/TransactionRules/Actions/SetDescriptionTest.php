@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class SetDescriptionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetDescriptionTest extends TestCase
 {
@@ -38,9 +41,9 @@ class SetDescriptionTest extends TestCase
     public function testAct(): void
     {
         // get journal, give fixed description
-        $description          = 'text' . random_int(1, 10000);
-        $newDescription       = 'new description' . random_int(1, 1234);
-        $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $description          = 'text' . $this->randomInt();
+        $newDescription       = 'new description' . $this->randomInt();
+        $journal              = $this->getRandomWithdrawal();
         $journal->description = $description;
         $journal->save();
 

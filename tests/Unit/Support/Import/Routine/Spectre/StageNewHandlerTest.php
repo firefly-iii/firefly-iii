@@ -43,6 +43,9 @@ use Tests\TestCase;
 
 /**
  * Class StageNewHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StageNewHandlerTest extends TestCase
 {
@@ -67,7 +70,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 10000);
+        $job->key           = 'sn_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -134,7 +137,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 10000);
+        $job->key           = 'sn_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -187,7 +190,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 10000);
+        $job->key           = 'sn_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -256,7 +259,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 10000);
+        $job->key           = 'sn_a_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

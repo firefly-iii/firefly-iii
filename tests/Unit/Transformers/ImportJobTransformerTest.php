@@ -33,6 +33,9 @@ use Tests\TestCase;
 /**
  *
  * Class ImportJobTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ImportJobTransformerTest extends TestCase
 {

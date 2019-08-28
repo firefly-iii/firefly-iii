@@ -104,9 +104,9 @@
         <section class="sidebar">
             <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input autocomplete="off" type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
+                    <input autocomplete="off" type="text" name="search" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
                 </div>
             </form>
@@ -203,6 +203,8 @@
 
 {% if config('firefly.analytics_id') != '' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
+    <!-- Your own installation will NOT include it -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];

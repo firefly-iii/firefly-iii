@@ -52,8 +52,6 @@ class BoxController extends Controller
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function available(BudgetRepositoryInterface $repository): JsonResponse
     {
@@ -110,8 +108,6 @@ class BoxController extends Controller
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
@@ -143,9 +139,9 @@ class BoxController extends Controller
         foreach ($set as $journal) {
             $currencyId           = (int)$journal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $journal['amount']);
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($journal['amount']));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $journal['amount']);
+            $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($journal['amount']));
         }
 
         // collect expenses
@@ -237,8 +233,6 @@ class BoxController extends Controller
      * Total user net worth.
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function netWorth(): JsonResponse
     {

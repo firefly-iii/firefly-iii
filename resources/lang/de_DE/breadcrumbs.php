@@ -39,6 +39,7 @@ return [
     'reports'                => 'Berichte',
     'search_result'          => 'Suchergebnisse für ":query"',
     'withdrawal_list'        => 'Ausgaben',
+    'Withdrawal_list'        => 'Aufwendungen',
     'deposit_list'           => 'Umsatz, Einkommen und Einzahlungen',
     'transfer_list'          => 'Umbuchungen',
     'transfers_list'         => 'Umbuchungen',

@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class HasNoBudgetTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class HasNoBudgetTest extends TestCase
 {
@@ -38,7 +41,7 @@ class HasNoBudgetTest extends TestCase
     public function testTriggeredBudget(): void
     {
         $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
-        $budget  = $journal->user->budgets()->first();
+        $budget  = $this->getRandomBudget();
         $journal->budgets()->detach();
         $journal->budgets()->save($budget);
         $this->assertEquals(1, $journal->budgets()->count());

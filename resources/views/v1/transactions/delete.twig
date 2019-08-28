@@ -1,0 +1,35 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, group) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('transactions.destroy',group.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('form.delete_journal', {'description': group.title|default(journal.description)}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                        </p>
+
+                        <p>
+                            {{ trans('form.journal_areYouSure', {'description': group.title|default(journal.description)}) }}
+                        </p>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        <a href="{{ previous }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

@@ -231,7 +231,7 @@ class RuleGroupController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public function testGroup(RuleGroupTestRequest $request, RuleGroup $group): JsonResponse
     {

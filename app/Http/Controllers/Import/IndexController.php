@@ -32,7 +32,6 @@ use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
 /**
- * TODO make sure all import methods work.
  *
  * Class IndexController
  */
@@ -72,8 +71,6 @@ class IndexController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function create(string $importProvider)
     {

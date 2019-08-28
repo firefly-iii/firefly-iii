@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class BudgetDestroyService
+ * @codeCoverageIgnore
  */
 class BudgetDestroyService
 {
