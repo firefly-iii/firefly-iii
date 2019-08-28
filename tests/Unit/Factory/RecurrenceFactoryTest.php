@@ -43,7 +43,6 @@ use Tests\TestCase;
 
 /**
  *
- *
  * Test different combinations:
  * Transfer
  * Withdrawal

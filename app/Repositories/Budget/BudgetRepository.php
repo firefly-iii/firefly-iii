@@ -46,9 +46,6 @@ use Navigation;
 /**
  * Class BudgetRepository.
  *
- *
- *
- *
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
@@ -138,7 +135,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
-     *
      *
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
@@ -281,7 +277,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Carbon
      *
-     *
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {
@@ -322,7 +317,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     *
      *
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
@@ -490,7 +484,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     *
      *
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
@@ -1055,7 +1048,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $amount
      *
      * @return BudgetLimit|null
-     *
      *
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit

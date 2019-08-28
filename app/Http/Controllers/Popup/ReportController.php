@@ -31,7 +31,6 @@ use Illuminate\Http\Request;
 /**
  * Class ReportController.
  *
- *
  */
 class ReportController extends Controller
 {

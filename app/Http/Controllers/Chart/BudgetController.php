@@ -40,9 +40,6 @@ use Illuminate\Support\Collection;
 /**
  * Class BudgetController.
  *
- *
- *
- *
  */
 class BudgetController extends Controller
 {

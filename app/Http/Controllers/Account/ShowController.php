@@ -39,7 +39,6 @@ use View;
 /**
  * Class ShowController
  *
- *
  */
 class ShowController extends Controller
 {

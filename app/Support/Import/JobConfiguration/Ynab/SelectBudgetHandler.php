@@ -150,7 +150,6 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         $this->repository->setUser($importJob->user);
         $this->currencyRepository->setUser($importJob->user);
         $this->accountRepository->setUser($importJob->user);
-        $this->accountRepository->setUser($importJob->user);
 
         $this->accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
     }

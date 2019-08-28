@@ -38,7 +38,6 @@ use Log;
 /**
  * Class ReportController.
  *
- *
  */
 class ReportController extends Controller
 {
@@ -309,7 +308,6 @@ class ReportController extends Controller
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-     *
      *
      */
     public function postIndex(ReportFormRequest $request)

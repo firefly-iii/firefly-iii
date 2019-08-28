@@ -79,8 +79,6 @@ trait AugumentData
      *
      * @return array
      *
-     *
-     *
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -352,7 +350,6 @@ trait AugumentData
      *
      * @return array
      *
-     *
      */
     protected function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -396,8 +393,6 @@ trait AugumentData
      * @param Collection $limits
      *
      * @return array
-     *
-     *
      *
      */
     protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
@@ -587,7 +582,6 @@ trait AugumentData
      *
      * @return array
      *
-     *
      */
     protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
@@ -646,8 +640,6 @@ trait AugumentData
      * @param Carbon $end
      *
      * @return array
-     *
-     *
      *
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info

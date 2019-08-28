@@ -560,8 +560,6 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
-     * @throws FireflyException
-     * @throws FireflyException
      */
     public function update(Account $account, array $data): Account
     {

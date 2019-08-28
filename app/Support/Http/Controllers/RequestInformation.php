@@ -66,7 +66,6 @@ trait RequestInformation
      *
      * @return string
      *
-     *
      */
     protected function getHelpText(string $route, string $language): string // get from internet.
     {

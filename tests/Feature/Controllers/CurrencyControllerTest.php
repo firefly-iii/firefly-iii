@@ -342,7 +342,6 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController
-     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndex(): void
     {
@@ -376,7 +375,6 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndexNoRights(): void

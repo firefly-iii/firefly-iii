@@ -180,7 +180,6 @@ class TagReportController extends Controller
      *
      * @return JsonResponse
      *
-     *
      */
     public function mainChart(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {

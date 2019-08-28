@@ -69,8 +69,6 @@ class BelongsUser implements Rule
      * @return bool
      * @throws FireflyException
      *
-     *
-     *
      */
     public function passes($attribute, $value): bool
     {
@@ -109,7 +107,6 @@ class BelongsUser implements Rule
      * @param string $value
      *
      * @return int
-     *
      *
      */
     protected function countField(string $class, string $field, string $value): int

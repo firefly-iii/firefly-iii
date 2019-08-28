@@ -47,7 +47,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class AccountController.
  *
- *
  */
 class AccountController extends Controller
 {

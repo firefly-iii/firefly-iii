@@ -189,7 +189,6 @@ class CategoryReportController extends Controller
      *
      * @return JsonResponse
      *
-     *
      */
     public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {

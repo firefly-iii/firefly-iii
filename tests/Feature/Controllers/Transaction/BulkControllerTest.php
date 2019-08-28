@@ -55,7 +55,6 @@ class BulkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
      */
     public function testEditWithdrawal(): void
     {

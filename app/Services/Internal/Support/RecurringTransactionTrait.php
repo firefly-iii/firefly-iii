@@ -254,7 +254,6 @@ trait RecurringTransactionTrait
     //        $piggyName = $data['meta']['piggy_bank_name'] ?? '';
     //        $this->updatePiggyBank($recurrence, $piggyId, $piggyName);
     //
-    //
     //        $tags = $data['meta']['tags'] ?? [];
     //        $this->updateTags($recurrence, $tags);
     //

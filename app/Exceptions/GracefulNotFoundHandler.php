@@ -45,7 +45,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Exception $exception
      *
-     *
      * @return mixed
      */
     public function render($request, Exception $exception)

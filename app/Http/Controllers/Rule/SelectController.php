@@ -47,7 +47,6 @@ use Throwable;
 /**
  * Class SelectController.
  *
- *
  */
 class SelectController extends Controller
 {

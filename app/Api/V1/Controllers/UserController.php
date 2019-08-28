@@ -43,7 +43,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class UserController.
  *
- *
  */
 class UserController extends Controller
 {

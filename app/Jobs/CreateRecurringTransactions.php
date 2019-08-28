@@ -68,7 +68,6 @@ use Log;
 /**
  * Class CreateRecurringTransactions.
  *
- *
  */
 class CreateRecurringTransactions implements ShouldQueue
 {
@@ -441,7 +440,6 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      *
      * @return bool
-     *
      *
      */
     private function validRecurrence(Recurrence $recurrence): bool

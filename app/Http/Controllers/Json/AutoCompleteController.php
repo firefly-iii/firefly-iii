@@ -44,7 +44,6 @@ use Log;
  *
  * TODO autocomplete for transaction types.
  *
- *
  */
 class AutoCompleteController extends Controller
 {

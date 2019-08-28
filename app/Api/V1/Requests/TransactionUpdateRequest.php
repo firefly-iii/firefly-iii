@@ -256,7 +256,6 @@ class TransactionUpdateRequest extends Request
                 //                // validate foreign currency info
                 //                $this->validateForeignCurrencyInformation($validator);
                 //
-                //
 
                 //
                 //                // make sure all splits have valid source + dest info

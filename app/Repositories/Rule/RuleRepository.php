@@ -34,7 +34,6 @@ use Log;
 /**
  * Class RuleRepository.
  *
- *
  */
 class RuleRepository implements RuleRepositoryInterface
 {

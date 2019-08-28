@@ -64,7 +64,6 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return array
      *
-     *
      */
     public function run(array $row): array
     {
@@ -132,8 +131,6 @@ class AbnAmroDescription implements SpecificInterface
      *
      * @return bool true if the description is SEPA format, false otherwise
      *
-     *
-     *
      */
     protected function parseSepaDescription(): bool
     {
@@ -188,8 +185,6 @@ class AbnAmroDescription implements SpecificInterface
      * Parses the current description in TRTP format.
      *
      * @return bool true if the description is TRTP format, false otherwise
-     *
-     *
      *
      */
     protected function parseTRTPDescription(): bool

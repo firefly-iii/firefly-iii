@@ -185,7 +185,6 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Carbon|null
      *
-     *
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {

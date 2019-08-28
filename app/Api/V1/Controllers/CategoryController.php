@@ -44,7 +44,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class CategoryController.
  *
- *
  */
 class CategoryController extends Controller
 {

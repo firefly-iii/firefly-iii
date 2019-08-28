@@ -42,7 +42,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class PiggyBankController.
  *
- *
  */
 class PiggyBankController extends Controller
 {

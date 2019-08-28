@@ -47,8 +47,6 @@ trait ChartGeneration
      *
      * @return array
      *
-     *
-     *
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {

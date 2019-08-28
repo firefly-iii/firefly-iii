@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class ImportJobRepository.
  *
- *
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {

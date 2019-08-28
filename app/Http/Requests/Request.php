@@ -33,7 +33,6 @@ use Log;
  *
  * @codeCoverageIgnore
  *
- *
  */
 class Request extends FormRequest
 {

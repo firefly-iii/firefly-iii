@@ -109,7 +109,6 @@ class YnabJobConfiguration implements JobConfigurationInterface
      * @return YnabJobConfigurationInterface
      * @throws FireflyException
      *
-     *
      */
     private function getHandler(): YnabJobConfigurationInterface
     {

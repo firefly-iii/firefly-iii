@@ -47,7 +47,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class BillController.
  *
- *
  */
 class BillController extends Controller
 {

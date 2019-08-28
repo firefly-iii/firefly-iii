@@ -108,7 +108,6 @@ class FireflyServiceProvider extends ServiceProvider
     /**
      * Register stuff.
      *
-     *
      */
     public function register(): void
     {

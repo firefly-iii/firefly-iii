@@ -42,7 +42,6 @@ use Log;
 /**
  * Class MassController.
  *
- *
  */
 class MassController extends Controller
 {

@@ -183,7 +183,6 @@ trait UserNavigation
     //            return redirect(route('index'));
     //        }
     //
-    //
     //        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
     //        $transactions = $journal->transactions;
     //        /** @var Transaction $transaction */

@@ -66,7 +66,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class CurrencyController.
  *
- *
  */
 class CurrencyController extends Controller
 {

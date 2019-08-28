@@ -331,7 +331,6 @@ class StageImportDataHandlerTest extends TestCase
     //        // todo: improve test thing:
     //        Preferences::shouldReceive('setForUser');
     //
-    //
     //        // ignore the deprecated fields:
     //        $amount->setValue('150');
     //        $amount->setCurrency('EUR');
@@ -409,7 +408,6 @@ class StageImportDataHandlerTest extends TestCase
     //        $accountRepository->shouldReceive('findNull')->withArgs([5678])->andReturn($account)->once();
     //        $payment->shouldReceive('listing')->once()->andReturn($list);
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::REVENUE]])->once()->andReturn($deposit);
-    //
     //
     //        $handler = new StageImportDataHandler;
     //        $handler->setImportJob($job);
@@ -546,7 +544,6 @@ class StageImportDataHandlerTest extends TestCase
     //        $payment->shouldReceive('listing')->once()->andReturn($list);
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::REVENUE]])->once()->andReturnNull();
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::ASSET]])->once()->andReturn($asset);
-    //
     //
     //        // set new last transaction ID:
     //        $lastPref       = new Preference;

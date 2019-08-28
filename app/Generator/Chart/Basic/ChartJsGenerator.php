@@ -196,7 +196,6 @@ class ChartJsGenerator implements GeneratorInterface
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:.
      *
      * 'label-of-entry' => value
-     * 'label-of-entry' => value
      *
      * @param string $setLabel
      * @param array  $data

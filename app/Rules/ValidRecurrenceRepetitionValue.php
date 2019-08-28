@@ -54,7 +54,6 @@ class ValidRecurrenceRepetitionValue implements Rule
      *
      * @return bool
      *
-     *
      */
     public function passes($attribute, $value): bool
     {
@@ -103,7 +102,6 @@ class ValidRecurrenceRepetitionValue implements Rule
      * @param string $value
      *
      * @return bool
-     *
      *
      */
     private function validateNdom(string $value): bool

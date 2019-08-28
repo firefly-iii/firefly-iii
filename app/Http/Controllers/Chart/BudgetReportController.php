@@ -39,7 +39,6 @@ use Illuminate\Support\Collection;
  *
  * Class BudgetReportController
  *
- *
  */
 class BudgetReportController extends Controller
 {

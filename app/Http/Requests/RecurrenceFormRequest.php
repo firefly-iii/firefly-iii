@@ -139,7 +139,6 @@ class RecurrenceFormRequest extends Request
      * @return array
      * @throws FireflyException
      *
-     *
      */
     public function rules(): array
     {

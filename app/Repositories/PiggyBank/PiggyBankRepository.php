@@ -37,8 +37,6 @@ use Log;
 /**
  * Class PiggyBankRepository.
  *
- *
- *
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {

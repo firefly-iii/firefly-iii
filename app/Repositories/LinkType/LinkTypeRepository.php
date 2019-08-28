@@ -35,7 +35,6 @@ use Log;
 /**
  * Class LinkTypeRepository.
  *
- *
  */
 class LinkTypeRepository implements LinkTypeRepositoryInterface
 {
@@ -347,7 +346,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     /**
      * @param TransactionJournalLink $link
      * @param string                 $text
-     *
      *
      * @throws \Exception
      */

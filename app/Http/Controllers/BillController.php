@@ -44,7 +44,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class BillController.
  *
- *
  */
 class BillController extends Controller
 {

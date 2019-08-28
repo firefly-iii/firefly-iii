@@ -36,7 +36,6 @@ use Illuminate\Support\Collection;
  *
  * Class ShowController
  *
- *
  */
 class ShowController extends Controller
 {

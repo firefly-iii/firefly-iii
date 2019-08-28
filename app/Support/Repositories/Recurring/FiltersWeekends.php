@@ -43,7 +43,6 @@ trait FiltersWeekends
      *
      * @return array
      *
-     *
      */
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {

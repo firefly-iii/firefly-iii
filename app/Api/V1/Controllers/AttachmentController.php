@@ -45,7 +45,6 @@ use function strlen;
 /**
  * Class AttachmentController.
  *
- *
  */
 class AttachmentController extends Controller
 {

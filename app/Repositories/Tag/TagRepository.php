@@ -36,7 +36,6 @@ use Log;
 /**
  * Class TagRepository.
  *
- *
  */
 class TagRepository implements TagRepositoryInterface
 {

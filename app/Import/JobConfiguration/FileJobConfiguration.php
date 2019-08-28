@@ -91,7 +91,6 @@ class FileJobConfiguration implements JobConfigurationInterface
      *
      * @return string
      *
-     *
      *@throws FireflyException
      */
     public function getNextView(): string
@@ -131,7 +130,6 @@ class FileJobConfiguration implements JobConfigurationInterface
      *
      * @return FileConfigurationInterface
      * @throws FireflyException
-     *
      *
      */
     private function getConfigurationObject(): FileConfigurationInterface

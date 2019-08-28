@@ -51,7 +51,6 @@ use Log;
  *
  * Class ImportArrayStorage
  *
- *
  */
 class ImportArrayStorage
 {
@@ -200,8 +199,6 @@ class ImportArrayStorage
      *
      * @return Collection
      * @throws FireflyException
-     *
-     *
      *
      */
     private function storeGroupArray(): Collection
@@ -387,9 +384,6 @@ class ImportArrayStorage
      * @param array $transaction
      *
      * @return bool
-     *
-     *
-     *
      *
      */
     private function transferExists(array $transaction): bool

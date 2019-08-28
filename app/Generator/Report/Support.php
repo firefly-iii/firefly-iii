@@ -19,7 +19,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 /** @noinspection PhpUndefinedMethodInspection */
-/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;

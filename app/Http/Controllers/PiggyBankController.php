@@ -41,8 +41,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class PiggyBankController.
  *
- *
- *
  */
 class PiggyBankController extends Controller
 {

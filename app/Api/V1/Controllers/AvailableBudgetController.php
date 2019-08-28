@@ -42,7 +42,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class AvailableBudgetController.
  *
- *
  */
 class AvailableBudgetController extends Controller
 {

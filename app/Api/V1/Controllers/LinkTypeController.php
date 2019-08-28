@@ -45,7 +45,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 /**
  * Class LinkTypeController.
  *
- *
  */
 class LinkTypeController extends Controller
 {

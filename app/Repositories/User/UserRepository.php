@@ -32,7 +32,6 @@ use Log;
 /**
  * Class UserRepository.
  *
- *
  */
 class UserRepository implements UserRepositoryInterface
 {

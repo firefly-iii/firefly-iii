@@ -33,7 +33,6 @@ use Route;
 /**
  * Class Controller.
  *
- *
  */
 class Controller extends BaseController
 {
