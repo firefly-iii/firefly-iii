@@ -1,7 +1,7 @@
 <?php
 /**
- * IngDescription.php
- * Copyright (C) 2016 https://github.com/tomwerf.
+ * AppendHash.php
+ * Copyright (C) 2016 https://github.com/viraptor.
  *
  * This file is part of Firefly III.
  *
