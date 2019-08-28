@@ -29,12 +29,23 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class WholePeriodChartGenerator
  */
 class WholePeriodChartGenerator
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
+
     /**
      * @param Category $category
      * @param Carbon   $start

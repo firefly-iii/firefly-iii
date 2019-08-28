@@ -65,27 +65,29 @@ class CategoryController extends Controller
 
     /**
      * Show an overview for a category for all time, per month/week/year.
+     * TODO test method, for category refactor.
      *
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
+     * @param Category $category
      *
      * @return JsonResponse
      */
-    public function all(CategoryRepositoryInterface $repository, Category $category): JsonResponse
+    public function all(Category $category): JsonResponse
     {
         // cache results:
         $cache = new CacheProperties;
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $start = $repository->firstUseDate($category) ?? $this->getDate();
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $start = app('navigation')->startOfPeriod($start, $range);
-        $end   = $this->getDate();
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $start      = $repository->firstUseDate($category) ?? $this->getDate();
+        $range      = app('preferences')->get('viewRange', '1M')->data;
+        $start      = app('navigation')->startOfPeriod($start, $range);
+        $end        = $this->getDate();
 
-        Log::debug(sprintf('Full range is %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        //Log::debug(sprintf('Full range is %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         /** @var WholePeriodChartGenerator $generator */
         $generator = app(WholePeriodChartGenerator::class);
@@ -99,6 +101,7 @@ class CategoryController extends Controller
 
     /**
      * Shows the category chart on the front page.
+     * TODO test method, for category refactor.
      *
      * @return JsonResponse
      */
@@ -112,7 +115,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // currency repos:
@@ -207,6 +210,7 @@ class CategoryController extends Controller
 
     /**
      * Chart report.
+     * TODO test method, for category refactor.
      *
      * @param Category   $category
      * @param Collection $accounts
@@ -224,7 +228,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            // return response()->json($cache->get());// @codeCoverageIgnore
+            return response()->json($cache->get());// @codeCoverageIgnore
         }
 
         /** @var OperationsRepositoryInterface $opsRepository */
@@ -272,12 +276,14 @@ class CategoryController extends Controller
             $outSet = $expenses[$currencyId]['categories'][$category->id] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $date                                 = $journal['date']->formatLocalized($format);
+                $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
                 $chartData[$outKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet = $income[$currencyId]['categories'][$category->id] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $date                                = $journal['date']->formatLocalized($format);
+                $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
                 $chartData[$inKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$inKey]['entries'][$date]);
             }
         }
@@ -291,6 +297,7 @@ class CategoryController extends Controller
 
     /**
      * Chart for period for transactions without a category.
+     * TODO test me.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -352,12 +359,14 @@ class CategoryController extends Controller
             $outSet = $expenses[$currencyId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $date                                 = $journal['date']->formatLocalized($format);
+                $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
                 $chartData[$outKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet = $income[$currencyId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $date                                = $journal['date']->formatLocalized($format);
+                $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
                 $chartData[$inKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$inKey]['entries'][$date]);
             }
         }
@@ -369,6 +378,7 @@ class CategoryController extends Controller
 
     /**
      * Chart for a specific period.
+     * TODO test method, for category refactor.
      *
      * @param Category                    $category
      * @param                             $date
