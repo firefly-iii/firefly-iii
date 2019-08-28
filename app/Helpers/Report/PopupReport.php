@@ -52,9 +52,9 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for one account and one budget.
      *
-     * @param Budget $budget
+     * @param Budget  $budget
      * @param Account $account
-     * @param array $attributes
+     * @param array   $attributes
      *
      * @return array
      */
@@ -62,7 +62,11 @@ class PopupReport implements PopupReportInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
+        $collector->setAccounts(new Collection([$account]))
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
 
         return $collector->getExtractedJournals();
     }
@@ -71,7 +75,7 @@ class PopupReport implements PopupReportInterface
      * Collect the transactions for one account and no budget.
      *
      * @param Account $account
-     * @param array $attributes
+     * @param array   $attributes
      *
      * @return array
      */
@@ -82,6 +86,8 @@ class PopupReport implements PopupReportInterface
         $collector
             ->setAccounts(new Collection([$account]))
             ->setTypes([TransactionType::WITHDRAWAL])
+            ->withAccountInformation()
+            ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withoutBudget();
 
@@ -92,7 +98,7 @@ class PopupReport implements PopupReportInterface
      * Collect the transactions for a budget.
      *
      * @param Budget $budget
-     * @param array $attributes
+     * @param array  $attributes
      *
      * @return array
      */
@@ -110,7 +116,11 @@ class PopupReport implements PopupReportInterface
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($attributes['accounts'])->setRange($attributes['startDate'], $attributes['endDate']);
+        $collector->setAccounts($attributes['accounts'])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->setRange($attributes['startDate'], $attributes['endDate']);
 
         if (null !== $currency) {
             $collector->setCurrency($currency);
@@ -130,7 +140,7 @@ class PopupReport implements PopupReportInterface
      * Collect journals by a category.
      *
      * @param Category $category
-     * @param array $attributes
+     * @param array    $attributes
      *
      * @return array
      */
@@ -150,6 +160,9 @@ class PopupReport implements PopupReportInterface
 
         $collector->setAccounts($attributes['accounts'])
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
                   ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation()
                   ->setCategory($category);
         if (null !== $currency) {
@@ -163,7 +176,7 @@ class PopupReport implements PopupReportInterface
      * Group transactions by expense.
      *
      * @param Account $account
-     * @param array $attributes
+     * @param array   $attributes
      *
      * @return array
      */
@@ -187,6 +200,9 @@ class PopupReport implements PopupReportInterface
 
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($attributes['startDate'], $attributes['endDate'])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
 
         if (null !== $currency) {
@@ -200,7 +216,7 @@ class PopupReport implements PopupReportInterface
      * Collect transactions by income.
      *
      * @param Account $account
-     * @param array $attributes
+     * @param array   $attributes
      *
      * @return array
      */
@@ -216,7 +232,11 @@ class PopupReport implements PopupReportInterface
             ->setDestinationAccounts($attributes['accounts'])
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->withAccountInformation()
+            ->withBudgetInformation()
+            ->withCategoryInformation()
             ->withAccountInformation();
+
         return $collector->getExtractedJournals();
     }
 }

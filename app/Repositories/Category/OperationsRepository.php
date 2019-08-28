@@ -26,12 +26,10 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 
 /**
  *
@@ -53,202 +51,135 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
+     *
+     * First currency, then categories.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
-    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategory($category);
-
-        if ($accounts->count() > 0) {
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+        if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        // collect and group results:
-        $array  = $collector->getExtractedJournals();
-        $return = [];
-
-        foreach ($array as $journal) {
-            $currencyCode = $journal['currency_code'];
-            if (!isset($return[$currencyCode])) {
-                $return[$currencyCode] = [
-                    'currency_id'             => $journal['currency_id'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                    'earned'                  => '0',
-                ];
-            }
-
-            // also extract foreign currency information:
-            if (null !== $journal['foreign_currency_id']) {
-                $currencyCode = $journal['foreign_currency_code'];
-                if (!isset($return[$currencyCode])) {
-                    $return[$currencyCode] = [
-                        'currency_id'             => $journal['foreign_currency_id'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                        'earned'                  => '0',
-                    ];
-                }
-                $return[$currencyCode]['earned'] = bcadd($return[$currencyCode]['earned'], app('steam')->positive($journal['foreign_amount']));
-            }
-            $return[$currencyCode]['earned'] = bcadd($return[$currencyCode]['earned'], app('steam')->positive($journal['amount']));
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
-
-        if ($categories->count() > 0) {
+        if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (0 === $categories->count()) {
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
         $journals = $collector->getExtractedJournals();
-        $return   = [];
+        $array    = [];
+
         foreach ($journals as $journal) {
-            $categoryId = (int)$journal['category_id'];
             $currencyId = (int)$journal['currency_id'];
-            $name       = $journal['category_name'];
-            // make array for category:
-            if (!isset($return[$categoryId])) {
-                $return[$categoryId] = [
-                    'name'   => $name,
-                    'earned' => [],
-                ];
-            }
-            if (!isset($return[$categoryId]['earned'][$currencyId])) {
-                $return[$categoryId]['earned'][$currencyId] = [
-                    'earned'                  => '0',
+            $categoryId = (int)$journal['category_id'];
+
+            // info about the currency:
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'categories'              => [],
                     'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-            }
-            $return[$categoryId]['earned'][$currencyId]['earned']
-                = bcadd($return[$categoryId]['earned'][$currencyId]['earned'], $journal['amount']);
+
+            // info about the categories:
+            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+                    'id'                   => $categoryId,
+                    'name'                 => $journal['category_name'],
+                    'transaction_journals' => [],
+                ];
+
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId = (int)$journal['transaction_journal_id'];
+
+
+            $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
+                'amount' => app('steam')->negative($journal['amount']),
+                'date'   => $journal['date'],
+            ];
+
         }
 
-        return $return;
+        return $array;
     }
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
+     * which have the specified category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
-    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
-        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        $data         = [];
-        // prep data array:
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $data[$category->id] = [
-                'name'    => $category->name,
-                'sum'     => '0',
-                'entries' => [],
-            ];
-        }
-
-        // get all transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($accounts)->setRange($start, $end);
-        $collector->setCategories($categories)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->withAccountInformation()->withCategoryInformation();
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (null !== $categories && $categories->count() > 0) {
+            $collector->setCategories($categories);
+        }
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $collector->setCategories($this->getCategories());
+        }
         $journals = $collector->getExtractedJournals();
-
-        // loop transactions:
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $categoryId                          = (int)$journal['category_id'];
-            $date                                = $journal['date']->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $journal['amount']);
-        }
+            $currencyId = (int)$journal['currency_id'];
+            $categoryId = (int)$journal['category_id'];
 
-        return $data;
-    }
+            // info about the currency:
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'categories'              => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
 
-    /**
-     * TODO not multi currency aware.
-     *
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        $data         = [];
-        // prep data array:
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $data[$category->id] = [
-                'name'    => $category->name,
-                'sum'     => '0',
-                'entries' => [],
+            // info about the categories:
+            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+                    'id'                   => $categoryId,
+                    'name'                 => $journal['category_name'],
+                    'transaction_journals' => [],
+                ];
+
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId = (int)$journal['transaction_journal_id'];
+
+
+            $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
+                'amount' => app('steam')->positive($journal['amount']),
+                'date'   => $journal['date'],
             ];
+
         }
 
-        // get all transactions:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($accounts)->setRange($start, $end);
-        $collector->setCategories($categories)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
-
-        // loop transactions:
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $categoryId                          = (int)$journal['category_id'];
-            $date                                = $journal['date']->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', bcmul($journal['amount'], '-1'));
-        }
-
-        return $data;
+        return $array;
     }
 
     /**
@@ -260,118 +191,89 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * Returns the amount spent in a category, for a set of accounts, in a specific period.
+     * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
-    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategory($category);
+        $collector->setUser($this->user)->setRange($start, $end)
+                  ->setTypes([TransactionType::WITHDRAWAL]);
 
-        if ($accounts->count() > 0) {
+        if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        // collect and group results:
-        $array  = $collector->getExtractedJournals();
-        $return = [];
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
-        foreach ($array as $journal) {
-            $currencyCode = $journal['currency_code'];
-            if (!isset($return[$currencyCode])) {
-                $return[$currencyCode] = [
-                    'currency_id'             => $journal['currency_id'],
-                    'currency_code'           => $journal['currency_code'],
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
                     'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
-                    'spent'                   => '0',
                 ];
-            }
-
-            // also extract foreign currency information:
-            if (null !== $journal['foreign_currency_id']) {
-                $currencyCode = $journal['foreign_currency_code'];
-                if (!isset($return[$currencyCode])) {
-                    $return[$currencyCode] = [
-                        'currency_id'             => $journal['foreign_currency_id'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                        'spent'                   => '0',
-                    ];
-                }
-                $return[$currencyCode]['spent'] = bcadd($return[$currencyCode]['spent'], $journal['foreign_amount']);
-            }
-            $return[$currencyCode]['spent'] = bcadd($return[$currencyCode]['spent'], $journal['amount']);
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
         }
 
-        return $return;
+        return $array;
     }
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
-    public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->setUser($this->user)->setRange($start, $end)
+                  ->setTypes([TransactionType::DEPOSIT]);
 
-        if ($categories->count() > 0) {
-            $collector->setCategories($categories);
-        }
-        if (0 === $categories->count()) {
-            $collector->setCategories($this->getCategories());
-        }
-
-        if ($accounts->count() > 0) {
+        if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
-        $set    = $collector->getExtractedJournals();
-        $return = [];
-        /** @var array $journal */
-        foreach ($set as $journal) {
-            $categoryId = (int)$journal['category_id'];
-            $currencyId = (int)$journal['currency_id'];
-            $name       = $journal['category_name'];
-
-            // make array for category:
-            if (!isset($return[$categoryId])) {
-                $return[$categoryId] = [
-                    'name'  => $name,
-                    'spent' => [],
-                ];
-            }
-            if (!isset($return[$categoryId]['spent'][$currencyId])) {
-                $return[$categoryId]['spent'][$currencyId] = [
-                    'spent'                   => '0',
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
                     'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-            }
-            $return[$categoryId]['spent'][$currencyId]['spent']
-                = bcadd($return[$categoryId]['spent'][$currencyId]['spent'], $journal['amount']);
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
         }
 
-        return $return;
+        return $array;
     }
 
     /**

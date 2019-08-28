@@ -71,8 +71,8 @@ class CategoryTransformer extends AbstractTransformer
         $start  = $this->parameters->get('start');
         $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $earned = array_values($this->opsRepository->earnedInPeriod($category, new Collection, $start, $end));
-            $spent  = array_values($this->opsRepository->spentInPeriod($category, new Collection, $start, $end));
+            $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
+            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
         $data = [
             'id'         => (int)$category->id,
@@ -90,5 +90,21 @@ class CategoryTransformer extends AbstractTransformer
         ];
 
         return $data;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function beautify(array $array): array
+    {
+        $return = [];
+        foreach ($array as $data) {
+            $data['sum'] = round($data['sum'], $data['currency_decimal_places']);
+            $return[]    = $data;
+        }
+
+        return $return;
     }
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Category;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -36,51 +35,32 @@ use Illuminate\Support\Collection;
 interface OperationsRepositoryInterface
 {
     /**
-     * Returns the amount earned in a category, for a set of accounts, in a specific period.
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
-     * @deprecated
-     *
      */
-    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
+     * which have the specified category set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
-     * @deprecated
      */
-    public function earnedInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 
     /**
      * @param User $user
@@ -88,27 +68,26 @@ interface OperationsRepositoryInterface
     public function setUser(User $user): void;
 
     /**
-     * Returns the amount spent in a category, for a set of accounts, in a specific period.
+     * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
-     * @deprecated
-     *
      */
-    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 
     /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
-     * @deprecated
      */
-    public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 }

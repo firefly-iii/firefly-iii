@@ -36,18 +36,6 @@ use Illuminate\Support\Collection;
 interface NoCategoryRepositoryInterface
 {
     /**
-     * TODO not multi-currency
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
@@ -61,60 +49,6 @@ interface NoCategoryRepositoryInterface
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
     /**
-     * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     *
-     * @return array
-     */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
-
-    /**
-     * TODO not multi-currency
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
-     * A very cryptic method name that means:
-     *
-     * Get me the amount spent in this period, grouped per currency, where no category was set.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     *
-     */
-    public function spentInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     *
-     * @return array
-     */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
@@ -126,6 +60,33 @@ interface NoCategoryRepositoryInterface
      * @return array
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
+
+    /**
+     * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+
+    /**
+     * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     *
+     * @return array
+     */
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
 
 }
