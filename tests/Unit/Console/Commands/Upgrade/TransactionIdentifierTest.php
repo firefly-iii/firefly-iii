@@ -67,8 +67,8 @@ class TransactionIdentifierTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transaction_identifier', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transaction_identifier', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transaction_identifier', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transaction_identifier', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:transaction-identifiers')
@@ -140,8 +140,8 @@ class TransactionIdentifierTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transaction_identifier', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transaction_identifier', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transaction_identifier', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transaction_identifier', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:transaction-identifiers')

@@ -518,7 +518,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function searchAccount(string $query, array $types): Collection
     {
-        $dbQuery = $this->user->accounts()->with(['accountType']);
+        $dbQuery = $this->user->accounts()
+                              ->where('active', 1)
+                              ->with(['accountType']);
         if ('' !== $query) {
             $search = sprintf('%%%s%%', $query);
             $dbQuery->where('name', 'LIKE', $search);

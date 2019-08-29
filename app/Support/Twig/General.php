@@ -208,10 +208,6 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'accountGetMetaField',
             static function (Account $account, string $field): string {
-                if ('testing' === config('app.env')) {
-                    Log::warning('Twig General::getMetaField should NOT be called in the TEST environment!');
-                }
-
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepositoryInterface::class);
                 $result     = $repository->getMetaValue($account, $field);

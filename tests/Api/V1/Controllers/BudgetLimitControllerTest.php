@@ -120,6 +120,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
+        Log::warning('The following error is part of a test.');
         $response = $this->post(route('api.v1.budget_limits.store'), $data);
         $response->assertStatus(500);
         $response->assertSee('Unknown budget.');

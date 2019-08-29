@@ -45,7 +45,8 @@ trait BasicDataSupport
          */
         foreach ($data as $entryId => $set) {
             $sum = '0';
-            foreach ($set['entries'] as $amount) {
+            $entries = $set['entries'] ?? [];
+            foreach ($entries as $amount) {
                 $sum = bcadd($amount, $sum);
             }
             $data[$entryId]['sum'] = $sum;

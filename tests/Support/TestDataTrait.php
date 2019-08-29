@@ -172,6 +172,41 @@ trait TestDataTrait
     }
 
     /**
+     * Method that returns default data for when the category OperationsController
+     * "sumIncome" method is called.
+     *
+     * Also applies to NoCategoryRepos::sumIncome.
+     *
+     * @return array
+     */
+    protected function categorySumIncome(): array
+    {
+        $eur    = TransactionCurrency::where('code', 'EUR')->first();
+        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $data   = [];
+        $amount = 400;
+        try {
+            $amount = random_int(100, 2500);
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        $amount = (string)round($amount / 100, 2);
+
+        foreach ([$eur, $usd] as $currency) {
+            $data[$currency->id] = [
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+                'sum'                     => $amount,
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
      * Method that returns default data for when the category NoCategoryRepos
      * "listExpenses" method is called.
      *

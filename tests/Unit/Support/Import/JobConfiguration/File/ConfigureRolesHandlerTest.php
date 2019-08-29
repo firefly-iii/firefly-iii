@@ -61,7 +61,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteBasic(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-count' => 5,
@@ -84,6 +84,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteForeign(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-count' => 5,
@@ -110,6 +111,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteNoAmount(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $config      = [
             'column-count' => 5,
             'column-roles' => [
@@ -173,6 +175,7 @@ class ConfigureRolesHandlerTest extends TestCase
         ];
 
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStage')->once()->withArgs([Mockery::any(), 'ready_to_run']);
         $repository->shouldReceive('setStage')->once()->withArgs([Mockery::any(), 'map']);
@@ -189,6 +192,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetExampleFromLine(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $lines       = [
             ['one', 'two', '', 'three'],
             ['four', 'five', '', 'six'],
@@ -212,6 +216,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetExamplesFromFile(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setConfiguration')->once()
                     ->withAnyArgs();
@@ -255,6 +260,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetHeadersHas(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         //$importRepos->shouldReceive('setUser')->once();
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
@@ -278,6 +284,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetHeadersNone(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
@@ -418,7 +425,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIgnoreUnmappableColumns(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $config   = [
             'column-count'      => 5,
             'column-roles'      => [
@@ -463,6 +470,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIsMappingNecessaryNo(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-do-mapping' => [false, false, false],
@@ -478,6 +486,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIsMappingNecessaryYes(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-do-mapping' => [false, true, false, false],
@@ -493,6 +502,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testMakeExamplesUnique(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $lines = [
             ['one', 'two', '', 'three'],
@@ -521,6 +531,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testProcessSpecifics(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $line   = [];
         $config = [
@@ -555,6 +566,8 @@ class ConfigureRolesHandlerTest extends TestCase
         $job->save();
 
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('setConfiguration')->once()
                    ->withArgs([Mockery::any(), ['column-count' => 0]]);

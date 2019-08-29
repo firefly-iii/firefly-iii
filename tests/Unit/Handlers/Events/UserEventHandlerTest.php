@@ -30,6 +30,7 @@ use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Auth\Events\Login;
@@ -109,7 +110,7 @@ class UserEventHandlerTest extends TestCase
         $repository->shouldReceive('getRole')->once()->andReturn(null);
         $repository->shouldReceive('attachRole')->once()->withArgs([Mockery::any(), 'owner']);
         $repository->shouldReceive('createRole')->once()->withArgs(['owner', 'Site Owner', 'User runs this instance of FF3'])->andReturn(new Role);
-
+        Log::warning('The following error is part of a test.');
         $listener->checkSingleUserIsAdmin($event);
         $this->assertTrue(true);
     }
@@ -178,7 +179,13 @@ class UserEventHandlerTest extends TestCase
      */
     public function testSendEmailChangeConfirmMail(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Mail::fake();
+
+        $tokenPref       = new Preference;
+        $tokenPref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'email_change_confirm_token', 'invalid'])->andReturn($tokenPref);
+
         $user     = $this->emptyUser();
         $event    = new UserChangedEmail($user, 'new@new', 'old@old', '127.0.0.1');
         $listener = new UserEventHandler;
@@ -201,13 +208,17 @@ class UserEventHandlerTest extends TestCase
      */
     public function testSendEmailChangeUndoMail(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Mail::fake();
+
+        $tokenPref       = new Preference;
+        $tokenPref->data = 'token';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'email_change_undo_token', 'invalid'])->andReturn($tokenPref);
+
         $user     = $this->emptyUser();
         $event    = new UserChangedEmail($user, 'new@new', 'old@old', '127.0.0.1');
         $listener = new UserEventHandler;
         $listener->sendEmailChangeUndoMail($event);
-
-        // must send user an email:
 
         Mail::assertSent(
             UndoEmailChangeMail::class, function ($mail) {
@@ -225,6 +236,7 @@ class UserEventHandlerTest extends TestCase
      */
     public function testSendNewPassword(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Mail::fake();
         $user     = $this->emptyUser();
         $event    = new RequestedNewPassword($user, 'token', '127.0.0.1');
@@ -248,6 +260,7 @@ class UserEventHandlerTest extends TestCase
      */
     public function testSendRegistrationMail(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Mail::fake();
         $user  = $this->emptyUser();
         $event = new RegisteredUser($user, '127.0.0.1');

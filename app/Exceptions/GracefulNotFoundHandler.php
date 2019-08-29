@@ -60,7 +60,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
         switch ($name) {
             default:
-                Log::error(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
+                Log::debug(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
 
                 return parent::render($request, $exception);
             case 'accounts.show':

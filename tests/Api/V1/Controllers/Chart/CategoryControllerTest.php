@@ -24,8 +24,11 @@ namespace Tests\Api\V1\Controllers\Chart;
 
 
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 /**
@@ -36,6 +39,8 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    use TestDataTrait;
+
     /**
      *
      */
@@ -52,65 +57,21 @@ class CategoryControllerTest extends TestCase
     public function testOverview(): void
     {
         $repository = $this->mock(CategoryRepositoryInterface::class);
+        $noCatRepos =$this->mock(NoCategoryRepositoryInterface::class);
+        $opsRepos = $this->mock(OperationsRepositoryInterface::class);
 
-        $spent = [
-            2 => [
-                'name'  => 'Some other category',
-                'spent' => [
-                    // earned in this currency.
-                    1 => [
-                        'currency_decimal_places' => 2,
-                        'currency_symbol'         => 'x',
-                        'currency_code'           => 'EUR',
-                        'currency_id'             => 1,
-                        'spent'                   => '-522',
-                    ],
-                ],
-            ],
-        ];
-
-        $earned = [
-            1 => [
-                'name'   => 'Some category',
-                'earned' => [
-                    // earned in this currency.
-                    2 => [
-                        'currency_decimal_places' => 2,
-                        'currency_id'             => 1,
-                        'currency_symbol'         => 'x',
-                        'currency_code'           => 'EUR',
-                        'earned'                  => '123',
-                    ],
-                ],
-            ],
-        ];
-
-        $earnedNoCategory = [
-            1 => [
-                'currency_decimal_places' => 2,
-                'currency_id'             => 3,
-                'currency_symbol'         => 'x',
-                'currency_code'           => 'EUR',
-                'earned'                  => '123',
-            ],
-        ];
-        $spentNoCategory  = [
-            5 => [
-                'currency_decimal_places' => 2,
-                'currency_symbol'         => 'x',
-                'currency_code'           => 'EUR',
-                'currency_id'             => 4,
-                'spent'                   => '-345',
-            ],
-        ];
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('spentInPeriodPerCurrency')->atLeast()->once()->andReturn($spent);
-        $repository->shouldReceive('earnedInPeriodPerCurrency')->atLeast()->once()->andReturn($earned);
+        $noCatRepos->shouldReceive('setUser')->atLeast()->once();
+        $opsRepos->shouldReceive('setUser')->atLeast()->once();
 
-        $repository->shouldReceive('earnedInPeriodPcWoCategory')->atLeast()->once()->andReturn($earnedNoCategory);
-        $repository->shouldReceive('spentInPeriodPcWoCategory')->atLeast()->once()->andReturn($spentNoCategory);
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+
+        $noCatRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
+        $noCatRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
 
         $parameters = [
             'start' => '2019-01-01',

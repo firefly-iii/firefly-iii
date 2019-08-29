@@ -583,7 +583,6 @@ class ImportArrayStorage
                     DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
                 } catch (QueryException $e) {
                     Log::error(sprintf('Could not link journal #%d to tag #%d because: %s', $journalId, $tagId, $e->getMessage()));
-                    Log::error($e->getTraceAsString());
                 }
                 // @codeCoverageIgnoreEnd
             }

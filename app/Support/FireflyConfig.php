@@ -40,7 +40,7 @@ class FireflyConfig
     public function delete(string $name): void
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+            Log::warning(sprintf('%s("%s") should NOT be called in the TEST environment!', __METHOD__, $name));
         }
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
@@ -63,7 +63,7 @@ class FireflyConfig
     public function get(string $name, $default = null): ?Configuration
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+            Log::warning(sprintf('%s("%s") should NOT be called in the TEST environment!', __METHOD__, $name));
         }
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {

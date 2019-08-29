@@ -266,7 +266,6 @@ trait RecurringTransactionTrait
      */
     protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId, string $piggyName): void
     {
-
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
         $factory->setUser($transaction->recurrence->user);

@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -37,8 +36,6 @@ class CategoryTransformer extends AbstractTransformer
 {
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
-    /** @var CategoryRepositoryInterface */
-    private $repository;
 
     /**
      * CategoryTransformer constructor.
@@ -47,7 +44,6 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository    = app(CategoryRepositoryInterface::class);
         $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
@@ -63,7 +59,6 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
-        $this->repository->setUser($category->user);
         $this->opsRepository->setUser($category->user);
 
         $spent  = [];
@@ -101,7 +96,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = round($data['sum'], $data['currency_decimal_places']);
+            $data['sum'] = round($data['sum'], (int)$data['currency_decimal_places']);
             $return[]    = $data;
         }
 

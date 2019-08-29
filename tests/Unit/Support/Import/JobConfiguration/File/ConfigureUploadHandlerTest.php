@@ -162,7 +162,9 @@ class ConfigureUploadHandlerTest extends TestCase
         $job->save();
 
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('setUser');
+        $accountRepos->shouldReceive('setUser');
         $repository->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), ['date-format' => 'Ymd']]);
 
         $handler = new ConfigureUploadHandler;
@@ -181,6 +183,8 @@ class ConfigureUploadHandlerTest extends TestCase
      */
     public function testGetSpecifics(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $array    = [
             'specifics' => [
                 'IngDescription', 'BadFakeNewsThing',

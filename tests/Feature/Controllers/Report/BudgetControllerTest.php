@@ -86,7 +86,7 @@ class BudgetControllerTest extends TestCase
         $date         = new Carbon;
 
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+        //Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getBudgets')->andReturn(new Collection);

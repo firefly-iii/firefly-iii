@@ -26,9 +26,12 @@ use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 /**
@@ -40,6 +43,7 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    use TestDataTrait;
     /**
      *
      */
@@ -56,11 +60,16 @@ class CategoryControllerTest extends TestCase
     public function testExpenses(): void
     {
         $this->mockDefaultSession();
-        $first        = [1 => ['entries' => ['1', '1']]];
-        $second       = ['entries' => ['1', '1']];
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
+        $first           = [1 => ['entries' => ['1', '1']]];
+        $second          = ['entries' => ['1', '1']];
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos  = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $noCatRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
 
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
@@ -81,15 +90,22 @@ class CategoryControllerTest extends TestCase
     public function testIncome(): void
     {
         $this->mockDefaultSession();
-        $first        = [
+        $first           = [
             1 => ['entries' => ['1', '1']],
             2 => ['entries' => ['0']],
         ];
-        $second       = ['entries' => ['1', '1']];
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
+        $second          = ['entries' => ['1', '1']];
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+        $noCatRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
@@ -107,12 +123,21 @@ class CategoryControllerTest extends TestCase
     public function testOperations(): void
     {
         $this->mockDefaultSession();
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $category     = $this->getRandomCategory();
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $category        = $this->getRandomCategory();
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+        $noCatRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
+        $opsRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $noCatRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
+
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-        //Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));

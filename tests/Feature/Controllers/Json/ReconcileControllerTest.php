@@ -35,6 +35,7 @@ use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Steam;
 
 /**
  *
@@ -117,9 +118,11 @@ class ReconcileControllerTest extends TestCase
         $euro         = $this->getEuro();
         $withdrawal   = $this->getRandomWithdrawalAsArray();
 
+        Steam::shouldReceive('balance')->atLeast()->once()->andReturn('20');
+
 
         $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
-        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->andReturn('-100');
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);

@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BackToJournals
@@ -109,9 +110,11 @@ class BackToJournals extends Command
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions')
-                     ->whereIn('transactions.id', $transactions)
-                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions')
+                       ->whereIn('transactions.id', $chunk)
+                       ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            /** @noinspection SlowArrayOperationsInLoopInspection */
+            $array = array_merge($array, $set);
         }
 
         return $array;
@@ -156,6 +159,7 @@ class BackToJournals extends Command
      */
     private function migrateAll(): void
     {
+        Log::debug('Now in migrateAll()');
         $this->migrateBudgets();
         $this->migrateCategories();
 
@@ -224,11 +228,16 @@ class BackToJournals extends Command
      */
     private function migrateCategories(): void
     {
+        Log::debug('Now in migrateCategories()');
         $journals = new Collection;
         $allIds   = $this->getIdsForCategories();
-        $chunks   = array_chunk($allIds, 500);
-        foreach ($chunks as $journalIds) {
-            $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
+
+        Log::debug(sprintf('Total: %d', count($allIds)));
+
+        $chunks = array_chunk($allIds, 500);
+        foreach ($chunks as $chunk) {
+            Log::debug('Now doing a chunk.');
+            $collected = TransactionJournal::whereIn('id', $chunk)->with(['transactions', 'categories', 'transactions.categories'])->get();
             $journals  = $journals->merge($collected);
         }
         $this->line(sprintf('Check %d transaction journal(s) for category info.', count($journals)));

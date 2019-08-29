@@ -178,6 +178,8 @@ class ExpenseControllerTest extends TestCase
         $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once();
 
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('100');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
@@ -222,6 +224,7 @@ class ExpenseControllerTest extends TestCase
         $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn($transactions)->atLeast()->once();
 
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('100');
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.income', ['1', $expense->id, '20170101', '20170131']));

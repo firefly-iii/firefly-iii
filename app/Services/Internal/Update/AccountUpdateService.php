@@ -90,7 +90,7 @@ class AccountUpdateService
         $account->save();
 
         // find currency, or use default currency instead.
-        if (null !== $data['currency_id'] || null !== $data['currency_code']) {
+        if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
             $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;

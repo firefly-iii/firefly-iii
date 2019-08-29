@@ -53,13 +53,17 @@ class RuleTransformerTest extends TestCase
 
         $repository = $this->mock(RuleRepositoryInterface::class);
         /** @var RuleTrigger $ruleTrigger */
-        $ruleTrigger = RuleTrigger::first();
+        $ruleTrigger = RuleTrigger::where('trigger_type', '!=', 'user_action')->first();
+
+        /** @var RuleTrigger $ruleTrigger */
+        $moment = RuleTrigger::where('trigger_type', '=', 'user_action')->first();
+
         /** @var RuleAction $ruleAction */
         $ruleAction = RuleAction::first();
         // mock stuff
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getRuleActions')->atLeast()->once()->andReturn(new Collection([$ruleAction]));
-        $repository->shouldReceive('getRuleTriggers')->atLeast()->once()->andReturn(new Collection([$ruleTrigger]));
+        $repository->shouldReceive('getRuleTriggers')->atLeast()->once()->andReturn(new Collection([$moment]), new Collection([$ruleTrigger]));
 
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters(new ParameterBag);

@@ -121,6 +121,7 @@ class BudgetControllerTest extends TestCase
         // mock default session
         $this->mockDefaultSession();
 
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->get(route('chart.budget.budget-limit', [$budget->id, $limit->id]));
         $response->assertStatus(500);

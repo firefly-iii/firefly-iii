@@ -75,7 +75,7 @@ class RuleTransformer extends AbstractTransformer
             'active'          => $rule->active,
             'strict'          => $rule->strict,
             'stop_processing' => $rule->stop_processing,
-            'trigger'          => $this->getRuleTrigger($rule),
+            'trigger'         => $this->getRuleTrigger($rule),
             'triggers'        => $this->triggers($rule),
             'actions'         => $this->actions($rule),
             'links'           => [

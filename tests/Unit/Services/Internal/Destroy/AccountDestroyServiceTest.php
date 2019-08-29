@@ -55,6 +55,7 @@ class AccountDestroyServiceTest extends TestCase
     public function testDestroyBasic(): void
     {
         $this->mock(RecurrenceDestroyService::class);
+        $this->mock(JournalDestroyService::class);
         $account = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
@@ -73,6 +74,7 @@ class AccountDestroyServiceTest extends TestCase
     public function testDestroyWithRecurrence(): void
     {
         $recService = $this->mock(RecurrenceDestroyService::class);
+        $this->mock(JournalDestroyService::class);
         $account = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
@@ -108,6 +110,7 @@ class AccountDestroyServiceTest extends TestCase
     public function testDestroyDontMove(): void
     {
         $this->mock(RecurrenceDestroyService::class);
+        $this->mock(JournalDestroyService::class);
         // create objects:
         $account = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
@@ -132,6 +135,7 @@ class AccountDestroyServiceTest extends TestCase
     public function testDestroyMove(): void
     {
         $this->mock(RecurrenceDestroyService::class);
+        $this->mock(JournalDestroyService::class);
         $account     = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . $this->randomInt(),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]

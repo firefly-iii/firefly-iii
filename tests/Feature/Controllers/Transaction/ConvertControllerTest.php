@@ -23,8 +23,18 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Transaction;
 
 use Amount;
+use FireflyIII\Factory\TagFactory;
+use FireflyIII\Factory\TransactionFactory;
+use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepository;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -63,12 +73,18 @@ class ConvertControllerTest extends TestCase
     public function testIndexDepositTransfer(): void
     {
         // mock stuff:
-        $journalRepos  = $this->mockDefaultSession();
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $groupRepos    = $this->mock(TransactionGroupRepositoryInterface::class);
-        $transformer   = $this->mock(TransactionGroupTransformer::class);
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $journalRepos       = $this->mockDefaultSession();
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos      = $this->mock(CurrencyRepositoryInterface::class);
+        $groupRepos         = $this->mock(TransactionGroupRepositoryInterface::class);
+        $transformer        = $this->mock(TransactionGroupTransformer::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos           = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos         = $this->mock(NoCategoryRepositoryInterface::class);
+        $transactionFactory = $this->mock(TransactionFactory::class);
 
         $revenue = $this->getRandomRevenue();
         $deposit = $this->getRandomDepositGroup();
@@ -123,10 +139,16 @@ class ConvertControllerTest extends TestCase
     public function testIndexSameType(): void
     {
         // mock stuff:
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mockDefaultSession();
         $this->mock(UserRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(TransactionGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos           = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos         = $this->mock(NoCategoryRepositoryInterface::class);
+        $transactionFactory = $this->mock(TransactionFactory::class);
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transformer  = $this->mock(TransactionGroupTransformer::class);
@@ -174,28 +196,38 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
-    public function testPostIndexDepositTransfer(): void
+    public function testPostIndexBadDestination(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mockDefaultSession();
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos           = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos         = $this->mock(NoCategoryRepositoryInterface::class);
+        $transactionFactory = $this->mock(TransactionFactory::class);
+
+
         $validator = $this->mock(AccountValidator::class);
         $deposit   = $this->getRandomDepositGroup();
 
-        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        // first journal:
+        $journal = $deposit->transactionJournals()->first();
 
         $validator->shouldReceive('setUser')->atLeast()->once();
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['Transfer']);
         $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(false);
 
 
         $data = ['source_account_id' => 1];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index.post', ['transfer', $deposit->id]), $data);
         $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.show', [$deposit->id]));
+        $response->assertSessionHas('error', sprintf('Destination information is invalid for transaction #%d.', $journal->id));
+        $response->assertRedirect(route('transactions.convert.index', ['transfer', $deposit->id]));
     }
 
     /**
@@ -203,10 +235,18 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexBadSource(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mockDefaultSession();
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleGroupRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos           = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos         = $this->mock(NoCategoryRepositoryInterface::class);
+        $transactionFactory = $this->mock(TransactionFactory::class);
+
+
         $validator = $this->mock(AccountValidator::class);
         $deposit   = $this->getRandomDepositGroup();
 
@@ -230,29 +270,46 @@ class ConvertControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
-    public function testPostIndexBadDestination(): void
+    public function testPostIndexDepositTransfer(): void
     {
-        $this->mockDefaultSession();
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $this->mock(RuleGroupRepositoryInterface::class);
-        $validator = $this->mock(AccountValidator::class);
-        $deposit   = $this->getRandomDepositGroup();
 
-        // first journal:
-        $journal = $deposit->transactionJournals()->first();
+
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos           = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos         = $this->mock(NoCategoryRepositoryInterface::class);
+        $budgetRepos        = $this->mock(BudgetRepositoryInterface::class);
+        $tagFactory         = $this->mock(TagFactory::class);
+        $currencyRepos      = $this->mock(CurrencyRepository::class);
+        $validator          = $this->mock(AccountValidator::class);
+        $transactionFactory = $this->mock(TransactionFactory::class);
+        $typeFactory        = $this->mock(TransactionTypeFactory::class);
+        $ruleGroup          = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $type = TransactionType::first();
+        $typeFactory->shouldReceive('find')->atLeast()->once()->andReturn($type);
+
+        $this->mockDefaultSession();
+
+
+        $deposit = $this->getRandomDepositGroup();
+
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $validator->shouldReceive('setUser')->atLeast()->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['Transfer']);
         $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(false);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
 
 
         $data = ['source_account_id' => 1];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index.post', ['transfer', $deposit->id]), $data);
         $response->assertStatus(302);
-        $response->assertSessionHas('error', sprintf('Destination information is invalid for transaction #%d.', $journal->id));
-        $response->assertRedirect(route('transactions.convert.index', ['transfer', $deposit->id]));
+        $response->assertRedirect(route('transactions.show', [$deposit->id]));
     }
 }

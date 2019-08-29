@@ -129,7 +129,7 @@ class EditController extends Controller
             'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
 
-        $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags']);
+        $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
         return view(
             'recurring.edit',

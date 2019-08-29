@@ -172,6 +172,7 @@ class RuleGroupControllerTest extends TestCase
 
         // call API
         $group    = $this->user()->ruleGroups()->first();
+        Log::warning('The following error is part of a test.');
         $response = $this->get(route('api.v1.rule_groups.test', [$group->id]), ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('{"message":"No rules in this rule group.","exception":"FireflyIII\\\\Exceptions\\\\FireflyException"');

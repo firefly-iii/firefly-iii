@@ -162,47 +162,5 @@ class IndexControllerTest extends TestCase
     }
 
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Recurring\IndexController
-     */
-    public function testShow(): void
-    {
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos       = $this->mock(UserRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-
-        $this->mockDefaultSession();
-
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            [
-                'id'                     => 5,
-                'first_date'             => '2018-01-01',
-                'repeat_until'           => null,
-                'latest_date'            => null,
-                'recurrence_repetitions' => [
-                    [
-                        'occurrences' => [
-                            '2019-01-01',
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $recurrence = $this->user()->recurrences()->first();
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast()->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('recurring.show', [$recurrence->id]));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
 
 }

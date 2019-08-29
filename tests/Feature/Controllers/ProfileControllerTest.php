@@ -116,7 +116,8 @@ class ProfileControllerTest extends TestCase
         $this->mock(UserRepositoryInterface::class);
 
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
-        // email_change_confirm_token
+
+        Log::warning('The following error is part of a test.');
         $response = $this->get(route('profile.confirm-email-change', ['some-fake-token']));
         $response->assertStatus(500);
     }
@@ -583,6 +584,7 @@ class ProfileControllerTest extends TestCase
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection([$tokenPreference]));
         Preferences::shouldReceive('beginsWith')->once()->andReturn(new Collection([$hashPreference]));
 
+        Log::warning('The following error is part of a test.');
         $response = $this->get(route('profile.undo-email-change', ['token', $hash]));
         $response->assertStatus(500);
     }

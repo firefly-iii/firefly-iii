@@ -53,8 +53,8 @@ class MigrateJournalNotesTest extends TestCase
     {
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrate_notes', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrate_notes', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrate_notes', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrate_notes', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:migrate-notes')
@@ -69,8 +69,8 @@ class MigrateJournalNotesTest extends TestCase
     {
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrate_notes', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrate_notes', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrate_notes', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrate_notes', true]);
 
         $journal = $this->getRandomWithdrawal();
 

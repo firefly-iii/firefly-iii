@@ -316,7 +316,7 @@ class CreateCSVImportTest extends TestCase
             '--user=1',
             '--token=token',
         ];
-
+        Log::warning('The following error is part of a test.');
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
@@ -373,7 +373,7 @@ class CreateCSVImportTest extends TestCase
             '--user=1',
             '--token=token',
         ];
-
+        Log::warning('The following error is part of a test.');
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
@@ -424,6 +424,7 @@ class CreateCSVImportTest extends TestCase
             '--user=1',
             '--token=token',
         ];
+        Log::warning('The following error is part of a test.');
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
