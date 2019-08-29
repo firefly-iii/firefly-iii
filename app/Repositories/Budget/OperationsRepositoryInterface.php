@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface OperationsRepositoryInterface
@@ -46,4 +48,29 @@ interface OperationsRepositoryInterface
      * @deprecated
      */
     public function budgetedPerDay(Budget $budget): string;
+
+    /**
+     * This method collects various info on budgets, used on the budget page and on the index.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     * @deprecated
+     */
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
+
+
 }

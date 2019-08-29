@@ -32,6 +32,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -356,9 +357,12 @@ trait AugumentData
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
 
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         $return = [];
         if (0 === $limits->count()) {
-            $spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+            $spent = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
             if (0 !== bccomp($spent, '0')) {
                 $return[$budget->name]['spent']     = bcmul($spent, '-1');
                 $return[$budget->name]['left']      = 0;
@@ -400,12 +404,15 @@ trait AugumentData
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
 
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         $return = [];
         $format = (string)trans('config.month_and_day');
         $name   = $budget->name;
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {
-            $expenses = $repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
+            $expenses = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
             $expenses = app('steam')->positive($expenses);
 
             if ($limits->count() > 1) {
@@ -447,6 +454,10 @@ trait AugumentData
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
         // properties for cache
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -463,7 +474,7 @@ trait AugumentData
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
+            $entry->spent = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
             $limits->push($entry);
         }
         $cache->store($limits);

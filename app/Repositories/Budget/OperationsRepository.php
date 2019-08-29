@@ -23,8 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -54,6 +60,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Budget $budget
      *
      * @return string
+     * @deprecated
      */
     public function budgetedPerDay(Budget $budget): string
     {
@@ -79,10 +86,99 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * This method collects various info on budgets, used on the budget page and on the index.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     *
+     */
+    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
+    {
+        // get account information
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
+        $return            = [];
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId          = $budget->id;
+            $return[$budgetId] = [
+                'spent'    => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
+                'budgeted' => '0',
+            ];
+            $budgetLimits      = $this->getBudgetLimits($budget, $start, $end);
+            $otherLimits       = new Collection;
+
+            // get all the budget limits relevant between start and end and examine them:
+            /** @var BudgetLimit $limit */
+            foreach ($budgetLimits as $limit) {
+                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
+                ) {
+                    $return[$budgetId]['currentLimit'] = $limit;
+                    $return[$budgetId]['budgeted']     = round($limit->amount, $defaultCurrency->decimal_places);
+                    continue;
+                }
+                // otherwise it's just one of the many relevant repetitions:
+                $otherLimits->push($limit);
+            }
+            $return[$budgetId]['otherLimits'] = $otherLimits;
+        }
+
+        return $return;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     * @deprecated
+     */
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+
+        return $collector->getSum();
+    }
+
+    /**
+     * For now, simply refer to whichever repository holds this function.
+     * TODO might be done better in the future.
+     *
+     * @param Budget      $budget
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     */
+    private function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+
+        return $repository->getBudgetLimits($budget, $start, $end);
     }
 }

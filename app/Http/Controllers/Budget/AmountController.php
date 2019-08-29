@@ -98,7 +98,7 @@ class AmountController extends Controller
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
 
         // calculate what the user has spent in current period.
-        $spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $spent = $this->opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
 
         // given the new budget, this is what they have left (and left per day?)
         $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);

@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,11 +41,14 @@ class IndexController extends Controller
 {
 
     use DateCalculation;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
      * IndexController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -57,7 +61,8 @@ class IndexController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository    = app(BudgetRepositoryInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->repository->cleanupBudgets();
 
                 return $next($request);
@@ -110,7 +115,7 @@ class IndexController extends Controller
         $inactive = $this->repository->getInactiveBudgets();
 
         // collect budget info to fill bars and so on.
-        $budgetInformation = $this->repository->collectBudgetInformation($collection, $start, $end);
+        $budgetInformation = $this->opsRepository->collectBudgetInformation($collection, $start, $end);
 
         // to display available budget:
         $available = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);

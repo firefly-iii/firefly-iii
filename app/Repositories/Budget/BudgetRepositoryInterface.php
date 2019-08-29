@@ -42,17 +42,6 @@ interface BudgetRepositoryInterface
     public function cleanupBudgets(): bool;
 
     /**
-     * This method collects various info on budgets, used on the budget page and on the index.
-     *
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
-
-    /**
      * @param Budget $budget
      *
      * @return bool
@@ -244,19 +233,6 @@ interface BudgetRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * TODO this method is not multi-currency aware.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
-
 
     /**
      * Return multi-currency spent information.

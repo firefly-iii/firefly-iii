@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -49,12 +50,16 @@ class BoxController extends Controller
     /**
      * How much money user has available.
      *
-     * @param BudgetRepositoryInterface $repository
-     *
      * @return JsonResponse
      */
-    public function available(BudgetRepositoryInterface $repository): JsonResponse
+    public function available(): JsonResponse
     {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -74,7 +79,7 @@ class BoxController extends Controller
 
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();
-        $budgetInformation = $repository->collectBudgetInformation($budgets, $start, $end);
+        $budgetInformation = $opsRepository->collectBudgetInformation($budgets, $start, $end);
         $spent             = (string)array_sum(array_column($budgetInformation, 'spent'));
         $left              = bcadd($available, $spent);
         $days              = $today->diffInDays($end) + 1;
@@ -121,7 +126,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // prep some arrays:
         $incomes  = [];

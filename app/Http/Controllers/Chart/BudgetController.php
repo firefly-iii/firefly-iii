@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -46,12 +47,14 @@ class BudgetController extends Controller
     use DateCalculation, AugumentData;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
-
+    /** @var OperationsRepositoryInterface */
+    protected $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     protected $repository;
 
     /**
      * BudgetController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -60,8 +63,9 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                $this->generator  = app(GeneratorInterface::class);
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->generator     = app(GeneratorInterface::class);
+                $this->repository    = app(BudgetRepositoryInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -105,7 +109,7 @@ class BudgetController extends Controller
             if ('1Y' === $step) {
                 $currentEnd->subDay(); // @codeCoverageIgnore
             }
-            $spent             = $this->repository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
+            $spent             = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
             $label             = app('navigation')->periodShow($current, $step);
             $chartData[$label] = (float)bcmul($spent, '-1');
             $current           = clone $currentEnd;
@@ -125,7 +129,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget $budget
+     * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
@@ -155,7 +159,7 @@ class BudgetController extends Controller
         $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
         while ($start <= $end) {
-            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
+            $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
             $format           = $start->formatLocalized((string)trans('config.month_and_day'));
             $entries[$format] = $amount;
@@ -174,7 +178,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget $budget
+     * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -223,7 +227,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget $budget
+     * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -271,7 +275,7 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget $budget
+     * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
@@ -377,9 +381,9 @@ class BudgetController extends Controller
      *
      * TODO this chart is not multi-currency aware.
      *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return JsonResponse
@@ -426,8 +430,8 @@ class BudgetController extends Controller
      * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
