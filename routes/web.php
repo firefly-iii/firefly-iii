@@ -21,6 +21,10 @@
 
 declare(strict_types=1);
 
+if ('' !== config('firefly.baseurl_override') {
+    URL::forceRootUrl(config('firefly.baseurl_override'));
+}
+
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
      'as'        => 'installer.', 'prefix' => 'install'], function () {
