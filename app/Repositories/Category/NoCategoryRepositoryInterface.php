@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
 /**
  * Interface NoCategoryRepositoryInterface
  *
- * @package FireflyIII\Repositories\Category
  */
 interface NoCategoryRepositoryInterface
 {

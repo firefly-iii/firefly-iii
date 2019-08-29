@@ -29,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -41,6 +42,9 @@ use Illuminate\Support\Collection;
 class AmountController extends Controller
 {
     use DateCalculation;
+
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
@@ -57,7 +61,8 @@ class AmountController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository    = app(BudgetRepositoryInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -69,7 +74,7 @@ class AmountController extends Controller
      * Set the amount for a single budget in a specific period.
      *
      * @param Request $request
-     * @param Budget $budget
+     * @param Budget  $budget
      *
      * @return JsonResponse
      */
@@ -109,7 +114,7 @@ class AmountController extends Controller
 
         // Get the average amount of money the user budgets for this budget. And calculate the same for the current amount.
         // If the difference is very large, give the user a notification.
-        $average = $this->repository->budgetedPerDay($budget);
+        $average = $this->opsRepository->budgetedPerDay($budget);
         $current = bcdiv($amount, (string)$periodLength);
         if (bccomp(bcmul('1.3', $average), $current) === -1) {
             $largeDiff = true;
@@ -149,7 +154,7 @@ class AmountController extends Controller
     public function postUpdateIncome(BudgetIncomeRequest $request): RedirectResponse
     {
         /** @var Carbon $start */
-        $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
+        $start = Carbon::createFromFormat('Y-m-d', $request->string('start'));
         /** @var Carbon $end */
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -166,8 +171,8 @@ class AmountController extends Controller
      * Shows the form to update available budget.
      *
      * @param Request $request
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -178,6 +183,6 @@ class AmountController extends Controller
         $available       = round($available, $defaultCurrency->decimal_places);
         $page            = (int)$request->get('page');
 
-        return view('budgets.income', compact('available', 'start', 'end', 'page','defaultCurrency'));
+        return view('budgets.income', compact('available', 'start', 'end', 'page', 'defaultCurrency'));
     }
 }

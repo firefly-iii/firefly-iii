@@ -61,7 +61,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
-     * @covers \FireflyIII\Api\V1\Requests\RuleRequest
+     * @covers \FireflyIII\Api\V1\Requests\RuleStoreRequest
      */
     public function testStore(): void
     {
@@ -112,7 +112,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
-     * @covers \FireflyIII\Api\V1\Requests\RuleRequest
+     * @covers \FireflyIII\Api\V1\Requests\RuleStoreRequest
      */
     public function testStoreNoActions(): void
     {
@@ -157,7 +157,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
-     * @covers \FireflyIII\Api\V1\Requests\RuleRequest
+     * @covers \FireflyIII\Api\V1\Requests\RuleStoreRequest
      */
     public function testStoreNoTriggers(): void
     {
@@ -347,7 +347,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
-     * @covers \FireflyIII\Api\V1\Requests\RuleRequest
+     * @covers \FireflyIII\Api\V1\Requests\RuleUpdateRequest
      */
     public function testUpdate(): void
     {

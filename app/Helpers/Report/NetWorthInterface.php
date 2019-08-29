@@ -30,7 +30,6 @@ use Illuminate\Support\Collection;
 /**
  * Interface NetWorthInterface
  *
- * @package FireflyIII\Helpers\Report
  */
 interface NetWorthInterface
 {

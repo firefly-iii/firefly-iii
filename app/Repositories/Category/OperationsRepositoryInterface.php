@@ -30,7 +30,6 @@ use Illuminate\Support\Collection;
 /**
  * Interface OperationsRepositoryInterface
  *
- * @package FireflyIII\Repositories\Category
  */
 interface OperationsRepositoryInterface
 {

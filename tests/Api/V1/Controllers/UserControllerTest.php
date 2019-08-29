@@ -56,7 +56,7 @@ class UserControllerTest extends TestCase
      * Store new user.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testStoreBasic(): void
     {
@@ -86,7 +86,7 @@ class UserControllerTest extends TestCase
      * Store new user using JSON.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testStoreBasicJson(): void
     {
@@ -118,7 +118,7 @@ class UserControllerTest extends TestCase
      * Store user with info already used.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testStoreNotUnique(): void
     {
@@ -149,7 +149,7 @@ class UserControllerTest extends TestCase
      * Store user with info already used.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testStoreNotUniqueJson(): void
     {
@@ -180,7 +180,7 @@ class UserControllerTest extends TestCase
      * Update user.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testUpdate(): void
     {
@@ -215,7 +215,7 @@ class UserControllerTest extends TestCase
      * Update user.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
-     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     * @covers \FireflyIII\Api\V1\Requests\UserStoreRequest
      */
     public function testUpdateJson(): void
     {
