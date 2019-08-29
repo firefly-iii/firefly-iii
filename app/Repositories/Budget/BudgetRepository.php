@@ -63,37 +63,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * A method that returns the amount of money budgeted per day for this budget,
-     * on average.
-     *
-     * @param Budget $budget
-     *
-     * @return string
-     */
-    public function budgetedPerDay(Budget $budget): string
-    {
-        Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
-        $total = '0';
-        $count = 0;
-        foreach ($budget->budgetlimits as $limit) {
-            $diff   = $limit->start_date->diffInDays($limit->end_date);
-            $diff   = 0 === $diff ? 1 : $diff;
-            $amount = (string)$limit->amount;
-            $perDay = bcdiv($amount, (string)$diff);
-            $total  = bcadd($total, $perDay);
-            $count++;
-            Log::debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
-        }
-        $avg = $total;
-        if ($count > 0) {
-            $avg = bcdiv($total, (string)$count);
-        }
-        Log::debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
-
-        return $avg;
-    }
-
-    /**
      * @return bool
      *  // it's 5.
      */
