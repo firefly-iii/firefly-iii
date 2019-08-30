@@ -233,7 +233,7 @@ class BudgetController extends Controller
     {
         $data           = $request->getAll();
         $data['budget'] = $budget;
-        $budgetLimit    = $this->repository->storeBudgetLimit($data);
+        $budgetLimit    = $this->blRepository->storeBudgetLimit($data);
         $manager        = new Manager;
         $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

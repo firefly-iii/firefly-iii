@@ -75,4 +75,29 @@ interface BudgetLimitRepositoryInterface
      */
     public function setUser(User $user): void;
 
+    /**
+     * @param array $data
+     *
+     * @return BudgetLimit
+     */
+    public function storeBudgetLimit(array $data): BudgetLimit;
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     * @param array       $data
+     *
+     * @return BudgetLimit
+     */
+    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $amount
+     *
+     * @return BudgetLimit|null
+     */
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
+
 }

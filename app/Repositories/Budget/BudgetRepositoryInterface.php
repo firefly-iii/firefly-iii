@@ -23,10 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -126,28 +123,11 @@ interface BudgetRepositoryInterface
     public function setUser(User $user);
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
-
-
-    /**
      * @param array $data
      *
      * @return Budget
      */
     public function store(array $data): Budget;
-
-    /**
-     * @param array $data
-     *
-     * @return BudgetLimit
-     */
-    public function storeBudgetLimit(array $data): BudgetLimit;
 
     /**
      * @param Budget $budget
@@ -156,31 +136,4 @@ interface BudgetRepositoryInterface
      * @return Budget
      */
     public function update(Budget $budget, array $data): Budget;
-
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
-     *
-     * @return AvailableBudget
-     */
-    public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget;
-
-    /**
-     * @param BudgetLimit $budgetLimit
-     * @param array       $data
-     *
-     * @return BudgetLimit
-     */
-    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
-
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $amount
-     *
-     * @return BudgetLimit|null
-     */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
 }

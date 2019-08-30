@@ -34,11 +34,6 @@ use Illuminate\Support\Collection;
 interface NoBudgetRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -47,6 +42,11 @@ interface NoBudgetRepositoryInterface
      * @deprecated
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param Collection $accounts

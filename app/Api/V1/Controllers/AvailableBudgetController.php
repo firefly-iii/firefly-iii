@@ -214,7 +214,7 @@ class AvailableBudgetController extends Controller
         $data['currency_id'] = $currency->id;
 
 
-        $this->repository->updateAvailableBudget($availableBudget, $data);
+        $this->abRepository->updateAvailableBudget($availableBudget, $data);
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

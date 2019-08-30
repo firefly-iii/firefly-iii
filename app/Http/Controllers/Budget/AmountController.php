@@ -29,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -46,6 +47,8 @@ class AmountController extends Controller
 
     /** @var AvailableBudgetRepositoryInterface */
     private $abRepository;
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
@@ -67,6 +70,7 @@ class AmountController extends Controller
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->abRepository  = app(AvailableBudgetRepositoryInterface::class);
+                $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -99,7 +103,7 @@ class AmountController extends Controller
         $periodLength   = $start->diffInDays($end) + 1; // absolute period length.
 
         // update limit amount:
-        $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
+        $budgetLimit = $this->blRepository->updateLimitAmount($budget, $start, $end, $amount);
 
         // calculate what the user has spent in current period.
         $spent = $this->opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
