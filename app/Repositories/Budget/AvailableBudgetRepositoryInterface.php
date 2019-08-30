@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface AvailableBudgetRepositoryInterface
@@ -54,6 +55,15 @@ interface AvailableBudgetRepositoryInterface
      * @return array
      */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+
+    /**
+     * Returns all available budget objects.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
 
     /**
      * @param User $user

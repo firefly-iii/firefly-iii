@@ -91,15 +91,6 @@ interface BudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
-     */
-    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
-
-    /**
-     * Returns all available budget objects.
-     *
      * @param Carbon|null $start
      * @param Carbon|null $end
      *

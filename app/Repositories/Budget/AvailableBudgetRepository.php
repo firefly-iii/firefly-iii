@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -83,6 +84,17 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return $amount;
     }
 
+    /**
+     * Returns all available budget objects.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
+    {
+        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
+    }
 
     /**
      * @param Carbon $start

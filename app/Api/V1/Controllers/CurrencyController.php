@@ -36,6 +36,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -182,8 +183,12 @@ class CurrencyController extends Controller
 
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
+
+        /** @var AvailableBudgetRepositoryInterface $abRepository */
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+
         $repository->setUser($admin);
-        $collection       = $repository->getAvailableBudgetsByCurrency($currency);
+        $collection       = $abRepository->getAvailableBudgetsByCurrency($currency);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

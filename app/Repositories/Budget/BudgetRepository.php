@@ -207,17 +207,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /**
-     * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
-     */
-    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
-    {
-        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
-    }
+
 
     /**
      * Returns all available budget objects.
