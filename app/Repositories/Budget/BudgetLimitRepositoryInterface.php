@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -64,4 +65,14 @@ interface BudgetLimitRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
+
 }

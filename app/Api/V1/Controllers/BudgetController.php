@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\BudgetRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BudgetLimitTransformer;
@@ -51,6 +52,8 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class BudgetController extends Controller
 {
     use TransactionFilter;
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
@@ -67,9 +70,10 @@ class BudgetController extends Controller
                 /** @var User $admin */
                 $admin = auth()->user();
 
-                /** @var BudgetRepositoryInterface repository */
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository   = app(BudgetRepositoryInterface::class);
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser($admin);
+                $this->blRepository->setUser($admin);
 
                 return $next($request);
             }
@@ -78,8 +82,9 @@ class BudgetController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
      * @param Request $request
-     * @param Budget $budget
+     * @param Budget  $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -90,7 +95,7 @@ class BudgetController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budget->id);
-        $collection   = $this->repository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
+        $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
@@ -167,7 +172,7 @@ class BudgetController extends Controller
      * Show a budget.
      *
      * @param Request $request
-     * @param Budget $budget
+     * @param Budget  $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -219,7 +224,8 @@ class BudgetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param BudgetLimitRequest $request
-     * @param Budget $budget
+     * @param Budget             $budget
+     *
      * @return JsonResponse
      * @throws Exception
      */
@@ -246,7 +252,7 @@ class BudgetController extends Controller
      *
      * @param Request $request
      *
-     * @param Budget $budget
+     * @param Budget  $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -311,7 +317,7 @@ class BudgetController extends Controller
      * Update a budget.
      *
      * @param BudgetRequest $request
-     * @param Budget $budget
+     * @param Budget        $budget
      *
      * @return JsonResponse
      */

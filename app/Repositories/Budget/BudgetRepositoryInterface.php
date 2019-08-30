@@ -104,6 +104,7 @@ interface BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
+     * @deprecated
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 

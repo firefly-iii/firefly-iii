@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -155,6 +156,71 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                 return $budgetLimit->transaction_currency_id === $currency->id;
             }
         );
+    }
+
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     *
+     */
+    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
+    {
+        if (null === $end && null === $start) {
+            return $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
+        }
+        if (null === $end xor null === $start) {
+            $query = $budget->budgetlimits()->with(['transactionCurrency'])->orderBy('budget_limits.start_date', 'DESC');
+            // one of the two is null
+            if (null !== $end) {
+                // end date must be before $end.
+                $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
+            }
+            if (null !== $start) {
+                // start date must be after $start.
+                $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
+            }
+            $set = $query->get(['budget_limits.*']);
+
+            return $set;
+        }
+
+        // when both dates are set:
+        $set = $budget->budgetlimits()
+                      ->where(
+                          static function (Builder $q5) use ($start, $end) {
+                              $q5->where(
+                                  static function (Builder $q1) use ($start, $end) {
+                                      // budget limit ends within period
+                                      $q1->where(
+                                          static function (Builder $q2) use ($start, $end) {
+                                              $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                          }
+                                      )
+                                          // budget limit start within period
+                                         ->orWhere(
+                                              static function (Builder $q3) use ($start, $end) {
+                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              }
+                                          );
+                                  }
+                              )
+                                 ->orWhere(
+                                     static function (Builder $q4) use ($start, $end) {
+                                         // or start is before start AND end is after end.
+                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                         $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                                     }
+                                 );
+                          }
+                      )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
+
+        return $set;
     }
 
     /**
