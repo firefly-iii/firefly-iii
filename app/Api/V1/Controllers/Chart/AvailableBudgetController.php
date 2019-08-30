@@ -28,6 +28,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -37,11 +38,14 @@ use Illuminate\Support\Collection;
  */
 class AvailableBudgetController extends Controller
 {
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var BudgetRepositoryInterface */
     private $repository;
 
     /**
      * AvailableBudgetController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -50,9 +54,11 @@ class AvailableBudgetController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $user                = auth()->user();
+                $this->repository    = app(BudgetRepositoryInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->repository->setUser($user);
+                $this->opsRepository->setUser($user);
 
                 return $next($request);
             }
@@ -68,7 +74,7 @@ class AvailableBudgetController extends Controller
     {
         $currency          = $availableBudget->transactionCurrency;
         $budgets           = $this->repository->getActiveBudgets();
-        $budgetInformation = $this->repository->spentInPeriodMc($budgets, new Collection, $availableBudget->start_date, $availableBudget->end_date);
+        $budgetInformation = $this->opsRepository->spentInPeriodMc($budgets, new Collection, $availableBudget->start_date, $availableBudget->end_date);
         $spent             = 0.0;
 
         // get for current currency

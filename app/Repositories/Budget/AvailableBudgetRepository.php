@@ -139,6 +139,34 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return $query->get();
     }
 
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
+     *
+     * @return AvailableBudget
+     */
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
+    {
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
+        if (null === $availableBudget) {
+            $availableBudget = new AvailableBudget;
+            $availableBudget->user()->associate($this->user);
+            $availableBudget->transactionCurrency()->associate($currency);
+            $availableBudget->start_date = $start->format('Y-m-d 00:00:00');
+            $availableBudget->end_date   = $end->format('Y-m-d 00:00:00');
+        }
+        $availableBudget->amount = $amount;
+        $availableBudget->save();
+
+        return $availableBudget;
+    }
+
     /**
      * @param User $user
      */

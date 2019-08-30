@@ -27,6 +27,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -39,6 +40,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 {
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository interface. */
     private $repository;
 
@@ -47,9 +50,9 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      */
     public function __construct()
     {
-        $this->repository   = app(BudgetRepositoryInterface::class);
-        $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-
+        $this->repository    = app(BudgetRepositoryInterface::class);
+        $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -85,7 +88,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
             ];
             // get multi currency expenses first:
             $budgetLimits    = $this->blRepository->getBudgetLimits($budget, $start, $end);
-            $expenses        = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
+            $expenses        = $this->opsRepository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
             $defaultCurrency = app('amount')->getDefaultCurrencyByUser($budget->user);
             Log::debug(sprintf('Default currency for getBudgetReport is %s', $defaultCurrency->code));
             if (0 === count($expenses)) {

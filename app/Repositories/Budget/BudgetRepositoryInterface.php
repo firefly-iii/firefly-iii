@@ -115,38 +115,15 @@ interface BudgetRepositoryInterface
     public function searchBudget(string $query): Collection;
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param string              $amount
-     *
-     * @return AvailableBudget
-     */
-    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
-
-    /**
      * @param Budget $budget
      * @param int    $order
      */
     public function setBudgetOrder(Budget $budget, int $order): void;
 
-
     /**
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * Return multi-currency spent information.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $accounts

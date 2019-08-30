@@ -165,7 +165,7 @@ class AmountController extends Controller
         $amount          = $request->get('amount');
         $page            = 0 === $request->integer('page') ? 1 : $request->integer('page');
         $this->repository->cleanupBudgets();
-        $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
+        $this->abRepository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         app('preferences')->mark();
 
         return redirect(route('budgets.index', [$start->format('Y-m-d')]) . '?page=' . $page);

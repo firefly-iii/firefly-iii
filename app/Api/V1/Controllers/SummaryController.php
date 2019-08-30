@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -59,6 +60,9 @@ class SummaryController extends Controller
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
 
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
+
     /**
      * SummaryController constructor.
      *
@@ -76,12 +80,14 @@ class SummaryController extends Controller
                 $this->budgetRepository  = app(BudgetRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
 
                 $this->billRepository->setUser($user);
                 $this->currencyRepos->setUser($user);
                 $this->budgetRepository->setUser($user);
                 $this->accountRepository->setUser($user);
                 $this->abRepository->setUser($user);
+                $this->opsRepository->setUser($user);
 
 
                 return $next($request);
@@ -343,7 +349,7 @@ class SummaryController extends Controller
         $today     = new Carbon;
         $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
-        $spentInfo = $this->budgetRepository->spentInPeriodMc($budgets, new Collection, $start, $end);
+        $spentInfo = $this->opsRepository->spentInPeriodMc($budgets, new Collection, $start, $end);
         foreach ($available as $currencyId => $amount) {
             $currency = $this->currencyRepos->findNull($currencyId);
             if (null === $currency) {

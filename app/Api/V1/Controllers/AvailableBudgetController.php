@@ -172,7 +172,7 @@ class AvailableBudgetController extends Controller
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency();
         }
-        $availableBudget = $this->repository->setAvailableBudget($currency, $data['start'], $data['end'], $data['amount']);
+        $availableBudget = $this->abRepository->setAvailableBudget($currency, $data['start'], $data['end'], $data['amount']);
         $manager         = new Manager;
         $baseUrl         = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

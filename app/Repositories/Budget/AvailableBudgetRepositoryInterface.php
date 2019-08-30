@@ -66,6 +66,17 @@ interface AvailableBudgetRepositoryInterface
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
+     *
+     * @return AvailableBudget
+     */
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
+
+
+    /**
      * Returns all available budget objects.
      *
      * @param Carbon|null $start
