@@ -210,29 +210,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
     /**
-     * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     *
-     */
-    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
-    {
-        $query = $this->user->availableBudgets();
-
-        if (null !== $start) {
-            $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
-        }
-        if (null !== $end) {
-            $query->where('end_date', '<=', $end->format('Y-m-d H:i:s'));
-        }
-
-        return $query->get();
-    }
-
-    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end

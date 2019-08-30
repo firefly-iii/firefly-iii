@@ -110,7 +110,7 @@ class AvailableBudgetController extends Controller
         $end   = $this->parameters->get('end');
 
         // get list of available budgets. Count it and split it.
-        $collection       = $this->repository->getAvailableBudgetsByDate($start, $end);
+        $collection       = $this->abRepository->getAvailableBudgetsByDate($start, $end);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

@@ -89,17 +89,6 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
-     * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     *
-     */
-    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
-
-    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end

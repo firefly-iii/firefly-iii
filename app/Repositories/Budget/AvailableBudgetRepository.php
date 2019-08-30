@@ -85,18 +85,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
-     */
-    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
-    {
-        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
-    }
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -114,6 +102,41 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * Returns all available budget objects.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
+    {
+        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
+    }
+
+    /**
+     * Returns all available budget objects.
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     *
+     */
+    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
+    {
+        $query = $this->user->availableBudgets();
+
+        if (null !== $start) {
+            $query->where('start_date', '>=', $start->format('Y-m-d H:i:s'));
+        }
+        if (null !== $end) {
+            $query->where('end_date', '<=', $end->format('Y-m-d H:i:s'));
+        }
+
+        return $query->get();
     }
 
     /**
