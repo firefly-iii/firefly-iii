@@ -405,7 +405,7 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $periods  = app('navigation')->listOfPeriods($start, $end);
-        $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
+        $entries  = $this->opsRepository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
         $budgeted = $this->getBudgetedInPeriod($budget, $start, $end);
 
         // join them into one set of data:

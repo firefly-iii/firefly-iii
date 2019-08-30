@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Support\Collection;
@@ -98,8 +99,13 @@ class BudgetController extends Controller
         // generate budget report right here.
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository= app(OperationsRepositoryInterface::class);
+
+
         $budgets    = $repository->getBudgets();
-        $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
+        $data       = $opsRepository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
         $noBudget   = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
         $data       = array_merge($data, $noBudget);
         $report     = $this->filterPeriodReport($data);

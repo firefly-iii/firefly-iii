@@ -57,6 +57,17 @@ interface OperationsRepositoryInterface
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
 
     /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void;

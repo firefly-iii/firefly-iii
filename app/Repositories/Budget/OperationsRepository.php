@@ -133,6 +133,58 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * This method is being used to generate the budget overview in the year/multi-year report. Its used
+     * in both the year/multi-year budget overview AND in the accompanying chart.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
+        $data         = [];
+
+
+        // get all transactions:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setBudgets($budgets);
+        $journals = $collector->getExtractedJournals();
+
+        // loop transactions:
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            // prep data array for currency:
+            $budgetId   = (int)$journal['budget_id'];
+            $budgetName = $journal['budget_name'];
+            $currencyId = (int)$journal['currency_id'];
+            $key        = sprintf('%d-%d', $budgetId, $currencyId);
+
+            $data[$key]                   = $data[$key] ?? [
+                    'id'                      => $budgetId,
+                    'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'entries'                 => [],
+                ];
+            $date                         = $journal['date']->format($carbonFormat);
+            $data[$key]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
+        }
+
+        return $data;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void

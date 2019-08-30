@@ -89,17 +89,6 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
      * @return Collection
      */
     public function getBudgets(): Collection;
@@ -112,7 +101,6 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getByIds(array $budgetIds): Collection;
-
 
     /**
      * @return Collection
