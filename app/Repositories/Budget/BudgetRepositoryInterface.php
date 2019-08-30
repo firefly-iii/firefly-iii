@@ -89,15 +89,6 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
-
-    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start

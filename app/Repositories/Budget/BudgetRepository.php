@@ -36,7 +36,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -206,7 +205,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $set;
     }
-
 
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used

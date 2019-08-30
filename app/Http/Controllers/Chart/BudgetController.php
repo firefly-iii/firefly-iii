@@ -30,6 +30,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -51,6 +52,8 @@ class BudgetController extends Controller
     protected $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     protected $repository;
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
 
     /**
      * BudgetController constructor.
@@ -66,6 +69,7 @@ class BudgetController extends Controller
                 $this->generator     = app(GeneratorInterface::class);
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -351,7 +355,7 @@ class BudgetController extends Controller
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             // get relevant repetitions:
-            $limits   = $this->repository->getBudgetLimits($budget, $start, $end);
+            $limits   = $this->blRepository->getBudgetLimits($budget, $start, $end);
             $expenses = $this->getExpensesForBudget($limits, $budget, $start, $end);
 
             foreach ($expenses as $name => $row) {

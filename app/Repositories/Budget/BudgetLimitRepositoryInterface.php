@@ -62,11 +62,6 @@ interface BudgetLimitRepositoryInterface
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
@@ -74,5 +69,10 @@ interface BudgetLimitRepositoryInterface
      * @return Collection
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
 }

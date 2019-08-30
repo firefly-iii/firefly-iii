@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Report;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -36,17 +37,18 @@ use Log;
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
     /** @var BudgetRepositoryInterface The budget repository interface. */
     private $repository;
 
     /**
      * BudgetReportHelper constructor.
-     *
-     * @param BudgetRepositoryInterface $repository
      */
-    public function __construct(BudgetRepositoryInterface $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository   = app(BudgetRepositoryInterface::class);
+        $this->blRepository = app(BudgetLimitRepositoryInterface::class);
 
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
@@ -82,7 +84,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 'rows'        => [],
             ];
             // get multi currency expenses first:
-            $budgetLimits    = $this->repository->getBudgetLimits($budget, $start, $end);
+            $budgetLimits    = $this->blRepository->getBudgetLimits($budget, $start, $end);
             $expenses        = $this->repository->spentInPeriodMc(new Collection([$budget]), $accounts, $start, $end);
             $defaultCurrency = app('amount')->getDefaultCurrencyByUser($budget->user);
             Log::debug(sprintf('Default currency for getBudgetReport is %s', $defaultCurrency->code));

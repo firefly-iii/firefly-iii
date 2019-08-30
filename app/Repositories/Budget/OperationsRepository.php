@@ -176,9 +176,9 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     private function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
+        /** @var BudgetLimitRepositoryInterface $blRepository */
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
 
-        return $repository->getBudgetLimits($budget, $start, $end);
+        return $blRepository->getBudgetLimits($budget, $start, $end);
     }
 }

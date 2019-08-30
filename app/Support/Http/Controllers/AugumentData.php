@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -75,8 +76,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -133,8 +134,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -212,9 +213,9 @@ trait AugumentData
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
      * @param Collection $budgetLimits
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Collection
      */
@@ -295,8 +296,8 @@ trait AugumentData
      */
     protected function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
+        /** @var BudgetLimitRepositoryInterface $blRepository */
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         $key      = app('navigation')->preferredCarbonFormat($start, $end);
         $range    = app('navigation')->preferredRangeFormat($start, $end);
@@ -307,7 +308,7 @@ trait AugumentData
             $currentStart = app('navigation')->startOfPeriod($current, $range);
             /** @var Carbon $currentEnd */
             $currentEnd       = app('navigation')->endOfPeriod($current, $range);
-            $budgetLimits     = $repository->getBudgetLimits($budget, $currentStart, $currentEnd);
+            $budgetLimits     = $blRepository->getBudgetLimits($budget, $currentStart, $currentEnd);
             $index            = $currentStart->format($key);
             $budgeted[$index] = $budgetLimits->sum('amount');
             $currentEnd->addDay();
@@ -345,9 +346,9 @@ trait AugumentData
      * Get the expenses for a budget in a date range.
      *
      * @param Collection $limits
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -384,64 +385,6 @@ trait AugumentData
     }
 
     /**
-     *
-     * Returns an array with the following values:
-     * 0 =>
-     *   'name' => name of budget + repetition
-     *   'left' => left in budget repetition (always zero)
-     *   'overspent' => spent more than budget repetition? (always zero)
-     *   'spent' => actually spent in period for budget
-     * 1 => (etc)
-     *
-     * @param Budget $budget
-     * @param Collection $limits
-     *
-     * @return array
-     *
-     */
-    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
-    {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        $return = [];
-        $format = (string)trans('config.month_and_day');
-        $name   = $budget->name;
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($limits as $budgetLimit) {
-            $expenses = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
-            $expenses = app('steam')->positive($expenses);
-
-            if ($limits->count() > 1) {
-                $name = $budget->name . ' ' . trans(
-                        'firefly.between_dates',
-                        [
-                            'start' => $budgetLimit->start_date->formatLocalized($format),
-                            'end'   => $budgetLimit->end_date->formatLocalized($format),
-                        ]
-                    );
-            }
-            $amount       = $budgetLimit->amount;
-            $leftInLimit  = bcsub($amount, $expenses);
-            $hasOverspent = bccomp($leftInLimit, '0') === -1;
-            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
-            $spent        = $hasOverspent ? $amount : $expenses;
-            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
-
-            $return[$name] = [
-                'left'      => $left,
-                'overspent' => $overspent,
-                'spent'     => $spent,
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
      * Gets all budget limits for a budget.
      *
      * @param Budget $budget
@@ -452,11 +395,11 @@ trait AugumentData
      */
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
+
+        /** @var BudgetLimitRepositoryInterface $blRepository */
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         // properties for cache
         $cache = new CacheProperties;
@@ -469,7 +412,7 @@ trait AugumentData
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $set    = $repository->getBudgetLimits($budget, $start, $end);
+        $set    = $blRepository->getBudgetLimits($budget, $start, $end);
         $limits = new Collection();
 
         /** @var BudgetLimit $entry */
@@ -553,7 +496,6 @@ trait AugumentData
         return $grouped;
     }
 
-
     /**
      * Group transactions by tag.
      *
@@ -569,7 +511,7 @@ trait AugumentData
         foreach ($array as $journal) {
             $tags = $journal['tags'] ?? [];
             /**
-             * @var int $id
+             * @var int   $id
              * @var array $tag
              */
             foreach ($tags as $id => $tag) {
@@ -581,15 +523,13 @@ trait AugumentData
         return $grouped;
     }
 
-
-
     /**
      * Spent by budget.
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -640,15 +580,13 @@ trait AugumentData
         return $sum;
     }
 
-
-
     /**
      * Spent by category.
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -699,15 +637,13 @@ trait AugumentData
         return $sum;
     }
 
-
-
     /**
      * Spent in a period.
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -747,7 +683,63 @@ trait AugumentData
         return $sum;
     }
 
+    /**
+     *
+     * Returns an array with the following values:
+     * 0 =>
+     *   'name' => name of budget + repetition
+     *   'left' => left in budget repetition (always zero)
+     *   'overspent' => spent more than budget repetition? (always zero)
+     *   'spent' => actually spent in period for budget
+     * 1 => (etc)
+     *
+     * @param Budget     $budget
+     * @param Collection $limits
+     *
+     * @return array
+     *
+     */
+    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
 
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+        $return = [];
+        $format = (string)trans('config.month_and_day');
+        $name   = $budget->name;
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($limits as $budgetLimit) {
+            $expenses = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
+            $expenses = app('steam')->positive($expenses);
+
+            if ($limits->count() > 1) {
+                $name = $budget->name . ' ' . trans(
+                        'firefly.between_dates',
+                        [
+                            'start' => $budgetLimit->start_date->formatLocalized($format),
+                            'end'   => $budgetLimit->end_date->formatLocalized($format),
+                        ]
+                    );
+            }
+            $amount       = $budgetLimit->amount;
+            $leftInLimit  = bcsub($amount, $expenses);
+            $hasOverspent = bccomp($leftInLimit, '0') === -1;
+            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
+            $spent        = $hasOverspent ? $amount : $expenses;
+            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
+
+            $return[$name] = [
+                'left'      => $left,
+                'overspent' => $overspent,
+                'spent'     => $spent,
+            ];
+        }
+
+        return $return;
+    }
 
     /**
      * Returns an array with the following values:
