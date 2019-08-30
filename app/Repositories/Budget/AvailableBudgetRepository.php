@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Log;
 
@@ -58,6 +60,48 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         } catch (Exception $e) {
             Log::error(sprintf('Could not delete available budget: %s', $e->getMessage()));
         }
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
+    {
+        $amount          = '0';
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                      ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
+        if (null !== $availableBudget) {
+            $amount = (string)$availableBudget->amount;
+        }
+
+        return $amount;
+    }
+
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
+    {
+        $return           = [];
+        $availableBudgets = $this->user->availableBudgets()
+                                       ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                       ->where('end_date', $end->format('Y-m-d 00:00:00'))->get();
+        /** @var AvailableBudget $availableBudget */
+        foreach ($availableBudgets as $availableBudget) {
+            $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
+        }
+
+        return $return;
     }
 
     /**

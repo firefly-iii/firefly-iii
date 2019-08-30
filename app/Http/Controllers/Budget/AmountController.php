@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -43,6 +44,8 @@ class AmountController extends Controller
 {
     use DateCalculation;
 
+    /** @var AvailableBudgetRepositoryInterface */
+    private $abRepository;
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
     /** @var BudgetRepositoryInterface The budget repository */
@@ -63,6 +66,7 @@ class AmountController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->abRepository  = app(AvailableBudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -179,7 +183,7 @@ class AmountController extends Controller
     public function updateIncome(Request $request, Carbon $start, Carbon $end)
     {
         $defaultCurrency = app('amount')->getDefaultCurrency();
-        $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
+        $available       = $this->abRepository->getAvailableBudget($defaultCurrency, $start, $end);
         $available       = round($available, $defaultCurrency->decimal_places);
         $page            = (int)$request->get('page');
 

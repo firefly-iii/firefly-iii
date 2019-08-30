@@ -89,27 +89,6 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return string
-     */
-    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
-
-    /**
-     * TODO only used in API
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
-
-    /**
-     * TODO only used in API
-     *
      * Returns all available budget objects.
      *
      * @param TransactionCurrency $currency

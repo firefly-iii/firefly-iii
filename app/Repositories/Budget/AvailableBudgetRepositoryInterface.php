@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 
 /**
@@ -37,7 +39,25 @@ interface AvailableBudgetRepositoryInterface
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void;
+
 }

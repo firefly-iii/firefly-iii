@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -59,6 +60,9 @@ class BoxController extends Controller
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
 
+        /** @var AvailableBudgetRepositoryInterface $abRepository */
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+
 
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
@@ -75,7 +79,7 @@ class BoxController extends Controller
         }
         // get available amount
         $currency  = app('amount')->getDefaultCurrency();
-        $available = $repository->getAvailableBudget($currency, $start, $end);
+        $available = $abRepository->getAvailableBudget($currency, $start, $end);
 
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();

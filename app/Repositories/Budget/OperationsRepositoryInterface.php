@@ -34,11 +34,6 @@ use Illuminate\Support\Collection;
 interface OperationsRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      *
@@ -60,6 +55,11 @@ interface OperationsRepositoryInterface
      * @deprecated
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param Collection $budgets
