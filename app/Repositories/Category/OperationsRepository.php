@@ -78,12 +78,19 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
+        $collector->withCategoryInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            $categoryId = (int)$journal['category_id'];
+            $currencyId   = (int)$journal['currency_id'];
+            $categoryId   = (int)$journal['category_id'];
+            $categoryName = (string)$journal['category_name'];
+
+            // catch "no category" entries.
+            if (0 === $categoryId) {
+                $categoryName = (string)trans('firefly.no_category');
+            }
 
             // info about the currency:
             $array[$currencyId] = $array[$currencyId] ?? [
@@ -98,7 +105,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
                     'id'                   => $categoryId,
-                    'name'                 => $journal['category_name'],
+                    'name'                 => $categoryName,
                     'transaction_journals' => [],
                 ];
 
@@ -143,12 +150,19 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
+        $collector->withCategoryInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
         foreach ($journals as $journal) {
             $currencyId = (int)$journal['currency_id'];
             $categoryId = (int)$journal['category_id'];
+            $categoryName = (string)$journal['category_name'];
+
+            // catch "no category" entries.
+            if (0 === $categoryId) {
+                $categoryName = (string)trans('firefly.no_category');
+            }
 
             // info about the currency:
             $array[$currencyId] = $array[$currencyId] ?? [
@@ -163,7 +177,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
                     'id'                   => $categoryId,
-                    'name'                 => $journal['category_name'],
+                    'name'                 => $categoryName,
                     'transaction_journals' => [],
                 ];
 
