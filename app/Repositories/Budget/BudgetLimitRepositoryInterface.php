@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\User;
 
 /**
@@ -30,6 +31,13 @@ use FireflyIII\User;
  */
 interface BudgetLimitRepositoryInterface
 {
+    /**
+     * Destroy a budget limit.
+     *
+     * @param BudgetLimit $budgetLimit
+     */
+    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
+
     /**
      * @param User $user
      */

@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BudgetLimitTransformer;
@@ -53,6 +54,10 @@ class BudgetLimitController extends Controller
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
+
+
     /**
      * BudgetLimitController constructor.
      *
@@ -66,7 +71,9 @@ class BudgetLimitController extends Controller
                 /** @var User $user */
                 $user             = auth()->user();
                 $this->repository = app(BudgetRepositoryInterface::class);
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser($user);
+                $this->blRepository->setUser($user);
 
                 return $next($request);
             }
@@ -83,7 +90,7 @@ class BudgetLimitController extends Controller
      */
     public function delete(BudgetLimit $budgetLimit): JsonResponse
     {
-        $this->repository->destroyBudgetLimit($budgetLimit);
+        $this->blRepository->destroyBudgetLimit($budgetLimit);
 
         return response()->json([], 204);
     }

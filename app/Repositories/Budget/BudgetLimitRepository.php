@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 
+use Exception;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\User;
 use Log;
 
@@ -44,6 +46,20 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
             die(get_class($this));
+        }
+    }
+
+    /**
+     * Destroy a budget limit.
+     *
+     * @param BudgetLimit $budgetLimit
+     */
+    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
+    {
+        try {
+            $budgetLimit->delete();
+        } catch (Exception $e) {
+            Log::info(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
     }
 

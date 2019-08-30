@@ -111,20 +111,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Destroy a budget limit.
-     *
-     * @param BudgetLimit $budgetLimit
-     */
-    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
-    {
-        try {
-            $budgetLimit->delete();
-        } catch (Exception $e) {
-            Log::info(sprintf('Could not delete budget limit: %s', $e->getMessage()));
-        }
-    }
-
-    /**
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
