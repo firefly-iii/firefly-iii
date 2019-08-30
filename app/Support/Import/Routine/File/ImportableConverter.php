@@ -90,6 +90,74 @@ class ImportableConverter
     }
 
     /**
+     * @param ImportJob $importJob
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob = $importJob;
+        $this->config    = $importJob->configuration;
+
+        // repository is used for error messages
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
+
+        // asset account mapper can map asset accounts (makes sense right?)
+        $this->assetMapper = app(AssetAccountMapper::class);
+        $this->assetMapper->setUser($importJob->user);
+        $this->assetMapper->setDefaultAccount($this->config['import-account'] ?? 0);
+
+        // asset account repository is used for currency information
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->accountRepository->setUser($importJob->user);
+
+        // opposing account mapper:
+        $this->opposingMapper = app(OpposingAccountMapper::class);
+        $this->opposingMapper->setUser($importJob->user);
+
+        // currency mapper:
+        $this->currencyMapper = app(CurrencyMapper::class);
+        $this->currencyMapper->setUser($importJob->user);
+        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($importJob->user);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param array $mappedValues
+     */
+    public function setMappedValues(array $mappedValues): void
+    {
+        $this->mappedValues = $mappedValues;
+    }
+
+    /**
+     * @param string|null $date
+     *
+     * @return string|null
+     */
+    private function convertDateValue(string $date = null): ?string
+    {
+        $result = null;
+        if (null !== $date) {
+            try {
+                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
+                $dateFormat = $this->config['date-format'] ?? 'Ymd';
+                if ('!' !== $dateFormat{0}) {
+                    $dateFormat = '!' . $dateFormat;
+                }
+                $object = Carbon::createFromFormat($dateFormat, $date);
+                $result = $object->format('Y-m-d H:i:s');
+                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
+            } catch (InvalidDateException|InvalidArgumentException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param ImportTransaction $importable
      *
      * @return array
@@ -110,13 +178,18 @@ class ImportableConverter
             throw new FireflyException('No transaction amount information.');
         }
 
-        $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
-        $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+        // amount is 0? skip
+        if (0 === bccomp($amount, '0')) {
+            throw new FireflyException('Amount of transaction is zero.');
+        }
+
+        $source      = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
+        $destination = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
 
         // if the amount is positive, switch source and destination (account and opposing account)
         if (1 === bccomp($amount, '0')) {
-            $source          = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
-            $destination     = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
+            $source      = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+            $destination = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
@@ -220,25 +293,6 @@ class ImportableConverter
     }
 
     /**
-     * @param string $source
-     * @param string $destination
-     *
-     * @return string
-     */
-    private function getTransactionType(string $source, string $destination): string
-    {
-        $type = 'unknown';
-
-        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
-        if (null !== $newType) {
-            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
-
-            return (string)$newType;
-        }
-        return $type;
-    }
-
-    /**
      * @param Account $source
      * @param Account $destination
      *
@@ -269,70 +323,22 @@ class ImportableConverter
     }
 
     /**
-     * @param string|null $date
+     * @param string $source
+     * @param string $destination
      *
-     * @return string|null
+     * @return string
      */
-    private function convertDateValue(string $date = null): ?string
+    private function getTransactionType(string $source, string $destination): string
     {
-        $result = null;
-        if (null !== $date) {
-            try {
-                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
-                $dateFormat = $this->config['date-format'] ?? 'Ymd';
-                if ('!' !== $dateFormat{0}) {
-                    $dateFormat = '!' . $dateFormat;
-                }
-                $object = Carbon::createFromFormat($dateFormat, $date);
-                $result = $object->format('Y-m-d H:i:s');
-                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
-            } catch (InvalidDateException|InvalidArgumentException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
+        $type = 'unknown';
+
+        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
+        if (null !== $newType) {
+            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
+
+            return (string)$newType;
         }
 
-        return $result;
-    }
-
-    /**
-     * @param ImportJob $importJob
-     */
-    public function setImportJob(ImportJob $importJob): void
-    {
-        $this->importJob = $importJob;
-        $this->config    = $importJob->configuration;
-
-        // repository is used for error messages
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($importJob->user);
-
-        // asset account mapper can map asset accounts (makes sense right?)
-        $this->assetMapper = app(AssetAccountMapper::class);
-        $this->assetMapper->setUser($importJob->user);
-        $this->assetMapper->setDefaultAccount($this->config['import-account'] ?? 0);
-
-        // asset account repository is used for currency information
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->accountRepository->setUser($importJob->user);
-
-        // opposing account mapper:
-        $this->opposingMapper = app(OpposingAccountMapper::class);
-        $this->opposingMapper->setUser($importJob->user);
-
-        // currency mapper:
-        $this->currencyMapper = app(CurrencyMapper::class);
-        $this->currencyMapper->setUser($importJob->user);
-        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($importJob->user);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param array $mappedValues
-     */
-    public function setMappedValues(array $mappedValues): void
-    {
-        $this->mappedValues = $mappedValues;
+        return $type;
     }
 }

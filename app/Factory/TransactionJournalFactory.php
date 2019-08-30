@@ -52,10 +52,10 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
-    /** @var AccountValidator */
-    private $accountValidator;
     /** @var AccountRepositoryInterface */
     private $accountRepository;
+    /** @var AccountValidator */
+    private $accountValidator;
     /** @var BillRepositoryInterface */
     private $billRepository;
     /** @var CurrencyRepositoryInterface */
@@ -143,7 +143,7 @@ class TransactionJournalFactory
             if (null !== $journal) {
                 $collection->push($journal);
             }
-            if(null === $journal) {
+            if (null === $journal) {
                 Log::error('The createJournal() method returned NULL. This may indicate an error.');
             }
         }
@@ -171,8 +171,8 @@ class TransactionJournalFactory
 
     /**
      * @param TransactionJournal $journal
-     * @param NullArrayObject $data
-     * @param string $field
+     * @param NullArrayObject    $data
+     * @param string             $field
      */
     protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
     {
@@ -187,32 +187,6 @@ class TransactionJournalFactory
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
-    }
-
-    /**
-     * Link a piggy bank to this journal.
-     *
-     * @param TransactionJournal $journal
-     * @param NullArrayObject $data
-     */
-    private function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        Log::debug('Will now store piggy event.');
-        if (!$journal->isTransfer()) {
-            Log::debug('Journal is not a transfer, do nothing.');
-
-            return;
-        }
-
-        $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
-
-        if (null !== $piggyBank) {
-            $this->piggyEventFactory->create($journal, $piggyBank);
-            Log::debug('Create piggy event.');
-
-            return;
-        }
-        Log::debug('Create no piggy event');
     }
 
     /**
@@ -302,6 +276,10 @@ class TransactionJournalFactory
             $destForeignCurrency   = $foreignCurrency;
         }
 
+        $description = '' === $description ? '(empty description)' : $description;
+        $description = substr($description, 0, 255);
+
+
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
             [
@@ -309,7 +287,7 @@ class TransactionJournalFactory
                 'transaction_type_id'     => $type->id,
                 'bill_id'                 => $billId,
                 'transaction_currency_id' => $currency->id,
-                'description'             => '' === $description ? '(empty description)' : $description,
+                'description'             => $description,
                 'date'                    => $carbon->format('Y-m-d H:i:s'),
                 'order'                   => $order,
                 'tag_count'               => 0,
@@ -342,19 +320,19 @@ class TransactionJournalFactory
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         // TODO this can't be faked so it can't be tested.
-//        $count = $journal->transactions()->count();
-//        if (2 !== $count) {
-//            // @codeCoverageIgnoreStart
-//            Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
-//            try {
-//                $journal->delete();
-//            } catch (Exception $e) {
-//                Log::debug(sprintf('Dont care: %s.', $e->getMessage()));
-//            }
-//
-//            return null;
-//            // @codeCoverageIgnoreEnd
-//        }
+        //        $count = $journal->transactions()->count();
+        //        if (2 !== $count) {
+        //            // @codeCoverageIgnoreStart
+        //            Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
+        //            try {
+        //                $journal->delete();
+        //            } catch (Exception $e) {
+        //                Log::debug(sprintf('Dont care: %s.', $e->getMessage()));
+        //            }
+        //
+        //            return null;
+        //            // @codeCoverageIgnoreEnd
+        //        }
         $journal->completed = true;
         $journal->save();
 
@@ -382,6 +360,23 @@ class TransactionJournalFactory
     }
 
     /**
+     * @param TransactionCurrency|null $currency
+     * @param Account                  $account
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
+    {
+        $preference = $this->accountRepository->getAccountCurrency($account);
+        if (null === $preference && null === $currency) {
+            // return user's default:
+            return app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
+        return $preference ?? $currency;
+    }
+
+    /**
      * @param NullArrayObject $row
      *
      * @return string
@@ -391,7 +386,7 @@ class TransactionJournalFactory
         $dataRow = $row->getArrayCopy();
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json                   = json_encode($dataRow);
+        $json = json_encode($dataRow);
         if (false === $json) {
             // @codeCoverageIgnoreStart
             $json = json_encode((string)microtime());
@@ -406,7 +401,7 @@ class TransactionJournalFactory
 
     /**
      * @param TransactionJournal $journal
-     * @param NullArrayObject $transaction
+     * @param NullArrayObject    $transaction
      */
     private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
     {
@@ -415,9 +410,35 @@ class TransactionJournalFactory
         }
     }
 
+    /**
+     * Link a piggy bank to this journal.
+     *
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     */
+    private function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        Log::debug('Will now store piggy event.');
+        if (!$journal->isTransfer()) {
+            Log::debug('Journal is not a transfer, do nothing.');
+
+            return;
+        }
+
+        $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
+
+        if (null !== $piggyBank) {
+            $this->piggyEventFactory->create($journal, $piggyBank);
+            Log::debug('Create piggy event.');
+
+            return;
+        }
+        Log::debug('Create no piggy event');
+    }
 
     /**
      * @param NullArrayObject $data
+     *
      * @throws FireflyException
      */
     private function validateAccounts(NullArrayObject $data): void
@@ -444,21 +465,5 @@ class TransactionJournalFactory
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore
         }
-    }
-
-    /**
-     * @param TransactionCurrency|null $currency
-     * @param Account $account
-     * @return TransactionCurrency
-     */
-    private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
-    {
-        $preference = $this->accountRepository->getAccountCurrency($account);
-        if (null === $preference && null === $currency) {
-            // return user's default:
-            return app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-
-        return $preference ?? $currency;
     }
 }
