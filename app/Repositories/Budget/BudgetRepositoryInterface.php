@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
     /**
      * @return bool
      */
@@ -47,11 +46,6 @@ interface BudgetRepositoryInterface
      * @return bool
      */
     public function destroy(Budget $budget): bool;
-
-    /**
-     * @param AvailableBudget $availableBudget
-     */
-    public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
 
     /**
      * Destroy a budget limit.

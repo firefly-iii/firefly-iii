@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use FireflyIII\Models\AvailableBudget;
 use FireflyIII\User;
 
 /**
@@ -30,6 +31,11 @@ use FireflyIII\User;
  */
 interface AvailableBudgetRepositoryInterface
 {
+    /**
+     * @param AvailableBudget $availableBudget
+     */
+    public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
+
     /**
      * @param User $user
      */

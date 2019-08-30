@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Exception;
+use FireflyIII\Models\AvailableBudget;
 use FireflyIII\User;
 use Log;
 
@@ -47,11 +49,24 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
+     * @param AvailableBudget $availableBudget
+     */
+    public function destroyAvailableBudget(AvailableBudget $availableBudget): void
+    {
+        try {
+            $availableBudget->delete();
+        } catch (Exception $e) {
+            Log::error(sprintf('Could not delete available budget: %s', $e->getMessage()));
+        }
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
+
 
 }
