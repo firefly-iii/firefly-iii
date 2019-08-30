@@ -6,7 +6,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">
-                    <a href="{{ route('reports.report.default', ['allAssetAccounts','currentMonthStart','currentMonthEnd']) }}">{{ 'balance'|_ }}</a></span>
+                    <a href="{{ route('reports.report.default', ['allAssetAccounts',start.format('Ymd'),end.format('Ymd')]) }}">{{ 'balance'|_ }}</a></span>
                 <span class="info-box-number" id="box-balance-sums"></span>
 
                 <div class="progress" id="box-balance-progress">
