@@ -24,7 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -36,7 +40,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     /** @var User */
     private $user;
 
-
     /**
      * Constructor.
      */
@@ -46,6 +49,52 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
             die(get_class($this));
         }
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->withoutBudget();
+        $journals = $collector->getExtractedJournals();
+        $data     = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
+
+            $data[$currencyId] = $data[$currencyId] ?? [
+                    'id'                      => 0,
+                    'name'                    => sprintf('%s (%s)', trans('firefly.no_budget'), $journal['currency_name']),
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'entries'                 => [],
+                ];
+            $date              = $journal['date']->format($carbonFormat);
+
+            if (!isset($data[$currencyId]['entries'][$date])) {
+                $data[$currencyId]['entries'][$date] = '0';
+            }
+            $data[$currencyId]['entries'][$date] = bcadd($data[$currencyId]['entries'][$date], $journal['amount']);
+        }
+
+        return $data;
     }
 
     /**

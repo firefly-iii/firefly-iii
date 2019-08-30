@@ -108,15 +108,6 @@ interface BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
      * @param string $query
      *
      * @return Collection

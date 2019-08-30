@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 
+use Carbon\Carbon;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface NoBudgetRepositoryInterface
@@ -35,4 +37,14 @@ interface NoBudgetRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 }

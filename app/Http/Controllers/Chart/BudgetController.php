@@ -32,6 +32,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
@@ -55,6 +56,9 @@ class BudgetController extends Controller
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
 
+    /** @var NoBudgetRepositoryInterface */
+    private $nbRepository;
+
     /**
      * BudgetController constructor.
      *
@@ -70,6 +74,7 @@ class BudgetController extends Controller
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
+                $this->nbRepository  = app(NoBudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -453,7 +458,7 @@ class BudgetController extends Controller
 
         // the expenses:
         $periods   = app('navigation')->listOfPeriods($start, $end);
-        $entries   = $this->repository->getNoBudgetPeriodReport($accounts, $start, $end);
+        $entries   = $this->nbRepository->getNoBudgetPeriodReport($accounts, $start, $end);
         $chartData = [];
 
         // join them:
