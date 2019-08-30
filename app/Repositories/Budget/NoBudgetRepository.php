@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -49,6 +50,58 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
             die(get_class($this));
         }
+    }
+
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals   = $collector->getExtractedJournals();
+        $return     = [];
+        $total      = [];
+        $currencies = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $code = $journal['currency_code'];
+            if (!isset($currencies[$code])) {
+                $currencies[$code] = [
+                    'id'             => $journal['currency_id'],
+                    'name'           => $journal['currency_name'],
+                    'symbol'         => $journal['currency_symbol'],
+                    'decimal_places' => $journal['currency_decimal_places'],
+                ];
+            }
+            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
+        }
+        foreach ($total as $code => $spent) {
+            /** @var TransactionCurrency $currency */
+            $currency = $currencies[$code];
+            $return[] = [
+                'currency_id'             => $currency['id'],
+                'currency_code'           => $code,
+                'currency_name'           => $currency['name'],
+                'currency_symbol'         => $currency['symbol'],
+                'currency_decimal_places' => $currency['decimal_places'],
+                'amount'                  => $spent,
+            ];
+        }
+
+        return $return;
     }
 
     /**

@@ -47,4 +47,14 @@ interface NoBudgetRepositoryInterface
      * @deprecated
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
 }
