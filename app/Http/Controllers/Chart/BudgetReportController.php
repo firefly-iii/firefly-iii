@@ -27,6 +27,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
@@ -43,6 +44,8 @@ use Illuminate\Support\Collection;
 class BudgetReportController extends Controller
 {
     use AugumentData, TransactionCalculation;
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
     /** @var GeneratorInterface Chart generation methods. */
@@ -50,6 +53,7 @@ class BudgetReportController extends Controller
 
     /**
      * BudgetReportController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -59,6 +63,7 @@ class BudgetReportController extends Controller
             function ($request, $next) {
                 $this->generator        = app(GeneratorInterface::class);
                 $this->budgetRepository = app(BudgetRepositoryInterface::class);
+                $this->blRepository     = app(BudgetLimitRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -176,7 +181,7 @@ class BudgetReportController extends Controller
                 'entries' => [],
             ];
         }
-        $allBudgetLimits = $this->budgetRepository->getAllBudgetLimits($start, $end);
+        $allBudgetLimits = $this->blRepository->getAllBudgetLimits($start, $end);
         $sumOfExpenses   = [];
         $leftOfLimits    = [];
         while ($currentStart < $end) {

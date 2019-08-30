@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use Carbon\Carbon;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface BudgetLimitRepositoryInterface
@@ -37,6 +40,25 @@ interface BudgetLimitRepositoryInterface
      * @param BudgetLimit $budgetLimit
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
+
+    /**
+     * TODO this method is not multi-currency aware.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection;
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
 
     /**
      * @param User $user

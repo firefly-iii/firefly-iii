@@ -114,7 +114,7 @@ class BudgetLimitController extends Controller
 
         $collection = new Collection;
         if (null === $budget) {
-            $collection = $this->repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
+            $collection = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         }
         if (null !== $budget) {
             $collection = $this->repository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));

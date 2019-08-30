@@ -36,6 +36,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -56,7 +57,6 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -77,6 +77,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyRepository constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -100,7 +101,7 @@ class CurrencyController extends Controller
     /**
      * Display a list of accounts.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -158,7 +159,7 @@ class CurrencyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param Request             $request
      *
      * @param TransactionCurrency $currency
      *
@@ -207,7 +208,7 @@ class CurrencyController extends Controller
     /**
      * List all bills
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -222,7 +223,7 @@ class CurrencyController extends Controller
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $unfiltered  = $repository->getBills();
+        $unfiltered = $repository->getBills();
 
         // filter and paginate list:
         $collection = $unfiltered->filter(
@@ -253,7 +254,7 @@ class CurrencyController extends Controller
     /**
      * List all budget limits
      *
-     * @param Request $request
+     * @param Request             $request
      *
      * @param TransactionCurrency $currency
      *
@@ -262,12 +263,13 @@ class CurrencyController extends Controller
      */
     public function budgetLimits(Request $request, TransactionCurrency $currency): JsonResponse
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository   = app(BudgetRepositoryInterface::class);
+        /** @var BudgetLimitRepositoryInterface $blRepository */
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
+
         $manager      = new Manager;
         $baseUrl      = $request->getSchemeAndHttpHost() . '/api/v1';
         $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection   = $repository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
+        $collection   = $blRepository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
@@ -288,7 +290,7 @@ class CurrencyController extends Controller
     /**
      * Show a list of known exchange rates
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -350,7 +352,7 @@ class CurrencyController extends Controller
     /**
      * Disable a currency.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -383,7 +385,7 @@ class CurrencyController extends Controller
     /**
      * Enable a currency.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -447,7 +449,7 @@ class CurrencyController extends Controller
     /**
      * Make the currency a default currency.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -479,7 +481,7 @@ class CurrencyController extends Controller
     /**
      * List all recurring transactions.
      *
-     * @param Request $request
+     * @param Request             $request
      *
      * @param TransactionCurrency $currency
      *
@@ -539,7 +541,7 @@ class CurrencyController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -593,7 +595,7 @@ class CurrencyController extends Controller
     /**
      * Show a currency.
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
@@ -654,7 +656,7 @@ class CurrencyController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request $request
+     * @param Request             $request
      *
      * @param TransactionCurrency $currency
      *
@@ -712,7 +714,7 @@ class CurrencyController extends Controller
     /**
      * Update a currency.
      *
-     * @param CurrencyRequest $request
+     * @param CurrencyRequest     $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse

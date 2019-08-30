@@ -24,9 +24,13 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -61,6 +65,96 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         } catch (Exception $e) {
             Log::info(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     *
+     */
+    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
+    {
+        // both are NULL:
+        if (null === $start && null === $end) {
+            $set = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                              ->with(['budget'])
+                              ->where('budgets.user_id', $this->user->id)
+                              ->whereNull('budgets.deleted_at')
+                              ->get(['budget_limits.*']);
+
+            return $set;
+        }
+        // one of the two is NULL.
+        if (null === $start xor null === $end) {
+            $query = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                ->with(['budget'])
+                                ->whereNull('budgets.deleted_at')
+                                ->where('budgets.user_id', $this->user->id);
+            if (null !== $end) {
+                // end date must be before $end.
+                $query->where('end_date', '<=', $end->format('Y-m-d 00:00:00'));
+            }
+            if (null !== $start) {
+                // start date must be after $start.
+                $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
+            }
+            $set = $query->get(['budget_limits.*']);
+
+            return $set;
+        }
+        // neither are NULL:
+        $set = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->with(['budget'])
+                          ->where('budgets.user_id', $this->user->id)
+                          ->whereNull('budgets.deleted_at')
+                          ->where(
+                              static function (Builder $q5) use ($start, $end) {
+                                  $q5->where(
+                                      static function (Builder $q1) use ($start, $end) {
+                                          $q1->where(
+                                              static function (Builder $q2) use ($start, $end) {
+                                                  $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              }
+                                          )
+                                             ->orWhere(
+                                                 static function (Builder $q3) use ($start, $end) {
+                                                     $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                     $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                                 }
+                                             );
+                                      }
+                                  )
+                                     ->orWhere(
+                                         static function (Builder $q4) use ($start, $end) {
+                                             // or start is before start AND end is after end.
+                                             $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                             $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                                         }
+                                     );
+                              }
+                          )->get(['budget_limits.*']);
+
+        return $set;
+    }
+
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
+    {
+        return $this->getAllBudgetLimits($start, $end)->filter(
+            static function (BudgetLimit $budgetLimit) use ($currency) {
+                return $budgetLimit->transaction_currency_id === $currency->id;
+            }
+        );
     }
 
     /**
