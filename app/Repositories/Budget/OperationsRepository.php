@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -61,7 +62,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Budget $budget
      *
      * @return string
-     * @deprecated
      */
     public function budgetedPerDay(Budget $budget): string
     {
@@ -278,6 +278,53 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $budgets
+     * @param TransactionCurrency|null $currency
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
+    ): array {
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (null === $budgets || (null !== $budgets && 0 === $budgets->count())) {
+            $budgets = $this->getBudgets();
+        }
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
+        $collector->setBudgets($budgets);
+        $collector->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+        }
+
+        return $array;
+    }
+
     /**
      * For now, simply refer to whichever repository holds this function.
      * TODO might be done better in the future.
@@ -294,5 +341,16 @@ class OperationsRepository implements OperationsRepositoryInterface
         $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         return $blRepository->getBudgetLimits($budget, $start, $end);
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
     }
 }

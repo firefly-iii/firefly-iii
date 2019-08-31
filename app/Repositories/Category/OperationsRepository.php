@@ -228,6 +228,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
+        $collector->withCategoryInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 

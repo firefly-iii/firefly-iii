@@ -28,6 +28,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -192,7 +193,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
 

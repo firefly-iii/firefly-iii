@@ -83,6 +83,19 @@ interface BudgetLimitRepositoryInterface
     public function storeBudgetLimit(array $data): BudgetLimit;
 
     /**
+     * Tells you which amount has been budgeted (for the given budgets)
+     * in the selected query. Returns a positive amount as a string.
+     *
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
+     * @param Collection|null     $budgets
+     *
+     * @return string
+     */
+    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
+
+    /**
      * @param BudgetLimit $budgetLimit
      * @param array       $data
      *

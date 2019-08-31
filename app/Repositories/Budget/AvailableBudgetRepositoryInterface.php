@@ -40,13 +40,50 @@ interface AvailableBudgetRepositoryInterface
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
 
     /**
+     * Return a list of all available budgets (in all currencies) (for the selected period).
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     */
+    public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
+
+    /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
      * @param Carbon              $end
      *
      * @return string
+     * @deprecated
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param array $data
+     *
+     * @return AvailableBudget|null
+     */
+    public function store(array $data): ?AvailableBudget;
+
+    /**
+     * @param AvailableBudget $availableBudget
+     * @param array           $data
+     *
+     * @return AvailableBudget
+     */
+    public function update(AvailableBudget $availableBudget, array $data): AvailableBudget;
+
+    /**
+     * Find existing AB.
+     *
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return AvailableBudget|null
+     */
+    public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget;
 
     /**
      * @param Carbon $start

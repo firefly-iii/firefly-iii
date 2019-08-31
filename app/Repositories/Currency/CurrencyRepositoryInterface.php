@@ -35,12 +35,6 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
-     * @param string $search
-     * @return Collection
-     */
-    public function searchCurrency(string $search): Collection;
-
-    /**
      * @param TransactionCurrency $currency
      *
      * @return int
@@ -201,6 +195,11 @@ interface CurrencyRepositoryInterface
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
 
     /**
+     * @return Collection
+     */
+    public function getEnabled(): Collection;
+
+    /**
      * Get currency exchange rate.
      *
      * @param TransactionCurrency $fromCurrency
@@ -219,6 +218,13 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function getExchangeRates(TransactionCurrency $currency): Collection;
+
+    /**
+     * @param string $search
+     *
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection;
 
     /**
      * @param User $user

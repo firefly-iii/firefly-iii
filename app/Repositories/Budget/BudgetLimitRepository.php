@@ -56,6 +56,36 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
+     * Tells you which amount has been budgeted (for the given budgets)
+     * in the selected query. Returns a positive amount as a string.
+     *
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
+     * @param Collection|null     $budgets
+     *
+     * @return string
+     */
+    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
+    {
+        $query = BudgetLimit
+            ::where('start_date', $start->format('Y-m-d 00:00:00'))
+            ->where('end_date', $end->format('Y-m-d 00:00:00'))
+            ->where('transaction_currency_id', $currency->id);
+        if (null !== $budgets && $budgets->count() > 0) {
+            $query->whereIn('budget_id', $budgets->pluck('id')->toArray());
+        }
+        $set    = $query->get(['budget_limits.*']);
+        $result = '0';
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($set as $budgetLimit) {
+            $result = bcadd($budgetLimit->amount, $result);
+        }
+
+        return $result;
+    }
+
+    /**
      * Destroy a budget limit.
      *
      * @param BudgetLimit $budgetLimit
@@ -142,7 +172,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         return $set;
     }
 
-
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -158,7 +187,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             }
         );
     }
-
 
     /**
      * @param Budget $budget

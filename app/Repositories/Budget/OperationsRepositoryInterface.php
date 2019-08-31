@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -40,9 +41,10 @@ interface OperationsRepositoryInterface
      * @param Budget $budget
      *
      * @return string
-     * @deprecated
      */
     public function budgetedPerDay(Budget $budget): string;
+
+
 
     /**
      * This method collects various info on budgets, used on the budget page and on the index.
@@ -95,5 +97,18 @@ interface OperationsRepositoryInterface
      * @deprecated
      */
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $budgets
+     * @param TransactionCurrency|null $currency
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
+    ): array;
 
 }

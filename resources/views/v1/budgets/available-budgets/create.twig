@@ -1,0 +1,37 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <h4 class="modal-title">
+                {{ trans('firefly.update_budget_amount_range',
+                    {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+            </h4>
+        </div>
+
+        <form style="display: inline;" id="income" action="{{ route('available-budgets.store') }}" method="POST">
+            <div class="modal-body">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="start" value="{{ start.format('Y-m-d') }}"/>
+                <input type="hidden" name="end" value="{{ end.format('Y-m-d') }}"/>
+                <input type="hidden" name="page" value="{{ page }}"/>
+                <input type="hidden" name="currency_id" value="{{ currency.id }}"/>
+
+                <div class="form-group">
+                    <p class="form-control-static">{{ trans('firefly.ab_basic_modal_explain', {currency: currency.name}) }}</p>
+                </div>
+
+
+                <div class="input-group">
+                    <div class="input-group-addon">{{ currency.symbol|raw }}</div>
+                    <input step="any" class="form-control" id="amount" value="" autocomplete="off" name="amount" type="number"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'set_available_amount'|_ }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+

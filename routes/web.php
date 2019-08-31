@@ -220,11 +220,41 @@ Route::group(
     Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
 
     // update budget amount and income amount
-    Route::get('income/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@updateIncome', 'as' => 'income']);
-    Route::post('income', ['uses' => 'Budget\AmountController@postUpdateIncome', 'as' => 'income.post']);
-    Route::post('amount/{budget}', ['uses' => 'Budget\AmountController@amount', 'as' => 'amount']);
+    //Route::get('income/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@updateIncome', 'as' => 'income']);
+    //Route::post('income', ['uses' => 'Budget\AmountController@postUpdateIncome', 'as' => 'income.post']);
+    //Route::post('amount/{budget}', ['uses' => 'Budget\AmountController@amount', 'as' => 'amount']);
+}
+);
 
+/**
+ * Available Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'available-budgets', 'as' => 'available-budgets.'], function () {
 
+    // delete
+    //Route::get('delete/{budget}', ['uses' => 'Budget\DeleteController@delete', 'as' => 'delete']);
+    //Route::post('destroy/{budget}', ['uses' => 'Budget\DeleteController@destroy', 'as' => 'destroy']);
+
+    // create
+    Route::get('create/{start_date}/{end_date}/{currency?}', ['uses' => 'Budget\AvailableBudgetController@create', 'as' => 'create']);
+    Route::get('create-alternative/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@createAlternative', 'as' => 'create-alternative']);
+    Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
+    //Route::post('store', ['uses' => 'Budget\CreateController@store', 'as' => 'store']);
+
+    // edit
+    Route::get('edit/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
+    Route::post('update/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
+
+    Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
+    //Route::get('edit/{budget}', ['uses' => 'Budget\EditController@edit', 'as' => 'edit']);
+    //Route::post('update/{budget}', ['uses' => 'Budget\EditController@update', 'as' => 'update']);
+
+    // show
+    //Route::get('show/{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
+    //Route::get('show/{budget}/{budgetLimit}', ['uses' => 'Budget\ShowController@showByBudgetLimit', 'as' => 'show.limit']);
+    //Route::get('list/no-budget/all', ['uses' => 'Budget\ShowController@noBudgetAll', 'as' => 'no-budget-all']);
+    //Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
 }
 );
 
