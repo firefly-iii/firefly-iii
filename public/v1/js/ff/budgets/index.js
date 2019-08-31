@@ -30,10 +30,15 @@ $(function () {
      On start, fill the "spent"-bar using the content from the page.
      */
     //drawSpentBar();
+    drawSpentBars();
     //drawBudgetedBar();
 
-    $('.update_ab').on('click', updateAvailableBudget)
-    $('.create_ab_alt').on('click', createAltAvailableBudget)
+    drawBudgetedBars();
+
+    $('.update_ab').on('click', updateAvailableBudget);
+    $('.create_ab_alt').on('click', createAltAvailableBudget);
+
+    $('.budget_amount').on('change', updateBudgetedAmount);
 
     /*
      When the input changes, update the percentages for the budgeted bar:
@@ -78,6 +83,38 @@ $(function () {
     }
 });
 
+function updateBudgetedAmount(e) {
+    var input = $(e.currentTarget);
+    var budgetId = parseInt(input.data('id'));
+    var budgetLimitId = parseInt(input.data('limit'));
+    var currencyId = parseInt(input.data('currency'));
+    console.log(budgetLimitId);
+    if (0 === budgetLimitId) {
+        $.post(createBudgetLimitUri, {
+            _token: token,
+            budget_id: budgetId,
+            transaction_currency_id: currencyId,
+            amount: input.val(),
+            start: periodStart,
+            end: periodEnd
+        }).done(function (data) {
+
+            alert('done!');
+        }).fail(function () {
+            alert('I failed :(');
+        });
+    } else {
+        $.post(updateBudgetLimitUri.replace('REPLACEME', budgetLimitId), {
+            _token: token,
+            amount: input.val(),
+        }).done(function (data) {
+            alert('done!');
+        }).fail(function () {
+            alert('I failed :(');
+        });
+    }
+}
+
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -110,13 +147,15 @@ function sortStop(event, ui) {
     };
     $.post('budgets/reorder', arr);
 }
+
 function createAltAvailableBudget(e) {
     var button = $(e.currentTarget);
-        $('#defaultModal').empty().load(createAltAvailableBudgetUri, function () {
-            $('#defaultModal').modal('show');
-        });
+    $('#defaultModal').empty().load(createAltAvailableBudgetUri, function () {
+        $('#defaultModal').modal('show');
+    });
     return false;
 }
+
 function updateAvailableBudget(e) {
     var button = $(e.currentTarget);
     var abId = parseInt(button.data('id'));
@@ -134,6 +173,55 @@ function updateAvailableBudget(e) {
     return false;
 }
 
+
+function drawBudgetedBars() {
+    "use strict";
+    $.each($('.budgeted_bar'), function (i, v) {
+        var bar = $(v);
+        var budgeted = parseFloat(bar.data('budgeted'));
+        var available = parseFloat(bar.data('available'));
+        console.log('Budgeted bar for bar ' + bar.data('id'));
+        var budgetedTooMuch = budgeted > available;
+        var pct;
+        if (budgetedTooMuch) {
+            console.log('over budget');
+            // budgeted too much.
+            pct = (available / budgeted) * 100;
+            bar.find('.progress-bar-warning').css('width', pct + '%');
+            bar.find('.progress-bar-danger').css('width', (100 - pct) + '%');
+            bar.find('.progress-bar-info').css('width', 0);
+        } else {
+            console.log('under budget');
+            pct = (budgeted / available) * 100;
+            bar.find('.progress-bar-warning').css('width', 0);
+            bar.find('.progress-bar-danger').css('width', 0);
+            bar.find('.progress-bar-info').css('width', pct + '%');
+        }
+        //$('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
+    });
+}
+
+function drawSpentBars() {
+    "use strict";
+    $.each($('.spent_bar'), function (i, v) {
+        var bar = $(v);
+        var spent = parseFloat(bar.data('spent')) * -1;
+        var budgeted = parseFloat(bar.data('budgeted'));
+        var overspent = spent > budgeted;
+        var pct;
+
+        if (overspent) {
+            // draw overspent bar
+            pct = (budgeted / spent) * 100;
+            bar.find('.progress-bar-warning').css('width', pct + '%');
+            bar.find('.progress-bar-danger').css('width', (100 - pct) + '%');
+        } else {
+            // draw normal bar:
+            pct = (spent / budgeted) * 100;
+            bar.find('.progress-bar-info').css('width', pct + '%');
+        }
+    });
+}
 
 //
 //

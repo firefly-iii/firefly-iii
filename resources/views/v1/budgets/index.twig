@@ -145,7 +145,8 @@
                             {# progresss bar to visualise available vs budgeted. #}
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="progress budgetedBar" data-id="{{ budget.id }}">
+                                    <div class="progress budgeted_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
+                                         data-available="{{ budget.amount }}">
                                         <div class="progress-bar progress-bar-danger" data-id="{{ budget.id }}" role="progressbar" aria-valuenow="0"
                                              aria-valuemin="0"
                                              aria-valuemax="100" style="width: 0;"></div>
@@ -169,7 +170,8 @@
                             {# bar to visualise spending in budget .#}
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="progress spentBar" data-id="{{ budget.id }}">
+                                    <div class="progress spent_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
+                                         data-spent="{{ budget.spent }}">
                                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
                                              aria-valuemax="100"
                                              style="width: 0;"></div>
@@ -195,62 +197,11 @@
             {% endif %}
         </div>
     {% endif %}
-    {#
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount"
-                                             class="text-success">{{ "-1"|formatAmountPlain }}{{ budgeted|formatAmountPlain }}</span></small>
-        </div>
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
-            <small id="availableBar">{{ trans('firefly.available_between',{start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
-                :
-                <span id="available" data-value="{{ available }}">{{ "-1"|formatAmountPlain }}{{ available|formatAmountPlain }}</span>
-                <a href="#" class="updateIncome btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
-            </small>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="progress budgetedBar">
-                <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                     aria-valuemax="100" style="width: 0;"></div>
-                <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0"
-                     aria-valuemax="100" style="width: 0;"></div>
-                <div class="progress-bar progress-bar-info" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                     aria-valuemax="100" style="width: 0;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row" id="spentBar">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
-                : {{ "-1"|formatAmount }}{{ spent|formatAmount }}</small>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="progress spentBar">
-                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                     style="width: 0;"></div>
-                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                     style="width: 0;"></div>
-                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                     style="width: 0;"></div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-</div>#}
-    {% if paginator.count == 0 and inactive.count == 0 and page == 1 %}
+    {% if budgets.count == 0 and inactive.count == 0 %}
         {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% endif %}
-
-
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -261,9 +212,6 @@
                 <div class="box-body no-padding">
                     <div style="padding:8px;">
                         <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
-                    </div>
-                    <div style="padding-left:8px;">
-                        {{ paginator.render|raw }}
                     </div>
                     <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
                         <thead>
@@ -276,64 +224,93 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for budget in paginator %}
+                        {% for budget in budgets %}
                             <tr data-id="{{ budget.id }}">
                                 <td class="hidden-sm hidden-xs">
                                     <div class="btn-group btn-group-xs">
                                         <a href="#" class="handle btn btn-default"><i class="fa fa-fw fa-arrows-v"></i></a>
-                                        <a href="{{ route('budgets.edit',budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                                        <a href="{{ route('budgets.delete',budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                                        <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                                        <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ budget.name }}">
-
-                                    {% if budgetInformation[budget.id]['currentLimit'] %}
-                                        <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}"
-                                           class="budget-link"
-                                           data-id="{{ budget.id }}">{{ budget.name }}</a>
-                                    {% else %}
-                                        <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                </td>
+                                <td data-value="-1">
+                                    {% if 0==budget.budgeted|length %}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
+                                            <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                            <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
+                                                   data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
+                                                   type="number">
+                                        </div>
+                                        <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                              style="display:none;"></span>
+                                    {% endif %}
+                                    {% if budget.budgeted|length > 0 %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            <div class="input-group">
+                                                <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
+                                                <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
+                                                       data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
+                                                       autocomplete="off"
+                                                       min="0" name="amount" type="number">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false"><span class="caret"></span></button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">Remove budgeted amount
+                                                                in {{ budgetLimit.currency_name }}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                  style="display:none;"></span>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if budget.budgeted|length < currencies.count %}
+                                        <a href="#" class="btn btn-success btn-xs create_ab_alt">
+                                            <i class="fa fa-plus-circle"></i>
+                                            {{ 'bl_create_btn'|_ }}</a>
                                     {% endif %}
                                 </td>
-                                {% if budgetInformation[budget.id]['currentLimit'] %}
-                                    {% set repAmount = budgetInformation[budget.id]['budgeted'] %}
-                                {% else %}
-                                    {% set repAmount = '0' %}
-                                {% endif %}
+                                <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}">
+                                    {% for spentInfo in budget.spent %}
+                                        {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                        ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                    {% endfor %}
 
-                                <td data-value="{{ repAmount }}">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
-                                        <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                        <input class="form-control budgetAmount" data-original="{{ repAmount }}"
-                                               data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
-                                               min="0" name="amount" type="number">
-                                    </div>
-                                    <span class="text-danger budget_warning" data-id="{{ budget.id }}" style="display:none;"></span>
                                 </td>
-                                <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
-                                    data-value="{{ budgetInformation[budget.id]['spent'] }}">
-                                    {{ "-1"|formatAmount }}
-                                    {#{{ budgetInformation[budget.id]['spent']|formatAmount }}#}
-                                    ({{ "-1"|formatAmount }})
-                                    {#({{ (budgetInformation[budget.id]['spent'] / activeDaysPassed)|formatAmount }})#}
-                                </td>
-                                <td class="left" data-id="{{ budget.id }}"
-                                    data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
-                                    {{ "-1"|formatAmount }}
+                                <td class="left" data-id="{{ budget.id }}">
+                                    <!-- only makes sense to list what's left for budgeted amounts.-->
+                                    {% if budget.budgeted|length > 0 %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% for spentInfo in budget.spent %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id %}
+                                                    {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                                    {% if spentInfo.spent + budgetLimit.amount > 0 %}
+                                                        ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% else %}
+                                                            ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {#{{ "-1"|formatAmount }}#}
                                     {#{{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}#}
-                                    {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
-                                        ({{ "-1"|formatAmount }})
-                                        {#({{ ((repAmount + budgetInformation[budget.id]['spent']) / activeDaysLeft)|formatAmount }})#}
-                                    {% endif %}
+                                    {#{% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}#}
+                                    {#({{ "-1"|formatAmount }})#}
+                                    {#({{ ((repAmount + budgetInformation[budget.id]['spent']) / activeDaysLeft)|formatAmount }})#}
+                                    {#{% endif %}#}
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                    <div style="padding-left:8px;">
-                        {{ paginator.render|raw }}
-                    </div>
                 </div>
                 <div class="box-footer">
                     <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
@@ -399,16 +376,14 @@
 {% block scripts %}
     <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
     <script type="text/javascript">
-        // actually spent bar data:
-        var spent = 0;
-        var page = {{ page }};
-        // budgeted data:
-        var budgeted = 0;
-        var available = 0;
         var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
         var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME']) }}";
+
+        var createBudgetLimitUri = "{{ route('budget-limits.store') }}";
+        var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+
         {#var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";#}
         {#var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}?page={{ page }}";#}
         var periodStart = "{{ start.format('Y-m-d') }}";

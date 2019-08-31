@@ -227,14 +227,14 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                       $q1->where(
                                           static function (Builder $q2) use ($start, $end) {
                                               $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 23:59:59'));
                                           }
                                       )
                                           // budget limit start within period
                                          ->orWhere(
                                               static function (Builder $q3) use ($start, $end) {
                                                   $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 23:59:59'));
                                               }
                                           );
                                   }
@@ -242,7 +242,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                  ->orWhere(
                                      static function (Builder $q4) use ($start, $end) {
                                          // or start is before start AND end is after end.
-                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 23:59:59'));
                                          $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
                                      }
                                  );
@@ -264,6 +264,17 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      * @param array $data
      *
      * @return BudgetLimit
+     */
+    public function store(array $data): BudgetLimit
+    {
+        return BudgetLimit::create($data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return BudgetLimit
+     * @deprecated
      */
     public function storeBudgetLimit(array $data): BudgetLimit
     {
@@ -308,7 +319,22 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      * @param array       $data
      *
      * @return BudgetLimit
+     */
+    public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
+    {
+        $budgetLimit->amount = $data['amount'] ?? $budgetLimit->amount;
+        $budgetLimit->save();
+
+        return $budgetLimit;
+    }
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     * @param array       $data
+     *
+     * @return BudgetLimit
      * @throws Exception
+     * @deprecated
      */
     public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {

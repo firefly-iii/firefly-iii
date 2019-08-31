@@ -40,7 +40,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property string $name
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetLimits
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions

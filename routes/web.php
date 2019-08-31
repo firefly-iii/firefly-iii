@@ -117,7 +117,9 @@ Route::group(
     Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
     // create
-    Route::get('create/{objectType}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('objectType', 'revenue|asset|expense|liabilities');
+    Route::get('create/{objectType}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where(
+        'objectType', 'revenue|asset|expense|liabilities'
+    );
     Route::post('store', ['uses' => 'Account\CreateController@store', 'as' => 'store']);
 
 
@@ -230,32 +232,36 @@ Route::group(
  * Available Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'available-budgets', 'as' => 'available-budgets.'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'available-budgets', 'as' => 'available-budgets.'],
+    function () {
 
-    // delete
-    //Route::get('delete/{budget}', ['uses' => 'Budget\DeleteController@delete', 'as' => 'delete']);
-    //Route::post('destroy/{budget}', ['uses' => 'Budget\DeleteController@destroy', 'as' => 'destroy']);
+        // create
+        Route::get('create/{start_date}/{end_date}/{currency?}', ['uses' => 'Budget\AvailableBudgetController@create', 'as' => 'create']);
+        Route::get(
+            'create-alternative/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@createAlternative', 'as' => 'create-alternative']
+        );
+        Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
 
-    // create
-    Route::get('create/{start_date}/{end_date}/{currency?}', ['uses' => 'Budget\AvailableBudgetController@create', 'as' => 'create']);
-    Route::get('create-alternative/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@createAlternative', 'as' => 'create-alternative']);
-    Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
-    //Route::post('store', ['uses' => 'Budget\CreateController@store', 'as' => 'store']);
+        // edit
+        Route::get('edit/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
+        Route::post('update/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
 
-    // edit
-    Route::get('edit/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
-    Route::post('update/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
+        Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
+    }
+);
 
-    Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
-    //Route::get('edit/{budget}', ['uses' => 'Budget\EditController@edit', 'as' => 'edit']);
-    //Route::post('update/{budget}', ['uses' => 'Budget\EditController@update', 'as' => 'update']);
 
-    // show
-    //Route::get('show/{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
-    //Route::get('show/{budget}/{budgetLimit}', ['uses' => 'Budget\ShowController@showByBudgetLimit', 'as' => 'show.limit']);
-    //Route::get('list/no-budget/all', ['uses' => 'Budget\ShowController@noBudgetAll', 'as' => 'no-budget-all']);
-    //Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
-}
+/**
+ * Budget Limit Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budget-limits', 'as' => 'budget-limits.'],
+    static function () {
+
+        Route::get('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
+        Route::post('store', ['uses' => 'Budget\BudgetLimitController@store', 'as' => 'store']);
+        Route::post('update/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@update', 'as' => 'update']);
+    }
 );
 
 /**
@@ -389,7 +395,9 @@ Route::group(
         Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod', 'as' => 'current']);
         Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod', 'as' => 'specific']);
         Route::get('all/{category}', ['uses' => 'CategoryController@all', 'as' => 'all']);
-        Route::get('report-period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriodNoCategory', 'as' => 'period.no-category']);
+        Route::get(
+            'report-period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriodNoCategory', 'as' => 'period.no-category']
+        );
         Route::get('report-period/{category}/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriod', 'as' => 'period']);
 
         // these charts are used in reports (category reports):
@@ -572,7 +580,6 @@ Route::group(
     Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
     Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
     Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
-
 
 
     Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
@@ -905,7 +912,9 @@ Route::group(
 
     // show groups:
     // TODO improve these routes
-    Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+    Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
+        ['what' => 'withdrawal|deposit|transfers|transfer']
+    );
 
     Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
         ['what' => 'withdrawal|deposit|transfers|transfer']

@@ -36,6 +36,19 @@ use Illuminate\Support\Collection;
 interface BudgetLimitRepositoryInterface
 {
     /**
+     * Tells you which amount has been budgeted (for the given budgets)
+     * in the selected query. Returns a positive amount as a string.
+     *
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
+     * @param Collection|null     $budgets
+     *
+     * @return string
+     */
+    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
+
+    /**
      * Destroy a budget limit.
      *
      * @param BudgetLimit $budgetLimit
@@ -80,26 +93,30 @@ interface BudgetLimitRepositoryInterface
      *
      * @return BudgetLimit
      */
-    public function storeBudgetLimit(array $data): BudgetLimit;
+    public function store(array $data): BudgetLimit;
 
     /**
-     * Tells you which amount has been budgeted (for the given budgets)
-     * in the selected query. Returns a positive amount as a string.
+     * @param array $data
      *
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param TransactionCurrency $currency
-     * @param Collection|null     $budgets
-     *
-     * @return string
+     * @return BudgetLimit
+     * @deprecated
      */
-    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
+    public function storeBudgetLimit(array $data): BudgetLimit;
 
     /**
      * @param BudgetLimit $budgetLimit
      * @param array       $data
      *
      * @return BudgetLimit
+     */
+    public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit;
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     * @param array       $data
+     *
+     * @return BudgetLimit
+     * @deprecated
      */
     public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
 

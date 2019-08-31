@@ -70,7 +70,7 @@ class BudgetLimit extends Model
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount'];
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount','transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

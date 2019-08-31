@@ -27,6 +27,8 @@ namespace FireflyIII\Http\Controllers\Budget;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
@@ -36,7 +38,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -101,17 +103,15 @@ class IndexController extends Controller
         $range           = app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
-        $page            = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $budgeted        = '0';
         $spent           = '0';
+
+
         // new period stuff:
         $periodTitle = app('navigation')->periodShow($start, $range);
-
-        // loop of previous periods:
-        $prevLoop = $this->getPreviousPeriods($start, $range);
-        $nextLoop = $this->getNextPeriods($start, $range);
+        $prevLoop    = $this->getPreviousPeriods($start, $range);
+        $nextLoop    = $this->getNextPeriods($start, $range);
 
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);
@@ -152,16 +152,45 @@ class IndexController extends Controller
 
         // get all budgets, and paginate them into $budgets.
         $collection = $this->repository->getActiveBudgets();
-        $total      = $collection->count();
-        $budgets    = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $budgets    = [];
+
+        // complement budget with budget limits in range, and expenses in currency X in range.
+        /** @var Budget $current */
+        foreach ($collection as $current) {
+            $array             = $current->toArray();
+            $array['spent']    = [];
+            $array['budgeted'] = [];
+            $budgetLimits      = $this->blRepository->getBudgetLimits($current, $start, $end);
+
+            /** @var BudgetLimit $limit */
+            foreach ($budgetLimits as $limit) {
+                $array['budgeted'][] = [
+                    'id'                      => $limit->id,
+                    'amount'                  => $limit->amount,
+                    'currency_id'             => $limit->transactionCurrency->id,
+                    'currency_symbol'         => $limit->transactionCurrency->symbol,
+                    'currency_name'           => $limit->transactionCurrency->name,
+                    'currency_decimal_places' => $limit->transactionCurrency->decimal_places,
+                ];
+            }
+
+            /** @var TransactionCurrency $currency */
+            foreach ($currencies as $currency) {
+                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$current]), $currency);
+                if (isset($spentArr[$currency->id]['sum'])) {
+                    $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
+                    $array['spent'][$currency->id]['currency_id']             = $currency->id;
+                    $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
+                    $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;
+
+                }
+            }
+            $budgets[] = $array;
+        }
 
         // get all inactive budgets, and simply list them:
         $inactive = $this->repository->getInactiveBudgets();
 
-
-        // paginate budgets
-        $paginator = new LengthAwarePaginator($budgets, $total, $pageSize, $page);
-        $paginator->setPath(route('budgets.index'));
 
         return view(
             'budgets.index', compact(
@@ -171,11 +200,12 @@ class IndexController extends Controller
                                //'prevText', 'previousLoop', 'nextLoop',
                                'budgeted', 'spent',
                                'prevLoop', 'nextLoop',
-                               'paginator',
+                               'budgets',
+                               'currencies',
                                'enableAddButton',
                                'periodTitle',
                                'defaultCurrency',
-                               'page', 'activeDaysPassed', 'activeDaysLeft',
+                               'activeDaysPassed', 'activeDaysLeft',
                                'inactive', 'budgets', 'start', 'end'
                            )
         );
