@@ -63,8 +63,8 @@ class BelongsUser implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      * @throws FireflyException
@@ -197,6 +197,9 @@ class BelongsUser implements Rule
      */
     private function validateBudgetId(int $value): bool
     {
+        if (0 === $value) {
+            return true;
+        }
         $count = Budget::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;

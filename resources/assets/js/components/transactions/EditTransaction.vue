@@ -570,9 +570,8 @@
                     currentArray.foreign_currency_id = foreignCurrency;
                 }
                 // set budget id and piggy ID.
-                if (parseInt(row.budget) > 0) {
-                    currentArray.budget_id = parseInt(row.budget);
-                }
+                currentArray.budget_id = parseInt(row.budget);
+
                 if (parseInt(row.piggy_bank) > 0) {
                     currentArray.piggy_bank_id = parseInt(row.piggy_bank);
                 }
