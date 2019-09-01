@@ -895,15 +895,15 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * @param array            $existingJournal
-     * @param TransactionGroup $newGroup
+     * @param TransactionJournal $newJournal
      *
      * @return array
      */
-    private function mergeTags(array $existingJournal, TransactionGroup $newGroup): array
+    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
     {
-        $newArray = $newGroup->toArray();
+        $newArray = $newJournal->toArray();
         if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
-            $tagId = (int)$newGroup['tag_id'];
+            $tagId = (int)$newJournal['tag_id'];
 
             $tagDate = null;
             try {
