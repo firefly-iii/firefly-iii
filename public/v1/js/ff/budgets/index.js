@@ -107,7 +107,6 @@ function updateBudgetedAmount(e) {
             if (data.left_per_day > 0) {
                 $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
             }
-            console.log(data);
             //$('.left_span[data-limit="0"][data-id="' + budgetId + '"]').text('XXXXX');
 
         }).fail(function () {
@@ -118,7 +117,12 @@ function updateBudgetedAmount(e) {
             _token: token,
             amount: input.val(),
         }).done(function (data) {
-            alert('done!');
+            input.prop('disabled', false);
+            $('.left_span[data-limit="'+budgetLimitId+'"]').html(data.left_formatted);
+            if (data.left_per_day > 0) {
+                $('.left_span[data-limit="'+budgetLimitId+'"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
+            }
+
         }).fail(function () {
             alert('I failed :(');
         });

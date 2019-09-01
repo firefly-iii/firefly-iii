@@ -196,7 +196,23 @@ class BudgetLimitController extends Controller
     {
         $amount = $request->get('amount');
 
-        return response()->json($this->blRepository->update($budgetLimit, ['amount' => $amount])->toArray());
+        $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
+        $array = $limit->toArray();
+
+        $spentArr                  = $this->opsRepository->sumExpenses(
+            $limit->start_date, $limit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
+        );
+        $array['spent']            = $spentArr[$budgetLimit->transactionCurrency->id]['sum'] ?? '0';
+        $array['left_formatted']   = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], $array['amount']));
+        $array['amount_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $limit['amount']);
+        $array['days_left']        = (string)$this->activeDaysLeft($limit->start_date, $limit->end_date);
+        // left per day:
+        $array['left_per_day'] = bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
+
+        // left per day formatted.
+        $array['left_per_day_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $array['left_per_day']);
+
+        return response()->json($array);
 
     }
 
