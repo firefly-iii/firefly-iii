@@ -322,8 +322,8 @@ class CategoryController extends Controller
         $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
         // this gives us all currencies
-        $expenses   = $noCatRepository->listExpenses($start, $end);
-        $income     = $noCatRepository->listIncome($start, $end);
+        $expenses   = $noCatRepository->listExpenses($start, $end, $accounts);
+        $income     = $noCatRepository->listIncome($start, $end, $accounts);
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
         $periods    = app('navigation')->listOfPeriods($start, $end);
         $format     = app('navigation')->preferredCarbonLocalizedFormat($start, $end);

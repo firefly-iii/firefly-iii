@@ -89,7 +89,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // catch "no category" entries.
             if (0 === $categoryId) {
-                $categoryName = (string)trans('firefly.no_category');
+                continue;
             }
 
             // info about the currency:
