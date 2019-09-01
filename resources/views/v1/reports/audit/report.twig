@@ -53,6 +53,17 @@
             {% else %}
             <div class="box-body table-responsive no-padding">
                 <p style="padding:10px;">
+                    {{ trans('firefly.audit_end_balance',
+                        {
+                            account_name: account.name|escape,
+                            url: url,
+                            end: auditData[account.id].dayBefore,
+                            balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
+                        })|raw }}
+                </p>
+                {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
+
+                <p style="padding:10px;">
 
                     {{ trans('firefly.audit_end_balance',
                         {
@@ -60,17 +71,6 @@
                             url: url,
                             end: auditData[account.id].end,
                             balance: formatAmountByAccount(account,auditData[account.id].endBalance)
-                        })|raw }}
-                    <!-- TODO VERIFY THAT STEAM BALANCE ACTUALLY WORKS -->
-                </p>
-                {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
-                <p style="padding:10px;">
-                    {{ trans('firefly.audit_end_balance',
-                        {
-                            account_name: account.name|escape,
-                            url: url,
-                            end: auditData[account.id].dayBefore,
-                            balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
                         })|raw }}
                 </p>
             </div>

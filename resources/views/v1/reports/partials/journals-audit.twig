@@ -57,11 +57,11 @@
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Reconciliation' %}
-                    XX
+                    <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Opening balance' %}
-                    XX
+                    <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                 {% endif %}
 
             </td>
@@ -80,7 +80,12 @@
                 {{ formatAmountBySymbol(journal.balance_before, journal.currency_symbol, journal.currency_decimal_places) }}
             </td>
             <td class="hide-amount" style="text-align: right;">
-                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% else %}
+                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% endif %}
+
             </td>
 
             <td class="hide-balance_after" style="text-align: right;">
