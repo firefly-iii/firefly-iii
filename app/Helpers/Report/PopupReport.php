@@ -81,6 +81,16 @@ class PopupReport implements PopupReportInterface
      */
     public function balanceForNoBudget(Account $account, array $attributes): array
     {
+        // filter by currency, if set.
+        $currencyId = $attributes['currencyId'] ?? null;
+        $currency   = null;
+        if (null !== $currencyId) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos    = app(CurrencyRepositoryInterface::class);
+            $currency = $repos->find((int)$currencyId);
+        }
+
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector
@@ -90,6 +100,10 @@ class PopupReport implements PopupReportInterface
             ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withoutBudget();
+
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
 
         return $collector->getExtractedJournals();
     }
@@ -139,12 +153,12 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect journals by a category.
      *
-     * @param Category $category
+     * @param Category|null $category
      * @param array    $attributes
      *
      * @return array
      */
-    public function byCategory(Category $category, array $attributes): array
+    public function byCategory(?Category $category, array $attributes): array
     {
         // filter by currency, if set.
         $currencyId = $attributes['currencyId'] ?? null;
@@ -163,8 +177,15 @@ class PopupReport implements PopupReportInterface
                   ->withAccountInformation()
                   ->withBudgetInformation()
                   ->withCategoryInformation()
-                  ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation()
-                  ->setCategory($category);
+                  ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation();
+
+        if(null!== $category) {
+            $collector->setCategory($category);
+        }
+        if(null === $category) {
+            $collector->withoutCategory();
+        }
+
         if (null !== $currency) {
             $collector->setCurrency($currency);
         }

@@ -229,7 +229,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'available-budgets', 'as' => 'available-budgets.'],
-    static function () {s
+    static function () {
 
         // create
         Route::get('create/{start_date}/{end_date}/{currency?}', ['uses' => 'Budget\AvailableBudgetController@create', 'as' => 'create']);

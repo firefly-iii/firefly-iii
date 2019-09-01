@@ -30,9 +30,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
@@ -46,14 +43,8 @@ class AvailableBudgetController extends Controller
 
     /** @var AvailableBudgetRepositoryInterface */
     private $abRepository;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
 
     /**
      * AmountController constructor.
@@ -68,10 +59,7 @@ class AvailableBudgetController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
-                $this->repository    = app(BudgetRepositoryInterface::class);
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->abRepository  = app(AvailableBudgetRepositoryInterface::class);
-                $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
 
                 return $next($request);
@@ -83,6 +71,13 @@ class AvailableBudgetController extends Controller
      * Create will always assume the user's default currency, if it's not set.
      *
      * This method will check if there is no AB, and refuse to continue if it exists.
+     *
+     * @param Request                  $request
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param TransactionCurrency|null $currency
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function create(Request $request, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null)
     {
@@ -106,10 +101,16 @@ class AvailableBudgetController extends Controller
 
     /**
      * createAlternative will show a list of enabled currencies so the user can pick one.
+     *
+     * @param Request $request
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function createAlternative(Request $request, Carbon $start, Carbon $end)
     {
-        $currencies = $this->currencyRepos->getEnabled();
+        $currencies       = $this->currencyRepos->getEnabled();
         $availableBudgets = $this->abRepository->get($start, $end);
 
         // remove already budgeted currencies:
@@ -121,12 +122,14 @@ class AvailableBudgetController extends Controller
                         return false;
                     }
                 }
+
                 return true;
             }
         );
 
 
-        $page       = (int)($request->get('page') ?? 1);
+        $page = (int)($request->get('page') ?? 1);
+
         return view('budgets.available-budgets.create-alternative', compact('start', 'end', 'page', 'currencies'));
     }
 
@@ -145,6 +148,8 @@ class AvailableBudgetController extends Controller
 
     /**
      * @param AvailableBudget $availableBudget
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(AvailableBudget $availableBudget)
     {
@@ -153,6 +158,8 @@ class AvailableBudgetController extends Controller
 
     /**
      * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(Request $request)
     {
@@ -197,6 +204,8 @@ class AvailableBudgetController extends Controller
     /**
      * @param Request         $request
      * @param AvailableBudget $availableBudget
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, AvailableBudget $availableBudget)
     {

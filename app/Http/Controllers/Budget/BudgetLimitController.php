@@ -31,7 +31,6 @@ use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
@@ -50,8 +49,6 @@ class BudgetLimitController extends Controller
 {
     use DateCalculation;
 
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
     /** @var CurrencyRepositoryInterface */
@@ -73,7 +70,6 @@ class BudgetLimitController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->abRepository  = app(AvailableBudgetRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
 
