@@ -186,6 +186,78 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified budget set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $budgets
+     *
+     * @return array
+     */
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (null !== $budgets && $budgets->count() > 0) {
+            $collector->setBudgets($budgets);
+        }
+        if (null === $budgets || (null !== $budgets && 0 === $budgets->count())) {
+            $collector->setBudgets($this->getBudgets());
+        }
+        $collector->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
+            $budgetId   = (int)$journal['budget_id'];
+            $budgetName = (string)$journal['budget_name'];
+
+            // catch "no category" entries.
+            if (0 === $budgetId) {
+                $budgetName = (string)trans('firefly.no_budget');
+            }
+
+            // info about the currency:
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'budgets'                 => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+
+            // info about the categories:
+            $array[$currencyId]['budgets'][$budgetId] = $array[$currencyId]['budgets'][$budgetId] ?? [
+                    'id'                   => $budgetId,
+                    'name'                 => $budgetName,
+                    'transaction_journals' => [],
+                ];
+
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId = (int)$journal['transaction_journal_id'];
+
+
+            $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
+                'amount' => app('steam')->negative($journal['amount']),
+                'date'   => $journal['date'],
+            ];
+
+        }
+
+        return $array;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -216,6 +288,8 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         return $collector->getSum();
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $budgets
@@ -278,7 +352,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Carbon                   $start
      * @param Carbon                   $end

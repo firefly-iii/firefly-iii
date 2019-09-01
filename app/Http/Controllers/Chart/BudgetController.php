@@ -408,10 +408,11 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $titleFormat = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $chartData   = [
+        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $chartData      = [
             [
                 'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
@@ -430,7 +431,7 @@ class BudgetController extends Controller
         $currentStart = clone $start;
         while ($currentStart <= $end) {
             $title      = $currentStart->formatLocalized($titleFormat);
-            $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
+            $currentEnd = app('navigation')->endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
             $chartData[0]['entries'][$title] = 0;
@@ -448,7 +449,7 @@ class BudgetController extends Controller
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[0]['entries'][$title] = round($amount, $currency->decimal_places);
 
-            $currentStart = app('navigation')->addPeriod($currentStart, '1M', 0);
+            $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -478,20 +479,21 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // the expenses:
-        $titleFormat  = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $chartData    = [];
-        $currentStart = clone $start;
+        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $chartData      = [];
+        $currentStart   = clone $start;
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         while ($currentStart <= $end) {
-            $currentEnd        = app('navigation')->endOfPeriod($currentStart, '1M');
+            $currentEnd        = app('navigation')->endOfPeriod($currentStart, $preferredRange);
             $title             = $currentStart->formatLocalized($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[$title] = round($amount, $currency->decimal_places);
-            $currentStart      = app('navigation')->addPeriod($currentStart, '1M', 0);
+            $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
         $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);

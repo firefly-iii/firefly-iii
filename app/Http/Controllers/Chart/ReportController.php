@@ -154,6 +154,7 @@ class ReportController extends Controller
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format      = app('navigation')->preferredCarbonFormat($start, $end);
         $titleFormat = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         $ids         = $accounts->pluck('id')->toArray();
 
         // get journals for entire period:
@@ -161,7 +162,8 @@ class ReportController extends Controller
         $chartData = [];
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setAccounts($accounts)->withAccountInformation();
+        $collector->setRange($start, $end)->setAccounts($accounts)
+                                          ->withAccountInformation();
         $journals = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
@@ -187,7 +189,7 @@ class ReportController extends Controller
             if (TransactionType::DEPOSIT === $journal['transaction_type_type']
                 || (TransactionType::TRANSFER === $journal['transaction_type_type']
                     && in_array(
-                        $journal['destination_id'], $ids, true
+                        $journal['destination_account_id'], $ids, true
                     ))) {
                 $key = 'earned';
             }
@@ -217,13 +219,12 @@ class ReportController extends Controller
             // loop all possible periods between $start and $end
             $currentStart = clone $start;
             while ($currentStart <= $end) {
-                $currentEnd                 = app('navigation')->endOfPeriod($currentStart, '1M');
+                $currentEnd                 = app('navigation')->endOfPeriod($currentStart, $preferredRange);
                 $key                        = $currentStart->format($format);
                 $title                      = $currentStart->formatLocalized($titleFormat);
                 $income['entries'][$title]  = round($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
                 $expense['entries'][$title] = round($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
-
-                $currentStart = app('navigation')->addPeriod($currentStart, '1M', 0);
+                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
 
             $chartData[] = $income;

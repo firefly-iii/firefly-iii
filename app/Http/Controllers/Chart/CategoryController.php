@@ -315,7 +315,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var NoCategoryRepositoryInterface $noCatRepository */

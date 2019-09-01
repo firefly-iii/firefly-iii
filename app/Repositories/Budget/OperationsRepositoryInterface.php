@@ -109,4 +109,18 @@ interface OperationsRepositoryInterface
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
     ): array;
 
+    /**
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified budget set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $budgets
+     *
+     * @return array
+     */
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
+
 }

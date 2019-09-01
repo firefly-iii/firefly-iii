@@ -94,7 +94,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            // return $cache->get(); // @codeCoverageIgnore
         }
 
         // generate budget report right here.
@@ -102,30 +102,41 @@ class BudgetController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository= app(OperationsRepositoryInterface::class);
+        $opsRepository = app(OperationsRepositoryInterface::class);
 
         /** @var NoBudgetRepositoryInterface $nbRepository */
         $nbRepository = app(NoBudgetRepositoryInterface::class);
 
 
-        $budgets    = $repository->getBudgets();
-        $data       = $opsRepository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
-        $noBudget   = $nbRepository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
-        $data       = array_merge($data, $noBudget);
-        $report     = $this->filterPeriodReport($data);
+        $budgets   = $repository->getBudgets();
+        $periods   = app('navigation')->listOfPeriods($start, $end);
+        $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
 
-        // depending on the carbon format (a reliable way to determine the general date difference)
-        // change the "listOfPeriods" call so the entire period gets included correctly.
-        $range = app('navigation')->preferredCarbonFormat($start, $end);
-
-        if ('Y' === $range) {
-            $start->startOfYear();
+        // list expenses for budgets in account(s)
+        $expenses = $opsRepository->listExpenses($start, $end, $accounts);
+        $report   = [];
+        foreach ($expenses as $currency) {
+            foreach ($currency['budgets'] as $budget) {
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $key                                = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
+                    $dateKey                            = $journal['date']->format($keyFormat);
+                    $report[$key]                       = $report[$key] ?? [
+                            'id'                      => $budget['id'],
+                            'name'                    => sprintf('%s (%s)', $budget['name'], $currency['currency_name']),
+                            'sum'                     => '0',
+                            'currency_id'             => $currency['currency_id'],
+                            'currency_name'           => $currency['currency_name'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_code'           => $currency['currency_code'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                            'entries'                 => [],
+                        ];
+                    $report[$key] ['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
+                    $report[$key] ['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
+                    $report[$key] ['sum'] = bcadd($report[$key] ['sum'], $journal['amount']);
+                }
+            }
         }
-        if ('Y-m' === $range) {
-            $start->startOfMonth();
-        }
-
-        $periods = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
