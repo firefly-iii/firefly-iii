@@ -112,8 +112,11 @@ class BudgetController extends Controller
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
 
+
+
         // list expenses for budgets in account(s)
         $expenses = $opsRepository->listExpenses($start, $end, $accounts);
+
         $report   = [];
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {

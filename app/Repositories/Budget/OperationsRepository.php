@@ -222,7 +222,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // catch "no category" entries.
             if (0 === $budgetId) {
-                $budgetName = (string)trans('firefly.no_budget');
+                continue;
             }
 
             // info about the currency:

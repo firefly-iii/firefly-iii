@@ -408,7 +408,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            // return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -427,16 +427,17 @@ class BudgetController extends Controller
             ],
         ];
 
-
         $currentStart = clone $start;
         while ($currentStart <= $end) {
+            $currentStart= app('navigation')->startOfPeriod($currentStart, $preferredRange);
             $title      = $currentStart->formatLocalized($titleFormat);
             $currentEnd = app('navigation')->endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
             $chartData[0]['entries'][$title] = 0;
-            $chartData[1]['entries'][$title] = 0;
 
+            // default spent is not spent at all.
+            $chartData[1]['entries'][$title] = 0;
 
             // get budget limit in this period for this currency.
             $limit = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
@@ -449,7 +450,8 @@ class BudgetController extends Controller
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[0]['entries'][$title] = round($amount, $currency->decimal_places);
 
-            $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
         }
 
         $data = $this->generator->multiSet($chartData);
