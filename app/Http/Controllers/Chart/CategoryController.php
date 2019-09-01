@@ -39,7 +39,6 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class CategoryController.
@@ -275,16 +274,19 @@ class CategoryController extends Controller
             // loop income and expenses for this category.:
             $outSet = $expenses[$currencyId]['categories'][$category->id] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
+                $amount                               = app('steam')->positive($journal['amount']);
                 $date                                 = $journal['date']->formatLocalized($format);
                 $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
-                $chartData[$outKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$outKey]['entries'][$date]);
+
+                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet = $income[$currencyId]['categories'][$category->id] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
+                $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->formatLocalized($format);
                 $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
-                $chartData[$inKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$inKey]['entries'][$date]);
+                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }
         }
 
@@ -313,7 +315,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var NoCategoryRepositoryInterface $noCatRepository */
@@ -358,16 +360,18 @@ class CategoryController extends Controller
             // loop income and expenses:
             $outSet = $expenses[$currencyId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
+                $amount                               = app('steam')->positive($journal['amount']);
                 $date                                 = $journal['date']->formatLocalized($format);
                 $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
-                $chartData[$outKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$outKey]['entries'][$date]);
+                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet = $income[$currencyId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
+                $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->formatLocalized($format);
                 $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
-                $chartData[$inKey]['entries'][$date] = bcadd($journal['amount'], $chartData[$inKey]['entries'][$date]);
+                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }
         }
         $data = $this->generator->multiSet($chartData);

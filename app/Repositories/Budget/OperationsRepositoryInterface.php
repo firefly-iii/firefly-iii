@@ -44,8 +44,6 @@ interface OperationsRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string;
 
-
-
     /**
      * This method collects various info on budgets, used on the budget page and on the index.
      *

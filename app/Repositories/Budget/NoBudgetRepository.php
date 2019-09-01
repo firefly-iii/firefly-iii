@@ -157,4 +157,47 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
         return $return;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param TransactionCurrency|null $currency
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
+    {
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
+        $collector->withoutBudget();
+        $collector->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+        }
+
+        return $array;
+    }
 }

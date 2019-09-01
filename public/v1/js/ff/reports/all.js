@@ -147,9 +147,10 @@ function clickBudgetChart(e) {
     "use strict";
     var link = $(e.target);
     var budgetId = link.data('budget');
+    var currencyId = parseInt(link.data('currency'));
     $('#budget_help').remove();
 
-    var URL = 'chart/budget/period/' + budgetId + '/' + accountIds + '/' + startDate + '/' + endDate;
+    var URL = 'chart/budget/period/' + budgetId + '/' + currencyId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'budget_chart';
     columnChart(URL, container);
     return false;

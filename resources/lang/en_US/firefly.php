@@ -1434,6 +1434,7 @@ return [
     'box_balance_in_currency'            => 'Balance (:currency)',
     'box_spent_in_currency'              => 'Spent (:currency)',
     'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_budgeted_in_currency'             => 'Budgeted (:currency)',
     'box_sum_in_currency'                => 'Sum (:currency)',
     'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
     'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
