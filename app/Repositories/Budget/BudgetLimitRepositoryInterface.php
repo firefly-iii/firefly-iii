@@ -56,6 +56,16 @@ interface BudgetLimitRepositoryInterface
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
 
     /**
+     * @param Budget              $budget
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return BudgetLimit|null
+     */
+    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit;
+
+    /**
      * TODO this method is not multi-currency aware.
      *
      * @param Carbon $start

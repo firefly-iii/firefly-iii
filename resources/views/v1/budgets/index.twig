@@ -270,7 +270,7 @@
                                         {% endfor %}
                                     {% endif %}
                                     {% if budget.budgeted|length < currencies.count %}
-                                        <a href="#" class="btn btn-success btn-xs create_ab_alt">
+                                        <a href="#" class="btn btn-success btn-xs create_bl" data-id="{{ budget.id }}">
                                             <i class="fa fa-plus-circle"></i>
                                             {{ 'bl_create_btn'|_ }}</a>
                                     {% endif %}
@@ -279,26 +279,60 @@
                                     {% for spentInfo in budget.spent %}
                                         {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                         ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                        <br/>
                                     {% endfor %}
 
                                 </td>
                                 <td class="left" data-id="{{ budget.id }}">
+                                    {% for spentInfo in budget.spent %}
+                                        {% set countLimit = 0 %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% if spentInfo.currency_id == budgetLimit.currency_id %}
+                                                {% set countLimit = countLimit + 1 %}
+                                                <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                      data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                    {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                                    {% if spentInfo.spent + budgetLimit.amount > 0 %}
+                                                        ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                    {% else %}
+                                                        ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                    {% endif %}
+                                                </span>
+                                                <br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if countLimit == 0 %}
+                                            <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
+                                                  class="amount_left" data-value="{{ spentInfo.spent }}">
+                                                {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                            </span>
+                                            <br/>
+                                        {% endif %}
+                                    {% endfor %}
+
                                     <!-- only makes sense to list what's left for budgeted amounts.-->
+
+                                    <!--
                                     {% if budget.budgeted|length > 0 %}
                                         {% for budgetLimit in budget.budgeted %}
                                             {% for spentInfo in budget.spent %}
                                                 {% if spentInfo.currency_id == budgetLimit.currency_id %}
+                                                    <span data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}" class="amount_left">
                                                     {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
-                                                    {% if spentInfo.spent + budgetLimit.amount > 0 %}
-                                                        ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% if spentInfo.spent + budgetLimit.amount > 0 %}
+                                                            ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
                                                         {% else %}
                                                             ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
-                                                    {% endif %}
+                                                        {% endif %}
+                                                        </span>
+                                                    <br/>
                                                 {% endif %}
+
                                             {% endfor %}
 
                                         {% endfor %}
                                     {% endif %}
+                                    -->
 
                                     {#{{ "-1"|formatAmount }}#}
                                     {#{{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}#}
@@ -381,7 +415,8 @@
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME']) }}";
 
-        var createBudgetLimitUri = "{{ route('budget-limits.store') }}";
+        var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME',start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
 
         {#var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";#}

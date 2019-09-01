@@ -4,20 +4,19 @@
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
             </button>
             <h4 class="modal-title">
-                {{ trans('firefly.update_budget_amount_range',
-                    {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                {{ trans('firefly.set_budget_limit_title',
+                    {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat), budget: budget.name}) }}
             </h4>
         </div>
 
-        <form style="display: inline;" id="income" action="{{ route('available-budgets.store') }}" method="POST">
+        <form style="display: inline;" id="income" action="{{ route('budget-limits.store') }}" method="POST">
             <div class="modal-body">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="start" value="{{ start.format('Y-m-d') }}"/>
                 <input type="hidden" name="end" value="{{ end.format('Y-m-d') }}"/>
-                <input type="hidden" name="page" value="{{ page }}"/>
-
+                <input type="hidden" name="budget_id" value="{{ budget.id }}"/>
                 <div class="form-group">
-                    <select class="form-control" name="currency_id">
+                    <select class="form-control" name="transaction_currency_id">
                         {% for currency in currencies %}
                             <option label="{{ currency.name }}" value="{{ currency.id }}">{{ currency.name }}</option>
                         {% endfor %}
@@ -29,7 +28,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
-                <button type="submit" class="btn btn-primary">{{ 'set_available_amount'|_ }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'set_budget_limit'|_ }}</button>
             </div>
         </form>
     </div>

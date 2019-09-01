@@ -149,6 +149,7 @@ class IndexController extends Controller
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
         $activeDaysLeft   = $this->activeDaysLeft($start, $end); // see method description.
+        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // get all budgets, and paginate them into $budgets.
         $collection = $this->repository->getActiveBudgets();
@@ -221,18 +222,14 @@ class IndexController extends Controller
     public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
         $budgetIds = $request->get('budgetIds');
-        $page      = (int)$request->get('page');
-        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
 
-        $currentOrder = (($page - 1) * $pageSize) + 1;
-        foreach ($budgetIds as $budgetId) {
+        foreach ($budgetIds as $index => $budgetId) {
             $budgetId = (int)$budgetId;
             $budget   = $repository->findNull($budgetId);
             if (null !== $budget) {
-                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $currentOrder));
-                $repository->setBudgetOrder($budget, $currentOrder);
+                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
             }
-            $currentOrder++;
         }
 
         return response()->json(['OK']);

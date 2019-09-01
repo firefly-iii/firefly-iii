@@ -28,7 +28,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -55,7 +54,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
-     *  // it's 5.
      */
     public function cleanupBudgets(): bool
     {
@@ -65,23 +63,14 @@ class BudgetRepository implements BudgetRepositoryInterface
         } catch (Exception $e) {
             Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
-        Budget::where('order', 0)->update(['order' => 100]);
-
-        // do the clean up by hand because Sqlite can be tricky with this.
-        $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
-        $count        = [];
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($budgetLimits as $budgetLimit) {
-            $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
-            if (isset($count[$key])) {
-                // delete it!
-                try {
-                    BudgetLimit::find($budgetLimit->id)->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
-                }
-            }
-            $count[$key] = true;
+        $budgets = $this->getActiveBudgets();
+        /**
+         * @var int    $index
+         * @var Budget $budget
+         */
+        foreach ($budgets as $index => $budget) {
+            $budget->order = $index + 1;
+            $budget->save();
         }
 
         return true;

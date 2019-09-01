@@ -258,8 +258,11 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budget-limits', 'as' => 'budget-limits.'],
     static function () {
 
-        Route::get('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
+        Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create']);
         Route::post('store', ['uses' => 'Budget\BudgetLimitController@store', 'as' => 'store']);
+
+        Route::get('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
+
         Route::post('update/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@update', 'as' => 'update']);
     }
 );

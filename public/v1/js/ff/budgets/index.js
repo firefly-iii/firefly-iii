@@ -39,6 +39,8 @@ $(function () {
     $('.create_ab_alt').on('click', createAltAvailableBudget);
 
     $('.budget_amount').on('change', updateBudgetedAmount);
+    $('.create_bl').on('click', createBudgetLimit);
+
 
     /*
      When the input changes, update the percentages for the budgeted bar:
@@ -49,8 +51,7 @@ $(function () {
         var selected = $(e.currentTarget);
         if (selected.find(":selected").val() !== "x") {
             var newUri = budgetIndexUri.replace("START", selected.find(":selected").data('start')).replace('END', selected.find(":selected").data('end'));
-            console.log(newUri);
-            window.location.assign(newUri + "?page=" + page);
+            window.location.assign(newUri);
         }
     });
 
@@ -88,9 +89,9 @@ function updateBudgetedAmount(e) {
     var budgetId = parseInt(input.data('id'));
     var budgetLimitId = parseInt(input.data('limit'));
     var currencyId = parseInt(input.data('currency'));
-    console.log(budgetLimitId);
+    input.prop('disabled', true);
     if (0 === budgetLimitId) {
-        $.post(createBudgetLimitUri, {
+        $.post(storeBudgetLimitUri, {
             _token: token,
             budget_id: budgetId,
             transaction_currency_id: currencyId,
@@ -99,12 +100,21 @@ function updateBudgetedAmount(e) {
             end: periodEnd
         }).done(function (data) {
 
-            alert('done!');
+            input.prop('disabled', false);
+
+            // update amount left.
+            $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted);
+            if (data.left_per_day > 0) {
+                $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
+            }
+            console.log(data);
+            //$('.left_span[data-limit="0"][data-id="' + budgetId + '"]').text('XXXXX');
+
         }).fail(function () {
             alert('I failed :(');
         });
     } else {
-        $.post(updateBudgetLimitUri.replace('REPLACEME', budgetLimitId), {
+        $.post(updateBudgetLimitUri.replace('REPLACEME', budgetLimitId.toString()), {
             _token: token,
             amount: input.val(),
         }).done(function (data) {
@@ -142,14 +152,21 @@ function sortStop(event, ui) {
     });
     var arr = {
         budgetIds: submit,
-        page: page,
         _token: token
     };
     $.post('budgets/reorder', arr);
 }
 
-function createAltAvailableBudget(e) {
+function createBudgetLimit(e) {
     var button = $(e.currentTarget);
+    var budgetId = button.data('id');
+    $('#defaultModal').empty().load(createBudgetLimitUri.replace('REPLACEME', budgetId.toString()), function () {
+        $('#defaultModal').modal('show');
+    });
+    return false;
+}
+
+function createAltAvailableBudget(e) {
     $('#defaultModal').empty().load(createAltAvailableBudgetUri, function () {
         $('#defaultModal').modal('show');
     });
@@ -180,18 +197,15 @@ function drawBudgetedBars() {
         var bar = $(v);
         var budgeted = parseFloat(bar.data('budgeted'));
         var available = parseFloat(bar.data('available'));
-        console.log('Budgeted bar for bar ' + bar.data('id'));
         var budgetedTooMuch = budgeted > available;
         var pct;
         if (budgetedTooMuch) {
-            console.log('over budget');
             // budgeted too much.
             pct = (available / budgeted) * 100;
             bar.find('.progress-bar-warning').css('width', pct + '%');
             bar.find('.progress-bar-danger').css('width', (100 - pct) + '%');
             bar.find('.progress-bar-info').css('width', 0);
         } else {
-            console.log('under budget');
             pct = (budgeted / available) * 100;
             bar.find('.progress-bar-warning').css('width', 0);
             bar.find('.progress-bar-danger').css('width', 0);

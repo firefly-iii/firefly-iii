@@ -100,6 +100,22 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
+     * @param Budget              $budget
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return BudgetLimit|null
+     */
+    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit
+    {
+        return $budget->budgetlimits()
+                      ->where('transaction_currency_id', $currency->id)
+                      ->where('start_date', $start->format('Y-m-d'))
+                      ->where('end_date', $end->format('Y-m-d'))->first();
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
