@@ -30,32 +30,6 @@ namespace FireflyIII\Support\Http\Controllers;
 trait BasicDataSupport
 {
 
-    /**
-     * Filters empty results from getBudgetPeriodReport.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function filterPeriodReport(array $data): array // helper function for period overview.
-    {
-        /**
-         * @var int   $entryId
-         * @var array $set
-         */
-        foreach ($data as $entryId => $set) {
-            $sum = '0';
-            $entries = $set['entries'] ?? [];
-            foreach ($entries as $amount) {
-                $sum = bcadd($amount, $sum);
-            }
-            $data[$entryId]['sum'] = $sum;
-            if (0 === bccomp('0', $sum)) {
-                unset($data[$entryId]);
-            }
-        }
-        return $data;
-    }
 
     /**
      * Find the ID in a given array. Return '0' of not there (amount).

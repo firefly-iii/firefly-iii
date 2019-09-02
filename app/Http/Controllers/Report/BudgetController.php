@@ -41,6 +41,26 @@ class BudgetController extends Controller
 {
     use BasicDataSupport;
 
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
+
+    /**
+     * ExpenseReportController constructor.
+     *
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -49,10 +69,8 @@ class BudgetController extends Controller
      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        // get all journals.
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $report        = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $report = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId          = $account->id;
@@ -101,11 +119,9 @@ class BudgetController extends Controller
      */
     public function accounts(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        // get all journals.
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $report        = [];
-        $sums          = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $report = [];
+        $sums   = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId          = $account->id;
@@ -156,10 +172,8 @@ class BudgetController extends Controller
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        // get all journals.
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $result        = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result = [];
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
             foreach ($currency['budgets'] as $budget) {
@@ -210,11 +224,9 @@ class BudgetController extends Controller
      */
     public function budgets(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        // get all journals.
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $sums          = [];
-        $report        = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $sums   = [];
+        $report = [];
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $budgetId          = $budget->id;
@@ -257,6 +269,7 @@ class BudgetController extends Controller
 
     /**
      * Show partial overview of budgets.
+     * TODO can be replaced I think.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -310,14 +323,12 @@ class BudgetController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $periods       = app('navigation')->listOfPeriods($start, $end);
-        $keyFormat     = app('navigation')->preferredCarbonFormat($start, $end);
+        $periods   = app('navigation')->listOfPeriods($start, $end);
+        $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
 
 
         // list expenses for budgets in account(s)
-        $expenses = $opsRepository->listExpenses($start, $end, $accounts);
+        $expenses = $this->opsRepository->listExpenses($start, $end, $accounts);
 
         $report = [];
         foreach ($expenses as $currency) {
@@ -363,10 +374,8 @@ class BudgetController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        // get all journals.
-        $opsRepository = app(OperationsRepositoryInterface::class);
-        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $result        = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result = [];
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
             foreach ($currency['budgets'] as $budget) {
