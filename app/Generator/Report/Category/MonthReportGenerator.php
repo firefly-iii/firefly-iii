@@ -95,7 +95,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
                 ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;

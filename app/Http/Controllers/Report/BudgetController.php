@@ -116,6 +116,8 @@ class BudgetController extends Controller
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function accounts(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -392,6 +394,8 @@ class BudgetController extends Controller
                         'currency_name'            => $currency['currency_name'],
                         'currency_symbol'          => $currency['currency_symbol'],
                         'currency_decimal_places'  => $currency['currency_decimal_places'],
+                        'budget_id'                => $budget['id'],
+                        'budget_name'              => $budget['name'],
                     ];
                 }
             }

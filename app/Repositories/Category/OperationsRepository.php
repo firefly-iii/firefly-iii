@@ -78,7 +78,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
-        $collector->withCategoryInformation();
+        $collector->withCategoryInformation()->withAccountInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
@@ -115,8 +115,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount' => app('steam')->negative($journal['amount']),
-                'date'   => $journal['date'],
+                'amount'            => app('steam')->negative($journal['amount']),
+                'date'              => $journal['date'],
+                'source_account_id' => $journal['source_account_id'],
             ];
 
         }
@@ -155,8 +156,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            $categoryId = (int)$journal['category_id'];
+            $currencyId   = (int)$journal['currency_id'];
+            $categoryId   = (int)$journal['category_id'];
             $categoryName = (string)$journal['category_name'];
 
             // catch "no category" entries.

@@ -17,28 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-
-/** global: categoryIncomeUri, categoryExpenseUri, accountIncomeUri, accountExpenseUri, mainUri */
-
 $(function () {
     "use strict";
     drawChart();
 
-    $('#categories-in-pie-chart-checked').on('change', function () {
-        redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
-    });
 
-    $('#categories-out-pie-chart-checked').on('change', function () {
-        redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
-    });
-
-    $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
-    });
-
-    $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
-    });
+    // $('#categories-in-pie-chart-checked').on('change', function () {
+    //     redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
+    // });
+    //
+    // $('#categories-out-pie-chart-checked').on('change', function () {
+    //     redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
+    // });
+    //
+    // $('#accounts-in-pie-chart-checked').on('change', function () {
+    //     redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
+    // });
+    //
+    // $('#accounts-out-pie-chart-checked').on('change', function () {
+    //     redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
+    // });
 
 });
 
@@ -46,28 +44,21 @@ $(function () {
 function drawChart() {
     "use strict";
 
+    loadAjaxPartial('accountsHolder', accountsUri);
+
+
     // month view:
-    doubleYChart(mainUri, 'in-out-chart');
+    //doubleYChart(mainUri, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
-    redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
-    redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
-    redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
+    // redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
+    // redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
+    // redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
+    // redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
 
 }
 
 function redrawPieChart(uri, container) {
     "use strict";
-    var checkbox = $('#' + container + '-checked');
-
-    var others = '0';
-    // check if box is checked:
-    if (checkbox.prop('checked')) {
-        others = '1';
-    }
-    uri = uri.replace('OTHERS', others);
-
-    pieChart(uri, container);
-
+    multiCurrencyPieChart(uri, container);
 }

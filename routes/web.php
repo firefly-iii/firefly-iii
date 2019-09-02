@@ -82,12 +82,13 @@ Route::group(
 // *
 // */
 Route::group(
-    ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'], static function () {
-    Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
-    Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-    //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-    //
-}
+    ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
+    static function () {
+        Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
+        Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
+        //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
+        //
+    }
 );
 
 /**
@@ -320,21 +321,22 @@ Route::group(
  * Chart\Account Controller (default report)
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'], static function () {
-    Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
-    Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
-    Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
-    Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
-    Route::get('period/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@period', 'as' => 'period']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'],
+    static function () {
+        Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
+        Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
+        Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
+        Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
+        Route::get('period/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 
-    Route::get('income-category/{account}/all/all', ['uses' => 'AccountController@incomeCategoryAll', 'as' => 'income-category-all']);
-    Route::get('expense-category/{account}/all/all', ['uses' => 'AccountController@expenseCategoryAll', 'as' => 'expense-category-all']);
-    Route::get('expense-budget/{account}/all/all', ['uses' => 'AccountController@expenseBudgetAll', 'as' => 'expense-budget-all']);
+        Route::get('income-category/{account}/all/all', ['uses' => 'AccountController@incomeCategoryAll', 'as' => 'income-category-all']);
+        Route::get('expense-category/{account}/all/all', ['uses' => 'AccountController@expenseCategoryAll', 'as' => 'expense-category-all']);
+        Route::get('expense-budget/{account}/all/all', ['uses' => 'AccountController@expenseBudgetAll', 'as' => 'expense-budget-all']);
 
-    Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category']);
-    Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category']);
-    Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
-}
+        Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category']);
+        Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category']);
+        Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
+    }
 );
 
 
@@ -342,37 +344,50 @@ Route::group(
  * Chart\Bill Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/bill', 'as' => 'chart.bill.'], static function () {
-    Route::get('frontpage', ['uses' => 'BillController@frontpage', 'as' => 'frontpage']);
-    Route::get('single/{bill}', ['uses' => 'BillController@single', 'as' => 'single']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/bill', 'as' => 'chart.bill.'],
+    static function () {
+        Route::get('frontpage', ['uses' => 'BillController@frontpage', 'as' => 'frontpage']);
+        Route::get('single/{bill}', ['uses' => 'BillController@single', 'as' => 'single']);
 
-}
+    }
 );
 
 /**
  * Chart\Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/budget', 'as' => 'chart.budget.'], static function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/budget', 'as' => 'chart.budget.'],
+    static function () {
 
-    Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
-    Route::get('period/0/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget']);
-    Route::get('period/{budget}/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
-    Route::get('budget/{budget}/{budgetLimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
-    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
+        Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
+        Route::get('period/0/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget']);
+        Route::get('period/{budget}/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
+        Route::get('budget/{budget}/{budgetLimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
+        Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
-    // these charts are used in budget/show:
-    Route::get('expense-category/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
-    Route::get('expense-asset/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
-    Route::get('expense-expense/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
+        // these charts are used in budget/show:
+        Route::get('expense-category/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
+        Route::get('expense-asset/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
+        Route::get('expense-expense/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
-    // these charts are used in reports (category reports):
-    Route::get('category/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@categoryExpense', 'as' => 'category-expense']);
-    Route::get('budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']);
-    Route::get('source-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@sourceAccountExpense', 'as' => 'source-account-expense']);
-    Route::get('destination-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@destinationAccountExpense', 'as' => 'destination-account-expense']);
-    Route::get('operations/{accountList}/{budget}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']);
-}
+        // these charts are used in reports (category reports):
+        Route::get(
+            'category/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
+            ['uses' => 'BudgetReportController@categoryExpense', 'as' => 'category-expense']
+        );
+        Route::get(
+            'budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']
+        );
+        Route::get(
+            'source-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
+            ['uses' => 'BudgetReportController@sourceAccountExpense', 'as' => 'source-account-expense']
+        );
+        Route::get(
+            'destination-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
+            ['uses' => 'BudgetReportController@destinationAccountExpense', 'as' => 'destination-account-expense']
+        );
+        Route::get('operations/{accountList}/{budget}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']);
+    }
 );
 
 /**
@@ -465,12 +480,13 @@ Route::group(
  * Chart\Expense Controller (for expense/revenue report).
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/expense', 'as' => 'chart.expense.'], static function () {
-    Route::get(
-        'operations/{accountList}/{expenseList}/{start_date}/{end_date}',
-        ['uses' => 'ExpenseReportController@mainChart', 'as' => 'main']
-    );
-}
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/expense', 'as' => 'chart.expense.'],
+    static function () {
+        Route::get(
+            'operations/{accountList}/{expenseList}/{start_date}/{end_date}',
+            ['uses' => 'ExpenseReportController@mainChart', 'as' => 'main']
+        );
+    }
 );
 
 
@@ -488,11 +504,12 @@ Route::group(
  * Chart\Report Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/report', 'as' => 'chart.report.'], static function () {
-    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations', 'as' => 'operations']);
-    Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth', 'as' => 'net-worth']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/report', 'as' => 'chart.report.'],
+    static function () {
+        Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations', 'as' => 'operations']);
+        Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth', 'as' => 'net-worth']);
 
-}
+    }
 );
 
 /**
@@ -776,9 +793,14 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/category',
      'as'         => 'report-data.category.'], static function () {
+
+    // TODO still in use?
     Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
     Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
     Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses']);
+
+    Route::get('accounts/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryController@accounts', 'as' => 'accounts']);
+
 
 }
 );
@@ -788,7 +810,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/balance', 'as' => 'report-data.balance.'],
-    function () {
+    static function () {
 
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general']);
     }
@@ -801,12 +823,16 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'],
     static function () {
 
+        // todo are these two routes still used?
         Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general']);
         Route::get('period/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
 
         Route::get('accounts/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accounts', 'as' => 'accounts']);
         Route::get('budgets/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
-        Route::get('account-per-budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accountPerBudget', 'as' => 'account-per-budget']);
+        Route::get(
+            'account-per-budget/{accountList}/{budgetList}/{start_date}/{end_date}',
+            ['uses' => 'BudgetController@accountPerBudget', 'as' => 'account-per-budget']
+        );
         Route::get('top-expenses/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@topExpenses', 'as' => 'top-expenses']);
         Route::get('avg-expenses/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@avgExpenses', 'as' => 'avg-expenses']);
 

@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
@@ -40,6 +41,27 @@ use Throwable;
 class CategoryController extends Controller
 {
     use BasicDataSupport;
+
+
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
+
+    /**
+     * ExpenseReportController constructor.
+     *
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
 
     /**
      * Show overview of expenses in category.
@@ -144,6 +166,61 @@ class CategoryController extends Controller
         $cache->store($result);
 
         return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function accounts(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    {
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $report = [];
+        $sums   = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountId          = $account->id;
+            $report[$accountId] = $report[$accountId] ?? [
+                    'name'       => $account->name,
+                    'id'         => $account->id,
+                    'iban'       => $account->iban,
+                    'currencies' => [],
+                ];
+        }
+
+        // loop expenses.
+        foreach ($spent as $currency) {
+            $currencyId        = $currency['currency_id'];
+            $sums[$currencyId] = $sums[$currencyId] ?? [
+                    'currency_id'             => $currency['currency_id'],
+                    'currency_symbol'         => $currency['currency_symbol'],
+                    'currency_name'           => $currency['currency_name'],
+                    'currency_decimal_places' => $currency['currency_decimal_places'],
+                    'sum'                     => '0',
+                ];
+            foreach ($currency['categories'] as $category) {
+                foreach ($category['transaction_journals'] as $journal) {
+                    $sourceAccountId                                            = $journal['source_account_id'];
+                    $report[$sourceAccountId]['currencies'][$currencyId]        = $report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                            'currency_id'             => $currency['currency_id'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_name'           => $currency['currency_name'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                            'sum'                     => '0',
+                        ];
+                    $report[$sourceAccountId]['currencies'][$currencyId]['sum'] = bcadd(
+                        $report[$sourceAccountId]['currencies'][$currencyId]['sum'], $journal['amount']
+                    );
+                    $sums[$currencyId]['sum']                                   = bcadd($sums[$currencyId]['sum'], $journal['amount']);
+                }
+            }
+        }
+
+        return view('reports.category.partials.accounts', compact('sums', 'report'));
     }
 
 
