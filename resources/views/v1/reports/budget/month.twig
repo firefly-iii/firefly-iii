@@ -7,83 +7,50 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            {# spent in these budgets per account, per currency.#}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accounts'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <tr>
-                            <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% set sum = 0 %}
-                        {% for account in accounts %}
-
-                            <tr>
-                                <td data-value="{{ account.name }}">
-                                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
-                                </td>
-                                {% if accountSummary[account.id] %}
-                                    {% set sum = sum + accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id] }}"
-                                        style="text-align: right;">{{ accountSummary[account.id]|formatAmount }}</td>
-                                {% else %}
-                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td>{{ 'sum'|_ }}</td>
-                            <td style="text-align: right;">{{ sum|formatAmount }}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                <div class="box-body table-responsive no-padding" id="accountsHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
-
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <tr>
-                            <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for budget in budgets %}
-                            <tr>
-                                <td data-value="{{ budget.name }}">
-                                    <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }}</a>
-                                </td>
-                                {% if budgetSummary[budget.id] %}
-                                    <td data-value="{{ budgetSummary[budget.id] }}" style="text-align: right;">{{ budgetSummary[budget.id]|formatAmount }}</td>
-                                {% else %}
-                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td>{{ 'sum'|_ }}</td>
-                            <td style="text-align: right;">{{ budgetSummary.sum|formatAmount }}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                <div class="box-body table-responsive no-padding" id="budgetsHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'account_per_budget'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="accountPerbudgetHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         {% if budgets.count > 1 %}
             <div class="col-lg-4 col-md-6">
                 <div class="box">
@@ -145,6 +112,12 @@
                         <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
+                    </div>
+                    {# loading indicator #}
+                    <div class="overlay">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    {#
                         <table class="table table-hover sortable">
                             <thead>
                             <tr>
@@ -198,6 +171,7 @@
                             </tfoot>
                         </table>
                     </div>
+                    #}
                 </div>
             </div>
         {% endif %}
@@ -208,7 +182,14 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="box-body table-responsive no-padding">
+                    </div>
+                    {# loading indicator #}
+                    <div class="overlay">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    {#
+
                         <table class="table table-hover sortable">
                             <thead>
                             <tr>
@@ -249,7 +230,7 @@
                                 </td>
 
 
-                                <td data-value="{{ row.amount}}" style="text-align: right;">
+                                <td data-value="{{ row.amount }}" style="text-align: right;">
                                     {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
                                 </td>
 
@@ -273,6 +254,7 @@
                             </tfoot>
                         </table>
                     </div>
+                    #}
                 </div>
             </div>
         {% endif %}
@@ -292,6 +274,11 @@
         var endDate = '{{ end.format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
         var budgetIds = '{{ budgetIds }}';
+
+        // html block URI's:
+        var accountsUri = '{{ route('report-data.budget.accounts', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsUri =  '{{ route('report-data.budget.budgets', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountPerBudgetUri =  '{{ route('report-data.budget.account-per-budget', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // chart uri's
         var budgetExpenseUri = '{{ route('chart.budget.budget-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';

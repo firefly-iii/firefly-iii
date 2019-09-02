@@ -24,6 +24,11 @@ $(function () {
     "use strict";
     drawChart();
 
+    loadAjaxPartial('accountsHolder', accountsUri);
+    loadAjaxPartial('budgetsHolder', budgetsUri);
+    loadAjaxPartial('accountPerbudgetHolder', accountPerBudgetUri);
+
+
     $('#budgets-out-pie-chart-checked').on('change', function () {
         redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
     });

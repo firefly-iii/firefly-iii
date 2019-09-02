@@ -66,17 +66,13 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $budgetIds       = implode(',', $this->budgets->pluck('id')->toArray());
-        $expenses        = $this->getExpenses();
-        $accountSummary  = $this->summarizeByAccount($expenses);
-        $budgetSummary   = $this->summarizeByBudget($expenses);
-        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
-        $topExpenses     = $this->getTopExpenses();
-
-        // render!
+        $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
+        $budgetIds  = implode(',', $this->budgets->pluck('id')->toArray());
         try {
-            $result = view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
+            $result = view(
+                'reports.budget.month',
+                compact('accountIds', 'budgetIds')
+            )
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
@@ -84,57 +80,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = 'Could not render report view.';
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the expenses.
-     *
-     * @return array
-     */
-    protected function getExpenses(): array
-    {
-        if (count($this->expenses) > 0) {
-            Log::debug('Return previous set of expenses.');
-
-            return $this->expenses;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withAccountInformation()
-                  ->withBudgetInformation()
-                  ->setBudgets($this->budgets);
-
-        $journals       = $collector->getExtractedJournals();
-        $this->expenses = $journals;
-
-        return $journals;
-    }
-
-    /**
-     * Summarize a collection by its budget.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function summarizeByBudget(array $array): array
-    {
-        $result = [
-            'sum' => '0',
-        ];
-
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            $budgetId          = (int)$journal['budget_id'];
-            $result[$budgetId] = $result[$budgetId] ?? '0';
-            $result[$budgetId] = bcadd($journal['amount'], $result[$budgetId]);
-            $result['sum']     = bcadd($result['sum'], $journal['amount']);
         }
 
         return $result;
@@ -230,5 +175,32 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
+    }
+
+    /**
+     * Get the expenses.
+     *
+     * @return array
+     */
+    protected function getExpenses(): array
+    {
+        if (count($this->expenses) > 0) {
+            Log::debug('Return previous set of expenses.');
+
+            return $this->expenses;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->setBudgets($this->budgets);
+
+        $journals       = $collector->getExtractedJournals();
+        $this->expenses = $journals;
+
+        return $journals;
     }
 }

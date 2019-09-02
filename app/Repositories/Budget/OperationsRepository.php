@@ -248,8 +248,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
-                'amount' => app('steam')->negative($journal['amount']),
-                'date'   => $journal['date'],
+                'amount'            => app('steam')->negative($journal['amount']),
+                'source_account_id' => $journal['source_account_id'],
+                'date'              => $journal['date'],
             ];
 
         }

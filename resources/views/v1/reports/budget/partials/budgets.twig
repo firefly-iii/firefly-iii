@@ -1,0 +1,40 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for budget in report %}
+        {% if budget.currencies|length == 0 %}
+            <tr>
+                <td data-value="{{ budget.name }}">
+                    <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }}</a>
+                </td>
+                <td style="text-align: right;">&mdash;</td>
+            </tr>
+        {% endif %}
+        {% for currency in budget.currencies %}
+            <tr>
+                <td data-value="{{ budget.name }} ({{ currency.currency_name }})">
+                    <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }} ({{ currency.currency_name }})</a>
+                </td>
+                <td data-value="{{ currency.sym }}" style="text-align: right;">
+                    {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% for sum in sums %}
+        <tr>
+            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tfoot>
+</table>
