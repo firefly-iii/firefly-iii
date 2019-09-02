@@ -211,7 +211,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $budgets || (null !== $budgets && 0 === $budgets->count())) {
             $collector->setBudgets($this->getBudgets());
         }
-        $collector->withBudgetInformation();
+        $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
@@ -248,9 +248,15 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
-                'amount'            => app('steam')->negative($journal['amount']),
-                'source_account_id' => $journal['source_account_id'],
-                'date'              => $journal['date'],
+                'amount'                   => app('steam')->negative($journal['amount']),
+                'destination_account_id'   => $journal['destination_account_id'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'source_account_id'        => $journal['source_account_id'],
+                'source_account_name'      => $journal['source_account_name'],
+                'category_name'            => $journal['category_name'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
+                'date'                     => $journal['date'],
             ];
 
         }

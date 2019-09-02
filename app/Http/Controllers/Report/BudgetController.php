@@ -153,6 +153,58 @@ class BudgetController extends Controller
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
+     */
+    public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
+    {
+        // get all journals.
+        $opsRepository = app(OperationsRepositoryInterface::class);
+        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result        = [];
+        foreach ($spent as $currency) {
+            $currencyId = $currency['currency_id'];
+            foreach ($currency['budgets'] as $budget) {
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $destinationId          = $journal['destination_account_id'];
+                    $result[$destinationId] = $result[$destinationId] ?? [
+                            'transactions'             => 0,
+                            'sum'                      => '0',
+                            'avg'                      => '0',
+                            'avg_float'                => 0,
+                            'destination_account_name' => $journal['destination_account_name'],
+                            'destination_account_id'   => $journal['destination_account_id'],
+                            'currency_id'              => $currency['currency_id'],
+                            'currency_name'            => $currency['currency_name'],
+                            'currency_symbol'          => $currency['currency_symbol'],
+                            'currency_decimal_places'  => $currency['currency_decimal_places'],
+                        ];
+                    $result[$destinationId]['transactions']++;
+                    $result[$destinationId]['sum']       = bcadd($journal['amount'], $result[$destinationId]['sum']);
+                    $result[$destinationId]['avg']       = bcdiv($result[$destinationId]['sum'], (string)$result[$destinationId]['transactions']);
+                    $result[$destinationId]['avg_float'] = (float)$result[$destinationId]['avg'];
+                }
+            }
+        }
+        // sort by amount_float
+        // sort temp array by amount.
+        $amounts = array_column($result, 'avg_float');
+        array_multisort($amounts, SORT_ASC, $result);
+
+        try {
+            $result = view('reports.budget.partials.avg-expenses', compact('result'))->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            $result = sprintf('Could not render view: %s', $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -238,7 +290,6 @@ class BudgetController extends Controller
         return $result;
     }
 
-
     /**
      * Show budget overview for a period.
      *
@@ -300,6 +351,54 @@ class BudgetController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     */
+    public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
+    {
+        // get all journals.
+        $opsRepository = app(OperationsRepositoryInterface::class);
+        $spent         = $opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result        = [];
+        foreach ($spent as $currency) {
+            $currencyId = $currency['currency_id'];
+            foreach ($currency['budgets'] as $budget) {
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $result[] = [
+                        'description'              => $journal['description'],
+                        'transaction_group_id'     => $journal['transaction_group_id'],
+                        'amount_float'             => (float)$journal['amount'],
+                        'amount'                   => $journal['amount'],
+                        'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'destination_account_name' => $journal['destination_account_name'],
+                        'destination_account_id'   => $journal['destination_account_id'],
+                        'currency_id'              => $currency['currency_id'],
+                        'currency_name'            => $currency['currency_name'],
+                        'currency_symbol'          => $currency['currency_symbol'],
+                        'currency_decimal_places'  => $currency['currency_decimal_places'],
+                    ];
+                }
+            }
+        }
+        // sort by amount_float
+        // sort temp array by amount.
+        $amounts = array_column($result, 'amount_float');
+        array_multisort($amounts, SORT_ASC, $result);
+
+        try {
+            $result = view('reports.budget.partials.top-expenses', compact('result'))->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            $result = sprintf('Could not render view: %s', $e->getMessage());
+        }
 
         return $result;
     }

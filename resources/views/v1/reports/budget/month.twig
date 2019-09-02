@@ -8,7 +8,6 @@
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {# spent in these budgets per account, per currency.#}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accounts'|_ }}</h3>
@@ -51,213 +50,100 @@
         </div>
     </div>
     <div class="row">
-        {% if budgets.count > 1 %}
-            <div class="col-lg-4 col-md-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expense_per_budget'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <div style="width:100%;margin:0 auto;">
-                            <canvas id="budgets-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
-                        </div>
-                        <label style="font-weight:normal;">
-                            <input type="checkbox" id="budgets-out-pie-chart-checked">
-                            <small>{{ 'include_expense_not_in_budget'|_ }}</small>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="col-lg-4 col-md-6">
-            <div class="box" id="pieCharts">
+        <div class="col-lg-6 col-md-6">
+            <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
+                    <h3 class="box-title">{{ 'expense_per_budget'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <div style="width:100%;margin:0 auto;">
-                        <canvas id="accounts-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                        <canvas id="budgets-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
-                    <label style="font-weight:normal;">
-                        <input type="checkbox" id="accounts-out-pie-chart-checked">
-                        <small>{{ 'include_expense_not_in_account'|_ }}</small>
-                    </label>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="box" id="incomeAndExpensesChart">
+        <div class="col-lg-6 col-md-6">
+            <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
+                    <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {#
-                    Here be a chart with the budget limits as well if relevant.<br>
-                    amount spent vs budget limit reps<br>
-                    over the entire period the amount spent would rise and the budget limit rep would be like a heart beat jumping up and down<br>
-                    needs to be two axes to work<br>#}
-                    <canvas id="in-out-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="categories-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        {% if averageExpenses|length > 0 %}
-            <div class="col-lg-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
+        <div class="col-lg-6 col-md-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_source_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="source-accounts-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
-                    <div class="box-body table-responsive no-padding">
-                    </div>
-                    {# loading indicator #}
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                    {#
-                        <table class="table table-hover sortable">
-                            <thead>
-                            <tr>
-                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19" style="text-align: right;">{{ 'spent_average'|_ }}</th>
-                                <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% set totalCount = 0 %}
-                            {% set totalSum = 0 %}
-                            {% for row in averageExpenses %}
-                                {% set totalCount = totalCount+ row.count %}
-                                {% set totalSum = totalSum + row.sum %}
-                                {% if loop.index > listLength %}
-                                    <tr class="overListLength">
-                                {% else %}
-                                    <tr>
-                                {% endif %}
-                                <td data-value="{{ row.name }}">
-                                    <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
-                                </td>
-                                <td data-value="{{ row.average }}" style="text-align: right;">
-                                    {{ row.average|formatAmount }}
-                                </td>
-                                <td data-value="{{ row.sum }}" style="text-align: right;">
-                                    {{ row.sum|formatAmount }}
-                                </td>
-                                <td data-value="{{ row.count }}">
-                                    {{ row.count }}
-                                </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                            <tfoot>
-                            {% if averageExpenses|length > listLength %}
-                                <tr>
-                                    <td colspan="4" class="active">
-                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td colspan="2">
-                                    {{ 'sum'|_ }}
-                                </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
-                                <td>{{ totalCount }}</td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    #}
                 </div>
             </div>
-        {% endif %}
-        {% if topExpenses|length > 0 %}
-            <div class="col-lg-6">
-
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_destination_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="dest-accounts-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
-                    <div class="box-body table-responsive no-padding">
-                    </div>
-                    {# loading indicator #}
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                    {#
-
-                        <table class="table table-hover sortable">
-                            <thead>
-                            <tr>
-                                <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
-                                <th data-defaultsign="month">{{ 'date'|_ }}</th>
-                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19" style="text-align: right;">{{ 'amount'|_ }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% set totalSum = 0 %}
-                            {% for row in topExpenses %}
-
-                                {% set totalSum = totalSum + row.amount %}
-
-                                {% if loop.index > listLength %}
-                                    <tr class="overListLength">
-                                {% else %}
-                                    <tr>
-                                {% endif %}
-                                <td data-sortable="false">
-                                    <a href="{{ route('transactions.show', row.transaction_group_id) }}">
-                                        {% if row.group_title|length > 0 %}
-                                            {{ row.group_title }} ({{ row.description }})
-                                        {% else %}
-                                            {{ row.description }}
-                                        {% endif %}
-                                    </a>
-                                </td>
-                                <td data-value="{{ row.date.format('Y-m-d') }}">
-                                    {{ row.date.formatLocalized(monthAndDayFormat) }}
-                                </td>
-
-                                <td data-value="{{ row.destination_account_name }}">
-                                    <a href="{{ route('accounts.show', row.destination_account_id) }}">
-                                        {{ row.destination_account_name }}
-                                    </a>
-                                </td>
-
-
-                                <td data-value="{{ row.amount }}" style="text-align: right;">
-                                    {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
-                                </td>
-
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                            <tfoot>
-                            {% if topExpenses|length > listLength %}
-                                <tr>
-                                    <td colspan="4" class="active">
-                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td colspan="3">
-                                    {{ 'sum'|_ }}
-                                </td>
-                                <td style="text-align:right">{{ totalSum|formatAmount }}</td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    #}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    </div>
+
+    {% for budget in budgets %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box main_budget_chart">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses'|_ }} ({{ budget.name }})</h3>
+                </div>
+                <div class="box-body">
+                    <canvas class="main_budget_canvas" data-url="{{ route('chart.budget.main', [accountIds, budget.id, start.format('Ymd'), end.format('Ymd')]) }}" id="in-out-chart-{{ budget.id }}" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_spending_per_destination'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="avgExpensesHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="topExpensesHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
@@ -277,13 +163,16 @@
 
         // html block URI's:
         var accountsUri = '{{ route('report-data.budget.accounts', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetsUri =  '{{ route('report-data.budget.budgets', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var accountPerBudgetUri =  '{{ route('report-data.budget.account-per-budget', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsUri = '{{ route('report-data.budget.budgets', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountPerBudgetUri = '{{ route('report-data.budget.account-per-budget', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgExpensesUri = '{{ route('report-data.budget.avg-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topExpensesUri = '{{ route('report-data.budget.top-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // chart uri's
-        var budgetExpenseUri = '{{ route('chart.budget.budget-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
-        var accountExpenseUri = '{{ route('chart.budget.account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
-        var mainUri = '{{ route('chart.budget.main', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetExpenseUri = '{{ route('chart.budget.budget-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryExpenseUri = '{{ route('chart.budget.category-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sourceExpenseUri = '{{ route('chart.budget.source-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var destinationExpenseUri = '{{ route('chart.budget.destination-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
     </script>
 
 

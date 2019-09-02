@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection MoreThanThreeArgumentsInspection */
 /**
  * BudgetReportController.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -24,12 +24,9 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
@@ -44,12 +41,11 @@ use Illuminate\Support\Collection;
 class BudgetReportController extends Controller
 {
     use AugumentData, TransactionCalculation;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $budgetRepository;
     /** @var GeneratorInterface Chart generation methods. */
     private $generator;
+
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * BudgetReportController constructor.
@@ -61,78 +57,89 @@ class BudgetReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->generator        = app(GeneratorInterface::class);
-                $this->budgetRepository = app(BudgetRepositoryInterface::class);
-                $this->blRepository     = app(BudgetLimitRepositoryInterface::class);
+                $this->generator     = app(GeneratorInterface::class);
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
 
                 return $next($request);
             }
         );
     }
 
-
     /**
-     * Chart that groups expenses by the account.
-     *
-     * TODO this chart is not multi-currency aware.
+     * Chart that groups the expenses by budget.
      *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param string     $others
      *
      * @return JsonResponse
      */
-    public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
+    public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {
-        /** @var MetaPieChartInterface $helper */
-        $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setBudgets($budgets);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === (int)$others);
-        $chartData = $helper->generate('expense', 'account');
-        $data      = $this->generator->pieChart($chartData);
+        $result = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+
+        // loop expenses.
+        foreach ($spent as $currency) {
+            foreach ($currency['budgets'] as $budget) {
+                $title          = sprintf('%s (%s)', $budget['name'], $currency['currency_name']);
+                $result[$title] = $result[$title] ?? [
+                        'amount'          => '0',
+                        'currency_symbol' => $currency['currency_symbol'],
+                    ];
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $amount                   = app('steam')->positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                }
+            }
+        }
+
+        $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
-
 
     /**
      * Chart that groups the expenses by budget.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param string     $others
      *
      * @return JsonResponse
      */
-    public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
+    public function categoryExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {
-        /** @var MetaPieChartInterface $helper */
-        $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setBudgets($budgets);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === (int)$others);
-        $chartData = $helper->generate('expense', 'budget');
-        $data      = $this->generator->pieChart($chartData);
+        $result = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        // loop expenses.
+        foreach ($spent as $currency) {
+            foreach ($currency['budgets'] as $budget) {
+
+
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $categoryName   = $journal['category_name'] ?? trans('firefly.no_category');
+                    $title          = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
+                    $result[$title] = $result[$title] ?? [
+                            'amount'          => '0',
+                            'currency_symbol' => $currency['currency_symbol'],
+                        ];
+
+                    $amount                   = app('steam')->positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                }
+            }
+        }
+
+        $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
 
-
     /**
-     * Main overview of a budget in the budget report.
-     *
-     * TODO this chart is not multi-currency aware.
+     * Chart that groups expenses by the account.
      *
      * @param Collection $accounts
      * @param Collection $budgets
@@ -140,82 +147,139 @@ class BudgetReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
      */
-    public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
+    public function destinationAccountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
-        $cache->addProperty('chart.budget.report.main');
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $function     = app('navigation')->preferredEndOfPeriod($start, $end);
-        $chartData    = [];
-        $currentStart = clone $start;
+        $result = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
 
-        // prep chart data:
-        foreach ($budgets as $budget) {
-            $chartData[$budget->id]           = [
-                'label'   => (string)trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
-                'type'    => 'bar',
-                'yAxisID' => 'y-axis-0',
-                'entries' => [],
-            ];
-            $chartData[$budget->id . '-sum']  = [
-                'label'   => (string)trans('firefly.sum_of_expenses_in_budget', ['budget' => $budget->name]),
-                'type'    => 'line',
-                'fill'    => false,
-                'yAxisID' => 'y-axis-1',
-                'entries' => [],
-            ];
-            $chartData[$budget->id . '-left'] = [
-                'label'   => (string)trans('firefly.left_in_budget_limit', ['budget' => $budget->name]),
-                'type'    => 'bar',
-                'fill'    => false,
-                'yAxisID' => 'y-axis-0',
-                'entries' => [],
-            ];
-        }
-        $allBudgetLimits = $this->blRepository->getAllBudgetLimits($start, $end);
-        $sumOfExpenses   = [];
-        $leftOfLimits    = [];
-        while ($currentStart < $end) {
-            $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->$function();
-            $expenses   = $this->groupByBudget($this->getExpensesInBudgets($accounts, $budgets, $currentStart, $currentEnd));
-            $label      = $currentStart->formatLocalized($format);
+        // loop expenses.
+        foreach ($spent as $currency) {
+            foreach ($currency['budgets'] as $budget) {
 
-            /** @var Budget $budget */
-            foreach ($budgets as $budget) {
-                // get budget limit(s) for this period):
-                $budgetLimits                                       = $this->filterBudgetLimits($allBudgetLimits, $budget, $currentStart, $currentEnd);
-                $currentExpenses                                    = $expenses[$budget->id] ?? '0';
-                $sumOfExpenses[$budget->id]                         = $sumOfExpenses[$budget->id] ?? '0';
-                $sumOfExpenses[$budget->id]                         = bcadd($currentExpenses, $sumOfExpenses[$budget->id]);
-                $chartData[$budget->id]['entries'][$label]          = bcmul($currentExpenses, '-1');
-                $chartData[$budget->id . '-sum']['entries'][$label] = bcmul($sumOfExpenses[$budget->id], '-1');
 
-                if (count($budgetLimits) > 0) {
-                    $budgetLimitId                                       = $budgetLimits->first()->id;
-                    $leftOfLimits[$budgetLimitId]                        = $leftOfLimits[$budgetLimitId] ?? (string)$budgetLimits->sum('amount');
-                    $leftOfLimits[$budgetLimitId]                        = bcadd($leftOfLimits[$budgetLimitId], $currentExpenses);
-                    $chartData[$budget->id . '-left']['entries'][$label] = $leftOfLimits[$budgetLimitId];
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $title          = sprintf('%s (%s)', $journal['destination_account_name'], $currency['currency_name']);
+                    $result[$title] = $result[$title] ?? [
+                            'amount'          => '0',
+                            'currency_symbol' => $currency['currency_symbol'],
+                        ];
+
+                    $amount                   = app('steam')->positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
-            /** @var Carbon $currentStart */
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay();
+        }
+
+        $data = $this->generator->multiCurrencyPieChart($result);
+
+        return response()->json($data);
+    }
+
+    /**
+     * Main overview of a budget in the budget report.
+     *
+     * @param Collection $accounts
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return JsonResponse
+     */
+    public function mainChart(Collection $accounts, Budget $budget, Carbon $start, Carbon $end): JsonResponse
+    {
+        $chartData = [];
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$budget]));
+        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+
+        // loop expenses.
+        foreach ($spent as $currency) {
+            // add things to chart Data for each currency:
+            $spentKey             = sprintf('%d-spent', $currency['currency_id']);
+            $chartData[$spentKey] = $chartData[$spentKey] ?? [
+                    'label'           => sprintf(
+                        '%s (%s)', (string)trans('firefly.spent_in_specific_budget', ['budget' => $budget['name']]), $currency['currency_name']
+                    ),
+                    'type'            => 'bar',
+                    'currency_symbol' => $currency['currency_symbol'],
+                    'currency_id'     => $currency['currency_id'],
+                    'entries'         => $this->makeEntries($start, $end),
+                ];
+
+            foreach ($currency['budgets'] as $currentBudget) {
+                foreach ($currentBudget['transaction_journals'] as $journal) {
+                    $key                                   = $journal['date']->formatLocalized($format);
+                    $amount                                = app('steam')->positive($journal['amount']);
+                    $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
+                }
+            }
         }
 
         $data = $this->generator->multiSet($chartData);
-        $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * Chart that groups expenses by the account.
+     *
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return JsonResponse
+     */
+    public function sourceAccountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
+    {
+        $result = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+
+        // loop expenses.
+        foreach ($spent as $currency) {
+            foreach ($currency['budgets'] as $budget) {
+
+
+                foreach ($budget['transaction_journals'] as $journal) {
+                    $title          = sprintf('%s (%s)', $journal['source_account_name'], $currency['currency_name']);
+                    $result[$title] = $result[$title] ?? [
+                            'amount'          => '0',
+                            'currency_symbol' => $currency['currency_symbol'],
+                        ];
+
+                    $amount                   = app('steam')->positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
+                }
+            }
+        }
+
+        $data = $this->generator->multiCurrencyPieChart($result);
+
+        return response()->json($data);
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->formatLocalized($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 
 }

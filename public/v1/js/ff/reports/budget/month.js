@@ -18,8 +18,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: budgetExpenseUri, accountExpenseUri, mainUri */
-
 $(function () {
     "use strict";
     drawChart();
@@ -28,14 +26,9 @@ $(function () {
     loadAjaxPartial('budgetsHolder', budgetsUri);
     loadAjaxPartial('accountPerbudgetHolder', accountPerBudgetUri);
 
+    loadAjaxPartial('topExpensesHolder', topExpensesUri);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
 
-    $('#budgets-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
-    });
-
-    $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-    });
 
 });
 
@@ -43,27 +36,21 @@ $(function () {
 function drawChart() {
     "use strict";
 
-    // month view:
-    doubleYNonStackedChart(mainUri, 'in-out-chart');
+    $.each($('.main_budget_canvas'), function (i, v) {
+        var canvas = $(v);
+        columnChart(canvas.data('url'), canvas.attr('id'));
+    });
 
     // draw pie chart of income, depending on "show other transactions too":
     redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
-    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
+    redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
+    redrawPieChart('source-accounts-pie-chart', sourceExpenseUri);
+    redrawPieChart('dest-accounts-pie-chart', destinationExpenseUri);
 
 
 }
 
 function redrawPieChart(container, uri) {
     "use strict";
-    var checkbox = $('#' + container + '-checked');
-
-    var others = '0';
-    // check if box is checked:
-    if (checkbox.prop('checked')) {
-        others = '1';
-    }
-    uri = uri.replace('OTHERS', others);
-
-    pieChart(uri, container);
-
+    multiCurrencyPieChart(uri, container);
 }

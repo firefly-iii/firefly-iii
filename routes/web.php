@@ -367,19 +367,11 @@ Route::group(
     Route::get('expense-expense/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
     // these charts are used in reports (category reports):
-    Route::get(
-        'budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}/{others}',
-        ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']
-    );
-    Route::get(
-        'account/expense/{accountList}/{budgetList}/{start_date}/{end_date}/{others}',
-        ['uses' => 'BudgetReportController@accountExpense', 'as' => 'account-expense']
-    );
-
-    Route::get(
-        'operations/{accountList}/{budgetList}/{start_date}/{end_date}',
-        ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']
-    );
+    Route::get('category/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@categoryExpense', 'as' => 'category-expense']);
+    Route::get('budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']);
+    Route::get('source-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@sourceAccountExpense', 'as' => 'source-account-expense']);
+    Route::get('destination-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@destinationAccountExpense', 'as' => 'destination-account-expense']);
+    Route::get('operations/{accountList}/{budget}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']);
 }
 );
 
@@ -401,19 +393,19 @@ Route::group(
 
         // these charts are used in reports (category reports):
         Route::get(
-            'category/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+            'category/income/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@categoryIncome', 'as' => 'category-income']
         );
         Route::get(
-            'category/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+            'category/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@categoryExpense', 'as' => 'category-expense']
         );
         Route::get(
-            'account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+            'account/income/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@accountIncome', 'as' => 'account-income']
         );
         Route::get(
-            'account/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+            'account/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@accountExpense', 'as' => 'account-expense']
         );
 
@@ -433,19 +425,19 @@ Route::group(
 
     // these charts are used in reports (tag reports):
     Route::get(
-        'tag/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        'tag/income/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@tagIncome', 'as' => 'tag-income']
     );
     Route::get(
-        'tag/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        'tag/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@tagExpense', 'as' => 'tag-expense']
     );
     Route::get(
-        'account/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        'account/income/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@accountIncome', 'as' => 'account-income']
     );
     Route::get(
-        'account/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        'account/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@accountExpense', 'as' => 'account-expense']
     );
 
@@ -815,6 +807,8 @@ Route::group(
         Route::get('accounts/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accounts', 'as' => 'accounts']);
         Route::get('budgets/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
         Route::get('account-per-budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accountPerBudget', 'as' => 'account-per-budget']);
+        Route::get('top-expenses/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@topExpenses', 'as' => 'top-expenses']);
+        Route::get('avg-expenses/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@avgExpenses', 'as' => 'avg-expenses']);
 
     }
 );
