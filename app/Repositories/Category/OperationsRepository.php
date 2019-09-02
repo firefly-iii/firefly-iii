@@ -151,7 +151,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
-        $collector->withCategoryInformation();
+        $collector->withCategoryInformation()->withAccountInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
@@ -188,8 +188,10 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount' => app('steam')->positive($journal['amount']),
-                'date'   => $journal['date'],
+                'amount'                 => app('steam')->positive($journal['amount']),
+                'date'                   => $journal['date'],
+                'source_account_id'      => $journal['source_account_id'],
+                'destination_account_id' => $journal['destination_account_id'],
             ];
 
         }

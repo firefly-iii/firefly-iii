@@ -45,6 +45,7 @@ function drawChart() {
     "use strict";
 
     loadAjaxPartial('accountsHolder', accountsUri);
+    loadAjaxPartial('categoriesHolder', categoriesUri);
 
 
     // month view:

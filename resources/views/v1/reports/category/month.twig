@@ -230,7 +230,7 @@
 
         var accountsUri = '{{ route('report-data.category.accounts', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        {#var categoriesUri = '{{ route('report-data.category.categories', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
+        var categoriesUri = '{{ route('report-data.category.categories', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
         {#var accountPerCategoryUri = '{{ route('report-data.category.account-per-category', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
         {#var avgExpensesUri = '{{ route('report-data.category.avg-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
         {#var topExpensesUri = '{{ route('report-data.category.top-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
