@@ -125,7 +125,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.0.3',
+    'version'                      => '4.8.1',
     'api_version'                  => '0.10.1',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
@@ -307,6 +307,9 @@ return [
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 100%
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 99%
         'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 40%
+
+        // greek: Ελληνικά
+
         // hungarian!
 
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
