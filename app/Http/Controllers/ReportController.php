@@ -320,7 +320,7 @@ class ReportController extends Controller
         $categories = implode(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
         $tags       = implode(',', $request->getTagList()->pluck('id')->toArray());
-        $expense    = implode(',', $request->getExpenseList()->pluck('id')->toArray());
+        $double    = implode(',', $request->getDoubleList()->pluck('id')->toArray());
         $uri        = route('reports.index');
 
         if (0 === $request->getAccountList()->count()) {
@@ -348,7 +348,7 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
-        if ('account' === $reportType && 0 === $request->getExpenseList()->count()) {
+        if ('account' === $reportType && 0 === $request->getDoubleList()->count()) {
             session()->flash('error', (string)trans('firefly.select_at_least_one_expense'));
 
             return redirect(route('reports.index'));
@@ -375,7 +375,7 @@ class ReportController extends Controller
                 $uri = route('reports.report.tag', [$accounts, $tags, $start, $end]);
                 break;
             case 'account':
-                $uri = route('reports.report.account', [$accounts, $expense, $start, $end]);
+                $uri = route('reports.report.account', [$accounts, $double, $start, $end]);
                 break;
         }
 

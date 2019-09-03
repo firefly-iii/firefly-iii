@@ -57,12 +57,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $preferredPeriod = $this->preferredPeriod();
         try {
             $result = view(
-                'reports.account.report',
-                compact('accountIds', 'reportType', 'expenseIds', 'preferredPeriod')
+                'reports.double.report', compact('accountIds', 'reportType', 'expenseIds', 'preferredPeriod')
             )->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;

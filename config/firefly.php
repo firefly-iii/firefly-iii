@@ -390,7 +390,7 @@ return [
 
         // lists
         'accountList'       => AccountList::class,
-        'expenseList'       => AccountList::class,
+        'doubleList'       => AccountList::class,
         'budgetList'        => BudgetList::class,
         'journalList'       => JournalList::class,
         'categoryList'      => CategoryList::class,

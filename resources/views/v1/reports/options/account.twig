@@ -3,7 +3,7 @@
     <div class="col-sm-9">
         <select id="inputExpRevAccounts" name="exp_rev[]" multiple="multiple" class="form-control">
             {% for account in set %}
-                <option value="{{ account.id }}" label="{{ account.name }}">{{ account.name }}</option>
+                <option value="{{ account.id }}" label="{{ account.name }}{% if account.iban !='' %} ({{ account.iban }}){% endif %}">{{ account.name }}{% if account.iban !='' %} ({{ account.iban }}){% endif %}</option>
             {% endfor %}
         </select>
     </div>

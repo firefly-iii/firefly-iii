@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use FireflyIII\Helpers\Report\PopupReportInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Rule;
@@ -33,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Throwable;
 
@@ -53,15 +53,28 @@ trait RenderPartialViews
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE]);
-        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE]);
-        $set        = new Collection;
-        $names      = $revenue->pluck('name')->toArray();
-        foreach ($expense as $exp) {
-            if (in_array($exp->name, $names, true)) {
-                $set->push($exp);
+        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $set        = [];
+
+        /** @var Account $account */
+        foreach ($expense as $account) {
+            // loop revenue, find same account:
+            /** @var Account $otherAccount */
+            foreach ($revenue as $otherAccount) {
+                if (
+                    (
+                    ($otherAccount->name === $account->name)
+                    ||
+                    (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
+                    )
+                    && $otherAccount->id !== $account->id
+                ) {
+                    $set[] = $account;
+                }
             }
         }
+
         // @codeCoverageIgnoreStart
         try {
             $result = view('reports.options.account', compact('set'))->render();
@@ -97,7 +110,7 @@ trait RenderPartialViews
         $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
         // @codeCoverageIgnoreStart
         try {
-            $view = view('popup.report.balance-amount', compact('journals', 'budget','account'))->render();
+            $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';

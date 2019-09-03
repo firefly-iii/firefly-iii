@@ -147,11 +147,11 @@ class ReportFormRequest extends Request
     }
 
     /**
-     * Validate list of expense accounts.
+     * Validate list of accounts which exist twice in system.
      *
      * @return Collection
      */
-    public function getExpenseList(): Collection
+    public function getDoubleList(): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
