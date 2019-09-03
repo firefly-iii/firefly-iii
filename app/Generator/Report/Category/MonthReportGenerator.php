@@ -35,6 +35,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ * TODO include info about tags.
  *
  * @codeCoverageIgnore
  */
@@ -69,26 +70,13 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $categoryIds     = implode(',', $this->categories->pluck('id')->toArray());
-        $reportType      = 'category';
-        $expenses        = $this->getExpenses();
-        $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAssetAccount($expenses), $this->summarizeByAssetAccount($income));
-        $categorySummary = $this->getObjectSummary($this->summarizeByCategory($expenses), $this->summarizeByCategory($income));
-        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
-        $averageIncome   = $this->getAverages($income, SORT_DESC);
-        $topExpenses     = $this->getTopExpenses();
-        $topIncome       = $this->getTopIncome();
+        $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
+        $categoryIds = implode(',', $this->categories->pluck('id')->toArray());
+        $reportType  = 'category';
 
         // render!
         try {
-            return view(
-                'reports.category.month', compact(
-                                            'accountIds', 'categoryIds', 'topIncome', 'reportType', 'accountSummary', 'categorySummary', 'averageExpenses',
-                                            'averageIncome', 'topExpenses'
-                                        )
-            )
+            return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType',))
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
@@ -96,75 +84,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the expenses for this report.
-     *
-     * @return array
-     */
-    protected function getExpenses(): array
-    {
-        if (count($this->expenses) > 0) {
-            Log::debug('Return previous set of expenses.');
-
-            return $this->expenses;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withAccountInformation();
-
-        $transactions   = $collector->getExtractedJournals();
-        $this->expenses = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * Get the income for this report.
-     *
-     * @return array
-     */
-    protected function getIncome(): array
-    {
-        if (count($this->income) > 0) {
-            return $this->income;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withAccountInformation();
-
-        $transactions = $collector->getExtractedJournals();
-        $this->income = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * Summarize the category.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function summarizeByCategory(array $array): array
-    {
-        $result = [];
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            $categoryId          = (int)$journal['category_id'];
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($journal['amount'], $result[$categoryId]);
         }
 
         return $result;
@@ -260,5 +179,54 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
+    }
+
+    /**
+     * Get the expenses for this report.
+     *
+     * @return array
+     */
+    protected function getExpenses(): array
+    {
+        if (count($this->expenses) > 0) {
+            Log::debug('Return previous set of expenses.');
+
+            return $this->expenses;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->setCategories($this->categories)->withAccountInformation();
+
+        $transactions   = $collector->getExtractedJournals();
+        $this->expenses = $transactions;
+
+        return $transactions;
+    }
+
+    /**
+     * Get the income for this report.
+     *
+     * @return array
+     */
+    protected function getIncome(): array
+    {
+        if (count($this->income) > 0) {
+            return $this->income;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->setCategories($this->categories)->withAccountInformation();
+
+        $transactions = $collector->getExtractedJournals();
+        $this->income = $transactions;
+
+        return $transactions;
     }
 }
