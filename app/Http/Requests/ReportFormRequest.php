@@ -235,7 +235,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget,tag,account',
+            'report_type' => 'in:audit,default,category,budget,tag,double',
         ];
     }
 }

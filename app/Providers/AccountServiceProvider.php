@@ -26,6 +26,8 @@ use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTasker;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Account\OperationsRepository;
+use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -61,6 +63,20 @@ class AccountServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepository::class);
+
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            OperationsRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var OperationsRepository $repository */
+                $repository = app(OperationsRepository::class);
 
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());

@@ -404,6 +404,29 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Both source AND destination must be in this list of accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBothAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->where(
+                static function (EloquentBuilder $query) use ($accountIds) {
+                    $query->whereIn('source.account_id', $accountIds);
+                    $query->whereIn('destination.account_id', $accountIds);
+                }
+            );
+            app('log')->debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -499,7 +522,7 @@ class GroupCollector implements GroupCollectorInterface
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('destination.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+            app('log')->debug(sprintf('GroupCollector: setDestinationAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -894,7 +917,7 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * @param array            $existingJournal
+     * @param array              $existingJournal
      * @param TransactionJournal $newJournal
      *
      * @return array

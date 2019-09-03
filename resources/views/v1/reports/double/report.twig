@@ -6,14 +6,27 @@
 
 {% block content %}
 
-    {# in/out + In/out per per periode #}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'in_out_accounts'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="inOutAccounts">
+                <div class="box-body table-responsive no-padding" id="opsAccounts">
+                    {# loading indicator #}
+                    <div class="overlay">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'in_out_accounts_per_asset'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="opsAccountsAsset">
                     {# loading indicator #}
                     <div class="overlay">
                         <i class="fa fa-refresh fa-spin"></i>
@@ -23,59 +36,107 @@
         </div>
     </div>
 
-    {# chart #}
     <div class="row">
-        <div class="col-lg-12">
-            <div class="box" id="incomeAndExpensesChart">
+        <div class="col-lg-4 col-md-6">
+            <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
+                    <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="in-out-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="category-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="category-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_budget'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="budgets-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {# in/out category + out per budget #}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'in_out_per_category'|_ }}</h3>
+                    <h3 class="box-title">{{ 'expense_per_tag'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="inOutCategory">
-                    {# loading indicator #}
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="tag-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
+                </div>
+                <div class="box-footer">
+                    <p class="text-info">
+                        <em>{{ 'double_report_expenses_charted_once'|_ }}</em>
+                    </p>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'out_per_budget'|_ }}</h3>
+                    <h3 class="box-title">{{ 'income_per_tag'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="inOutBudget">
-                    {# loading indicator #}
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="tag-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
+                </div>
+                <div class="box-footer">
+                    <p class="text-info">
+                        <em>{{ 'double_report_expenses_charted_once'|_ }}</em>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    {# expenses top 10 + income top 10 #}
+
+    {% for account in doubles %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box" id="incomeAndExpensesChart">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_and_expenses'|_ }} ({{ account.name }}) {% if account.iban %}({{ account.iban }}){% endif %}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas class="main_double_canvas"
+                                data-url="{{ route('chart.double.main', [accountIds, account.id, start.format('Ymd'), end.format('Ymd')]) }}"
+                                id="in-out-chart-{{ account.id }}" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="topXexpense">
+                <div class="box-body table-responsive no-padding" id="topExpensesHolder">
                     {# loading indicator #}
                     <div class="overlay">
                         <i class="fa fa-refresh fa-spin"></i>
@@ -89,11 +150,40 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="topXincome">
+                <div class="box-body table-responsive no-padding" id="topIncomeHolder">
                     {# loading indicator #}
                     <div class="overlay">
                         <i class="fa fa-refresh fa-spin"></i>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_spending_per_source'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="avgExpensesHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_earning_per_destination'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="avgIncomeHolder">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -112,23 +202,30 @@
         var startDate = '{{ start.format('Ymd') }}';
         var endDate = '{{ end.format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
-        var expenseIds = '{{ expenseIds }}';
+        var doubleIds = '{{ doubleIds }}';
 
         // chart uri's
-        var mainUri = '{{ route('chart.expense.main', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        {#var mainUri = '{{ route('chart.expense.main', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
 
-        // boxes with stuff:
-        var spentUri = '{{ route('report-data.expense.spent', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryUri = '{{ route('report-data.expense.category', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetUri = '{{ route('report-data.expense.budget', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseUri = '{{ route('report-data.expense.expenses', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var incomeUri = '{{ route('report-data.expense.income', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        // html blocks.
+        var opsAccountsUri = '{{ route('report-data.double.operations', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opsAccountsAssetUri = '{{ route('report-data.double.ops-asset', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
+        // pie charts:
+        var categoryOutUri = '{{ route('chart.double.category-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryInUri = '{{ route('chart.double.category-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsOutUri = '{{ route('chart.double.budget-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagOutUri = '{{ route('chart.double.tag-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagInUri = '{{ route('chart.double.tag-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
+        var avgExpensesUri = '{{ route('report-data.double.avg-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topExpensesUri = '{{ route('report-data.double.top-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgIncomeUri = '{{ route('report-data.double.avg-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topIncomeUri = '{{ route('report-data.double.top-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
-
-
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/reports/account/month.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/reports/double/month.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}
 

@@ -45,11 +45,11 @@ trait RenderPartialViews
 {
 
     /**
-     * Get options for account report.
+     * Get options for double report.
      *
      * @return string
      */
-    protected function accountReportOptions(): string // render a view
+    protected function doubleReportOptions(): string // render a view
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -77,7 +77,7 @@ trait RenderPartialViews
 
         // @codeCoverageIgnoreStart
         try {
-            $result = view('reports.options.account', compact('set'))->render();
+            $result = view('reports.options.double', compact('set'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';

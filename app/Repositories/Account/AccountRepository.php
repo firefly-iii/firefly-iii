@@ -89,6 +89,41 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Find account with same name OR same IBAN or both, but not the same type or ID.
+     *
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function expandWithDoubles(Collection $accounts): Collection
+    {
+        $result = new Collection;
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $byName = $this->user->accounts()->where('name', $account->name)
+                                 ->where('id', '!=', $account->id)->first();
+            if (null !== $byName) {
+                $result->push($account);
+                $result->push($byName);
+                continue;
+            }
+            if (null !== $account->iban) {
+                $byIban = $this->user->accounts()->where('iban', $account->iban)
+                                     ->where('id', '!=', $account->id)->first();
+                if (null !== $byIban) {
+                    $result->push($account);
+                    $result->push($byIban);
+                    continue;
+                }
+            }
+            $result->push($account);
+        }
+
+        return $result;
+
+    }
+
+    /**
      * @param string $number
      * @param array  $types
      *
