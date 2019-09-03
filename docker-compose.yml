@@ -4,7 +4,7 @@ networks:
     driver: bridge
 services: 
   firefly_iii_app: 
-    image: jc5x/firefly-iii:develop
+    image: jc5x/firefly-iii:latest
     depends_on:
       - firefly_iii_db
     networks: 
