@@ -1,0 +1,64 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'earned'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for tag in report %}
+        {% if tag.currencies|length == 0 %}
+            <tr>
+                <td data-value="{{ tag.name }}">
+                    <a href="{{ route('tags.show', tag.id) }}" title="{{ tag.name }}">{{ tag.name }}</a>
+                </td>
+                <td style="text-align: right;">&mdash;</td>
+                <td style="text-align: right;">&mdash;</td>
+                <td style="text-align: right;">&mdash;</td>
+            </tr>
+        {% endif %}
+        {% for currency in tag.currencies %}
+            <tr>
+                <td data-value="{{ tag.name }} ({{ currency.currency_name }})">
+                    <a href="{{ route('tags.show', tag.id) }}" title="{{ tag.name }}">{{ tag.name }} ({{ currency.currency_name }})</a>
+                </td>
+                <td data-value="{{ currency.spent }}" style="text-align: right;">
+                    {{ formatAmountBySymbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}
+                </td>
+                <td data-value="{{ currency.earned }}" style="text-align: right;">
+                    {{ formatAmountBySymbol(currency.earned, currency.currency_symbol, currency.currency_decimal_places) }}
+                </td>
+                <td data-value="{{ currency.sum }}" style="text-align: right;">
+                    {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% for sum in sums %}
+        <tr>
+            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.spent_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.earned_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.total_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="4">
+            <p class="text-info">
+                <em>{{ 'tag_report_expenses_listed_once'|_ }}</em>
+            </p>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+

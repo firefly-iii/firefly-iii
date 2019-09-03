@@ -296,7 +296,7 @@ class CategoryReportController extends Controller
 
     /**
      * @param Collection $accounts
-     * @param Category $category
+     * @param Category   $category
      * @param Carbon     $start
      * @param Carbon     $end
      *
@@ -307,7 +307,7 @@ class CategoryReportController extends Controller
     {
         $chartData = [];
         $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$category]));
-        $earned     = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$category]));
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$category]));
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
@@ -435,6 +435,7 @@ class CategoryReportController extends Controller
 
     /**
      * TODO duplicate function
+     *
      * @param Carbon $start
      * @param Carbon $end
      *

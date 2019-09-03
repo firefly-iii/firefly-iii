@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Repositories\Tag\OperationsRepository;
+use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepository;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Foundation\Application;
@@ -50,6 +52,20 @@ class TagServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var TagRepository $repository */
                 $repository = app(TagRepository::class);
+
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            OperationsRepositoryInterface::class,
+            function (Application $app) {
+                /** @var OperationsRepository $repository */
+                $repository = app(OperationsRepository::class);
 
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());

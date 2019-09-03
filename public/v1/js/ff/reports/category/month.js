@@ -19,30 +19,6 @@
  */
 $(function () {
     "use strict";
-    drawChart();
-
-
-    // $('#categories-in-pie-chart-checked').on('change', function () {
-    //     redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
-    // });
-    //
-    // $('#categories-out-pie-chart-checked').on('change', function () {
-    //     redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
-    // });
-    //
-    // $('#accounts-in-pie-chart-checked').on('change', function () {
-    //     redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
-    // });
-    //
-    // $('#accounts-out-pie-chart-checked').on('change', function () {
-    //     redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
-    // });
-
-});
-
-
-function drawChart() {
-    "use strict";
 
     loadAjaxPartial('accountsHolder', accountsUri);
     loadAjaxPartial('categoriesHolder', categoriesUri);
@@ -65,4 +41,5 @@ function drawChart() {
     loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
     loadAjaxPartial('topIncomeHolder', topIncomeUri);
     loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
-}
+
+});

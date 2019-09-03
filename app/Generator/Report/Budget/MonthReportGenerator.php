@@ -39,7 +39,7 @@ use Throwable;
  *
  * @codeCoverageIgnore
  */
-class MonthReportGenerator extends Support implements ReportGeneratorInterface
+class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts in the report. */
     private $accounts;
