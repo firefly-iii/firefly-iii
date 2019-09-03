@@ -4,7 +4,7 @@
         <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
         <th data-defaultsign="month">{{ 'date'|_ }}</th>
         <th data-defaultsign="az">{{ 'account'|_ }}</th>
-        <th data-defaultsign="az">{{ 'budget'|_ }}</th>
+        <th data-defaultsign="az">{{ 'category'|_ }}</th>
         <th data-defaultsign="_19" style="text-align: right;">{{ 'amount'|_ }}</th>
     </tr>
     </thead>
@@ -25,13 +25,13 @@
         </td>
 
         <td data-sortable="false">
-            <a href="{{ route('accounts.show', row.destination_account_id) }}">
-                {{ row.destination_account_name }}
+            <a href="{{ route('accounts.show', row.source_account_id) }}">
+                {{ row.source_account_name }}
             </a>
         </td>
         <td data-sortable="false">
-            <a href="{{ route('budgets.show', row.budget_id) }}">
-                {{ row.budget_name }}
+            <a href="{{ route('categories.show', row.category_id) }}">
+                {{ row.category_name }}
             </a>
         </td>
 

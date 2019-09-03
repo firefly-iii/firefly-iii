@@ -95,7 +95,7 @@
                 </div>
                 <div class="box-body">
                     <div style="width:100%;margin:0 auto;">
-                        <canvas id="source-accounts-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                        <canvas id="source-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="box-body">
                     <div style="width:100%;margin:0 auto;">
-                        <canvas id="source-accounts-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                        <canvas id="source-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 </div>
                 <div class="box-body">
                     <div style="width:100%;margin:0 auto;">
-                        <canvas id="dest-accounts-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                        <canvas id="dest-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="box-body">
                     <div style="width:100%;margin:0 auto;">
-                        <canvas id="dest-accounts-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
+                        <canvas id="dest-in-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -148,7 +148,7 @@
                         <h3 class="box-title">{{ 'income_and_expenses'|_ }} ({{ category.name }})</h3>
                     </div>
                     <div class="box-body">
-                        {#<canvas class="main_budget_canvas" data-url="{{ route('chart.category.main', [accountIds, category.id, start.format('Ymd'), end.format('Ymd')]) }}" id="in-out-chart-{{ category.id }}" style="width:100%;height:400px;" height="400" width="100%"></canvas>#}
+                        <canvas class="main_category_canvas" data-url="{{ route('chart.category.main', [accountIds, category.id, start.format('Ymd'), end.format('Ymd')]) }}" id="in-out-chart-{{ category.id }}" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                     </div>
                 </div>
             </div>
@@ -219,6 +219,7 @@
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
 
+    <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript">
         // to report another URL:
         var startDate = '{{ start.format('Ymd') }}';
@@ -229,22 +230,24 @@
         // html block URI's:
 
         var accountsUri = '{{ route('report-data.category.accounts', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-
         var categoriesUri = '{{ route('report-data.category.categories', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        {#var accountPerCategoryUri = '{{ route('report-data.category.account-per-category', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var avgExpensesUri = '{{ route('report-data.category.avg-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var topExpensesUri = '{{ route('report-data.category.top-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
+        var accountPerCategoryUri = '{{ route('report-data.category.account-per-category', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        {#var avgIncomeUri = '{{ route('report-data.category.avg-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var topIncomesUri = '{{ route('report-data.category.top-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
+        // pie charts:
+        var categoryOutUri = '{{ route('chart.category.category-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryInUri = '{{ route('chart.category.category-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsOutUri = '{{ route('chart.category.budget-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sourceOutUri = '{{ route('chart.category.source-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sourceInUri = '{{ route('chart.category.source-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var destOutUri = '{{ route('chart.category.dest-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var destInUri = '{{ route('chart.category.dest-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        // chart uri's
-        {#var budgetExpenseUri = '{{ route('chart.category.category-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var categoryExpenseUri = '{{ route('chart.category.category-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var sourceExpenseUri = '{{ route('chart.budget.source-account-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
-        {#var destinationExpenseUri = '{{ route('chart.budget.destination-account-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
+        var avgExpensesUri = '{{ route('report-data.category.avg-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topExpensesUri = '{{ route('report-data.category.top-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgIncomeUri = '{{ route('report-data.category.avg-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topIncomeUri = '{{ route('report-data.category.top-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
     </script>
-    <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/category/month.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}

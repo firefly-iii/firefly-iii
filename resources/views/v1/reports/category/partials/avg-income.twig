@@ -15,8 +15,8 @@
             <tr>
         {% endif %}
         <td data-sortable="false">
-            <a href="{{ route('accounts.show', row.destination_account_id) }}">
-                {{ row.destination_account_name }}
+            <a href="{{ route('accounts.show', row.source_account_id) }}">
+                {{ row.source_account_name }}
             </a>
         </td>
         <td data-value="{{ row.avg }}" style="text-align: right;">

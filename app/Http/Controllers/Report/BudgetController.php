@@ -66,6 +66,8 @@ class BudgetController extends Controller
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -171,6 +173,8 @@ class BudgetController extends Controller
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
+     *
+     * @return array|string
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -181,7 +185,8 @@ class BudgetController extends Controller
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
                     $destinationId          = $journal['destination_account_id'];
-                    $result[$destinationId] = $result[$destinationId] ?? [
+                    $key = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                    $result[$key] = $result[$key] ?? [
                             'transactions'             => 0,
                             'sum'                      => '0',
                             'avg'                      => '0',
@@ -193,10 +198,10 @@ class BudgetController extends Controller
                             'currency_symbol'          => $currency['currency_symbol'],
                             'currency_decimal_places'  => $currency['currency_decimal_places'],
                         ];
-                    $result[$destinationId]['transactions']++;
-                    $result[$destinationId]['sum']       = bcadd($journal['amount'], $result[$destinationId]['sum']);
-                    $result[$destinationId]['avg']       = bcdiv($result[$destinationId]['sum'], (string)$result[$destinationId]['transactions']);
-                    $result[$destinationId]['avg_float'] = (float)$result[$destinationId]['avg'];
+                    $result[$key]['transactions']++;
+                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -373,6 +378,8 @@ class BudgetController extends Controller
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
+     *
+     * @return array|string
      */
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {

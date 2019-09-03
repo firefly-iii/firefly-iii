@@ -78,7 +78,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $categories || (null !== $categories && 0 === $categories->count())) {
             $collector->setCategories($this->getCategories());
         }
-        $collector->withCategoryInformation()->withAccountInformation();
+        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
 
@@ -115,9 +115,15 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'            => app('steam')->negative($journal['amount']),
-                'date'              => $journal['date'],
-                'source_account_id' => $journal['source_account_id'],
+                'amount'                   => app('steam')->negative($journal['amount']),
+                'date'                     => $journal['date'],
+                'source_account_id'        => $journal['source_account_id'],
+                'budget_name'              => $journal['budget_name'],
+                'source_account_name'      => $journal['source_account_name'],
+                'destination_account_id' => $journal['destination_account_id'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
             ];
 
         }
@@ -188,10 +194,14 @@ class OperationsRepository implements OperationsRepositoryInterface
 
 
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'                 => app('steam')->positive($journal['amount']),
-                'date'                   => $journal['date'],
-                'source_account_id'      => $journal['source_account_id'],
-                'destination_account_id' => $journal['destination_account_id'],
+                'amount'                   => app('steam')->positive($journal['amount']),
+                'date'                     => $journal['date'],
+                'source_account_id'        => $journal['source_account_id'],
+                'destination_account_id'   => $journal['destination_account_id'],
+                'source_account_name'      => $journal['source_account_name'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
             ];
 
         }

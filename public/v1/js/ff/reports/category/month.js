@@ -46,20 +46,23 @@ function drawChart() {
 
     loadAjaxPartial('accountsHolder', accountsUri);
     loadAjaxPartial('categoriesHolder', categoriesUri);
+    loadAjaxPartial('accountPerCategoryHolder', accountPerCategoryUri);
 
+    $.each($('.main_category_canvas'), function (i, v) {
+        var canvas = $(v);
+        columnChart(canvas.data('url'), canvas.attr('id'));
+    });
 
-    // month view:
-    //doubleYChart(mainUri, 'in-out-chart');
+    multiCurrencyPieChart(categoryOutUri, 'category-out-pie-chart');
+    multiCurrencyPieChart(categoryInUri, 'category-in-pie-chart');
+    multiCurrencyPieChart(budgetsOutUri, 'budgets-out-pie-chart');
+    multiCurrencyPieChart(sourceOutUri, 'source-out-pie-chart');
+    multiCurrencyPieChart(sourceInUri, 'source-in-pie-chart');
+    multiCurrencyPieChart(destOutUri, 'dest-out-pie-chart');
+    multiCurrencyPieChart(destInUri, 'dest-in-pie-chart');
 
-    // draw pie chart of income, depending on "show other transactions too":
-    // redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
-    // redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
-    // redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
-    // redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
-
-}
-
-function redrawPieChart(uri, container) {
-    "use strict";
-    multiCurrencyPieChart(uri, container);
+    loadAjaxPartial('topExpensesHolder', topExpensesUri);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
+    loadAjaxPartial('topIncomeHolder', topIncomeUri);
+    loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
 }

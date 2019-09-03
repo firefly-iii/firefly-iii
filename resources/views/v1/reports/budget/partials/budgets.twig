@@ -20,7 +20,7 @@
                 <td data-value="{{ budget.name }} ({{ currency.currency_name }})">
                     <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }} ({{ currency.currency_name }})</a>
                 </td>
-                <td data-value="{{ currency.sym }}" style="text-align: right;">
+                <td data-value="{{ currency.sum }}" style="text-align: right;">
                     {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
             </tr>
