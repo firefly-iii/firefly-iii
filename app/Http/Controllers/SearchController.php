@@ -68,10 +68,7 @@ class SearchController extends Controller
         $modifiers = $searcher->getModifiers();
         $subTitle  = (string)trans('breadcrumbs.search_result', ['query' => $query]);
 
-        return view(
-            'search.index',
-            compact('query', 'modifiers', 'fullQuery', 'subTitle')
-        );
+        return view('search.index', compact('query', 'modifiers', 'fullQuery', 'subTitle'));
     }
 
     /**
