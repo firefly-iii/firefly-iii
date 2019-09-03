@@ -24,7 +24,6 @@ namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
@@ -60,7 +59,6 @@ class BudgetReportControllerTest extends TestCase
     {
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -69,12 +67,6 @@ class BudgetReportControllerTest extends TestCase
         // mock default session
         $this->mockDefaultSession();
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'account'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -89,7 +81,6 @@ class BudgetReportControllerTest extends TestCase
     {
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -99,12 +90,6 @@ class BudgetReportControllerTest extends TestCase
         $this->mockDefaultSession();
         //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'budget'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -114,6 +99,7 @@ class BudgetReportControllerTest extends TestCase
 
     /**
      * TODO something in this method makes it return a 404.
+     *
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testMainChart(): void

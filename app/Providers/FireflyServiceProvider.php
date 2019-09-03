@@ -27,8 +27,6 @@ use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Chart\MetaPieChart;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Help\Help;
@@ -68,7 +66,6 @@ use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
 use Twig_Extension_Debug;
@@ -180,19 +177,6 @@ class FireflyServiceProvider extends ServiceProvider
         // chart generator:
         $this->app->bind(GeneratorInterface::class, ChartJsGenerator::class);
 
-        // chart builder
-        $this->app->bind(
-            MetaPieChartInterface::class,
-            function (Application $app) {
-                /** @var MetaPieChart $chart */
-                $chart = app(MetaPieChart::class);
-                if ($app->auth->check()) {
-                    $chart->setUser(auth()->user());
-                }
-
-                return $chart;
-            }
-        );
 
         // other generators
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);

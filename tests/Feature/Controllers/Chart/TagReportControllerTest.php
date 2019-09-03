@@ -24,7 +24,6 @@ namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
@@ -59,7 +58,6 @@ class TagReportControllerTest extends TestCase
     public function testAccountExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -74,12 +72,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'account'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -95,7 +87,6 @@ class TagReportControllerTest extends TestCase
     public function testAccountIncome(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -109,12 +100,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['income', 'account'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -129,7 +114,6 @@ class TagReportControllerTest extends TestCase
     public function testBudgetExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -143,12 +127,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'budget'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -162,7 +140,6 @@ class TagReportControllerTest extends TestCase
     public function testCategoryExpense(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -176,12 +153,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'category'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -238,7 +209,6 @@ class TagReportControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
         $tagRepos  = $this->mock(TagRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $tag = $this->user()->tags()->first();
@@ -250,13 +220,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['expense', 'tag'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());
@@ -271,7 +234,6 @@ class TagReportControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -283,13 +245,6 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
-
-        $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setEnd')->once()->andReturnSelf();
-        $pieChart->shouldReceive('setCollectOtherObjects')->once()->andReturnSelf()->withArgs([false]);
-        $pieChart->shouldReceive('generate')->withArgs(['income', 'tag'])->andReturn([])->once();
         $generator->shouldReceive('pieChart')->andReturn([])->once();
 
         $this->be($this->user());

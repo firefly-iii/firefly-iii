@@ -24,11 +24,9 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
@@ -64,64 +62,6 @@ class TagReportController extends Controller
                 return $next($request);
             }
         );
-    }
-
-
-    /**
-     * Generate expenses for tags grouped on account.
-     *
-     * TODO this chart is not multi-currency aware.
-     *
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param string     $others
-     *
-     * @return JsonResponse
-     */
-    public function accountExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
-    {
-        /** @var MetaPieChartInterface $helper */
-        $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setTags($tags);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === (int)$others);
-        $chartData = $helper->generate('expense', 'account');
-        $data      = $this->generator->pieChart($chartData);
-
-        return response()->json($data);
-    }
-
-
-    /**
-     * Generate income for tag grouped by account.
-     *
-     * TODO this chart is not multi-currency aware.
-     *
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param string     $others
-     *
-     * @return JsonResponse
-     */
-    public function accountIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others): JsonResponse
-    {
-        /** @var MetaPieChartInterface $helper */
-        $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setTags($tags);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(1 === (int)$others);
-        $chartData = $helper->generate('income', 'account');
-        $data      = $this->generator->pieChart($chartData);
-
-        return response()->json($data);
     }
 
     /**
@@ -304,7 +244,7 @@ class TagReportController extends Controller
      * Generate main tag overview chart.
      *
      * @param Collection $accounts
-     * @param Tag $tag
+     * @param Tag        $tag
      * @param Carbon     $start
      * @param Carbon     $end
      *
