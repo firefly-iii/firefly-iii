@@ -37,21 +37,21 @@ return [
     'transactions_create_withdrawal_destination'      => 'Sélectionnez un compte de dépenses ici. Laissez-le vide si vous voulez faire une dépense en espèces.',
     'transactions_create_withdrawal_foreign_currency' => 'Utilisez ce champ pour définir une devise étrangère et un montant.',
     'transactions_create_withdrawal_more_meta'        => 'Beaucoup d\'autres métadonnées que vous avez définies dans ces champs.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_split_add'        => 'Si vous voulez ventiler une opération ajoutez des parties avec ce bouton',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_source'              => 'Sélectionnez ou tapez le bénéficiaire dans ce champ. Laissez le champ vide si vous voulez effectuer un dépôt d\'espèces.',
+    'transactions_create_deposit_destination'         => 'Sélectionnez un compte d\'actif ou de passif ici.',
+    'transactions_create_deposit_foreign_currency'    => 'Utilisez ce champ pour définir une devise étrangère et un montant.',
+    'transactions_create_deposit_more_meta'           => 'Beaucoup d\'autres métadonnées que vous avez définies dans ces champs.',
+    'transactions_create_deposit_split_add'           => 'Si vous voulez ventiler une opération ajoutez des parties avec ce bouton',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_source'             => 'Sélectionner le compte d\'actif source ici.',
+    'transactions_create_transfer_destination'        => 'Sélectionner le compte d\'actif de destination ici.',
+    'transactions_create_transfer_foreign_currency'   => 'Utilisez ce champ pour définir une devise étrangère et un montant.',
+    'transactions_create_transfer_more_meta'          => 'Beaucoup d\'autres métadonnées que vous avez définies dans ces champs.',
+    'transactions_create_transfer_split_add'          => 'Si vous voulez ventiler une opération ajoutez des parties avec ce bouton',
 
     // create account:
     'accounts_create_iban'                            => 'Donnez à vos comptes un IBAN valide. Cela pourrait rendre une importation de données très facile à l\'avenir.',

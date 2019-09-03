@@ -127,7 +127,7 @@ return [
     'in_array'                    => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                     => 'Le champs :attribute doit être rempli.',
     'amount_zero'                 => 'Le montant total ne peut pas être zéro.',
-    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'current_target_amount'       => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'  => 'Le nom de la tirelire doit être unique.',
     'secure_password'             => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Type de répétition non valide pour des opérations périodiques.',
@@ -192,5 +192,5 @@ return [
     'ob_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'generic_invalid_source' => 'Vous ne pouvez pas utiliser ce compte comme compte source.',
-    'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte destinataire.',
+    'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',
 ];

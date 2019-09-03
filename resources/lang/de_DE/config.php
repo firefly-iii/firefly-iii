@@ -27,7 +27,7 @@ return [
     'locale'                  => 'de, Deutsch, de_DE, de_DE.utf8, de_DE.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%e. %B %Y',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'DD. MMM. YYYY',
     'month_and_date_day'      => '%A, %B %e. %Y',
     'month_and_day_no_year'   => '%B %e',
     'date_time'               => '%e %B %Y, @ %T',

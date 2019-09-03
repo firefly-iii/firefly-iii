@@ -127,7 +127,7 @@ return [
     'in_array'                    => ':attribute il campo non esiste in :other.',
     'present'                     => ':attribute il campo deve essere presente.',
     'amount_zero'                 => 'L\'importo totale non può essere zero.',
-    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'current_target_amount'       => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
     'unique_piggy_bank_for_user'  => 'Il nome del salvadanaio deve essere unico.',
     'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',

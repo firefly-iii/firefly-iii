@@ -30,28 +30,28 @@ return [
     'index_help'                                      => 'Если вам нужна помощь со страницей или формой - нажмите эту кнопку.',
     'index_outro'                                     => 'Большинство страниц Firefly III начнутся с небольшого тура, подобного этому. Пожалуйста, свяжитесь со мной, если у вас возникнут вопросы или комментарии. Наслаждайтесь!',
     'index_sidebar-toggle'                            => 'Для создания новый транзакций, счётов или другие элементов, используйте меню под этим значком.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Это ранее созданные счета. Вы можете использовать счёт "Наличные" для отслеживания ваших наличных расходов, но это, в общем-то, не обязательно.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_source'           => 'Выберите основной счёт или обязательство, которые вы используете чаще всего, из этого списка.',
+    'transactions_create_withdrawal_destination'      => 'Выберите счёт расходов. Оставьте это поле пустым, если вы хотите создать наличный счёт.',
+    'transactions_create_withdrawal_foreign_currency' => 'Используйте это поле для указания валюты и суммы.',
+    'transactions_create_withdrawal_more_meta'        => 'В этих полях вы можете указать различные дополнительные данные.',
+    'transactions_create_withdrawal_split_add'        => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_source'              => 'В этом поле укажите (или выберите из списка) получателя платежа. Оставьте поле пустым, если вы хотите сделать вклад наличными.',
+    'transactions_create_deposit_destination'         => 'Выберите основной счёт или обязательство.',
+    'transactions_create_deposit_foreign_currency'    => 'Используйте это поле для указания валюты и суммы.',
+    'transactions_create_deposit_more_meta'           => 'В этих полях вы можете указать различные дополнительные данные.',
+    'transactions_create_deposit_split_add'           => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_source'             => 'Выберите исходный счёт здесь.',
+    'transactions_create_transfer_destination'        => 'Выберите счёт назначения здесь.',
+    'transactions_create_transfer_foreign_currency'   => 'Используйте это поле для указания валюты и суммы.',
+    'transactions_create_transfer_more_meta'          => 'В этих полях вы можете указать различные дополнительные данные.',
+    'transactions_create_transfer_split_add'          => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
 
     // create account:
     'accounts_create_iban'                            => 'Задайте вашим счетам действующий IBAN. В будущем это может сделать импорт данных очень простым.',
