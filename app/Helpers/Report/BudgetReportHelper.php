@@ -108,7 +108,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                         'budgeted'                => $limit->amount,
                         'spent'                   => '0',
                         'left'                    => $limit->amount,
-                        'overspent'               => null,
+                        'overspent'               => '0',
                         'currency_id'             => $currency->id,
                         'currency_code'           => $currency->code,
                         'currency_name'           => $currency->name,
@@ -128,7 +128,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                     'budgeted'                => null,
                     'spent'                   => $expense['amount'],
                     'left'                    => null,
-                    'overspent'               => null,
+                    'overspent'               => '0',
                     'currency_id'             => $expense['currency_id'],
                     'currency_code'           => $expense['currency_name'],
                     'currency_name'           => $expense['currency_name'],
@@ -146,7 +146,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                     $row['left'] = -1 === bccomp(bcadd($limit->amount, $row['spent']), '0') ? '0' : bcadd($limit->amount, $row['spent']);
 
                     // spent > budgeted? then sum, otherwise other sum
-                    $row['overspent'] = 1 === bccomp($row['spent'], $row['budgeted']) ? bcadd($row['spent'], $row['budgeted']) : '0';
+                    $row['overspent'] = 1 === bccomp(bcmul($row['spent'],'-1'), $row['budgeted']) ? bcadd($row['spent'], $row['budgeted']) : '0';
                 }
                 $entry['rows'][] = $row;
             }
