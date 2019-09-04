@@ -31,8 +31,6 @@ use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Help\Help;
 use FireflyIII\Helpers\Help\HelpInterface;
-use FireflyIII\Helpers\Report\BalanceReportHelper;
-use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\NetWorth;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Helpers\Report\PopupReport;
@@ -186,7 +184,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
-        $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
         if ('' === $class) {
             throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');
