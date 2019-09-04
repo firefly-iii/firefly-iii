@@ -39,8 +39,9 @@
                             <tr>
                                 <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
                                 <th data-defaultsign="az">{{ trans('list.title') }}</th>
-                                <th data-defaultsign="_19">{{ trans('list.transaction_s') }}</th>
+                                <th data-defaultsort="disabled">{{ trans('list.transaction_s') }}</th>
                                 <th data-defaultsort="disabled">{{ trans('list.repetitions') }}</th>
+                                <th data-defaultsign="month" data-dateformat="{{ madMomentJS }}">{{ trans('list.next_due') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -49,7 +50,8 @@
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-xs edit_tr_buttons">
                                             <a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('recurring.edit',rt.id) }}"><i
-                                                        class="fa fa-fw fa-pencil"></i></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}" href="{{ route('recurring.delete',rt.id) }}"><i
+                                                        class="fa fa-fw fa-pencil"></i></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
+                                                                                              href="{{ route('recurring.delete',rt.id) }}"><i
                                                         class="fa fa-fw fa-trash-o"></i></a>
                                         </div>
                                     </td>
@@ -57,7 +59,7 @@
                                         {% if rt.active == false %}<s>{% endif %}
                                             {{ rt.type|_ }}:
                                             <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>
-                                        {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }}){% endif %}
+                                            {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }}){% endif %}
                                         {% if rt.description|length > 0 %}
                                             <small><br>{{ rt.description }}</small>
                                         {% endif %}
@@ -86,12 +88,12 @@
                                         <ul>
                                             {% for rep in rt.repetitions %}
                                                 <li>{{ rep.description }}
-                                                {% if rep.repetition_skip == 1 %}
-                                                    ({{ trans('firefly.recurring_skips_one')|lower }}).
-                                                {% endif %}
-                                                {% if rep.repetition_skip > 1 %}
-                                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }}).
-                                                {% endif %}
+                                                    {% if rep.repetition_skip == 1 %}
+                                                        ({{ trans('firefly.recurring_skips_one')|lower }}).
+                                                    {% endif %}
+                                                    {% if rep.repetition_skip > 1 %}
+                                                        ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }}).
+                                                    {% endif %}
                                                     {% if rep.weekend == 3 %}
                                                         {{ 'will_jump_friday'|_ }}
                                                     {% endif %}
@@ -114,9 +116,13 @@
                                             {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
                                                 {{ trans('firefly.recurring_repeats_x_times', {count: rt.nr_of_repetitions}) }}.
                                             {% endif %}
-
                                         </p>
                                     </td>
+                                    {% if rt.occurrences|length == 0 %}
+                                        <td>&nbsp;</td>
+                                    {% else %}
+                                        <td>{{ rt.occurrences[0].formatLocalized(monthAndDayFormat) }}</td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>

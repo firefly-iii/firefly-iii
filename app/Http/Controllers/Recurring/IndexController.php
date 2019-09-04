@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -48,6 +47,7 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -82,6 +82,9 @@ class IndexController extends Controller
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
+        $today      = new Carbon;
+        $year       = new Carbon;
+        $year->addYear();
 
         // split collection
         $total = $collection->count();
@@ -99,6 +102,7 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            $array['occurrences']  = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year),0,1);
             $recurring[]           = $array;
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
