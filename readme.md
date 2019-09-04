@@ -55,7 +55,7 @@ The most exciting features are:
 	* [FinTS](http://docs.firefly-iii.org/en/latest/import/fints.html)
 	* [bunq](http://docs.firefly-iii.org/en/latest/import/bunq.html)
 	* [Spectre](http://docs.firefly-iii.org/en/latest/import/spectre.html) (offering thousands of connected banks)
-	* [CVS files](http://docs.firefly-iii.org/en/latest/import/csv.html) 
+	* [CSV files](http://docs.firefly-iii.org/en/latest/import/csv.html) 
 	* [YNAB](http://docs.firefly-iii.org/en/latest/import/ynab.html)
 
 Then the things that make you go "yeah OK, makes sense".
