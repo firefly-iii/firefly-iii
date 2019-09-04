@@ -25,7 +25,6 @@ namespace Tests\Feature\Controllers\Report;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -58,7 +57,6 @@ class BudgetControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $return       = [];
-        $helper       = $this->mock(BudgetReportHelperInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
 
@@ -66,7 +64,6 @@ class BudgetControllerTest extends TestCase
         //Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $helper->shouldReceive('getBudgetReport')->andReturn($return);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.budget.general', ['1', '20120101', '20120131']));

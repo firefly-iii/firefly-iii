@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
@@ -41,8 +44,14 @@ class BudgetController extends Controller
 {
     use BasicDataSupport;
 
+    /** @var BudgetLimitRepositoryInterface */
+    private $blRepository;
+    /** @var NoBudgetRepositoryInterface */
+    private $nbRepository;
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
+    /** @var BudgetRepositoryInterface */
+    private $repository;
 
     /**
      * ExpenseReportController constructor.
@@ -55,6 +64,9 @@ class BudgetController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->repository    = app(BudgetRepositoryInterface::class);
+                $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
+                $this->nbRepository  = app(NoBudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -184,9 +196,9 @@ class BudgetController extends Controller
             $currencyId = $currency['currency_id'];
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $destinationId          = $journal['destination_account_id'];
-                    $key = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key] = $result[$key] ?? [
+                    $destinationId = $journal['destination_account_id'];
+                    $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                    $result[$key]  = $result[$key] ?? [
                             'transactions'             => 0,
                             'sum'                      => '0',
                             'avg'                      => '0',
@@ -260,14 +272,30 @@ class BudgetController extends Controller
                     // add currency info to report array:
                     $report[$budgetId]['currencies'][$currencyId]        = $report[$budgetId]['currencies'][$currencyId] ?? [
                             'sum'                     => '0',
+                            'sum_pct'                 => '0',
                             'currency_id'             => $currency['currency_id'],
                             'currency_symbol'         => $currency['currency_symbol'],
                             'currency_name'           => $currency['currency_name'],
                             'currency_decimal_places' => $currency['currency_decimal_places'],
+
                         ];
                     $report[$budgetId]['currencies'][$currencyId]['sum'] = bcadd($report[$budgetId]['currencies'][$currencyId]['sum'], $journal['amount']);
                     $sums[$currencyId]['sum']                            = bcadd($sums[$currencyId]['sum'], $journal['amount']);
                 }
+            }
+        }
+
+        // loop again to get percentages.
+        foreach ($report as $budgetId => $data) {
+            foreach ($data['currencies'] as $currencyId => $data) {
+                $sum   = $data['sum'] ?? '0';
+                $total = $sums[$currencyId]['sum'] ?? '0';
+                $pct   = '0';
+                if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
+                    $pct = round(bcmul(bcdiv($sum, $total), '100'));
+
+                }
+                $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }
         }
 
@@ -286,26 +314,136 @@ class BudgetController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('budget-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+        $report          = [
+            'budgets' => [],
+            'sums'    => [],
+        ];
+        $budgets         = $this->repository->getBudgets();
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId                     = $budget->id;
+            $report['budgets'][$budgetId] = $report['budgets'][$budgetId] ?? [
+                    'budget_id'     => $budgetId,
+                    'budget_name'   => $budget->name,
+                    'no_budget'     => false,
+                    'budget_limits' => [],
+                ];
+
+            // get all budget limits for budget in period:
+            $limits = $this->blRepository->getBudgetLimits($budget, $start, $end);
+            /** @var BudgetLimit $limit */
+            foreach ($limits as $limit) {
+                $limitId   = $limit->id;
+                $currency  = $limit->transactionCurrency ?? $defaultCurrency;
+                $expenses  = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $accounts, new Collection([$budget]));
+                $spent     = $expenses[$currency->id]['sum'] ?? '0';
+                $left      = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
+                $overspent = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
+
+                $report['budgets'][$budgetId]['budget_limits'][$limitId] = $report['budgets'][$budgetId]['budget_limits'][$limitId] ?? [
+                        'budget_limit_id'         => $limitId,
+                        'start_date'              => $limit->start_date,
+                        'end_date'                => $limit->end_date,
+                        'budgeted'                => $limit->amount,
+                        'budgeted_pct'            => '0',
+                        'spent'                   => $spent,
+                        'spent_pct'               => '0',
+                        'left'                    => $left,
+                        'overspent'               => $overspent,
+                        'currency_id'             => $currency->id,
+                        'currency_code'           => $currency->code,
+                        'currency_name'           => $currency->name,
+                        'currency_symbol'         => $currency->symbol,
+                        'currency_decimal_places' => $currency->decimal_places,
+                    ];
+
+                // make sum information:
+                $report['sums'][$currency->id]              = $report['sums'][$currency->id] ?? [
+                        'budgeted'                => '0',
+                        'spent'                   => '0',
+                        'left'                    => '0',
+                        'overspent'               => '0',
+                        'currency_id'             => $currency->id,
+                        'currency_code'           => $currency->code,
+                        'currency_name'           => $currency->name,
+                        'currency_symbol'         => $currency->symbol,
+                        'currency_decimal_places' => $currency->decimal_places,
+                    ];
+                $report['sums'][$currency->id]['budgeted']  = bcadd($report['sums'][$currency->id]['budgeted'], $limit->amount);
+                $report['sums'][$currency->id]['spent']     = bcadd($report['sums'][$currency->id]['spent'], $spent);
+                $report['sums'][$currency->id]['left']      = bcadd($report['sums'][$currency->id]['left'], bcadd($limit->amount, $spent));
+                $report['sums'][$currency->id]['overspent'] = bcadd($report['sums'][$currency->id]['overspent'], $overspent);
+            }
         }
-        $helper  = app(BudgetReportHelperInterface::class);
-        $budgets = $helper->getBudgetReport($start, $end, $accounts);
-        try {
-            $result = view('reports.partials.budgets', compact('budgets'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+
+        // add no budget info.
+        $report['budgets'][0] = $report['budgets'][0] ?? [
+                'budget_id'     => null,
+                'budget_name'   => null,
+                'no_budget'     => true,
+                'budget_limits' => [],
+            ];
+        $noBudget             = $this->nbRepository->sumExpenses($start, $end);
+        foreach ($noBudget as $noBudgetEntry) {
+            $report['budgets'][0]['budget_limits'][]                = [
+                'budget_limit_id'         => null,
+                'start_date'              => $start,
+                'end_date'                => $end,
+                'budgeted'                => '0',
+                'budgeted_pct'            => '0',
+                'spent'                   => $noBudgetEntry['sum'],
+                'spent_pct'               => '0',
+                'left'                    => '0',
+                'overspent'               => '0',
+                'currency_id'             => $noBudgetEntry['currency_id'],
+                'currency_code'           => $noBudgetEntry['currency_code'],
+                'currency_name'           => $noBudgetEntry['currency_name'],
+                'currency_symbol'         => $noBudgetEntry['currency_symbol'],
+                'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'],
+            ];
+            $report['sums'][$noBudgetEntry['currency_id']]['spent'] = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'], $noBudgetEntry['sum']);
         }
+
+        // make percentages based on total amount.
+        foreach ($report['budgets'] as $budgetId => $data) {
+            foreach ($data['budget_limits'] as $limitId => $entry) {
+                $currencyId = $entry['currency_id'];
+
+                $spent      = $entry['spent'];
+                $totalSpent = $report['sums'][$currencyId]['spent'] ?? '0';
+                $spentPct   = '0';
+
+                $budgeted      = $entry['budgeted'];
+                $totalBudgeted = $report['sums'][$currencyId]['budgeted'] ?? '0';;
+                $budgetedPct = '0';
+
+                if (0 !== bccomp($spent, '0') && 0 !== bccomp($totalSpent, '0')) {
+                    $spentPct = round(bcmul(bcdiv($spent, $totalSpent), '100'));
+                }
+                if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
+                    $budgetedPct = round(bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
+                }
+                $report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
+                $report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
+            }
+        }
+
+        //        var_dump($noBudget);
+        //
+        //
+        //        echo '<pre>';
+        //        print_r($report);
+        //        exit;
+        //        try {
+        $result = view('reports.partials.budgets', compact('report'))->render();
+        // @codeCoverageIgnoreStart
+        //        } catch (Throwable $e) {
+        //            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
+        //            $result = 'Could not render view.';
+        //        }
+
         // @codeCoverageIgnoreEnd
-        $cache->store($result);
 
         return $result;
     }
