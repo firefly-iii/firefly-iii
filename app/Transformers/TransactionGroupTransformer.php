@@ -274,14 +274,11 @@ class TransactionGroupTransformer extends AbstractTransformer
             $row = new NullArrayObject($transaction);
 
             // amount:
-            $type   = $row['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-            $amount = $row['amount'] ?? '0';
-            if (TransactionType::WITHDRAWAL !== $type) {
-                $amount = bcmul($amount, '-1');
-            }
+            $type          = $row['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+            $amount        = app('steam')->positive($row['amount'] ?? '0');
             $foreignAmount = null;
             if (null !== $row['foreign_amount']) {
-                $foreignAmount = TransactionType::WITHDRAWAL !== $type ? bcmul($row['foreign_amount'], '-1') : $row['foreign_amount']; // @codeCoverageIgnore
+                $foreignAmount = app('steam')->positive($row['foreign_amount']);
             }
 
             $metaFieldData = $this->groupRepos->getMetaFields((int)$row['transaction_journal_id'], $this->metaFields);
