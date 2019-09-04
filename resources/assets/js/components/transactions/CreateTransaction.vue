@@ -399,7 +399,7 @@
                     console.log('Will create another.');
 
                     // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
+                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been stored.';
                     this.error_message = '';
                     if (this.resetFormAfter) {
                         // also clear form.
