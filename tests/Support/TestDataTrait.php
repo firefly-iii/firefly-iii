@@ -91,6 +91,57 @@ trait TestDataTrait
      *
      * @return array
      */
+    protected function budgetListExpenses(): array
+    {
+        $eur    = TransactionCurrency::where('code', 'EUR')->first();
+        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $bud1   = $this->user()->budgets()->inRandomOrder()->first();
+        $bud2   = $this->user()->budgets()->inRandomOrder()->where('id', '!=', $bud1->id)->first();
+        $data   = [];
+        $amount = 400;
+        $date   = null;
+        try {
+            $amount = random_int(100, 2500);
+            $date   = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        $amount = bcmul((string)round($amount / 100, 2), '-1');
+
+        foreach ([$eur, $usd] as $currency) {
+            $data[$currency->id] = [
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+                'categories'              => [],
+            ];
+            foreach ([$bud1, $bud2] as $budget) {
+                $data[$currency->id]['budgets'][$budget->id] = [
+                    'id'                   => $budget->id,
+                    'name'                 => $budget->name,
+                    'transaction_journals' => [],
+                ];
+                // add two random amounts:
+                for ($i = 0; $i < 2; $i++) {
+                    $data[$currency->id]['budgets'][$budget->id]['transaction_journals'][$i] = [
+                        'amount' => $amount,
+                        'date'   => $date,
+                    ];
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Method that returns default data for when the category OperationsRepos
+     * "listExpenses" method is called.
+     *
+     * @return array
+     */
     protected function categoryListIncome(): array
     {
         $eur    = TransactionCurrency::where('code', 'EUR')->first();
@@ -145,6 +196,41 @@ trait TestDataTrait
      * @return array
      */
     protected function categorySumExpenses(): array
+    {
+        $eur    = TransactionCurrency::where('code', 'EUR')->first();
+        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $data   = [];
+        $amount = 400;
+        try {
+            $amount = random_int(100, 2500);
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        $amount = bcmul((string)round($amount / 100, 2), '-1');
+
+        foreach ([$eur, $usd] as $currency) {
+            $data[$currency->id] = [
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+                'sum'                     => $amount,
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Method that returns default data for when the budget OperationsController
+     * "sumExpenses" method is called.
+     *
+     * Also works for NoBudgetRepos::sumExpenses
+     *
+     * @return array
+     */
+    protected function budgetSumExpenses(): array
     {
         $eur    = TransactionCurrency::where('code', 'EUR')->first();
         $usd    = TransactionCurrency::where('code', 'USD')->first();

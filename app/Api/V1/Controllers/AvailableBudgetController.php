@@ -28,7 +28,6 @@ use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;

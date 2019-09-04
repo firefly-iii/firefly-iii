@@ -27,8 +27,10 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Log;
 use Preferences;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 
@@ -40,6 +42,7 @@ use Tests\TestCase;
  */
 class CategoryReportControllerTest extends TestCase
 {
+    use TestDataTrait;
     /**
      *
      */
@@ -49,47 +52,6 @@ class CategoryReportControllerTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController
-     */
-    public function testAccountExpense(): void
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
-
-        $this->mockDefaultSession();
-        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $generator->shouldReceive('pieChart')->andReturn([])->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.category.account-expense', ['1', '1', '20120101', '20120131', 0]));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController
-     */
-    public function testAccountIncome(): void
-    {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
-
-        $this->mockDefaultSession();
-        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $generator->shouldReceive('pieChart')->andReturn([])->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.category.account-income', ['1', '1', '20120101', '20120131', 0]));
-        $response->assertStatus(200);
-    }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController
@@ -98,6 +60,7 @@ class CategoryReportControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
         $date         = new Carbon;
 
         $this->mockDefaultSession();
@@ -105,7 +68,9 @@ class CategoryReportControllerTest extends TestCase
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $generator->shouldReceive('pieChart')->andReturn([])->once();
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([])->once();
+
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
 
         $this->be($this->user());
         $response = $this->get(route('chart.category.category-expense', ['1', '1', '20120101', '20120131', 0]));
@@ -119,14 +84,16 @@ class CategoryReportControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
         $date         = new Carbon;
 
         $this->mockDefaultSession();
-        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $generator->shouldReceive('pieChart')->andReturn([])->once();
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([])->once();
+
+        $opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
 
         $this->be($this->user());
         $response = $this->get(route('chart.category.category-income', ['1', '1', '20120101', '20120131', 0]));
@@ -141,23 +108,18 @@ class CategoryReportControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(GroupCollectorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
         $date         = new Carbon;
         $withdrawal   = $this->getRandomWithdrawalAsArray();
 
         $this->mockDefaultSession();
-        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
-
-        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('setCategories')->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
+
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
 
         $this->be($this->user());
         $response = $this->get(route('chart.category.main', ['1', '1', '20120101', '20120131']));

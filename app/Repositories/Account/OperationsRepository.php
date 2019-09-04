@@ -29,6 +29,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  *
@@ -38,6 +39,17 @@ class OperationsRepository implements OperationsRepositoryInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+            die(__METHOD__);
+        }
+    }
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
