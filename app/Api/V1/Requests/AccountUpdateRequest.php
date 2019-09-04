@@ -28,10 +28,22 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class AccountUpdateRequest
+ *
  * @codeCoverageIgnore
  */
 class AccountUpdateRequest extends Request
 {
+
+    /**
+     * Authorize logged in users.
+     *
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        // Only allow authenticated users
+        return auth()->check();
+    }
 
     /**
      * @return array
@@ -77,17 +89,6 @@ class AccountUpdateRequest extends Request
         }
 
         return $data;
-    }
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
     }
 
     /**

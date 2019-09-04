@@ -34,11 +34,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class TransactionLinkController
@@ -54,6 +52,7 @@ class TransactionLinkController extends Controller
 
     /**
      * TransactionLinkController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -101,9 +100,7 @@ class TransactionLinkController extends Controller
     public function index(Request $request): JsonResponse
     {
         // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager = $this->getManager();
         // read type from URI
         $name = $request->get('name');
 
@@ -120,9 +117,6 @@ class TransactionLinkController extends Controller
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.transaction_links.index') . $this->buildParams());
 
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -137,17 +131,14 @@ class TransactionLinkController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, TransactionJournalLink $journalLink): JsonResponse
+    public function show(TransactionJournalLink $journalLink): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
@@ -169,10 +160,7 @@ class TransactionLinkController extends Controller
      */
     public function store(TransactionLinkRequest $request): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         $data    = $request->getAll();
         $inward  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $outward = $this->journalRepository->findNull($data['outward_id'] ?? 0);
@@ -203,9 +191,7 @@ class TransactionLinkController extends Controller
      */
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
-        $manager         = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager         = $this->getManager();
         $data            = $request->getAll();
         $data['inward']  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $data['outward'] = $this->journalRepository->findNull($data['outward_id'] ?? 0);

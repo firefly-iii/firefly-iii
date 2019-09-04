@@ -36,11 +36,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class LinkTypeController.
@@ -98,16 +96,13 @@ class LinkTypeController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         // create some objects:
-        $manager  = new Manager;
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager  = $this->getManager();
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
@@ -118,9 +113,6 @@ class LinkTypeController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($linkTypes, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.link_types.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
@@ -136,17 +128,14 @@ class LinkTypeController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param LinkType $linkType
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, LinkType $linkType): JsonResponse
+    public function show(LinkType $linkType): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -176,9 +165,7 @@ class LinkTypeController extends Controller
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
         $linkType = $this->repository->store($data);
-        $manager  = new Manager;
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager  = $this->getManager();
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
@@ -192,7 +179,7 @@ class LinkTypeController extends Controller
     /**
      * Delete the resource.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param LinkType $linkType
      *
      * @return JsonResponse
@@ -205,9 +192,7 @@ class LinkTypeController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         // whatever is returned by the query, it must be part of these journals:
         $journalIds = $this->repository->getJournalIds($linkType);
@@ -254,7 +239,7 @@ class LinkTypeController extends Controller
      * Update object.
      *
      * @param LinkTypeRequest $request
-     * @param LinkType $linkType
+     * @param LinkType        $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -274,10 +259,7 @@ class LinkTypeController extends Controller
 
         $data = $request->getAll();
         $this->repository->update($linkType, $data);
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);

@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
-
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\Transformers\BudgetTransformer;
@@ -66,9 +66,11 @@ class BudgetControllerTest extends TestCase
         // mock stuff:
         $repository  = $this->mock(BudgetRepositoryInterface::class);
         $transformer = $this->mock(BudgetTransformer::class);
+        $blRepository = $this->mock(BudgetLimitRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
+        $blRepository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($budget);
 
         // mock transformer
@@ -107,10 +109,12 @@ class BudgetControllerTest extends TestCase
             'amount'    => 1,
         ];
         // mock stuff:
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $transformer = $this->mock(BudgetLimitTransformer::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $blRepository = $this->mock(BudgetLimitRepositoryInterface::class);
+        $transformer  = $this->mock(BudgetLimitTransformer::class);
 
-        $repository->shouldReceive('storeBudgetLimit')->andReturn($budgetLimit)->once();
+        $blRepository->shouldReceive('storeBudgetLimit')->andReturn($budgetLimit)->once();
+        $blRepository->shouldReceive('setUser')->atLeast()->once();
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -140,11 +144,13 @@ class BudgetControllerTest extends TestCase
         // mock repositories
         $repository  = $this->mock(BudgetRepositoryInterface::class);
         $transformer = $this->mock(BudgetTransformer::class);
+        $blRepository = $this->mock(BudgetLimitRepositoryInterface::class);
         /** @var Budget $budget */
         $budget = $this->user()->budgets()->first();
 
         // mock calls:
         $repository->shouldReceive('setUser');
+        $blRepository->shouldReceive('setUser');
         $repository->shouldReceive('update')->once()->andReturn(new Budget);
 
         // mock calls to transformer:

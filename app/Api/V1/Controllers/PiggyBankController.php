@@ -31,13 +31,10 @@ use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class PiggyBankController.
@@ -89,17 +86,12 @@ class PiggyBankController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager = $this->getManager();
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
@@ -111,9 +103,6 @@ class PiggyBankController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.piggy_banks.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -129,19 +118,16 @@ class PiggyBankController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function piggyBankEvents(Request $request, PiggyBank $piggyBank): JsonResponse
+    public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager  = $this->getManager();
 
         $collection = $this->repository->getEvents($piggyBank);
         $count      = $collection->count();
@@ -165,17 +151,14 @@ class PiggyBankController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, PiggyBank $piggyBank): JsonResponse
+    public function show(PiggyBank $piggyBank): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -199,9 +182,7 @@ class PiggyBankController extends Controller
     {
         $piggyBank = $this->repository->store($request->getAll());
         if (null !== $piggyBank) {
-            $manager = new Manager();
-            $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-            $manager->setSerializer(new JsonApiSerializer($baseUrl));
+            $manager = $this->getManager();
 
             /** @var PiggyBankTransformer $transformer */
             $transformer = app(PiggyBankTransformer::class);
@@ -219,7 +200,7 @@ class PiggyBankController extends Controller
      * Update piggy bank.
      *
      * @param PiggyBankRequest $request
-     * @param PiggyBank $piggyBank
+     * @param PiggyBank        $piggyBank
      *
      * @return JsonResponse
      */
@@ -233,10 +214,7 @@ class PiggyBankController extends Controller
         }
 
 
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);

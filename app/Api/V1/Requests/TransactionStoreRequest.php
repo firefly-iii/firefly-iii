@@ -192,7 +192,7 @@ class TransactionStoreRequest extends Request
     {
         $return = [];
         /**
-         * @var int $index
+         * @var int   $index
          * @var array $transaction
          */
         foreach ($this->get('transactions') as $index => $transaction) {

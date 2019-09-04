@@ -26,18 +26,20 @@ use Cache;
 use Exception;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
 
 /**
  * Class Preferences.
+ *
  * @codeCoverageIgnore
  */
 class Preferences
 {
     /**
-     * @param User $user
+     * @param User   $user
      * @param string $search
      *
      * @return Collection
@@ -92,7 +94,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
@@ -115,7 +117,7 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param array $list
+     * @param array            $list
      *
      * @return array
      */
@@ -140,9 +142,9 @@ class Preferences
     }
 
     /**
-     * @param \FireflyIII\User $user
-     * @param string $name
-     * @param null|string $default
+     * @param \FireflyIII\User|Authenticatable $user
+     * @param string           $name
+     * @param null|string      $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
@@ -212,7 +214,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return \FireflyIII\Models\Preference
      */
@@ -233,8 +235,8 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param string $name
-     * @param mixed $value
+     * @param string           $name
+     * @param mixed            $value
      *
      * @return Preference
      */

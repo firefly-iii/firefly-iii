@@ -30,6 +30,7 @@ use FireflyIII\Rules\IsValidAttachmentModel;
 
 /**
  * Class AttachmentStoreRequest
+ *
  * @codeCoverageIgnore
  */
 class AttachmentStoreRequest extends Request
@@ -77,6 +78,7 @@ class AttachmentStoreRequest extends Request
             ]
         );
         $model  = $this->string('model');
+
         return [
             'filename' => 'required|between:1,255',
             'title'    => 'between:1,255',

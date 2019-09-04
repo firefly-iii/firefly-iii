@@ -31,12 +31,11 @@ use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class CurrencyExchangeRateController
+ *
  * @codeCoverageIgnore
  */
 class CurrencyExchangeRateController extends Controller
@@ -75,11 +74,7 @@ class CurrencyExchangeRateController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager      = $this->getManager();
         $fromCurrency = $this->repository->findByCodeNull($request->get('from') ?? 'EUR');
         $toCurrency   = $this->repository->findByCodeNull($request->get('to') ?? 'USD');
 

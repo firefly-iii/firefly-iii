@@ -190,6 +190,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      * @param string              $amount
      *
      * @return AvailableBudget
+     * @deprecated
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {

@@ -38,11 +38,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class BudgetLimitController.
@@ -51,12 +49,10 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class BudgetLimitController extends Controller
 {
     use TransactionFilter;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
-
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
-
+    /** @var BudgetRepositoryInterface The budget repository */
+    private $repository;
 
     /**
      * BudgetLimitController constructor.
@@ -69,8 +65,8 @@ class BudgetLimitController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $user               = auth()->user();
+                $this->repository   = app(BudgetRepositoryInterface::class);
                 $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser($user);
                 $this->blRepository->setUser($user);
@@ -105,8 +101,7 @@ class BudgetLimitController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $manager  = new Manager;
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager  = $this->getManager();
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -125,8 +120,6 @@ class BudgetLimitController extends Controller
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budget_limits.index') . $this->buildParams());
 
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -140,17 +133,14 @@ class BudgetLimitController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request $request
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, BudgetLimit $budgetLimit): JsonResponse
+    public function show(BudgetLimit $budgetLimit): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -179,9 +169,7 @@ class BudgetLimitController extends Controller
         }
         $data['budget'] = $budget;
         $budgetLimit    = $this->blRepository->storeBudgetLimit($data);
-        $manager        = new Manager;
-        $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager        = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -195,7 +183,7 @@ class BudgetLimitController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request $request
+     * @param Request     $request
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
@@ -208,9 +196,7 @@ class BudgetLimitController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var User $admin */
         $admin = auth()->user();
@@ -251,7 +237,7 @@ class BudgetLimitController extends Controller
      * Update the specified resource in storage.
      *
      * @param BudgetLimitRequest $request
-     * @param BudgetLimit $budgetLimit
+     * @param BudgetLimit        $budgetLimit
      *
      * @return JsonResponse
      */
@@ -260,9 +246,7 @@ class BudgetLimitController extends Controller
         $data           = $request->getAll();
         $data['budget'] = $budgetLimit->budget;
         $budgetLimit    = $this->blRepository->updateBudgetLimit($budgetLimit, $data);
-        $manager        = new Manager;
-        $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager        = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);

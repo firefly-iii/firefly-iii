@@ -31,7 +31,9 @@ use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use Log;
 use Throwable;
 
@@ -69,7 +71,7 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function accountPerCategory(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -168,7 +170,7 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function accounts(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -268,7 +270,113 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return array|string
+     */
+    public function avgExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    {
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $result = [];
+        foreach ($spent as $currency) {
+            $currencyId = $currency['currency_id'];
+            foreach ($currency['categories'] as $category) {
+                foreach ($category['transaction_journals'] as $journal) {
+                    $destinationId = $journal['destination_account_id'];
+                    $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                    $result[$key]  = $result[$key] ?? [
+                            'transactions'             => 0,
+                            'sum'                      => '0',
+                            'avg'                      => '0',
+                            'avg_float'                => 0,
+                            'destination_account_name' => $journal['destination_account_name'],
+                            'destination_account_id'   => $journal['destination_account_id'],
+                            'currency_id'              => $currency['currency_id'],
+                            'currency_name'            => $currency['currency_name'],
+                            'currency_symbol'          => $currency['currency_symbol'],
+                            'currency_decimal_places'  => $currency['currency_decimal_places'],
+                        ];
+                    $result[$key]['transactions']++;
+                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
+                }
+            }
+        }
+        // sort by amount_float
+        // sort temp array by amount.
+        $amounts = array_column($result, 'avg_float');
+        array_multisort($amounts, SORT_ASC, $result);
+
+        try {
+            $result = view('reports.category.partials.avg-expenses', compact('result'))->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            $result = sprintf('Could not render view: %s', $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array|string
+     */
+    public function avgIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    {
+        $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $result = [];
+        foreach ($spent as $currency) {
+            $currencyId = $currency['currency_id'];
+            foreach ($currency['categories'] as $category) {
+                foreach ($category['transaction_journals'] as $journal) {
+                    $sourceId     = $journal['source_account_id'];
+                    $key          = sprintf('%d-%d', $sourceId, $currency['currency_id']);
+                    $result[$key] = $result[$key] ?? [
+                            'transactions'            => 0,
+                            'sum'                     => '0',
+                            'avg'                     => '0',
+                            'avg_float'               => 0,
+                            'source_account_name'     => $journal['source_account_name'],
+                            'source_account_id'       => $journal['source_account_id'],
+                            'currency_id'             => $currency['currency_id'],
+                            'currency_name'           => $currency['currency_name'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                        ];
+                    $result[$key]['transactions']++;
+                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
+                }
+            }
+        }
+        // sort by amount_float
+        // sort temp array by amount.
+        $amounts = array_column($result, 'avg_float');
+        array_multisort($amounts, SORT_DESC, $result);
+
+        try {
+            $result = view('reports.category.partials.avg-income', compact('result'))->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            $result = sprintf('Could not render view: %s', $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Factory|View
      */
     public function categories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -808,19 +916,19 @@ class CategoryController extends Controller
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
-                        'description'              => $journal['description'],
-                        'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float)$journal['amount'],
-                        'amount'                   => $journal['amount'],
-                        'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
-                        'source_account_name' => $journal['source_account_name'],
-                        'source_account_id'   => $journal['source_account_id'],
-                        'currency_id'              => $currency['currency_id'],
-                        'currency_name'            => $currency['currency_name'],
-                        'currency_symbol'          => $currency['currency_symbol'],
-                        'currency_decimal_places'  => $currency['currency_decimal_places'],
-                        'category_id'              => $category['id'],
-                        'category_name'            => $category['name'],
+                        'description'             => $journal['description'],
+                        'transaction_group_id'    => $journal['transaction_group_id'],
+                        'amount_float'            => (float)$journal['amount'],
+                        'amount'                  => $journal['amount'],
+                        'date'                    => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'source_account_name'     => $journal['source_account_name'],
+                        'source_account_id'       => $journal['source_account_id'],
+                        'currency_id'             => $currency['currency_id'],
+                        'currency_name'           => $currency['currency_name'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
+                        'category_id'             => $category['id'],
+                        'category_name'           => $category['name'],
                     ];
                 }
             }
@@ -832,112 +940,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.category.partials.top-income', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
-            $result = sprintf('Could not render view: %s', $e->getMessage());
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array|string
-     */
-    public function avgExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
-    {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
-        $result = [];
-        foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
-            foreach ($currency['categories'] as $category) {
-                foreach ($category['transaction_journals'] as $journal) {
-                    $destinationId          = $journal['destination_account_id'];
-                    $key = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key] = $result[$key] ?? [
-                            'transactions'             => 0,
-                            'sum'                      => '0',
-                            'avg'                      => '0',
-                            'avg_float'                => 0,
-                            'destination_account_name' => $journal['destination_account_name'],
-                            'destination_account_id'   => $journal['destination_account_id'],
-                            'currency_id'              => $currency['currency_id'],
-                            'currency_name'            => $currency['currency_name'],
-                            'currency_symbol'          => $currency['currency_symbol'],
-                            'currency_decimal_places'  => $currency['currency_decimal_places'],
-                        ];
-                    $result[$key]['transactions']++;
-                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
-                }
-            }
-        }
-        // sort by amount_float
-        // sort temp array by amount.
-        $amounts = array_column($result, 'avg_float');
-        array_multisort($amounts, SORT_ASC, $result);
-
-        try {
-            $result = view('reports.category.partials.avg-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
-            $result = sprintf('Could not render view: %s', $e->getMessage());
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array|string
-     */
-    public function avgIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
-    {
-        $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $result = [];
-        foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
-            foreach ($currency['categories'] as $category) {
-                foreach ($category['transaction_journals'] as $journal) {
-                    $sourceId          = $journal['source_account_id'];
-                    $key = sprintf('%d-%d', $sourceId, $currency['currency_id']);
-                    $result[$key] = $result[$key] ?? [
-                            'transactions'             => 0,
-                            'sum'                      => '0',
-                            'avg'                      => '0',
-                            'avg_float'                => 0,
-                            'source_account_name' => $journal['source_account_name'],
-                            'source_account_id'   => $journal['source_account_id'],
-                            'currency_id'              => $currency['currency_id'],
-                            'currency_name'            => $currency['currency_name'],
-                            'currency_symbol'          => $currency['currency_symbol'],
-                            'currency_decimal_places'  => $currency['currency_decimal_places'],
-                        ];
-                    $result[$key]['transactions']++;
-                    $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
-                }
-            }
-        }
-        // sort by amount_float
-        // sort temp array by amount.
-        $amounts = array_column($result, 'avg_float');
-        array_multisort($amounts, SORT_DESC, $result);
-
-        try {
-            $result = view('reports.category.partials.avg-income', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));

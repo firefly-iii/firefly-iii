@@ -38,11 +38,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class AccountController.
@@ -100,12 +98,8 @@ class AccountController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // read type from URI
-        $type = $request->get('type') ?? 'all';
+        $manager = $this->getManager();
+        $type    = $request->get('type') ?? 'all';
         $this->parameters->set('type', $type);
 
         // types to get, page size:
@@ -121,8 +115,6 @@ class AccountController extends Controller
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.index') . $this->buildParams());
 
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
@@ -138,18 +130,16 @@ class AccountController extends Controller
     /**
      * List all piggies.
      *
-     * @param Request $request
      * @param Account $account
      *
+     * @return JsonResponse
      * @codeCoverageIgnore
      *
-     * @return JsonResponse
      */
-    public function piggyBanks(Request $request, Account $account): JsonResponse
+    public function piggyBanks(Account $account): JsonResponse
     {
         // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -162,9 +152,6 @@ class AccountController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.piggy_banks', [$account->id]) . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -180,16 +167,13 @@ class AccountController extends Controller
     /**
      * Show single instance.
      *
-     * @param Request $request
      * @param Account $account
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Account $account): JsonResponse
+    public function show(Account $account): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
@@ -210,9 +194,7 @@ class AccountController extends Controller
     {
         $data    = $request->getAllAccountData();
         $account = $this->repository->store($data);
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
@@ -247,9 +229,7 @@ class AccountController extends Controller
         }
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var User $admin */
         $admin = auth()->user();
@@ -292,9 +272,7 @@ class AccountController extends Controller
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

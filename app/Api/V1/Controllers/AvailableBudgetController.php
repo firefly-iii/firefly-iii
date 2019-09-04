@@ -32,13 +32,10 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class AvailableBudgetController.
@@ -48,8 +45,6 @@ class AvailableBudgetController extends Controller
 {
     /** @var AvailableBudgetRepositoryInterface */
     private $abRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
 
     /**
      * AvailableBudgetController constructor.
@@ -63,9 +58,7 @@ class AvailableBudgetController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user               = auth()->user();
-                $this->repository   = app(BudgetRepositoryInterface::class);
                 $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
-                $this->repository->setUser($user);
                 $this->abRepository->setUser($user);
 
                 return $next($request);
@@ -92,16 +85,12 @@ class AvailableBudgetController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -118,9 +107,6 @@ class AvailableBudgetController extends Controller
         $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.available_budgets.index') . $this->buildParams());
 
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -134,17 +120,14 @@ class AvailableBudgetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request         $request
      * @param AvailableBudget $availableBudget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, AvailableBudget $availableBudget): JsonResponse
+    public function show(AvailableBudget $availableBudget): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -172,10 +155,9 @@ class AvailableBudgetController extends Controller
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency();
         }
-        $availableBudget = $this->abRepository->setAvailableBudget($currency, $data['start'], $data['end'], $data['amount']);
-        $manager         = new Manager;
-        $baseUrl         = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $data['currency'] = $currency;
+        $availableBudget  = $this->abRepository->store($data);
+        $manager          = $this->getManager();
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -215,9 +197,7 @@ class AvailableBudgetController extends Controller
 
 
         $this->abRepository->updateAvailableBudget($availableBudget, $data);
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);

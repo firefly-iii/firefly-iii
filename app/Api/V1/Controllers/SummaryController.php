@@ -80,7 +80,7 @@ class SummaryController extends Controller
                 $this->budgetRepository  = app(BudgetRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
                 $this->billRepository->setUser($user);
                 $this->currencyRepos->setUser($user);

@@ -189,8 +189,8 @@ class CategoryController extends Controller
             $oldSet = $set['entries'];
             $newSet = [];
             foreach ($categories as $category) {
-                $value        = $oldSet[$category] ?? '0';
-                $value        = -1 === bccomp($value, '0') ? bcmul($value, '-1') : $value;
+                $value             = $oldSet[$category] ?? '0';
+                $value             = -1 === bccomp($value, '0') ? bcmul($value, '-1') : $value;
                 $newSet[$category] = $value;
             }
             $tempData[$index]['entries'] = $newSet;

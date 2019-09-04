@@ -29,7 +29,9 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use Log;
 use Throwable;
 
@@ -67,7 +69,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function accountPerTag(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -166,7 +168,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function accounts(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -372,7 +374,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function tags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {

@@ -35,11 +35,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class CategoryController.
@@ -91,16 +89,12 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -113,9 +107,6 @@ class CategoryController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -132,17 +123,14 @@ class CategoryController extends Controller
     /**
      * Show the category.
      *
-     * @param Request $request
      * @param Category $category
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, Category $category): JsonResponse
+    public function show(Category $category): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -165,9 +153,7 @@ class CategoryController extends Controller
     {
         $category = $this->repository->store($request->getAll());
         if (null !== $category) {
-            $manager = new Manager();
-            $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-            $manager->setSerializer(new JsonApiSerializer($baseUrl));
+            $manager = $this->getManager();
 
             /** @var CategoryTransformer $transformer */
             $transformer = app(CategoryTransformer::class);
@@ -183,7 +169,7 @@ class CategoryController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request $request
+     * @param Request  $request
      *
      * @param Category $category
      *
@@ -197,9 +183,7 @@ class CategoryController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var User $admin */
         $admin = auth()->user();
@@ -242,7 +226,7 @@ class CategoryController extends Controller
      * Update the category.
      *
      * @param CategoryRequest $request
-     * @param Category $category
+     * @param Category        $category
      *
      * @return JsonResponse
      */
@@ -250,9 +234,7 @@ class CategoryController extends Controller
     {
         $data     = $request->getAll();
         $category = $this->repository->update($category, $data);
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager  = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);

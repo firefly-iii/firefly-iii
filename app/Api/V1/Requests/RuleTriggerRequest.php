@@ -75,18 +75,6 @@ class RuleTriggerRequest extends Request
     }
 
     /**
-     * @param string $field
-     * @return Carbon|null
-     */
-    private function getDate(string $field): ?Carbon
-    {
-        /** @var Carbon $result */
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-
-        return $result;
-    }
-
-    /**
      * @return Collection
      */
     private function getAccounts(): Collection
@@ -111,7 +99,21 @@ class RuleTriggerRequest extends Request
     }
 
     /**
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    private function getDate(string $field): ?Carbon
+    {
+        /** @var Carbon $result */
+        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
+
+        return $result;
+    }
+
+    /**
      * @param Account|null $account
+     *
      * @return bool
      */
     private function validAccount(?Account $account): bool

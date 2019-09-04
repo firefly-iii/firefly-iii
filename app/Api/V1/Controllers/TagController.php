@@ -37,11 +37,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class TagController
@@ -111,17 +109,12 @@ class TagController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager = $this->getManager();
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
@@ -133,9 +126,6 @@ class TagController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.tags.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
@@ -150,18 +140,14 @@ class TagController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param Tag $tag
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, Tag $tag): JsonResponse
+    public function show(Tag $tag): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -182,10 +168,7 @@ class TagController extends Controller
     public function store(TagRequest $request): JsonResponse
     {
         $rule    = $this->repository->store($request->getAll());
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -199,7 +182,7 @@ class TagController extends Controller
      * Show all transactions.
      *
      * @param Request $request
-     * @param Tag $tag
+     * @param Tag     $tag
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -211,10 +194,7 @@ class TagController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -255,16 +235,14 @@ class TagController extends Controller
      * Update a rule.
      *
      * @param TagRequest $request
-     * @param Tag $tag
+     * @param Tag        $tag
      *
      * @return JsonResponse
      */
     public function update(TagRequest $request, Tag $tag): JsonResponse
     {
         $rule    = $this->repository->update($tag, $request->getAll());
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -276,9 +254,28 @@ class TagController extends Controller
     }
 
     /**
+     * @param array $cloud
+     * @param float $min
+     * @param float $max
+     *
+     * @return array
+     */
+    private function analyseTagCloud(array $cloud, float $min, float $max): array
+    {
+        foreach (array_keys($cloud['tags']) as $index) {
+            $cloud['tags'][$index]['relative'] = round($cloud['tags'][$index]['size'] / $max, 4);
+        }
+        $cloud['min'] = $min;
+        $cloud['max'] = $max;
+
+        return $cloud;
+    }
+
+    /**
      * @param Collection $tags
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return array
      */
     private function getTagCloud(Collection $tags, Carbon $start, Carbon $end): array
@@ -304,23 +301,6 @@ class TagController extends Controller
             }
         }
         $cloud = $this->analyseTagCloud($cloud, $min, $max);
-
-        return $cloud;
-    }
-
-    /**
-     * @param array $cloud
-     * @param float $min
-     * @param float $max
-     * @return array
-     */
-    private function analyseTagCloud(array $cloud, float $min, float $max): array
-    {
-        foreach (array_keys($cloud['tags']) as $index) {
-            $cloud['tags'][$index]['relative'] = round($cloud['tags'][$index]['size'] / $max, 4);
-        }
-        $cloud['min'] = $min;
-        $cloud['max'] = $max;
 
         return $cloud;
     }

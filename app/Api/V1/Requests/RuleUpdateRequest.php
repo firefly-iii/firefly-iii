@@ -143,11 +143,9 @@ class RuleUpdateRequest extends Request
     {
         $data    = $validator->getData();
         $actions = $data['actions'] ?? null;
-        if (is_array($actions)) {
-            // need at least one action
-            if (0 === count($actions)) {
-                $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
-            }
+        // need at least one action
+        if (is_array($actions) && 0 === count($actions)) {
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 
@@ -160,11 +158,9 @@ class RuleUpdateRequest extends Request
     {
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? null;
-        if (is_array($triggers)) {
-            // need at least one trigger
-            if (0 === count($triggers)) {
-                $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
-            }
+        // need at least one trigger
+        if (is_array($triggers) && 0 === count($triggers)) {
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 

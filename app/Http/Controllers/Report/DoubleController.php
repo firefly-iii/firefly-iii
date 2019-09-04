@@ -28,7 +28,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use Log;
 use Throwable;
 
@@ -82,9 +84,9 @@ class DoubleController extends Controller
         $result   = [];
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $sourceId = $journal['source_account_id'];
-                $key           = sprintf('%d-%d', $sourceId, $currency['currency_id']);
-                $result[$key]  = $result[$key] ?? [
+                $sourceId     = $journal['source_account_id'];
+                $key          = sprintf('%d-%d', $sourceId, $currency['currency_id']);
+                $result[$key] = $result[$key] ?? [
                         'transactions'            => 0,
                         'sum'                     => '0',
                         'avg'                     => '0',
@@ -137,16 +139,16 @@ class DoubleController extends Controller
                 $destinationId = $journal['destination_account_id'];
                 $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
                 $result[$key]  = $result[$key] ?? [
-                        'transactions'            => 0,
-                        'sum'                     => '0',
-                        'avg'                     => '0',
-                        'avg_float'               => 0,
-                        'destination_account_name'     => $journal['destination_account_name'],
-                        'destination_account_id'       => $journal['destination_account_id'],
-                        'currency_id'             => $currency['currency_id'],
-                        'currency_name'           => $currency['currency_name'],
-                        'currency_symbol'         => $currency['currency_symbol'],
-                        'currency_decimal_places' => $currency['currency_decimal_places'],
+                        'transactions'             => 0,
+                        'sum'                      => '0',
+                        'avg'                      => '0',
+                        'avg_float'                => 0,
+                        'destination_account_name' => $journal['destination_account_name'],
+                        'destination_account_id'   => $journal['destination_account_id'],
+                        'currency_id'              => $currency['currency_id'],
+                        'currency_name'            => $currency['currency_name'],
+                        'currency_symbol'          => $currency['currency_symbol'],
+                        'currency_decimal_places'  => $currency['currency_decimal_places'],
                     ];
                 $result[$key]['transactions']++;
                 $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
@@ -176,7 +178,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
     {
@@ -295,7 +297,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function operationsPerAsset(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
     {

@@ -276,7 +276,7 @@ class TransactionUpdateRequest extends Request
         Log::debug('Now in getTransactionData()');
         $return = [];
         /**
-         * @var int $index
+         * @var int   $index
          * @var array $transaction
          */
         foreach ($this->get('transactions') as $index => $transaction) {

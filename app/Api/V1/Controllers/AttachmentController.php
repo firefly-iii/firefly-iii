@@ -35,11 +35,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 use function strlen;
 
 /**
@@ -53,6 +51,7 @@ class AttachmentController extends Controller
 
     /**
      * AccountController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -72,7 +71,9 @@ class AttachmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
      * @codeCoverageIgnore
+     *
      * @param Attachment $attachment
      *
      * @return JsonResponse
@@ -88,6 +89,7 @@ class AttachmentController extends Controller
      * Download an attachment.
      *
      * @param Attachment $attachment
+     *
      * @codeCoverageIgnore
      * @return LaravelResponse
      * @throws   FireflyException
@@ -122,15 +124,12 @@ class AttachmentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     * @codeCoverageIgnore
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -143,9 +142,6 @@ class AttachmentController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.attachments.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -160,16 +156,13 @@ class AttachmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request $request
      * @param Attachment $attachment
+     *
      * @return JsonResponse
      */
-    public function show(Request $request, Attachment $attachment): JsonResponse
+    public function show(Attachment $attachment): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -191,9 +184,7 @@ class AttachmentController extends Controller
     {
         $data       = $request->getAll();
         $attachment = $this->repository->store($data);
-        $manager    = new Manager;
-        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager    = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -208,7 +199,7 @@ class AttachmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param AttachmentUpdateRequest $request
-     * @param Attachment $attachment
+     * @param Attachment              $attachment
      *
      * @return JsonResponse
      */
@@ -216,9 +207,7 @@ class AttachmentController extends Controller
     {
         $data = $request->getAll();
         $this->repository->update($attachment, $data);
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -231,8 +220,10 @@ class AttachmentController extends Controller
 
     /**
      * Upload an attachment.
+     *
      * @codeCoverageIgnore
-     * @param Request $request
+     *
+     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return JsonResponse

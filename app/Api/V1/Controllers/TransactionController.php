@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\TransactionStoreRequest;
 use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -42,11 +41,9 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -59,11 +56,10 @@ class TransactionController extends Controller
 
     /** @var TransactionGroupRepositoryInterface Group repository. */
     private $groupRepository;
-    /** @var JournalRepositoryInterface The journal repository */
-    private $repository;
-
     /** @var JournalAPIRepositoryInterface Journal API repos */
     private $journalAPIRepository;
+    /** @var JournalRepositoryInterface The journal repository */
+    private $repository;
 
     /**
      * TransactionController constructor.
@@ -91,18 +87,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function attachments(Request $request, TransactionJournal $transactionJournal): JsonResponse
+    public function attachments(TransactionJournal $transactionJournal): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager     = $this->getManager();
         $attachments = $this->journalAPIRepository->getAttachments($transactionJournal);
 
         /** @var AttachmentTransformer $transformer */
@@ -160,10 +152,7 @@ class TransactionController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -200,19 +189,15 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function piggyBankEvents(Request $request, TransactionJournal $transactionJournal): JsonResponse
+    public function piggyBankEvents(TransactionJournal $transactionJournal): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $events = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal);
+        $manager = $this->getManager();
+        $events  = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal);
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
@@ -227,18 +212,14 @@ class TransactionController extends Controller
     /**
      * Show a single transaction.
      *
-     * @param Request $request
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, TransactionGroup $transactionGroup): JsonResponse
+    public function show(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();
         // use new group collector:
@@ -269,7 +250,6 @@ class TransactionController extends Controller
      * @param TransactionStoreRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
@@ -283,10 +263,7 @@ class TransactionController extends Controller
 
         event(new StoredTransactionGroup($transactionGroup));
 
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();
         // use new group collector:
@@ -316,7 +293,7 @@ class TransactionController extends Controller
      * Update a transaction.
      *
      * @param TransactionUpdateRequest $request
-     * @param TransactionGroup $transactionGroup
+     * @param TransactionGroup         $transactionGroup
      *
      * @return JsonResponse
      */
@@ -325,9 +302,7 @@ class TransactionController extends Controller
         Log::debug('Now in update routine.');
         $data             = $request->getAll();
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
-        $manager          = new Manager();
-        $baseUrl          = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager          = $this->getManager();
 
         event(new UpdatedTransactionGroup($transactionGroup));
 
