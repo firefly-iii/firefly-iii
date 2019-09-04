@@ -125,6 +125,18 @@ TODO: hide and show columns
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
                             </span>
+                    {% elseif transaction.transaction_type_type == 'Opening balance' %}
+                        {% if transaction.source_account_type == 'Initial balance account' %}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
+                        {% else %}
+                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
+                        {% endif %}
                     {% else %}
                         {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {% if null != transaction.foreign_amount %}
