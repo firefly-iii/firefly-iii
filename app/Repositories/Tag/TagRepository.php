@@ -356,9 +356,10 @@ class TagRepository implements TagRepositoryInterface
 
             // return value for tag cloud:
             $return[$tag->id] = [
-                'size' => $fontSize,
-                'tag'  => $tag->tag,
-                'id'   => $tag->id,
+                'size'       => $fontSize,
+                'tag'        => $tag->tag,
+                'id'         => $tag->id,
+                'created_at' => $tag->created_at,
             ];
         }
 
@@ -481,7 +482,7 @@ class TagRepository implements TagRepositoryInterface
             $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
 
-        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
+        return $tagQuery->get(['tags.id', 'tags.tag','tags.created_at', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
     }
 }

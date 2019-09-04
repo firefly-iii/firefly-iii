@@ -25,12 +25,12 @@
                         </div>
                         <div class="col-lg-8 col-md-4 col-sm-12 col-xs-12 text-center">
                             <div class="btn btn-group btn-group-lg" style="padding-top:0;">
-                                <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}?page={{ page }}"
+                                <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}"
                                    class="btn btn-default" title="{{ prevLoop[0].title }}">&larr;</a>
                                 <a title="{{ start.formatLocalized(monthAndDayFormat) }} - {{ end.formatLocalized(monthAndDayFormat) }}"
-                                   href="{{ route('budgets.index', [start.format('Y-m-d'), end.format('Y-m-d')]) }}?page={{ page }}"
+                                   href="{{ route('budgets.index', [start.format('Y-m-d'), end.format('Y-m-d')]) }}"
                                    class="btn btn-default">{{ periodTitle }}</a>
-                                <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}?page={{ page }}"
+                                <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}"
                                    class="btn btn-default" title="{{ nextLoop[0].title }}">&rarr;</a>
                             </div>
                         </div>
@@ -420,7 +420,7 @@
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
 
         {#var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";#}
-        {#var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}?page={{ page }}";#}
+        {#var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}";#}
         var periodStart = "{{ start.format('Y-m-d') }}";
         var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>

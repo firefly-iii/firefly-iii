@@ -155,7 +155,7 @@ class ReportFormRequest extends Request
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $set        = $this->get('exp_rev');
+        $set        = $this->get('double');
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {

@@ -196,7 +196,7 @@ class AvailableBudgetController extends Controller
         }
         session()->flash('success', trans('firefly.set_ab'));
 
-        return redirect(route('budgets.index'));
+        return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
     }
 
     /**

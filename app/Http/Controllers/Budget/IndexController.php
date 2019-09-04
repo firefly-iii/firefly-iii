@@ -86,6 +86,7 @@ class IndexController extends Controller
     }
 
     /**
+     * TODO the "budgeted" progress bar doesn't update.
      * Show all budgets.
      *
      * @param Request     $request
@@ -194,9 +195,6 @@ class IndexController extends Controller
         return view(
             'budgets.index', compact(
                                'availableBudgets',
-                               //'available',
-                               //'currentMonth', 'next', 'nextText', 'prev',
-                               //'prevText', 'previousLoop', 'nextLoop',
                                'budgeted', 'spent',
                                'prevLoop', 'nextLoop',
                                'budgets',
