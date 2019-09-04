@@ -39,9 +39,9 @@ class SearchController extends Controller
     public function __construct()
     {
         parent::__construct();
-
+        app('view')->share('showCategory', true);
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-search');
                 app('view')->share('title', (string)trans('firefly.search'));
 

@@ -48,7 +48,7 @@ class IndexController extends Controller
     public function __construct()
     {
         parent::__construct();
-
+        app('view')->share('showCategory', true);
         // translations:
         $this->middleware(
             function ($request, $next) {

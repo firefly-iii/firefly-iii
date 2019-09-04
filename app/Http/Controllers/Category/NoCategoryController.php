@@ -51,6 +51,7 @@ class NoCategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
+        app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {

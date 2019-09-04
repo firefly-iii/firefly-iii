@@ -65,6 +65,7 @@ class BillController extends Controller
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         app('view')->share('uploadSize', $uploadSize);
+        app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {

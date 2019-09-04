@@ -69,8 +69,6 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        app('view')->share('hideBudgets', true);
-
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
