@@ -86,6 +86,7 @@ class RecurrenceTransformer extends AbstractTransformer
 
         $shortType = (string)config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
         $notes     = $this->repository->getNoteText($recurrence);
+        $reps      = 0 === (int)$recurrence->repetitions ? null : (int)$recurrence->repetitions;
         // basic data.
         $return = [
             'id'                => (int)$recurrence->id,
@@ -99,7 +100,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'repeat_until'      => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->format('Y-m-d'),
             'apply_rules'       => $recurrence->apply_rules,
             'active'            => $recurrence->active,
-            'nr_of_repetitions' => $recurrence->repetitions,
+            'nr_of_repetitions' => $reps,
             'notes'             => '' === $notes ? null : $notes,
             'repetitions'       => $this->getRepetitions($recurrence),
             'transactions'      => $this->getTransactions($recurrence),
