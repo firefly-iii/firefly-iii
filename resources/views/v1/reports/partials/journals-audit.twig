@@ -82,8 +82,10 @@
             <td class="hide-amount" style="text-align: right;">
                 {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
                     {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                    {% else %}
-                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% else %}
+                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                 {% endif %}
 
             </td>
