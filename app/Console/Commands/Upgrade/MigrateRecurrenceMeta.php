@@ -57,8 +57,6 @@ class MigrateRecurrenceMeta extends Command
 
             return 0;
         }
-        $this->warn('Congrats, you found the skeleton command. Boo!');
-
         $count = $this->migrateMetaData();
 
         if (0 === $count) {
@@ -106,6 +104,9 @@ class MigrateRecurrenceMeta extends Command
     private function migrateEntry(RecurrenceMeta $meta): int
     {
         $recurrence       = $meta->recurrence;
+        if (null === $recurrence) {
+            return 0;
+        }
         $firstTransaction = $recurrence->recurrenceTransactions()->first();
         if (null === $firstTransaction) {
             return 0;
