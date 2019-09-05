@@ -12,6 +12,7 @@ mkdir -p $FIREFLY_PATH/storage/export
 mkdir -p $FIREFLY_PATH/storage/framework/cache/data
 mkdir -p $FIREFLY_PATH/storage/framework/sessions
 mkdir -p $FIREFLY_PATH/storage/framework/testing
+mkdir -p $FIREFLY_PATH/storage/framework/views/twig
 mkdir -p $FIREFLY_PATH/storage/framework/views/v1
 mkdir -p $FIREFLY_PATH/storage/framework/views/v2
 mkdir -p $FIREFLY_PATH/storage/logs
