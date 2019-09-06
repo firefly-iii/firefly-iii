@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Huidig saldo',
     'linked_to_rules'         => 'Relevante regels',
     'active'                  => 'Actief?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Laatste activiteit',
     'balanceDiff'             => 'Saldoverschil',

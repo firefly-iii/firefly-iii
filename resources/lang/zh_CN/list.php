@@ -36,6 +36,8 @@ return [
     'currentBalance'          => '目前馀额',
     'linked_to_rules'         => '相关规则',
     'active'                  => '是否启用？',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => '上次活动',
     'balanceDiff'             => '馀额差',

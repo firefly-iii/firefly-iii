@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Текущий баланс',
     'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Тип',
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',

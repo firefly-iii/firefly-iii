@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Sold curent',
     'linked_to_rules'         => 'Reguli relevante',
     'active'                  => 'Este activ?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Ultima activitate',
     'balanceDiff'             => 'Diferența de sold',

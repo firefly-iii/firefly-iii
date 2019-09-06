@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Aktuální zůstatek',
     'linked_to_rules'         => 'Příslušná pravidla',
     'active'                  => 'Aktivní?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Poslední aktivita',
     'balanceDiff'             => 'Rozdíl zůstatku',

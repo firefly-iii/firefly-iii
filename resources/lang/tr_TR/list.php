@@ -37,6 +37,8 @@ return [
     'linked_to_rules'         => '
 İlgili kurallar',
     'active'                  => 'Aktif mi?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Son Etkinlik',
     'balanceDiff'             => 'Bakiye farkı',

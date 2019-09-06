@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Balance actual',
     'linked_to_rules'         => 'Reglas asociadas',
     'active'                  => '¿Está Activo?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Tipo',
     'lastActivity'            => 'Actividad más reciente',
     'balanceDiff'             => 'Diferencia de saldo',

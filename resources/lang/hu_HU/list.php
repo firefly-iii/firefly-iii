@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Aktuális egyenleg',
     'linked_to_rules'         => 'Vonatkozó szabályok',
     'active'                  => 'Aktív?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Utolsó aktivitás',
     'balanceDiff'             => 'Egyenleg különbség',

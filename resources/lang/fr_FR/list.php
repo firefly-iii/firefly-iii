@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Solde courant',
     'linked_to_rules'         => 'Règles applicables',
     'active'                  => 'Actif ?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Activité récente',
     'balanceDiff'             => 'Différence d\'équilibre',

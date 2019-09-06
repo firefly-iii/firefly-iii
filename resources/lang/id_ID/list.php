@@ -36,6 +36,8 @@ return [
     'currentBalance'          => 'Saldo saat ini',
     'linked_to_rules'         => 'Aturan yang relevan',
     'active'                  => 'Aktif?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Aktifitas terakhir',
     'balanceDiff'             => 'Perbedaan saldo',
