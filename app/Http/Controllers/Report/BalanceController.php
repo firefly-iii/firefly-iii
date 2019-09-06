@@ -49,7 +49,7 @@ class BalanceController extends Controller
         parent::__construct();
 
         $this->middleware(
-            static function ($request, $next) {
+            function ($request, $next) {
                 $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
