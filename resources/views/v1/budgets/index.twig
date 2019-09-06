@@ -197,7 +197,7 @@
             {% endif %}
         </div>
     {% endif %}
-    {% if budgets.count == 0 and inactive.count == 0 %}
+    {% if budgets|length == 0 and inactive.count == 0 %}
         {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}

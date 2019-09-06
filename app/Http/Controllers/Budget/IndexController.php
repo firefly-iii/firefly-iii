@@ -164,13 +164,14 @@ class IndexController extends Controller
 
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
+                $currency = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => $limit->amount,
-                    'currency_id'             => $limit->transactionCurrency->id,
-                    'currency_symbol'         => $limit->transactionCurrency->symbol,
-                    'currency_name'           => $limit->transactionCurrency->name,
-                    'currency_decimal_places' => $limit->transactionCurrency->decimal_places,
+                    'currency_id'             => $currency->id,
+                    'currency_symbol'         => $currency->symbol,
+                    'currency_name'           => $currency->name,
+                    'currency_decimal_places' => $currency->decimal_places,
                 ];
             }
 
