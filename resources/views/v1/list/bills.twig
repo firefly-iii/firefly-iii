@@ -78,7 +78,11 @@
                     {{ trans('components.not_or_not_yet') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                    {% for date in entry.pay_dates %}
+                        {#{{ formatDate(entry.next_expected_match, monthAndDayFormat) }}<br>#}
+                        {{ formatDate(date, monthAndDayFormat) }}<br>
+                    {% endfor %}
+
                 </td>
             {% endif %}
 
