@@ -203,7 +203,7 @@
             this.getGroup();
         },
         ready() {
-            console.log('Ready Group ID: ' + this.groupId);
+            // console.log('Ready Group ID: ' + this.groupId);
         },
         methods: {
             positiveAmount(amount) {
@@ -290,10 +290,10 @@
                 }
             },
             clearDestination(index) {
-                console.log('clearDestination(' + index + ')');
+                // console.log('clearDestination(' + index + ')');
                 // reset destination account:
-                console.log('Destination allowed types first:');
-                console.log(this.transactions[index].destination_account.allowed_types);
+                // console.log('Destination allowed types first:');
+                // console.log(this.transactions[index].destination_account.allowed_types);
                 this.transactions[index].destination_account = {
                     id: 0,
                     name: '',
@@ -313,8 +313,8 @@
                     this.selectedSourceAccount(index, this.transactions[index].source_account);
                 }
 
-                console.log('Destination allowed types after:');
-                console.log(this.transactions[index].destination_account.allowed_types);
+                // console.log('Destination allowed types after:');
+                // console.log(this.transactions[index].destination_account.allowed_types);
             },
             getGroup() {
 
@@ -323,7 +323,7 @@
 
 
                 const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
-                console.log(uri);
+                // console.log(uri);
 
                 // fill in transactions array.
                 axios.get(uri)
@@ -331,11 +331,11 @@
                         this.processIncomingGroup(response.data.data);
                     })
                     .catch(error => {
-                        console.error('Some error.');
+                        //console.error('Some error.');
                     });
             },
             processIncomingGroup(data) {
-                console.log(data);
+                // console.log(data);
                 this.group_title = data.attributes.group_title;
                 let transactions = data.attributes.transactions.reverse();
                 for (let key in transactions) {
@@ -347,7 +347,7 @@
                 }
             },
             processIncomingGroupRow(transaction) {
-                console.log(transaction);
+                // console.log(transaction);
                 this.setTransactionType(transaction.type);
 
                 let newTags = [];
@@ -579,7 +579,7 @@
                 return currentArray;
             },
             submit: function (e) {
-                console.log('I am submit');
+                // console.log('I am submit');
                 const page = window.location.href.split('/');
                 const groupId = page[page.length - 1];
                 const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
@@ -617,7 +617,7 @@
             },
 
             redirectUser(groupId, button) {
-                console.log('In redirectUser()');
+                // console.log('In redirectUser()');
                 // if count is 0, send user onwards.
 
                 if (this.returnAfter) {
@@ -632,7 +632,7 @@
             },
 
             collectAttachmentData(response) {
-                console.log('Now incollectAttachmentData()');
+                // console.log('Now incollectAttachmentData()');
                 let groupId = response.data.data.id;
 
                 // array of all files to be uploaded:
@@ -661,7 +661,7 @@
                     }
                 }
                 let count = toBeUploaded.length;
-                console.log('Found ' + toBeUploaded.length + ' attachments.');
+                // console.log('Found ' + toBeUploaded.length + ' attachments.');
 
                 // loop all uploads.
                 for (const key in toBeUploaded) {
@@ -695,7 +695,7 @@
                 let uploads = 0;
                 for (const key in fileData) {
                     if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        console.log('Creating attachment #' + key);
+                        // console.log('Creating attachment #' + key);
                         // axios thing, + then.
                         const uri = './api/v1/attachments';
                         const data = {
@@ -705,23 +705,23 @@
                         };
                         axios.post(uri, data)
                             .then(response => {
-                                console.log('Created attachment #' + key);
-                                console.log('Uploading attachment #' + key);
+                                // console.log('Created attachment #' + key);
+                                // console.log('Uploading attachment #' + key);
                                 const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
                                 axios.post(uploadUri, fileData[key].content)
                                     .then(response => {
-                                        console.log('Uploaded attachment #' + key);
+                                        // console.log('Uploaded attachment #' + key);
                                         uploads++;
                                         if (uploads === count) {
                                             // finally we can redirect the user onwards.
-                                            console.log('FINAL UPLOAD');
+                                            // console.log('FINAL UPLOAD');
                                             this.redirectUser(groupId);
                                         }
-                                        console.log('Upload complete!');
+                                        // console.log('Upload complete!');
                                         return true;
                                     }).catch(error => {
-                                    console.error('Could not upload');
-                                    console.error(error);
+                                    // console.error('Could not upload');
+                                    // console.error(error);
                                     return false;
                                 });
                             });

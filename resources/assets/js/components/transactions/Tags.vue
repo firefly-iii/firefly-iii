@@ -70,7 +70,7 @@
                 return this.error.length > 0;
             },
             initItems() {
-                console.log('Now in initItems');
+                // console.log('Now in initItems');
                 if (this.tag.length < 2) {
                     return;
                 }

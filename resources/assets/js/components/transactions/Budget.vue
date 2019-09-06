@@ -43,8 +43,8 @@
         props: ['transactionType', 'value', 'error'],
         mounted() {
             this.loadBudgets();
-            console.log('budget value');
-            console.log(this.value);
+            // console.log('budget value');
+            // console.log(this.value);
         },
         data() {
             return {
