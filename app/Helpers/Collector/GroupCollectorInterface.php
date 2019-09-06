@@ -122,6 +122,15 @@ interface GroupCollectorInterface
     public function setAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Either account can be set, but NOT both. This effectively excludes internal transfers.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setXorAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
      * Collect transactions after a specific date.
      *
      * @param Carbon $date

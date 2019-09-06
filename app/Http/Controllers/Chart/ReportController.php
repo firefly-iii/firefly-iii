@@ -162,8 +162,8 @@ class ReportController extends Controller
         $chartData = [];
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setAccounts($accounts)
-                                          ->withAccountInformation();
+        $collector->setRange($start, $end)->withAccountInformation();
+        $collector->setXorAccounts($accounts);
         $journals = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
@@ -186,11 +186,10 @@ class ReportController extends Controller
             // in our outgoing?
             $key    = 'spent';
             $amount = app('steam')->positive($journal['amount']);
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type']
-                || (TransactionType::TRANSFER === $journal['transaction_type_type']
-                    && in_array(
-                        $journal['destination_account_id'], $ids, true
-                    ))) {
+            if (TransactionType::DEPOSIT === $journal['transaction_type_type'] ||
+                (TransactionType::TRANSFER === $journal['transaction_type_type']
+                    && in_array($journal['destination_account_id'], $ids, true)
+                )) {
                 $key = 'earned';
             }
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
