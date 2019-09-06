@@ -664,7 +664,7 @@
                                                currency_name: '',
                                                currency_code: '',
                                                currency_decimal_places: 2,
-                                               allowed_types: []
+                                               allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage']
                                            },
                                            destination_account: {
                                                id: 0,
@@ -674,7 +674,7 @@
                                                currency_name: '',
                                                currency_code: '',
                                                currency_decimal_places: 2,
-                                               allowed_types: []
+                                               allowed_types: ['Asset account','Expense account','Loan','Debt','Mortgage']
                                            }
                                        });
                 if (this.transactions.length === 1) {
