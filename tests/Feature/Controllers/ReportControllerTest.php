@@ -69,7 +69,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController
      */
-    public function testAccountReport(): void
+    public function testDoubleReport(): void
     {
         $this->mockDefaultSession();
         $this->mock(ReportHelperInterface::class);
@@ -92,7 +92,7 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('generate')->once()->andReturn('here-be-report');
 
         $this->be($this->user());
-        $response = $this->get(route('reports.report.account', [$account->id, $expense->id, '20160101', '20161231']));
+        $response = $this->get(route('reports.report.double', [$account->id, $expense->id, '20160101', '20161231']));
         $response->assertStatus(200);
     }
 
@@ -290,7 +290,7 @@ class ReportControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController
      */
-    public function testOptionsAccount(): void
+    public function testOptionsDouble(): void
     {
         Log::debug(sprintf('Now in test %s', __METHOD__));
         $this->mockDefaultSession();
@@ -304,11 +304,11 @@ class ReportControllerTest extends TestCase
         $collection    = new Collection([$account]);
 
 
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::EXPENSE]])->once()->andReturn($collection);
-        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
+        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->once()->andReturn($collection);
+        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->once()->andReturn($collection);
 
         $this->be($this->user());
-        $response = $this->get(route('reports.options', ['account']));
+        $response = $this->get(route('reports.options', ['double']));
         $response->assertStatus(200);
     }
 
@@ -376,7 +376,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexAccountError(): void
+    public function testPostIndexDoubleError(): void
     {
         Log::debug(sprintf('Now in test %s', __METHOD__));
         $this->mockDefaultSession();
@@ -395,9 +395,9 @@ class ReportControllerTest extends TestCase
 
         $data = [
             'accounts'    => ['1'],
-            'exp_rev'     => ['4'],
+            'double'     => ['4'],
             'daterange'   => '2016-01-01 - 2016-01-31',
-            'report_type' => 'account',
+            'report_type' => 'double',
         ];
 
         $this->be($this->user());
@@ -411,7 +411,7 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
-    public function testPostIndexAccountOK(): void
+    public function testPostIndexDoubleOK(): void
     {
         Log::debug(sprintf('Now in test %s', __METHOD__));
         $this->mockDefaultSession();
@@ -425,15 +425,15 @@ class ReportControllerTest extends TestCase
 
         $data = [
             'accounts'    => ['1'],
-            'exp_rev'     => ['4'],
+            'double'     => ['4'],
             'daterange'   => '2016-01-01 - 2016-01-31',
-            'report_type' => 'account',
+            'report_type' => 'double',
         ];
 
         $this->be($this->user());
         $response = $this->post(route('reports.index.post'), $data);
         $response->assertStatus(302);
-        $response->assertRedirect(route('reports.report.account', ['1', '1', '20160101', '20160131']));
+        $response->assertRedirect(route('reports.report.double', ['1', '1', '20160101', '20160131']));
     }
 
     /**

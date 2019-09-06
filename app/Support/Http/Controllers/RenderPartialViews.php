@@ -193,6 +193,9 @@ trait RenderPartialViews
         $categoryRepository = app(CategoryRepositoryInterface::class);
         $category           = $categoryRepository->findNull((int)$attributes['categoryId']);
         $journals           = $popupHelper->byCategory($category, $attributes);
+        if (null === $category) {
+            return 'This is an unknown category. Apologies.';
+        }
         // @codeCoverageIgnoreStart
         try {
             $view = view('popup.report.category-entry', compact('journals', 'category'))->render();

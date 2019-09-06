@@ -26,6 +26,8 @@ namespace Tests\Unit\Transformers;
 use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use Illuminate\Support\Collection;
 use Log;
@@ -56,7 +58,9 @@ class AvailableBudgetTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $nbRepos       = $this->mock(NoBudgetRepositoryInterface::class);
         $repository->shouldReceive('setUser')->atLeast()->once();
 
         /** @var AvailableBudget $availableBudget */
@@ -93,12 +97,14 @@ class AvailableBudgetTransformerTest extends TestCase
         ];
 
 
-        $budget = $this->getRandomBudget();
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $budget        = $this->getRandomBudget();
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $nbRepos       = $this->mock(NoBudgetRepositoryInterface::class);
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn($data);
-        $repository->shouldReceive('spentInPeriodWoBudgetMc')->atLeast()->once()->andReturn($data);
+        $opsRepository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn($data);
+        $nbRepos->shouldReceive('spentInPeriodWoBudgetMc')->atLeast()->once()->andReturn($data);
 
         // spentInPeriodWoBudgetMc
 

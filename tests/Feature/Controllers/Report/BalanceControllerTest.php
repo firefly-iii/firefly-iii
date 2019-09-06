@@ -24,6 +24,8 @@ namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Tests\TestCase;
@@ -54,9 +56,12 @@ class BalanceControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $date         = new Carbon;
+        $budget       = $this->getRandomBudget();
 
-        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        $repository->shouldReceive('getBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 

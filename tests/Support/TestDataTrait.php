@@ -86,6 +86,108 @@ trait TestDataTrait
     }
 
     /**
+     * Method that returns default data for when the tag OperationsRepos
+     * "listExpenses" method is called.
+     *
+     * @return array
+     */
+    protected function tagListExpenses(): array
+    {
+        $eur    = TransactionCurrency::where('code', 'EUR')->first();
+        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $tag1   = $this->user()->tags()->inRandomOrder()->first();
+        $tag2   = $this->user()->tags()->inRandomOrder()->where('id', '!=', $tag1->id)->first();
+        $data   = [];
+        $amount = 400;
+        $date   = null;
+        try {
+            $amount = random_int(100, 2500);
+            $date   = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        $amount = bcmul((string)round($amount / 100, 2), '-1');
+
+        foreach ([$eur, $usd] as $currency) {
+            $data[$currency->id] = [
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+                'categories'              => [],
+            ];
+            foreach ([$tag1, $tag2] as $tag) {
+                $data[$currency->id]['tags'][$tag->id] = [
+                    'id'                   => $tag->id,
+                    'name'                 => $tag->tag,
+                    'transaction_journals' => [],
+                ];
+                // add two random amounts:
+                for ($i = 0; $i < 2; $i++) {
+                    $data[$currency->id]['categories'][$tag->id]['transaction_journals'][$i] = [
+                        'amount' => $amount,
+                        'date'   => $date,
+                    ];
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Method that returns default data for when the tag OperationsRepos
+     * "listIncome" method is called.
+     *
+     * @return array
+     */
+    protected function tagListIncome(): array
+    {
+        $eur    = TransactionCurrency::where('code', 'EUR')->first();
+        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $tag1   = $this->user()->tags()->inRandomOrder()->first();
+        $tag2   = $this->user()->tags()->inRandomOrder()->where('id', '!=', $tag1->id)->first();
+        $data   = [];
+        $amount = 400;
+        $date   = null;
+        try {
+            $amount = random_int(100, 2500);
+            $date   = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        $amount = (string)round($amount / 100, 2);
+
+        foreach ([$eur, $usd] as $currency) {
+            $data[$currency->id] = [
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+                'categories'              => [],
+            ];
+            foreach ([$tag1, $tag2] as $tag) {
+                $data[$currency->id]['tags'][$tag->id] = [
+                    'id'                   => $tag->id,
+                    'name'                 => $tag->tag,
+                    'transaction_journals' => [],
+                ];
+                // add two random amounts:
+                for ($i = 0; $i < 2; $i++) {
+                    $data[$currency->id]['categories'][$tag->id]['transaction_journals'][$i] = [
+                        'amount' => $amount,
+                        'date'   => $date,
+                    ];
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Method that returns default data for when the category OperationsRepos
      * "listExpenses" method is called.
      *

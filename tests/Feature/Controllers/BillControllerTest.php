@@ -180,6 +180,7 @@ class BillControllerTest extends TestCase
              'currency'                => $this->getEuro(),
              'currency_id'             => $euro->id,
              'currency_code'           => $euro->code,
+             'pay_dates'               => [],
              'currency_symbol'         => $euro->symbol,
              'currency_decimal_places' => $euro->decimal_places,
             ]

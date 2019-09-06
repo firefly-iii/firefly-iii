@@ -72,6 +72,8 @@ class IndexControllerTest extends TestCase
         $pref->data = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
+        $repository->shouldReceive('getOccurrencesInRange')->atLeast()->once()->andReturn([]);
+
         $this->mockDefaultSession();
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
@@ -125,6 +127,8 @@ class IndexControllerTest extends TestCase
         $pref       = new Preference;
         $pref->data = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        $repository->shouldReceive('getOccurrencesInRange')->atLeast()->once()->andReturn([]);
 
         $this->mockDefaultSession();
 

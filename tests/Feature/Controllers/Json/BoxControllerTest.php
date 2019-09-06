@@ -29,7 +29,9 @@ use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -67,14 +69,16 @@ class BoxControllerTest extends TestCase
         ];
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $abRepository = $this->mock(AvailableBudgetRepositoryInterface::class);
 
 
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
-        $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
+        $abRepository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($return);
+        $opsRepository->shouldReceive('collectBudgetInformation')->andReturn($return);
 
         $this->be($this->user());
         $response = $this->get(route('json.box.available'));
@@ -95,14 +99,16 @@ class BoxControllerTest extends TestCase
         ];
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $abRepository = $this->mock(AvailableBudgetRepositoryInterface::class);
 
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
 
-        $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
+        $abRepository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($return);
+        $opsRepository->shouldReceive('collectBudgetInformation')->andReturn($return);
 
         $this->be($this->user());
         $response = $this->get(route('json.box.available'));
