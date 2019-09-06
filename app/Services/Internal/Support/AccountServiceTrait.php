@@ -140,6 +140,9 @@ trait AccountServiceTrait
     public function validOBData(array $data): bool
     {
         $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
+        if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
+            $data['opening_balance'] = '';
+        }
         if ('' !== $data['opening_balance'] && isset($data['opening_balance'], $data['opening_balance_date'])) {
             Log::debug('Array has valid opening balance data.');
 
