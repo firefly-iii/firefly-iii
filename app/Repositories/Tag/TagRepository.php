@@ -68,6 +68,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function destroy(Tag $tag): bool
     {
+        $tag->transactionJournals()->sync([]);
         $tag->delete();
 
         return true;
