@@ -62,6 +62,7 @@
 
                         {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
                             <!--CLONE-->
+                            <a href="#" class="btn btn-default" style="white-space: nowrap;" onclick="return false;" data-toggle="tooltip" data-placement="top" title="{{ 'clone_instructions' |_|escape}}">Clone</a>
                             {#<a href="{{ route('transactions.clone', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a>#}
                         {% endif %}
                         {#

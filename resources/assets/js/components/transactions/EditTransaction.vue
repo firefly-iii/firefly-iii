@@ -181,6 +181,12 @@
                                 After updating, return here to continue editing.
                             </label>
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input v-model="storeAsNew" name="store_as_new" type="checkbox">
+                                Store as a new transaction instead of updating.
+                            </label>
+                        </div>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
@@ -579,31 +585,30 @@
                 return currentArray;
             },
             submit: function (e) {
-                // console.log('I am submit');
                 const page = window.location.href.split('/');
                 const groupId = page[page.length - 1];
-                const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                let uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                let method = 'PUT';
+                if (this.storeAsNew) {
+                    // other links.
+                    uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                    method = 'POST';
+                }
                 const data = this.convertData();
 
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);
 
-                axios.put(uri, data)
-                    .then(response => {
+                //axios.put(uri, data)
+                axios({
+                          method: method,
+                          url: uri,
+                          data: data,
+                      }).then(response => {
 
                         if (0 === this.collectAttachmentData(response)) {
                             this.redirectUser(response.data.data.id, button);
                         }
-
-                        // if (this.returnAfter) {
-                        //     this.setDefaultErrors();
-                        //     // do message:
-                        //     this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been updated.';
-                        //     this.error_message = '';
-                        //     button.prop("disabled", false);
-                        // } else {
-                        //     window.location.href = 'transactions/show/' + response.data.data.id + '?message=updated';
-                        // }
                     }).catch(error => {
                     // give user errors things back.
                     // something something render errors.
@@ -622,12 +627,21 @@
 
                 if (this.returnAfter) {
                     this.setDefaultErrors();
-                    // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been updated.';
-                    this.error_message = '';
+                    // do message if update or new:
+                    if (this.storeAsNew) {
+                        this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been created.';
+                        this.error_message = '';
+                    } else {
+                        this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been updated.';
+                        this.error_message = '';
+                    }
                     button.prop("disabled", false);
                 } else {
-                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=updated';
+                    if (this.storeAsNew) {
+                        window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
+                    } else {
+                        window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=updated';
+                    }
                 }
             },
 
@@ -901,6 +915,7 @@
                 transactions: [],
                 group_title: "",
                 returnAfter: false,
+                storeAsNew: false,
                 transactionType: null,
                 group_title_errors: [],
                 resetButtonDisabled: true,
