@@ -158,17 +158,17 @@ class SummaryController extends Controller
      * @param array               $spentInfo
      * @param TransactionCurrency $currency
      *
-     * @return float
+     * @return string
      */
-    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
+    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): string
     {
         foreach ($spentInfo as $array) {
             if ($array['currency_id'] === $currency->id) {
-                return $array['amount'];
+                return (string)$array['amount'];
             }
         }
 
-        return 0.0; // @codeCoverageIgnore
+        return '0'; // @codeCoverageIgnore
     }
 
     /**
