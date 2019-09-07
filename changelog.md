@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1 (API 0.10.2)] - 2019-08-xx
+
+### Added
+- Support for Greek
+
+### Changed
+- All reports are now properly multi-currency.
+
+### Removed
+- The bunq API has changed, and support for bunq has been disabled.
+
+### Fixed
+- ... and many other bugs.
+
+### Security
+- Initial release.
+
+### API
+- Initial release
+
 ## [4.8.0.3 (API 0.10.1)] - 2019-08-23
 
 Fixes many other issues in the previous release.
