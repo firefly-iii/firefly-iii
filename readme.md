@@ -111,7 +111,7 @@ There are many ways to run Firefly III
 Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://firefly-iii.readthedocs.io/en/latest/installation/upgrading.html) can be found in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ## Contribute
-Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/), [Twitter](https://twitter.com/Firefly_III) and [Facebook](https://www.facebook.com/FireflyIII/) just to start. It's not very active but it's a start!
+Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III). It's not very active but it's a start!
 
 Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
 
