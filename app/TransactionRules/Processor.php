@@ -328,7 +328,7 @@ class Processor
                 }
             }
             if ($trigger->stopProcessing) {
-                Log::debug('Stop processing this trigger and break.');
+                Log::debug('Stop processing this rule and break off all triggers.');
                 break;
             }
         }
