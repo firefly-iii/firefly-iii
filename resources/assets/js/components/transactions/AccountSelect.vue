@@ -131,20 +131,20 @@
                     }
                     this.inputDisabled = false;
                     if (this.transactionType.toString() !== '' && this.index > 0) {
-                        if (this.transactionType.toString() === 'Transfer') {
+                        if (this.transactionType.toString().toLowerCase() === 'transfer') {
                             this.inputDisabled = true;
                             // todo: needs to copy value from very first input
 
                             return;
                         }
 
-                        if (this.transactionType.toString() === 'Withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
+                        if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
                             // todo also clear value?
                             this.inputDisabled = true;
                             return;
                         }
 
-                        if (this.transactionType.toString() === 'Deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
+                        if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
                             // todo also clear value?
                             this.inputDisabled = true;
                         }
