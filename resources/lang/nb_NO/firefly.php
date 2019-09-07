@@ -58,6 +58,7 @@ return [
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => 'Se aktivakontoene dine',
     'go_to_budgets'                              => 'Gå til budsjettene dine',
+    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
     'go_to_categories'                           => 'Gå til kategoriene dine',
     'go_to_bills'                                => 'Gå til regningene dine',
     'go_to_expense_accounts'                     => 'Se utgiftskontoene dine',

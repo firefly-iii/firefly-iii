@@ -59,6 +59,7 @@ return [
     'go_to_asset_accounts'                       => 'Varlık hesaplarınızı görüntüleyin
 ',
     'go_to_budgets'                              => 'Bütçelerine git',
+    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
     'go_to_categories'                           => 'Kategorilerinize gidin',
     'go_to_bills'                                => 'Faturalarına git',
     'go_to_expense_accounts'                     => 'Gider hesaplarınızı görün',

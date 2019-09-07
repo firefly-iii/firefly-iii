@@ -130,7 +130,7 @@ return [
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Seleziona un importo minimo e massimo per questo conto.',
     'bills_create_repeat_freq_holder'                         => 'La maggior parte dei pagamenti si ripetono mensilmente, ma qui puoi impostare un\'altra frequenza.',
-    'bills_create_skip_holder'                                => 'Se una bolletta si ripete ogni 2 settimane, il campo "salta" deve essere impostato a "1" per saltare ogni volta una settimana.',
+    'bills_create_skip_holder'                                => 'Se una bolletta si ripete ogni 2 settimane, il campo "salta" deve essere impostato a "1" per saltare una settimana.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III ti consente di gestire delle regole che verranno automaticamente applicate a qualsiasi transazione creata o modificata.',

@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
     'percentage'              => 'pct.',
-    'next_due'                => 'Next due',
+    'next_due'                => 'Следующий срок',
     'transaction_type'        => 'Тип',
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',

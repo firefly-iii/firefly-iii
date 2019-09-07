@@ -58,6 +58,7 @@ return [
     'no_rules_for_bill'                          => 'Cette facture n\'a aucune règle associée.',
     'go_to_asset_accounts'                       => 'Afficher vos comptes d\'actifs',
     'go_to_budgets'                              => 'Gérer vos budgets',
+    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
     'go_to_categories'                           => 'Gérer vos catégories',
     'go_to_bills'                                => 'Gérer vos factures',
     'go_to_expense_accounts'                     => 'Voir vos comptes de dépenses',

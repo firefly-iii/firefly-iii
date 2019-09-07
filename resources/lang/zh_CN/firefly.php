@@ -58,6 +58,7 @@ return [
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => '检视您的资产帐户',
     'go_to_budgets'                              => '前往您的预算',
+    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
     'go_to_categories'                           => '前往您的分类',
     'go_to_bills'                                => '前往您的帐单',
     'go_to_expense_accounts'                     => '查看您的支出帐户',

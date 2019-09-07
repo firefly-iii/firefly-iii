@@ -58,6 +58,7 @@ return [
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => 'Zobacz swoje konta aktywów',
     'go_to_budgets'                              => 'Przejdź do swoich budżetów',
+    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
     'go_to_categories'                           => 'Przejdź do swoich kategorii',
     'go_to_bills'                                => 'Przejdź do swoich rachunków',
     'go_to_expense_accounts'                     => 'Zobacz swoje konta wydatków',
