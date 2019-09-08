@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.1 (API 0.10.2)] - 2019-08-xx
+## [4.8.1.1 (API 0.10.2)] - 2019-09-08
+
+Fixes a query error on the /tags page that affected some MySQL users.
+
+## [4.8.1 (API 0.10.2)] - 2019-09-08
 
 Firefly III 4.8.1 requires PHP 7.3.
 
