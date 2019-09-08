@@ -23,7 +23,7 @@ Firefly III 4.8.1 requires PHP 7.3.
 - [Issue 2495](https://github.com/firefly-iii/firefly-iii/issues/2495) A better message of transaction submission.
 - [Issue 2506](https://github.com/firefly-iii/firefly-iii/issues/2506) Some bugs in tag report fixed.
 - [Issue 2510](https://github.com/firefly-iii/firefly-iii/issues/2510) All transaction descriptions cut off at 255 chars.
-
+- Changing your language preference invites you to submit corrections to [Crowdin](https://crowdin.com/project/firefly-iii).
 - Better sum in bill view.
 - Clean up docker files for flawless operation.
 
