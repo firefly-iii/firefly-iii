@@ -27,6 +27,7 @@ $host        = '';
 $username    = '';
 $password    = '';
 $database    = '';
+$port        = '';
 
 if (!(false === $databaseUrl)) {
 
