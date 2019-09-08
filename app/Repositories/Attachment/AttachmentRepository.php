@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -105,25 +106,27 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
-        $disk    = Storage::disk('upload');
-        $file    = $attachment->fileName();
-        $content = '';
+        $disk               = Storage::disk('upload');
+        $file               = $attachment->fileName();
+        $unencryptedContent = '';
 
         if ($disk->exists($file)) {
+            $encryptedContent = '';
             try {
-                $content = Crypt::decrypt($disk->get($file));
+                $encryptedContent = $disk->get($file);
             } catch (FileNotFoundException $e) {
-                Log::debug(sprintf('File not found: %e', $e->getMessage()));
-                $content = false;
+                Log::error($e->getMessage());
+            }
+
+            try {
+                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
+            } catch (DecryptException $e) {
+                Log::debug(sprintf('Could not decrypt: %e', $e->getMessage()));
+                $unencryptedContent = $encryptedContent;
             }
         }
-        if (\is_bool($content)) {
-            Log::error(sprintf('Attachment #%d may be corrupted: the content could not be decrypted.', $attachment->id));
 
-            return '';
-        }
-
-        return $content;
+        return $unencryptedContent;
     }
 
     /**

@@ -34,11 +34,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class ImportController
@@ -51,6 +49,7 @@ class ImportController extends Controller
 
     /**
      * ImportController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -69,16 +68,13 @@ class ImportController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function listAll(Request $request): JsonResponse
+    public function listAll(): JsonResponse
     {
         // create some objects:
-        $manager  = new Manager;
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager  = $this->getManager();
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
@@ -89,9 +85,6 @@ class ImportController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($importJobs, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.import.list') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var ImportJobTransformer $transformer */
         $transformer = app(ImportJobTransformer::class);
@@ -104,18 +97,14 @@ class ImportController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param ImportJob $importJob
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, ImportJob $importJob): JsonResponse
+    public function show(ImportJob $importJob): JsonResponse
     {
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var ImportJobTransformer $transformer */
         $transformer = app(ImportJobTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -128,7 +117,7 @@ class ImportController extends Controller
     /**
      * Show all transactions
      *
-     * @param Request $request
+     * @param Request   $request
      * @param ImportJob $importJob
      *
      * @return JsonResponse
@@ -141,9 +130,7 @@ class ImportController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         $tag          = $importJob->tag;
         $transactions = new Collection();

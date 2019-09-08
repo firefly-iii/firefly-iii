@@ -68,7 +68,7 @@
                                 <span v-if="transactions.length === 1">Transaction information</span>
                             </h3>
                             <div class="box-tools pull-right" v-if="transactions.length > 1" x>
-                                <button v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
+                                <button type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
                                         class="fa fa-trash"></i></button>
                             </div>
                         </div>
@@ -86,6 +86,7 @@
                                             title="Source account"
                                             :accountName="transaction.source_account.name"
                                             :accountTypeFilters="transaction.source_account.allowed_types"
+                                            :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
                                             :transactionType="transactionType"
                                             :index="index"
                                             v-on:clear:value="clearSource(index)"
@@ -97,6 +98,7 @@
                                             title="Destination account"
                                             :accountName="transaction.destination_account.name"
                                             :accountTypeFilters="transaction.destination_account.allowed_types"
+                                            :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"
                                             :transactionType="transactionType"
                                             :index="index"
                                             v-on:clear:value="clearDestination(index)"
@@ -393,28 +395,34 @@
                 }
             },
             redirectUser(groupId, button) {
-                console.log('In redirectUser()');
+                //console.log('In redirectUser()');
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
-                    console.log('Will create another.');
+                    //console.log('Will create another.');
+
                     // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
+                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been stored.';
                     this.error_message = '';
                     if (this.resetFormAfter) {
+                        // also clear form.
+                        this.resetTransactions();
                         this.addTransactionToArray();
                     }
+
+                    // clear errors:
+                    this.setDefaultErrors();
+
                     if (button) {
                         button.prop("disabled", false);
                     }
                 } else {
-                    console.log('Will redirect to previous URL. (' + previousUri + ')');
-                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId+ '&message=created';
-                    //window.location.href = 'transactions/show/' + groupId + '?message=created';
+                    // console.log('Will redirect to previous URL. (' + previousUri + ')');
+                    window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
                 }
             },
 
             collectAttachmentData(response) {
-                console.log('Now incollectAttachmentData()');
+                // console.log('Now incollectAttachmentData()');
                 let groupId = response.data.data.id;
 
                 // array of all files to be uploaded:
@@ -443,7 +451,7 @@
                     }
                 }
                 let count = toBeUploaded.length;
-                console.log('Found ' + toBeUploaded.length + ' attachments.');
+                // console.log('Found ' + toBeUploaded.length + ' attachments.');
 
                 // loop all uploads.
                 for (const key in toBeUploaded) {
@@ -477,7 +485,7 @@
                 let uploads = 0;
                 for (const key in fileData) {
                     if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        console.log('Creating attachment #' + key);
+                        // console.log('Creating attachment #' + key);
                         // axios thing, + then.
                         const uri = './api/v1/attachments';
                         const data = {
@@ -487,19 +495,19 @@
                         };
                         axios.post(uri, data)
                             .then(response => {
-                                console.log('Created attachment #' + key);
-                                console.log('Uploading attachment #' + key);
+                                // console.log('Created attachment #' + key);
+                                // console.log('Uploading attachment #' + key);
                                 const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
                                 axios.post(uploadUri, fileData[key].content)
                                     .then(response => {
-                                        console.log('Uploaded attachment #' + key);
+                                        // console.log('Uploaded attachment #' + key);
                                         uploads++;
                                         if (uploads === count) {
                                             // finally we can redirect the user onwards.
-                                            console.log('FINAL UPLOAD');
+                                            // console.log('FINAL UPLOAD');
                                             this.redirectUser(groupId);
                                         }
-                                        console.log('Upload complete!');
+                                        // console.log('Upload complete!');
                                         return true;
                                     }).catch(error => {
                                     console.error('Could not upload');
@@ -516,6 +524,8 @@
             setDefaultErrors: function () {
                 for (const key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        // console.log('Set default errors for key ' + key);
+                        //this.transactions[key].description
                         this.transactions[key].errors = {
                             source_account: [],
                             destination_account: [],
@@ -589,6 +599,11 @@
                                     break;
                             }
                         }
+                        // unique some things
+                        this.transactions[transactionIndex].errors.source_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
+                        this.transactions[transactionIndex].errors.destination_account =
+                            Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
                     }
                 }
             },
@@ -597,73 +612,75 @@
             },
             addTransactionToArray: function (e) {
                 this.transactions.push({
-                    description: "",
-                    date: "",
-                    amount: "",
-                    category: "",
-                    piggy_bank: 0,
-                    errors: {
-                        source_account: [],
-                        destination_account: [],
-                        description: [],
-                        amount: [],
-                        date: [],
-                        budget_id: [],
-                        foreign_amount: [],
-                        category: [],
-                        piggy_bank: [],
-                        tags: [],
-                        // custom fields:
-                        custom_errors: {
-                            interest_date: [],
-                            book_date: [],
-                            process_date: [],
-                            due_date: [],
-                            payment_date: [],
-                            invoice_date: [],
-                            internal_reference: [],
-                            notes: [],
-                            attachments: [],
-                        },
-                    },
-                    budget: 0,
-                    tags: [],
-                    custom_fields: {
-                        "interest_date": "",
-                        "book_date": "",
-                        "process_date": "",
-                        "due_date": "",
-                        "payment_date": "",
-                        "invoice_date": "",
-                        "internal_reference": "",
-                        "notes": "",
-                        "attachments": []
-                    },
-                    foreign_amount: {
-                        amount: "",
-                        currency_id: 0
-                    },
-                    source_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    },
-                    destination_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    }
-                });
+                                           description: "",
+                                           date: "",
+                                           amount: "",
+                                           category: "",
+                                           piggy_bank: 0,
+                                           errors: {
+                                               source_account: [],
+                                               destination_account: [],
+                                               description: [],
+                                               amount: [],
+                                               date: [],
+                                               budget_id: [],
+                                               foreign_amount: [],
+                                               category: [],
+                                               piggy_bank: [],
+                                               tags: [],
+                                               // custom fields:
+                                               custom_errors: {
+                                                   interest_date: [],
+                                                   book_date: [],
+                                                   process_date: [],
+                                                   due_date: [],
+                                                   payment_date: [],
+                                                   invoice_date: [],
+                                                   internal_reference: [],
+                                                   notes: [],
+                                                   attachments: [],
+                                               },
+                                           },
+                                           budget: 0,
+                                           tags: [],
+                                           custom_fields: {
+                                               "interest_date": "",
+                                               "book_date": "",
+                                               "process_date": "",
+                                               "due_date": "",
+                                               "payment_date": "",
+                                               "invoice_date": "",
+                                               "internal_reference": "",
+                                               "notes": "",
+                                               "attachments": []
+                                           },
+                                           foreign_amount: {
+                                               amount: "",
+                                               currency_id: 0
+                                           },
+                                           source_account: {
+                                               id: 0,
+                                               name: "",
+                                               type: "",
+                                               currency_id: 0,
+                                               currency_name: '',
+                                               currency_code: '',
+                                               currency_decimal_places: 2,
+                                               allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage'],
+                                               default_allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage']
+                                           },
+                                           destination_account: {
+                                               id: 0,
+                                               name: "",
+                                               type: "",
+                                               currency_id: 0,
+                                               currency_name: '',
+                                               currency_code: '',
+                                               currency_decimal_places: 2,
+                                               allowed_types: ['Asset account','Expense account','Loan','Debt','Mortgage'],
+                                               default_allowed_types: ['Asset account','Expense account','Loan','Debt','Mortgage']
+                                           }
+                                       });
                 if (this.transactions.length === 1) {
                     // set first date.
                     let today = new Date();
@@ -719,7 +736,8 @@
                         currency_name: model.currency_name,
                         currency_code: model.currency_code,
                         currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].source_account.allowed_types
+                        allowed_types: this.transactions[index].source_account.allowed_types,
+                        default_allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage']
                     };
 
                     // force types on destination selector.
@@ -739,7 +757,8 @@
                         currency_name: model.currency_name,
                         currency_code: model.currency_code,
                         currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].destination_account.allowed_types
+                        allowed_types: this.transactions[index].destination_account.allowed_types,
+                        default_allowed_types: ['Asset account','Expense account','Loan','Debt','Mortgage']
                     };
 
                     // force types on destination selector.
@@ -747,7 +766,7 @@
                 }
             },
             clearSource: function (index) {
-                console.log('clearSource(' + index + ')');
+                // console.log('clearSource(' + index + ')');
                 // reset source account:
                 this.transactions[index].source_account = {
                     id: 0,
@@ -757,7 +776,8 @@
                     currency_name: '',
                     currency_code: '',
                     currency_decimal_places: 2,
-                    allowed_types: this.transactions[index].source_account.allowed_types
+                    allowed_types: this.transactions[index].source_account.allowed_types,
+                    default_allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage']
                 };
                 // reset destination allowed account types.
                 this.transactions[index].destination_account.allowed_types = [];
@@ -769,7 +789,7 @@
                 }
             },
             clearDestination: function (index) {
-                console.log('clearDestination(' + index + ')');
+                // console.log('clearDestination(' + index + ')');
                 // reset destination account:
                 this.transactions[index].destination_account = {
                     id: 0,
@@ -779,7 +799,8 @@
                     currency_name: '',
                     currency_code: '',
                     currency_decimal_places: 2,
-                    allowed_types: this.transactions[index].destination_account.allowed_types
+                    allowed_types: this.transactions[index].destination_account.allowed_types,
+                    default_allowed_types: ['Asset account','Expense account','Loan','Debt','Mortgage']
                 };
                 // reset destination allowed account types.
                 this.transactions[index].source_account.allowed_types = [];

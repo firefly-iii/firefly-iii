@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class ImportJobRepository.
  *
- *
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
@@ -243,10 +242,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         // this will overwrite all transactions currently in the job.
         $disk     = Storage::disk('upload');
-        $filename = sprintf('%s-%s.crypt.json', $job->created_at->format('Ymd'), $job->key);
+        $filename = sprintf('%s-%s.json', $job->created_at->format('Ymd'), $job->key);
         $array    = [];
         if ($disk->exists($filename)) {
-            $json  = Crypt::decrypt($disk->get($filename));
+            $json  = $disk->get($filename);
             $array = json_decode($json, true);
         }
         if (false === $array) {
@@ -329,8 +328,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         // this will overwrite all transactions currently in the job.
         $disk     = Storage::disk('upload');
-        $filename = sprintf('%s-%s.crypt.json', $job->created_at->format('Ymd'), $job->key);
-        $json     = Crypt::encrypt(json_encode($transactions));
+        $filename = sprintf('%s-%s.json', $job->created_at->format('Ymd'), $job->key);
+        $json     = json_encode($transactions);
 
         // set count for easy access
         $array             = ['count' => count($transactions)];
@@ -389,9 +388,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->size     = strlen($content);
         $attachment->uploaded = false;
         $attachment->save();
-        $encrypted = Crypt::encrypt($content);
 
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $this->uploadDisk->put($attachment->fileName(), $content);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 
@@ -446,8 +444,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         $content   = $fileObject->fread($file->getSize());
-        $encrypted = Crypt::encrypt($content);
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $this->uploadDisk->put($attachment->fileName(), $content);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 

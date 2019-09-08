@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Auth;
 
+use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use Google2FA;
 use Log;
 use Preferences;
 use Tests\TestCase;
-
+use FireflyConfig;
 /**
  * Class TwoFactorControllerTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -53,6 +54,11 @@ class TwoFactorControllerTest extends TestCase
         $this->be($this->user());
         $langPreference         = new Preference;
         $langPreference->data   = 'en_US';
+
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
 
         Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference);
 

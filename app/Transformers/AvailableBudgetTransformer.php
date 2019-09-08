@@ -26,6 +26,8 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -34,6 +36,10 @@ use Log;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
+    /** @var NoBudgetRepositoryInterface */
+    private $noBudgetRepository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
     /** @var BudgetRepositoryInterface */
     private $repository;
 
@@ -44,7 +50,9 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(BudgetRepositoryInterface::class);
+        $this->repository         = app(BudgetRepositoryInterface::class);
+        $this->opsRepository      = app(OperationsRepositoryInterface::class);
+        $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -99,7 +107,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
     {
         $allActive = $this->repository->getActiveBudgets();
 
-        return $this->repository->spentInPeriodMc(
+        return $this->opsRepository->spentInPeriodMc(
             $allActive, new Collection, $this->parameters->get('start'), $this->parameters->get('end')
         );
 
@@ -110,7 +118,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     private function spentOutsideBudgets(): array
     {
-        return $this->repository->spentInPeriodWoBudgetMc(new Collection, $this->parameters->get('start'), $this->parameters->get('end'));
+        return $this->noBudgetRepository->spentInPeriodWoBudgetMc(new Collection, $this->parameters->get('start'), $this->parameters->get('end'));
     }
 
 }

@@ -23,10 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
@@ -39,13 +37,20 @@ class AccountUpdateService
 {
     use AccountServiceTrait;
 
-    /** @var array */
-    private $canHaveVirtual;
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
-
+    /** @var array */
+    private $canHaveVirtual;
     /** @var User */
     private $user;
+
+    /** @var array */
+    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+
     /**
      * Constructor.
      */
@@ -73,21 +78,23 @@ class AccountUpdateService
         $this->user = $account->user;
 
         // update the account itself:
-        $account->name            = $data['name'];
-        $account->active          = $data['active'];
-        $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
-        $account->iban            = $data['iban'];
-        $account->save();
+        $account->name   = $data['name'] ?? $account->name;
+        $account->active = $data['active'] ?? $account->active;
+        $account->iban = $data['iban'] ?? $account->iban;
 
-        if (isset($data['currency_id']) && 0 === $data['currency_id']) {
-            unset($data['currency_id']);
+        // update virtual balance (could be set to zero if empty string).
+        if (null !== $data['virtual_balance']) {
+            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
         }
 
-        // find currency, or use default currency instead.
-        $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
-        unset($data['currency_code']);
-        $data['currency_id'] = $currency->id;
+        $account->save();
 
+        // find currency, or use default currency instead.
+        if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
+            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+            unset($data['currency_code']);
+            $data['currency_id'] = $currency->id;
+        }
 
         // update all meta data:
         $this->updateMetaData($account, $data);
@@ -108,7 +115,7 @@ class AccountUpdateService
         }
 
         // update note:
-        if (isset($data['notes'])) {
+        if (isset($data['notes']) && null !== $data['notes']) {
             $this->updateNote($account, (string)$data['notes']);
         }
 

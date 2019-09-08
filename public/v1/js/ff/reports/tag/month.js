@@ -18,61 +18,31 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: tagIncomeUri, tagExpenseUri, accountIncomeUri, accountExpenseUri, tagBudgetUri, tagCategoryUri, mainUri */
-
 $(function () {
     "use strict";
-    drawChart();
+    loadAjaxPartial('accountsHolder', accountsUri);
+    loadAjaxPartial('tagsHolder', tagsUri);
+    loadAjaxPartial('accountPerTagHolder', accountPerTagUri);
 
-    $('#tags-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('tags-in-pie-chart', tagIncomeUri);
+    $.each($('.main_tag_canvas'), function (i, v) {
+        var canvas = $(v);
+        columnChart(canvas.data('url'), canvas.attr('id'));
     });
 
-    $('#tags-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('tags-out-pie-chart', tagExpenseUri);
-    });
+    multiCurrencyPieChart(tagOutUri, 'tag-out-pie-chart');
+    multiCurrencyPieChart(tagInUri, 'tag-in-pie-chart');
+    multiCurrencyPieChart(categoryOutUri, 'category-out-pie-chart');
+    multiCurrencyPieChart(categoryInUri, 'category-in-pie-chart');
+    multiCurrencyPieChart(budgetsOutUri, 'budgets-out-pie-chart');
+    multiCurrencyPieChart(sourceOutUri, 'source-out-pie-chart');
+    multiCurrencyPieChart(sourceInUri, 'source-in-pie-chart');
+    multiCurrencyPieChart(destOutUri, 'dest-out-pie-chart');
+    multiCurrencyPieChart(destInUri, 'dest-in-pie-chart');
 
-    $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
-    });
-
-    $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-    });
-
-    // two extra charts:
-    pieChart(tagBudgetUri, 'budgets-out-pie-chart');
-    pieChart(tagCategoryUri, 'categories-out-pie-chart');
+    loadAjaxPartial('topExpensesHolder', topExpensesUri);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
+    loadAjaxPartial('topIncomeHolder', topIncomeUri);
+    loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
 
 });
 
-
-function drawChart() {
-    "use strict";
-
-    // month view:
-    doubleYChart(mainUri, 'in-out-chart');
-
-    // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('tags-in-pie-chart', tagIncomeUri);
-    redrawPieChart('tags-out-pie-chart', tagExpenseUri);
-    redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
-    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-
-
-}
-
-function redrawPieChart(container, uri) {
-    "use strict";
-    var checkbox = $('#' + container + '-checked');
-
-    var others = '0';
-    // check if box is checked:
-    if (checkbox.prop('checked')) {
-        others = '1';
-    }
-    uri = uri.replace('OTHERS', others);
-
-    pieChart(uri, container);
-
-}

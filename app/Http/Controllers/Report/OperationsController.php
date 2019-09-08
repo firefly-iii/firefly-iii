@@ -41,6 +41,7 @@ class OperationsController extends Controller
 
     /**
      * OperationsController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -170,14 +171,12 @@ class OperationsController extends Controller
             $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['in'], $sums[$currencyId]['out']);
         }
 
-        //try {
+        try {
             $result = view('reports.partials.operations', compact('sums'))->render();
-            // @codeCoverageIgnoreStart
-//        } catch (Throwable $e) {
-//            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
-//            $result = 'Could not render view.';
-//        }
-        // @codeCoverageIgnoreEnd
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;

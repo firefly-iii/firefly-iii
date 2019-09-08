@@ -39,7 +39,7 @@ return [
     'reports'                => 'Jelentések',
     'search_result'          => '":query" keresési eredményei',
     'withdrawal_list'        => 'Kiadások',
-    'Withdrawal_list'        => 'Expenses',
+    'Withdrawal_list'        => 'Költségek',
     'deposit_list'           => 'Bevételek, jövedelem és betétek',
     'transfer_list'          => 'Átvezetések',
     'transfers_list'         => 'Átvezetések',

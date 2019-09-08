@@ -56,8 +56,8 @@ class BudgetLimitCurrencyTest extends TestCase
 
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_bl_currency', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_bl_currency', true]);
 
         $this->artisan('firefly-iii:bl-currency')
              ->expectsOutput('All budget limits are correct.')
@@ -81,8 +81,8 @@ class BudgetLimitCurrencyTest extends TestCase
                 'end_date'   => '2019-01-31',
             ]);
 
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_bl_currency', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_bl_currency', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_bl_currency', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_bl_currency', true]);
 
         $currency = $this->getEuro();
         Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);

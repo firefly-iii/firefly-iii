@@ -57,11 +57,11 @@
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Reconciliation' %}
-                    XX
+                    <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
                 {% endif %}
 
                 {% if journal.transaction_type_type == 'Opening balance' %}
-                    XX
+                    <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                 {% endif %}
 
             </td>
@@ -80,7 +80,14 @@
                 {{ formatAmountBySymbol(journal.balance_before, journal.currency_symbol, journal.currency_decimal_places) }}
             </td>
             <td class="hide-amount" style="text-align: right;">
-                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% else %}
+                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                {% endif %}
+
             </td>
 
             <td class="hide-balance_after" style="text-align: right;">
@@ -97,13 +104,19 @@
                 <a href="{{ route('accounts.show', [journal.destination_account_id]) }}" title="{{ journal.destination_account_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
             </td>
             <td class="hide-budget">
-                {# TODO BUDGET #}
+                {% if journal.budget_id %}
+                    <a href="{{ route('budgets.show', [journal.budget_id]) }}" title="{{ journal.budget_name }}">{{ journal.budget_name }}</a>
+                {% endif %}
             </td>
             <td class="hide-category">
-                {# TODO CATEGORY#}
+                {% if journal.category_id %}
+                    <a href="{{ route('categories.show', [journal.category_id]) }}" title="{{ journal.category_name }}">{{ journal.category_name }}</a>
+                {% endif %}
             </td>
             <td class="hide-bill">
-                {#TODO BILL#}
+                {% if journal.bill_id %}
+                    <a href="{{ route('bills.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
+                {% endif %}
             </td>
 
             <!-- new optional fields (2x) -->

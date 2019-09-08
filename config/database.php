@@ -27,13 +27,16 @@ $host        = '';
 $username    = '';
 $password    = '';
 $database    = '';
+$port        = '';
 
 if (!(false === $databaseUrl)) {
+
     $options  = parse_url($databaseUrl);
-    $host     = $options['host'];
-    $username = $options['user'];
-    $password = $options['pass'];
-    $database = substr($options['path'], 1);
+    $host     = $options['host'] ?? 'firefly_iii_db';
+    $username = $options['user'] ?? 'firefly';
+    $port     = $options['port'] ?? '5432';
+    $password = $options['pass'] ?? 'secret_firefly_password';
+    $database = substr($options['path'] ?? '/firefly', 1);
 }
 
 return [
@@ -47,11 +50,11 @@ return [
         ],
         'mysql'  => [
             'driver'      => 'mysql',
-            'host'        => envNonEmpty('DB_HOST', '127.0.0.1'),
-            'port'        => envNonEmpty('DB_PORT', '3306'),
-            'database'    => envNonEmpty('DB_DATABASE', 'forge'),
-            'username'    => envNonEmpty('DB_USERNAME', 'forge'),
-            'password'    => env('DB_PASSWORD', ''),
+            'host'        => envNonEmpty('DB_HOST', $host),
+            'port'        => envNonEmpty('DB_PORT', $port),
+            'database'    => envNonEmpty('DB_DATABASE', $database),
+            'username'    => envNonEmpty('DB_USERNAME', $username),
+            'password'    => env('DB_PASSWORD', $password),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset'     => 'utf8mb4',
             'collation'   => 'utf8mb4_unicode_ci',
@@ -62,7 +65,7 @@ return [
         'pgsql'  => [
             'driver'      => 'pgsql',
             'host'        => envNonEmpty('DB_HOST', $host),
-            'port'        => envNonEmpty('DB_PORT', '5432'),
+            'port'        => envNonEmpty('DB_PORT', $port),
             'database'    => envNonEmpty('DB_DATABASE', $database),
             'username'    => envNonEmpty('DB_USERNAME', $username),
             'password'    => env('DB_PASSWORD', $password),

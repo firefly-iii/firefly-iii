@@ -125,8 +125,8 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.0.3',
-    'api_version'                  => '0.10.1',
+    'version'                      => '4.8.1',
+    'api_version'                  => '0.10.2',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -291,23 +291,29 @@ return [
         'Mortgage'    => 'mortgage',
     ],
     'languages'                    => [
-        'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
-        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 35%
-        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'], // 92%
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],  // 100%
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'], // 100%
-        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 65%
-        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 100%
-        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 100%
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 87%
-        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 80%
-        'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
-        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 83%
-        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 100%
-        'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 99%
-        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 40%
-        // hungarian!
+        'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],  // 4.8,1
+        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],      // 4.8,1
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],  // 4.8,1
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],   // 4.8,1
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],  // 4.8,1
+        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 57%, removed
+        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 4.8,1
+        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],  // 4.8,1
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 4.8,1
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],   // 4.8,1
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 4.8,1
+        'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'], // 4.8,1
+        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 4.8,1
+        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 4.8,1
+        'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],   // 4.8,1
+        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 4.8,1
+
+        // new since 4.8,1
+        'el_GR' => ['name_locale' => 'Ελληνικά', 'Greek' => 'Hungarian'], // 4.8,1
+
+        // greek: Ελληνικά
+
+        // Czech not yet.
 
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
         //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 0%
@@ -387,7 +393,7 @@ return [
 
         // lists
         'accountList'       => AccountList::class,
-        'expenseList'       => AccountList::class,
+        'doubleList'       => AccountList::class,
         'budgetList'        => BudgetList::class,
         'journalList'       => JournalList::class,
         'categoryList'      => CategoryList::class,
@@ -513,8 +519,9 @@ return [
     'default_currency'          => 'EUR',
     'default_language'          => 'en_US',
     'search_modifiers'          => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after','from','to'],
-    // tag notes has_attachments
+                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after','from','to','tag'],
+    // TODO notes has_attachments
+
     'cer_providers'             => [
         'fixer'    => FixerIOv2::class,
         'ratesapi' => RatesApiIOv1::class,

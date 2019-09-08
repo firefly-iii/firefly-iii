@@ -64,6 +64,7 @@ class CreateControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(), 'owner'])->andReturn(true);
         $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($cash);
 
+        Preferences::shouldReceive('mark')->atLeast()->once();
         Preferences::shouldReceive('get')->withArgs(['transaction_journal_optional_fields', []])->atLeast()->once()->andReturn($empty);
 
 

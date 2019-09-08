@@ -50,7 +50,7 @@ trait RecurringTransactionTrait
 {
     /**
      * @param Recurrence $recurrence
-     * @param array $repetitions
+     * @param array      $repetitions
      */
     protected function createRepetitions(Recurrence $recurrence, array $repetitions): void
     {
@@ -70,62 +70,11 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param array $expectedTypes
-     * @param Account|null $account
-     * @param int|null $accountId
-     * @param string|null $accountName
-     *
-     * @return Account
-     */
-    protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
-    {
-        $result      = null;
-        $accountId   = (int)$accountId;
-        $accountName = (string)$accountName;
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($this->user);
-
-        // if user has submitted an account ID, search for it.
-        $result = $repository->findNull((int)$accountId);
-        if (null !== $result) {
-            return $result;
-        }
-
-        // if user has submitted a name, search for it:
-        $result = $repository->findByName($accountName, $expectedTypes);
-        if (null !== $result) {
-            return $result;
-        }
-
-        // maybe we can create it? Try to avoid LOAN and other asset types.
-        $cannotCreate = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user);
-        foreach ($expectedTypes as $expectedType) {
-            if (in_array($expectedType, $cannotCreate, true)) {
-                continue;
-            }
-            if (!in_array($expectedType, $cannotCreate, true)) {
-                try {
-                    $result = $factory->findOrCreate($accountName, $expectedType);
-                    // @codeCoverageIgnoreStart
-                } catch (FireflyException $e) {
-                    Log::error($e->getMessage());
-                }
-                // @codeCoverageIgnoreEnd
-            }
-        }
-
-        return $result ?? $repository->getCashAccount();
-    }
-
-    /**
      * Store transactions of a recurring transactions. It's complex but readable.
      *
      * @param Recurrence $recurrence
-     * @param array $transactions
+     * @param array      $transactions
+     *
      * @throws FireflyException
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
@@ -181,6 +130,15 @@ trait RecurringTransactionTrait
             $categoryFactory->setUser($recurrence->user);
             $category = $categoryFactory->findOrCreate($array['category_id'], $array['category_name']);
 
+            // same for piggy bank
+            $piggyId   = (int)($array['piggy_bank_id'] ?? 0.0);
+            $piggyName = $array['piggy_bank_name'] ?? '';
+            $this->updatePiggyBank($transaction, $piggyId, $piggyName);
+
+            // same for tags
+            $tags = $array['tags'] ?? [];
+            $this->updateTags($transaction, $tags);
+
             // create recurrence transaction meta:
             if (null !== $budget) {
                 RecurrenceTransactionMeta::create(
@@ -232,69 +190,119 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * Update meta data for recurring transaction.
+     * @param array        $expectedTypes
+     * @param Account|null $account
+     * @param int|null     $accountId
+     * @param string|null  $accountName
      *
-     * @param Recurrence $recurrence
-     * @param array $data
+     * @return Account
      */
-    protected function updateMetaData(Recurrence $recurrence, array $data): void
+    protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {
-        // only two special meta fields right now. Let's just hard code them.
-        $piggyId   = (int)($data['meta']['piggy_bank_id'] ?? 0.0);
-        $piggyName = $data['meta']['piggy_bank_name'] ?? '';
-        $this->updatePiggyBank($recurrence, $piggyId, $piggyName);
+        $result      = null;
+        $accountId   = (int)$accountId;
+        $accountName = (string)$accountName;
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
+        // if user has submitted an account ID, search for it.
+        $result = $repository->findNull((int)$accountId);
+        if (null !== $result) {
+            return $result;
+        }
 
-        $tags = $data['meta']['tags'] ?? [];
-        $this->updateTags($recurrence, $tags);
+        // if user has submitted a name, search for it:
+        $result = $repository->findByName($accountName, $expectedTypes);
+        if (null !== $result) {
+            return $result;
+        }
 
+        // maybe we can create it? Try to avoid LOAN and other asset types.
+        $cannotCreate = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user);
+        foreach ($expectedTypes as $expectedType) {
+            if (in_array($expectedType, $cannotCreate, true)) {
+                continue;
+            }
+            if (!in_array($expectedType, $cannotCreate, true)) {
+                try {
+                    $result = $factory->findOrCreate($accountName, $expectedType);
+                    // @codeCoverageIgnoreStart
+                } catch (FireflyException $e) {
+                    Log::error($e->getMessage());
+                }
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
+        return $result ?? $repository->getCashAccount();
     }
 
-    /**
-     * @param Recurrence $recurrence
-     * @param int $piggyId
-     * @param string $piggyName
-     */
-    protected function updatePiggyBank(Recurrence $recurrence, int $piggyId, string $piggyName): void
-    {
+    //    /**
+    //     * Update meta data for recurring transaction.
+    //     *
+    //     * @param Recurrence $recurrence
+    //     * @param array $data
+    //     */
+    //    protected function updateMetaData(Recurrence $recurrence, array $data): void
+    //    {
+    //        // only two special meta fields right now. Let's just hard code them.
+    //        $piggyId   = (int)($data['meta']['piggy_bank_id'] ?? 0.0);
+    //        $piggyName = $data['meta']['piggy_bank_name'] ?? '';
+    //        $this->updatePiggyBank($recurrence, $piggyId, $piggyName);
+    //
+    //        $tags = $data['meta']['tags'] ?? [];
+    //        $this->updateTags($recurrence, $tags);
+    //
+    //    }
 
+    /**
+     * @param RecurrenceTransaction $transaction
+     * @param int                   $piggyId
+     * @param string                $piggyName
+     */
+    protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId, string $piggyName): void
+    {
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
-        $factory->setUser($recurrence->user);
+        $factory->setUser($transaction->recurrence->user);
         $piggyBank = $factory->find($piggyId, $piggyName);
         if (null !== $piggyBank) {
             /** @var RecurrenceMeta $entry */
-            $entry = $recurrence->recurrenceMeta()->where('name', 'piggy_bank_id')->first();
+            $entry = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
             if (null === $entry) {
-                $entry = RecurrenceMeta::create(['recurrence_id' => $recurrence->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
             }
             $entry->value = $piggyBank->id;
             $entry->save();
         }
         if (null === $piggyBank) {
             // delete if present
-            $recurrence->recurrenceMeta()->where('name', 'piggy_bank_id')->delete();
+            $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->delete();
         }
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param array $tags
+     * @param RecurrenceTransaction $transaction
+     * @param array                 $tags
      */
-    protected function updateTags(Recurrence $recurrence, array $tags): void
+    protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
     {
         if (count($tags) > 0) {
             /** @var RecurrenceMeta $entry */
-            $entry = $recurrence->recurrenceMeta()->where('name', 'tags')->first();
+            $entry = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
-                $entry = RecurrenceMeta::create(['recurrence_id' => $recurrence->id, 'name' => 'tags', 'value' => implode(',', $tags)]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
             }
-            $entry->value = implode(',', $tags);
+            $entry->value = json_encode($tags);
             $entry->save();
         }
         if (0 === count($tags)) {
             // delete if present
-            $recurrence->recurrenceMeta()->where('name', 'tags')->delete();
+            $transaction->recurrenceTransactionMeta()->where('name', 'tags')->delete();
         }
     }
 }

@@ -39,7 +39,7 @@ return [
     'reports'                => 'Sestavy',
     'search_result'          => 'Výsledky hledání pro „:query“',
     'withdrawal_list'        => 'Výdaje',
-    'Withdrawal_list'        => 'Expenses',
+    'Withdrawal_list'        => 'Výdaje',
     'deposit_list'           => 'Výnosy, příjmy a vklady',
     'transfer_list'          => 'Převody',
     'transfers_list'         => 'Převody',

@@ -211,7 +211,7 @@ class BillTransformer extends AbstractTransformer
             $currentStart = clone $nextExpectedMatch;
         }
         $simple = $set->map(
-            function (Carbon $date) {
+            static function (Carbon $date) {
                 return $date->format('Y-m-d');
             }
         );

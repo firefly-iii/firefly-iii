@@ -172,6 +172,10 @@ class TagControllerTest extends TestCase
         $collector  = $this->mock(GroupCollectorInterface::class);
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        //$repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('findByTag')->atLeast()->once()->andReturn($this->getRandomTag());
+
 
         //Preferences::shouldReceive('mark')->atLeast()->once();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
@@ -228,6 +232,9 @@ class TagControllerTest extends TestCase
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('findByTag')->atLeast()->once()->andReturn($this->getRandomTag());
+
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
@@ -278,6 +285,10 @@ class TagControllerTest extends TestCase
         $collector  = $this->mock(GroupCollectorInterface::class);
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('findByTag')->atLeast()->once()->andReturn($this->getRandomTag());
+
 
         //Preferences::shouldReceive('mark')->atLeast()->once();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');

@@ -30,12 +30,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\PreferenceTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  *
@@ -76,12 +73,10 @@ class PreferenceController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         /** @var User $user */
         $user      = auth()->user();
@@ -99,12 +94,7 @@ class PreferenceController extends Controller
             }
         }
 
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
@@ -119,20 +109,14 @@ class PreferenceController extends Controller
     /**
      * Return a single preference by name.
      *
-     * @param Request $request
      * @param Preference $preference
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, Preference $preference): JsonResponse
+    public function show(Preference $preference): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -146,7 +130,7 @@ class PreferenceController extends Controller
      * Update a preference.
      *
      * @param PreferenceRequest $request
-     * @param Preference $preference
+     * @param Preference        $preference
      *
      * @return JsonResponse
      */
@@ -171,12 +155,7 @@ class PreferenceController extends Controller
         }
         $result = app('preferences')->set($preference->name, $newValue);
 
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);

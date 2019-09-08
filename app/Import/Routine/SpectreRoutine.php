@@ -49,8 +49,6 @@ class SpectreRoutine implements RoutineInterface
      *
      * @throws FireflyException
      *
-     *
-     *
      */
     public function run(): void
     {

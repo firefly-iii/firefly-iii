@@ -201,7 +201,6 @@
                                                 transaction.destination_type == 'Debt' or
                                                 transaction.destination_type == 'Mortgage' %}
                                                 {# if new source is Liability, destination must be expense account. #}
-                                                {# hier ben je. #}
 
                                                 <input
                                                         autocomplete="off"
@@ -275,15 +274,7 @@
                         </table>
 
 
-                        {#
-
-
-                            {{ ExpandedForm.staticText('description', '<a href="'~route('transactions.show', group.id)~'">'~journal.description~'</a>') }}
-                            {{ ExpandedForm.staticText('type', sourceType.type|_) }}
-                            {{ ExpandedForm.staticText('date', journal.date.formatLocalized(monthAndDayFormat)) }}
-                        #}
                         {# in case of withdrawal #}
-
                         {% if sourceType.type == "Withdrawal" %}
                             {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {# if destination is cash, show (cash) #}
@@ -294,14 +285,12 @@
                             {% endif %}
 
                         {% endif %}
-                        #}
 
                         {# in case of transfer #}
                         {% if sourceType.type == "Transfer" %}
                             {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name|escape~'</a>') }}
                             {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name|escape~'</a>') }}
                         {% endif %}
-                        #}
                     </div>
                     <div class="box-footer">
                         <a href="{{ route('transactions.show', group.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>

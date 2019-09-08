@@ -68,6 +68,7 @@ class TransactionJournalFactoryTest extends TestCase
 
     /**
      * Submit empty array.
+     *
      * @covers \FireflyIII\Factory\TransactionJournalFactory
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait
      */
@@ -103,7 +104,7 @@ class TransactionJournalFactoryTest extends TestCase
         /** @var TransactionJournalFactory $factory */
         $factory = app(TransactionJournalFactory::class);
         $factory->setUser($this->user());
-
+        Log::warning('The following error is part of a test.');
         try {
             $collection = $factory->create($submission);
         } catch (FireflyException $e) {

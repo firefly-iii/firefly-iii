@@ -148,9 +148,6 @@ class TransactionGroupTwig extends Twig_Extension
         return new Twig_SimpleFunction(
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
-                if ('testing' === config('app.env')) {
-                    Log::warning('Twig TransactionGroup::journalHasMeta should NOT be called in the TEST environment!');
-                }
                 $count = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)

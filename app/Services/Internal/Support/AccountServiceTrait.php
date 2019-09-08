@@ -35,7 +35,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Log;
 use Validator;
@@ -46,16 +45,6 @@ use Validator;
  */
 trait AccountServiceTrait
 {
-    /** @var AccountRepositoryInterface */
-    protected $accountRepository;
-
-    /** @var array */
-    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
-
     /**
      * @param null|string $iban
      *
@@ -85,7 +74,7 @@ trait AccountServiceTrait
      * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
      *
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      */
     public function updateMetaData(Account $account, array $data): void
@@ -95,19 +84,23 @@ trait AccountServiceTrait
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+        if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
-            $factory->crud($account, $field, (string)($data[$field] ?? ''));
+            // if the field is set but NULL, skip it.
+            // if the field is set but "", update it.
+            if (isset($data[$field]) && null !== $data[$field]) {
+                $factory->crud($account, $field, (string)($data[$field] ?? ''));
+            }
         }
     }
 
     /**
      * @param Account $account
-     * @param string $note
+     * @param string  $note
      *
      * @codeCoverageIgnore
      * @return bool
@@ -147,6 +140,9 @@ trait AccountServiceTrait
     public function validOBData(array $data): bool
     {
         $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
+        if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
+            $data['opening_balance'] = '';
+        }
         if ('' !== $data['opening_balance'] && isset($data['opening_balance'], $data['opening_balance_date'])) {
             Log::debug('Array has valid opening balance data.');
 
@@ -158,50 +154,9 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param int $currencyId
-     * @param string $currencyCode
-     * @return TransactionCurrency
-     */
-    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
-    {
-        // find currency, or use default currency instead.
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($currencyId, $currencyCode);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-        $currency->enabled = true;
-        $currency->save();
-
-        return $currency;
-    }
-
-    /**
-     * Delete TransactionGroup with opening balance in it.
+     * @param Account $account
+     * @param array   $data
      *
-     * @param Account $account
-     */
-    protected function deleteOBGroup(Account $account): void
-    {
-        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
-        $openingBalanceGroup = $this->getOBGroup($account);
-
-        // opening balance data? update it!
-        if (null !== $openingBalanceGroup) {
-            Log::debug('Opening balance journal found, delete journal.');
-            /** @var TransactionGroupDestroyService $service */
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($openingBalanceGroup);
-        }
-    }
-
-    /**
-     * @param Account $account
-     * @param array $data
      * @return TransactionGroup|null
      */
     protected function createOBGroup(Account $account, array $data): ?TransactionGroup
@@ -280,12 +235,67 @@ trait AccountServiceTrait
     }
 
     /**
+     * Delete TransactionGroup with opening balance in it.
+     *
+     * @param Account $account
+     */
+    protected function deleteOBGroup(Account $account): void
+    {
+        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
+        $openingBalanceGroup = $this->getOBGroup($account);
+
+        // opening balance data? update it!
+        if (null !== $openingBalanceGroup) {
+            Log::debug('Opening balance journal found, delete journal.');
+            /** @var TransactionGroupDestroyService $service */
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($openingBalanceGroup);
+        }
+    }
+
+    /**
+     * @param int    $currencyId
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency
+     */
+    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
+    {
+        // find currency, or use default currency instead.
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find($currencyId, $currencyCode);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        $currency->enabled = true;
+        $currency->save();
+
+        return $currency;
+    }
+
+    /**
+     * Returns the opening balance group, or NULL if it does not exist.
+     *
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    protected function getOBGroup(Account $account): ?TransactionGroup
+    {
+        return $this->accountRepository->getOpeningBalanceGroup($account);
+    }
+
+    /**
      * Update or create the opening balance group. Assumes valid data in $data.
      *
      * Returns null if this fails.
      *
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return TransactionGroup|null
      * @codeCoverageIgnore
@@ -332,16 +342,5 @@ trait AccountServiceTrait
         $obGroup->refresh();
 
         return $obGroup;
-    }
-
-    /**
-     * Returns the opening balance group, or NULL if it does not exist.
-     *
-     * @param Account $account
-     * @return TransactionGroup|null
-     */
-    protected function getOBGroup(Account $account): ?TransactionGroup
-    {
-        return $this->accountRepository->getOpeningBalanceGroup($account);
     }
 }

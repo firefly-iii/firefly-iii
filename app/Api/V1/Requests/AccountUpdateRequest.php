@@ -28,6 +28,7 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class AccountUpdateRequest
+ *
  * @codeCoverageIgnore
  */
 class AccountUpdateRequest extends Request
@@ -45,6 +46,52 @@ class AccountUpdateRequest extends Request
     }
 
     /**
+     * @return array
+     */
+    public function getUpdateData(): array
+    {
+        $active          = null;
+        $includeNetWorth = null;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('include_net_worth')) {
+            $includeNetWorth = $this->boolean('include_net_worth');
+        }
+
+        $data = [
+            'name'                    => $this->nullableString('name'),
+            'active'                  => $active,
+            'include_net_worth'       => $includeNetWorth,
+            'account_type'            => $this->nullableString('type'),
+            'account_type_id'         => null,
+            'currency_id'             => $this->nullableInteger('currency_id'),
+            'currency_code'           => $this->nullableString('currency_code'),
+            'virtual_balance'         => $this->nullableString('virtual_balance'),
+            'iban'                    => $this->nullableString('iban'),
+            'BIC'                     => $this->nullableString('bic'),
+            'account_number'          => $this->nullableString('account_number'),
+            'account_role'            => $this->nullableString('account_role'),
+            'opening_balance'         => $this->nullableString('opening_balance'),
+            'opening_balance_date'    => $this->date('opening_balance_date'),
+            'cc_type'                 => $this->nullableString('credit_card_type'),
+            'cc_Monthly_payment_date' => $this->nullableString('monthly_payment_date'),
+            'notes'                   => $this->nullableString('notes'),
+            'interest'                => $this->nullableString('interest'),
+            'interest_period'         => $this->nullableString('interest_period'),
+        ];
+
+        if ('liability' === $data['account_type']) {
+            $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');
+            $data['opening_balance_date'] = $this->date('liability_start_date');
+            $data['account_type']         = $this->nullableString('liability_type');
+            $data['account_type_id']      = null;
+        }
+
+        return $data;
+    }
+
+    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
@@ -56,7 +103,7 @@ class AccountUpdateRequest extends Request
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
-            'name'                 => sprintf('required|min:1|uniqueAccountForUser:%d', $account->id),
+            'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => 'iban|nullable',
             'bic'                  => 'bic|nullable',

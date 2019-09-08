@@ -149,7 +149,7 @@ class StageImportDataHandler
             'user'               => $this->importJob->user_id,
             'type'               => $type,
             'date'               => $transaction->getValutaDate()->format('Y-m-d'),
-            'description'        => $description,
+            'description'        => null,
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
             'bill_id'            => null,
@@ -163,7 +163,9 @@ class StageImportDataHandler
             'transactions'       => [
                 // single transaction:
                 [
-                    'description'           => null,
+                    'type'                  => $type,
+                    'description'           => $description,
+                    'date'                  => $transaction->getValutaDate()->format('Y-m-d'),
                     'amount'                => $amount,
                     'currency_id'           => null,
                     'currency_code'         => 'EUR',

@@ -38,16 +38,12 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class BillController.
- *
  *
  */
 class BillController extends Controller
@@ -81,18 +77,14 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
      * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function attachments(Request $request, Bill $bill): JsonResponse
+    public function attachments(Bill $bill): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager    = $this->getManager();
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($bill);
 
@@ -102,9 +94,6 @@ class BillController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]) . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -134,21 +123,17 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
+        $bills     = $this->repository->getBills();
+        $manager   = $this->getManager();
         $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $paginator = $this->repository->getPaginator($pageSize);
-        /** @var Collection $bills */
-        $bills = $paginator->getCollection();
-
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $count     = $bills->count();
+        $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
@@ -163,17 +148,14 @@ class BillController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
      * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function rules(Request $request, Bill $bill): JsonResponse
+    public function rules(Bill $bill): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -186,9 +168,6 @@ class BillController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.bills.rules', [$bill->id]) . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -205,18 +184,14 @@ class BillController extends Controller
     /**
      * Show the specified bill.
      *
-     * @param Request $request
      * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, Bill $bill): JsonResponse
+    public function show(Bill $bill): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -238,9 +213,7 @@ class BillController extends Controller
     {
         $bill = $this->repository->store($request->getAll());
         if (null !== $bill) {
-            $manager = new Manager();
-            $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-            $manager->setSerializer(new JsonApiSerializer($baseUrl));
+            $manager = $this->getManager();
 
             /** @var BillTransformer $transformer */
             $transformer = app(BillTransformer::class);
@@ -259,7 +232,7 @@ class BillController extends Controller
      *
      * @param Request $request
      *
-     * @param Bill $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -271,9 +244,7 @@ class BillController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var User $admin */
         $admin = auth()->user();
@@ -318,7 +289,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillRequest $request
-     * @param Bill $bill
+     * @param Bill        $bill
      *
      * @return JsonResponse
      */
@@ -326,9 +297,7 @@ class BillController extends Controller
     {
         $data    = $request->getAll();
         $bill    = $this->repository->update($bill, $data);
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);

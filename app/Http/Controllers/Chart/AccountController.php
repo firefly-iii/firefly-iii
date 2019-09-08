@@ -43,9 +43,6 @@ use Log;
 /**
  * Class AccountController.
  *
- *
- *
- *
  */
 class AccountController extends Controller
 {

@@ -27,16 +27,10 @@ use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Chart\MetaPieChart;
-use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Help\Help;
 use FireflyIII\Helpers\Help\HelpInterface;
-use FireflyIII\Helpers\Report\BalanceReportHelper;
-use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
-use FireflyIII\Helpers\Report\BudgetReportHelper;
-use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Helpers\Report\NetWorth;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Helpers\Report\PopupReport;
@@ -68,7 +62,6 @@ use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
 use Twig_Extension_Debug;
@@ -107,7 +100,6 @@ class FireflyServiceProvider extends ServiceProvider
 
     /**
      * Register stuff.
-     *
      *
      */
     public function register(): void
@@ -181,19 +173,6 @@ class FireflyServiceProvider extends ServiceProvider
         // chart generator:
         $this->app->bind(GeneratorInterface::class, ChartJsGenerator::class);
 
-        // chart builder
-        $this->app->bind(
-            MetaPieChartInterface::class,
-            function (Application $app) {
-                /** @var MetaPieChart $chart */
-                $chart = app(MetaPieChart::class);
-                if ($app->auth->check()) {
-                    $chart->setUser(auth()->user());
-                }
-
-                return $chart;
-            }
-        );
 
         // other generators
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
@@ -205,8 +184,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
-        $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
-        $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
         $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
         if ('' === $class) {
             throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');

@@ -59,7 +59,6 @@ class RabobankDescription implements SpecificInterface
      *
      * @return array
      *
-     *
      */
     public function run(array $row): array
     {

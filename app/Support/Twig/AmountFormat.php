@@ -143,7 +143,7 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'formatAmountPlain',
-            function (string $string): string {
+            static function (string $string): string {
                 $currency = app('amount')->getDefaultCurrency();
 
                 return app('amount')->formatAnything($currency, $string, false);

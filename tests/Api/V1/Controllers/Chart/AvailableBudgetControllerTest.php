@@ -24,6 +24,7 @@ namespace Tests\Api\V1\Controllers\Chart;
 
 
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -54,15 +55,16 @@ class AvailableBudgetControllerTest extends TestCase
     {
         $availableBudget = $this->user()->availableBudgets()->first();
         $repository      = $this->mock(BudgetRepositoryInterface::class);
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
 
         // get data:
         $budget = $this->getBudget();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
+        $opsRepository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->
-        andReturn(
+        $opsRepository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
             [
                 [
                     'currency_id'             => 1,
@@ -78,8 +80,10 @@ class AvailableBudgetControllerTest extends TestCase
             'start' => '2019-01-01',
             'end'   => '2019-01-31',
         ];
-        $response   = $this->get(route('api.v1.chart.ab.overview', [$availableBudget->id]) . '?'
-                                 . http_build_query($parameters), ['Accept' => 'application/json']);
+        $response   = $this->get(
+            route('api.v1.chart.ab.overview', [$availableBudget->id]) . '?'
+            . http_build_query($parameters), ['Accept' => 'application/json']
+        );
         $response->assertStatus(200);
     }
 
@@ -90,15 +94,15 @@ class AvailableBudgetControllerTest extends TestCase
     {
         $availableBudget = $this->user()->availableBudgets()->first();
         $repository      = $this->mock(BudgetRepositoryInterface::class);
-
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
         // get data:
         $budget = $this->getBudget();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
+        $opsRepository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->
-        andReturn(
+        $opsRepository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
             [
                 [
                     'currency_id'             => 1,
@@ -114,8 +118,10 @@ class AvailableBudgetControllerTest extends TestCase
             'start' => '2019-01-01',
             'end'   => '2019-01-31',
         ];
-        $response   = $this->get(route('api.v1.chart.ab.overview', [$availableBudget->id]) . '?'
-                                 . http_build_query($parameters), ['Accept' => 'application/json']);
+        $response   = $this->get(
+            route('api.v1.chart.ab.overview', [$availableBudget->id]) . '?'
+            . http_build_query($parameters), ['Accept' => 'application/json']
+        );
         $response->assertStatus(200);
     }
 

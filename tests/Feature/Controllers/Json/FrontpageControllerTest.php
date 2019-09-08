@@ -26,6 +26,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
+use Amount;
 
 /**
  * Class FrontpageControllerTest
@@ -56,6 +57,8 @@ class FrontpageControllerTest extends TestCase
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggy]));
         $repository->shouldReceive('getCurrentAmount')->andReturn('10');
+
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 
         $this->be($this->user());
         $response = $this->get(route('json.fp.piggy-banks'));

@@ -43,7 +43,6 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
-     *
      * @param RequestedVersionCheckStatus $event
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void

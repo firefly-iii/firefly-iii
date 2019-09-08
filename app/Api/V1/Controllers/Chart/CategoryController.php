@@ -28,9 +28,10 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class CategoryController
@@ -39,9 +40,14 @@ class CategoryController extends Controller
 {
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
+    /** @var NoCategoryRepositoryInterface */
+    private $noCatRepository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * AccountController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -52,7 +58,11 @@ class CategoryController extends Controller
                 /** @var User $user */
                 $user                     = auth()->user();
                 $this->categoryRepository = app(CategoryRepositoryInterface::class);
+                $this->opsRepository      = app(OperationsRepositoryInterface::class);
+                $this->noCatRepository    = app(NoCategoryRepositoryInterface::class);
                 $this->categoryRepository->setUser($user);
+                $this->opsRepository->setUser($user);
+                $this->noCatRepository->setUser($user);
 
                 return $next($request);
             }
@@ -77,129 +87,111 @@ class CategoryController extends Controller
         $end = $dates['end'];
 
 
-        $tempData   = [];
-        $spent      = $this->categoryRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);
-        $earned     = $this->categoryRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
-        $categories = [];
+        $tempData      = [];
+        $spentWith     = $this->opsRepository->listExpenses($start, $end);
+        $earnedWith    = $this->opsRepository->listIncome($start, $end);
+        $spentWithout  = $this->noCatRepository->listExpenses($start, $end);
+        $earnedWithout = $this->noCatRepository->listIncome($start, $end);
+        $categories    = [];
 
-        // earned:
-        foreach ($earned as $categoryId => $row) {
-            $categoryName = $row['name'];
-            foreach ($row['earned'] as $currencyId => $income) {
-                // find or make set for currency:
-                $key           = sprintf('%s-e', $currencyId);
-                $decimalPlaces = $income['currency_decimal_places'];
-                if (!isset($tempData[$key])) {
-                    $tempData[$key] = [
-                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_symbol']]),
-                        'currency_id'             => $income['currency_id'],
-                        'currency_code'           => $income['currency_code'],
-                        'currency_symbol'         => $income['currency_symbol'],
-                        'currency_decimal_places' => $decimalPlaces,
+
+        foreach ([$spentWith, $earnedWith] as $set) {
+            foreach ($set as $currency) {
+                foreach ($currency['categories'] as $category) {
+                    $categories[] = $category['name'];
+                    $inKey        = sprintf('%d-i', $currency['currency_id']);
+                    $outKey       = sprintf('%d-e', $currency['currency_id']);
+                    // make data arrays if not yet present.
+                    $tempData[$inKey]  = $tempData[$inKey] ?? [
+                            'currency_id'             => $currency['currency_id'],
+                            'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                            'currency_code'           => $currency['currency_code'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                            'type'                    => 'bar', // line, area or bar
+                            'yAxisID'                 => 0, // 0, 1, 2
+                            'entries'                 => [
+                                // per category:
+                                // "category" => 5,
+                            ],
+                        ];
+                    $tempData[$outKey] = $tempData[$outKey] ?? [
+                            'currency_id'             => $currency['currency_id'],
+                            'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                            'currency_code'           => $currency['currency_code'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                            'type'                    => 'bar', // line, area or bar
+                            'yAxisID'                 => 0, // 0, 1, 2
+                            'entries'                 => [
+                                // per category:
+                                // "category" => 5,
+                            ],
+                        ];
+
+                    foreach ($category['transaction_journals'] as $journal) {
+                        // is it expense or income?
+                        $letter                                  = -1 === bccomp($journal['amount'], '0') ? 'e' : 'i';
+                        $currentKey                              = sprintf('%d-%s', $currency['currency_id'], $letter);
+                        $name                                    = $category['name'];
+                        $tempData[$currentKey]['entries'][$name] = $tempData[$currentKey]['entries'][$name] ?? '0';
+                        $tempData[$currentKey]['entries'][$name] = bcadd($tempData[$currentKey]['entries'][$name], $journal['amount']);
+                    }
+                }
+            }
+        }
+
+        foreach ([$spentWithout, $earnedWithout] as $set) {
+            foreach ($set as $currency) {
+                $inKey        = sprintf('%d-i', $currency['currency_id']);
+                $outKey       = sprintf('%d-e', $currency['currency_id']);
+                $categories[] = (string)trans('firefly.no_category');
+                // make data arrays if not yet present.
+                $tempData[$inKey]  = $tempData[$inKey] ?? [
+                        'currency_id'             => $currency['currency_id'],
+                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                        'currency_code'           => $currency['currency_code'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
                         'type'                    => 'bar', // line, area or bar
                         'yAxisID'                 => 0, // 0, 1, 2
-                        'entries'                 => [],
+                        'entries'                 => [
+                            // per category:
+                            // "category" => 5,
+                        ],
                     ];
-                }
-                $amount                    = round($income['earned'], $decimalPlaces);
-                $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
-                $tempData[$key]['entries'][$categoryName]
-                                           = $amount;
-
-            }
-        }
-
-        // earned with no category:
-        $noCategory = $this->categoryRepository->earnedInPeriodPcWoCategory(new Collection, $start, $end);
-        foreach ($noCategory as $currencyId => $income) {
-            $categoryName = (string)trans('firefly.no_category');
-            // find or make set for currency:
-            $key           = sprintf('%s-e', $currencyId);
-            $decimalPlaces = $income['currency_decimal_places'];
-            if (!isset($tempData[$key])) {
-                $tempData[$key] = [
-                    'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_symbol']]),
-                    'currency_id'             => $income['currency_id'],
-                    'currency_code'           => $income['currency_code'],
-                    'currency_symbol'         => $income['currency_symbol'],
-                    'currency_decimal_places' => $decimalPlaces,
-                    'type'                    => 'bar', // line, area or bar
-                    'yAxisID'                 => 0, // 0, 1, 2
-                    'entries'                 => [],
-                ];
-            }
-            $amount                    = round($income['earned'], $decimalPlaces);
-            $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
-            $tempData[$key]['entries'][$categoryName]
-                                       = $amount;
-        }
-
-
-        // spent
-        foreach ($spent as $categoryId => $row) {
-            $categoryName = $row['name'];
-            // create a new set if necessary, "spent (EUR)":
-            foreach ($row['spent'] as $currencyId => $expense) {
-                // find or make set for currency:
-                $key           = sprintf('%s-s', $currencyId);
-                $decimalPlaces = $expense['currency_decimal_places'];
-                if (!isset($tempData[$key])) {
-                    $tempData[$key] = [
-                        'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $expense['currency_symbol']]),
-                        'currency_id'             => $expense['currency_id'],
-                        'currency_code'           => $expense['currency_code'],
-                        'currency_symbol'         => $expense['currency_symbol'],
-                        'currency_decimal_places' => $decimalPlaces,
+                $tempData[$outKey] = $tempData[$outKey] ?? [
+                        'currency_id'             => $currency['currency_id'],
+                        'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                        'currency_code'           => $currency['currency_code'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
                         'type'                    => 'bar', // line, area or bar
                         'yAxisID'                 => 0, // 0, 1, 2
-                        'entries'                 => [],
+                        'entries'                 => [
+                            // per category:
+                            // "category" => 5,
+                        ],
                     ];
+                foreach ($currency['transaction_journals'] as $journal) {
+                    // is it expense or income?
+                    $letter                                  = -1 === bccomp($journal['amount'], '0') ? 'e' : 'i';
+                    $currentKey                              = sprintf('%d-%s', $currency['currency_id'], $letter);
+                    $name                                    = (string)trans('firefly.no_category');
+                    $tempData[$currentKey]['entries'][$name] = $tempData[$currentKey]['entries'][$name] ?? '0';
+                    $tempData[$currentKey]['entries'][$name] = bcadd($tempData[$currentKey]['entries'][$name], $journal['amount']);
                 }
-                $amount                    = round($expense['spent'], $decimalPlaces);
-                $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
-                $tempData[$key]['entries'][$categoryName]
-                                           = $amount;
-
             }
         }
-
-        // spent with no category
-        $noCategory = $this->categoryRepository->spentInPeriodPcWoCategory(new Collection, $start, $end);
-        foreach ($noCategory as $currencyId => $expense) {
-            $categoryName = (string)trans('firefly.no_category');
-            // find or make set for currency:
-            $key           = sprintf('%s-s', $currencyId);
-            $decimalPlaces = $expense['currency_decimal_places'];
-            if (!isset($tempData[$key])) {
-                $tempData[$key] = [
-                    'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $expense['currency_symbol']]),
-                    'currency_id'             => $expense['currency_id'],
-                    'currency_code'           => $expense['currency_code'],
-                    'currency_symbol'         => $expense['currency_symbol'],
-                    'currency_decimal_places' => $decimalPlaces,
-                    'type'                    => 'bar', // line, area or bar
-                    'yAxisID'                 => 0, // 0, 1, 2
-                    'entries'                 => [],
-                ];
-            }
-            $amount                    = round($expense['spent'], $decimalPlaces);
-            $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
-            $tempData[$key]['entries'][$categoryName]
-                                       = $amount;
-        }
-
-
-        asort($categories);
-        $keys = array_keys($categories);
 
         // re-sort every spent array and add 0 for missing entries.
         foreach ($tempData as $index => $set) {
             $oldSet = $set['entries'];
             $newSet = [];
-            foreach ($keys as $key) {
-                $value        = $oldSet[$key] ?? 0;
-                $value        = $value < 0 ? $value * -1 : $value;
-                $newSet[$key] = $value;
+            foreach ($categories as $category) {
+                $value             = $oldSet[$category] ?? '0';
+                $value             = -1 === bccomp($value, '0') ? bcmul($value, '-1') : $value;
+                $newSet[$category] = $value;
             }
             $tempData[$index]['entries'] = $newSet;
         }

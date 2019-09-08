@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
  */
 interface PopupReportInterface
 {
+
     /**
      * Get balances for budget.
      *
@@ -66,12 +67,12 @@ interface PopupReportInterface
     /**
      * Group by category.
      *
-     * @param Category $category
+     * @param Category|null $category
      * @param array    $attributes
      *
      * @return array
      */
-    public function byCategory(Category $category, array $attributes): array;
+    public function byCategory(?Category $category, array $attributes): array;
 
     /**
      * Do something with expense. Sorry, I am not very inspirational here.

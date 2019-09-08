@@ -147,15 +147,15 @@ class ReportFormRequest extends Request
     }
 
     /**
-     * Validate list of expense accounts.
+     * Validate list of accounts which exist twice in system.
      *
      * @return Collection
      */
-    public function getExpenseList(): Collection
+    public function getDoubleList(): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $set        = $this->get('exp_rev');
+        $set        = $this->get('double');
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
@@ -235,7 +235,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget,tag,account',
+            'report_type' => 'in:audit,default,category,budget,tag,double',
         ];
     }
 }

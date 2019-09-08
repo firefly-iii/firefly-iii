@@ -185,6 +185,7 @@ class ChartJsGenerator implements GeneratorInterface
             // make larger than 0
             $chartData['datasets'][0]['data'][]            = (float)app('steam')->positive((string)$value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+
             $chartData['labels'][]                         = $key;
             ++$index;
         }
@@ -195,7 +196,6 @@ class ChartJsGenerator implements GeneratorInterface
     /**
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:.
      *
-     * 'label-of-entry' => value
      * 'label-of-entry' => value
      *
      * @param string $setLabel

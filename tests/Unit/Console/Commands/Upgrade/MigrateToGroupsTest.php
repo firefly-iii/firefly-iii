@@ -75,8 +75,8 @@ class MigrateToGroupsTest extends TestCase
 
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrated_to_groups', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:migrate-to-groups')
@@ -136,8 +136,8 @@ class MigrateToGroupsTest extends TestCase
 
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrated_to_groups', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:migrate-to-groups')
@@ -242,8 +242,8 @@ class MigrateToGroupsTest extends TestCase
 
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrated_to_groups', true]);
 
         $this->artisan('firefly-iii:migrate-to-groups')
              ->expectsOutput('Migrated 1 transaction journal(s).')

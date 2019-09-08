@@ -40,103 +40,6 @@ use Illuminate\Support\Collection;
 interface GroupCollectorInterface
 {
     /**
-     * Return the transaction journals without group information. Is useful in some instances.
-     *
-     * @return array
-     */
-    public function getExtractedJournals(): array;
-
-    /**
-     * Set source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
-     * These accounts must not be source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
-     * Exclude destination accounts.
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
-     * Set destination accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
-     * Return the sum of all journals.
-     *
-     * @return string
-     */
-    public function getSum(): string;
-
-    /**
-     * Add tag info.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withTagInformation(): GroupCollectorInterface;
-
-    /**
-     * Return the groups.
-     *
-     * @return Collection
-     */
-    public function getGroups(): Collection;
-
-    /**
-     * Same as getGroups but everything is in a paginator.
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getPaginatedGroups(): LengthAwarePaginator;
-
-    /**
-     * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
-     * Limit the search to a specific bill.
-     *
-     * @param Bill $bill
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBill(Bill $bill): GroupCollectorInterface;
-
-    /**
-     * Limit the search to a specific set of bills.
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBills(Collection $bills): GroupCollectorInterface;
-
-    /**
      * Get transactions with a specific amount.
      *
      * @param string $amount
@@ -164,6 +67,115 @@ interface GroupCollectorInterface
     public function amountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * Exclude destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * These accounts must not be source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Return the transaction journals without group information. Is useful in some instances.
+     *
+     * @return array
+     */
+    public function getExtractedJournals(): array;
+
+    /**
+     * Return the groups.
+     *
+     * @return Collection
+     */
+    public function getGroups(): Collection;
+
+    /**
+     * Same as getGroups but everything is in a paginator.
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginatedGroups(): LengthAwarePaginator;
+
+    /**
+     * Return the sum of all journals.
+     *
+     * @return string
+     */
+    public function getSum(): string;
+
+    /**
+     * Define which accounts can be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Either account can be set, but NOT both. This effectively excludes internal transfers.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setXorAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Collect transactions after a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setAfter(Carbon $date): GroupCollectorInterface;
+
+    /**
+     * Collect transactions before a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBefore(Carbon $date): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific bill.
+     *
+     * @param Bill $bill
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBill(Bill $bill): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific set of bills.
+     *
+     * @param Collection $bills
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBills(Collection $bills): GroupCollectorInterface;
+
+    /**
+     * Both source AND destination must be in this list of accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBothAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -180,6 +192,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setBudgets(Collection $budgets): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific bunch of categories.
+     *
+     * @param Collection $categories
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategories(Collection $categories): GroupCollectorInterface;
 
     /**
      * Limit the search to a specific category.
@@ -201,13 +222,13 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
-     * Limit the result to a set of specific transaction journals.
+     * Set destination accounts.
      *
-     * @param array $journalIds
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
-    public function setJournalIds(array $journalIds): GroupCollectorInterface;
+    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
      * Limit the result to a specific transaction group.
@@ -219,13 +240,13 @@ interface GroupCollectorInterface
     public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface;
 
     /**
-     * Search for words in descriptions.
+     * Limit the result to a set of specific transaction journals.
      *
-     * @param array $array
+     * @param array $journalIds
      *
      * @return GroupCollectorInterface
      */
-    public function setSearchWords(array $array): GroupCollectorInterface;
+    public function setJournalIds(array $journalIds): GroupCollectorInterface;
 
     /**
      * Limit the number of returned entries.
@@ -256,6 +277,24 @@ interface GroupCollectorInterface
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
 
     /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSearchWords(array $array): GroupCollectorInterface;
+
+    /**
+     * Set source accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
      * Limit results to a specific tag.
      *
      * @param Tag $tag
@@ -272,20 +311,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setTags(Collection $tags): GroupCollectorInterface;
-
-    /**
-     * Limit results to a transactions without a budget.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withoutBudget(): GroupCollectorInterface;
-
-    /**
-     * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withoutCategory(): GroupCollectorInterface;
 
     /**
      * Limit the search to one specific transaction group.
@@ -329,33 +354,6 @@ interface GroupCollectorInterface
     public function withAccountInformation(): GroupCollectorInterface;
 
     /**
-     * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCategories(Collection $categories): GroupCollectorInterface;
-
-    /**
-     * Collect transactions before a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBefore(Carbon $date): GroupCollectorInterface;
-
-    /**
-     * Collect transactions after a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setAfter(Carbon $date): GroupCollectorInterface;
-
-    /**
      * Include bill name + ID.
      *
      * @return GroupCollectorInterface
@@ -375,5 +373,26 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withCategoryInformation(): GroupCollectorInterface;
+
+    /**
+     * Add tag info.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions without a budget.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBudget(): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions without a category.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutCategory(): GroupCollectorInterface;
 
 }

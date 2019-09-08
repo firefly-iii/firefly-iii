@@ -30,7 +30,7 @@ use Illuminate\Console\Command;
  */
 class RenameAccountMeta extends Command
 {
-    public const CONFIG_NAME = '4780_rename_account_meta';
+    public const CONFIG_NAME = '480_rename_account_meta';
     /**
      * The console command description.
      *

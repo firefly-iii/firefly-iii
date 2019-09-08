@@ -1256,7 +1256,7 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'description' => [
+                    'repetitions' => [
                         'Need at least one repetition.',
                     ],
                 ],
@@ -1309,7 +1309,7 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'description' => [
+                    'transactions' => [
                         'Need at least one transaction.',
                     ],
                 ],

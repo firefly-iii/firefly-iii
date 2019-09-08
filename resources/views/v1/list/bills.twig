@@ -14,18 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    {% set sum_min =0 %}
-    {% set sum_max =0 %}
-    {% set expected_total = 0 %}
-    {% set count = 0 %}
-
     {% for entry in bills %}
-        {% if entry.active %}
-            {% set count = count + 1 %}
-            {% set sum_min = sum_min + entry.amount_min %}
-            {% set sum_max = sum_max + entry.amount_max %}
-            {% set expected_total = expected_total + ((entry.amount_min + entry.amount_max) / 2) %}
-        {% endif %}
         <tr{% if not entry.active %} data-disablesort="true"{% endif %}>
             <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i
@@ -58,8 +47,10 @@
                 {% endif %}
             </td>
             <td data-value="{{ entry.amount_min }}" style="text-align: right;">
-                <span style="margin-right:5px;">
-                    ~ {{ formatAmountByCurrency(entry.currency, (entry.amount_max + entry.amount_min)/2) }}
+                <span style="margin-right:5px;"
+                title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}"
+                >
+                    ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
                 </span>
             </td>
 
@@ -87,7 +78,11 @@
                     {{ trans('components.not_or_not_yet') }}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                    {% for date in entry.pay_dates %}
+                        {#{{ formatDate(entry.next_expected_match, monthAndDayFormat) }}<br>#}
+                        {{ formatDate(date, monthAndDayFormat) }}<br>
+                    {% endfor %}
+
                 </td>
             {% endif %}
 
@@ -125,53 +120,19 @@
     {% endfor %}
     </tbody>
     <tfoot>
-    <tr>
-        <td style="text-align:right;" colspan="3">{{ 'sum'|_ }} ({{ 'active_bills_only'|_ }})</td>
-        <td style="text-align:right;" colspan="1">
+    {% for sum in sums %}
+        <tr>
+            <td style="text-align:right;" colspan="3">
+                {{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})<br />
+            </td>
+            <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ formatAmountBySymbol(sum_min,'¤') }}
+                {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
             </span>
-        </td>
-        <td style="text-align:right;" colspan="1">
-            <span style="margin-right:5px;">
-                {{ formatAmountBySymbol(sum_max,'¤') }}
-            </span>
-        </td>
-        <td colspan="5">&nbsp;</td>
-    </tr>
-
-    {# calculate total#}
-    {% if count > 0 %}
-        {% set avg_min = (sum_min / count) %}
-        {% set avg_max = (sum_max / count) %}
-    {% else %}
-        {% set avg_min = 0 %}
-        {% set avg_max = 0 %}
-    {% endif %}
-
-    <tr>
-        <td style="text-align:right;" colspan="3">{{ 'average_per_bill'|_ }} ({{ 'active_bills_only'|_ }})</td>
-        <td style="text-align:right;" colspan="1">
-            <span style="margin-right:5px;">
-                {{ formatAmountBySymbol(avg_min,'¤') }}
-            </span>
-        </td>
-        <td style="text-align:right;" colspan="1">
-            <span style="margin-right:5px;">
-                {{ formatAmountBySymbol(avg_max,'¤') }}
-            </span>
-        </td>
-        <td colspan="6">&nbsp;</td>
-    </tr>
-    <tr>
-        <td style="text-align:right;" colspan="3">{{ 'expected_total'|_ }} ({{ 'active_bills_only'|_ }})</td>
-        <td style="text-align:right;" colspan="1">
-            <span style="margin-right:5px;">
-                ~ {{ formatAmountBySymbol(expected_total,'¤') }}
-            </span>
-        </td>
-        <td colspan="6">&nbsp;</td>
-    </tr>
+            </td>
+            <td colspan="6">&nbsp;</td>
+        </tr>
+    {% endfor %}
     </tfoot>
 </table>
 <div style="padding-left:8px;">

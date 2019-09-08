@@ -2,6 +2,74 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1 (API 0.10.2)] - 2019-08-xx
+
+Firefly III 4.8.1 requires PHP 7.3.
+
+### Added
+- Support for Greek
+- [Issue 2383](https://github.com/firefly-iii/firefly-iii/issues/2383) Some tables in reports now also report percentages.
+- [Issue 2389](https://github.com/firefly-iii/firefly-iii/issues/2389) Add category / budget information to transaction lists.
+- [Issue 2464](https://github.com/firefly-iii/firefly-iii/issues/2464) Can now search for tag.
+- [Issue 2466](https://github.com/firefly-iii/firefly-iii/issues/2466) Can order recurring transactions in a more useful manner.
+- [Issue 2497](https://github.com/firefly-iii/firefly-iii/issues/2497) Transaction creation moment in hover of tag title.
+- [Issue 2471](https://github.com/firefly-iii/firefly-iii/issues/2471) Added date tag to table cells.
+
+### Changed
+- [Issue 2285](https://github.com/firefly-iii/firefly-iii/issues/2285) Rule handling is now uniform across the app.
+- [Issue 2231](https://github.com/firefly-iii/firefly-iii/issues/2231) You can now also use the `DATABASE_URL` for MySQL connections.
+- [Issue 2291](https://github.com/firefly-iii/firefly-iii/issues/2291) All reports are now properly multi-currency.
+- [Issue 2481](https://github.com/firefly-iii/firefly-iii/issues/2481) As part of the removal of local encryption, uploads and imports are no longer encrypted.
+- [Issue 2495](https://github.com/firefly-iii/firefly-iii/issues/2495) A better message of transaction submission.
+- [Issue 2506](https://github.com/firefly-iii/firefly-iii/issues/2506) Some bugs in tag report fixed.
+- [Issue 2510](https://github.com/firefly-iii/firefly-iii/issues/2510) All transaction descriptions cut off at 255 chars.
+- Changing your language preference invites you to submit corrections to [Crowdin](https://crowdin.com/project/firefly-iii).
+- Better sum in bill view.
+- Clean up docker files for flawless operation.
+
+### Removed
+- The bunq API has changed, and support for bunq has been disabled.
+
+### Fixed
+- [Issue 2470](https://github.com/firefly-iii/firefly-iii/issues/2470) Bad links for transactions.
+- [Issue 2480](https://github.com/firefly-iii/firefly-iii/issues/2480) Large queries would break in SQLite.
+- [Issue 2484](https://github.com/firefly-iii/firefly-iii/issues/2484) Transaction description auto-complete.
+- [Issue 2487](https://github.com/firefly-iii/firefly-iii/issues/2487) Fix issues with FinTS
+- [Issue 2488](https://github.com/firefly-iii/firefly-iii/issues/2488) 404 after deleting a tag.
+- [Issue 2490](https://github.com/firefly-iii/firefly-iii/issues/2490) "Reset form after submission" doesn't work.
+- [Issue 2492](https://github.com/firefly-iii/firefly-iii/issues/2492) After submitting and fixing an error, the error is persistent.
+- [Issue 2493](https://github.com/firefly-iii/firefly-iii/issues/2493) Auto detect transaction type is a bit better now.
+- [Issue 2498](https://github.com/firefly-iii/firefly-iii/issues/2498) Pressing enter in some fields breaks the form.
+- [Issue 2499](https://github.com/firefly-iii/firefly-iii/issues/2499) Auto-complete issues in transaction link form.
+- [Issue 2500](https://github.com/firefly-iii/firefly-iii/issues/2500) Issue when submitting edited transactions.
+- [Issue 2501](https://github.com/firefly-iii/firefly-iii/issues/2501) Better error messages for empty submissions.
+- [Issue 2508](https://github.com/firefly-iii/firefly-iii/issues/2508) Can remove category from transaction.
+- [Issue 2516](https://github.com/firefly-iii/firefly-iii/issues/2516) Can no longer import transactions with no amount.
+- [Issue 2518](https://github.com/firefly-iii/firefly-iii/issues/2518) Link in balance box goes to current period.
+- [Issue 2521](https://github.com/firefly-iii/firefly-iii/issues/2521) Foreign transaction currency is hidden when the user hasn't enabled foreign currencies.
+- [Issue 2522](https://github.com/firefly-iii/firefly-iii/issues/2522) Some reports were missing the "overspent" field.
+- [Issue 2526](https://github.com/firefly-iii/firefly-iii/issues/2526) It was impossible to remove the budget of a transaction.
+- [Issue 2527](https://github.com/firefly-iii/firefly-iii/issues/2527) Some bulk edits were buggy.
+- [Issue 2539](https://github.com/firefly-iii/firefly-iii/issues/2539) Fixed a typo.
+- [Issue 2545](https://github.com/firefly-iii/firefly-iii/issues/2545) Deleted tags would still show up.
+- [Issue 2547](https://github.com/firefly-iii/firefly-iii/issues/2547) Changing the opening balance to 0 will now remove it.
+- [Issue 2549](https://github.com/firefly-iii/firefly-iii/issues/2549) Can now clone transactions again.
+- [Issue 2550](https://github.com/firefly-iii/firefly-iii/issues/2550) Added missing locales for moment.js
+- [Issue 2553](https://github.com/firefly-iii/firefly-iii/issues/2553) Fixed an issue with split transactions.
+- [Issue 2555](https://github.com/firefly-iii/firefly-iii/issues/2555) Better error for when you submit the same account twice.
+- [Issue 2439](https://github.com/firefly-iii/firefly-iii/issues/2439) SQL error in API post new user
+- ... and many other bugs.
+
+### API
+- [Issue 2475](https://github.com/firefly-iii/firefly-iii/issues/2475) Tags are now the same for all views.
+- [Issue 2476](https://github.com/firefly-iii/firefly-iii/issues/2476) Amount is now represented equally in all views.
+- [Issue 2477](https://github.com/firefly-iii/firefly-iii/issues/2477) Rules are easier to update.
+- [Issue 2483](https://github.com/firefly-iii/firefly-iii/issues/2483) Several consistencies fixed.
+- [Issue 2484](https://github.com/firefly-iii/firefly-iii/issues/2484) Transaction link view fixed.
+- [Issue 2557](https://github.com/firefly-iii/firefly-iii/issues/2557) Fix for issue in summary API
+- No longer have to submit mandatory fields to account end point. Just submit the field you wish to update, the rest will be untouched.
+- Rules will no longer list the "user-action" trigger Rules will have a "moment" field that says either "update-journal" or "store-journal".
+
 ## [4.8.0.3 (API 0.10.1)] - 2019-08-23
 
 Fixes many other issues in the previous release.
@@ -10,23 +78,23 @@ Fixes many other issues in the previous release.
 - Autocomplete for transaction description.
 
 ### Fixed
-- #2438 Some balance issues when working with multiple currencies (a known issue)
-- #2425 Transaction edit/create form is weird with the enter button
-- #2424 auto complete tab doesn't work.
-- #2441 Inconsistent character limit for currencies.
-- #2443 500 error when submitting budgets
-- #2446 Can't update current amount for piggy bank
-- #2440 Errors when interacting with recurring transactions
-- #2439 SQL error in API post new user
+- [Issue 2438](https://github.com/firefly-iii/firefly-iii/issues/2438) Some balance issues when working with multiple currencies (a known issue)
+- [Issue 2425](https://github.com/firefly-iii/firefly-iii/issues/2425) Transaction edit/create form is weird with the enter button
+- [Issue 2424](https://github.com/firefly-iii/firefly-iii/issues/2424) auto complete tab doesn't work.
+- [Issue 2441](https://github.com/firefly-iii/firefly-iii/issues/2441) Inconsistent character limit for currencies.
+- [Issue 2443](https://github.com/firefly-iii/firefly-iii/issues/2443) 500 error when submitting budgets
+- [Issue 2446](https://github.com/firefly-iii/firefly-iii/issues/2446) Can't update current amount for piggy bank
+- [Issue 2440](https://github.com/firefly-iii/firefly-iii/issues/2440) Errors when interacting with recurring transactions
+- [Issue 2439](https://github.com/firefly-iii/firefly-iii/issues/2439) SQL error in API post new user
 - Transaction report (after import, over email) is mostly empty
 - Mass edit checkboxes doesn't work in a tag overview
-- #2437 CPU issues when viewing accounts, probably run-away queries.
-- #2432 Can't disable all currencies except one / can't disable EUR and switch to something else.
+- [Issue 2437](https://github.com/firefly-iii/firefly-iii/issues/2437) CPU issues when viewing accounts, probably run-away queries.
+- [Issue 2432](https://github.com/firefly-iii/firefly-iii/issues/2432) Can't disable all currencies except one / can't disable EUR and switch to something else.
 - Option to edit the budget is gone from edit transaction form.
-- #2453 Search view things
-- #2449 Can't add invoice date.
-- #2448 Bad link in transaction overview
-- #2447 Bad link in bill overview
+- [Issue 2453](https://github.com/firefly-iii/firefly-iii/issues/2453) Search view things
+- [Issue 2449](https://github.com/firefly-iii/firefly-iii/issues/2449) Can't add invoice date.
+- [Issue 2448](https://github.com/firefly-iii/firefly-iii/issues/2448) Bad link in transaction overview
+- [Issue 2447](https://github.com/firefly-iii/firefly-iii/issues/2447) Bad link in bill overview
 
 ### API
 - Improvements to various API end-points. Docs are updated.

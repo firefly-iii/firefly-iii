@@ -31,7 +31,6 @@ use Illuminate\Http\Request;
 /**
  * Class ReportController.
  *
- *
  */
 class ReportController extends Controller
 {
@@ -68,6 +67,9 @@ class ReportController extends Controller
                 break;
             case 'category-entry':
                 $html = $this->categoryEntry($attributes);
+                break;
+            case 'budget-entry':
+                $html = $this->budgetEntry($attributes);
                 break;
         }
 

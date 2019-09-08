@@ -275,6 +275,7 @@ class JobStatusControllerTest extends TestCase
         $routine->shouldReceive('run')->andThrow(new Exception('Unknown exception'));
 
         // call thing.
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);
@@ -308,6 +309,7 @@ class JobStatusControllerTest extends TestCase
         $routine->shouldReceive('run')->andThrow(new FireflyException('Unknown exception'));
 
         // call thing.
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);

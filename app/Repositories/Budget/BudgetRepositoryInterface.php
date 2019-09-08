@@ -23,10 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -35,32 +32,10 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
-    /**
-     * A method that returns the amount of money budgeted per day for this budget,
-     * on average.
-     *
-     * @param Budget $budget
-     *
-     * @return string
-     */
-    public function budgetedPerDay(Budget $budget): string;
-
     /**
      * @return bool
      */
     public function cleanupBudgets(): bool;
-
-    /**
-     * This method collects various info on budgets, used on the budget page and on the index.
-     *
-     * @param Collection $budgets
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
 
     /**
      * @param Budget $budget
@@ -70,19 +45,7 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget): bool;
 
     /**
-     * @param AvailableBudget $availableBudget
-     */
-    public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
-
-    /**
-     * Destroy a budget limit.
-     *
-     * @param BudgetLimit $budgetLimit
-     */
-    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
-
-    /**
-     * @param int|null $budgetId
+     * @param int|null    $budgetId
      * @param string|null $budgetName
      *
      * @return Budget|null
@@ -99,6 +62,8 @@ interface BudgetRepositoryInterface
     public function findByName(?string $name): ?Budget;
 
     /**
+     * TODO refactor to "find"
+     *
      * @param int|null $budgetId
      *
      * @return Budget|null
@@ -121,81 +86,6 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection;
-
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
-
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
-
-    /**
-     * TODO only used in API
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
-
-    /**
-     * Returns all available budget objects.
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     * @return Collection
-     *
-     */
-    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
-
-    /**
-     * TODO only used in API
-     *
-     * Returns all available budget objects.
-     *
-     * @param TransactionCurrency $currency
-     * @return Collection
-     */
-    public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection;
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
      * @return Collection
      */
     public function getBudgets(): Collection;
@@ -209,21 +99,10 @@ interface BudgetRepositoryInterface
      */
     public function getByIds(array $budgetIds): Collection;
 
-
-
     /**
      * @return Collection
      */
     public function getInactiveBudgets(): Collection;
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param string $query
@@ -233,71 +112,15 @@ interface BudgetRepositoryInterface
     public function searchBudget(string $query): Collection;
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $amount
-     *
-     * @return AvailableBudget
-     */
-    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
-
-    /**
      * @param Budget $budget
-     * @param int $order
+     * @param int    $order
      */
     public function setBudgetOrder(Budget $budget, int $order): void;
-
-
 
     /**
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * TODO this method is not multi-currency aware.
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
-
-
-
-    /**
-     * Return multi-currency spent information.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
-
 
     /**
      * @param array $data
@@ -307,44 +130,10 @@ interface BudgetRepositoryInterface
     public function store(array $data): Budget;
 
     /**
-     * @param array $data
-     *
-     * @return BudgetLimit
-     */
-    public function storeBudgetLimit(array $data): BudgetLimit;
-
-    /**
      * @param Budget $budget
-     * @param array $data
+     * @param array  $data
      *
      * @return Budget
      */
     public function update(Budget $budget, array $data): Budget;
-
-    /**
-     * @param AvailableBudget $availableBudget
-     * @param array $data
-     *
-     * @return AvailableBudget
-     */
-    public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget;
-
-    /**
-     * @param BudgetLimit $budgetLimit
-     * @param array $data
-     *
-     * @return BudgetLimit
-     */
-    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
-
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $amount
-     *
-     * @return BudgetLimit|null
-     */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
 }

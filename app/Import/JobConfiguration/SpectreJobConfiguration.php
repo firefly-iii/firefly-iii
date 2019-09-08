@@ -111,7 +111,6 @@ class SpectreJobConfiguration implements JobConfigurationInterface
      * @return SpectreJobConfigurationInterface
      * @throws FireflyException
      *
-     *
      */
     private function getHandler(): SpectreJobConfigurationInterface
     {

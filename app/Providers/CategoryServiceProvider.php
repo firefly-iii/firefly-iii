@@ -24,6 +24,10 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Category\CategoryRepository;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepository;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepository;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,9 +51,35 @@ class CategoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             CategoryRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var CategoryRepository $repository */
                 $repository = app(CategoryRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            OperationsRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var OperationsRepository $repository */
+                $repository = app(OperationsRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            NoCategoryRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var NoCategoryRepository $repository */
+                $repository = app(NoCategoryRepository::class);
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }

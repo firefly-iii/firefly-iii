@@ -40,14 +40,11 @@ use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 
 /**
@@ -62,6 +59,7 @@ class RuleGroupController extends Controller
 
     /**
      * RuleGroupController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -101,17 +99,12 @@ class RuleGroupController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager = $this->getManager();
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
@@ -124,9 +117,6 @@ class RuleGroupController extends Controller
         $paginator = new LengthAwarePaginator($ruleGroups, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rule_groups.index') . $this->buildParams());
 
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -138,18 +128,54 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param RuleGroup $ruleGroup
+     *
+     * @return JsonResponse
+     */
+    public function moveDown(RuleGroup $ruleGroup): JsonResponse
+    {
+        $this->ruleGroupRepository->moveDown($ruleGroup);
+        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
+        $manager   = $this->getManager();
+
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return JsonResponse
+     */
+    public function moveUp(RuleGroup $ruleGroup): JsonResponse
+    {
+        $this->ruleGroupRepository->moveUp($ruleGroup);
+        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
+        $manager   = $this->getManager();
+
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * @param RuleGroup $group
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function rules(Request $request, RuleGroup $group): JsonResponse
+    public function rules(RuleGroup $group): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $manager = $this->getManager();
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
@@ -161,9 +187,6 @@ class RuleGroupController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rule_groups.rules', [$group->id]) . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -179,18 +202,14 @@ class RuleGroupController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, RuleGroup $ruleGroup): JsonResponse
+    public function show(RuleGroup $ruleGroup): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -211,9 +230,7 @@ class RuleGroupController extends Controller
     public function store(RuleGroupRequest $request): JsonResponse
     {
         $ruleGroup = $this->ruleGroupRepository->store($request->getAll());
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager   = $this->getManager();
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
@@ -227,7 +244,7 @@ class RuleGroupController extends Controller
 
     /**
      * @param RuleGroupTestRequest $request
-     * @param RuleGroup $group
+     * @param RuleGroup            $group
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -272,11 +289,7 @@ class RuleGroupController extends Controller
         $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $parameters['page']);
         $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]) . $this->buildParams());
 
-        // resulting list is presented as JSON thing.
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager     = $this->getManager();
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
@@ -290,7 +303,7 @@ class RuleGroupController extends Controller
      * Execute the given rule group on a set of existing transactions.
      *
      * @param RuleGroupTriggerRequest $request
-     * @param RuleGroup $group
+     * @param RuleGroup               $group
      *
      * @return JsonResponse
      * @throws Exception
@@ -334,60 +347,14 @@ class RuleGroupController extends Controller
      * Update a rule group.
      *
      * @param RuleGroupRequest $request
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup        $ruleGroup
      *
      * @return JsonResponse
      */
     public function update(RuleGroupRequest $request, RuleGroup $ruleGroup): JsonResponse
     {
         $ruleGroup = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        /** @var RuleGroupTransformer $transformer */
-        $transformer = app(RuleGroupTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @param Request $request
-     * @param RuleGroup $ruleGroup
-     * @return JsonResponse
-     */
-    public function moveDown(Request $request, RuleGroup $ruleGroup): JsonResponse
-    {
-        $this->ruleGroupRepository->moveDown($ruleGroup);
-        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        /** @var RuleGroupTransformer $transformer */
-        $transformer = app(RuleGroupTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @param Request $request
-     * @param RuleGroup $ruleGroup
-     * @return JsonResponse
-     */
-    public function moveUp(Request $request, RuleGroup $ruleGroup): JsonResponse
-    {
-        $this->ruleGroupRepository->moveUp($ruleGroup);
-        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
-        $manager   = new Manager();
-        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager   = $this->getManager();
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);

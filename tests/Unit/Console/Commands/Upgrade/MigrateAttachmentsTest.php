@@ -55,8 +55,8 @@ class MigrateAttachmentsTest extends TestCase
     {
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrate_attachments', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrate_attachments', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrate_attachments', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrate_attachments', true]);
         // assume all is well.
         $this->artisan('firefly-iii:migrate-attachments')
              ->expectsOutput('All attachments are OK.')
@@ -70,8 +70,8 @@ class MigrateAttachmentsTest extends TestCase
     {
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrate_attachments', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrate_attachments', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrate_attachments', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_migrate_attachments', true]);
 
         $attachment = Attachment::create(
             [

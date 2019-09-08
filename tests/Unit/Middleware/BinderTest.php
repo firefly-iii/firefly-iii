@@ -25,9 +25,14 @@ namespace Tests\Unit\Middleware;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Import\Prerequisites\BunqPrerequisites;
+use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
+use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Prerequisites\YnabPrerequisites;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Preference;
@@ -64,6 +69,7 @@ class BinderTest extends TestCase
      */
     public function testAccount(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
@@ -82,6 +88,7 @@ class BinderTest extends TestCase
      */
     public function testAccountList(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
@@ -99,6 +106,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListAllAssets(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
@@ -121,6 +129,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListEmpty(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', static function (Collection $accounts) {
             return 'count: ' . $accounts->count();
@@ -137,6 +146,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListInvalid(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
@@ -154,6 +164,7 @@ class BinderTest extends TestCase
      */
     public function testAccountListNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{accountList}', function (Collection $accounts) {
             return 'count: ' . $accounts->count();
@@ -169,6 +180,7 @@ class BinderTest extends TestCase
      */
     public function testAccountNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
@@ -186,6 +198,7 @@ class BinderTest extends TestCase
      */
     public function testAccountNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{account}', function () {
             return 'OK';
@@ -202,6 +215,7 @@ class BinderTest extends TestCase
      */
     public function testAttachment(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
@@ -219,6 +233,7 @@ class BinderTest extends TestCase
      */
     public function testAttachmentNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
@@ -236,6 +251,7 @@ class BinderTest extends TestCase
      */
     public function testAttachmentNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{attachment}', function () {
             return 'OK';
@@ -248,10 +264,45 @@ class BinderTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\AvailableBudget
+     */
+    public function testAvailableBudget(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{availableBudget}', static function (?AvailableBudget $availableBudget) {
+            return $availableBudget->id ?? 0;
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\AvailableBudget
+     */
+    public function testAvailableBudgetNotFound(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{availableBudget}', static function (?AvailableBudget $availableBudget) {
+            return $availableBudget->id ?? 0;
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Bill
      */
     public function testBill(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
@@ -269,6 +320,7 @@ class BinderTest extends TestCase
      */
     public function testBillNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
@@ -286,6 +338,7 @@ class BinderTest extends TestCase
      */
     public function testBillNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{bill}', function () {
             return 'OK';
@@ -302,6 +355,7 @@ class BinderTest extends TestCase
      */
     public function testBudget(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budget}', function () {
             return 'OK';
@@ -319,6 +373,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimit(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
@@ -336,6 +391,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimitNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
@@ -353,6 +409,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetLimitNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetLimit}', function () {
             return 'OK';
@@ -369,6 +426,7 @@ class BinderTest extends TestCase
      */
     public function testBudgetList(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
             return 'count: ' . $budgets->count();
@@ -384,24 +442,9 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\BudgetList
      */
-    public function testBudgetListInvalid(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{budgetList}', function (Collection $budgets) {
-            return 'count: ' . $budgets->count();
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/-1');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\BudgetList
-     */
     public function testBudgetListEmpty(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{budgetList}', function (Collection $budgets) {
             return 'count: ' . $budgets->count();
@@ -414,10 +457,63 @@ class BinderTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\BudgetList
+     */
+    public function testBudgetListInvalid(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{budgetList}', function (Collection $budgets) {
+            return 'count: ' . $budgets->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Budget
+     */
+    public function testBudgetNotFound(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{budget}', function () {
+            return 'OK';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/0');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Budget
+     */
+    public function testBudgetNotLoggedIn(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{budget}', function () {
+            return 'OK';
+        }
+        );
+
+        $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CLIToken
      */
     public function testCLIToken(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repos = $this->mock(UserRepositoryInterface::class);
         $repos->shouldReceive('all')->andReturn(new Collection([$this->user()]))->atLeast()->once();
 
@@ -444,6 +540,7 @@ class BinderTest extends TestCase
      */
     public function testCLITokenNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repos = $this->mock(UserRepositoryInterface::class);
         $repos->shouldReceive('all')->andReturn(new Collection([$this->user()]))->atLeast()->once();
 
@@ -464,194 +561,11 @@ class BinderTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ConfigurationName
-     */
-    public function testConfigName(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{configName}', static function (string $name) {
-            return sprintf('configName: %s', $name);
-        }
-        );
-
-        $response = $this->get('/_test/binder/is_demo_site');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $response->assertSee('is_demo_site');
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ConfigurationName
-     */
-    public function testConfigNameNotFOund(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{configName}', static function (string $name) {
-            return sprintf('configName: %s', $name);
-        }
-        );
-
-        $response = $this->get('/_test/binder/is_demoX_site');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * Normal user can access file routine
-     *
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ImportProvider
-     */
-    public function testImportProvider(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $this->mock(PrerequisitesInterface::class);
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{import_provider}', static function (string $name) {
-            return sprintf('import_provider: %s', $name);
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/file');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $response->assertSee('file');
-    }
-
-    /**
-     * Normal user cannot access fake import routine.
-     *
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ImportProvider
-     */
-    public function testImportProviderFake(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $this->mock(PrerequisitesInterface::class);
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{import_provider}', static function (string $name) {
-            return sprintf('import_provider: %s', $name);
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/fake');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * Nobody can access "bad" import routine.
-     *
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ImportProvider
-     */
-    public function testImportProviderBad(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $this->mock(PrerequisitesInterface::class);
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{import_provider}', static function (string $name) {
-            return sprintf('import_provider: %s', $name);
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/bad');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * Demo user cannot access file import routine.
-     *
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ImportProvider
-     */
-    public function testImportProviderDemoFile(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $this->mock(PrerequisitesInterface::class);
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{import_provider}', static function (string $name) {
-            return sprintf('import_provider: %s', $name);
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/file');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\ImportProvider
-     */
-    public function testImportProviderNotLoggedIn(): void
-    {
-        $this->mock(UserRepositoryInterface::class);
-        $this->mock(PrerequisitesInterface::class);
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{import_provider}', static function (string $name) {
-            return sprintf('import_provider: %s', $name);
-        }
-        );
-
-        $response = $this->get('/_test/binder/file');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Budget
-     */
-    public function testBudgetNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{budget}', function () {
-            return 'OK';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/0');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Budget
-     */
-    public function testBudgetNotLoggedIn(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{budget}', function () {
-            return 'OK';
-        }
-        );
-
-        $response = $this->get('/_test/binder/1');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Category
      */
     public function testCategory(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
@@ -669,6 +583,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryList(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
             return 'count: ' . $categories->count();
@@ -686,6 +601,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryListInvalid(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{categoryList}', function (Collection $categories) {
             return 'count: ' . $categories->count();
@@ -702,6 +618,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
@@ -719,6 +636,7 @@ class BinderTest extends TestCase
      */
     public function testCategoryNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{category}', function () {
             return 'OK';
@@ -731,10 +649,46 @@ class BinderTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ConfigurationName
+     */
+    public function testConfigName(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{configName}', static function (string $name) {
+            return sprintf('configName: %s', $name);
+        }
+        );
+
+        $response = $this->get('/_test/binder/is_demo_site');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('is_demo_site');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ConfigurationName
+     */
+    public function testConfigNameNotFound(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{configName}', static function (string $name) {
+            return sprintf('configName: %s', $name);
+        }
+        );
+
+        $response = $this->get('/_test/binder/is_demoX_site');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\CurrencyCode
      */
     public function testCurrencyCode(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
@@ -752,6 +706,7 @@ class BinderTest extends TestCase
      */
     public function testCurrencyCodeNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
@@ -769,6 +724,7 @@ class BinderTest extends TestCase
      */
     public function testCurrencyCodeNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{fromCurrencyCode}', function () {
             return 'OK';
@@ -785,6 +741,7 @@ class BinderTest extends TestCase
      */
     public function testDate(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -810,6 +767,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentMonthEnd(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             Log::debug(sprintf('Received in function: "%s"', $date->format('Y-m-d')));
@@ -837,6 +795,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentMonthStart(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -863,6 +822,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentYearEnd(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -889,6 +849,7 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentYearStart(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $date = new Carbon;
         $date->startOfYear();
         $testDate = clone $date;
@@ -916,6 +877,7 @@ class BinderTest extends TestCase
      */
     public function testDateFiscalYearEnd(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -943,6 +905,7 @@ class BinderTest extends TestCase
      */
     public function testDateFiscalYearStart(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -970,6 +933,7 @@ class BinderTest extends TestCase
      */
     public function testDateInvalid(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
@@ -992,6 +956,7 @@ class BinderTest extends TestCase
      */
     public function testImportJob(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
@@ -1009,6 +974,7 @@ class BinderTest extends TestCase
      */
     public function testImportJobNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
@@ -1026,6 +992,7 @@ class BinderTest extends TestCase
      */
     public function testImportJobNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{importJob}', function () {
             return 'OK';
@@ -1037,16 +1004,195 @@ class BinderTest extends TestCase
     }
 
     /**
+     * Normal user can access file routine
+     *
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ImportProvider
+     */
+    public function testImportProvider(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $this->mock(PrerequisitesInterface::class);
+
+        // mock all prerequisite classes.
+        $bunq    = $this->mock(BunqPrerequisites::class);
+        $spectre = $this->mock(SpectrePrerequisites::class);
+        $ynab    = $this->mock(YnabPrerequisites::class);
+
+        $bunq->shouldReceive('setUser')->atLeast()->once();
+        $spectre->shouldReceive('setUser')->atLeast()->once();
+        $ynab->shouldReceive('setUser')->atLeast()->once();
+        $bunq->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $spectre->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $ynab->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+
+
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{import_provider}', static function (string $name) {
+            return sprintf('import_provider: %s', $name);
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/file');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('file');
+    }
+
+    /**
+     * Nobody can access "bad" import routine.
+     *
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ImportProvider
+     */
+    public function testImportProviderBad(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $this->mock(PrerequisitesInterface::class);
+
+        // mock all prerequisite classes.
+        $bunq    = $this->mock(BunqPrerequisites::class);
+        $spectre = $this->mock(SpectrePrerequisites::class);
+        $ynab    = $this->mock(YnabPrerequisites::class);
+
+        $bunq->shouldReceive('setUser')->atLeast()->once();
+        $spectre->shouldReceive('setUser')->atLeast()->once();
+        $ynab->shouldReceive('setUser')->atLeast()->once();
+        $bunq->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $spectre->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $ynab->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+
+
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{import_provider}', static function (string $name) {
+            return sprintf('import_provider: %s', $name);
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/bad');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * Demo user cannot access file import routine.
+     *
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ImportProvider
+     */
+    public function testImportProviderDemoFile(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $this->mock(PrerequisitesInterface::class);
+
+        // mock all prerequisite classes.
+        $bunq    = $this->mock(BunqPrerequisites::class);
+        $spectre = $this->mock(SpectrePrerequisites::class);
+        $ynab    = $this->mock(YnabPrerequisites::class);
+        $fake    = $this->mock(FakePrerequisites::class);
+
+        $fake->shouldReceive('setUser')->atLeast()->once();
+        $fake->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{import_provider}', static function (string $name) {
+            return sprintf('import_provider: %s', $name);
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/file');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * Normal user cannot access fake import routine.
+     *
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ImportProvider
+     */
+    public function testImportProviderFake(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $this->mock(PrerequisitesInterface::class);
+
+        // mock all prerequisite classes.
+        $bunq    = $this->mock(BunqPrerequisites::class);
+        $spectre = $this->mock(SpectrePrerequisites::class);
+        $ynab    = $this->mock(YnabPrerequisites::class);
+
+        $bunq->shouldReceive('setUser')->atLeast()->once();
+        $spectre->shouldReceive('setUser')->atLeast()->once();
+        $ynab->shouldReceive('setUser')->atLeast()->once();
+        $bunq->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $spectre->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+        $ynab->shouldReceive('isComplete')->atLeast()->once()->andReturn(false);
+
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{import_provider}', static function (string $name) {
+            return sprintf('import_provider: %s', $name);
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/fake');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\ImportProvider
+     */
+    public function testImportProviderNotLoggedIn(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mock(UserRepositoryInterface::class);
+        $this->mock(PrerequisitesInterface::class);
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{import_provider}', static function (string $name) {
+            return sprintf('import_provider: %s', $name);
+        }
+        );
+
+        $response = $this->get('/_test/binder/file');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\JournalList
      */
     public function testJournalList(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', static function (array $journals) {
             return 'count: ' . count($journals);
         }
         );
+        $withdrawalArray = $this->getRandomWithdrawalAsArray();
+        $collector       = $this->mock(GroupCollectorInterface::class);
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withTagInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($withdrawalArray);
+
         $this->be($this->user());
         $withdrawal = $this->getRandomWithdrawal();
         $deposit    = $this->getRandomDeposit();
@@ -1061,10 +1207,22 @@ class BinderTest extends TestCase
      */
     public function testJournalListEmpty(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', static function (array $journals) {
             return 'count: ' . count($journals);
-        });
+        }
+        );
+
+        $collector       = $this->mock(GroupCollectorInterface::class);
+        $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withTagInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([]);
+
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/-1');
@@ -1079,10 +1237,12 @@ class BinderTest extends TestCase
      */
     public function testJournalListNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', static function (array $journals) {
             return 'count: ' . count($journals);
-        });
+        }
+        );
 
         $response = $this->get('/_test/binder/-1');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -1094,6 +1254,7 @@ class BinderTest extends TestCase
      */
     public function testLinkType(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
@@ -1111,6 +1272,7 @@ class BinderTest extends TestCase
      */
     public function testLinkTypeNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
@@ -1128,6 +1290,7 @@ class BinderTest extends TestCase
      */
     public function testLinkTypeNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{linkType}', function () {
             return 'OK';
@@ -1144,6 +1307,7 @@ class BinderTest extends TestCase
      */
     public function testPiggyBank(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
@@ -1155,147 +1319,13 @@ class BinderTest extends TestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Preference
-     */
-    public function testPreference(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{preference}', static function (?Preference $preference) {
-            return $preference->name ?? 'unknown';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/frontPageAccounts');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $response->assertSee('frontPageAccounts');
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Recurrence
-     */
-    public function testRecurrence(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{recurrence}', static function (?Recurrence $recurrence) {
-            return $recurrence->description ?? 'unknown';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/1');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Recurrence
-     */
-    public function testRecurrenceNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{recurrence}', static function (?Recurrence $recurrence) {
-            return $recurrence->description ?? 'unknown';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/-1');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\TransactionGroup
-     */
-    public function testTransactionGroup(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{transactionGroup}', static function (?TransactionGroup $transactionGroup) {
-            return $transactionGroup->title ?? 'unknown';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/1');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\TransactionGroup
-     */
-    public function testTransactionGroupNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{transactionGroup}', static function (?TransactionGroup $transactionGroup) {
-            return $transactionGroup->title ?? 'unknown';
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/-1');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\AvailableBudget
-     */
-    public function testAvailableBudget(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{availableBudget}', static function (?AvailableBudget $availableBudget) {
-            return $availableBudget->id ?? 0;
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/1');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\AvailableBudget
-     */
-    public function testAvailableBudgetNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{availableBudget}', static function (?AvailableBudget $availableBudget) {
-            return $availableBudget->id ?? 0;
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/-1');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Preference
-     */
-    public function testPreferenceNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{preference}', static function (?Preference $preference) {
-            return $preference->name ?? 'unknown';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/frontPageAccountsX');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\PiggyBank
      */
     public function testPiggyBankNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
@@ -1313,6 +1343,7 @@ class BinderTest extends TestCase
      */
     public function testPiggyBankNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{piggyBank}', function () {
             return 'OK';
@@ -1325,10 +1356,82 @@ class BinderTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Preference
+     */
+    public function testPreference(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{preference}', static function (?Preference $preference) {
+            return $preference->name ?? 'unknown';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/frontPageAccounts');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $response->assertSee('frontPageAccounts');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Preference
+     */
+    public function testPreferenceNotFound(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{preference}', static function (?Preference $preference) {
+            return $preference->name ?? 'unknown';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/frontPageAccountsX');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Recurrence
+     */
+    public function testRecurrence(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{recurrence}', static function (?Recurrence $recurrence) {
+            return $recurrence->description ?? 'unknown';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Recurrence
+     */
+    public function testRecurrenceNotFound(): void
+    {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{recurrence}', static function (?Recurrence $recurrence) {
+            return $recurrence->description ?? 'unknown';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Models\Rule
      */
     public function testRule(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
@@ -1346,6 +1449,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroup(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
@@ -1363,6 +1467,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroupNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
@@ -1380,6 +1485,7 @@ class BinderTest extends TestCase
      */
     public function testRuleGroupNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{ruleGroup}', function () {
             return 'OK';
@@ -1396,6 +1502,7 @@ class BinderTest extends TestCase
      */
     public function testRuleNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
@@ -1413,6 +1520,7 @@ class BinderTest extends TestCase
      */
     public function testRuleNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{rule}', function () {
             return 'OK';
@@ -1429,6 +1537,7 @@ class BinderTest extends TestCase
      */
     public function testTJ(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1446,6 +1555,7 @@ class BinderTest extends TestCase
      */
     public function testTJNotFound(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1463,6 +1573,7 @@ class BinderTest extends TestCase
      */
     public function testTJNotLoggedIn(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1520,6 +1631,26 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\TagList
      */
+    public function testTagListEmpty(): void
+    {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('get')->once()->andReturn(new Collection());
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tagList}', function (Collection $tags) {
+            return 'count: ' . $tags->count();
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/noblaexista');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\TagList
+     */
     public function testTagListWithId(): void
     {
         $tagRepos = $this->mock(TagRepositoryInterface::class);
@@ -1540,6 +1671,97 @@ class BinderTest extends TestCase
         $response = $this->get(sprintf('/_test/binder/%s,%d,bleep', $first->tag, $second->id));
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $response->assertSee('count: 2');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Tag
+     */
+    public function testTagNotFound(): void
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tag}', function () {
+            return 'OK';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/0');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\Tag
+     */
+    public function testTagNotLoggedIn(): void
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tag}', function () {
+            return 'OK';
+        }
+        );
+
+        $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\TagOrId
+     */
+    public function testTagOrIdBothNull(): void
+    {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tag      = $this->getRandomTag();
+
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('findByTag')->withArgs([(string)$tag->id])->andReturnNull()->atLeast()->once();
+        $tagRepos->shouldReceive('findNull')->withArgs([$tag->id])->andReturnNull()->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tagOrId}', static function (?Tag $tag) {
+            if ($tag) {
+                return $tag->tag;
+            }
+
+            return 'unfound';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get(sprintf('/_test/binder/%d', $tag->id));
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Support\Binder\TagOrId
+     */
+    public function testTagOrIdById(): void
+    {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tag      = $this->getRandomTag();
+
+        $tagRepos->shouldReceive('setUser');
+        $tagRepos->shouldReceive('findByTag')->withArgs([(string)$tag->id])->andReturnNull()->atLeast()->once();
+        $tagRepos->shouldReceive('findNull')->withArgs([$tag->id])->andReturn($tag)->atLeast()->once();
+
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{tagOrId}', static function (?Tag $tag) {
+            if ($tag) {
+                return $tag->tag;
+            }
+
+            return 'unfound';
+        }
+        );
+
+        $this->be($this->user());
+        $response = $this->get(sprintf('/_test/binder/%d', $tag->id));
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $response->assertSee($tag->tag);
     }
 
     /**
@@ -1577,64 +1799,6 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Http\Middleware\Binder
      * @covers \FireflyIII\Support\Binder\TagOrId
      */
-    public function testTagOrIdById(): void
-    {
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->getRandomTag();
-
-        $tagRepos->shouldReceive('setUser');
-        $tagRepos->shouldReceive('findByTag')->withArgs([(string)$tag->id])->andReturnNull()->atLeast()->once();
-        $tagRepos->shouldReceive('findNull')->withArgs([$tag->id])->andReturn($tag)->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{tagOrId}', static function (?Tag $tag) {
-            if ($tag) {
-                return $tag->tag;
-            }
-
-            return 'unfound';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get(sprintf('/_test/binder/%d', $tag->id));
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-
-        $response->assertSee($tag->tag);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\TagOrId
-     */
-    public function testTagOrIdBothNull(): void
-    {
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->getRandomTag();
-
-        $tagRepos->shouldReceive('setUser');
-        $tagRepos->shouldReceive('findByTag')->withArgs([(string)$tag->id])->andReturnNull()->atLeast()->once();
-        $tagRepos->shouldReceive('findNull')->withArgs([$tag->id])->andReturnNull()->atLeast()->once();
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{tagOrId}', static function (?Tag $tag) {
-            if ($tag) {
-                return $tag->tag;
-            }
-
-            return 'unfound';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get(sprintf('/_test/binder/%d', $tag->id));
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\TagOrId
-     */
     public function testTagOrIdNotLoggedIn(): void
     {
         Route::middleware(Binder::class)->any(
@@ -1648,59 +1812,6 @@ class BinderTest extends TestCase
         );
 
         $response = $this->get(sprintf('/_test/binder/%d', 4));
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Support\Binder\TagList
-     */
-    public function testTagListEmpty(): void
-    {
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tagRepos->shouldReceive('setUser');
-        $tagRepos->shouldReceive('get')->once()->andReturn(new Collection());
-
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{tagList}', function (Collection $tags) {
-            return 'count: ' . $tags->count();
-        }
-        );
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/noblaexista');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Tag
-     */
-    public function testTagNotFound(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{tag}', function () {
-            return 'OK';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/0');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\Tag
-     */
-    public function testTagNotLoggedIn(): void
-    {
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{tag}', function () {
-            return 'OK';
-        }
-        );
-
-        $response = $this->get('/_test/binder/1');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
@@ -1751,6 +1862,38 @@ class BinderTest extends TestCase
         );
 
         $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\TransactionGroup
+     */
+    public function testTransactionGroup(): void
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{transactionGroup}', static function (?TransactionGroup $transactionGroup) {
+            return $transactionGroup->title ?? 'unknown';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/1');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Middleware\Binder
+     * @covers \FireflyIII\Models\TransactionGroup
+     */
+    public function testTransactionGroupNotFound(): void
+    {
+        Route::middleware(Binder::class)->any(
+            '/_test/binder/{transactionGroup}', static function (?TransactionGroup $transactionGroup) {
+            return $transactionGroup->title ?? 'unknown';
+        }
+        );
+        $this->be($this->user());
+        $response = $this->get('/_test/binder/-1');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 

@@ -27,11 +27,12 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -58,95 +59,6 @@ class SummaryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\SummaryController
-     */
-    public function testBasicInThePast(): void
-    {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $billRepos     = $this->mock(BillRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $collector     = $this->mock(GroupCollectorInterface::class);
-        $netWorth      = $this->mock(NetWorthInterface::class);
-
-        // data
-        $euro         = $this->getEuro();
-        $budget       = $this->user()->budgets()->inRandomOrder()->first();
-        $account      = $this->getRandomAsset();
-        $journals     = [
-            [
-                'amount'      => '10',
-                'currency_id' => 1,
-            ],
-        ];
-        $netWorthData = [
-            [
-                'currency' => $euro,
-                'balance'  => '232',
-            ],
-        ];
-
-        // mock calls.
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $billRepos->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
-        $netWorth->shouldReceive('setUser')->atLeast()->once();
-
-        // mock collector calls:
-        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
-
-        // used to get balance information (deposits)
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->atLeast()->once()->andReturnSelf();
-
-        // same, but for withdrawals
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->atLeast()->once()->andReturnSelf();
-
-        // system always returns one basic transaction (see above)
-        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($journals);
-
-        // currency repos does some basic collecting
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($euro);
-
-        // bill repository return value
-        $billRepos->shouldReceive('getBillsPaidInRangePerCurrency')->atLeast()->once()->andReturn([1 => '123']);
-        $billRepos->shouldReceive('getBillsUnpaidInRangePerCurrency')->atLeast()->once()->andReturn([1 => '123']);
-
-        // budget repos
-        $budgetRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123']);
-        $budgetRepos->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $budgetRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
-            [
-                [
-                    'currency_id'             => 1,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => 'x',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => 321.21,
-                ],
-            ]
-        );
-
-        // account repos:
-        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()
-                     ->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
-        $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true);
-
-        // net worth calculator
-        $netWorth->shouldReceive('getNetWorthByCurrency')->atLeast()->once()->andReturn($netWorthData);
-
-        $parameters = [
-            'start' => '2019-01-01',
-            'end'   => '2019-01-31',
-        ];
-
-        $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));
-        $response->assertStatus(200);
-        // TODO AFTER 4.8,0: check if JSON is correct
-    }
-
-    /**
      * Also includes NULL currencies for better coverage.
      *
      * @covers \FireflyIII\Api\V1\Controllers\SummaryController
@@ -159,6 +71,8 @@ class SummaryControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $netWorth      = $this->mock(NetWorthInterface::class);
+        $abRepos       = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $opsRepos      = $this->mock(OperationsRepositoryInterface::class);
         $date          = new Carbon();
         $date->addWeek();
 
@@ -194,6 +108,8 @@ class SummaryControllerTest extends TestCase
         $budgetRepos->shouldReceive('setUser')->atLeast()->once();
         $currencyRepos->shouldReceive('setUser')->atLeast()->once();
         $netWorth->shouldReceive('setUser')->atLeast()->once();
+        $opsRepos->shouldReceive('setUser')->atLeast()->once();
+        $abRepos->shouldReceive('setUser')->atLeast()->once();
 
         // mock collector calls:
         $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
@@ -217,9 +133,9 @@ class SummaryControllerTest extends TestCase
         $billRepos->shouldReceive('getBillsUnpaidInRangePerCurrency')->atLeast()->once()->andReturn([1 => '123', 2 => '456']);
 
         // budget repos
-        $budgetRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123', 2 => '456']);
+        $abRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123', 2 => '456']);
         $budgetRepos->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $budgetRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
+        $opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
             [
                 [
                     'currency_id'             => 3,
@@ -250,6 +166,99 @@ class SummaryControllerTest extends TestCase
         $parameters = [
             'start' => $date->format('Y-m-d'),
             'end'   => $date->addWeek()->format('Y-m-d'),
+        ];
+
+        $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));
+        $response->assertStatus(200);
+        // TODO AFTER 4.8,0: check if JSON is correct
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\SummaryController
+     */
+    public function testBasicInThePast(): void
+    {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
+        $netWorth      = $this->mock(NetWorthInterface::class);
+        $abRepos       = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $opsRepos      = $this->mock(OperationsRepositoryInterface::class);
+
+        // data
+        $euro         = $this->getEuro();
+        $budget       = $this->user()->budgets()->inRandomOrder()->first();
+        $account      = $this->getRandomAsset();
+        $journals     = [
+            [
+                'amount'      => '10',
+                'currency_id' => 1,
+            ],
+        ];
+        $netWorthData = [
+            [
+                'currency' => $euro,
+                'balance'  => '232',
+            ],
+        ];
+
+        // mock calls.
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $billRepos->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+        $netWorth->shouldReceive('setUser')->atLeast()->once();
+        $abRepos->shouldReceive('setUser')->atLeast()->once();
+        $opsRepos->shouldReceive('setUser')->atLeast()->once();
+
+        // mock collector calls:
+        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->atLeast()->once()->andReturnSelf();
+
+        // used to get balance information (deposits)
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->atLeast()->once()->andReturnSelf();
+
+        // same, but for withdrawals
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->atLeast()->once()->andReturnSelf();
+
+        // system always returns one basic transaction (see above)
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($journals);
+
+        // currency repos does some basic collecting
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($euro);
+
+        // bill repository return value
+        $billRepos->shouldReceive('getBillsPaidInRangePerCurrency')->atLeast()->once()->andReturn([1 => '123']);
+        $billRepos->shouldReceive('getBillsUnpaidInRangePerCurrency')->atLeast()->once()->andReturn([1 => '123']);
+
+        // budget repos
+        $abRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123']);
+        $budgetRepos->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
+        $opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
+            [
+                [
+                    'currency_id'             => 1,
+                    'currency_code'           => 'EUR',
+                    'currency_symbol'         => 'x',
+                    'currency_decimal_places' => 2,
+                    'amount'                  => 321.21,
+                ],
+            ]
+        );
+
+        // account repos:
+        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()
+                     ->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true);
+
+        // net worth calculator
+        $netWorth->shouldReceive('getNetWorthByCurrency')->atLeast()->once()->andReturn($netWorthData);
+
+        $parameters = [
+            'start' => '2019-01-01',
+            'end'   => '2019-01-31',
         ];
 
         $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));

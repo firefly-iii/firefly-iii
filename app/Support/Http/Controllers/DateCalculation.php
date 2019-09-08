@@ -122,9 +122,17 @@ trait DateCalculation
         $count = 0;
 
         while ($count < 12) {
-            $format        = $current->format('Y-m-d');
-            $loop[$format] = app('navigation')->periodShow($current, $range);
-            $current       = app('navigation')->endOfPeriod($current, $range);
+            $current      = app('navigation')->endOfPeriod($current, $range);
+            $currentStart = app('navigation')->startOfPeriod($current, $range);
+
+            $loop[] = [
+                'label' => $current->format('Y-m-d'),
+                'title' => app('navigation')->periodShow($current, $range),
+                'start' => clone $currentStart,
+                'end'   => clone $current,
+            ];
+
+
             ++$count;
             $current->addDay();
         }
@@ -150,9 +158,14 @@ trait DateCalculation
         $count   = 0;
         while ($count < 12) {
             $current->subDay();
-            $current       = app('navigation')->startOfPeriod($current, $range);
-            $format        = $current->format('Y-m-d');
-            $loop[$format] = app('navigation')->periodShow($current, $range);
+            $current    = app('navigation')->startOfPeriod($current, $range);
+            $currentEnd = app('navigation')->endOfPeriod($current, $range);
+            $loop[]     = [
+                'label' => $current->format('Y-m-d'),
+                'title' => app('navigation')->periodShow($current, $range),
+                'start' => clone $current,
+                'end'   => clone $currentEnd,
+            ];
             ++$count;
         }
 

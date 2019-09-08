@@ -26,18 +26,20 @@ use Cache;
 use Exception;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
 
 /**
  * Class Preferences.
+ *
  * @codeCoverageIgnore
  */
 class Preferences
 {
     /**
-     * @param User $user
+     * @param User   $user
      * @param string $search
      *
      * @return Collection
@@ -92,14 +94,14 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
     public function get(string $name, $default = null): ?Preference
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+            Log::warning(sprintf('%s("%s") should NOT be called in the TEST environment!', __METHOD__, $name));
         }
         /** @var User $user */
         $user = auth()->user();
@@ -115,7 +117,7 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param array $list
+     * @param array            $list
      *
      * @return array
      */
@@ -140,16 +142,16 @@ class Preferences
     }
 
     /**
-     * @param \FireflyIII\User $user
-     * @param string $name
-     * @param null|string $default
+     * @param \FireflyIII\User|Authenticatable $user
+     * @param string           $name
+     * @param null|string      $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+            Log::warning(sprintf('%s("%s") should NOT be called in the TEST environment!', __METHOD__, $name));
         }
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
@@ -212,7 +214,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return \FireflyIII\Models\Preference
      */
@@ -233,8 +235,8 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param string $name
-     * @param mixed $value
+     * @param string           $name
+     * @param mixed            $value
      *
      * @return Preference
      */

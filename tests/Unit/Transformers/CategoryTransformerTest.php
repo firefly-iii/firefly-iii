@@ -25,13 +25,11 @@ namespace Tests\Unit\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
-use Illuminate\Support\Collection;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 
@@ -43,6 +41,8 @@ use Tests\TestCase;
  */
 class CategoryTransformerTest extends TestCase
 {
+    use TestDataTrait;
+
     /**
      *
      */
@@ -59,8 +59,8 @@ class CategoryTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $opsRepository->shouldReceive('setUser')->once();
 
         /** @var Category $category */
         $category    = Category::first();
@@ -80,35 +80,20 @@ class CategoryTransformerTest extends TestCase
      */
     public function testWithDates(): void
     {
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+        $opsRepository->shouldReceive('setUser')->once();
 
         $parameters = new ParameterBag;
         $parameters->set('start', new Carbon('2018-01-01'));
         $parameters->set('end', new Carbon('2018-01-31'));
 
-        // mock some objects for the spent/earned lists.
-        $expense                            = [
-            'currency_id'             => 1,
-            'currency_code'           => 'EUR',
-            'currency_symbol'         => '€',
-            'currency_decimal_places' => 2,
-            'amount'                  => -100,
-        ];
-        $income                             = [
-            'currency_id'             => 1,
-            'currency_code'           => 'EUR',
-            'currency_symbol'         => '€',
-            'currency_decimal_places' => 2,
-            'amount'                  => 100,
-        ];
+        $income  = $this->categorySumIncome();
+        $expense = $this->categorySumExpenses();
+        $opsRepository->shouldReceive('sumIncome')
+                      ->atLeast()->once()->andReturn($income);
 
-
-        $incomeCollection  = [$income];
-        $expenseCollection = [$expense];
-
-        $repository->shouldReceive('spentInPeriod')->atLeast()->once()->andReturn($expenseCollection);
-        $repository->shouldReceive('earnedInPeriod')->atLeast()->once()->andReturn($incomeCollection);
+        $opsRepository->shouldReceive('sumExpenses')
+                      ->atLeast()->once()->andReturn($expense);
 
         /** @var Category $category */
         $category    = Category::first();
@@ -117,27 +102,5 @@ class CategoryTransformerTest extends TestCase
         $result = $transformer->transform($category);
 
         $this->assertEquals($category->name, $result['name']);
-        $this->assertEquals(
-            [
-                [
-                    'currency_id'             => 1,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => '€',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => -100,
-                ],
-            ], $result['spent']
-        );
-        $this->assertEquals(
-            [
-                [
-                    'currency_id'             => 1,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => '€',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => 100,
-                ],
-            ], $result['earned']
-        );
     }
 }

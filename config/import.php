@@ -45,7 +45,7 @@ return [
     'enabled'          => [
         'fake'    => true,
         'file'    => true,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => false,

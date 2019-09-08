@@ -61,6 +61,7 @@ class AttachmentHelperTest extends TestCase
         $path    = resource_path('stubs/binary.bin');
         $file    = new UploadedFile($path, 'binary.bin', 'application/octet-stream', filesize($path), null, true);
 
+        Log::warning('The following error is part of a test.');
         $helper->saveAttachmentsForModel($journal, [$file]);
         $errors   = $helper->getErrors();
         $messages = $helper->getMessages();
@@ -103,7 +104,6 @@ class AttachmentHelperTest extends TestCase
     public function testSaveAttachmentFromApi(): void
     {
         // mock calls:
-        Crypt::shouldReceive('encrypt')->times(1)->andReturn('Some encrypted content');
         Storage::fake('upload');
 
         $path   = public_path('apple-touch-icon.png');
@@ -162,6 +162,7 @@ class AttachmentHelperTest extends TestCase
         );
 
         // call helper
+        Log::warning('The following error is part of a test.');
         $result = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
 
         $this->assertFalse($result);
@@ -195,6 +196,7 @@ class AttachmentHelperTest extends TestCase
         $path    = public_path('apple-touch-icon.png');
         $file    = new UploadedFile($path, 'apple-touch-icon.png', 'image/png', filesize($path), null, true);
 
+        Log::warning('The following error is part of a test.');
         $helper->saveAttachmentsForModel($journal, [$file]);
         $errors   = $helper->getErrors();
         $messages = $helper->getMessages();

@@ -25,6 +25,7 @@ namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,6 +58,10 @@ class IsDemoUserTest extends TestCase
      */
     public function testMiddlewareAuthenticated(): void
     {
+        $userRepos =$this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturnFalse();
+
         $this->be($this->user());
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -67,6 +72,10 @@ class IsDemoUserTest extends TestCase
      */
     public function testMiddlewareIsDemoUser(): void
     {
+        $userRepos =$this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturnTrue();
+
         $this->be($this->demoUser());
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());

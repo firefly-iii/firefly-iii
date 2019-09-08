@@ -55,7 +55,7 @@
     "docs": "https://firefly-iii.readthedocs.io/en/latest/"
   },
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.3.0",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
@@ -147,6 +147,7 @@
       "@php artisan firefly-iii:cc-liabilities",
       "@php artisan firefly-iii:back-to-journals",
       "@php artisan firefly-iii:rename-account-meta",
+      "@php artisan firefly-iii:migrate-recurrence-meta",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",

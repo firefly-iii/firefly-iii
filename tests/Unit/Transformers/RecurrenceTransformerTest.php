@@ -25,11 +25,13 @@ namespace Tests\Unit\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\Transformers\RuleGroupTransformer;
+use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TagTransformer;
 use Log;
 use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -59,19 +61,21 @@ class RecurrenceTransformerTest extends TestCase
     public function testBasic(): void
     {
         $recurrenceRepos = $this->mock(RecurringRepositoryInterface::class);
-        $billRepos       = $this->mock(BillRepositoryInterface::class);
         $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
         $factory         = $this->mock(CategoryFactory::class);
         $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $category        = $this->getRandomCategory();
-        $budget          = $this->getRandomBudget();
-        $piggy           = $this->getRandomPiggyBank();
-        $bill            = $this->getRandomBill();
-        $ranges          = [new Carbon];
-        $recurrence      = $this->getRandomRecurrence();
+
+        $ruleGroupTransformer = $this->mock(RuleGroupTransformer::class);
+        $ruleTransformer      = $this->mock(RuleTransformer::class);
+        $tagTransformer       = $this->mock(TagTransformer::class);
+
+        $category   = $this->getRandomCategory();
+        $budget     = $this->getRandomBudget();
+        $piggy      = $this->getRandomPiggyBank();
+        $ranges     = [new Carbon];
+        $recurrence = $this->getRandomRecurrence();
         // mock calls:
         $recurrenceRepos->shouldReceive('setUser')->atLeast()->once();
-        $billRepos->shouldReceive('setUser')->atLeast()->once();
         $piggyRepos->shouldReceive('setUser')->atLeast()->once();
         $factory->shouldReceive('setUser')->atLeast()->once();
         $budgetRepos->shouldReceive('setUser')->atLeast()->once();
@@ -80,10 +84,9 @@ class RecurrenceTransformerTest extends TestCase
         $recurrenceRepos->shouldReceive('getNoteText')->once()->andReturn('Hi there');
         $recurrenceRepos->shouldReceive('repetitionDescription')->once()->andReturn('Rep descr');
         $recurrenceRepos->shouldReceive('getXOccurrences')->andReturn($ranges)->atLeast()->once();
-        $factory->shouldReceive('findOrCreate')->atLeast()->once()->withArgs([null,Mockery::any()])->andReturn($category);
+        $factory->shouldReceive('findOrCreate')->atLeast()->once()->withArgs([null, Mockery::any()])->andReturn($category);
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($budget);
         $piggyRepos->shouldReceive('findNull')->andReturn($piggy);
-        $billRepos->shouldReceive('find')->andReturn($bill);
 
         // basic transformation:
 
@@ -95,7 +98,7 @@ class RecurrenceTransformerTest extends TestCase
         $this->assertEquals($recurrence->id, $result['id']);
         //$this->assertEquals('deposit', $result['transaction_type']);
         $this->assertEquals(true, $result['apply_rules']);
-        $this->assertEquals('Rep descr', $result['recurrence_repetitions'][0]['description']);
+        $this->assertEquals('Rep descr', $result['repetitions'][0]['description']);
 
 
     }

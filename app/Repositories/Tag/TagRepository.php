@@ -36,7 +36,6 @@ use Log;
 /**
  * Class TagRepository.
  *
- *
  */
 class TagRepository implements TagRepositoryInterface
 {
@@ -69,13 +68,14 @@ class TagRepository implements TagRepositoryInterface
      */
     public function destroy(Tag $tag): bool
     {
+        $tag->transactionJournals()->sync([]);
         $tag->delete();
 
         return true;
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -93,7 +93,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -157,7 +157,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -208,6 +208,20 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * Find one or more tags based on the query.
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchTag(string $query): Collection
+    {
+        $search = sprintf('%%%s%%', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+    }
+
+    /**
      * Search the users tags.
      *
      * @param string $query
@@ -235,7 +249,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -267,7 +281,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag         $tag
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -336,16 +350,17 @@ class TagRepository implements TagRepositoryInterface
         foreach ($tags as $tag) {
             $amount       = (string)$tag->amount_sum;
             $amount       = '' === $amount ? '0' : $amount;
-            $amountMin = bcsub($amount, $min);
+            $amountMin    = bcsub($amount, $min);
             $pointsForTag = bcmul($amountMin, $pointsPerCoin);
             $fontSize     = bcadd($minimumFont, $pointsForTag);
             Log::debug(sprintf('Tag "%s": Amount is %s, so points is %s', $tag->tag, $amount, $fontSize));
 
             // return value for tag cloud:
             $return[$tag->id] = [
-                'size' => $fontSize,
-                'tag'  => $tag->tag,
-                'id'   => $tag->id,
+                'size'       => $fontSize,
+                'tag'        => $tag->tag,
+                'id'         => $tag->id,
+                'created_at' => $tag->created_at,
             ];
         }
 
@@ -353,37 +368,39 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int|null $year
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    private function getTagsInYear(?int $year): Collection
+    public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
-        // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()
-                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->where(
-                                   function (Builder $query) {
-                                       $query->where('transactions.amount', '>', 0);
-                                       $query->orWhereNull('transactions.amount');
-                                   }
-                               )
-                               ->groupBy(['tags.id', 'tags.tag']);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setTag($tag);
 
-        // add date range (or not):
-        if (null === $year) {
-            Log::debug('Get tags without a date.');
-            $tagQuery->whereNull('tags.date');
-        }
-        if (null !== $year) {
-            Log::debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
-        }
+        return $collector->getExtractedJournals();
+    }
 
-        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
+    /**
+     * @param Tag   $tag
+     * @param array $data
+     *
+     * @return Tag
+     */
+    public function update(Tag $tag, array $data): Tag
+    {
+        $tag->tag         = $data['tag'];
+        $tag->date        = $data['date'];
+        $tag->description = $data['description'];
+        $tag->latitude    = $data['latitude'];
+        $tag->longitude   = $data['longitude'];
+        $tag->zoomLevel   = $data['zoom_level'];
+        $tag->save();
 
+        return $tag;
     }
 
     /**
@@ -437,38 +454,36 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param int|null $year
      *
-     * @return array
+     * @return Collection
      */
-    public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
+    private function getTagsInYear(?int $year): Collection
     {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setTag($tag);
+        // get all tags in the year (if present):
+        $tagQuery = $this->user->tags()
+                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->where(
+                                   function (Builder $query) {
+                                       $query->where('transactions.amount', '>', 0);
+                                       $query->orWhereNull('transactions.amount');
+                                   }
+                               )
+                               ->groupBy(['tags.id', 'tags.tag']);
 
-        return $collector->getExtractedJournals();
-    }
+        // add date range (or not):
+        if (null === $year) {
+            Log::debug('Get tags without a date.');
+            $tagQuery->whereNull('tags.date');
+        }
+        if (null !== $year) {
+            Log::debug(sprintf('Get tags with year %s.', $year));
+            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
+        }
 
-    /**
-     * @param Tag $tag
-     * @param array $data
-     *
-     * @return Tag
-     */
-    public function update(Tag $tag, array $data): Tag
-    {
-        $tag->tag         = $data['tag'];
-        $tag->date        = $data['date'];
-        $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoom_level'];
-        $tag->save();
+        return $tagQuery->get(['tags.id', 'tags.tag','tags.created_at', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
-        return $tag;
     }
 }

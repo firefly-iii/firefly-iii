@@ -1,7 +1,7 @@
 sudo: required
 language: bash
 env:
-  - VERSION=4.8.0.3
+  - VERSION=4.8.1
 
 dist: xenial
 

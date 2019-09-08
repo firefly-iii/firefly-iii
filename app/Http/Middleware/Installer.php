@@ -46,7 +46,6 @@ class Installer
      *
      * @return mixed
      *
-     *
      * @throws FireflyException
      *
      */

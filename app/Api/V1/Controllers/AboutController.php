@@ -27,13 +27,11 @@ namespace FireflyIII\Api\V1\Controllers;
 use DB;
 use FireflyIII\Transformers\UserTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Returns basic information about this installation.
+ *
  * @codeCoverageIgnore
  * Class AboutController.
  */
@@ -68,14 +66,11 @@ class AboutController extends Controller
     /**
      * Returns information about the user.
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function user(Request $request): JsonResponse
+    public function user(): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);

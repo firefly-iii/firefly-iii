@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
@@ -115,6 +116,7 @@ class AutoCompleteControllerTest extends TestCase
      */
     public function testAllJournals(): void
     {
+        $groupRepos = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
         $journal      = $this->getRandomWithdrawalAsArray();
 
@@ -134,6 +136,7 @@ class AutoCompleteControllerTest extends TestCase
      */
     public function testAllJournalsWithId(): void
     {
+        $groupRepos = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
         $journal      = $this->getRandomWithdrawalAsArray();
 
@@ -155,12 +158,13 @@ class AutoCompleteControllerTest extends TestCase
      */
     public function testAllJournalsWithIdNumeric(): void
     {
+        $groupRepos = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos  = $this->mockDefaultSession();
         $journal       = $this->getRandomWithdrawalAsArray();
-        $journalObject = $this->getRandomWithdrawal();
+        $journalObject = $this->getRandomWithdrawalGroup();
 
         $journalRepos->shouldReceive('searchJournalDescriptions')->atLeast()->once()->andReturn(new Collection([$journal]));
-        $journalRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($journalObject);
+        $groupRepos->shouldReceive('find')->atLeast()->once()->andReturn($journalObject);
 
 
         $this->be($this->user());

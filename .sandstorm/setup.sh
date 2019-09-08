@@ -29,6 +29,7 @@ sed -i 's/# ro_RO.UTF-8 UTF-8/ro_RO.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# cs_CZ.UTF-8 UTF-8/cs_CZ.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# id_ID.UTF-8 UTF-8/id_ID.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# hu_HU.UTF-8 UTF-8/hu_HU.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# el_GR.UTF-8 UTF-8/el_GR.UTF-8 UTF-8/g' /etc/locale.gen
 
 dpkg-reconfigure --frontend=noninteractive locales
 

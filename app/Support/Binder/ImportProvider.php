@@ -37,7 +37,6 @@ class ImportProvider implements BinderInterface
     /**
      * @return array
      *
-     *
      */
     public static function getProviders(): array
     {

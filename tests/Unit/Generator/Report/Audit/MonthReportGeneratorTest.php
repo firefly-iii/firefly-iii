@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Mockery;
 use Steam;
 use Tests\TestCase;
 
@@ -76,6 +75,7 @@ class MonthReportGeneratorTest extends TestCase
                 'source_id'              => $asset->id,
                 'source_name'            => $asset->name,
                 'transaction_journal_id' => 1,
+                'destination_account_id' => 8,
             ],
             [
                 'description'            => 'Hello2',
@@ -86,6 +86,7 @@ class MonthReportGeneratorTest extends TestCase
                 'source_id'              => $asset->id,
                 'source_name'            => $asset->name,
                 'transaction_journal_id' => 1,
+                'destination_account_id' => 8,
 
             ],
         ];
@@ -105,13 +106,15 @@ class MonthReportGeneratorTest extends TestCase
         // mock calls
         Steam::shouldReceive('balance')->times(2)->andReturn('100');
         $accountRepos->shouldReceive('setUser')->once();
-        //$accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->once();
         $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
         // mock collector:
         $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBillInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($return);
         //$currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->once();
 

@@ -27,7 +27,7 @@ return [
     'locale'                  => 'zh_TW, Chinese Traditional (Taiwan), zh_TW.utf8, zh_TW.UTF-8',
     'month'                   => '%Y 年 %b',
     'month_and_day'           => '%Y 年 %b %e 號',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'YYYY 年 MMM D 日',
     'month_and_date_day'      => '%Y 年 %b %e 號 %A',
     'month_and_day_no_year'   => '%b %e 號',
     'date_time'               => '%Y 年 %b %e 號 %T',

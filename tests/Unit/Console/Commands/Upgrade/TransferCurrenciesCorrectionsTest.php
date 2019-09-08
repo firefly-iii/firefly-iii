@@ -75,8 +75,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:transfer-currencies')
@@ -117,8 +117,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:transfer-currencies')
@@ -162,8 +162,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')
@@ -218,8 +218,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 2 transfer(s).')
@@ -279,8 +279,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 3 transfer(s).')
@@ -339,8 +339,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')
@@ -393,8 +393,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')
@@ -443,8 +443,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')
@@ -493,8 +493,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')
@@ -551,8 +551,8 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_transfer_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_transfer_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
              ->expectsOutput('Verified currency information of 1 transfer(s).')

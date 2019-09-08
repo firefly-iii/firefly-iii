@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepository;
 use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -202,7 +203,7 @@ class RuleEngine
     }
 
     /**
-     * @param User $user
+     * @param User|Authenticatable $user
      */
     public function setUser(User $user): void
     {

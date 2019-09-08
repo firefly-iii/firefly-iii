@@ -28,7 +28,7 @@ use Illuminate\Console\Command;
  */
 class UpgradeSkeleton extends Command
 {
-    public const CONFIG_NAME = '4780_some_name';
+    public const CONFIG_NAME = '480_some_name';
     /**
      * The console command description.
      *

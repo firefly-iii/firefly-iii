@@ -93,7 +93,6 @@ class JavascriptControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *

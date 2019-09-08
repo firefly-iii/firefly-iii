@@ -70,7 +70,6 @@ class FakeJobConfiguration implements JobConfigurationInterface
      *
      * @return MessageBag
      *
-     *
      */
     public function configureJob(array $data): MessageBag
     {
@@ -127,7 +126,6 @@ class FakeJobConfiguration implements JobConfigurationInterface
      * Returns the view of the next step in the job configuration.
      *
      * @return string
-     *
      *
      */
     public function getNextView(): string

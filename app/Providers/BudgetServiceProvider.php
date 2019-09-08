@@ -22,8 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Repositories\Budget\AvailableBudgetRepository;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepository;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepository;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\NoBudgetRepository;
+use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepository;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,7 +55,7 @@ class BudgetServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             BudgetRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var BudgetRepositoryInterface $repository */
                 $repository = app(BudgetRepository::class);
                 if ($app->auth->check()) {
@@ -57,5 +65,62 @@ class BudgetServiceProvider extends ServiceProvider
                 return $repository;
             }
         );
+
+        // available budget repos
+        $this->app->bind(
+            AvailableBudgetRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AvailableBudgetRepositoryInterface $repository */
+                $repository = app(AvailableBudgetRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // budget limit repository.
+        $this->app->bind(
+            BudgetLimitRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var BudgetLimitRepositoryInterface $repository */
+                $repository = app(BudgetLimitRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // no budget repos
+        $this->app->bind(
+            NoBudgetRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var NoBudgetRepositoryInterface $repository */
+                $repository = app(NoBudgetRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // operations repos
+        $this->app->bind(
+            OperationsRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var OperationsRepositoryInterface $repository */
+                $repository = app(OperationsRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
     }
 }

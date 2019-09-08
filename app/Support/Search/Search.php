@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -55,6 +56,8 @@ class Search implements SearchInterface
     private $originalQuery = '';
     /** @var float */
     private $startTime;
+    /** @var TagRepositoryInterface */
+    private $tagRepository;
     /** @var User */
     private $user;
     /** @var array */
@@ -74,6 +77,7 @@ class Search implements SearchInterface
         $this->categoryRepository = app(CategoryRepositoryInterface::class);
         $this->budgetRepository   = app(BudgetRepositoryInterface::class);
         $this->billRepository     = app(BillRepositoryInterface::class);
+        $this->tagRepository      = app(TagRepositoryInterface::class);
 
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
@@ -131,22 +135,6 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param string $string
-     */
-    private function extractModifier(string $string): void
-    {
-        $parts = explode(':', $string);
-        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
-            $type  = trim((string)$parts[0]);
-            $value = trim((string)$parts[1]);
-            if (in_array($type, $this->validModifiers, true)) {
-                // filter for valid type
-                $this->modifiers->push(['type' => $type, 'value' => $value]);
-            }
-        }
-    }
-
-    /**
      * @return float
      */
     public function searchTime(): float
@@ -178,6 +166,26 @@ class Search implements SearchInterface
     }
 
     /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit): void
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
+        $this->billRepository->setUser($user);
+        $this->categoryRepository->setUser($user);
+        $this->budgetRepository->setUser($user);
+    }
+
+    /**
      * @param GroupCollectorInterface $collector
      *
      * @return GroupCollectorInterface
@@ -187,7 +195,7 @@ class Search implements SearchInterface
     {
         /*
          * TODO:
-         * 'bill',
+         * 'bill'?
          */
         $totalAccounts = new Collection;
 
@@ -224,6 +232,13 @@ class Search implements SearchInterface
                     if ($result->count() > 0) {
                         $collector->setBills($result);
                     }
+                    break;
+                case 'tag':
+                    $result = $this->tagRepository->searchTag($modifier['value']);
+                    if ($result->count() > 0) {
+                        $collector->setTags($result);
+                    }
+                    break;
                     break;
                 case 'budget':
                     $result = $this->budgetRepository->searchBudget($modifier['value']);
@@ -279,22 +294,18 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param int $limit
+     * @param string $string
      */
-    public function setLimit(int $limit): void
+    private function extractModifier(string $string): void
     {
-        $this->limit = $limit;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
-        $this->billRepository->setUser($user);
-        $this->categoryRepository->setUser($user);
-        $this->budgetRepository->setUser($user);
+        $parts = explode(':', $string);
+        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
+            $type  = trim((string)$parts[0]);
+            $value = trim((string)$parts[1]);
+            if (in_array($type, $this->validModifiers, true)) {
+                // filter for valid type
+                $this->modifiers->push(['type' => $type, 'value' => $value]);
+            }
+        }
     }
 }

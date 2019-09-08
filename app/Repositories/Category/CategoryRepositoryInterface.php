@@ -34,54 +34,11 @@ interface CategoryRepositoryInterface
 {
 
     /**
-     * @param int|null      $categoryId
-     * @param string|null   $categoryName
-     *
-     * @return Category|null
-     */
-    public function findCategory( ?int $categoryId, ?string $categoryName): ?Category;
-
-    /**
      * @param Category $category
      *
      * @return bool
      */
     public function destroy(Category $category): bool;
-
-    /**
-     * Returns the amount earned in a category, for a set of accounts, in a specific period.
-     *
-     * @param Category $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * A very cryptic method name that means:
-     *
-     * Get me the amount earned in this period, grouped per currency, where no category was set.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * Find a category.
@@ -91,6 +48,14 @@ interface CategoryRepositoryInterface
      * @return Category
      */
     public function findByName(string $name): ?Category;
+
+    /**
+     * @param int|null    $categoryId
+     * @param string|null $categoryName
+     *
+     * @return Category|null
+     */
+    public function findCategory(?int $categoryId, ?string $categoryName): ?Category;
 
     /**
      * Find a category or return NULL
@@ -124,8 +89,6 @@ interface CategoryRepositoryInterface
      */
     public function getCategories(): Collection;
 
-
-
     /**
      * Return most recent transaction(journal) date or null when never used before.
      *
@@ -137,99 +100,16 @@ interface CategoryRepositoryInterface
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
-     * TODO not multi-currency
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-
-
-    /**
-     * TODO not multi-currency
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * TODO not multi-currency
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * TODO not multi-currency
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-
-
-    /**
      * @param string $query
      *
      * @return Collection
      */
     public function searchCategory(string $query): Collection;
 
-
-
     /**
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * Returns the amount spent in a category, for a set of accounts, in a specific period.
-     *
-     * @param Category $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * A very cryptic method name that means:
-     *
-     * Get me the amount spent in this period, grouped per currency, where no category was set.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param array $data

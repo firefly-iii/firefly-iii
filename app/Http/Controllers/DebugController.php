@@ -39,7 +39,6 @@ use Route as RouteFacade;
 /**
  * Class DebugController
  *
- *
  */
 class DebugController extends Controller
 {

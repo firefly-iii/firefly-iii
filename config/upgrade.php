@@ -34,6 +34,7 @@ return [
                 '4.7.7'  => 'This version of Firefly III requires PHP7.2.',
                 '4.7.10' => 'Firefly III no longer encrypts database values. To protect your data, make sure you use TDE or FDE. Read more: https://bit.ly/FF3-encryption',
                 '4.8.0'  => 'This is a huge upgrade for Firefly III. Please expect bugs and errors, and bear with me as I fix them. I tested a lot of things but pretty sure I missed some. Thanks for understanding.',
+                '4.8.1'  => 'This version of Firefly III requires PHP7.3.',
             ],
         'install' =>
             [
@@ -46,6 +47,7 @@ return [
                 '4.7.7'  => 'This version of Firefly III requires PHP7.2.',
                 '4.7.10' => 'Firefly III no longer encrypts database values. To protect your data, make sure you use TDE or FDE. Read more: https://bit.ly/FF3-encryption',
                 '4.8.0'  => 'This is a huge upgrade for Firefly III. Please expect bugs and errors, and bear with me as I fix them. I tested a lot of things but pretty sure I missed some. Thanks for understanding.',
+                '4.8.1'  => 'This version of Firefly III requires PHP7.3.',
             ],
     ],
 ];

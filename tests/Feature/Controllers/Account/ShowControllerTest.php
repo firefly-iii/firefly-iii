@@ -103,6 +103,8 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([$journal]);
         $collector->shouldReceive('withAccountInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$group], 0, 10));
 
         $this->be($this->user());
@@ -154,6 +156,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('getExtractedJournals')->andReturn([$journal]);
         $collector->shouldReceive('withAccountInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$group], 0, 10));
 
         $this->be($this->user());

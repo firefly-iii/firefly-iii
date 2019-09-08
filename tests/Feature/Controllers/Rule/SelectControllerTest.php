@@ -59,11 +59,11 @@ class SelectControllerTest extends TestCase
      */
     public function testExecute(): void
     {
+        $this->mockDefaultSession();
         $account      = $this->user()->accounts()->find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $this->mockDefaultSession();
         $collector  = $this->mock(GroupCollectorInterface::class);
         $ruleEngine = $this->mock(RuleEngine::class);
 
@@ -100,9 +100,9 @@ class SelectControllerTest extends TestCase
      */
     public function testSelectTransactions(): void
     {
+        $this->mockDefaultSession();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -187,6 +187,7 @@ class SelectControllerTest extends TestCase
      */
     public function testTestTriggersMax(): void
     {
+        $this->mockDefaultSession();
         $data = [
             'triggers' => [
                 'name'            => 'description',

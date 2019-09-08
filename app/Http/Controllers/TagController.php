@@ -49,7 +49,6 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        app('view')->share('hideTags', true);
         $this->redirectUri = route('tags.index');
 
         $this->middleware(

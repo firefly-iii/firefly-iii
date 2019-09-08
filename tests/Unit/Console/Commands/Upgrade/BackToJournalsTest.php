@@ -60,11 +60,11 @@ class BackToJournalsTest extends TestCase
         $false->data = false;
         $true        = new Configuration;
         $true->data  = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_back_to_journals', false])->andReturn($false);
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($true);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_back_to_journals', false])->andReturn($false);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($true);
 
         // set new preference after running:
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_back_to_journals', true]);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_back_to_journals', true]);
 
         $this->artisan('firefly-iii:back-to-journals')
              ->expectsOutput('Check 0 transaction journal(s) for budget info.')
@@ -96,11 +96,11 @@ class BackToJournalsTest extends TestCase
         $false->data = false;
         $true        = new Configuration;
         $true->data  = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_back_to_journals', false])->andReturn($false);
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($true);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_back_to_journals', false])->andReturn($false);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($true);
 
         // set new preference after running:
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_back_to_journals', true]);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_back_to_journals', true]);
 
         $this->artisan('firefly-iii:back-to-journals')
              ->expectsOutput('Check 1 transaction journal(s) for budget info.')
@@ -122,6 +122,7 @@ class BackToJournalsTest extends TestCase
      */
     public function testHandleCategory(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $journal = $this->getRandomWithdrawal();
         /** @var Transaction $transaction */
         $transaction = $journal->transactions()->first();
@@ -138,11 +139,11 @@ class BackToJournalsTest extends TestCase
         $true        = new Configuration;
         $true->data  = true;
 
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_back_to_journals', false])->andReturn($false);
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($true);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_back_to_journals', false])->andReturn($false);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($true);
 
         // set new preference after running:
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_back_to_journals', true]);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_back_to_journals', true]);
 
         $this->artisan('firefly-iii:back-to-journals')
              ->expectsOutput('Check 0 transaction journal(s) for budget info.')
@@ -181,11 +182,11 @@ class BackToJournalsTest extends TestCase
         $false->data = false;
         $true        = new Configuration;
         $true->data  = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_back_to_journals', false])->andReturn($false);
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($true);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_back_to_journals', false])->andReturn($false);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($true);
 
         // set new preference after running:
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_back_to_journals', true]);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_back_to_journals', true]);
 
         $this->artisan('firefly-iii:back-to-journals')
              ->expectsOutput('Check 1 transaction journal(s) for budget info.')
@@ -225,11 +226,11 @@ class BackToJournalsTest extends TestCase
         $false->data = false;
         $true        = new Configuration;
         $true->data  = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_back_to_journals', false])->andReturn($false);
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($true);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_back_to_journals', false])->andReturn($false);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_migrated_to_groups', false])->andReturn($true);
 
         // set new preference after running:
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_back_to_journals', true]);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_back_to_journals', true]);
 
         $this->artisan('firefly-iii:back-to-journals')
              ->expectsOutput('Check 0 transaction journal(s) for budget info.')

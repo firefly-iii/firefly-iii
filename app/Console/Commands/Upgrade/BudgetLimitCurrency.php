@@ -33,7 +33,7 @@ use Illuminate\Console\Command;
  */
 class BudgetLimitCurrency extends Command
 {
-    public const CONFIG_NAME = '4780_bl_currency';
+    public const CONFIG_NAME = '480_bl_currency';
     /**
      * The console command description.
      *

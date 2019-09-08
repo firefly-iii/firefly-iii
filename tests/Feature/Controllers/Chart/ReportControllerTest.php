@@ -121,45 +121,10 @@ class ReportControllerTest extends TestCase
         $expense = [
             'accounts' => [
                 2 => ['sum' => '-100']]];
-        $tasker->shouldReceive('getIncomeReport')->once()->andReturn($income);
-        $tasker->shouldReceive('getExpenseReport')->once()->andReturn($expense);
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('chart.report.operations', [1, '20120101', '20120131']));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Chart\ReportController
-     */
-    public function testSum(): void
-    {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $tasker        = $this->mock(AccountTaskerInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
-
-        $this->mockDefaultSession();
-        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
-
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $income  = [
-            'accounts' => [
-                1 => ['sum' => '100']]];
-        $expense = [
-            'accounts' => [
-                2 => ['sum' => '-100']]];
-        $tasker->shouldReceive('getIncomeReport')->andReturn($income)->times(1);
-        $tasker->shouldReceive('getExpenseReport')->andReturn($expense)->times(1);
-
-        $generator->shouldReceive('multiSet')->andReturn([]);
-
-        $this->be($this->user());
-        $response = $this->get(route('chart.report.sum', [1, '20120101', '20120131']));
         $response->assertStatus(200);
     }
 }

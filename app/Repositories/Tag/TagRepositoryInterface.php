@@ -72,6 +72,14 @@ interface TagRepositoryInterface
     public function findByTag(string $tag): ?Tag;
 
     /**
+     * Find one or more tags based on the query.
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchTag(string $query): Collection;
+
+    /**
      * @param int $tagId
      *
      * @return Tag|null

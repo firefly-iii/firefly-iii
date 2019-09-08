@@ -25,7 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -34,8 +34,8 @@ use Log;
  */
 class CategoryTransformer extends AbstractTransformer
 {
-    /** @var CategoryRepositoryInterface */
-    private $repository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * CategoryTransformer constructor.
@@ -44,7 +44,7 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(CategoryRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -59,14 +59,15 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
-        $this->repository->setUser($category->user);
+        $this->opsRepository->setUser($category->user);
+
         $spent  = [];
         $earned = [];
         $start  = $this->parameters->get('start');
         $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $earned = array_values($this->repository->earnedInPeriod($category, new Collection, $start, $end));
-            $spent  = array_values($this->repository->spentInPeriod($category, new Collection, $start, $end));
+            $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
+            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
         $data = [
             'id'         => (int)$category->id,
@@ -84,5 +85,21 @@ class CategoryTransformer extends AbstractTransformer
         ];
 
         return $data;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function beautify(array $array): array
+    {
+        $return = [];
+        foreach ($array as $data) {
+            $data['sum'] = round($data['sum'], (int)$data['currency_decimal_places']);
+            $return[]    = $data;
+        }
+
+        return $return;
     }
 }

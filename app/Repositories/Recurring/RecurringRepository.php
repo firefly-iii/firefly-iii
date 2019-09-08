@@ -410,12 +410,24 @@ class RecurringRepository implements RecurringRepositoryInterface
             return (string)trans('firefly.recurring_daily', [], $language);
         }
         if ('weekly' === $repetition->repetition_type) {
+
             $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
+            if ($repetition->repetition_skip > 0) {
+                return (string)trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $language);
+            }
 
             return (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
         }
         if ('monthly' === $repetition->repetition_type) {
-            return (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment], $language);
+            if ($repetition->repetition_skip > 0) {
+                return (string)trans(
+                    'firefly.recurring_monthly_skip', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1], $language
+                );
+            }
+
+            return (string)trans(
+                'firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1], $language
+            );
         }
         if ('ndom' === $repetition->repetition_type) {
             $parts = explode(',', $repetition->repetition_moment);

@@ -66,6 +66,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
+        Log::warning('The following error is part of a test.');
         $result  = $factory->create(['name' => null, 'code' => null, 'symbol' => null, 'decimal_places' => null, 'enabled' => true]);
         $this->assertNull($result);
     }
@@ -100,7 +101,6 @@ class TransactionCurrencyFactoryTest extends TestCase
      */
     public function testFindByCode(): void
     {
-        // ;
         $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);

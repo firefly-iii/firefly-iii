@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use Preferences;
 use Amount;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use Laravel\Passport\Passport;
@@ -62,7 +61,7 @@ class AvailableBudgetControllerTest extends TestCase
     public function testStore(): void
     {
         Log::info(sprintf('Now in test %s.', __METHOD__));
-        $repository      = $this->mock(BudgetRepositoryInterface::class);
+        $abRepository    = $this->mock(AvailableBudgetRepositoryInterface::class);
         $transformer     = $this->mock(AvailableBudgetTransformer::class);
         $factory         = $this->mock(TransactionCurrencyFactory::class);
         $availableBudget = new AvailableBudget;
@@ -76,8 +75,8 @@ class AvailableBudgetControllerTest extends TestCase
         $factory->shouldReceive('find')->withArgs([2, ''])->once()->andReturn(TransactionCurrency::find(2));
 
         // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
+        $abRepository->shouldReceive('setUser')->atLeast()->once();
+        $abRepository->shouldReceive('store')->once()->andReturn($availableBudget);
 
         // data to submit
         $data = [
@@ -104,9 +103,9 @@ class AvailableBudgetControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock stuff:
-        $repository      = $this->mock(BudgetRepositoryInterface::class);
         $transformer     = $this->mock(AvailableBudgetTransformer::class);
         $factory         = $this->mock(TransactionCurrencyFactory::class);
+        $abRepository    = $this->mock(AvailableBudgetRepositoryInterface::class);
         $availableBudget = new AvailableBudget;
 
         // mock transformer
@@ -120,8 +119,8 @@ class AvailableBudgetControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn(TransactionCurrency::find(5));
 
         // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
+        $abRepository->shouldReceive('setUser')->atLeast()->once();
+        $abRepository->shouldReceive('store')->once()->andReturn($availableBudget);
 
         // data to submit
         $data = [
@@ -149,9 +148,9 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock stuff:
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $transformer = $this->mock(AvailableBudgetTransformer::class);
-        $factory     = $this->mock(TransactionCurrencyFactory::class);
+        $abRepository = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $transformer  = $this->mock(AvailableBudgetTransformer::class);
+        $factory      = $this->mock(TransactionCurrencyFactory::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -164,8 +163,8 @@ class AvailableBudgetControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn(TransactionCurrency::find(5));
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
+        $abRepository->shouldReceive('setUser')->once();
+        $abRepository->shouldReceive('store')->once()->andReturn($availableBudget);
 
         // data to submit
         $data = [
@@ -193,11 +192,11 @@ class AvailableBudgetControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock repositories
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
+        $abRepository       = $this->mock(AvailableBudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
         $factory            = $this->mock(TransactionCurrencyFactory::class);
-        $euro = $this->getEuro();
+        $euro               = $this->getEuro();
         // mock facades:
         Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
@@ -214,8 +213,8 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('updateAvailableBudget')->once()->andReturn($availableBudget);
+        $abRepository->shouldReceive('setUser');
+        $abRepository->shouldReceive('updateAvailableBudget')->once()->andReturn($availableBudget);
         $currencyRepository->shouldReceive('findNull')->andReturn($this->getEuro());
 
         // data to submit

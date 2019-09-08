@@ -27,12 +27,25 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class WholePeriodChartGenerator
  */
 class WholePeriodChartGenerator
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
+
     /**
      * @param Category $category
      * @param Carbon   $start
@@ -42,8 +55,12 @@ class WholePeriodChartGenerator
      */
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
+        $collection = new Collection([$category]);
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
+
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -61,10 +78,11 @@ class WholePeriodChartGenerator
         while ($current <= $end) {
             $key          = $current->format('Y-m-d');
             $currentEnd   = app('navigation')->endOfPeriod($current, $step);
-            $spent[$key]  = $repository->spentInPeriod($category, $accounts, $current, $currentEnd);
-            $earned[$key] = $repository->earnedInPeriod($category, $accounts, $current, $currentEnd);
+            $spent[$key]  = $opsRepository->sumExpenses($current, $currentEnd, $accounts, $collection);
+            $earned[$key] = $opsRepository->sumIncome($current, $currentEnd, $accounts, $collection);
             $current      = app('navigation')->addPeriod($current, $step, 0);
         }
+
         $currencies = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
 
         // generate chart data (for each currency)
@@ -91,21 +109,23 @@ class WholePeriodChartGenerator
         $current = clone $start;
 
         while ($current <= $end) {
-            $key        = $current->format('Y-m-d');
-            $label      = app('navigation')->periodShow($current, $step);
+            $key   = $current->format('Y-m-d');
+            $label = app('navigation')->periodShow($current, $step);
 
             /** @var array $currency */
             foreach ($currencies as $currency) {
                 $code                                         = $currency['currency_code'];
+                $currencyId                                   = $currency['currency_id'];
                 $spentInfoKey                                 = sprintf('spent-in-%s', $code);
                 $earnedInfoKey                                = sprintf('earned-in-%s', $code);
-                $spentAmount                                  = $spent[$key][$code]['spent'] ?? '0';
-                $earnedAmount                                 = $earned[$key][$code]['earned'] ?? '0';
+                $spentAmount                                  = $spent[$key][$currencyId]['sum'] ?? '0';
+                $earnedAmount                                 = $earned[$key][$currencyId]['sum'] ?? '0';
                 $chartData[$spentInfoKey]['entries'][$label]  = round($spentAmount, $currency['currency_decimal_places']);
                 $chartData[$earnedInfoKey]['entries'][$label] = round($earnedAmount, $currency['currency_decimal_places']);
             }
             $current = app('navigation')->addPeriod($current, $step, 0);
         }
+
         return $chartData;
     }
 
@@ -146,18 +166,15 @@ class WholePeriodChartGenerator
     private function extractCurrencies(array $array): array
     {
         $return = [];
-        foreach ($array as $info) {
-            foreach ($info as $block) {
-                $currencyId = $block['currency_id'];
-                if (!isset($return[$currencyId])) {
-                    $return[$currencyId] = [
-                        'currency_id'             => $block['currency_id'],
-                        'currency_code'           => $block['currency_code'],
-                        'currency_name'           => $block['currency_name'],
-                        'currency_symbol'         => $block['currency_symbol'],
-                        'currency_decimal_places' => $block['currency_decimal_places'],
+        foreach ($array as $block) {
+            foreach ($block as $currencyId => $currencyRow) {
+                $return[$currencyId] = $return[$currencyId] ?? [
+                        'currency_id'             => $currencyId,
+                        'currency_name'           => $currencyRow['currency_name'],
+                        'currency_symbol'         => $currencyRow['currency_symbol'],
+                        'currency_code'           => $currencyRow['currency_code'],
+                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
                     ];
-                }
             }
         }
 

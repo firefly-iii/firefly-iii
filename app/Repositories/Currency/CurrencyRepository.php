@@ -392,6 +392,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
+
+    /**
+     * @return Collection
+     */
+    public function getEnabled(): Collection
+    {
+        return TransactionCurrency::where('enabled',true)->orderBy('code', 'ASC')->get();
+    }
+
+
     /**
      * @param array $ids
      *

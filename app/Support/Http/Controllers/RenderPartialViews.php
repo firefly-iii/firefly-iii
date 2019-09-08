@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use FireflyIII\Helpers\Report\PopupReportInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Rule;
@@ -33,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Throwable;
 
@@ -45,26 +45,39 @@ trait RenderPartialViews
 {
 
     /**
-     * Get options for account report.
+     * Get options for double report.
      *
      * @return string
      */
-    protected function accountReportOptions(): string // render a view
+    protected function doubleReportOptions(): string // render a view
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE]);
-        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE]);
-        $set        = new Collection;
-        $names      = $revenue->pluck('name')->toArray();
-        foreach ($expense as $exp) {
-            if (in_array($exp->name, $names, true)) {
-                $set->push($exp);
+        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $set        = [];
+
+        /** @var Account $account */
+        foreach ($expense as $account) {
+            // loop revenue, find same account:
+            /** @var Account $otherAccount */
+            foreach ($revenue as $otherAccount) {
+                if (
+                    (
+                    ($otherAccount->name === $account->name)
+                    ||
+                    (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
+                    )
+                    && $otherAccount->id !== $account->id
+                ) {
+                    $set[] = $account;
+                }
             }
         }
+
         // @codeCoverageIgnoreStart
         try {
-            $result = view('reports.options.account', compact('set'))->render();
+            $result = view('reports.options.double', compact('set'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -75,6 +88,38 @@ trait RenderPartialViews
         return $result;
     }
 
+    /**
+     * View for transactions in a budget for an account.
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    protected function budgetEntry(array $attributes): string // generate view for report.
+    {
+        /** @var PopupReportInterface $popupHelper */
+        $popupHelper = app(PopupReportInterface::class);
+
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+        $budget           = $budgetRepository->findNull((int)$attributes['budgetId']);
+
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $account      = $accountRepos->findNull((int)$attributes['accountId']);
+
+        $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
+        // @codeCoverageIgnoreStart
+        try {
+            $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return $view;
+    }
 
     /**
      * Get options for budget report.
@@ -126,6 +171,7 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return $view;
@@ -146,12 +192,10 @@ trait RenderPartialViews
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = app(CategoryRepositoryInterface::class);
         $category           = $categoryRepository->findNull((int)$attributes['categoryId']);
-
+        $journals           = $popupHelper->byCategory($category, $attributes);
         if (null === $category) {
             return 'This is an unknown category. Apologies.';
         }
-
-        $journals = $popupHelper->byCategory($category, $attributes);
         // @codeCoverageIgnoreStart
         try {
             $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
@@ -159,6 +203,7 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return $view;
@@ -216,6 +261,7 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return $view;
@@ -314,7 +360,7 @@ trait RenderPartialViews
 
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
-        $account = $accountRepository->findNull((int)$attributes['accountId']);
+        $account     = $accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown category. Apologies.';
@@ -328,6 +374,7 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return $view;

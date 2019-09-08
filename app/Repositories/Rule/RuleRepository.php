@@ -34,7 +34,6 @@ use Log;
 /**
  * Class RuleRepository.
  *
- *
  */
 class RuleRepository implements RuleRepositoryInterface
 {
@@ -387,25 +386,29 @@ class RuleRepository implements RuleRepositoryInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
-        $rule->rule_group_id   = $data['rule_group_id'];
-        $rule->active          = $data['active'];
-        $rule->stop_processing = $data['stop_processing'];
-        $rule->title           = $data['title'];
-        $rule->strict          = $data['strict'] ?? false;
-        $rule->description     = $data['description'];
+
+        $rule->rule_group_id   = $data['rule_group_id'] ?? $rule->rule_group_id;
+        $rule->active          = $data['active'] ?? $rule->active;
+        $rule->stop_processing = $data['stop_processing'] ?? $rule->stop_processing;
+        $rule->title           = $data['title'] ?? $rule->title;
+        $rule->strict          = $data['strict'] ?? $rule->strict;
+        $rule->description     = $data['description'] ?? $rule->description;
         $rule->save();
 
-        // delete triggers:
-        $rule->ruleTriggers()->delete();
+        if (null !== $data['triggers']) {
+            // delete triggers:
+            $rule->ruleTriggers()->delete();
 
-        // delete actions:
-        $rule->ruleActions()->delete();
+            // recreate triggers:
+            $this->storeTriggers($rule, $data);
+        }
+        if (null !== $data['actions']) {
+            // delete actions:
+            $rule->ruleActions()->delete();
 
-        // recreate triggers:
-        $this->storeTriggers($rule, $data);
-
-        // recreate actions:
-        $this->storeActions($rule, $data);
+            // recreate actions:
+            $this->storeActions($rule, $data);
+        }
 
         return $rule;
     }

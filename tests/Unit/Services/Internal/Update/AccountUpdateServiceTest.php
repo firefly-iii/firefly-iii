@@ -25,6 +25,8 @@ namespace Tests\Unit\Services\Internal\Update;
 
 
 use Carbon\Carbon;
+use FireflyIII\Factory\AccountMetaFactory;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -59,9 +61,15 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testDeleteExistingIB(): void
     {
-        $group         = $this->getRandomWithdrawalGroup();
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $destroySerice = $this->mock(TransactionGroupDestroyService::class);
+        $group           = $this->getRandomWithdrawalGroup();
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $destroySerice   = $this->mock(TransactionGroupDestroyService::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory     = $this->mock(AccountMetaFactory::class);
+
+        $currencyFactory->shouldReceive('find')->atLeast()->once()->andReturn($this->getEuro());
+        $metaFactory->shouldReceive('crud');
+
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn($group);
         $destroySerice->shouldReceive('destroy')->atLeast()->once();
@@ -93,6 +101,14 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateBasic(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory = $this->mock(AccountMetaFactory::class);
+
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $metaFactory->shouldReceive('crud');
+        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturnNull();
+
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
@@ -116,6 +132,14 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateBasicEmptyNote(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory = $this->mock(AccountMetaFactory::class);
+
+        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturnNull();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $metaFactory->shouldReceive('crud');
+
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
@@ -141,6 +165,14 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateBasicExistingNote(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory = $this->mock(AccountMetaFactory::class);
+
+        $metaFactory->shouldReceive('crud');
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturnNull();
+
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $note    = new Note;
@@ -176,13 +208,18 @@ class AccountUpdateServiceTest extends TestCase
         $destroySerice = $this->mock(TransactionGroupDestroyService::class);
         $group         = $this->getRandomWithdrawalGroup();
 
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory = $this->mock(AccountMetaFactory::class);
+
         // make sure one transaction has the account as the asset.
         $journal = $group->transactionJournals()->first();
         $account = $journal->transactions()->first()->account;
 
-
+        $metaFactory->shouldReceive('crud');
+        $currencyFactory->shouldReceive('find')->atLeast()->once()->andReturn($this->getEuro());
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn($group);
+
         $data = [
             'name'                 => 'Some new name #' . $this->randomInt(),
             'active'               => true,
@@ -213,7 +250,13 @@ class AccountUpdateServiceTest extends TestCase
     {
 
         $deleteService = $this->mock(JournalDestroyService::class);
-        //$deleteService->shouldReceive('destroy')->once();
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $metaFactory = $this->mock(AccountMetaFactory::class);
+
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $currencyFactory->shouldReceive('find')->atLeast()->once()->andReturn($this->getEuro());
+        $metaFactory->shouldReceive('crud');
 
         /** @var Account $account */
         $account  = Account::create(

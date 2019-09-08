@@ -37,11 +37,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 
 /**
@@ -93,16 +91,12 @@ class RecurrenceController extends Controller
     /**
      * List all of them.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = $this->getManager();
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -115,9 +109,6 @@ class RecurrenceController extends Controller
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.recurrences.index') . $this->buildParams());
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -133,17 +124,14 @@ class RecurrenceController extends Controller
     /**
      * List single resource.
      *
-     * @param Request $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function show(Request $request, Recurrence $recurrence): JsonResponse
+    public function show(Recurrence $recurrence): JsonResponse
     {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager = $this->getManager();
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -162,13 +150,13 @@ class RecurrenceController extends Controller
      * @param RecurrenceStoreRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(RecurrenceStoreRequest $request): JsonResponse
     {
-        $recurrence = $this->repository->store($request->getAllRecurrenceData());
-        $manager    = new Manager();
-        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $data       = $request->getAll();
+        $recurrence = $this->repository->store($data);
+        $manager    = $this->getManager();
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -182,7 +170,7 @@ class RecurrenceController extends Controller
     /**
      * Show transactions for this recurrence.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
@@ -195,10 +183,7 @@ class RecurrenceController extends Controller
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
+        $manager = $this->getManager();
         // whatever is returned by the query, it must be part of these journals:
         $journalIds = $this->repository->getJournalIds($recurrence);
 
@@ -267,17 +252,16 @@ class RecurrenceController extends Controller
      * Update single recurrence.
      *
      * @param RecurrenceUpdateRequest $request
-     * @param Recurrence $recurrence
+     * @param Recurrence              $recurrence
      *
      * @return JsonResponse
      */
     public function update(RecurrenceUpdateRequest $request, Recurrence $recurrence): JsonResponse
     {
-        $data     = $request->getAllRecurrenceData();
+        $data     = $request->getAll();
         $category = $this->repository->update($recurrence, $data);
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $manager  = $this->getManager();
+
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);

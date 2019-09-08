@@ -30,28 +30,28 @@ return [
     'index_help'                                      => 'Si alguna vez necesitas ayuda en una página o formulario, pulsa este botón.',
     'index_outro'                                     => 'La mayoría de las páginas de Firefly III comenzarán con una pequeña introducción como ésta. Por favor, ponte en contacto conmigo si tienes preguntas o comentarios. ¡Disfruta!',
     'index_sidebar-toggle'                            => 'Para crear nuevas transacciones, cuentas u otros elementos, utiliza el menú bajo este icono.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Estas son las cuentas creadas hasta ahora. Puedes usar la cuenta de efectivo para rastrear los gastos de efectivo pero no es obligatorio por supuesto.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_source'           => 'Seleccione su cuenta de activos o pasivos favorita de este desplegable.',
+    'transactions_create_withdrawal_destination'      => 'Seleccione una cuenta de gastos aquí. Deje en blanco si desea hacer un gasto en efectivo.',
+    'transactions_create_withdrawal_foreign_currency' => 'Utilice este campo para establecer una moneda y cantidad extranjera.',
+    'transactions_create_withdrawal_more_meta'        => 'Hay muchos otros metadatos que se han establecido en estos campos.',
+    'transactions_create_withdrawal_split_add'        => 'Si quieres dividir una transacción, añade más divisiones con este botón',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_source'              => 'Seleccione o escriba el pagador en este menú desplegable/cuadro de texto auto completable. Deje vacío si desea hacer un depósito en efectivo.',
+    'transactions_create_deposit_destination'         => 'Seleccione una cuenta de activos o pasivos aquí.',
+    'transactions_create_deposit_foreign_currency'    => 'Utilice este campo para establecer una moneda y cantidad extranjera.',
+    'transactions_create_deposit_more_meta'           => 'Hay muchos otros metadatos que se han establecido en estos campos.',
+    'transactions_create_deposit_split_add'           => 'Si quieres dividir una transacción, añade más divisiones con este botón',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_source'             => 'Seleccione la cuenta de activos de origen aquí.',
+    'transactions_create_transfer_destination'        => 'Seleccione la cuenta de activos de destino aquí.',
+    'transactions_create_transfer_foreign_currency'   => 'Utilice este campo para establecer una moneda y cantidad extranjera.',
+    'transactions_create_transfer_more_meta'          => 'Hay muchos otros metadatos que se han establecido en estos campos.',
+    'transactions_create_transfer_split_add'          => 'Si quieres dividir una transacción, añade más divisiones con este botón',
 
     // create account:
     'accounts_create_iban'                            => 'Indica un IBAN válido en tus cuentas. Esto facilitará la importación de datos en el futuro.',

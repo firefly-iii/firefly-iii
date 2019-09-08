@@ -5,12 +5,30 @@ TODO: hide and show columns
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <td colspan="7" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% if showCategory or showBudget %}
+            <td colspan="8" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% else %}
+            <td colspan="7" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% endif %}
         <td colspan="1">
             <div class="pull-right">
                 <input id="list_ALL" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/>
             </div>
         </td>
+    </tr>
+    <tr>
+        <th>&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th>{{ trans('list.date') }}</th>
+        <th>{{ trans('list.source_account') }}</th>
+        <th>{{ trans('list.destination_account') }}</th>
+        {% if showCategory %}
+            <th>{{ trans('list.category') }}</th>
+        {% endif %}
+        {% if showBudget %}
+            <th>{{ trans('list.budget') }}</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
@@ -35,18 +53,24 @@ TODO: hide and show columns
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td colspan="2" style="border-top:1px #aaa solid;">&nbsp;</td>
-                <td style="border-top:1px #aaa solid;" colspan="2">
-                    <div class="btn-group btn-group-xs">
+                <!-- column to span accounts + extra fields -->
+                {% if showCategory or showBudget %}
+                    <td style="border-top:1px #aaa solid;" colspan="3">&nbsp;</td>
+                {% else %}
+                    <td style="border-top:1px #aaa solid;" colspan="2">&nbsp;</td>
+                {% endif %}
+                <td style="border-top:1px #aaa solid;">
+                    <div class="btn-group btn-group-xs pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
+                            {#<li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>#}
                         </ul>
                     </div>
                 </td>
+                <td style="border-top:1px #aaa solid;">&nbsp;</td>
             </tr>
         {% endif %}
         {% for index, transaction in group.transactions %}
@@ -54,7 +78,7 @@ TODO: hide and show columns
             {% if group.transactions|length == loop.index and group.count > 1 %}
                 {% set style="border-bottom:1px #aaa solid;" %}
             {% endif %}
-            <tr>
+            <tr data-date="{{ transaction.date.format('Y-m-d') }}">
                 <td style=" {{ style|raw }}">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
                         <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
@@ -81,11 +105,11 @@ TODO: hide and show columns
                         <i class="fa fa-check"></i>
                     {% endif %}
                     {% if group.count == 1 %}
-                        <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
-                    {% endif %}
-                    {{ transaction.description }}
-                    {% if group.count == 1 %}
-                        </a>
+                    <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
+                        {% endif %}
+                        {{ transaction.description }}
+                        {% if group.count == 1 %}
+                    </a>
                     {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
@@ -97,15 +121,27 @@ TODO: hide and show columns
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info">
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
-                        {% if null != transaction.foreign_amount %}
-                            ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
-                        {% endif %}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                            {% endif %}
                             </span>
+                    {% elseif transaction.transaction_type_type == 'Opening balance' %}
+                        {% if transaction.source_account_type == 'Initial balance account' %}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {% if null != transaction.foreign_amount %}
+                            ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
@@ -119,7 +155,23 @@ TODO: hide and show columns
                     <a href="{{ route('accounts.show', [transaction.destination_account_id]) }}"
                        title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
                 </td>
-                <td style=" {{ style|raw }}">
+                {% if showCategory %}
+                    <td style=" {{ style|raw }}">
+                        {% if transaction.category_id %}
+                            <a href="{{ route('categories.show', [transaction.category_id]) }}"
+                               title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                {% if showBudget %}
+                    <td style=" {{ style|raw }}">
+                        {% if transaction.budget_id %}
+                            <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
+                               title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                <td style=" {{ style|raw }};" class="pull-right">
                     {% if group.count == 1 %}
                         <div class="btn-group btn-group-xs">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -127,14 +179,15 @@ TODO: hide and show columns
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
+                                {#<li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>#}
                             </ul>
                         </div>
                     {% endif %}
                 </td>
                 <td style="{{ style|raw }}">
                     <div class="pull-right">
-                        <input id="list_{{ transaction.transaction_journal_id }}" value="{{ transaction.transaction_journal_id }}" name="journals[{{ transaction.transaction_journal_id }}]"
+                        <input id="list_{{ transaction.transaction_journal_id }}" value="{{ transaction.transaction_journal_id }}"
+                               name="journals[{{ transaction.transaction_journal_id }}]"
                                type="checkbox" class="mass-select form-check-inline" data-value="{{ transaction.transaction_journal_id }}"/>
                     </div>
                 </td>

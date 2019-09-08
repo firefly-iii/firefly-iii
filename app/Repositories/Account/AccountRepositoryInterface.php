@@ -37,21 +37,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
-
-    /**
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     *
-     */
-    public function getOpeningBalance(Account $account): ?TransactionJournal;
-
-    /**
-     * @param Account $account
-     * @return TransactionGroup|null
-     */
-    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
-
     /**
      * Moved here from account CRUD.
      *
@@ -64,7 +49,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -72,10 +57,19 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, ?Account $moveTo): bool;
 
     /**
+     * Find account with same name OR same IBAN or both, but not the same type or ID.
+     *
+     * @param Collection $accounts
+     *
+     * @return Collection
+     */
+    public function expandWithDoubles(Collection $accounts): Collection;
+
+    /**
      * Find by account number. Is used.
      *
      * @param string $number
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -83,7 +77,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -91,7 +85,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -157,7 +151,7 @@ interface AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string $field
+     * @param string  $field
      *
      * @return null|string
      */
@@ -171,6 +165,14 @@ interface AccountRepositoryInterface
      * @return null|string
      */
     public function getNoteText(Account $account): ?string;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     *
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal;
 
     /**
      * Returns the amount of the opening balance for this account.
@@ -189,6 +191,13 @@ interface AccountRepositoryInterface
      * @return null|string
      */
     public function getOpeningBalanceDate(Account $account): ?string;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
 
     /**
      * @param Account $account
@@ -235,7 +244,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array $types
+     * @param array  $types
      *
      * @return Collection
      */
@@ -255,7 +264,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return Account
      */

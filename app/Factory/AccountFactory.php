@@ -49,6 +49,13 @@ class AccountFactory
     /** @var array */
     private $canHaveVirtual;
 
+    /** @var array */
+    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+    /** @var array */
+    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+
     /**
      * AccountFactory constructor.
      *

@@ -30,6 +30,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -79,6 +81,19 @@ class Controller extends BaseController
         $return .= http_build_query($params);
 
         return $return;
+    }
+
+    /**
+     * @return Manager
+     */
+    protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
     }
 
     /**

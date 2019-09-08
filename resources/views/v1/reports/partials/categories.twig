@@ -4,28 +4,28 @@
         <th>{{ 'category'|_ }}</th>
         <th style="text-align: right;">{{ 'spent'|_ }}</th>
         <th style="text-align: right;">{{ 'earned'|_ }}</th>
+        <th style="text-align: right;">{{ 'sum'|_ }}</th>
         <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
-
-    {% for index, category in report.categories %}
+    {% for category in report.categories %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
             <tr>
         {% endif %}
         <td>
-            <a href="{{ route('categories.show', category.id) }}">{{ category.name }}</a>
+            <a href="{{ route('categories.show', category.id) }}">{{ category.title }}</a>
         </td>
         <td style="text-align: right;">{{ formatAmountBySymbol(category.spent, category.currency_symbol, category.currency_decimal_places, true) }}</td>
         <td style="text-align: right;">{{ formatAmountBySymbol(category.earned, category.currency_symbol, category.currency_decimal_places, true) }}</td>
+        <td style="text-align: right;">{{ formatAmountBySymbol(category.sum, category.currency_symbol, category.currency_decimal_places, true) }}</td>
         <td style="width:20px;">
-            <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
-               data-location="category-entry" data-category-id="{{ category.id }}" data-currency-id="{{ category.currency_id }}"
+            <i class="fa fa-fw fa-info-circle text-muted firefly-info-button" data-location="category-entry" data-category-id="{{ category.id }}" data-currency-id="{{ category.currency_id }}"
             ></i>
         </td>
-        </tr>
+    </tr>
     {% endfor %}
     </tbody>
     <tfoot>
@@ -45,17 +45,10 @@
         <td style="text-align: right;">
             {{ formatAmountBySymbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
-        <td></td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
     </tr>
     {% endfor %}
-    {#
-    <tr>
-        <td><em>{{ 'sum'|_ }}</em></td>
-        <td style="text-align: right;">{{ sumEarned|formatAmount }}</td>
-        <td style="text-align: right;">{{ sumSpent|formatAmount }}</td>
-        <td>&nbsp;</td>
-    </tr>
-    TODO fix the sum here.
-    #}
     </tfoot>
 </table>

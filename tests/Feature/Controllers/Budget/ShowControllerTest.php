@@ -30,7 +30,9 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -96,6 +98,8 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
@@ -140,6 +144,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
         try {
@@ -170,10 +175,10 @@ class ShowControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(GroupCollectorInterface::class);
-
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
+        $blRepos      = $this->mock(BudgetLimitRepositoryInterface::class);
         $this->mockDefaultSession();
-        
-        
+
 
         // mock calls
         $pref       = new Preference;
@@ -189,14 +194,11 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
-
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-
-
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]))->atLeast()->once();
+        $opsRepos->shouldReceive('spentInPeriod')->andReturn('-1')->atLeast()->once();
 
         try {
             $date = new Carbon;
@@ -226,7 +228,8 @@ class ShowControllerTest extends TestCase
         $budgetRepository  = $this->mock(BudgetRepositoryInterface::class);
         $collector         = $this->mock(GroupCollectorInterface::class);
         $userRepos         = $this->mock(UserRepositoryInterface::class);
-
+        $opsRepos          = $this->mock(OperationsRepositoryInterface::class);
+        $blRepos      = $this->mock(BudgetLimitRepositoryInterface::class);
 
         $this->mockDefaultSession();
 
@@ -238,15 +241,14 @@ class ShowControllerTest extends TestCase
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $accountRepository->shouldReceive('getAccountsByType')->andReturn(new Collection);
-        $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
-        $budgetRepository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
+        $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection)->atLeast()->once();
 
         $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
         $this->be($this->user());

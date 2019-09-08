@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -57,6 +58,7 @@ class RuleTransformer extends AbstractTransformer
      * @param Rule $rule
      *
      * @return array
+     * @throws FireflyException
      */
     public function transform(Rule $rule): array
     {
@@ -73,6 +75,7 @@ class RuleTransformer extends AbstractTransformer
             'active'          => $rule->active,
             'strict'          => $rule->strict,
             'stop_processing' => $rule->stop_processing,
+            'trigger'         => $this->getRuleTrigger($rule),
             'triggers'        => $this->triggers($rule),
             'actions'         => $this->actions($rule),
             'links'           => [
@@ -115,6 +118,29 @@ class RuleTransformer extends AbstractTransformer
     /**
      * @param Rule $rule
      *
+     * @return string
+     * @throws FireflyException
+     */
+    private function getRuleTrigger(Rule $rule): string
+    {
+        $moment   = null;
+        $triggers = $this->ruleRepository->getRuleTriggers($rule);
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($triggers as $ruleTrigger) {
+            if ('user_action' === $ruleTrigger->trigger_type) {
+                $moment = $ruleTrigger->trigger_value;
+            }
+        }
+        if (null === $moment) {
+            throw new FireflyException(sprintf('Rule #%d has no valid trigger moment. Edit it in the Firefly III user interface to correct this.', $rule->id));
+        }
+
+        return $moment;
+    }
+
+    /**
+     * @param Rule $rule
+     *
      * @return array
      */
     private function triggers(Rule $rule): array
@@ -123,6 +149,9 @@ class RuleTransformer extends AbstractTransformer
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
+            if ('user_action' === $ruleTrigger->trigger_type) {
+                continue;
+            }
             $result[] = [
                 'id'              => (int)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),

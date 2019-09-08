@@ -18,13 +18,12 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: budgetPeriodReportUri, categoryExpenseUri, categoryIncomeUri, netWorthUri, opChartUri, sumChartUri */
+/** global: budgetPeriodReportUri, categoryExpenseUri, categoryIncomeUri, netWorthUri, opChartUri */
 
 $(function () {
     "use strict";
     lineChart(netWorthUri, 'net-worth');
     columnChartCustomColours(opChartUri, 'income-expenses-chart');
-    columnChartCustomColours(sumChartUri, 'income-expenses-sum-chart');
 
     loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
     loadAjaxPartial('categoryExpense', categoryExpenseUri);

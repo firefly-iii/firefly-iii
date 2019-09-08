@@ -95,6 +95,80 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * Get the audit report.
+     *
+     * @param Account $account
+     * @param Carbon  $date
+     *
+     * @return array
+     *
+     * @throws FireflyException
+     */
+    public function getAuditReport(Account $account, Carbon $date): array
+    {
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountRepository->setUser($account->user);
+
+        /** @var JournalRepositoryInterface $journalRepository */
+        $journalRepository = app(JournalRepositoryInterface::class);
+        $journalRepository->setUser($account->user);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
+            ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
+        $journals         = $collector->getExtractedJournals();
+        $journals = array_reverse($journals, true);
+
+        $dayBeforeBalance = app('steam')->balance($account, $date);
+        $startBalance     = $dayBeforeBalance;
+        $currency         = $accountRepository->getAccountCurrency($account);
+
+        if (null === $currency) {
+            throw new FireflyException('Unexpected NULL value in account currency preference.'); // @codeCoverageIgnore
+        }
+
+        foreach ($journals as $index => $journal) {
+            $journals[$index]['balance_before'] = $startBalance;
+            $transactionAmount                  = $journal['amount'];
+
+            // make sure amount is in the right "direction".
+            if ($account->id === $journal['destination_account_id']) {
+                $transactionAmount = app('steam')->positive($journal['amount']);
+            }
+
+            if ($currency->id === $journal['foreign_currency_id']) {
+                $transactionAmount = $journal['foreign_amount'];
+            }
+
+            $newBalance                        = bcadd($startBalance, $transactionAmount);
+            $journals[$index]['balance_after'] = $newBalance;
+            $startBalance                      = $newBalance;
+
+            // add meta dates for each journal.
+            $journals[$index]['interest_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
+            $journals[$index]['book_date']     = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
+            $journals[$index]['process_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
+            $journals[$index]['due_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
+            $journals[$index]['payment_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
+            $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
+
+        }
+
+        $return = [
+            'journals'         => $journals,
+            'exists'           => count($journals) > 0,
+            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
+            'endBalance'       => app('steam')->balance($account, $this->end),
+            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
+            'dayBeforeBalance' => $dayBeforeBalance,
+        ];
+
+        return $return;
+    }
+
+    /**
      * Account collection setter.
      *
      * @param Collection $accounts
@@ -190,72 +264,5 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
-    }
-
-    /**
-     * Get the audit report.
-     *
-     * @param Account $account
-     * @param Carbon $date
-     *
-     * @return array
-     *
-     * @throws FireflyException
-     */
-    public function getAuditReport(Account $account, Carbon $date): array
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountRepository->setUser($account->user);
-
-        /** @var JournalRepositoryInterface $journalRepository */
-        $journalRepository = app(JournalRepositoryInterface::class);
-        $journalRepository->setUser($account->user);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)
-                  ->withAccountInformation();
-        $journals         = $collector->getExtractedJournals();
-        $dayBeforeBalance = app('steam')->balance($account, $date);
-        $startBalance     = $dayBeforeBalance;
-        $currency         = $accountRepository->getAccountCurrency($account);
-
-        if (null === $currency) {
-            throw new FireflyException('Unexpected NULL value in account currency preference.'); // @codeCoverageIgnore
-        }
-
-        foreach ($journals as $index => $journal) {
-            $journals[$index]['balance_before'] = $startBalance;
-            $transactionAmount                  = $journal['amount'];
-
-            if ($currency->id === $journal['foreign_currency_id']) {
-                $transactionAmount = $journal['foreign_amount'];
-            }
-
-            $newBalance                        = bcadd($startBalance, $transactionAmount);
-            $journals[$index]['balance_after'] = $newBalance;
-            $startBalance                      = $newBalance;
-
-            // add meta dates for each journal.
-            $journals[$index]['interest_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
-            $journals[$index]['book_date']     = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
-            $journals[$index]['process_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
-            $journals[$index]['due_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
-            $journals[$index]['payment_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
-            $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
-
-        }
-
-        $return = [
-            'journals'         => $journals,
-            'exists'           => count($journals) > 0,
-            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
-            'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
-            'dayBeforeBalance' => $dayBeforeBalance,
-        ];
-
-        return $return;
     }
 }

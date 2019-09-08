@@ -264,7 +264,6 @@ trait JournalServiceTrait
      * @param TransactionJournal $journal
      * @param array              $tags
      *
-     *
      * @codeCoverageIgnore
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void

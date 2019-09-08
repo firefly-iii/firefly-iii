@@ -39,7 +39,6 @@ use View;
 /**
  * Class ShowController
  *
- *
  */
 class ShowController extends Controller
 {
@@ -57,6 +56,8 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        app('view')->share('showCategory', true);
 
         // translations:
         $this->middleware(
@@ -117,7 +118,7 @@ class ShowController extends Controller
         $collector
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
-            ->setPage($page)->withAccountInformation()
+            ->setPage($page)->withAccountInformation()->withCategoryInformation()
             ->setRange($start, $end);
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
@@ -159,7 +160,7 @@ class ShowController extends Controller
         $periods      = new Collection;
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation();
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);

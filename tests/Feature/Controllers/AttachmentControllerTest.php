@@ -126,6 +126,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('exists')->once()->andReturn(false);
 
 
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->get(route('attachments.download', [$attachment->id]));
         $response->assertStatus(500);

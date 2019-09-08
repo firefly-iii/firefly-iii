@@ -82,6 +82,51 @@ trait TransactionValidation
     }
 
     /**
+     * Validates the given account information. Switches on given transaction type.
+     *
+     * @param Validator $validator
+     */
+    public function validateAccountInformationUpdate(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+
+        foreach ($transactions as $index => $transaction) {
+            $originalType    = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
+            $originalData    = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
+            $transactionType = $transaction['type'] ?? $originalType;
+            $accountValidator->setTransactionType($transactionType);
+
+            // validate source account.
+            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
+            $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
+            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+
+            // do something with result:
+            if (false === $validSource) {
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+
+                continue;
+            }
+            // validate destination account
+            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
+            $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
+            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+            // do something with result:
+            if (false === $validDestination) {
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+
+                continue;
+            }
+        }
+    }
+
+    /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
@@ -151,13 +196,13 @@ trait TransactionValidation
      *
      * @param Validator $validator
      */
-    public function validateOneTransaction(Validator $validator): void
+    public function validateOneRecurrenceTransaction(Validator $validator): void
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
         if (0 === count($transactions)) {
-            $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
+            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
         }
     }
 
@@ -166,13 +211,31 @@ trait TransactionValidation
      *
      * @param Validator $validator
      */
-    public function validateOneRecurrenceTransaction(Validator $validator): void
+    public function validateOneRecurrenceTransactionUpdate(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? null;
+        if (null === $transactions) {
+            return;
+        }
+        // need at least one transaction
+        if (0 === count($transactions)) {
+            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no transactions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    public function validateOneTransaction(Validator $validator): void
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
         if (0 === count($transactions)) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
+            $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
         }
     }
 
@@ -228,48 +291,64 @@ trait TransactionValidation
     }
 
     /**
-     * Validates the given account information. Switches on given transaction type.
+     * @param array $array
      *
-     * @param Validator $validator
+     * @return bool
      */
-    public function validateAccountInformationUpdate(Validator $validator): void
+    private function arrayEqual(array $array): bool
     {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
+        return 1 === count(array_unique($array));
+    }
 
-        /** @var AccountValidator $accountValidator */
-        $accountValidator = app(AccountValidator::class);
-
-        foreach ($transactions as $index => $transaction) {
-            $originalType    = $this->getOriginalType($transaction['transaction_journal_id'] ?? 0);
-            $originalData    = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
-            $transactionType = $transaction['type'] ?? $originalType;
-            $accountValidator->setTransactionType($transactionType);
-
-            // validate source account.
-            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
-            $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
-            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
-
-            // do something with result:
-            if (false === $validSource) {
-                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
-                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
-
-                continue;
-            }
-            // validate destination account
-            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
-            $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
-            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
-            // do something with result:
-            if (false === $validDestination) {
-                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
-                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
-
-                continue;
-            }
+    /**
+     * @param int $journalId
+     *
+     * @return array
+     */
+    private function getOriginalData(int $journalId): array
+    {
+        $return = [
+            'source_id'        => 0,
+            'source_name'      => '',
+            'destination_id'   => 0,
+            'destination_name' => '',
+        ];
+        if (0 === $journalId) {
+            return $return;
         }
+        /** @var Transaction $source */
+        $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['source_id']   = $source->account_id;
+            $return['source_name'] = $source->account->name;
+        }
+        /** @var Transaction $destination */
+        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['destination_id']   = $destination->account_id;
+            $return['destination_name'] = $destination->account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param int $journalId
+     *
+     * @return string
+     */
+    private function getOriginalType(int $journalId): string
+    {
+        if (0 === $journalId) {
+            return 'invalid';
+        }
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::with(['transactionType'])->find($journalId);
+        if (null !== $journal) {
+            return strtolower($journal->transactionType->type);
+        }
+
+        return 'invalid';
     }
 
     /**
@@ -313,7 +392,7 @@ trait TransactionValidation
     }
 
     /**
-     * @param Validator $validator
+     * @param Validator        $validator
      * @param TransactionGroup $transactionGroup
      */
     private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
@@ -396,56 +475,7 @@ trait TransactionValidation
     }
 
     /**
-     * @param int $journalId
-     * @return array
-     */
-    private function getOriginalData(int $journalId): array
-    {
-        $return = [
-            'source_id'        => 0,
-            'source_name'      => '',
-            'destination_id'   => 0,
-            'destination_name' => '',
-        ];
-        if (0 === $journalId) {
-            return $return;
-        }
-        /** @var Transaction $source */
-        $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
-        if (null !== $source) {
-            $return['source_id']   = $source->account_id;
-            $return['source_name'] = $source->account->name;
-        }
-        /** @var Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
-        if (null !== $source) {
-            $return['destination_id']   = $destination->account_id;
-            $return['destination_name'] = $destination->account->name;
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param int $journalId
-     * @return string
-     */
-    private function getOriginalType(int $journalId): string
-    {
-        if (0 === $journalId) {
-            return 'invalid';
-        }
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::with(['transactionType'])->find($journalId);
-        if (null !== $journal) {
-            return strtolower($journal->transactionType->type);
-        }
-
-        return 'invalid';
-    }
-
-    /**
-     * @param Validator $validator
+     * @param Validator        $validator
      * @param TransactionGroup $transactionGroup
      */
     private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
@@ -463,14 +493,5 @@ trait TransactionValidation
                 $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
             }
         }
-    }
-
-    /**
-     * @param array $array
-     * @return bool
-     */
-    private function arrayEqual(array $array): bool
-    {
-        return 1 === count(array_unique($array));
     }
 }

@@ -72,7 +72,7 @@ class TransactionFactoryTest extends TestCase
         $transaction = $factory->createNegative($amount, null);
 
         $this->assertEquals($transaction->account_id, $account->id);
-        $this->assertEquals('-10', $transaction->amount);
+        $this->assertEquals('-10.000000000000', $transaction->amount);
         $transaction->forceDelete();
     }
 
@@ -134,8 +134,8 @@ class TransactionFactoryTest extends TestCase
         $transaction = $factory->createNegative($amount, $amount);
 
         $this->assertEquals($transaction->account_id, $account->id);
-        $this->assertEquals('-10', $transaction->amount);
-        $this->assertEquals('-10', $transaction->foreign_amount);
+        $this->assertEquals('-10.000000000000', $transaction->amount);
+        $this->assertEquals('-10.000000000000', $transaction->foreign_amount);
         $this->assertEquals($euro->id, $transaction->transaction_currency_id);
         $this->assertEquals($dollar->id, $transaction->foreign_currency_id);
         $transaction->forceDelete();

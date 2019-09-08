@@ -88,8 +88,8 @@ class MigrateToRulesTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_bills_to_rules', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_bills_to_rules', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_bills_to_rules', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_bills_to_rules', true]);
 
         // preferences
         $language       = new Preference;
@@ -196,8 +196,8 @@ class MigrateToRulesTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_bills_to_rules', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_bills_to_rules', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_bills_to_rules', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_bills_to_rules', true]);
 
         // preferences
         $language       = new Preference;
@@ -308,8 +308,8 @@ class MigrateToRulesTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_bills_to_rules', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_bills_to_rules', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_bills_to_rules', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_bills_to_rules', true]);
 
         // preferences
         $language       = new Preference;

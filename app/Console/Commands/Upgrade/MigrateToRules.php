@@ -40,7 +40,7 @@ use Illuminate\Console\Command;
  */
 class MigrateToRules extends Command
 {
-    public const CONFIG_NAME = '4780_bills_to_rules';
+    public const CONFIG_NAME = '480_bills_to_rules';
     /**
      * The console command description.
      *

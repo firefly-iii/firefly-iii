@@ -49,6 +49,7 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -126,7 +127,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int $currencyId
+         * @var int                 $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -275,7 +276,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int $currencyId
+         * @var int                 $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {

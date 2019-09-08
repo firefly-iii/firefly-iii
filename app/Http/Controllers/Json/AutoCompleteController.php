@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,7 +43,6 @@ use Log;
  * Class AutoCompleteController.
  *
  * TODO autocomplete for transaction types.
- *
  *
  */
 class AutoCompleteController extends Controller
@@ -97,72 +97,11 @@ class AutoCompleteController extends Controller
     }
 
     /**
-     * An auto-complete specifically for revenue accounts, used when converting transactions mostly.
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function revenueAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::REVENUE];
-        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
-
-    /**
-     * An auto-complete specifically for expense accounts, used when mass updating mostly.
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function expenseAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::EXPENSE];
-        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
-
-    /**
      * Searches in the titles of all transaction journals.
      * The result is limited to the top 15 unique results.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function allJournals(Request $request): JsonResponse
@@ -176,6 +115,7 @@ class AutoCompleteController extends Controller
         $filtered = $result->unique('description');
         $limited  = $filtered->slice(0, 15);
         $array    = $limited->toArray();
+
         return response()->json(array_values($array));
     }
 
@@ -186,6 +126,7 @@ class AutoCompleteController extends Controller
      * If the query is numeric, it will append the journal with that particular ID.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function allJournalsWithID(Request $request): JsonResponse
@@ -193,19 +134,27 @@ class AutoCompleteController extends Controller
         $search = (string)$request->get('search');
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $result     = $repository->searchJournalDescriptions($search);
-        $array      = [];
+
+        /** @var TransactionGroupRepositoryInterface $groupRepos */
+        $groupRepos = app(TransactionGroupRepositoryInterface::class);
+
+        $result = $repository->searchJournalDescriptions($search);
+        $array  = [];
         if (is_numeric($search)) {
-            $firstResult = $repository->findNull((int)$search);
+            // search for group, not journal.
+            $firstResult = $groupRepos->find((int)$search);
             if (null !== $firstResult) {
-                $array[] = $firstResult->toArray();
+                // group may contain multiple journals, each a result:
+                foreach ($firstResult->transactionJournals as $journal) {
+                    $array[] = $journal->toArray();
+                }
             }
         }
         // if not numeric, search ahead!
 
         // limit and unique
-        $limited  = $result->slice(0, 15);
-        $array    = array_merge($array, $limited->toArray());
+        $limited = $result->slice(0, 15);
+        $array   = array_merge($array, $limited->toArray());
         foreach ($array as $index => $item) {
             // give another key for consistency
             $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
@@ -217,6 +166,7 @@ class AutoCompleteController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
@@ -247,45 +197,6 @@ class AutoCompleteController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function currencyNames(Request $request): JsonResponse
-    {
-        $query = (string)$request->get('search');
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $result     = $repository->searchCurrency($query)->toArray();
-        foreach ($result as $index => $item) {
-            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
-        }
-
-        return response()->json($result);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function transactionTypes(Request $request): JsonResponse
-    {
-        $query = (string)$request->get('search');
-        /** @var TransactionTypeRepositoryInterface $repository */
-        $repository = app(TransactionTypeRepositoryInterface::class);
-        $array      = $repository->searchTypes($query)->toArray();
-
-        foreach ($array as $index => $item) {
-            // different key for consistency.
-            $array[$index]['name'] = $item['type'];
-        }
-
-        return response()->json($array);
-    }
-
-    /**
      * @return JsonResponse
      * @codeCoverageIgnore
      */
@@ -312,6 +223,57 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function currencyNames(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $result     = $repository->searchCurrency($query)->toArray();
+        foreach ($result as $index => $item) {
+            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * An auto-complete specifically for expense accounts, used when mass updating mostly.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function expenseAccounts(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::EXPENSE];
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
+
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
      * @return JsonResponse
      * @codeCoverageIgnore
      */
@@ -324,7 +286,40 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * An auto-complete specifically for revenue accounts, used when converting transactions mostly.
+     *
      * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function revenueAccounts(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::REVENUE];
+        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
+
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
@@ -338,6 +333,27 @@ class AutoCompleteController extends Controller
         foreach ($array as $index => $item) {
             // rename field for consistency.
             $array[$index]['name'] = $item['tag'];
+        }
+
+        return response()->json($array);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function transactionTypes(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var TransactionTypeRepositoryInterface $repository */
+        $repository = app(TransactionTypeRepositoryInterface::class);
+        $array      = $repository->searchTypes($query)->toArray();
+
+        foreach ($array as $index => $item) {
+            // different key for consistency.
+            $array[$index]['name'] = $item['type'];
         }
 
         return response()->json($array);

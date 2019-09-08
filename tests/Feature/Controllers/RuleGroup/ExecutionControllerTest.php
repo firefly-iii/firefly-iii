@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Illuminate\Support\Collection;
@@ -59,12 +60,12 @@ class ExecutionControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
+        $groupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $collector  = $this->mock(GroupCollectorInterface::class);
         $ruleEngine = $this->mock(RuleEngine::class);
 
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-
+        $groupRepos->shouldReceive('getActiveRules')->atLeast()->once()->andReturn(new Collection);
         // new mocks for ruleEngine
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
@@ -96,6 +97,7 @@ class ExecutionControllerTest extends TestCase
         $this->mockDefaultSession();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $groupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 

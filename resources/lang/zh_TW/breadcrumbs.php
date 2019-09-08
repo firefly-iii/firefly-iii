@@ -39,7 +39,7 @@ return [
     'reports'                => '報表',
     'search_result'          => '":query" 的搜尋結果',
     'withdrawal_list'        => '支出',
-    'Withdrawal_list'        => 'Expenses',
+    'Withdrawal_list'        => '支出',
     'deposit_list'           => '收入、所得與存款',
     'transfer_list'          => '轉帳',
     'transfers_list'         => '轉帳',

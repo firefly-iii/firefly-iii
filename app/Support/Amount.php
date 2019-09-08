@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 use Crypt;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Log;
@@ -279,7 +280,7 @@ class Amount
     }
 
     /**
-     * @param User $user
+     * @param User|Authenticatable $user
      *
      * @return \FireflyIII\Models\TransactionCurrency
      */
@@ -343,7 +344,7 @@ class Amount
     private function tryDecrypt(string $value): string
     {
         try {
-            $value = Crypt::decrypt($value);
+            $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
             Log::debug(sprintf('Could not decrypt "%s". %s', $value, $e->getMessage()));
         }

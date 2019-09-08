@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Transaction;
 
 
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Tests\TestCase;
 
@@ -49,8 +50,10 @@ class EditControllerTest extends TestCase
         $group        = $this->getRandomWithdrawalGroup();
         $account      = $this->getRandomAsset();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $this->mockDefaultSession();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
+        $this->mockDefaultSession();
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
         $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($account);
 
 

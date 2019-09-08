@@ -74,6 +74,12 @@
                 default: function () {
                     return [];
                 }
+            },
+            defaultAccountTypeFilters: {
+                type: Array,
+                default: function () {
+                    return [];
+                }
             }
         },
 
@@ -84,7 +90,8 @@
                 trType: this.transactionType,
                 target: null,
                 inputDisabled: false,
-                allowedTypes: this.accountTypeFilters
+                allowedTypes: this.accountTypeFilters,
+                defaultAllowedTypes: this.defaultAccountTypeFilters
             }
         },
         ready() {
@@ -94,6 +101,8 @@
             this.target = this.$refs.input;
             let types = this.allowedTypes.join(',');
             this.name = this.accountName;
+            // console.log('Mounted Types:');
+            // console.log(this.allowedTypes);
             this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             this.triggerTransactionType();
         },
@@ -104,6 +113,10 @@
             },
             accountTypeFilters() {
                 let types = this.accountTypeFilters.join(',');
+                if (0 === this.accountTypeFilters.length) {
+                    types = this.defaultAccountTypeFilters.join(',');
+                    // console.log('types was empty: ' + types);
+                }
                 this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             }
         },
@@ -118,32 +131,35 @@
                     }
                     this.inputDisabled = false;
                     if (this.transactionType.toString() !== '' && this.index > 0) {
-                        if (this.transactionType.toString() === 'Transfer') {
+                        if (this.transactionType.toString().toLowerCase() === 'transfer') {
                             this.inputDisabled = true;
                             // todo: needs to copy value from very first input
 
                             return;
                         }
 
-                        if (this.transactionType.toString() === 'Withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
+                        if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
                             // todo also clear value?
                             this.inputDisabled = true;
                             return;
                         }
 
-                        if (this.transactionType.toString() === 'Deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
+                        if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
                             // todo also clear value?
                             this.inputDisabled = true;
                         }
                     }
                 },
                 selectedItem: function (e) {
-                    console.log('selectedItem()');
+                    //console.log('In SelectedItem()');
                     if (typeof this.name === 'undefined') {
+                        //console.log('Is undefined');
                         return;
                     }
                     if(typeof this.name === 'string') {
-                        console.log('Is a string.');
+                        //console.log('Is a string.');
+                        //this.trType = null;
+                        this.$emit('clear:value');
                     }
                     // emit the fact that the user selected a type of account
                     // (influencing the destination)

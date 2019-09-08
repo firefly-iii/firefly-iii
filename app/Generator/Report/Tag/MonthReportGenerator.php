@@ -28,8 +28,6 @@ namespace FireflyIII\Generator\Report\Tag;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -39,7 +37,7 @@ use Throwable;
  *
  * @codeCoverageIgnore
  */
-class MonthReportGenerator extends Support implements ReportGeneratorInterface
+class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts involved */
     private $accounts;
@@ -71,30 +69,18 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $tagTags         = implode(',', $this->tags->pluck('tag')->toArray());
-        $tagIds          = implode(',', $this->tags->pluck('id')->toArray());
-        $reportType      = 'tag';
-        $expenses        = $this->getExpenses();
-        $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAssetAccount($expenses), $this->summarizeByAssetAccount($income));
-        $tagSummary      = $this->getObjectSummary($this->summarizeByTag($expenses), $this->summarizeByTag($income));
-        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
-        $averageIncome   = $this->getAverages($income, SORT_DESC);
-        $topExpenses     = $this->getTopExpenses();
-        $topIncome       = $this->getTopIncome();
+        $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
+        $tagIds     = implode(',', $this->tags->pluck('id')->toArray());
+        $reportType = 'tag';
 
         // render!
         try {
             $result = view(
-                'reports.tag.month', compact(
-                                       'accountIds', 'tagTags', 'reportType', 'accountSummary', 'tagSummary', 'averageExpenses', 'averageIncome', 'topIncome',
-                                       'topExpenses', 'tagIds'
-                                   )
+                'reports.tag.month', compact('accountIds', 'reportType', 'tagIds')
             )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;
@@ -192,79 +178,5 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         return $this;
     }
 
-    /**
-     * Get expense collection for report.
-     *
-     * @return array
-     */
-    protected function getExpenses(): array
-    {
-        if (count($this->expenses) > 0) {
-            Log::debug('Return previous set of expenses.');
 
-            return $this->expenses;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withAccountInformation();
-
-        $journals       = $collector->getExtractedJournals();
-        $this->expenses = $journals;
-
-        return $journals;
-    }
-
-    /**
-     * Get the income for this report.
-     *
-     * @return array
-     */
-    protected function getIncome(): array
-    {
-        if (count($this->income) > 0) {
-            return $this->income;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withAccountInformation();
-
-        $journals     = $collector->getExtractedJournals();
-        $this->income = $journals;
-
-        return $journals;
-    }
-
-    /**
-     * Summarize by tag.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    protected function summarizeByTag(array $array): array
-    {
-        $tagIds = array_map('\intval', $this->tags->pluck('id')->toArray());
-        $result = [];
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            /**
-             * @var int $id
-             * @var array $tag
-             */
-            foreach ($journal['tags'] as $id => $tag) {
-                if (in_array($id, $tagIds, true)) {
-                    $result[$id] = $result[$id] ?? '0';
-                    $result[$id] = bcadd($journal['amount'], $result[$id]);
-                }
-            }
-        }
-
-        return $result;
-    }
 }

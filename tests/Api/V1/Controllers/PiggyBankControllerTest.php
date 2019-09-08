@@ -112,6 +112,7 @@ class PiggyBankControllerTest extends TestCase
         ];
 
         // test API
+        Log::warning('The following error is part of a test.');
         $response = $this->post(route('api.v1.piggy_banks.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertHeader('Content-Type', 'application/json');

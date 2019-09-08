@@ -52,7 +52,6 @@ use PragmaRX\Recovery\Recovery;
  *
  * @method Guard guard()
  *
- *
  */
 class ProfileController extends Controller
 {

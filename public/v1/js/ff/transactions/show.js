@@ -26,6 +26,7 @@ $(function () {
     $('#linkJournalModal').on('shown.bs.modal', function () {
         makeAutoComplete();
     })
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 function getLinkModal(e) {

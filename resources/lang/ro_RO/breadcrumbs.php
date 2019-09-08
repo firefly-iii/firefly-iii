@@ -39,7 +39,7 @@ return [
     'reports'                => 'Rapoarte',
     'search_result'          => 'Rezultatele căutării ":query"',
     'withdrawal_list'        => 'Cheltuieli',
-    'Withdrawal_list'        => 'Expenses',
+    'Withdrawal_list'        => 'Cheltuieli',
     'deposit_list'           => 'Venituri și depozite',
     'transfer_list'          => 'Transferuri',
     'transfers_list'         => 'Transferuri',

@@ -28,6 +28,7 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class AccountStoreRequest
+ *
  * @codeCoverageIgnore
  */
 class AccountStoreRequest extends Request

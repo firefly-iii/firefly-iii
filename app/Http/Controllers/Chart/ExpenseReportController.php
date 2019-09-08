@@ -77,7 +77,6 @@ class ExpenseReportController extends Controller
      *
      * @return JsonResponse
      *
-     *
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {

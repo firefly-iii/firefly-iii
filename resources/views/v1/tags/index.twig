@@ -29,6 +29,7 @@
                                 <p class="tagcloud">
                                     {% for tagInfo in entries %}
                                         <a style="font-size:{{ tagInfo.size }}px;" class="label label-success"
+                                           title="{{ tagInfo.created_at.formatLocalized(monthAndDayFormat) }}"
                                            href="{{ route('tags.show',tagInfo.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag }}</a>
                                     {% endfor %}
                                 </p>

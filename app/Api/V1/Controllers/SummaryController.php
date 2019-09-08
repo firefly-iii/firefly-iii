@@ -36,7 +36,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -47,6 +49,8 @@ use Illuminate\Support\Collection;
  */
 class SummaryController extends Controller
 {
+    /** @var AvailableBudgetRepositoryInterface */
+    private $abRepository;
     /** @var AccountRepositoryInterface */
     private $accountRepository;
     /** @var BillRepositoryInterface */
@@ -56,8 +60,12 @@ class SummaryController extends Controller
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
 
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
+
     /**
      * SummaryController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -71,11 +79,15 @@ class SummaryController extends Controller
                 $this->billRepository    = app(BillRepositoryInterface::class);
                 $this->budgetRepository  = app(BudgetRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
+                $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
+                $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
                 $this->billRepository->setUser($user);
                 $this->currencyRepos->setUser($user);
                 $this->budgetRepository->setUser($user);
                 $this->accountRepository->setUser($user);
+                $this->abRepository->setUser($user);
+                $this->opsRepository->setUser($user);
 
 
                 return $next($request);
@@ -138,6 +150,25 @@ class SummaryController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
+     *
+     * @param array               $spentInfo
+     * @param TransactionCurrency $currency
+     *
+     * @return string
+     */
+    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): string
+    {
+        foreach ($spentInfo as $array) {
+            if ($array['currency_id'] === $currency->id) {
+                return (string)$array['amount'];
+            }
+        }
+
+        return '0'; // @codeCoverageIgnore
     }
 
     /**
@@ -316,9 +347,9 @@ class SummaryController extends Controller
     {
         $return    = [];
         $today     = new Carbon;
-        $available = $this->budgetRepository->getAvailableBudgetWithCurrency($start, $end);
+        $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
-        $spentInfo = $this->budgetRepository->spentInPeriodMc($budgets, new Collection, $start, $end);
+        $spentInfo = $this->opsRepository->spentInPeriodMc($budgets, new Collection, $start, $end);
         foreach ($available as $currencyId => $amount) {
             $currency = $this->currencyRepos->findNull($currencyId);
             if (null === $currency) {
@@ -348,25 +379,6 @@ class SummaryController extends Controller
         }
 
         return $return;
-    }
-
-    /**
-     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
-     *
-     * @param array $spentInfo
-     * @param TransactionCurrency $currency
-     *
-     * @return float
-     */
-    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
-    {
-        foreach ($spentInfo as $array) {
-            if ($array['currency_id'] === $currency->id) {
-                return $array['amount'];
-            }
-        }
-
-        return 0.0; // @codeCoverageIgnore
     }
 
     /**

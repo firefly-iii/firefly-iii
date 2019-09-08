@@ -132,7 +132,6 @@ class StageNewHandler
                         /** @var MonetaryAccountSavings $object */
                         $array = $this->processMas($object);
                         break;
-                        break;
                     default:
                         // @codeCoverageIgnoreStart
                         throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', get_class($object)));

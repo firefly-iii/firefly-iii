@@ -91,8 +91,8 @@ class OtherCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_other_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_other_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_other_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_other_currencies', true]);
 
         // assume all is well.
         $this->artisan('firefly-iii:other-currencies')
@@ -167,8 +167,8 @@ class OtherCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_other_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_other_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_other_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_other_currencies', true]);
 
         $this->artisan('firefly-iii:other-currencies')
              ->expectsOutput('Verified 1 transaction(s) and journal(s).')
@@ -252,8 +252,8 @@ class OtherCurrenciesCorrectionsTest extends TestCase
         // configuration
         $false       = new Configuration;
         $false->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['4780_other_currencies', false])->andReturn($false);
-        FireflyConfig::shouldReceive('set')->withArgs(['4780_other_currencies', true]);
+        FireflyConfig::shouldReceive('get')->withArgs(['480_other_currencies', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['480_other_currencies', true]);
 
         $this->artisan('firefly-iii:other-currencies')
              ->expectsOutput('Verified 1 transaction(s) and journal(s).')

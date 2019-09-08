@@ -404,6 +404,29 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Both source AND destination must be in this list of accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBothAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->where(
+                static function (EloquentBuilder $query) use ($accountIds) {
+                    $query->whereIn('source.account_id', $accountIds);
+                    $query->whereIn('destination.account_id', $accountIds);
+                }
+            );
+            app('log')->debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -499,7 +522,7 @@ class GroupCollector implements GroupCollectorInterface
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('destination.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+            app('log')->debug(sprintf('GroupCollector: setDestinationAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -894,16 +917,16 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * @param array            $existingJournal
-     * @param TransactionGroup $newGroup
+     * @param array              $existingJournal
+     * @param TransactionJournal $newJournal
      *
      * @return array
      */
-    private function mergeTags(array $existingJournal, TransactionGroup $newGroup): array
+    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
     {
-        $newArray = $newGroup->toArray();
+        $newArray = $newJournal->toArray();
         if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
-            $tagId = (int)$newGroup['tag_id'];
+            $tagId = (int)$newJournal['tag_id'];
 
             $tagDate = null;
             try {
@@ -1101,5 +1124,42 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
+    }
+
+    /**
+     * Either account can be set, but NOT both. This effectively excludes internal transfers.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setXorAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->where(
+                static function (EloquentBuilder $q1) use ($accountIds) {
+                    // sourceAccount is in the set, and destination is NOT.
+
+                    $q1->where(
+                        static function (EloquentBuilder $q2) use ($accountIds) {
+                            $q2->whereIn('source.account_id', $accountIds);
+                            $q2->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    );
+                    // destination is in the set, and source is NOT
+                    $q1->orWhere(
+                        static function (EloquentBuilder $q3) use ($accountIds) {
+                            $q3->whereNotIn('source.account_id', $accountIds);
+                            $q3->whereIn('destination.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
+
+            app('log')->debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
     }
 }

@@ -32,6 +32,7 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class ConfigurationController.
+ *
  * @codeCoverageIgnore
  */
 class ConfigurationController extends Controller
@@ -80,7 +81,7 @@ class ConfigurationController extends Controller
      * Update the configuration.
      *
      * @param ConfigurationRequest $request
-     * @param string $name
+     * @param string               $name
      *
      * @return JsonResponse
      */

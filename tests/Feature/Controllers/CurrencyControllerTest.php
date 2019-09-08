@@ -295,6 +295,7 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->get(route('currencies.disable', [$euro->id]));
         $response->assertStatus(500);
@@ -342,7 +343,6 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController
-     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndex(): void
     {
@@ -376,7 +376,6 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndexNoRights(): void

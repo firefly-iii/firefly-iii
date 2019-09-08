@@ -30,28 +30,28 @@ return [
     'index_help'                                      => '如果您需要有關頁面或表單的説明，請按此按鈕。',
     'index_outro'                                     => 'Firefly III 大部分頁面會以這樣的小介紹開始，如有問題或意見，不妨與我聯繫。祝您使用得心應手！',
     'index_sidebar-toggle'                            => '若要建立新的交易記錄、帳戶或其他內容，請使用此圖示下的選單。',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => '目前為止就建立了這些帳戶。您可以用現金帳戶來追蹤現金支出，如果您喜歡。',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_source'           => '在此下拉清單中選取您喜歡的資產帳戶或負債。',
+    'transactions_create_withdrawal_destination'      => '在此選取一個支出帳戶。留空即代表現金支出。',
+    'transactions_create_withdrawal_foreign_currency' => '使用此欄位設定外幣及金額。',
+    'transactions_create_withdrawal_more_meta'        => '這些欄位設定許多其他的中繼資料。',
+    'transactions_create_withdrawal_split_add'        => '若您希望拆分交易，按此按鈕加一筆拆分',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_source'              => '在此自動完成的下拉清單/文字方塊中選取或鍵入支款人。留空即代表現金存款。',
+    'transactions_create_deposit_destination'         => '在此選取一個資產或負債帳戶。',
+    'transactions_create_deposit_foreign_currency'    => '使用此欄位設定外幣及金額。',
+    'transactions_create_deposit_more_meta'           => '這些欄位設定許多其他的中繼資料。',
+    'transactions_create_deposit_split_add'           => '若您希望拆分交易，按此按鈕加一筆拆分',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_source'             => '在此選取來源資產帳戶。',
+    'transactions_create_transfer_destination'        => '在此選取目標資產帳戶。',
+    'transactions_create_transfer_foreign_currency'   => '使用此欄位設定外幣及金額。',
+    'transactions_create_transfer_more_meta'          => '這些欄位設定許多其他的中繼資料。',
+    'transactions_create_transfer_split_add'          => '若您希望拆分交易，按此按鈕加一筆拆分',
 
     // create account:
     'accounts_create_iban'                            => '帳戶若設定有效的 IBAN，有助日後匯入資料。',
