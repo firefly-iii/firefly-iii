@@ -58,7 +58,7 @@ return [
     'no_rules_for_bill'                          => 'Questa bolletta non ha regole ad essa associate.',
     'go_to_asset_accounts'                       => 'Visualizza i tuoi conti attività',
     'go_to_budgets'                              => 'Vai ai tuoi budget',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'clone_instructions'                         => 'Per clonare una transazione, cerca la casella di controllo "salva come nuova" nella schermata di modifica',
     'go_to_categories'                           => 'Vai alle tue categorie',
     'go_to_bills'                                => 'Vai alle tue bollette',
     'go_to_expense_accounts'                     => 'Vedi i tuoi conti spese',

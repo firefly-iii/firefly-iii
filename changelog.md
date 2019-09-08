@@ -16,11 +16,14 @@ Firefly III 4.8.1 requires PHP 7.3.
 - [Issue 2471](https://github.com/firefly-iii/firefly-iii/issues/2471) Added date tag to table cells.
 
 ### Changed
+- [Issue 2285](https://github.com/firefly-iii/firefly-iii/issues/2285) Rule handling is now uniform across the app.
+- [Issue 2231](https://github.com/firefly-iii/firefly-iii/issues/2231) You can now also use the `DATABASE_URL` for MySQL connections.
 - [Issue 2291](https://github.com/firefly-iii/firefly-iii/issues/2291) All reports are now properly multi-currency.
 - [Issue 2481](https://github.com/firefly-iii/firefly-iii/issues/2481) As part of the removal of local encryption, uploads and imports are no longer encrypted.
 - [Issue 2495](https://github.com/firefly-iii/firefly-iii/issues/2495) A better message of transaction submission.
 - [Issue 2506](https://github.com/firefly-iii/firefly-iii/issues/2506) Some bugs in tag report fixed.
 - [Issue 2510](https://github.com/firefly-iii/firefly-iii/issues/2510) All transaction descriptions cut off at 255 chars.
+
 - Better sum in bill view.
 - Clean up docker files for flawless operation.
 

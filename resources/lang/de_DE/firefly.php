@@ -58,7 +58,7 @@ return [
     'no_rules_for_bill'                          => 'Diese Rechnung enthält keine mit ihr verbundenen Regeln.',
     'go_to_asset_accounts'                       => 'Bestandskonten anzeigen',
     'go_to_budgets'                              => 'Budgets anzeigen',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'clone_instructions'                         => 'Um eine Buchung zu duplizieren, setzen Sie im Bearbeitungsbildschirm ein Häkchen bei „Als neu speichern”.',
     'go_to_categories'                           => 'Kategorien anzeigen',
     'go_to_bills'                                => 'Rechnungen anzeigen',
     'go_to_expense_accounts'                     => 'Kreditoren (Ausgabenkonten) anzeigen',
