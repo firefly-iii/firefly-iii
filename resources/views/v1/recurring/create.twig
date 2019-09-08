@@ -101,7 +101,7 @@
                         {# destination account name for withdrawals #}
                         {#{{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }} #}
 
-                        {# for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
+                        {# NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
                         {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', null, {label: trans('form.withdrawal_destination_id')}) }}
                     </div>
                 </div>

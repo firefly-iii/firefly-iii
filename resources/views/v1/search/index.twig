@@ -121,7 +121,8 @@
         var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
 
         var searchQuery = "{{ fullQuery|escape('js') }}";
-        var searchUri = "{{ route('search.search') }}";
+        var searchUri = "{{ route('search.search') }}?page={{ page }}";
+        var searchPage = {{ page }};
     </script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>

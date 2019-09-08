@@ -1,6 +1,10 @@
 <p>
 <p class="search_count">
-    {{ trans('firefly.search_found_transactions', {count: groups.count, time: searchTime}) }}
+    {% if hasPages %}
+        {{ trans('firefly.search_found_transactions', {count: '>'~groups.perPage, time: searchTime}) }}
+    {% else %}
+        {{ trans('firefly.search_found_transactions', {count: groups.count, time: searchTime}) }}
+    {% endif %}
 </p>
 
 {% include 'list.groups' %}
