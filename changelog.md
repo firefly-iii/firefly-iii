@@ -70,7 +70,6 @@ Firefly III 4.8.1 requires PHP 7.3.
 - No longer have to submit mandatory fields to account end point. Just submit the field you wish to update, the rest will be untouched.
 - Rules will no longer list the "user-action" trigger Rules will have a "moment" field that says either "update-journal" or "store-journal".
 
-
 ## [4.8.0.3 (API 0.10.1)] - 2019-08-23
 
 Fixes many other issues in the previous release.
