@@ -42,7 +42,7 @@ return [
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',
     'matchesOn'               => 'Совпадает на',
-    'other_meta_data'         => 'Other meta data',
+    'other_meta_data'         => 'Другие метаданные',
     'account_type'            => 'Тип профиля',
     'created_at'              => 'Создан',
     'account'                 => 'Счёт',

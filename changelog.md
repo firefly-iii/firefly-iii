@@ -2,9 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.1.1 (API 0.10.2)] - 2019-09-08
+## [4.8.1.1 (API 0.10.2)] - 2019-09-12
 
-Fixes a query error on the /tags page that affected some MySQL users.
+### Changed
+- Add some sensible maximum amounts to form inputs.
+
+### Fixed
+- [Issue 2561](https://github.com/firefly-iii/firefly-iii/issues/2561) Fixes a query error on the /tags page that affected some MySQL users.
+- [Issue 2563](https://github.com/firefly-iii/firefly-iii/issues/2563) Two destination fields when editing a recurring transaction.
+- [Issue 2564](https://github.com/firefly-iii/firefly-iii/issues/2564) Ability to browse pages in the search results.
+- [Issue 2573](https://github.com/firefly-iii/firefly-iii/issues/2573) Could not submit an transaction update after an error was corrected.
+- [Issue 2577](https://github.com/firefly-iii/firefly-iii/issues/2577) Upgrade routine would wrongly store the categories of split transactions.
 
 ## [4.8.1 (API 0.10.2)] - 2019-09-08
 

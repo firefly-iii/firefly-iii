@@ -1,3 +1,12 @@
+# 4.8.1.1
+
+- Add some sensible maximum amounts to form inputs.
+- [Issue 2561](https://github.com/firefly-iii/firefly-iii/issues/2561) Fixes a query error on the /tags page that affected some MySQL users.
+- [Issue 2563](https://github.com/firefly-iii/firefly-iii/issues/2563) Two destination fields when editing a recurring transaction.
+- [Issue 2564](https://github.com/firefly-iii/firefly-iii/issues/2564) Ability to browse pages in the search results.
+- [Issue 2573](https://github.com/firefly-iii/firefly-iii/issues/2573) Could not submit an transaction update after an error was corrected.
+- [Issue 2577](https://github.com/firefly-iii/firefly-iii/issues/2577) Upgrade routine would wrongly store the categories of split transactions.
+
 # 4.8.1 (API 0.10.2)
 
 - Firefly III 4.8.1 requires PHP 7.3.
