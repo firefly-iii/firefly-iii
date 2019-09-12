@@ -50,9 +50,9 @@ class NewUserFormRequest extends Request
         // fixed
         return [
             'bank_name'                            => 'required|between:1,200',
-            'bank_balance'                         => 'required|numeric',
-            'savings_balance'                      => 'numeric',
-            'credit_card_limit'                    => 'numeric',
+            'bank_balance'                         => 'required|numeric|max:1000000000',
+            'savings_balance'                      => 'numeric|max:1000000000',
+            'credit_card_limit'                    => 'numeric|max:1000000000',
             'amount_currency_id_bank_balance'      => 'exists:transaction_currencies,id',
             'amount_currency_id_savings_balance'   => 'exists:transaction_currencies,id',
             'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id',

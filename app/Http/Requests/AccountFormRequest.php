@@ -94,11 +94,11 @@ class AccountFormRequest extends Request
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                               => 'required|min:1|uniqueAccountForUser',
-            'opening_balance'                    => 'numeric|required_with:opening_balance_date|nullable',
+            'opening_balance'                    => 'numeric|required_with:opening_balance_date|nullable|max:1000000000',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->string('objectType'))],
             'BIC'                                => 'bic|nullable',
-            'virtual_balance'                    => 'numeric|nullable',
+            'virtual_balance'                    => 'numeric|nullable|max:1000000000',
             'currency_id'                        => 'exists:transaction_currencies,id',
             'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
             'account_role'                       => 'in:' . $accountRoles,
@@ -111,7 +111,7 @@ class AccountFormRequest extends Request
         ];
 
         if ('liabilities' === $this->get('objectType')) {
-            $rules['opening_balance']      = ['numeric', 'required'];
+            $rules['opening_balance']      = ['numeric', 'required','max:1000000000'];
             $rules['opening_balance_date'] = 'date|required';
         }
 

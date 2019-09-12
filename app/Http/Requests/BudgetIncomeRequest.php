@@ -49,7 +49,7 @@ class BudgetIncomeRequest extends Request
     {
         // fixed
         return [
-            'amount' => 'numeric|required|min:0',
+            'amount' => 'numeric|required|min:0|max:1000000000',
             'start'  => 'required|date|before:end',
             'end'    => 'required|date|after:start',
         ];
