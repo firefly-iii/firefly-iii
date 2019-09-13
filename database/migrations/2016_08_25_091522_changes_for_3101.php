@@ -36,7 +36,9 @@ class ChangesFor3101 extends Migration
         Schema::table(
             'import_jobs',
             static function (Blueprint $table) {
-                $table->dropColumn('extended_status');
+                if (Schema::hasColumn('import_jobs', 'extended_status')) {
+                    $table->dropColumn('extended_status');
+                }
             }
         );
     }
@@ -51,7 +53,9 @@ class ChangesFor3101 extends Migration
         Schema::table(
             'import_jobs',
             static function (Blueprint $table) {
-                $table->text('extended_status')->nullable();
+                if (!Schema::hasColumn('import_jobs', 'extended_status')) {
+                    $table->text('extended_status')->nullable();
+                }
             }
         );
     }
