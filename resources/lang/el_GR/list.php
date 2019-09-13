@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Σχετικοί κανόνες',
     'active'                  => 'Είναι ενεργό;',
     'percentage'              => 'pct.',
-    'next_due'                => 'Next due',
+    'next_due'                => 'Επόμενη προθεσμία',
     'transaction_type'        => 'Τύπος',
     'lastActivity'            => 'Τελευταία δραστηριότητα',
     'balanceDiff'             => 'Διαφορά υπολοίπου',
