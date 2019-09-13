@@ -119,15 +119,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
             ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
         $journals         = $collector->getExtractedJournals();
-        $journals = array_reverse($journals, true);
-
+        $journals         = array_reverse($journals, true);
         $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-        $currency         = $accountRepository->getAccountCurrency($account);
-
-        if (null === $currency) {
-            throw new FireflyException('Unexpected NULL value in account currency preference.'); // @codeCoverageIgnore
-        }
+        $defaultCurrency  = app('amount')->getDefaultCurrencyByUser($account->user);
+        $currency         = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
         foreach ($journals as $index => $journal) {
             $journals[$index]['balance_before'] = $startBalance;
@@ -140,6 +136,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
             if ($currency->id === $journal['foreign_currency_id']) {
                 $transactionAmount = $journal['foreign_amount'];
+                if ($account->id === $journal['destination_account_id']) {
+                    $transactionAmount = app('steam')->positive($journal['foreign_amount']);
+                }
             }
 
             $newBalance                        = bcadd($startBalance, $transactionAmount);
@@ -158,6 +157,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         $return = [
             'journals'         => $journals,
+            'currency'         => $currency,
             'exists'           => count($journals) > 0,
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
             'endBalance'       => app('steam')->balance($account, $this->end),
