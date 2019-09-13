@@ -140,7 +140,9 @@ class CurrencyController extends Controller
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => e($currency->name)]));
+            $location = $this->repository->currencyInUseAt($currency);
+            $message  = (string)trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+            $request->session()->flash('error', $message);
             Log::channel('audit')->info(sprintf('Tried to visit page to delete currency %s but currency is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
