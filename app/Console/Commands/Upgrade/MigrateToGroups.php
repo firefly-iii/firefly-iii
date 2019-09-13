@@ -25,6 +25,8 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use DB;
 use Exception;
 use FireflyIII\Factory\TransactionGroupFactory;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
@@ -306,6 +308,10 @@ class MigrateToGroups extends Command
                 // @codeCoverageIgnoreEnd
             }
 
+            // overrule journal category with transaction category.
+            $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
+            $categoryId = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
+
             $tArray = [
                 'type'                => strtolower($journal->transactionType->type),
                 'date'                => $journal->date,
@@ -365,6 +371,72 @@ class MigrateToGroups extends Command
             sprintf('Migrated journal #%d into group #%d with these journals: #%s',
                     $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
         );
+    }
+
+    /**
+     * @param Transaction $left
+     * @param Transaction $right
+     *
+     * @return int|null
+     */
+    private function getTransactionBudget(Transaction $left, Transaction $right): ?int
+    {
+        Log::debug('Now in getTransactionBudget()');
+
+        // try to get a budget ID from the left transaction:
+        /** @var Budget $budget */
+        $budget = $left->budgets()->first();
+        if (null !== $budget) {
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
+
+            return (int)$budget->id;
+        }
+
+        // try to get a budget ID from the right transaction:
+        /** @var Budget $budget */
+        $budget = $right->budgets()->first();
+        if (null !== $budget) {
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
+
+            return (int)$budget->id;
+        }
+        Log::debug('Neither left or right have a budget, return NULL');
+
+        // if all fails, return NULL.
+        return null;
+    }
+
+    /**
+     * @param Transaction $left
+     * @param Transaction $right
+     *
+     * @return int|null
+     */
+    private function getTransactionCategory(Transaction $left, Transaction $right): ?int
+    {
+        Log::debug('Now in getTransactionCategory()');
+
+        // try to get a category ID from the left transaction:
+        /** @var Category $category */
+        $category = $left->categories()->first();
+        if (null !== $category) {
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
+
+            return (int)$category->id;
+        }
+
+        // try to get a category ID from the left transaction:
+        /** @var Category $category */
+        $category = $right->categories()->first();
+        if (null !== $category) {
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
+
+            return (int)$category->id;
+        }
+        Log::debug('Neither left or right have a category, return NULL');
+
+        // if all fails, return NULL.
+        return null;
     }
 
     /**

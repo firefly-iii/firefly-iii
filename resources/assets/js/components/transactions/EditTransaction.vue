@@ -664,9 +664,12 @@
                         for (const fileKey in attachments[key].files) {
                             if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
                                 // include journal thing.
+
+                                let transactions = response.data.data.attributes.transactions.reverse();
+
                                 toBeUploaded.push(
                                     {
-                                        journal: response.data.data.attributes.transactions[key].transaction_journal_id,
+                                        journal: transactions[key].transaction_journal_id,
                                         file: attachments[key].files[fileKey]
                                     }
                                 );
@@ -864,13 +867,13 @@
                                         this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
                                     break;
                             }
-                        }
-                        // unique some things
-                        this.transactions[transactionIndex].errors.source_account =
-                            Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
-                        this.transactions[transactionIndex].errors.destination_account =
-                            Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
 
+                            // unique some things
+                            this.transactions[transactionIndex].errors.source_account =
+                                Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
+                            this.transactions[transactionIndex].errors.destination_account =
+                                Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
+                        }
                     }
                 }
             },

@@ -50,7 +50,7 @@ class CurrencyDestroyService
     {
 
         try {
-            $currency->forceDelete();
+            $currency->delete();
         } catch (Exception $e) { // @codeCoverageIgnore
             Log::error(sprintf('Could not delete transaction currency: %s', $e->getMessage())); // @codeCoverageIgnore
         }

@@ -160,7 +160,7 @@ class RecurrenceFormRequest extends Request
             'transaction_description' => 'required|between:1,255',
             'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'amount'                  => 'numeric|required|more:0',
+            'amount'                  => 'numeric|required|more:0|max:1000000000',
             // mandatory account info:
             'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
             'source_name'             => 'between:1,255|nullable',
@@ -168,7 +168,7 @@ class RecurrenceFormRequest extends Request
             'destination_name'        => 'between:1,255|nullable',
 
             // foreign amount data:
-            'foreign_amount'          => 'nullable|more:0',
+            'foreign_amount'          => 'nullable|more:0|max:1000000000',
 
             // optional fields:
             'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',

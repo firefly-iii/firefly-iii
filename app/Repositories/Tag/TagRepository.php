@@ -466,12 +466,12 @@ class TagRepository implements TagRepositoryInterface
                                ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                                ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                ->where(
-                                   function (Builder $query) {
+                                   static function (Builder $query) {
                                        $query->where('transactions.amount', '>', 0);
                                        $query->orWhereNull('transactions.amount');
                                    }
                                )
-                               ->groupBy(['tags.id', 'tags.tag']);
+                               ->groupBy(['tags.id', 'tags.tag', 'tags.created_at']);
 
         // add date range (or not):
         if (null === $year) {

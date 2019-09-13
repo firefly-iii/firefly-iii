@@ -42,6 +42,11 @@ interface SearchInterface
     public function getWordsAsString(): string;
 
     /**
+     * @param int $page
+     */
+    public function setPage(int $page): void;
+
+    /**
      * @return bool
      */
     public function hasModifiers(): bool;

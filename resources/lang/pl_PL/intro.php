@@ -30,7 +30,7 @@ return [
     'index_help'                                      => 'Jeśli potrzebujesz pomocy na stronie lub formularzu, naciśnij ten przycisk.',
     'index_outro'                                     => 'Większość stron z Firefly III zacznie się od małego wprowadzenia jak to. Skontaktuj się ze mną, jeśli masz pytania lub komentarze. Miłego korzystania!',
     'index_sidebar-toggle'                            => 'Aby utworzyć nowe transakcje, konta lub inne rzeczy, użyj menu pod tą ikoną.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'To są dotychczas utworzone konta. Możesz użyć konta gotówkowego do śledzenia wydatków gotówkowych, ale oczywiście nie jest to obowiązkowe.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',

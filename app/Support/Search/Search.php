@@ -64,12 +64,15 @@ class Search implements SearchInterface
     private $validModifiers;
     /** @var array */
     private $words = [];
+    /** @var int */
+    private $page;
 
     /**
      * Search constructor.
      */
     public function __construct()
     {
+        $this->page               = 1;
         $this->modifiers          = new Collection;
         $this->validModifiers     = (array)config('firefly.search_modifiers');
         $this->startTime          = microtime(true);
@@ -149,12 +152,11 @@ class Search implements SearchInterface
     {
         Log::debug('Start of searchTransactions()');
         $pageSize = 50;
-        $page     = 1;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setLimit($pageSize)->setPage($page)->withAccountInformation();
+        $collector->setLimit($pageSize)->setPage($this->page)->withAccountInformation();
         $collector->withCategoryInformation()->withBudgetInformation();
         $collector->setSearchWords($this->words);
 
@@ -307,5 +309,13 @@ class Search implements SearchInterface
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
             }
         }
+    }
+
+    /**
+     * @param int $page
+     */
+    public function setPage(int $page): void
+    {
+        $this->page = $page;
     }
 }

@@ -77,21 +77,38 @@
             </td>
 
             <td class="hide-balance_before" style="text-align: right;">
-                {{ formatAmountBySymbol(journal.balance_before, journal.currency_symbol, journal.currency_decimal_places) }}
+                {{ formatAmountBySymbol(journal.balance_before, auditData[account.id].currency.symbol, auditData[account.id].currency.decimal_places) }}
             </td>
             <td class="hide-amount" style="text-align: right;">
-                {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
-                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
-                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                {% else %}
-                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+
+                {% if auditData[account.id].currency.id == journal.currency_id %}
+                    {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
+                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% else %}
+                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% endif %}
+                {% endif %}
+
+                {% if auditData[account.id].currency.id == journal.foreign_currency_id %}
+                    {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
+                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% else %}
+                        {{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% endif %}
                 {% endif %}
 
             </td>
 
             <td class="hide-balance_after" style="text-align: right;">
-                {{ formatAmountBySymbol(journal.balance_after, journal.currency_symbol, journal.currency_decimal_places) }}
+                {{ formatAmountBySymbol(journal.balance_after, auditData[account.id].currency.symbol, auditData[account.id].currency.decimal_places) }}
             </td>
 
             <td class="hide-date">{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>

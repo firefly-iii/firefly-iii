@@ -58,7 +58,7 @@ return [
     'no_rules_for_bill'                          => 'Esta conta não tem regras associadas a ela.',
     'go_to_asset_accounts'                       => 'Veja suas contas ativas',
     'go_to_budgets'                              => 'Vá para seus orçamentos',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'clone_instructions'                         => 'Para clonar uma transação, procure pela caixa de seleção "salvar como nova" na tela de edição',
     'go_to_categories'                           => 'Vá para suas categorias',
     'go_to_bills'                                => 'Vá para suas faturas',
     'go_to_expense_accounts'                     => 'Veja suas despesas',

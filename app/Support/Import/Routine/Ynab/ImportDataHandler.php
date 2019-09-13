@@ -182,16 +182,26 @@ class ImportDataHandler
                 // transaction data:
                 'transactions'    => [
                     [
+                        'type'                  => $type,
+                        'date'                  => $transaction['date'] ?? date('Y-m-d'),
+                        'tags'                  => $tags,
+                        'user'                  => $this->importJob->user_id,
+                        'notes'                 => null,
                         'currency_id'           => null,
                         'currency_code'         => $budget['currency_code'] ?? $this->defaultCurrency->code,
-                        'description'           => null,
                         'amount'                => bcdiv((string)$transaction['amount'], '1000'),
                         'budget_id'             => null,
+                        'original-source'       => sprintf('ynab-v%s', config('firefly.version')),
                         'budget_name'           => null,
                         'category_id'           => null,
                         'category_name'         => $transaction['category_name'],
                         'source_id'             => $source->id,
                         'source_name'           => null,
+                        // all custom fields:
+                        'external_id'           => $transaction['id'] ?? '',
+
+                        // journal data:
+                        'description'           => $description,
                         'destination_id'        => $destination->id,
                         'destination_name'      => null,
                         'foreign_currency_id'   => null,

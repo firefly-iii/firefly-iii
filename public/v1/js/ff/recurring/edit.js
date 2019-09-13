@@ -183,51 +183,55 @@ function initializeButtons() {
 function updateFormFields() {
 
     if (transactionType === 'withdrawal') {
-        // hide source account name:
-        // $('#source_name_holder').hide(); // no longer used
+        // hide source ID for deposits
         $('#deposit_source_id_holder').hide();
 
-        // show source account ID:
+        // show source ID for other transaction types
         $('#source_id_holder').show();
 
-        // show destination name:
-        // $('#destination_name_holder').show(); // no longer used.
+        // show destination ID for withdrawal:
         $('#withdrawal_destination_id_holder').show();
 
-        // hide destination ID:
+        // hide destination ID for other types
         $('#destination_id_holder').hide();
 
         // show budget
         $('#budget_id_holder').show();
-
-        // hide piggy bank:
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'deposit') {
-        // $('#source_name_holder').show(); // no longer used
+        // show source ID for deposits
         $('#deposit_source_id_holder').show();
 
+        // hide source ID for other transaction types
         $('#source_id_holder').hide();
 
-        // $('#destination_name_holder').hide(); // no longer used
+        // hide destination ID for withdrawal:
         $('#withdrawal_destination_id_holder').hide();
 
+        // show destination ID for other types:
         $('#destination_id_holder').show();
+
+        // the rest
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'transfer') {
-        // $('#source_name_holder').hide(); // no longer used
+        // hide source ID for deposits
         $('#deposit_source_id_holder').hide();
 
+        // show source ID for others
         $('#source_id_holder').show();
 
-        // $('#destination_name_holder').hide(); // no longer used
-        $('#withdrawal_destination_id_holder').show();
+        // hide destination ID for withdrawal
+        $('#withdrawal_destination_id_holder').hide();
 
+        // show destination ID for others
         $('#destination_id_holder').show();
+
+        // the rest
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').show();
     }
