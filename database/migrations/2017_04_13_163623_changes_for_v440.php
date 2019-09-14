@@ -39,13 +39,14 @@ class ChangesForV440 extends Migration
 
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
-
-                // cannot drop foreign keys in SQLite:
-                if ('sqlite' !== config('database.default')) {
-                    $table->dropForeign('transactions_transaction_currency_id_foreign');
+            static function (Blueprint $table) {
+                if (Schema::hasColumn('transactions', 'transaction_currency_id')) {
+                    // cannot drop foreign keys in SQLite:
+                    if ('sqlite' !== config('database.default')) {
+                        $table->dropForeign('transactions_transaction_currency_id_foreign');
+                    }
+                    $table->dropColumn('transaction_currency_id');
                 }
-                $table->dropColumn('transaction_currency_id');
             }
         );
     }
@@ -60,7 +61,7 @@ class ChangesForV440 extends Migration
         if (!Schema::hasTable('currency_exchange_rates')) {
             Schema::create(
                 'currency_exchange_rates',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();
@@ -80,9 +81,11 @@ class ChangesForV440 extends Migration
 
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
+                if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
                 $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                }
             }
         );
     }
