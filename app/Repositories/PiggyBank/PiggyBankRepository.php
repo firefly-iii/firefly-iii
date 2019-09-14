@@ -28,7 +28,9 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -295,21 +297,65 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
-        /** @var JournalRepositoryInterface $repos */
-        $repos = app(JournalRepositoryInterface::class);
-        $repos->setUser($this->user);
+        Log::debug(sprintf('Now in getExactAmount(%d, %d, %d)', $piggyBank->id, $repetition->id, $journal->id));
 
-        $amount  = $repos->getJournalTotal($journal);
-        $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
+        $operator = null;
+        /** @var JournalRepositoryInterface $journalRepost */
+        $journalRepost = app(JournalRepositoryInterface::class);
+        $journalRepost->setUser($this->user);
+
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $accountRepos->setUser($this->user);
+
+        $defaultCurrency   = app('amount')->getDefaultCurrencyByUser($this->user);
+        $piggyBankCurrency = $accountRepos->getAccountCurrency($piggyBank->account) ?? $defaultCurrency;
+
+        Log::debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBankCurrency->code));
+
+        /** @var Transaction $source */
+        $source = $journal->transactions()->with(['Account'])->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
+        $destination = $journal->transactions()->with(['Account'])->where('amount', '>', 0)->first();
+
+        // matches source, which means amount will be removed from piggy:
+        if ($source->account_id === $piggyBank->account_id) {
+            $operator = 'negative';
+            $currency = $accountRepos->getAccountCurrency($source->account) ?? $defaultCurrency;
+            Log::debug(sprintf('Currency will draw money out of piggy bank. Source currency is %s', $currency->code));
+        }
+
+        // matches destination, which means amount will be added to piggy.
+        if ($destination->account_id === $piggyBank->account_id) {
+            $operator = 'positive';
+            $currency = $accountRepos->getAccountCurrency($destination->account) ?? $defaultCurrency;
+            Log::debug(sprintf('Currency will add money to piggy bank. Destination currency is %s', $currency->code));
+        }
+        if (null === $operator || null === $currency) {
+            return '0';
+        }
+        // currency of the account + the piggy bank currency are almost the same.
+        // which amount from the transaction matches?
+        // $currency->id === $piggyBankCurrency->id
+        $amount = null;
+        if ($source->transaction_currency_id === $currency->id) {
+            Log::debug('Use normal amount');
+            $amount = app('steam')->$operator($source->amount);
+        }
+        if ($source->foreign_currency_id === $currency->id) {
+            Log::debug('Use foreign amount');
+            $amount = app('steam')->$operator($source->foreign_amount);
+        }
+        if (null === $amount) {
+            return '0';
+        }
+
+        Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
+
+
         $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-
-        // if piggy account matches source account, the amount is positive
-        if (in_array($piggyBank->account_id, $sources, true)) {
-            $amount = bcmul($amount, '-1');
-            Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
-        }
 
         // if the amount is positive, make sure it fits in piggy bank:
         if (1 === bccomp($amount, '0') && bccomp($room, $amount) === -1) {
@@ -317,7 +363,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
             Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             Log::debug(sprintf('New amount is %f', $room));
-
             return $room;
         }
 
@@ -326,11 +371,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             Log::debug(sprintf('Max amount to remove is %f', $repetition->currentamount));
             Log::debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             Log::debug(sprintf('New amount is %f', $compare));
-
             return $compare;
         }
 
-        return $amount;
+        return (string)$amount;
     }
 
     /**
