@@ -521,7 +521,6 @@
                         tagList.push(row.tags[tagKey].text);
                     }
                 }
-
                 // set foreign currency info:
                 if (row.foreign_amount.amount !== '' && parseFloat(row.foreign_amount.amount) !== .00) {
                     foreignAmount = row.foreign_amount.amount;
@@ -565,12 +564,9 @@
                         payment_date: row.custom_fields.payment_date,
                         invoice_date: row.custom_fields.invoice_date,
                         internal_reference: row.custom_fields.internal_reference,
-                        notes: row.custom_fields.notes
+                        notes: row.custom_fields.notes,
+                        tags: tagList
                     };
-
-                if (tagList.length > 0) {
-                    currentArray.tags = tagList;
-                }
                 if (null !== foreignAmount) {
                     currentArray.foreign_amount = foreignAmount;
                     currentArray.foreign_currency_id = foreignCurrency;
