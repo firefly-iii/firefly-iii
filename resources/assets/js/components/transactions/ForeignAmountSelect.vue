@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="(this.enabledCurrencies.length > 2 && this.transactionType === 'Deposit') || this.transactionType === 'Transfer'">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="(this.enabledCurrencies.length > 2 && this.transactionType === 'Deposit') || this.transactionType.toLowerCase() === 'transfer'">
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]" @input="handleInput">
                 <option
@@ -27,6 +27,7 @@
                         v-if="currency.enabled"
                         :value="currency.id"
                         :label="currency.name"
+                        :selected="value.currency_id === currency.id"
 
                 >
                     {{ currency.name }}
