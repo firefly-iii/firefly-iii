@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
 use Log;
 
@@ -237,17 +238,12 @@ trait UserNavigation
     {
         $return = null;
         /** @var ViewErrorBag $errors */
-        $errors = session()->get('errors');
-        if (null === $errors || (null !== $errors && 0 === $errors->count())) {
+        $errors    = session()->get('errors');
+        $forbidden = ['json'];
+        if ((null === $errors || (null !== $errors && 0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             $return = app('url')->previous();
-
-            // TODO URL might not be one we *want* to remember.
-
             session()->put($identifier, $return);
-            //Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
-            //return;
         }
-        //Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
         return $return;
     }
 }
