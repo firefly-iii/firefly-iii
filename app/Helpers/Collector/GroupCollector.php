@@ -1162,4 +1162,40 @@ class GroupCollector implements GroupCollectorInterface
 
         return $this;
     }
+
+    /**
+     * Collect transactions created on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCreatedAt(Carbon $date): GroupCollectorInterface
+    {
+        $after  = $date->format('Y-m-d 00:00:00');
+        $before = $date->format('Y-m-d 23:59:59');
+        $this->query->where('transaction_journals.created_at', '>=', $after);
+        $this->query->where('transaction_journals.created_at', '<=', $before);
+        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
+
+        return $this;
+    }
+
+    /**
+     * Collect transactions updated on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUpdatedAt(Carbon $date): GroupCollectorInterface
+    {
+        $after  = $date->format('Y-m-d 00:00:00');
+        $before = $date->format('Y-m-d 23:59:59');
+        $this->query->where('transaction_journals.updated_at', '>=', $after);
+        $this->query->where('transaction_journals.updated_at', '<=', $before);
+        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
+
+        return $this;
+    }
 }

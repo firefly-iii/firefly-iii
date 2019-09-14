@@ -140,6 +140,24 @@ interface GroupCollectorInterface
     public function setAfter(Carbon $date): GroupCollectorInterface;
 
     /**
+     * Collect transactions created on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCreatedAt(Carbon $date): GroupCollectorInterface;
+
+    /**
+     * Collect transactions updated on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUpdatedAt(Carbon $date): GroupCollectorInterface;
+
+    /**
      * Collect transactions before a specific date.
      *
      * @param Carbon $date

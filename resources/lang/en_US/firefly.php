@@ -253,6 +253,8 @@ return [
     'search_modifier_on'                         => 'Transaction date is :value',
     'search_modifier_before'                     => 'Transaction date is before :value',
     'search_modifier_after'                      => 'Transaction date is after :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
     'general_search_error'                       => 'An error occured while searching. Please check the log files for more information.',
     'search_box'                                 => 'Search',

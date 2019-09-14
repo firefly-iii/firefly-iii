@@ -288,6 +288,16 @@ class Search implements SearchInterface
                     $after = new Carbon($modifier['value']);
                     $collector->setAfter($after);
                     break;
+                case 'created_at':
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    $createdAt = new Carbon($modifier['value']);
+                    $collector->setCreatedAt($createdAt);
+                    break;
+                case 'updated_at':
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    $updatedAt = new Carbon($modifier['value']);
+                    $collector->setUpdatedAt($updatedAt);
+                    break;
             }
         }
         $collector->setAccounts($totalAccounts);
