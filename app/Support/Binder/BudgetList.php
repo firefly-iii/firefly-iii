@@ -43,8 +43,15 @@ class BudgetList implements BinderInterface
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
-        //Log::debug(sprintf('Now in BudgetList::routeBinder("%s")', $value));
         if (auth()->check()) {
+
+            if ('allBudgets' === $value) {
+                return auth()->user()->budgets()->where('active', 1)
+                             ->orderBy('order', 'ASC')
+                             ->orderBy('name', 'ASC')
+                             ->get();
+            }
+
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
             // @codeCoverageIgnoreStart

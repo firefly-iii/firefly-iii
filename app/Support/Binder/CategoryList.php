@@ -43,6 +43,12 @@ class CategoryList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
+            if ('allCategories' === $value) {
+                return auth()->user()->categories()
+                             ->orderBy('name', 'ASC')
+                             ->get();
+            }
+
             $list = array_unique(array_map('\intval', explode(',', $value)));
             if (0 === count($list)) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore

@@ -55,8 +55,8 @@ class AccountList implements BinderInterface
                                     ->where('account_types.type', AccountType::ASSET)
                                     ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
-                //Log::debug(sprintf('Collection length is %d', $collection->count()));
             }
+
             if ('allAssetAccounts' !== $value) {
                 $incoming = array_map('\intval', explode(',', $value));
                 $list     = array_merge(array_unique($incoming), [0]);
