@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -62,6 +63,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes  = [AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $balanceTypes         = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
         $filteredAccountTypes = [];
         foreach ($accountTypes as $type) {
             if (in_array($type, $allowedAccountTypes, true)) {
@@ -79,11 +81,18 @@ class AutoCompleteController extends Controller
 
         /** @var Account $account */
         foreach ($result as $account) {
-            $currency = $repository->getAccountCurrency($account);
-            $currency = $currency ?? $defaultCurrency;
+            $nameWithBalance = $account->name;
+            $currency        = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+
+            if (in_array($account->accountType->type, $balanceTypes, true)) {
+                $balance         = app('steam')->balance($account, new Carbon);
+                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
+            }
+
             $return[] = [
                 'id'                      => $account->id,
                 'name'                    => $account->name,
+                'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,

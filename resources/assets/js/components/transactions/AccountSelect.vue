@@ -48,7 +48,7 @@
                     :async-src="accountAutoCompleteURI"
                     v-model="name"
                     :target="target"
-                    item-key="name"
+                    item-key="name_with_balance"
             ></typeahead>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
