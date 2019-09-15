@@ -121,11 +121,11 @@ class Search implements SearchInterface
      */
     public function parseQuery(string $query): void
     {
-        $filteredQuery       = $query;
-        $this->originalQuery = $query;
-        $pattern             = '/[a-z_]*:[0-9a-z-.]*/i';
+        $filteredQuery       = app('steam')->cleanString($query);
+        $this->originalQuery = $filteredQuery;
+        $pattern             = '/[[:alpha:]_]*:"?[\p{L}_-]*"?/ui';
         $matches             = [];
-        preg_match_all($pattern, $query, $matches);
+        preg_match_all($pattern, $filteredQuery, $matches);
 
         foreach ($matches[0] as $match) {
             $this->extractModifier($match);
@@ -314,6 +314,7 @@ class Search implements SearchInterface
         if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
             $type  = trim((string)$parts[0]);
             $value = trim((string)$parts[1]);
+            $value = trim(trim($value, '"\''));
             if (in_array($type, $this->validModifiers, true)) {
                 // filter for valid type
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
