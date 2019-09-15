@@ -187,6 +187,7 @@ class ShowController extends Controller
                 'name'  => $budget->name,
                 'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
                 'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
+                'currency' => $budgetLimit->transactionCurrency->name,
             ]
         );
 

@@ -137,8 +137,6 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
@@ -177,6 +175,8 @@ class BudgetController extends Controller
             $start->addDay();
         }
         $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
+        // add currency symbol from budget limit:
+        $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
         $cache->store($data);
 
         return response()->json($data);
@@ -186,14 +186,12 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per asset account.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
-    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
+    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
@@ -208,24 +206,38 @@ class BudgetController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setBudget($budget);
         if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
+                      ->setCurrency($budgetLimit->transactionCurrency);
         }
+        if (null === $budgetLimit) {
+            $collector->setRange(session()->get('start'), session()->get('end'));
+        }
+
 
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
+
+        // group by asset account ID:
         foreach ($journals as $journal) {
-            $assetId          = (int)$journal['destination_account_id'];
-            $result[$assetId] = $result[$assetId] ?? '0';
-            $result[$assetId] = bcadd($journal['amount'], $result[$assetId]);
+            $assetId                    = (int)$journal['destination_account_id'];
+            $result[$assetId]           = $result[$assetId] ?? [
+                    'amount'          => '0',
+                    'currency_symbol' => $journal['currency_symbol'],
+                ];
+            $result[$assetId]['amount'] = bcadd($journal['amount'], $result[$assetId]['amount']);
         }
 
         $names = $this->getAccountNames(array_keys($result));
-        foreach ($result as $assetId => $amount) {
-            $chartData[$names[$assetId]] = $amount;
+        foreach ($result as $assetId => $info) {
+            $chartData[$names[$assetId]]
+                = [
+                'amount'          => $info['amount'],
+                'currency_symbol' => $info['currency_symbol'],
+            ];
         }
 
-        $data = $this->generator->pieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -235,14 +247,12 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per category.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
-    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
+    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
@@ -257,23 +267,33 @@ class BudgetController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setBudget($budget)->withCategoryInformation();
         if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
+                      ->setCurrency($budgetLimit->transactionCurrency);
+        }
+        if (null === $budgetLimit) {
+            $collector->setRange(session()->get('start'), session()->get('end'));
         }
 
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
         foreach ($journals as $journal) {
-            $categoryId          = (int)$journal['category_id'];
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($journal['amount'], $result[$categoryId]);
+            $categoryId                    = (int)$journal['category_id'];
+            $result[$categoryId]           = $result[$categoryId] ?? [
+                    'amount'          => '0',
+                    'currency_symbol' => $journal['currency_symbol'],
+                ];
+            $result[$categoryId]['amount'] = bcadd($journal['amount'], $result[$categoryId]['amount']);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
-        foreach ($result as $categoryId => $amount) {
-            $chartData[$names[$categoryId]] = $amount;
+        foreach ($result as $categoryId => $info) {
+            $chartData[$names[$categoryId]] = [
+                'amount'          => $info['amount'],
+                'currency_symbol' => $info['currency_symbol'],
+            ];
         }
-        $data = $this->generator->pieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -283,14 +303,13 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per expense account.
      *
-     * TODO this chart is not multi-currency aware.
      *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
-    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
+    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
@@ -305,7 +324,12 @@ class BudgetController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
         if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
+                      ->setCurrency($budgetLimit->transactionCurrency);
+        }
+
+        if (null === $budgetLimit) {
+            $collector->setRange(session()->get('start'), session()->get('end'));
         }
 
         $journals  = $collector->getExtractedJournals();
@@ -313,18 +337,24 @@ class BudgetController extends Controller
         $chartData = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $opposingId          = (int)$journal['destination_account_id'];
-            $result[$opposingId] = $result[$opposingId] ?? '0';
-            $result[$opposingId] = bcadd($journal['amount'], $result[$opposingId]);
+            $opposingId                    = (int)$journal['destination_account_id'];
+            $result[$opposingId]           = $result[$opposingId] ?? [
+                    'amount'          => '0',
+                    'currency_symbol' => $journal['currency_symbol'],
+                ];
+            $result[$opposingId]['amount'] = bcadd($journal['amount'], $result[$opposingId]['amount']);
         }
 
         $names = $this->getAccountNames(array_keys($result));
-        foreach ($result as $opposingId => $amount) {
+        foreach ($result as $opposingId => $info) {
             $name             = $names[$opposingId] ?? 'no name';
-            $chartData[$name] = $amount;
+            $chartData[$name] = [
+                'amount'          => $info['amount'],
+                'currency_symbol' => $info['currency_symbol'],
+            ];
         }
 
-        $data = $this->generator->pieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);

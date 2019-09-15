@@ -93,6 +93,57 @@ function lineChart(URI, container) {
 }
 
 /**
+ * Overrules the currency the line chart is drawn in.
+ *
+ * @param URI
+ * @param container
+ */
+function otherCurrencyLineChart(URI, container, currencySymbol) {
+    "use strict";
+
+    var colorData = true;
+
+    var newOpts = {
+        scales: {
+            xAxes: [
+                {
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        // break ticks when too long.
+                        callback: function (value, index, values) {
+                            return formatLabel(value, 20);
+                        }
+                    }
+                }
+            ],
+            yAxes: [{
+                display: true,
+                //hello: 'fresh',
+                ticks: {
+                    callback: function (tickValue) {
+                        "use strict";
+                        // use first symbol or null:
+                        return accounting.formatMoney(tickValue);
+
+                    },
+                    beginAtZero: true
+                }
+            }]
+        },
+    };
+
+    //var options = $.extend(true, newOpts, defaultChartOptions);
+    var options = $.extend(true, defaultChartOptions, newOpts);
+
+    console.log(options);
+    var chartType = 'line';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
  * Function to draw a chart with double Y Axes and stacked columns.
  *
  * @param URI
@@ -305,7 +356,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
         return;
     }
 
-
     $.getJSON(URI).done(function (data) {
         containerObj.removeClass('general-chart-error');
         if (data.labels.length === 0) {
@@ -323,7 +373,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
             }
             return;
         }
-
 
         if (colorData) {
             data = colorizeData(data);

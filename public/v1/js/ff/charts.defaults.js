@@ -97,6 +97,7 @@ var defaultChartOptions = {
             ticks: {
                 callback: function (tickValue) {
                     "use strict";
+                    // use first symbol or null:
                     return accounting.formatMoney(tickValue);
 
                 },
