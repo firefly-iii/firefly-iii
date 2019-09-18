@@ -45,6 +45,8 @@ class FinTS
         if (!isset($config['fints_url'], $config['fints_port'], $config['fints_bank_code'], $config['fints_username'], $config['fints_password'])) {
             throw new FireflyException('Constructed FinTS with incomplete config.');
         }
+        $versionElements = explode('.', config('firefly.version'));
+        $majorMinorVersion = implode('.', array_slice($versionElements, 0, 2));
         $this->finTS = new \Fhp\FinTs(
             $config['fints_url'],
             $config['fints_port'],
@@ -53,7 +55,7 @@ class FinTS
             Crypt::decrypt($config['fints_password']), // verified
             null,
             config('import.options.fints.registration_number'),
-            config('firefly.version')
+            $majorMinorVersion
         );
     }
 
