@@ -50,7 +50,10 @@ class FinTS
             $config['fints_port'],
             $config['fints_bank_code'],
             $config['fints_username'],
-            Crypt::decrypt($config['fints_password']) // verified
+            Crypt::decrypt($config['fints_password']), // verified
+            null,
+            config('import.options.fints.registration_number'),
+            config('version')
         );
     }
 

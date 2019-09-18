@@ -168,5 +168,8 @@ return [
         'plaid'   => [],
         'quovo'   => [],
         'yodlee'  => [],
+        'fints'   => [
+            'registration_number' => 'TODO'
+        ],
     ],
 ];
