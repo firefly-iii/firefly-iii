@@ -53,7 +53,7 @@ class FinTS
             Crypt::decrypt($config['fints_password']), // verified
             null,
             config('import.options.fints.registration_number'),
-            config('version')
+            config('firefly.version')
         );
     }
 
