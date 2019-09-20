@@ -225,6 +225,19 @@ class Request extends FormRequest
     }
 
     /**
+     * Return string value, but keep newlines.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function nlString(string $field): string
+    {
+        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
+    }
+
+
+    /**
      * Parse and clean a string.
      *
      * @param string|null $string
@@ -237,6 +250,24 @@ class Request extends FormRequest
             return null;
         }
         $result = app('steam')->cleanString($string);
+
+        return '' === $result ? null : $result;
+
+    }
+
+    /**
+     * Parse and clean a string, but keep the newlines.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function nlStringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->nlCleanString($string);
 
         return '' === $result ? null : $result;
 

@@ -55,7 +55,7 @@ class RuleGroupFormRequest extends Request
 
         return [
             'title'       => $this->string('title'),
-            'description' => $this->string('description'),
+            'description' => $this->nlString('description'),
             'active'      => $active,
         ];
     }

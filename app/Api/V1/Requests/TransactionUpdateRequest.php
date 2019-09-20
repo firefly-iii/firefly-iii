@@ -49,6 +49,8 @@ class TransactionUpdateRequest extends Request
     private $integerFields;
     /** @var array Fields that contain string values. */
     private $stringFields;
+    /** @var array Fields that contain text (with newlines) */
+    private $textareaFields;
 
     /**
      * Authorize logged in users.
@@ -91,6 +93,10 @@ class TransactionUpdateRequest extends Request
             'invoice_date',
         ];
 
+        $this->textareaFields = [
+            'notes',
+        ];
+
         $this->stringFields  = [
             'type',
             'currency_code',
@@ -103,7 +109,6 @@ class TransactionUpdateRequest extends Request
             'budget_name',
             'category_name',
             'bill_name',
-            'notes',
             'internal_reference',
             'external_id',
             'bunq_payment_id',
@@ -293,6 +298,12 @@ class TransactionUpdateRequest extends Request
             foreach ($this->stringFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
                     $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->textareaFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
                 }
             }
 

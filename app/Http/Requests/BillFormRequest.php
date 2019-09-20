@@ -56,7 +56,7 @@ class BillFormRequest extends Request
             'date'          => $this->date('date'),
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
-            'notes'         => $this->string('notes'),
+            'notes'         => $this->nlString('notes'),
             'active'        => $this->boolean('active'),
         ];
     }

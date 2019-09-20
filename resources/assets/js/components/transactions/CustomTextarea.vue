@@ -29,7 +29,9 @@
             <textarea class="form-control" :name="name"
                       :title="title" autocomplete="off"
                       ref="str"
-                      :value="value" @input="handleInput"
+                      rows="8"
+                      v-model="textValue"
+                      @input="handleInput"
                       :placeholder="title"></textarea>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -46,6 +48,11 @@
             name: String,
             value: String,
             error: Array
+        },
+        data() {
+            return {
+                textValue: this.value,
+            }
         },
         methods: {
             handleInput(e) {
