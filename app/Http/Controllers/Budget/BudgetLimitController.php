@@ -206,6 +206,7 @@ class BudgetLimitController extends Controller
         $array['left_per_day'] = bcdiv(bcadd($array['spent'], $array['amount']), $array['days_left']);
 
         // left per day formatted.
+        $array['amount']                 = round($limit['amount'], $limit->transactionCurrency->decimal_places);
         $array['left_per_day_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $array['left_per_day']);
 
         return response()->json($array);

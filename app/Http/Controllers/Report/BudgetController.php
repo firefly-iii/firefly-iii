@@ -388,7 +388,7 @@ class BudgetController extends Controller
             ];
         $noBudget             = $this->nbRepository->sumExpenses($start, $end);
         foreach ($noBudget as $noBudgetEntry) {
-            $report['budgets'][0]['budget_limits'][]                = [
+            $report['budgets'][0]['budget_limits'][] = [
                 'budget_limit_id'         => null,
                 'start_date'              => $start,
                 'end_date'                => $end,
@@ -404,7 +404,8 @@ class BudgetController extends Controller
                 'currency_symbol'         => $noBudgetEntry['currency_symbol'],
                 'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'],
             ];
-            $report['sums'][$noBudgetEntry['currency_id']]['spent'] = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'], $noBudgetEntry['sum']);
+            $report['sums'][$noBudgetEntry['currency_id']]['spent']
+                                                     = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'] ?? '0', $noBudgetEntry['sum']);
         }
 
         // make percentages based on total amount.
