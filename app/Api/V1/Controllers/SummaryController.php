@@ -349,13 +349,12 @@ class SummaryController extends Controller
         $today     = new Carbon;
         $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
-        $spentInfo = $this->opsRepository->spentInPeriodMc($budgets, new Collection, $start, $end);
-        foreach ($available as $currencyId => $amount) {
-            $currency = $this->currencyRepos->findNull($currencyId);
-            if (null === $currency) {
-                continue;
-            }
-            $spentInCurrency = (string)$this->findInSpentArray($spentInfo, $currency);
+        $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
+
+        foreach ($spent as $row) {
+            // either an amount was budgeted or 0 is available.
+            $amount          = $available[$row['currency_id']] ?? '0';
+            $spentInCurrency = $row['sum'];
             $leftToSpend     = bcadd($amount, $spentInCurrency);
 
             $days   = $today->diffInDays($end) + 1;
@@ -365,19 +364,23 @@ class SummaryController extends Controller
             }
 
             $return[] = [
-                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($leftToSpend, $currency->decimal_places),
-                'currency_id'             => $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $leftToSpend, false),
+                'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
+                'monetary_value'          => round($leftToSpend, $row['currency_decimal_places']),
+                'currency_id'             => $row['currency_id'],
+                'currency_code'           => $row['currency_code'],
+                'currency_symbol'         => $row['currency_symbol'],
+                'currency_decimal_places' => $row['currency_decimal_places'],
+                'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
-                'sub_title'               => (string)trans('firefly.box_spend_per_day', ['amount' => app('amount')->formatAnything($currency, $perDay, false)]),
+                'sub_title'               => (string)trans(
+                    'firefly.box_spend_per_day', ['amount' => app('amount')->formatFlat(
+                    $row['currency_symbol'], $row['currency_decimal_places'], $perDay, false
+                )]
+                ),
             ];
-        }
 
+        }
         return $return;
     }
 

@@ -138,8 +138,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     {
         $return           = [];
         $availableBudgets = $this->user->availableBudgets()
-                                       ->where('start_date', $start->format('Y-m-d 00:00:00'))
-                                       ->where('end_date', $end->format('Y-m-d 00:00:00'))->get();
+                                       ->where('start_date', $start->format('Y-m-d'))
+                                       ->where('end_date', $end->format('Y-m-d'))->get();
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
