@@ -162,7 +162,7 @@
                             {# info text to show how much is spent (in currency). #}
                             <div class="row spentInfo" data-id="{{ budget.id }}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <small>{{ trans('firefly.spent_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.start_date.formatLocalized(monthAndDayFormat)}) }}
+                                    <small>{{ trans('firefly.spent_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat)}) }}
                                         : {{ formatAmountBySymbol(budget.spent, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places) }} </small>
                                 </div>
                             </div>
