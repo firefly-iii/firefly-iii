@@ -167,7 +167,7 @@ class IndexController extends Controller
                 $currency = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
-                    'amount'                  => $limit->amount,
+                    'amount'                  => round($limit->amount, $currency->decimal_places),
                     'currency_id'             => $currency->id,
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
