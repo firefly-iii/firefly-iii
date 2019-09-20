@@ -93,7 +93,7 @@
                 {% if enableAddButton %}
                     <div class="col-lg-12">
                         <p class="pull-right">
-                            <a href="#" class="btn btn-success btn-xs create_ab_alt">
+                            <a href="#" class="btn btn-light btn-xs create_ab_alt">
                                 <i class="fa fa-plus-circle"></i>
                                 {{ 'alt_currency_ab_create'|_ }}</a>
                         </p>
@@ -189,7 +189,7 @@
             {% if enableAddButton %}
                 <div class="col-lg-12">
                     <p class="pull-right">
-                        <a href="#" class="btn btn-success btn-xs create_ab_alt">
+                        <a href="#" class="btn btn-light btn-xs create_ab_alt">
                             <i class="fa fa-plus-circle"></i>
                             {{ 'alt_currency_ab_create'|_ }}</a>
                     </p>
@@ -270,9 +270,9 @@
                                         {% endfor %}
                                     {% endif %}
                                     {% if budget.budgeted|length < currencies.count %}
-                                        <a href="#" class="btn btn-success btn-xs create_bl" data-id="{{ budget.id }}">
+                                        <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
                                             <i class="fa fa-plus-circle"></i>
-                                            {{ 'bl_create_btn'|_ }}</a>
+                                            </a>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}">
