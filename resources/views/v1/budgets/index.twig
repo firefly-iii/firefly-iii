@@ -413,9 +413,9 @@
         var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
         var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME']) }}";
+        var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
 
-        var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME',start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
 

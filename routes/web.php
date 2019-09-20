@@ -240,8 +240,8 @@ Route::group(
         Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
 
         // edit
-        Route::get('edit/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
-        Route::post('update/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
+        Route::get('edit/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
+        Route::post('update/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
 
         Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
     }

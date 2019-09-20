@@ -147,11 +147,14 @@ class AvailableBudgetController extends Controller
     /**
      * @param AvailableBudget $availableBudget
      *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(AvailableBudget $availableBudget)
+    public function edit(AvailableBudget $availableBudget, Carbon $start, Carbon $end)
     {
-        return view('budgets.available-budgets.edit', compact('availableBudget'));
+        return view('budgets.available-budgets.edit', compact('availableBudget','start','end'));
     }
 
     /**
@@ -203,14 +206,17 @@ class AvailableBudgetController extends Controller
      * @param Request         $request
      * @param AvailableBudget $availableBudget
      *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, AvailableBudget $availableBudget)
+    public function update(Request $request, AvailableBudget $availableBudget, Carbon $start, Carbon $end)
     {
         $this->abRepository->update($availableBudget, ['amount' => $request->get('amount')]);
         session()->flash('success', trans('firefly.updated_ab'));
 
-        return redirect(route('budgets.index'));
+        return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
     }
 
 }
