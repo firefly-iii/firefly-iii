@@ -115,7 +115,7 @@ class TransactionStoreRequest extends Request
             // other interesting fields
             'transactions.*.reconciled'            => [new IsBoolean],
             'transactions.*.notes'                 => 'min:1,max:50000|nullable',
-            'transactions.*.tags'                  => 'between:1,255',
+            'transactions.*.tags'                  => 'between:0,255',
 
             // meta info fields
             'transactions.*.internal_reference'    => 'min:1,max:255|nullable',
