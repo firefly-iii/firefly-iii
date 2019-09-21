@@ -56,6 +56,16 @@ class FireflyConfig
 
     /**
      * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return Configuration::where('name', $name)->count() === 1;
+    }
+
+    /**
+     * @param string $name
      * @param mixed $default
      *
      * @return \FireflyIII\Models\Configuration|null

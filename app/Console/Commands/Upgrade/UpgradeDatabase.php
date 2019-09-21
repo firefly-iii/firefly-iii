@@ -93,6 +93,7 @@ class UpgradeDatabase extends Command
             // two report commands
             'firefly-iii:report-empty-objects',
             'firefly-iii:report-sum',
+            'firefly-iii:restore-oauth-keys',
 
             // instructions
             'firefly:instructions update',
