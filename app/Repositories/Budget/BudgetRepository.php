@@ -220,7 +220,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->orderBy('order', 'DESC')
+        $set = $this->user->budgets()
+                          ->orderBy('order', 'DESC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
 
         return $set;
@@ -238,6 +239,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('' !== $query) {
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
+        $search->orderBy('order', 'DESC')
+        ->orderBy('name', 'ASC')->where('active', 1);
 
         return $search->get();
     }
