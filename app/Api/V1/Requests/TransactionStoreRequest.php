@@ -74,7 +74,7 @@ class TransactionStoreRequest extends Request
     {
         $rules = [
             // basic fields for group:
-            'group_title'                          => 'between:1,255',
+            'group_title'                          => 'between:1,1000',
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
@@ -92,7 +92,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.foreign_amount'        => 'numeric|more:0',
 
             // description
-            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.description'           => 'nullable|between:1,1000',
 
             // source of transaction
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],

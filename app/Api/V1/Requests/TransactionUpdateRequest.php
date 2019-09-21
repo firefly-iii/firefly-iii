@@ -149,7 +149,7 @@ class TransactionUpdateRequest extends Request
     {
         $rules = [
             // basic fields for group:
-            'group_title'                          => 'between:1,255',
+            'group_title'                          => 'between:1,1000',
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
@@ -163,11 +163,11 @@ class TransactionUpdateRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                => 'numeric|more:0',
+            'transactions.*.amount'                => 'numeric|more:0|max:100000000000',
             'transactions.*.foreign_amount'        => 'numeric|gte:0',
 
             // description
-            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.description'           => 'nullable|between:1,1000',
 
             // source of transaction
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],

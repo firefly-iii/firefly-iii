@@ -287,7 +287,7 @@ class TransactionJournalFactory
                 'transaction_type_id'     => $type->id,
                 'bill_id'                 => $billId,
                 'transaction_currency_id' => $currency->id,
-                'description'             => $description,
+                'description'             => substr($description,0,1000),
                 'date'                    => $carbon->format('Y-m-d H:i:s'),
                 'order'                   => $order,
                 'tag_count'               => 0,

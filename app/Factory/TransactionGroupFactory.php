@@ -61,7 +61,7 @@ class TransactionGroupFactory
         $title      = '' === $title ? null : $title;
 
         if (null !== $title) {
-            $title = substr($title, 0, 255);
+            $title = substr($title, 0, 1000);
         }
 
         $group = new TransactionGroup;

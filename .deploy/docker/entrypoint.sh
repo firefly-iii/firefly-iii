@@ -72,7 +72,7 @@ php artisan firefly-iii:back-to-journals
 php artisan firefly-iii:rename-account-meta
 php artisan firefly-iii:migrate-recurrence-meta
 
-# there are 14 verify commands
+# there are 15 verify commands
 php artisan firefly-iii:fix-piggies
 php artisan firefly-iii:create-link-types
 php artisan firefly-iii:create-access-tokens
@@ -87,6 +87,7 @@ php artisan firefly-iii:delete-empty-groups
 php artisan firefly-iii:fix-account-types
 php artisan firefly-iii:rename-meta-fields
 php artisan firefly-iii:fix-ob-currencies
+php artisan firefly-iii:fix-long-descriptions
 
 # report commands
 php artisan firefly-iii:report-empty-objects

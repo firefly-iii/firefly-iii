@@ -70,7 +70,8 @@ class CorrectDatabase extends Command
             'firefly-iii:delete-empty-groups',
             'firefly-iii:fix-account-types',
             'firefly-iii:rename-meta-fields',
-            'firefly-iii:fix-ob-currencies'
+            'firefly-iii:fix-ob-currencies',
+            'firefly-iii:fix-long-descriptions'
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));
