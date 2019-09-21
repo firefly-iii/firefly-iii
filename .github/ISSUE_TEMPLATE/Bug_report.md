@@ -12,9 +12,6 @@ I am running Firefly III version x.x.x, and my problem is:
 **Steps to reproduce**
 <!-- What do you need to do to trigger this bug? -->
 
-**Expected behavior**
-<!-- What do you expect to see after those steps? -->
-
 **Extra info**
 <!-- Please add extra info here, such as OS, browser, and the output from the /debug page of your Firefly III installation (click the version at the bottom). -->
 
@@ -23,5 +20,4 @@ I am running Firefly III version x.x.x, and my problem is:
 
 - Post a stacktrace from your log files
 - Add a screenshot
-- Remember the human
 -->
