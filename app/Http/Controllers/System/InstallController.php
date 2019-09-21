@@ -68,6 +68,7 @@ class InstallController extends Controller
             // there are 3 initial commands
             'migrate'                                  => ['--seed' => true, '--force' => true],
             'firefly-iii:decrypt-all'                  => [],
+            'firefly-iii:restore-oauth-keys'           => [],
             'generate-keys'                            => [], // an exception :(
 
             // there are 13 upgrade commands.
@@ -101,7 +102,6 @@ class InstallController extends Controller
             'firefly-iii:rename-meta-fields'           => [],
             'firefly-iii:fix-ob-currencies'            => [],
             'firefly-iii:fix-long-descriptions'        => [],
-            'firefly-iii:restore-oauth-keys'           => [],
         ];
     }
 
