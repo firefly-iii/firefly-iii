@@ -238,6 +238,21 @@ class Request extends FormRequest
 
 
     /**
+     * Return string value, but keep newlines, or NULL if empty.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function nullableNlString(string $field): string
+    {
+        if (!$this->has($field)) {
+            return null;
+        }
+        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
+    }
+
+    /**
      * Parse and clean a string.
      *
      * @param string|null $string

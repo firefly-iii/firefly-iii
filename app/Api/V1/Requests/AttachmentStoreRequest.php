@@ -56,7 +56,7 @@ class AttachmentStoreRequest extends Request
         return [
             'filename' => $this->string('filename'),
             'title'    => $this->string('title'),
-            'notes'    => $this->string('notes'),
+            'notes'    => $this->nlString('notes'),
             'model'    => $this->string('model'),
             'model_id' => $this->integer('model_id'),
         ];

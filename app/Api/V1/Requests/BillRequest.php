@@ -70,7 +70,7 @@ class BillRequest extends Request
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
             'active'        => $active,
-            'notes'         => $this->string('notes'),
+            'notes'         => $this->nlString('notes'),
         ];
 
         return $data;

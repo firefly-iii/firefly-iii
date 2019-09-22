@@ -69,7 +69,7 @@ class RecurrenceUpdateRequest extends Request
                 'title'             => $this->nullableString('title'),
                 'description'       => $this->nullableString('description'),
                 'first_date'        => $this->date('first_date'),
-                'notes'             => $this->nullableString('notes'),
+                'notes'             => $this->nullableNlString('notes'),
                 'repeat_until'      => $this->date('repeat_until'),
                 'nr_of_repetitions' => $this->nullableInteger('nr_of_repetitions'),
                 'apply_rules'       => $applyRules,
