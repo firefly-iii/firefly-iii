@@ -242,7 +242,7 @@ class TransactionStoreRequest extends Request
 
                 // some other interesting properties
                 'reconciled'            => $this->convertBoolean((string)$object['reconciled']),
-                'notes'                 => $this->stringFromValue($object['notes']),
+                'notes'                 => $this->nlStringFromValue($object['notes']),
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:
