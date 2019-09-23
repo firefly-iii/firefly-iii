@@ -95,6 +95,7 @@ class NoCategoryController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
                   ->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category'));
@@ -129,6 +130,7 @@ class NoCategoryController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));

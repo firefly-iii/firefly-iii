@@ -213,5 +213,12 @@ TODO: hide and show columns
             </div>
         </td>
     </tr>
+    <tr>
+        {% if showCategory or showBudget %}
+            <td colspan="9" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% else %}
+            <td colspan="8" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% endif %}
+    </tr>
     </tfoot>
 </table>
