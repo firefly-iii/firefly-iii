@@ -85,7 +85,7 @@ class ShowController extends Controller
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $oldest       = $this->repository->firstUseDate($category) ?? Carbon::create()->startOfYear();
+        $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
