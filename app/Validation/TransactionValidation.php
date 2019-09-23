@@ -96,7 +96,7 @@ trait TransactionValidation
 
         foreach ($transactions as $index => $transaction) {
             $originalType    = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
-            $originalData    = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
+            $originalData    = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
             $transactionType = $transaction['type'] ?? $originalType;
             $accountValidator->setTransactionType($transactionType);
 
