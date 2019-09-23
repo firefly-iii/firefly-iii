@@ -244,7 +244,7 @@ class Request extends FormRequest
      *
      * @return string
      */
-    public function nullableNlString(string $field): string
+    public function nullableNlString(string $field): ?string
     {
         if (!$this->has($field)) {
             return null;
