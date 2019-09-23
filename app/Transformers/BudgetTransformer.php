@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -34,7 +35,8 @@ use Log;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    private $repository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * BudgetTransformer constructor.
@@ -43,7 +45,7 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(BudgetRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -58,12 +60,12 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function transform(Budget $budget): array
     {
-        $this->repository->setUser($budget->user);
+        $this->opsRepository->setUser($budget->user);
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
         $spent = [];
         if (null !== $start && null !== $end) {
-            $spent = $this->repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
+            $spent = array_values($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
 
         $data = [
