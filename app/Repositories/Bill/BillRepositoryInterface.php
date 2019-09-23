@@ -33,6 +33,12 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
+
+    /**
+     * @param Bill $bill
+     */
+    public function unlinkAll(Bill $bill): void;
+
     /**
      * @param Bill $bill
      *

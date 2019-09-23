@@ -264,6 +264,9 @@ class BillController extends Controller
             return redirect(route('bills.show', [$bill->id]));
         }
 
+        // unlink all journals:
+        $this->billRepository->unlinkAll($bill);
+
         foreach ($set as $rule) {
             // simply fire off all rules?
             /** @var TransactionMatcher $matcher */

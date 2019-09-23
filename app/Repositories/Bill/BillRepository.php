@@ -686,4 +686,12 @@ class BillRepository implements BillRepositoryInterface
 
         return $service->update($bill, $data);
     }
+
+    /**
+     * @param Bill $bill
+     */
+    public function unlinkAll(Bill $bill): void
+    {
+        $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
+    }
 }

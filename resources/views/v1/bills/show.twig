@@ -88,7 +88,12 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <a id="billButtons" href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
+                    <p><a id="billButtons" href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a></p>
+                    <p><small class="text-muted">
+                            {{ 'running_again_loss'|_ }}
+                        </small>
+
+                    </p>
                 </div>
             </div>
             {% if object.data.notes %}
