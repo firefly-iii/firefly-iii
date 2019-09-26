@@ -41,6 +41,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -87,15 +88,18 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function attachments(TransactionJournal $transactionJournal): JsonResponse
+    public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager     = $this->getManager();
-        $attachments = $this->journalAPIRepository->getAttachments($transactionJournal);
+        $attachments = new Collection;
+        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
+            $attachments = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($attachments);
+        }
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -189,15 +193,18 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function piggyBankEvents(TransactionJournal $transactionJournal): JsonResponse
+    public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager = $this->getManager();
-        $events  = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal);
+        $events  = new Collection;
+        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
+            $events = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($events);
+        }
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);

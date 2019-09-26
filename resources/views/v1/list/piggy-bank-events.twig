@@ -15,7 +15,7 @@
             {% endif %}
             <td>
                 {% if event.transaction_journal_id %}
-                    <a href="{{ route('transactions.show',event.transaction_journal_id) }}"
+                    <a href="{{ route('transactions.show',event.transactionJournal.transaction_group_id) }}"
                        title="{{ event.transactionJournal.description }}">{{ event.date.formatLocalized(monthAndDayFormat) }}</a>
                 {% else %}
                     {{ event.date.formatLocalized(monthAndDayFormat) }}
