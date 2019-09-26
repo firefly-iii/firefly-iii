@@ -227,7 +227,7 @@ class TransactionGroupTransformer extends AbstractTransformer
                 'category_name' => $category ? $category->name : null,
 
                 'bill_id'   => $journal->bill_id ?: null,
-                'bill_name' => $journal->bill_id ? $journal->bill->name : null,
+                'bill_name' => $journal->bill ? $journal->bill->name : null,
 
                 'reconciled' => $source->reconciled,
                 'notes'      => $this->groupRepos->getNoteText($journal->id),
