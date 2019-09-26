@@ -125,9 +125,6 @@ class RecurrenceTransformer extends AbstractTransformer
     private function getRepetitions(Recurrence $recurrence): array
     {
         $fromDate = $recurrence->latest_date ?? $recurrence->first_date;
-        // date in the past? use today:
-        $today    = new Carbon;
-        $fromDate = $fromDate->lte($today) ? $today : $fromDate;
         $return   = [];
 
         /** @var RecurrenceRepetition $repetition */
@@ -145,7 +142,7 @@ class RecurrenceTransformer extends AbstractTransformer
             ];
 
             // get the (future) occurrences for this specific type of repetition:
-            $occurrences = $this->repository->getXOccurrences($repetition, $fromDate, 5);
+            $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon, 5);
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
                 $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');

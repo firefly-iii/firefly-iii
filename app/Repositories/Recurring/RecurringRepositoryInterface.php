@@ -164,6 +164,22 @@ interface RecurringRepositoryInterface
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array;
 
     /**
+     * Calculate the next X iterations starting on the date given in $date.
+     * Returns an array of Carbon objects.
+     *
+     * Only returns them of they are after $afterDate
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param Carbon $afterDate
+     * @param int                  $count
+     *
+     * @throws FireflyException
+     * @return array
+     */
+    public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date,Carbon $afterDate, int $count): array;
+
+    /**
      * Parse the repetition in a string that is user readable.
      *
      * @param RecurrenceRepetition $repetition

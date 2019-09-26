@@ -41,6 +41,7 @@ use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\Support\Repositories\Recurring\CalculateRangeOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrences;
+use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrencesSince;
 use FireflyIII\Support\Repositories\Recurring\FiltersWeekends;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -52,7 +53,7 @@ use Log;
  */
 class RecurringRepository implements RecurringRepositoryInterface
 {
-    use CalculateRangeOccurrences, CalculateXOccurrences, FiltersWeekends;
+    use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
     /** @var User */
     private $user;
 
@@ -495,5 +496,45 @@ class RecurringRepository implements RecurringRepositoryInterface
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
+    }
+
+    /**
+     * Calculate the next X iterations starting on the date given in $date.
+     * Returns an array of Carbon objects.
+     *
+     * Only returns them of they are after $afterDate
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param Carbon               $afterDate
+     * @param int                  $count
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
+    {
+        $skipMod     = $repetition->repetition_skip + 1;
+        $occurrences = [];
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getXDailyOccurrencesSince($date, $afterDate, $count, $skipMod);
+        }
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getXWeeklyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getXMonthlyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getXNDomOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getXYearlyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+
+        // filter out all the weekend days:
+        $occurrences = $this->filterWeekends($repetition, $occurrences);
+
+        return $occurrences;
     }
 }
