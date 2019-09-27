@@ -33,6 +33,11 @@ use Illuminate\Support\Collection;
 interface TagRepositoryInterface
 {
     /**
+     * Destroy all tags.
+     */
+    public function destroyAll(): void;
+
+    /**
      * @return int
      */
     public function count(): int;

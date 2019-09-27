@@ -282,4 +282,12 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return $availableBudget;
 
     }
+
+    /**
+     * Delete all available budgets.
+     */
+    public function destroyAll(): void
+    {
+        $this->user->availableBudgets()->delete();
+    }
 }

@@ -447,4 +447,16 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         return $limit;
     }
+
+    /**
+     * Destroy all budget limits.
+     */
+    public function destroyAll(): void
+    {
+        $budgets = $this->user->budgets()->get();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budget->budgetlimits()->delete();
+        }
+    }
 }

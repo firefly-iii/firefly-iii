@@ -35,6 +35,12 @@ use Illuminate\Support\Collection;
  */
 interface BudgetLimitRepositoryInterface
 {
+
+    /**
+     * Destroy all budget limits.
+     */
+    public function destroyAll(): void;
+
     /**
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.

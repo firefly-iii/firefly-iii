@@ -655,6 +655,12 @@ Route::group(
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
     Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
 
+    // routes to delete stuff.
+    Route::get('delete-budgets', ['uses' => 'Profile\DataController@deleteBudgets', 'as' => 'delete-budgets']);
+    Route::get('delete-categories', ['uses' => 'Profile\DataController@deleteCategories', 'as' => 'delete-categories']);
+    Route::get('delete-tags', ['uses' => 'Profile\DataController@deleteTags', 'as' => 'delete-tags']);
+
+
 }
 );
 

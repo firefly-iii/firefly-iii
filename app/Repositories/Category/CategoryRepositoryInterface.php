@@ -32,6 +32,10 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
+    /**
+     * Delete all categories.
+     */
+    public function destroyAll(): void;
 
     /**
      * @param Category $category

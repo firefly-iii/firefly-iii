@@ -33,6 +33,12 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     /**
+     * Destroy all budgets.
+     */
+    public function destroyAll(): void;
+
+
+    /**
      * @return bool
      */
     public function cleanupBudgets(): bool;

@@ -34,6 +34,12 @@ use Illuminate\Support\Collection;
  */
 interface AvailableBudgetRepositoryInterface
 {
+
+    /**
+     * Delete all available budgets.
+     */
+    public function destroyAll(): void;
+
     /**
      * @param AvailableBudget $availableBudget
      */

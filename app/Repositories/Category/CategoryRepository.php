@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
@@ -347,4 +350,19 @@ class CategoryRepository implements CategoryRepositoryInterface
         return null;
     }
 
+    /**
+     * Delete all categories.
+     */
+    public function destroyAll(): void
+    {
+        $categories = $this->getCategories();
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            DB::table('category_transaction')->where('category_id', $category->id)->delete();
+            DB::table('category_transaction_journal')->where('category_id', $category->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'category_id')->where('value', $category->id)->delete();
+            RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
+            $category->delete();
+        }
+    }
 }

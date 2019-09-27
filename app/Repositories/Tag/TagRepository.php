@@ -486,4 +486,17 @@ class TagRepository implements TagRepositoryInterface
         return $tagQuery->get(['tags.id', 'tags.tag','tags.created_at', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
     }
+
+    /**
+     * Destroy all tags.
+     */
+    public function destroyAll(): void
+    {
+        $tags = $this->get();
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
+            $tag->delete();
+        }
+    }
 }

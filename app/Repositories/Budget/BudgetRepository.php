@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
@@ -339,6 +341,22 @@ class BudgetRepository implements BudgetRepositoryInterface
             $trigger->trigger_value = $newName;
             $trigger->save();
             Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+        }
+    }
+
+    /**
+     * Destroy all budgets.
+     */
+    public function destroyAll(): void
+    {
+        $budgets = $this->getBudgets();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
+            $budget->delete();
         }
     }
 }
