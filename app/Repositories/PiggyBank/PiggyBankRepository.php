@@ -104,8 +104,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = (string)min(round($leftOnAccount, 12), round($leftToSave, 12));
+        $compare       = bccomp($amount, $maxAmount);
+        $result        = $compare <= 0;
+        
+        Log::debug(sprintf('Left on account: %s', $leftOnAccount));
+        Log::debug(sprintf('Saved so far: %s', $savedSoFar));
+        Log::debug(sprintf('Left to save: %s', $leftToSave));
+        Log::debug(sprintf('Maximum amount: %s', $maxAmount));
+        Log::debug(sprintf('Compare <= 0? %d, so %s', $compare, var_export($result, true)));
 
-        return bccomp($amount, $maxAmount) <= 0;
+        return $result;
     }
 
     /**
