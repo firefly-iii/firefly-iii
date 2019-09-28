@@ -481,10 +481,12 @@ class BudgetController extends Controller
         $report = [];
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
+                $count = 0;
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $key                                = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
-                    $dateKey                            = $journal['date']->format($keyFormat);
-                    $report[$key]                       = $report[$key] ?? [
+                    $count++;
+                    $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
+                    $dateKey                           = $journal['date']->format($keyFormat);
+                    $report[$key]                      = $report[$key] ?? [
                             'id'                      => $budget['id'],
                             'name'                    => sprintf('%s (%s)', $budget['name'], $currency['currency_name']),
                             'sum'                     => '0',
@@ -495,9 +497,10 @@ class BudgetController extends Controller
                             'currency_decimal_places' => $currency['currency_decimal_places'],
                             'entries'                 => [],
                         ];
-                    $report[$key] ['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
-                    $report[$key] ['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
-                    $report[$key] ['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
+                    $report[$key]['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
+                    $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
+                    $report[$key]['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
+                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string)$count);
                 }
             }
         }
