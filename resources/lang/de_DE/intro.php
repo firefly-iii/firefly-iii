@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Wilkommen auf der Startseite von Firefly III. Bitte nehmen Sie sich die Zeit, um ein Gefühl dafür zu bekommen, wie Firefly III funktioniert.',
+    'index_intro'                                     => 'Willkommen auf der Startseite von Firefly III. Bitte nehmen Sie sich die Zeit, um ein Gefühl dafür zu bekommen, wie Firefly III funktioniert.',
     'index_accounts-chart'                            => 'Dieses Diagramm zeigt den aktuellen Saldo Ihrer Bestandskonten. Sie können die anzuzeigenden Konten in Ihren Einstellungen auswählen.',
     'index_box_out_holder'                            => 'Diese kleine und ihre benachbarten Boxen geben Ihnen einen schnellen Überblick über Ihre finanzielle Situation.',
     'index_help'                                      => 'Wenn Sie jemals Hilfe bei einer Seite oder einem Formular benötigen, drücken Sie diese Taste.',

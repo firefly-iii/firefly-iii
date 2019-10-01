@@ -449,7 +449,7 @@ return [
     'rule_action_convert_transfer'               => 'Buchung von ":action_value" in eine Umbuchung umwandeln',
 
     'rules_have_read_warning'                   => 'Haben Sie die Warnung gelesen?',
-    'apply_rule_warning'                        => 'Warnung: Das Ausführen einer Regel(gruppe) für eine große Auswahl von Buchungen kann sehr lange dauern, und es kann zu einer Zeitüberschreitung kommen. Wenn dies der Fall ist, wird die Regel(gruppe) nur auf eine unbekannte Teilmenge Ihrer Buchungen angewendet. Dies könnte Ihre Finanzverwaltung komplett zerstören. Bitte seien Sie vorsichtig.',
+    'apply_rule_warning'                        => 'Warnung: Das Ausführen einer Regel(-gruppe) für eine große Auswahl von Buchungen kann sehr lange dauern, und es kann zu einer Zeitüberschreitung kommen. Wenn dies der Fall ist, wird die Regel(-gruppe) nur auf eine unbekannte Teilmenge Ihrer Buchungen angewendet. Dies könnte Ihre Finanzverwaltung komplett zerstören. Bitte seien Sie vorsichtig.',
     'rulegroup_for_bills_title'                 => 'Regelgruppe für Rechnungen',
     'rulegroup_for_bills_description'           => 'Eine spezielle Regelgruppe für alle Regeln, die Rechnungen betreffen.',
     'rule_for_bill_title'                       => 'Automatisch erstellte Regel für die Rechnung „:name”',
@@ -710,7 +710,7 @@ return [
     'set_budget_limit_title'                    => 'Eingeplanten Betrag für das Budget :budget zwischen :start und :end festlegen',
     'set_budget_limit'                          => 'Eingeplanten Betrag angeben',
     'budget_period_navigator'                   => 'Zeitraum-Navigator',
-    'info_on_available_amount'                  => 'Wieviel ist verfügbar?',
+    'info_on_available_amount'                  => 'Wie viel ist verfügbar?',
     'available_amount_indication'               => 'Verwenden Sie diese Angaben, um einen Anhaltspunkt darüber zu erhalten, wie hoch Ihr komplettes Budget sein könnte.',
     'suggested'                                 => 'Vorgeschlagen',
     'average_between'                           => 'Durchschnitt zwischen :start und :end',
@@ -1137,7 +1137,7 @@ return [
     'net_filtered_prefs'                        => 'Dieses Diagramm wird niemals Konten einbeziehen, die die Option "Im Eigenkapital enthalten" deaktiviert haben.',
 
     // charts:
-    'chart'                                     => 'Diagram',
+    'chart'                                     => 'Diagramm',
     'month'                                     => 'Monat',
     'budget'                                    => 'Budget',
     'spent'                                     => 'Ausgegeben',
@@ -1158,7 +1158,7 @@ return [
     'period'                                    => 'Zeitraum',
     'balance'                                   => 'Kontostand',
     'sum'                                       => 'Summe',
-    'summary'                                   => 'Zusammenfasssung',
+    'summary'                                   => 'Zusammenfassung',
     'average'                                   => 'Durchschnitt',
     'balanceFor'                                => 'Kontostand für „:name”',
     'no_tags_for_cloud'                         => 'Keine Schlagwörter zum Erstellen der Wolke',
@@ -1210,7 +1210,7 @@ return [
     'deleted_tag'               => 'Schlagwort „:tag” entfernt',
     'new_tag'                   => 'Neues Schlagwort erstellen',
     'edit_tag'                  => 'Schlagwort „:tag” bearbeiten',
-    'updated_tag'               => 'Schlagwort „:tag” aktualisiertern',
+    'updated_tag'               => 'Schlagwort „:tag” aktualisiert',
     'created_tag'               => 'Schlagwort „:tag” wurde angelegt!',
 
     'transaction_journal_information'  => 'Transaktionsinformationen',
@@ -1257,8 +1257,8 @@ return [
     'send_message'                     => 'Nachricht senden',
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
 
-    'split_transaction_title'               => 'Beschreibung der Splittbuchung',
-    'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
+    'split_transaction_title'               => 'Beschreibung der Splitbuchung',
+    'split_title_help'                      => 'Wenn Sie eine Splitbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
     'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',
     'you_create_withdrawal'                 => 'Sie erstellen gerade eine <strong>Ausgabe</strong>.',
