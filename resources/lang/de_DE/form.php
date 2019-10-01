@@ -185,7 +185,7 @@ return [
     'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Alle :count Schlagwörter, die mit dieser Rechnung verbunden sind, werden nicht gelöscht.',
     'check_for_updates'           => 'Nach Updates suchen',
 
-    'email'                 => 'E-Mail Adresse',
+    'email'                 => 'E-Mail-Adresse',
     'password'              => 'Passwort',
     'password_confirmation' => 'Passwort (wiederholen)',
     'blocked'               => 'Ist blockiert?',

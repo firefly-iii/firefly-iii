@@ -31,7 +31,7 @@ return [
     'preferences'            => 'Einstellungen',
     'profile'                => 'Profil',
     'changePassword'         => 'Passwort ändern',
-    'change_email'           => 'E-Mail Adresse ändern',
+    'change_email'           => 'E-Mail-Adresse ändern',
     'bills'                  => 'Rechnungen',
     'newBill'                => 'Neue Rechnung',
     'edit_bill'              => 'Rechnung „:name” bearbeiten',

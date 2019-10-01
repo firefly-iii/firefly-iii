@@ -79,7 +79,7 @@ return [
     'different'                      => ':attribute und :other müssen sich unterscheiden.',
     'digits'                         => ':attribute muss :digits Stellen haben.',
     'digits_between'                 => ':attribute muss zwischen :min und :max Stellen haben.',
-    'email'                          => ':attribute muss eine gültige E-Mail Adresse sein.',
+    'email'                          => ':attribute muss eine gültige E-Mail-Adresse sein.',
     'filled'                         => ':attribute Feld muss ausgefüllt sein.',
     'exists'                         => ':attribute ist ungültig.',
     'image'                          => ':attribute muss ein Bild sein.',
@@ -134,7 +134,7 @@ return [
     'valid_recurrence_rep_moment' => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
     'invalid_account_info'        => 'Ungültige Kontodaten.',
     'attributes'                     => [
-        'email'                   => 'E-Mail Adresse',
+        'email'                   => 'E-Mail-Adresse',
         'description'             => 'Beschreibung',
         'amount'                  => 'Betrag',
         'name'                    => 'Name',
