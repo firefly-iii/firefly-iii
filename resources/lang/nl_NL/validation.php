@@ -32,7 +32,7 @@ return [
     'deleted_user'                   => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'             => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
     'rule_action_value'              => 'Deze waarde is niet geldig voor de geselecteerde actie.',
-    'file_already_attached'          => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
+    'file_already_attached'          => 'Het geüploade bestand ":name" is al gelinkt aan deze transactie.',
     'file_attached'                  => 'Bestand ":name" is succesvol geüpload.',
     'must_exist'                     => 'Het ID in veld :attribute bestaat niet.',
     'all_accounts_equal'             => 'Alle rekeningen in dit veld moeten gelijk zijn.',

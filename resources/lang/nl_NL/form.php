@@ -84,7 +84,7 @@ return [
     'source_amount'               => 'Bronbedrag',
     'destination_amount'          => 'Doelbedrag',
     'native_amount'               => 'Origineel bedrag',
-    'new_email_address'           => 'Nieuw emailadres',
+    'new_email_address'           => 'Nieuw e-mailadres',
     'verification'                => 'Verificatie',
     'api_key'                     => 'API sleutel',
     'remember_me'                 => 'Aangemeld blijven',
@@ -201,7 +201,7 @@ return [
 
     // admin
     'domain'                => 'Domein',
-    'single_user_mode'      => 'Registratie uitgeschakelen',
+    'single_user_mode'      => 'Registratie uitgeschakeld',
     'is_demo_site'          => 'Is demo website',
 
     // import

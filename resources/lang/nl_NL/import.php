@@ -236,7 +236,7 @@ return [
     // import status page:
     'import_with_key'                 => 'Import met code \':key\'',
     'status_wait_title'               => 'Momentje...',
-    'status_wait_text'                => 'Dit vak verdwijnt zometeen.',
+    'status_wait_text'                => 'Dit vak verdwijnt zo meteen.',
     'status_running_title'            => 'De import is bezig',
     'status_job_running'              => 'Even geduld, de import loopt...',
     'status_job_storing'              => 'Even geduld, de gegevens worden opgeslagen...',
