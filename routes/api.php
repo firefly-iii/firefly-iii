@@ -335,6 +335,17 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
+     'as'         => 'api.v1.search.'],
+    static function () {
+
+        // Attachment API routes:
+        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
+        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'         => 'api.v1.summary.'],
     static function () {
