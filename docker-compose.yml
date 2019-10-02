@@ -30,6 +30,11 @@ services:
       - firefly_iii_net
     volumes: 
       - firefly_iii_db:/var/lib/postgresql/data
+  # uncomment the following lines after setting your Firefly IIU url and token to activate cron support
+  # For more details see https://firefly-iii.readthedocs.io/en/latest/installation/cronjob.html#cron-jobs-in-docker
+  #cron:
+  #  image: alpine
+  #  command: sh -c "echo \"0 3 * * * wget https://<Firefly III URL>/cron/run/<TOKEN>\" | crontab - && crond -f -L /dev/stdout"
 version: "3.2"
 volumes: 
   firefly_iii_db: ~
