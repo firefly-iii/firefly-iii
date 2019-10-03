@@ -44,7 +44,6 @@ return [
     'transactions_create_withdrawal'    => [
         'source'           => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
         'more_meta'        => ['element' => 'input[name="category[]"]'],
         'split_add'        => ['element' => '.split_add_btn'],
     ],
@@ -52,7 +51,6 @@ return [
     'transactions_create_deposit'    => [
         'source'           => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
         'more_meta'        => ['element' => 'input[name="category[]"]'],
         'split_add'        => ['element' => '.split_add_btn'],
     ],
@@ -60,7 +58,6 @@ return [
     'transactions_create_transfer'    => [
         'source'           => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'foreign_currency' => ['element' => 'select[name="foreign_currency[]"]'],
         'more_meta'        => ['element' => 'input[name="category[]"]'],
         'split_add'        => ['element' => '.split_add_btn'],
     ],
