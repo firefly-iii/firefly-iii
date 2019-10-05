@@ -26,7 +26,7 @@
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
                             aria-hidden="true">&times;</span></button>
-                    <strong>{{ $t("firefly.flash_error") }}!</strong> {{ error_message }}
+                    <strong>{{ $t("firefly.flash_error") }}</strong> {{ error_message }}
                 </div>
             </div>
         </div>
@@ -34,9 +34,9 @@
         <div class="row" v-if="success_message !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
                             aria-hidden="true">&times;</span></button>
-                    <strong>Success!</strong> <span v-html="success_message"></span>
+                    <strong>{{ $t("firefly.flash_success") }}</strong> <span v-html="success_message"></span>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            Description of the split transaction
+                            {{ $t('firefly.split_transaction_title')}}
                         </h3>
                     </div>
                     <div class="box-body">
@@ -64,8 +64,8 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title splitTitle">
-                                <span v-if="transactions.length > 1">Split {{ index+1 }} / {{ transactions.length }}</span>
-                                <span v-if="transactions.length === 1">Transaction information</span>
+                                <span v-if="transactions.length > 1">{{ $t('firefly.split')}} {{ index+1 }} / {{ transactions.length }}</span>
+                                <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
                             </h3>
                             <div class="box-tools pull-right" v-if="transactions.length > 1" x>
                                 <button type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
@@ -83,7 +83,7 @@
                                     </transaction-description>
                                     <account-select
                                             inputName="source[]"
-                                            title="Source account"
+                                            v-bind:title="$('firefly.source_account')"
                                             :accountName="transaction.source_account.name"
                                             :accountTypeFilters="transaction.source_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
@@ -95,7 +95,7 @@
                                     ></account-select>
                                     <account-select
                                             inputName="destination[]"
-                                            title="Destination account"
+                                            v-bind:title="$('firefly.destination_account')"
                                             :accountName="transaction.destination_account.name"
                                             :accountTypeFilters="transaction.destination_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"
@@ -165,7 +165,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">Add another split</button>
+                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">{{ $t('firefly.add_another_split')</button>
                         </div>
                     </div>
                 </div>
@@ -176,26 +176,26 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            Submission
+                            {{ $t('firefly.submission') }}
                         </h3>
                     </div>
                     <div class="box-body">
                         <div class="checkbox">
                             <label>
                                 <input v-model="createAnother" name="create_another" type="checkbox">
-                                After storing, return here to create another one.
+                                {{ $t('firefly.create_another') }}
                             </label>
                             <label v-bind:class="{ 'text-muted': this.createAnother === false}">
                                 <input v-model="resetFormAfter" :disabled="this.createAnother === false"
                                        name="reset_form" type="checkbox">
-                                Reset form after submission
+                                {{ $t('firefly.reset_after') }}
 
                             </label>
                         </div>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
-                            <button class="btn btn-success" id="submitButton" @click="submit">Submit</button>
+                            <button class="btn btn-success" id="submitButton" @click="submit">{{ $t('firefly.submit') }}</button>
                         </div>
                     </div>
                 </div>
@@ -557,7 +557,7 @@
                 this.setDefaultErrors();
                 this.error_message = "";
                 if (errors.message.length > 0) {
-                    this.error_message = "There was something wrong with your submission. Please check out the errors below.";
+                    this.error_message = $t('firefly.errors_submission');
                 } else {
                     this.error_message = '';
                 }

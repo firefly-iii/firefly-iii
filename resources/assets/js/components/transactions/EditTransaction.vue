@@ -25,7 +25,7 @@
         <div class="row" v-if="error_message !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
                             aria-hidden="true">&times;</span></button>
                     <strong>Error!</strong> {{ error_message }}
                 </div>
@@ -35,7 +35,7 @@
         <div class="row" v-if="success_message !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
                             aria-hidden="true">&times;</span></button>
                     <strong>Success!</strong> <span v-html="success_message"></span>
                 </div>
