@@ -1,3 +1,7 @@
+# 4.8.1.3
+
+- [Issue 2680](https://github.com/firefly-iii/firefly-iii/issues/2680) Upgrade routine would delete all transaction groups.
+
 # 4.8.1.2
 
 Firefly III v4.8.1.2 and onwards are licensed under the GNU Affero General 

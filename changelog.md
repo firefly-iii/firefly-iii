@@ -4,6 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.8.1.2 (API 0.10.3)] - 2019-10-05
 
+Emergency fix because I borked the upgrade routine. I apologise for the inconvenience.
+
+### Fixed
+- [Issue 2680](https://github.com/firefly-iii/firefly-iii/issues/2680) Upgrade routine would delete all transaction groups.
+
+## [4.8.1.2 (API 0.10.3)] - 2019-10-05
+
 Firefly III v4.8.1.2 and onwards are licensed under the GNU Affero General 
 Public License. This will not meaningfully change Firefly III. This 
 particular license has some extra provisions that protect web-applications
