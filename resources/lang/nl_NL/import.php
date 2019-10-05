@@ -213,7 +213,7 @@ return [
     'specific_ingbelgium_descr'       => 'Lost mogelijke problemen op met ING België bestanden',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
-    'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
+    'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Geef hier aan wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat je elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
     'job_config_roles_submit'         => 'Volgende',
     'job_config_roles_column_name'    => 'Kolomnaam',
     'job_config_roles_column_example' => 'Voorbeeldgegevens',

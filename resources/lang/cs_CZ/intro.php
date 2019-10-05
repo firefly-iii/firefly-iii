@@ -30,7 +30,7 @@ return [
     'index_help'                                      => 'Pokud budete potřebovat nápovědu ke stránce nebo formuláři, klikněte na toto tlačítko.',
     'index_outro'                                     => 'Většina stránek Firefly III začíná krátkou prohlídkou, jako je tato. Obraťte se na mně, pokud máte dotazy nebo komentáře. Ať poslouží!',
     'index_sidebar-toggle'                            => 'Nabídku pod touto ikonou použijte pro vytváření nových transakcí, účtů a ostatní věcí.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
