@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchhaltung geben.",
         "none_in_select_list": "(Keine)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "Buchungsdatum",
         "process_date": "Bearbeitungsdatum",
         "due_date": "F\u00e4lligkeitstermin",
+        "foreign_amount": "Ausl\u00e4ndischer Betrag",
         "payment_date": "Zahlungsdatum",
         "invoice_date": "Rechnungsdatum",
         "internal_reference": "Interner Verweis"

@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "Felosztott tranzakci\u00f3 l\u00e9trehoz\u00e1sakor meg kell adni egy glob\u00e1lis le\u00edr\u00e1st a tranzakci\u00f3 \u00f6sszes feloszt\u00e1sa r\u00e9sz\u00e9re.",
         "none_in_select_list": "(nincs)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
         "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
         "due_date": "Lej\u00e1rati id\u0151pont",
+        "foreign_amount": "Foreign amount",
         "payment_date": "Fizet\u00e9s d\u00e1tuma",
         "invoice_date": "Sz\u00e1mla d\u00e1tuma",
         "internal_reference": "Bels\u0151 hivatkoz\u00e1s"

@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "Si vous cr\u00e9ez une op\u00e9ration ventil\u00e9e, il doit y avoir une description globale pour chaque fractions de l'op\u00e9ration.",
         "none_in_select_list": "(aucun)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "Date de r\u00e9servation",
         "process_date": "Date de traitement",
         "due_date": "\u00c9ch\u00e9ance",
+        "foreign_amount": "Montant externe",
         "payment_date": "Date de paiement",
         "invoice_date": "Date de facturation",
         "internal_reference": "R\u00e9f\u00e9rence interne"

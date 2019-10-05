@@ -135,7 +135,7 @@
                                             v-model="transaction.foreign_amount"
                                             :transactionType="transactionType"
                                             :error="transaction.errors.foreign_amount"
-                                            :title="$t('firefly.foreign_amount')"
+                                            v-bind:title="$t('form.foreign_amount')"
                                     ></foreign-amount>
                                 </div>
                                 <div class="col-lg-4">

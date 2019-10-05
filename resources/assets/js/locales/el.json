@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "none_in_select_list": "(\u03c4\u03af\u03c0\u03bf\u03c4\u03b1)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03b5\u03b3\u03b3\u03c1\u03b1\u03c6\u03ae\u03c2",
         "process_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03b5\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1\u03c2",
         "due_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c0\u03c1\u03bf\u03b8\u03b5\u03c3\u03bc\u03af\u03b1\u03c2",
+        "foreign_amount": "\u0395\u03c4\u03b5\u03c1\u03cc\u03c7\u03b8\u03c9\u03bd \u03c0\u03bf\u03c3\u03cc",
         "payment_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ae\u03c2",
         "invoice_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03b9\u03bc\u03bf\u03bb\u03cc\u03b3\u03b7\u03c3\u03b7\u03c2",
         "internal_reference": "\u0395\u03c3\u03c9\u03c4\u03b5\u03c1\u03b9\u03ba\u03ae \u03b1\u03bd\u03b1\u03c6\u03bf\u03c1\u03ac"

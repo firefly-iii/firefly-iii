@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "Podzielone transakcje musz\u0105 posiada\u0107 globalny opis.",
         "none_in_select_list": "(\u017cadne)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "Data ksi\u0119gowania",
         "process_date": "Data przetworzenia",
         "due_date": "Termin realizacji",
+        "foreign_amount": "Kwota zagraniczna",
         "payment_date": "Data p\u0142atno\u015bci",
         "invoice_date": "Data faktury",
         "internal_reference": "Wewn\u0119trzny numer"

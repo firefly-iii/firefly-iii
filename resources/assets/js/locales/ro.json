@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "none_in_select_list": "(nici unul)",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "Rezerv\u0103 dat\u0103",
         "process_date": "Data proces\u0103rii",
         "due_date": "Data scadent\u0103",
+        "foreign_amount": "Sum\u0103 str\u0103in\u0103",
         "payment_date": "Data de plat\u0103",
         "invoice_date": "Data facturii",
         "internal_reference": "Referin\u021b\u0103 intern\u0103"

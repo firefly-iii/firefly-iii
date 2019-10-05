@@ -135,7 +135,7 @@
                                             :transactionType="transactionType"
                                             :error="transaction.errors.foreign_amount"
                                             :no_currency="$t('firefly.none_in_select_list')"
-                                            :title="$t('firefly.foreign_amount')"
+                                            v-bind:title="$t('form.foreign_amount')"
                                     ></foreign-amount>
                                 </div>
                                 <div class="col-lg-4">

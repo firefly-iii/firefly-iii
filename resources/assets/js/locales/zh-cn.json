@@ -25,7 +25,6 @@
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
-        "foreign_amount": "",
         "split_title_help": "\u5982\u679c\u60a8\u521b\u5efa\u4e00\u4e2a\u62c6\u5206\u4ea4\u6613\uff0c\u5fc5\u987b\u6709\u4e00\u4e2a\u5168\u5c40\u7684\u4ea4\u6613\u63cf\u8ff0\u3002",
         "none_in_select_list": "\uff08\u7a7a\uff09",
         "no_piggy_bank": "(no piggy bank)",
@@ -36,6 +35,7 @@
         "book_date": "\u767b\u8bb0\u65e5\u671f",
         "process_date": "\u5904\u7406\u65e5\u671f",
         "due_date": "\u5230\u671f\u65e5",
+        "foreign_amount": "\u5916\u5e01\u91d1\u989d",
         "payment_date": "\u4ed8\u6b3e\u65e5\u671f",
         "invoice_date": "\u53d1\u7968\u65e5\u671f",
         "internal_reference": "\u5185\u90e8\u53c2\u8003"
