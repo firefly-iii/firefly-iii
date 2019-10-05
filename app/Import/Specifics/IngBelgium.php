@@ -1,7 +1,7 @@
 <?php
 /**
  * IngBelgium.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 Sander Kleykens <sander@kleykens.com>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *

@@ -1,7 +1,7 @@
 <?php
 /**
  * IngDescription.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 https://github.com/tomwerf
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
