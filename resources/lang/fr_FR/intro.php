@@ -2,22 +2,22 @@
 
 /**
  * intro.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -30,7 +30,7 @@ return [
     'index_help'                                      => 'Si vous avez besoin d’aide avec une page ou un formulaire, appuyez sur ce bouton.',
     'index_outro'                                     => 'La plupart des pages de Firefly III vont commencer avec un petit tour comme celui-ci. Merci de me contacter si vous avez des questions ou des commentaires. Profitez-en !',
     'index_sidebar-toggle'                            => 'Pour créer de nouvelles transactions, comptes ou autres choses, utilisez le menu sous cette icône.',
-    'index_cash_account'                              => 'Voici les comptes créés jusqu\'ici. Vous pouvez utilier le compte de trésorerie pour faire le suivi de vos dépenses en espèces, mais ce n\'est pas obligatoire, bien sûr.',
+    'index_cash_account'                              => 'Voici les comptes créés jusqu\'ici. Vous pouvez utiliser le compte de trésorerie pour faire le suivi de vos dépenses en espèces, mais ce n\'est pas obligatoire, bien sûr.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Choisissez votre compte d\'actif ou passif préféré à partir de ce menu déroulant.',
@@ -84,7 +84,7 @@ return [
     'reports_report_category_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par catégorie ou par compte.',
     'reports_report_category_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par catégorie.',
 
-    'reports_report_tag_intro'                  => 'Ce rapport vous donnera un aperçu d\'un ou plusieurs tags.',
+    'reports_report_tag_intro'                  => 'Ce rapport vous donnera un aperçu d\'un ou plusieurs mots-clés.',
     'reports_report_tag_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par tag, catégorie, ou budget.',
     'reports_report_tag_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par tag.',
 

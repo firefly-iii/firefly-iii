@@ -2,22 +2,22 @@
 
 /**
  * TransactionStoreRequest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -74,7 +74,7 @@ class TransactionStoreRequest extends Request
     {
         $rules = [
             // basic fields for group:
-            'group_title'                          => 'between:1,255',
+            'group_title'                          => 'between:1,1000',
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
@@ -92,7 +92,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.foreign_amount'        => 'numeric|more:0',
 
             // description
-            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.description'           => 'nullable|between:1,1000',
 
             // source of transaction
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
@@ -115,7 +115,7 @@ class TransactionStoreRequest extends Request
             // other interesting fields
             'transactions.*.reconciled'            => [new IsBoolean],
             'transactions.*.notes'                 => 'min:1,max:50000|nullable',
-            'transactions.*.tags'                  => 'between:1,255',
+            'transactions.*.tags'                  => 'between:0,255',
 
             // meta info fields
             'transactions.*.internal_reference'    => 'min:1,max:255|nullable',
@@ -242,7 +242,7 @@ class TransactionStoreRequest extends Request
 
                 // some other interesting properties
                 'reconciled'            => $this->convertBoolean((string)$object['reconciled']),
-                'notes'                 => $this->stringFromValue($object['notes']),
+                'notes'                 => $this->nlStringFromValue($object['notes']),
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:

@@ -1,30 +1,33 @@
 <?php
 /**
  * CategoryRepository.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
@@ -347,4 +350,19 @@ class CategoryRepository implements CategoryRepositoryInterface
         return null;
     }
 
+    /**
+     * Delete all categories.
+     */
+    public function destroyAll(): void
+    {
+        $categories = $this->getCategories();
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            DB::table('category_transaction')->where('category_id', $category->id)->delete();
+            DB::table('category_transaction_journal')->where('category_id', $category->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'category_id')->where('value', $category->id)->delete();
+            RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
+            $category->delete();
+        }
+    }
 }

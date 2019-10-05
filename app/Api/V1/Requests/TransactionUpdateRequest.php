@@ -4,20 +4,20 @@
  * TransactionUpdateRequest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -49,6 +49,8 @@ class TransactionUpdateRequest extends Request
     private $integerFields;
     /** @var array Fields that contain string values. */
     private $stringFields;
+    /** @var array Fields that contain text (with newlines) */
+    private $textareaFields;
 
     /**
      * Authorize logged in users.
@@ -91,6 +93,10 @@ class TransactionUpdateRequest extends Request
             'invoice_date',
         ];
 
+        $this->textareaFields = [
+            'notes',
+        ];
+
         $this->stringFields  = [
             'type',
             'currency_code',
@@ -103,7 +109,6 @@ class TransactionUpdateRequest extends Request
             'budget_name',
             'category_name',
             'bill_name',
-            'notes',
             'internal_reference',
             'external_id',
             'bunq_payment_id',
@@ -144,7 +149,7 @@ class TransactionUpdateRequest extends Request
     {
         $rules = [
             // basic fields for group:
-            'group_title'                          => 'between:1,255',
+            'group_title'                          => 'between:1,1000',
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
@@ -158,11 +163,11 @@ class TransactionUpdateRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                => 'numeric|more:0',
+            'transactions.*.amount'                => 'numeric|more:0|max:100000000000',
             'transactions.*.foreign_amount'        => 'numeric|gte:0',
 
             // description
-            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.description'           => 'nullable|between:1,1000',
 
             // source of transaction
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
@@ -293,6 +298,12 @@ class TransactionUpdateRequest extends Request
             foreach ($this->stringFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
                     $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->textareaFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
                 }
             }
 

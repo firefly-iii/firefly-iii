@@ -1,22 +1,22 @@
 <?php
 /**
  * web.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -240,8 +240,8 @@ Route::group(
         Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
 
         // edit
-        Route::get('edit/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
-        Route::post('update/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
+        Route::get('edit/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
+        Route::post('update/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
 
         Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
     }
@@ -654,6 +654,12 @@ Route::group(
     Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
     Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
     Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
+
+    // routes to delete stuff.
+    Route::get('delete-budgets', ['uses' => 'Profile\DataController@deleteBudgets', 'as' => 'delete-budgets']);
+    Route::get('delete-categories', ['uses' => 'Profile\DataController@deleteCategories', 'as' => 'delete-categories']);
+    Route::get('delete-tags', ['uses' => 'Profile\DataController@deleteTags', 'as' => 'delete-tags']);
+
 
 }
 );

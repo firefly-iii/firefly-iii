@@ -1,22 +1,22 @@
 <?php
 /**
  * BudgetController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -388,7 +388,7 @@ class BudgetController extends Controller
             ];
         $noBudget             = $this->nbRepository->sumExpenses($start, $end);
         foreach ($noBudget as $noBudgetEntry) {
-            $report['budgets'][0]['budget_limits'][]                = [
+            $report['budgets'][0]['budget_limits'][] = [
                 'budget_limit_id'         => null,
                 'start_date'              => $start,
                 'end_date'                => $end,
@@ -404,7 +404,8 @@ class BudgetController extends Controller
                 'currency_symbol'         => $noBudgetEntry['currency_symbol'],
                 'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'],
             ];
-            $report['sums'][$noBudgetEntry['currency_id']]['spent'] = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'], $noBudgetEntry['sum']);
+            $report['sums'][$noBudgetEntry['currency_id']]['spent']
+                                                     = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'] ?? '0', $noBudgetEntry['sum']);
         }
 
         // make percentages based on total amount.
@@ -480,10 +481,12 @@ class BudgetController extends Controller
         $report = [];
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
+                $count = 0;
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $key                                = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
-                    $dateKey                            = $journal['date']->format($keyFormat);
-                    $report[$key]                       = $report[$key] ?? [
+                    $count++;
+                    $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
+                    $dateKey                           = $journal['date']->format($keyFormat);
+                    $report[$key]                      = $report[$key] ?? [
                             'id'                      => $budget['id'],
                             'name'                    => sprintf('%s (%s)', $budget['name'], $currency['currency_name']),
                             'sum'                     => '0',
@@ -494,9 +497,10 @@ class BudgetController extends Controller
                             'currency_decimal_places' => $currency['currency_decimal_places'],
                             'entries'                 => [],
                         ];
-                    $report[$key] ['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
-                    $report[$key] ['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
-                    $report[$key] ['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
+                    $report[$key]['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
+                    $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
+                    $report[$key]['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
+                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string)$count);
                 }
             }
         }

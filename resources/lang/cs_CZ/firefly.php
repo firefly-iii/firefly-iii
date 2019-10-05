@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'Vaš identifikátor uživatele je <strong>:user</strong>',
     'field_supports_markdown'                    => 'Text v této kolonce je možné formátovat pomocí <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Pokud potřebujete další pomoc s používáním Firefly III, <a href="https://github.com/firefly-iii/firefly-iii/issues"> založte požadavek na portálu GitHub</a>.',
-    'reenable_intro_text'                        => 'Můžete si také znovu spustit <a href="#" id="reenableGuidance">úvodního průvodce</a>.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'Oblasti s úvodem se znovu objeví po opětovném načtení stránky.',
     'show_all_no_filter'                         => 'Při jejich seskupení podle data zobrazit veškeré transakce.',
     'expenses_by_category'                       => 'Výdaje podle kategorie',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Stávající období',
     'show_the_current_period_and_overview'       => 'Zobrazit stávající období a přehled',
     'pref_languages_locale'                      => 'Aby správně fungovalo i pro jiné jazyky, než je angličtina je třeba, aby operační systém byl vybaven správnými údaji o místních a jazykových nastaveních. Pokud nejsou přítomné, data měn, datumů a částek mohou být chybně formátované.',
-    'budget_in_period'                           => 'Veškeré transakce pro rozpočet „:name“ mezi :start a :end',
-    'chart_budget_in_period'                     => 'Graf veškerých transakcí pro rozpočet „:name“ mezi :start a :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Graf veškerých transakcí pro účet „:name“ mezi :start a :end',
     'chart_category_in_period'                   => 'Graf veškerých transakcí pro kategorii „:name“ mezi :start a :end',
     'chart_category_all'                         => 'Graf veškerých transakcí pro kategoii „:name“',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Datum transakce je :value',
     'search_modifier_before'                     => 'Datum transakce je před :value',
     'search_modifier_after'                      => 'Datum transakce je po :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
-    'general_search_error'                       => 'Při hledání došlo k chybě. Podrobnosti naleznete v souborech se záznamem událostí.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Hledat',
     'search_box_intro'                           => 'Vítejte ve funkci vyhledávání ve Firefly III. Vyhledávací dotaz zadejte do kolonky. Protože vyhledávání poskytuje opravdu mnoho pokročilých funkcí, bude užitečné přečíst si nápovědu.',
     'search_error'                               => 'Chyba při hledání',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Volitelná metadata',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Změnit své heslo',
     'delete_account'                            => 'Smazat účet',
     'current_password'                          => 'Stávající heslo',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Pravidla vztahující se k této účtence/faktuře',
     'repeats'                                   => 'Opakuje se',
     'connected_journals'                        => 'Propojené transakce',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Překročeny výdaje',
     'left'                                      => 'Zbývá',
     'max-amount'                                => 'Maximální částka',
-    'min-amount'                                => 'Minimální částka',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Current bill entry',
     'name'                                      => 'Název',
     'date'                                      => 'Datum',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Tuto funkci nemusíte používat, ale hodí se pokud si chcete držet přehled v těchto věcech.',
     'no_accounts_create_liabilities'        => 'Vytvořit závazek',
     'no_budgets_title_default'              => 'Pojďme vytvořit rozpočet',
-    'no_budgets_intro_default'              => 'Zatím nemáte žádné rozpočty. Ty slouží k uspořádávání vašich výdajů do logických skupin, kterým je možné dávat překročitelné limity výdajů.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Rozpočty jsou základní nástroje správy financí. Pojďme takový vytvořit:',
     'no_budgets_create_default'             => 'Vytvořit rozpočet',
     'no_categories_title_default'           => 'Pojďme vytvořit kategorii!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Nová opakující se transakce',
     'help_weekend'                       => 'What should Firefly III do when the recurring transaction falls on a Saturday or Sunday?',
     'do_nothing'                         => 'Jen vytvořit transakci',
-    'skip_transaction'                   => 'Přeskočit výskyt',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Create the transaction on the previous Friday instead',
     'jump_to_monday'                     => 'Create the transaction on the next Monday instead',
     'will_jump_friday'                   => 'Bude vytvořeno v pátek namísto víkendů.',

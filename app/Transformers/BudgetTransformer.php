@@ -1,22 +1,22 @@
 <?php
 /**
  * BudgetTransformer.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -34,7 +35,8 @@ use Log;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    private $repository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * BudgetTransformer constructor.
@@ -43,7 +45,7 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(BudgetRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -58,12 +60,12 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function transform(Budget $budget): array
     {
-        $this->repository->setUser($budget->user);
+        $this->opsRepository->setUser($budget->user);
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
         $spent = [];
         if (null !== $start && null !== $end) {
-            $spent = $this->repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
+            $spent = array_values($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
 
         $data = [

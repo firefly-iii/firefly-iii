@@ -34,7 +34,7 @@
     "transfers",
     "management"
   ],
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "readme": "readme.md",
@@ -163,9 +163,11 @@
       "@php artisan firefly-iii:fix-account-types",
       "@php artisan firefly-iii:rename-meta-fields",
       "@php artisan firefly-iii:fix-ob-currencies",
+      "@php artisan firefly-iii:fix-long-descriptions",
 
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",
+      "@php artisan firefly-iii:restore-oauth-keys",
 
       "@php artisan firefly:instructions update",
       "@php artisan passport:install"

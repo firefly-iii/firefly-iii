@@ -2,22 +2,22 @@
 
 /**
  * config.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -27,7 +27,7 @@ return [
     'locale'                  => 'zh_CN.utf8,zh_CN.UTF-8',
     'month'                   => '%Y 年 %B',
     'month_and_day'           => '%Y年 %B %e日',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'YYYY 年 M 月 D 日',
     'month_and_date_day'      => '%Y 年 %B %e 日 %A',
     'month_and_day_no_year'   => '%B %e 日',
     'date_time'               => '%Y 年 %B %e 日, @ %T',

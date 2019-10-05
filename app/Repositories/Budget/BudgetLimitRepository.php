@@ -3,20 +3,20 @@
  * BudgetLimitRepository.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -69,12 +69,15 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
     {
         $query = BudgetLimit
-            ::where('start_date', $start->format('Y-m-d 00:00:00'))
-            ->where('end_date', $end->format('Y-m-d 00:00:00'))
-            ->where('transaction_currency_id', $currency->id);
+            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
+            ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
+            ->where('budget_limits.transaction_currency_id', $currency->id)
+            ->where('budgets.user_id', $this->user->id);
         if (null !== $budgets && $budgets->count() > 0) {
-            $query->whereIn('budget_id', $budgets->pluck('id')->toArray());
+            $query->whereIn('budget_limits.budget_id', $budgets->pluck('id')->toArray());
         }
+
         $set    = $query->get(['budget_limits.*']);
         $result = '0';
         /** @var BudgetLimit $budgetLimit */
@@ -446,5 +449,17 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
 
         return $limit;
+    }
+
+    /**
+     * Destroy all budget limits.
+     */
+    public function destroyAll(): void
+    {
+        $budgets = $this->user->budgets()->get();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budget->budgetlimits()->delete();
+        }
     }
 }

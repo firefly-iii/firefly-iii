@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'A felhasználói azonosító <strong>:user</strong>',
     'field_supports_markdown'                    => 'Ez a mező támogatja a <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a> használatát.',
     'need_more_help'                             => 'A Firefly III használatához további segítség kérhető a <a href="https://github.com/firefly-iii/firefly-iii/issues">a Githubon egy hibajegy nyitásával</a>.',
-    'reenable_intro_text'                        => '<a href="#" id="reenableGuidance">A bevezető útmutatót</a> újra lehet engedélyezni.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'A bevezető dobozok újra megjelennek az oldal frissítésekor.',
     'show_all_no_filter'                         => 'Az összes tranzakció megjelenítése dátum szerinti csoportosítás nélkül.',
     'expenses_by_category'                       => 'Költségek kategóriák szerint',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Jelenlegi időszak',
     'show_the_current_period_and_overview'       => 'Az aktuális időszak és az áttekintés megjelenítése',
     'pref_languages_locale'                      => 'Ahhoz, hogy egy angoltól eltérő nyelv megfelelően működjön, az operációs rendszernek a helyes helyspecifikus információkkal kell rendelkeznie. Ha ezek nincsenek jelen, akkor a pénznem adat, a dátumok és az összegek formázása hibás lehet.',
-    'budget_in_period'                           => '":name" költségkeret összes tranzakciója :start és :end között',
-    'chart_budget_in_period'                     => 'Diagram ":name" költségkeret minden tranzakciójáról :start és :end között',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Diagram ":name" bankszámla minden tranzakciójáról :start és :end között',
     'chart_category_in_period'                   => 'Diagram ":name" kategória minden tranzakciójáról :start és :end között',
     'chart_category_all'                         => 'Diagram ":name" kategória minden tranzakciójáról',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Tranzakció dátuma: :value',
     'search_modifier_before'                     => 'Tranzakció dátuma :value előtt van',
     'search_modifier_after'                      => 'Tranzakció dátuma :value után van',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'A következő módosítókat a keresésre is alkalmaztuk:',
-    'general_search_error'                       => 'Hiba történt keresés közben. További információ a naplófájlokban található.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Keresés',
     'search_box_intro'                           => 'Üdvözöljük a Firefly III kereső funkciójában. Írja be a keresési kifejezését a mezőbe. Győződjön meg róla, hogy alaposan tanulmányozta a súgót, mert a keresés meglhetősen összetett funkció.',
     'search_error'                               => 'Hiba történt keresés közben',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Opcionális metaadat',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Jelszó módosítása',
     'delete_account'                            => 'Fiók törlése',
     'current_password'                          => 'Jelenlegi jelszó',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Tranzakciókkal egyező számlák :low és :high között.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Erre a számlára vonatkozó szabályok',
     'repeats'                                   => 'Ismétlődések',
     'connected_journals'                        => 'Kapcsolódó tranzakciók',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Túlköltött',
     'left'                                      => 'Maradvány',
     'max-amount'                                => 'Maximális összeg',
-    'min-amount'                                => 'Minimális összeg',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Jelenlegi számla bejegyzés',
     'name'                                      => 'Név',
     'date'                                      => 'Dátum',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Nem kötelező használni ezt a funkciót, de hasznos lehet ha szükséges követni ezeket a dolgokat.',
     'no_accounts_create_liabilities'        => 'Új kötelezettség létrehozása',
     'no_budgets_title_default'              => 'Ideje létrehozni egy költségkeretet',
-    'no_budgets_intro_default'              => 'Még nincsenek költségkeretek. A költségkeretek arra szolgálnak, hogy a költségeket logikai csoportokba szervezhessük, amelyekhez a költségek csökkentéséhez megadható egy átléphető felső határ.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'A költségkeretek a pénzügyi menedzsment alapvető eszközei. Létrehozás most:',
     'no_budgets_create_default'             => 'Költségkeret létrehozása',
     'no_categories_title_default'           => 'Ideje létrehozni egy kategóriát!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Új ismétlődő tranzakció',
     'help_weekend'                       => 'Mit tegyen a Firefly III ha az ismétlődő tranzakció szombatra vagy vasárnapra esik?',
     'do_nothing'                         => 'Hozza létre a tranzakciót',
-    'skip_transaction'                   => 'Előfordulás kihagyása',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'A tranzakció inkább az előző pénteken jöjjön létre',
     'jump_to_monday'                     => 'A tranzakció inkább az következő hétfőn jöjjön létre',
     'will_jump_friday'                   => 'Pénteken lesz létrehozva hétvége helyett.',

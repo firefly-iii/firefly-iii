@@ -4,42 +4,24 @@
  * api.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
-/**
- * api.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- *
- * This file is part of Firefly III.
- *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Firefly III is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 Route::group(
     [
@@ -353,6 +335,17 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
+     'as'         => 'api.v1.search.'],
+    static function () {
+
+        // Attachment API routes:
+        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
+        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'         => 'api.v1.summary.'],
     static function () {
@@ -423,8 +416,8 @@ Route::group(
         Route::get('', ['uses' => 'TransactionController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'TransactionController@store', 'as' => 'store']);
         Route::get('{transactionGroup}', ['uses' => 'TransactionController@show', 'as' => 'show']);
-        Route::get('{transactionJournal}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
-        Route::get('{transactionJournal}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+        Route::get('{transactionGroup}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
+        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
         Route::put('{transactionGroup}', ['uses' => 'TransactionController@update', 'as' => 'update']);
         Route::delete('{transactionGroup}/{transactionJournal}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
         Route::delete('{transactionGroup}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);

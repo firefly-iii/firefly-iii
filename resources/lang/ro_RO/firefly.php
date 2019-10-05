@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'ID-ul dvs. de utilizator este <strong>:user</strong>',
     'field_supports_markdown'                    => 'Acest câmp acceptă <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown HTML</a>.',
     'need_more_help'                             => 'Dacă aveți nevoie de ajutor suplimentar, deschideți <a href="https://github.com/firefly-iii/firefly-iii/issues">un tichet pe Github</a>.',
-    'reenable_intro_text'                        => 'De asemenea, puteți să activați din nou <a href="#" id="reenableGuidance"> ghidul de introducere </a>.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'Cutiile de introducere vor apărea din nou atunci când actualizați pagina.',
     'show_all_no_filter'                         => 'Afișați toate tranzacțiile fără a le grupa după dată.',
     'expenses_by_category'                       => 'Cheltuieli pe categorii',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Perioada curentă',
     'show_the_current_period_and_overview'       => 'Afișați perioada curentă și prezentarea generală',
     'pref_languages_locale'                      => 'Pentru ca o altă limbă decât limba engleză să funcționeze corect, sistemul dvs. de operare trebuie să fie dotat cu informațiile de localizare corecte. Dacă acestea nu sunt prezente, datele valutare, datele și sumele pot fi formatate greșit.',
-    'budget_in_period'                           => 'Toate tranzacțiile pentru bugetul ":name" între :start și :end',
-    'chart_budget_in_period'                     => 'Graficul cu toate tranzacțiile pentru bugetul ":name" între :start și :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Graficul cu toate tranzacțiile pentru contul ":name" între :start și :end',
     'chart_category_in_period'                   => 'Graficul cu toate tranzacțiile pentru categoria ":name" între :start și :end',
     'chart_category_all'                         => 'Graficul cu toate tranzacțiile pentru categoria ":name"',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Data tranzacţiei este :value',
     'search_modifier_before'                     => 'Data tranzacţiei este înainte de :value',
     'search_modifier_after'                      => 'Data tranzacţiei este după :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'Următorii modificatorii sunt aplicați la căutare:',
-    'general_search_error'                       => 'A apărut o eroare în timpul căutării. Verificați log-urile pentru mai multe informații.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Caută',
     'search_box_intro'                           => 'Bun venit la funcția de căutare. Introduceți interogarea dvs. în căsuță. Asigurați-vă că verificați fișierul de ajutor deoarece căutarea este destul de avansată.',
     'search_error'                               => 'Eroare la căutare',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Meta date opționale',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Schimbați-vă parola',
     'delete_account'                            => 'Șterge account',
     'current_password'                          => 'Parola actuală',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Factura se potrivește tranzacțiilor între :low și :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Reguli legate de această factură',
     'repeats'                                   => 'Repetă',
     'connected_journals'                        => 'Tranzacții conectate',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Depășire de buget',
     'left'                                      => 'Rămas',
     'max-amount'                                => 'Sumă maximă',
-    'min-amount'                                => 'Sumă minimă',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Intrare factură curentă',
     'name'                                      => 'Nume',
     'date'                                      => 'Dată',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Nu trebuie să utilizați această funcție, dar poate fi utilă dacă doriți să urmăriți aceste lucruri.',
     'no_accounts_create_liabilities'        => 'Creați un provizion',
     'no_budgets_title_default'              => 'Să cream un provizion',
-    'no_budgets_intro_default'              => 'Nu ai încă nici un buget. Bugetele sunt folosite pentru a vă organiza cheltuielile în grupuri logice, pe care le puteți supune unei limite de cheltuieli.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Bugetele sunt instrumentele de bază ale gestiunii financiare. Să creăm unul acum:',
     'no_budgets_create_default'             => 'Creați un buget',
     'no_categories_title_default'           => 'Să cream o categorie!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Tranzacție recurentă nouă',
     'help_weekend'                       => 'Ce ar trebui să facă Firefly III atunci când tranzacția recurentă cade într-o sâmbătă sau duminică?',
     'do_nothing'                         => 'Doar creați tranzacția',
-    'skip_transaction'                   => 'Treceți peste apariție',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Creați tranzacția din vineri precedentă',
     'jump_to_monday'                     => 'Creați tranzacția de luni viitoare',
     'will_jump_friday'                   => 'Va fi creat vineri în loc de weekend.',

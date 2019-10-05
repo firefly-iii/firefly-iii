@@ -1,27 +1,28 @@
 <?php
 /**
  * AutoCompleteController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -62,6 +63,7 @@ class AutoCompleteController extends Controller
 
         // filter the account types:
         $allowedAccountTypes  = [AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $balanceTypes         = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
         $filteredAccountTypes = [];
         foreach ($accountTypes as $type) {
             if (in_array($type, $allowedAccountTypes, true)) {
@@ -79,11 +81,18 @@ class AutoCompleteController extends Controller
 
         /** @var Account $account */
         foreach ($result as $account) {
-            $currency = $repository->getAccountCurrency($account);
-            $currency = $currency ?? $defaultCurrency;
+            $nameWithBalance = $account->name;
+            $currency        = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+
+            if (in_array($account->accountType->type, $balanceTypes, true)) {
+                $balance         = app('steam')->balance($account, new Carbon);
+                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
+            }
+
             $return[] = [
                 'id'                      => $account->id,
                 'name'                    => $account->name,
+                'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,

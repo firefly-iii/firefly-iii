@@ -1,22 +1,22 @@
 <?php
 /**
  * RecurringRepository.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -41,6 +41,7 @@ use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
 use FireflyIII\Support\Repositories\Recurring\CalculateRangeOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrences;
+use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrencesSince;
 use FireflyIII\Support\Repositories\Recurring\FiltersWeekends;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -52,7 +53,7 @@ use Log;
  */
 class RecurringRepository implements RecurringRepositoryInterface
 {
-    use CalculateRangeOccurrences, CalculateXOccurrences, FiltersWeekends;
+    use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
     /** @var User */
     private $user;
 
@@ -495,5 +496,45 @@ class RecurringRepository implements RecurringRepositoryInterface
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
+    }
+
+    /**
+     * Calculate the next X iterations starting on the date given in $date.
+     * Returns an array of Carbon objects.
+     *
+     * Only returns them of they are after $afterDate
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param Carbon               $afterDate
+     * @param int                  $count
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
+    {
+        $skipMod     = $repetition->repetition_skip + 1;
+        $occurrences = [];
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getXDailyOccurrencesSince($date, $afterDate, $count, $skipMod);
+        }
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getXWeeklyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getXMonthlyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getXNDomOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getXYearlyOccurrencesSince($date, $afterDate, $count, $skipMod, $repetition->repetition_moment);
+        }
+
+        // filter out all the weekend days:
+        $occurrences = $this->filterWeekends($repetition, $occurrences);
+
+        return $occurrences;
     }
 }

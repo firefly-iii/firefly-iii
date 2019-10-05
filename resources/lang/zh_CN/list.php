@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,13 +36,13 @@ return [
     'currentBalance'          => '目前馀额',
     'linked_to_rules'         => '相关规则',
     'active'                  => '是否启用？',
-    'percentage'              => 'pct.',
-    'next_due'                => 'Next due',
-    'transaction_type'        => 'Type',
+    'percentage'              => '%',
+    'next_due'                => '下次到期日',
+    'transaction_type'        => '类别',
     'lastActivity'            => '上次活动',
     'balanceDiff'             => '馀额差',
     'matchesOn'               => '配对于',
-    'other_meta_data'         => 'Other meta data',
+    'other_meta_data'         => '其它元信息',
     'account_type'            => '帐户类型',
     'created_at'              => '建立于',
     'account'                 => '帐户',
@@ -110,7 +110,7 @@ return [
     'account_on_ynab'         => '帐户 (YNAB)',
     'do_import'               => '自此帐户导入',
     'sepa_ct_id'              => 'SEPA 端到端标识符',
-    'sepa_ct_op'              => 'SEPA Opposing Account Identifier',
+    'sepa_ct_op'              => 'SEPA 对方帐户标识符',
     'sepa_db'                 => 'SEPA Mandate Identifier',
     'sepa_country'            => 'SEPA Country',
     'sepa_cc'                 => 'SEPA Clearing Code',

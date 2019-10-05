@@ -5,6 +5,7 @@
         {% for period in periods %}
             <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
         {% endfor %}
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'average'|_ }}</th>
         <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
@@ -33,6 +34,9 @@
                 {% endif %}
 
             {% endfor %}
+            <td data-value="{{ info.avg }}" style="text-align: right;">
+                {{ formatAmountBySymbol(info.avg, info.currency_symbol, info.currency_decimal_places) }}
+            </td>
             <td data-value="{{ info.sum }}" style="text-align: right;">
                 {{ formatAmountBySymbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
             </td>

@@ -1,22 +1,22 @@
 <?php
 /**
  * PiggyBankEventTransformer.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -84,7 +84,10 @@ class PiggyBankEventTransformer extends AbstractTransformer
 
         // get associated journal and transaction, if any:
         $journalId = (int)$event->transaction_journal_id;
-
+        $groupId   = null;
+        if (0 !== $journalId) {
+            $groupId = (int)$event->transactionJournal->transaction_group_id;
+        }
         $data = [
             'id'                      => (int)$event->id,
             'created_at'              => $event->created_at->toAtomString(),
@@ -95,6 +98,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
             'transaction_journal_id'  => $journalId,
+            'transaction_group_id'    => $groupId,
             'links'                   => [
                 [
                     'rel' => 'self',

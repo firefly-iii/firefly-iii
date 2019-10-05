@@ -410,7 +410,7 @@
     <script type="text/javascript">
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURI = '{{ route('json.autocomplete.all-journals-with-id') }}';
-        var groupURI = '{{ route('transactions.show',['%GROUP']) }}';
+        var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}"></script>

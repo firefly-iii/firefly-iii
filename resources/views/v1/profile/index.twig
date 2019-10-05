@@ -17,11 +17,26 @@
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
                     {% if not SANDSTORM %}
-                        <ul>
-                            <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
-                            <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
-                            <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul>
+                                    <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
+                                    <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
+                                    <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <p>
+                                    {{ 'permanent_delete_stuff'|_ }}
+                                </p>
+                                <ul>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-budgets') }}">{{ 'delete_all_budgets'|_ }}</a></li>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-categories') }}">{{ 'delete_all_categories'|_ }}</a></li>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-tags') }}">{{ 'delete_all_tags'|_ }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
                     {% endif %}
                 </div>
             </div>

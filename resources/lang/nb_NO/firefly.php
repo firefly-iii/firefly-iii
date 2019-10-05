@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'Din bruker-ID er <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dette feltet støtter <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Hvis du trenger mer hjelp med å bruke Firefly III, vennligst <a href="https://github.com/firefly-iii/firefly-iii/issues">opprett en sak på Github</a>.',
-    'reenable_intro_text'                        => 'Du kan også reaktivere <a href="#" id="reenableGuidance">introduksjonsveiledningen</a>.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'Innføringsboksene vil dukke opp igjen når du laster siden på nytt.',
     'show_all_no_filter'                         => 'Vis alle transaksjoner uten å gruppere dem etter dato.',
     'expenses_by_category'                       => 'Utgifter etter kategori',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Nåværende periode',
     'show_the_current_period_and_overview'       => 'Vis gjeldende periode og oversikt',
     'pref_languages_locale'                      => 'For at et annet språk enn engelsk skal fungere skikkelig, må operativsystemet ditt være utstyrt med riktig lokalinformasjon. Hvis dette ikke er på plass, kan valutadata, datoer og beløp bli vist feil.',
-    'budget_in_period'                           => 'Alle transaksjoner for budsjett ":name" mellom :start og :end',
-    'chart_budget_in_period'                     => 'Diagram for alle transaksjoner for budsjett ":name" mellom :start og :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Diagram for alle transaksjoner for konto ":name" mellom :start og :end',
     'chart_category_in_period'                   => 'Diagram for alle transaksjoner for kategori ":name" mellom :start og :end',
     'chart_category_all'                         => 'Graf over alle transaksjoner for kategori ":name"',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Transaksjons dato er :value',
     'search_modifier_before'                     => 'Transaksjons dato er før :value',
     'search_modifier_after'                      => 'Transaksjons er etter :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'De følgende modifikatorer er lagt til søket i tillegg:',
-    'general_search_error'                       => 'Det oppsto en feil under søking. Vennligst sjekk loggfilene for mer informasjon.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Søk',
     'search_box_intro'                           => 'Velkommen til søkefunksjonen i Firefly III. Skriv inn søkefrasen din i boksen. Pass på at du sjekker hjelpefilen, for søkefunksjonen er ganske avansert.',
     'search_error'                               => 'Feil under søking',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Valgfri metadata',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Endre passord',
     'delete_account'                            => 'Slett konto',
     'current_password'                          => 'Nåværende passord',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Regning matcher transaksjoner mellom :low og :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Regler relatert til denne regningen',
     'repeats'                                   => 'Gjentas',
     'connected_journals'                        => 'Tilknyttede transaksjoner',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Overforbruk',
     'left'                                      => 'Gjenværende',
     'max-amount'                                => 'Maksimumsbeløp',
-    'min-amount'                                => 'Minimumsbeløp',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Gjeldende regningspost',
     'name'                                      => 'Navn',
     'date'                                      => 'Dato',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Du behøver ikke bruke denne funksjonen, men den kan være fornuftig å bruke når du vil ha kontroll på disse tingene.',
     'no_accounts_create_liabilities'        => 'Opprett gjeld',
     'no_budgets_title_default'              => 'La oss lage et budsjett',
-    'no_budgets_intro_default'              => 'Du har ingen budsjett ennå. Budsjett brukes til å organisere utgifter i logiske grupper, som du kan sette tak på for å begrense utgifter.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Budsjett er et basis verktøy for finansiell administrasjon. La oss lage et nå:',
     'no_budgets_create_default'             => 'Opprett et budsjett',
     'no_categories_title_default'           => 'La oss lage en kategori!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Opprett gjentakende transaksjon',
     'help_weekend'                       => 'Hva skal Firefly III gjøre når gjentakende transaksjon faller på en Lørdag eller Søndag?',
     'do_nothing'                         => 'Bare opprett transaksjonen',
-    'skip_transaction'                   => 'Hopp over forekomsten',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Opprett transaksjonen på foregående Fredag istedet',
     'jump_to_monday'                     => 'Opprett transaksjonen på neste Mandag istedet',
     'will_jump_friday'                   => 'Opprettes på Fredag i stedet for i helgene.',

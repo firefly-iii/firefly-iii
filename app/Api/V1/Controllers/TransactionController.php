@@ -2,22 +2,22 @@
 
 /**
  * TransactionController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -41,6 +41,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -87,15 +88,18 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function attachments(TransactionJournal $transactionJournal): JsonResponse
+    public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager     = $this->getManager();
-        $attachments = $this->journalAPIRepository->getAttachments($transactionJournal);
+        $attachments = new Collection;
+        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
+            $attachments = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($attachments);
+        }
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -189,15 +193,18 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function piggyBankEvents(TransactionJournal $transactionJournal): JsonResponse
+    public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager = $this->getManager();
-        $events  = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal);
+        $events  = new Collection;
+        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
+            $events = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($events);
+        }
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);

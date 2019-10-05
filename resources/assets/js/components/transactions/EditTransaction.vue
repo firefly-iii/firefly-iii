@@ -2,20 +2,20 @@
   - EditTransaction.vue
   - Copyright (c) 2019 thegrumpydictator@gmail.com
   -
-  - This file is part of Firefly III.
+  - This file is part of Firefly III (https://github.com/firefly-iii).
   -
-  - Firefly III is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU General Public License as published by
-  - the Free Software Foundation, either version 3 of the License, or
-  - (at your option) any later version.
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
   -
-  - Firefly III is distributed in the hope that it will be useful,
+  - This program is distributed in the hope that it will be useful,
   - but WITHOUT ANY WARRANTY; without even the implied warranty of
   - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU General Public License for more details.
+  - GNU Affero General Public License for more details.
   -
-  - You should have received a copy of the GNU General Public License
-  - along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
 <template>
@@ -521,7 +521,6 @@
                         tagList.push(row.tags[tagKey].text);
                     }
                 }
-
                 // set foreign currency info:
                 if (row.foreign_amount.amount !== '' && parseFloat(row.foreign_amount.amount) !== .00) {
                     foreignAmount = row.foreign_amount.amount;
@@ -565,12 +564,9 @@
                         payment_date: row.custom_fields.payment_date,
                         invoice_date: row.custom_fields.invoice_date,
                         internal_reference: row.custom_fields.internal_reference,
-                        notes: row.custom_fields.notes
+                        notes: row.custom_fields.notes,
+                        tags: tagList
                     };
-
-                if (tagList.length > 0) {
-                    currentArray.tags = tagList;
-                }
                 if (null !== foreignAmount) {
                     currentArray.foreign_amount = foreignAmount;
                     currentArray.foreign_currency_id = foreignCurrency;

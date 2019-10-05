@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {% if budgetLimit %}
-                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.formatLocalized(monthAndDayFormat), end: budgetLimit.end_date.formatLocalized(monthAndDayFormat) }) }}
+                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.formatLocalized(monthAndDayFormat), end: budgetLimit.end_date.formatLocalized(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
                         {% else %}
                             {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
                         {% endif %}
@@ -29,10 +29,16 @@
                 <div class="box-body">
                     <canvas id="budgetOverview" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
+                {% if budgetLimit %}
+                    <div class="box-footer">
+                        <p class="text-muted">
+                            {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
-{% if budgetLimit %}
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
@@ -44,6 +50,13 @@
                         <canvas id="budget-cat-out" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
+                {% if budgetLimit %}
+                    <div class="box-footer">
+                        <p class="text-muted">
+                            {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -56,6 +69,13 @@
                         <canvas id="budget-asset-out" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
+                {% if budgetLimit %}
+                    <div class="box-footer">
+                        <p class="text-muted">
+                            {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -68,10 +88,16 @@
                         <canvas id="budget-expense-out" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
+                {% if budgetLimit %}
+                    <div class="box-footer">
+                        <p class="text-muted">
+                            {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
-{% endif %}
 
     <div class="row">
         <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
@@ -118,11 +144,15 @@
                         <table class="table table-hover">
                             <tr>
                                 <td style="width:33%;">{{ 'amount'|_ }}</td>
-                                <td>{{ limit.amount|formatAmount }}</td>
+                                <td>
+                                    {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                </td>
                             </tr>
                             <tr>
                                 <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                <td>{{ limit.spent|formatAmount }}</td>
+                                <td>
+                                    {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                </td>
                             </tr>
                             {% if limit.spent > 0 %}
                                 <tr>
@@ -163,17 +193,17 @@
         var budgetID = {{ budget.id }};
         var budgetLimitID = 0;
         {% if budgetLimit.id %}
-        budgetLimitID = {{ budgetLimit.id }};
-        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
-
-        var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
-        var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
-        var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
+            budgetLimitID = {{ budgetLimit.id }};
+            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
+            var currencySymbol = '{{ budgetLimit.transactionCurrency.symbol }}';
+            var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
+            var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
+            var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
         {% else %}
-        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
-        var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
-        var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
-        var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
+            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
+            var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
+            var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
+            var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
         {% endif %}
     </script>
 

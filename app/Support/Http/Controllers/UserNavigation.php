@@ -1,22 +1,22 @@
 <?php
 /**
  * UserNavigation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
 use Log;
 
@@ -237,17 +238,12 @@ trait UserNavigation
     {
         $return = null;
         /** @var ViewErrorBag $errors */
-        $errors = session()->get('errors');
-        if (null === $errors || (null !== $errors && 0 === $errors->count())) {
+        $errors    = session()->get('errors');
+        $forbidden = ['json'];
+        if ((null === $errors || (null !== $errors && 0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             $return = app('url')->previous();
-
-            // TODO URL might not be one we *want* to remember.
-
             session()->put($identifier, $return);
-            //Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
-            //return;
         }
-        //Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
         return $return;
     }
 }
