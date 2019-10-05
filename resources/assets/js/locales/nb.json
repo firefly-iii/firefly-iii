@@ -5,17 +5,31 @@
         "flash_success": "Suksess!",
         "close": "Lukk",
         "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "errors_submission",
         "split": "Del opp",
         "transaction_journal_information": "Transaksjonsinformasjon",
         "source_account": "Source account",
         "destination_account": "Destination account",
         "add_another_split": "Legg til en oppdeling til",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
         "submit": "Send inn",
         "amount": "Bel\u00f8p",
+        "date": "Dato",
+        "tags": "Tagger",
         "no_budget": "(ingen budsjett)",
         "category": "Kategori",
         "attachments": "Vedlegg",
-        "notes": "Notater"
+        "notes": "Notater",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(ingen)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Beskrivelse"
     },
     "form": {
         "interest_date": "Rentedato",
@@ -27,6 +41,6 @@
         "internal_reference": "Intern referanse"
     },
     "config": {
-        "html_language": "no"
+        "html_language": "nb"
     }
 }

@@ -40,7 +40,7 @@
 <script>
     export default {
         name: "Budget",
-        props: ['transactionType', 'value', 'error'],
+        props: ['transactionType', 'value', 'error','no_budget'],
         mounted() {
             this.loadBudgets();
             // console.log('budget value');
@@ -63,7 +63,7 @@
                 axios.get(URI, {}).then((res) => {
                     this.budgets = [
                         {
-                            name: '(no budget)',
+                            name: this.no_budget,
                             id: 0,
                         }
                     ];

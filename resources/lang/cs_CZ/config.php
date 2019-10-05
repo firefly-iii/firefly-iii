@@ -27,7 +27,7 @@ return [
     'locale'                  => 'cs, Čeština, cs_CZ, cs_CZ.utf8, cs_CZ.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%e %B %Y',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'MMM D, RRRR',
     'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_day_no_year'   => '%B %e',
     'date_time'               => '%e %B %Y, @ %T',

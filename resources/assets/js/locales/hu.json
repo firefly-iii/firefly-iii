@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "Mi a helyzet?"
+        "welcome_back": "Mi a helyzet?",
+        "flash_error": "Hiba!",
+        "flash_success": "Siker!",
+        "close": "Bez\u00e1r\u00e1s",
+        "split_transaction_title": "Felosztott tranzakci\u00f3 le\u00edr\u00e1sa",
+        "errors_submission": "errors_submission",
+        "split": "Feloszt\u00e1s",
+        "transaction_journal_information": "Tranzakci\u00f3s inform\u00e1ci\u00f3k",
+        "source_account": "Forr\u00e1s sz\u00e1mla",
+        "destination_account": "C\u00e9lsz\u00e1mla",
+        "add_another_split": "M\u00e1sik feloszt\u00e1s hozz\u00e1ad\u00e1sa",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Bek\u00fcld\u00e9s",
+        "amount": "\u00d6sszeg",
+        "date": "D\u00e1tum",
+        "tags": "C\u00edmk\u00e9k",
+        "no_budget": "(nincs k\u00f6lts\u00e9gkeret)",
+        "category": "Kateg\u00f3ria",
+        "attachments": "Mell\u00e9kletek",
+        "notes": "Megjegyz\u00e9sek",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "Felosztott tranzakci\u00f3 l\u00e9trehoz\u00e1sakor meg kell adni egy glob\u00e1lis le\u00edr\u00e1st a tranzakci\u00f3 \u00f6sszes feloszt\u00e1sa r\u00e9sz\u00e9re.",
+        "none_in_select_list": "(nincs)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Le\u00edr\u00e1s"
+    },
+    "form": {
+        "interest_date": "Kamatfizet\u00e9si id\u0151pont",
+        "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
+        "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
+        "due_date": "Lej\u00e1rati id\u0151pont",
+        "payment_date": "Fizet\u00e9s d\u00e1tuma",
+        "invoice_date": "Sz\u00e1mla d\u00e1tuma",
+        "internal_reference": "Bels\u0151 hivatkoz\u00e1s"
     },
     "config": {
         "html_language": "hu"

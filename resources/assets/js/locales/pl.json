@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "Co jest grane?"
+        "welcome_back": "Co jest grane?",
+        "flash_error": "B\u0142\u0105d!",
+        "flash_success": "Sukces!",
+        "close": "Zamknij",
+        "split_transaction_title": "Opis podzielonej transakcji",
+        "errors_submission": "errors_submission",
+        "split": "Podziel",
+        "transaction_journal_information": "Informacje o transakcji",
+        "source_account": "Konto \u017ar\u00f3d\u0142owe",
+        "destination_account": "Konto docelowe",
+        "add_another_split": "Dodaj kolejny podzia\u0142",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Prze\u015blij",
+        "amount": "Kwota",
+        "date": "Data",
+        "tags": "Tagi",
+        "no_budget": "(brak bud\u017cetu)",
+        "category": "Kategoria",
+        "attachments": "Za\u0142\u0105czniki",
+        "notes": "Notatki",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "Podzielone transakcje musz\u0105 posiada\u0107 globalny opis.",
+        "none_in_select_list": "(\u017cadne)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Opis"
+    },
+    "form": {
+        "interest_date": "Data odsetek",
+        "book_date": "Data ksi\u0119gowania",
+        "process_date": "Data przetworzenia",
+        "due_date": "Termin realizacji",
+        "payment_date": "Data p\u0142atno\u015bci",
+        "invoice_date": "Data faktury",
+        "internal_reference": "Wewn\u0119trzny numer"
     },
     "config": {
         "html_language": "pl"

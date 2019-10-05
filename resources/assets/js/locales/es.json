@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "\u00bfQu\u00e9 est\u00e1 pasando?"
+        "welcome_back": "\u00bfQu\u00e9 est\u00e1 pasando?",
+        "flash_error": "\u00a1Error!",
+        "flash_success": "\u00a1Operaci\u00f3n correcta!",
+        "close": "Cerrar",
+        "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
+        "errors_submission": "errors_submission",
+        "split": "Separar",
+        "transaction_journal_information": "Informaci\u00f3n de transacci\u00f3n",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "A\u00f1adir otra divisi\u00f3n",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Enviar",
+        "amount": "Cantidad",
+        "date": "Fecha",
+        "tags": "Etiquetas",
+        "no_budget": "(sin presupuesto)",
+        "category": "Categoria",
+        "attachments": "Archivos adjuntos",
+        "notes": "Notas",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "Si crea una transacci\u00f3n dividida, debe haber una descripci\u00f3n global para todos los fragmentos de la transacci\u00f3n.",
+        "none_in_select_list": "(ninguno)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Descripci\u00f3n"
+    },
+    "form": {
+        "interest_date": "Fecha de inter\u00e9s",
+        "book_date": "Fecha de registro",
+        "process_date": "Fecha de procesamiento",
+        "due_date": "Fecha de vencimiento",
+        "payment_date": "Fecha de pago",
+        "invoice_date": "Fecha de la factura",
+        "internal_reference": "Referencia interna"
     },
     "config": {
         "html_language": "es"

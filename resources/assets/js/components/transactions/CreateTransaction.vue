@@ -45,7 +45,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            {{ $t('firefly.split_transaction_title')}}
+                            {{ $t('firefly.split_title_help')}}
                         </h3>
                     </div>
                     <div class="box-body">
@@ -83,7 +83,7 @@
                                     </transaction-description>
                                     <account-select
                                             inputName="source[]"
-                                            v-bind:title="$('firefly.source_account')"
+                                            v-bind:title="$t('firefly.source_account')"
                                             :accountName="transaction.source_account.name"
                                             :accountTypeFilters="transaction.source_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
@@ -95,7 +95,7 @@
                                     ></account-select>
                                     <account-select
                                             inputName="destination[]"
-                                            v-bind:title="$('firefly.destination_account')"
+                                            v-bind:title="$t('firefly.destination_account')"
                                             :accountName="transaction.destination_account.name"
                                             :accountTypeFilters="transaction.destination_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"
@@ -135,6 +135,7 @@
                                             v-model="transaction.foreign_amount"
                                             :transactionType="transactionType"
                                             :error="transaction.errors.foreign_amount"
+                                            :title="$t('firefly.foreign_amount')"
                                     ></foreign-amount>
                                 </div>
                                 <div class="col-lg-4">
@@ -142,6 +143,7 @@
                                             :transactionType="transactionType"
                                             v-model="transaction.budget"
                                             :error="transaction.errors.budget_id"
+                                            :no_budget="$t('firefly.none_in_select_list')"
                                     ></budget>
                                     <category
                                             :transactionType="transactionType"
@@ -152,6 +154,7 @@
                                             :transactionType="transactionType"
                                             v-model="transaction.piggy_bank"
                                             :error="transaction.errors.piggy_bank"
+                                            :no_piggy_bank="$t('firefly.no_piggy_bank')"
                                     ></piggy-bank>
                                     <tags
                                             v-model="transaction.tags"
@@ -165,7 +168,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">{{ $t('firefly.add_another_split')</button>
+                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
                 </div>

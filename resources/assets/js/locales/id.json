@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "What's playing?"
+        "welcome_back": "What's playing?",
+        "flash_error": "Kesalahan!",
+        "flash_success": "Keberhasilan!",
+        "close": "Dekat",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "errors_submission",
+        "split": "Pisah",
+        "transaction_journal_information": "Informasi transaksi",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Tambahkan perpecahan lagi",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Menyerahkan",
+        "amount": "Jumlah",
+        "date": "Tanggal",
+        "tags": "Tag",
+        "no_budget": "(no budget)",
+        "category": "Kategori",
+        "attachments": "Lampiran",
+        "notes": "Notes",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(none)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Deskripsi"
+    },
+    "form": {
+        "interest_date": "Tanggal bunga",
+        "book_date": "Tanggal buku",
+        "process_date": "Tanggal pemrosesan",
+        "due_date": "Batas tanggal terakhir",
+        "payment_date": "Tanggal pembayaran",
+        "invoice_date": "Tanggal faktur",
+        "internal_reference": "Referensi internal"
     },
     "config": {
         "html_language": "id"

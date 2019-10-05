@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "Ce se red\u0103?"
+        "welcome_back": "Ce se red\u0103?",
+        "flash_error": "Eroare!",
+        "flash_success": "Succes!",
+        "close": "\u00cenchide",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "errors_submission",
+        "split": "\u00cemparte",
+        "transaction_journal_information": "Informa\u021bii despre tranzac\u021bii",
+        "source_account": "Contul surs\u0103",
+        "destination_account": "Contul de destina\u021bie",
+        "add_another_split": "Ad\u0103uga\u021bi o divizare",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Trimite",
+        "amount": "Sum\u0103",
+        "date": "Dat\u0103",
+        "tags": "Etichete",
+        "no_budget": "(nici un buget)",
+        "category": "Categorie",
+        "attachments": "Ata\u0219amente",
+        "notes": "Noti\u021be",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(nici unul)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Descriere"
+    },
+    "form": {
+        "interest_date": "Data de interes",
+        "book_date": "Rezerv\u0103 dat\u0103",
+        "process_date": "Data proces\u0103rii",
+        "due_date": "Data scadent\u0103",
+        "payment_date": "Data de plat\u0103",
+        "invoice_date": "Data facturii",
+        "internal_reference": "Referin\u021b\u0103 intern\u0103"
     },
     "config": {
         "html_language": "ro"

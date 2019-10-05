@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "Neler oluyor?",
+        "flash_error": "Hata!",
+        "flash_success": "Ba\u015far\u0131l\u0131!",
+        "close": "Kapat",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "errors_submission",
+        "split": "B\u00f6l",
+        "transaction_journal_information": "\u0130\u015flem Bilgileri",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Ba\u015fka bir b\u00f6lme ekle",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "G\u00f6nder",
+        "amount": "Miktar",
+        "date": "Tarih",
+        "tags": "Etiketler",
+        "no_budget": "(no budget)",
+        "category": "Kategori",
+        "attachments": "Ekler",
+        "notes": "Notlar",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(Yok)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "A\u00e7\u0131klama"
+    },
+    "form": {
+        "interest_date": "Faiz tarihi",
+        "book_date": "Kitap Tarihi",
+        "process_date": "\u0130\u015flem tarihi",
+        "due_date": "Biti\u015f Tarihi",
+        "payment_date": "\u00d6deme Tarihi",
+        "invoice_date": "Fatura Tarihi",
+        "internal_reference": "Dahili referans"
+    },
+    "config": {
+        "html_language": "tr"
+    }
+}

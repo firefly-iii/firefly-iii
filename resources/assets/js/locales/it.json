@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "La tua situazione finanziaria"
+        "welcome_back": "La tua situazione finanziaria",
+        "flash_error": "Errore!",
+        "flash_success": "Successo!",
+        "close": "Chiudi",
+        "split_transaction_title": "Descrizione della transazione suddivisa",
+        "errors_submission": "errors_submission",
+        "split": "Dividi",
+        "transaction_journal_information": "Informazioni transazione",
+        "source_account": "Conto di origine",
+        "destination_account": "Conto destinazione",
+        "add_another_split": "Aggiungi un'altra divisione",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Invia",
+        "amount": "Conto",
+        "date": "Data",
+        "tags": "Etichette",
+        "no_budget": "(nessun budget)",
+        "category": "Categoria",
+        "attachments": "Allegati",
+        "notes": "Note",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "Se crei una transazione suddivisa \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.",
+        "none_in_select_list": "(nessuna)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Descrizione"
+    },
+    "form": {
+        "interest_date": "Data interesse",
+        "book_date": "Data contabile",
+        "process_date": "Data elaborazione",
+        "due_date": "Data scadenza",
+        "payment_date": "Data pagamento",
+        "invoice_date": "Data fatturazione",
+        "internal_reference": "Riferimento interno"
     },
     "config": {
         "html_language": "it"

@@ -22,35 +22,35 @@
     <div>
         <component
                 :error="error.interest_date"
-                v-model="value.interest_date" v-if="this.fields.interest_date" name="interest_date[]" title="Interest date" v-bind:is="dateComponent"></component>
+                v-model="value.interest_date" v-if="this.fields.interest_date" name="interest_date[]" v-bind:title="$t('form.interest_date')" v-bind:is="dateComponent"></component>
         <component
                 :error="error.book_date"
-                v-model="value.book_date" v-if="this.fields.book_date" name="book_date[]" title="Book date" v-bind:is="dateComponent"></component>
+                v-model="value.book_date" v-if="this.fields.book_date" name="book_date[]" v-bind:title="$t('form.book_date')" v-bind:is="dateComponent"></component>
         <component
                 :error="error.process_date"
-                v-model="value.process_date" v-if="this.fields.process_date" name="process_date[]" title="Process date" v-bind:is="dateComponent"></component>
+                v-model="value.process_date" v-if="this.fields.process_date" name="process_date[]" v-bind:title="$t('form.process_date')" v-bind:is="dateComponent"></component>
         <component
                 :error="error.due_date"
-                v-model="value.due_date" v-if="this.fields.due_date" name="due_date[]" title="Due date" v-bind:is="dateComponent"></component>
+                v-model="value.due_date" v-if="this.fields.due_date" name="due_date[]" v-bind:title="$t('form.due_date')" v-bind:is="dateComponent"></component>
         <component
                 :error="error.payment_date"
-                v-model="value.payment_date" v-if="this.fields.payment_date" name="payment_date[]" title="Payment date" v-bind:is="dateComponent"></component>
+                v-model="value.payment_date" v-if="this.fields.payment_date" name="payment_date[]" v-bind:title="$t('form.payment_date')" v-bind:is="dateComponent"></component>
 
         <component
                 :error="error.invoice_date"
-                v-model="value.invoice_date" v-if="this.fields.invoice_date" name="invoice_date[]" title="Invoice date" v-bind:is="dateComponent"></component>
+                v-model="value.invoice_date" v-if="this.fields.invoice_date" name="invoice_date[]" v-bind:title="$t('form.invoice_date')" v-bind:is="dateComponent"></component>
 
         <component
                 :error="error.internal_reference"
-                v-model="value.internal_reference" v-if="this.fields.internal_reference" name="internal_reference[]" title="Internal reference" v-bind:is="stringComponent"></component>
+                v-model="value.internal_reference" v-if="this.fields.internal_reference" name="internal_reference[]" v-bind:title="$t('form.internal_reference')" v-bind:is="stringComponent"></component>
 
         <component
                 :error="error.attachments"
-                v-model="value.attachments" v-if="this.fields.attachments" name="attachments[]" title="Attachments" v-bind:is="attachmentComponent"></component>
+                v-model="value.attachments" v-if="this.fields.attachments" name="attachments[]" v-bind:title="$t('firefly.attachments')" v-bind:is="attachmentComponent"></component>
 
         <component
                 :error="error.notes"
-                v-model="value.notes" v-if="this.fields.notes" name="notes[]" title="Notes" v-bind:is="textareaComponent"></component>
+                v-model="value.notes" v-if="this.fields.notes" name="notes[]" v-bind:title="$t('firefly.notes')" v-bind:is="textareaComponent"></component>
 
 
     </div>

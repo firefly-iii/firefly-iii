@@ -30,7 +30,7 @@
                     v-on:submit.prevent
                     ref="descr"
                     autocomplete="off"
-                    placeholder="Description"
+                    v-bind:placeholder="$t('firefly.description')"
                     :value="value" @input="handleInput"
             >
             <typeahead

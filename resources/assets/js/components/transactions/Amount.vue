@@ -25,7 +25,7 @@
             <input type="number" ref="amount" :value="value" @input="handleInput" step="any"
                    class="form-control"
                    name="amount[]"
-                   title="amount" autocomplete="off" placeholder="Amount">
+                   title="amount" autocomplete="off" v-bind:placeholder="$t('firefly.amount')">
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>

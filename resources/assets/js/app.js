@@ -18,16 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import CustomAttachments from "./components/transactions/CustomAttachments";
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import * as uiv from 'uiv';
+import CustomAttachments from "./components/transactions/CustomAttachments";
 import CreateTransaction from './components/transactions/CreateTransaction';
 import EditTransaction from './components/transactions/EditTransaction';
 import Clients from './components/passport/Clients';
 import AuthorizedClients from "./components/passport/AuthorizedClients";
 import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
-import Budget from "./components/transactions/Budget";
 import CustomDate from "./components/transactions/CustomDate";
 import CustomString from "./components/transactions/CustomString";
 import CustomTextarea from "./components/transactions/CustomTextarea";
@@ -42,6 +41,7 @@ import Amount from "./components/transactions/Amount";
 import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
+import Budget from "./components/transactions/Budget";
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -55,6 +55,8 @@ Vue.use(VueI18n);
 window.Vue = Vue;
 
 Vue.use(uiv);
+
+
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);

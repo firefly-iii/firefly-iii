@@ -37,7 +37,7 @@
         <div class="col-sm-8">
             <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
                    name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
-                   title="Foreign amount" autocomplete="off" placeholder="Foreign amount">
+                   :title="title" autocomplete="off" :placeholder="this.title">
 
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -49,7 +49,7 @@
 <script>
     export default {
         name: "ForeignAmountSelect",
-        props: ['source', 'destination', 'transactionType', 'value','error'],
+        props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title'],
         mounted() {
             this.loadCurrencies();
         },
@@ -130,7 +130,7 @@
                 axios.get(URI, {}).then((res) => {
                     this.currencies = [
                         {
-                            name: '(none)',
+                            name: this.no_currency,
                             id: 0,
                             enabled: true
                         }

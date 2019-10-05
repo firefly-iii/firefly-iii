@@ -25,11 +25,11 @@
                     type="date"
                     class="form-control"
                     name="date[]"
-                    title="Date"
+                    v-bind:title="$t('firefly.date')"
                     ref="date"
                     autocomplete="off"
                     :disabled="index > 0"
-                    placeholder="Date"
+                    v-bind:placeholder="$t('firefly.date')"
                     :value="value" @input="handleInput"
             >
             <ul class="list-unstyled" v-for="error in this.error">

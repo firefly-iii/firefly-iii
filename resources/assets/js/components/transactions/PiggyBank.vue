@@ -36,7 +36,7 @@
 <script>
     export default {
         name: "PiggyBank",
-        props: ['value','transactionType','error'],
+        props: ['value','transactionType','error', 'no_piggy_bank'],
         mounted() {
             this.loadPiggies();
         },
@@ -57,7 +57,7 @@
                 axios.get(URI, {}).then((res) => {
                     this.piggies = [
                         {
-                            name: '(no piggy bank)',
+                            name: this.no_piggy_bank,
                             id: 0,
                         }
                     ];

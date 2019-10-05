@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "Co hraje?"
+        "welcome_back": "Co hraje?",
+        "flash_error": "Chyba!",
+        "flash_success": "\u00dasp\u011b\u0161n\u011b dokon\u010deno!",
+        "close": "Zav\u0159\u00edt",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "errors_submission",
+        "split": "Rozd\u011blit",
+        "transaction_journal_information": "Informace o transakci",
+        "source_account": "Zdrojov\u00fd \u00fa\u010det",
+        "destination_account": "C\u00edlov\u00fd \u00fa\u010det",
+        "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Odeslat",
+        "amount": "\u010c\u00e1stka",
+        "date": "Datum",
+        "tags": "\u0160t\u00edtky",
+        "no_budget": "(\u017e\u00e1dn\u00fd rozpo\u010det)",
+        "category": "Kategorie",
+        "attachments": "P\u0159\u00edlohy",
+        "notes": "Pozn\u00e1mky",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(\u017e\u00e1dn\u00e9)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Popis"
+    },
+    "form": {
+        "interest_date": "\u00darokov\u00e9 datum",
+        "book_date": "Book date",
+        "process_date": "Datum zpracov\u00e1n\u00ed",
+        "due_date": "Datum splatnosti",
+        "payment_date": "Datum zaplacen\u00ed",
+        "invoice_date": "Datum vystaven\u00ed",
+        "internal_reference": "Intern\u00ed reference"
     },
     "config": {
         "html_language": "cs"

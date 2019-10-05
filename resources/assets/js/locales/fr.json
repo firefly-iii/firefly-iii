@@ -1,6 +1,44 @@
 {
     "firefly": {
-        "welcome_back": "Que se passe-t-il ?"
+        "welcome_back": "Que se passe-t-il ?",
+        "flash_error": "Erreur !",
+        "flash_success": "Termin\u00e9 avec succ\u00e8s !",
+        "close": "Fermer",
+        "split_transaction_title": "Description de l'op\u00e9ration ventil\u00e9e",
+        "errors_submission": "errors_submission",
+        "split": "Ventiler",
+        "transaction_journal_information": "Informations sur les transactions",
+        "source_account": "Compte d'origine",
+        "destination_account": "Compte de destination",
+        "add_another_split": "Ajouter une autre fraction",
+        "submission": "submission",
+        "create_another": "create_another",
+        "reset_after": "reset_after",
+        "submit": "Soumettre",
+        "amount": "Montant",
+        "date": "Date",
+        "tags": "Tags",
+        "no_budget": "(pas de budget)",
+        "category": "Cat\u00e9gorie",
+        "attachments": "Pi\u00e8ces jointes",
+        "notes": "Notes",
+        "update_transaction": "update_transaction",
+        "after_update_create_another": "after_update_create_another",
+        "store_as_new": "store_as_new",
+        "foreign_amount": "foreign_amount",
+        "split_title_help": "Si vous cr\u00e9ez une op\u00e9ration ventil\u00e9e, il doit y avoir une description globale pour chaque fractions de l'op\u00e9ration.",
+        "none_in_select_list": "(aucun)",
+        "no_piggy_bank": "no_piggy_bank",
+        "description": "Description"
+    },
+    "form": {
+        "interest_date": "Date de l\u2019int\u00e9r\u00eat",
+        "book_date": "Date de r\u00e9servation",
+        "process_date": "Date de traitement",
+        "due_date": "\u00c9ch\u00e9ance",
+        "payment_date": "Date de paiement",
+        "invoice_date": "Date de facturation",
+        "internal_reference": "R\u00e9f\u00e9rence interne"
     },
     "config": {
         "html_language": "fr"
