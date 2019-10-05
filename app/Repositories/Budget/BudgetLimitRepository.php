@@ -69,12 +69,15 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
     {
         $query = BudgetLimit
-            ::where('start_date', $start->format('Y-m-d 00:00:00'))
-            ->where('end_date', $end->format('Y-m-d 00:00:00'))
-            ->where('transaction_currency_id', $currency->id);
+            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
+            ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
+            ->where('budget_limits.transaction_currency_id', $currency->id)
+            ->where('budgets.user_id', $this->user->id);
         if (null !== $budgets && $budgets->count() > 0) {
-            $query->whereIn('budget_id', $budgets->pluck('id')->toArray());
+            $query->whereIn('budget_limits.budget_id', $budgets->pluck('id')->toArray());
         }
+
         $set    = $query->get(['budget_limits.*']);
         $result = '0';
         /** @var BudgetLimit $budgetLimit */
