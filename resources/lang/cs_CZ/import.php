@@ -34,7 +34,7 @@ return [
     'disabled_for_demo_user'              => 'v ukázce vypnuté',
 
     // index page:
-    'general_index_intro'                 => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'general_index_intro'                 => 'Vítejte v rutině importu do Firefly III. Data je možné importovat vícero způsoby, zobrazenými zde jako tlačítka.',
 
     // import provider strings (index):
     'button_fake'                         => 'Simulovat import',
@@ -147,7 +147,7 @@ return [
     'ynab_account_type_cash'               => 'hotovostní účet',
     'ynab_account_type_creditCard'         => 'kreditní karta',
     'ynab_account_type_lineOfCredit'       => 'řádek úvěru',
-    'ynab_account_type_otherAsset'         => 'other asset account',
+    'ynab_account_type_otherAsset'         => 'jiný účet aktiv',
     'ynab_account_type_otherLiability'     => 'ostatní závazky',
     'ynab_account_type_payPal'             => 'Paypal',
     'ynab_account_type_merchantAccount'    => 'merchant account',
@@ -160,7 +160,7 @@ return [
     // job configuration for YNAB:
     'job_config_ynab_select_budgets'       => 'Vyberte svůj rozpočet',
     'job_config_ynab_select_budgets_text'  => 'You have :count budgets stored at YNAB. Please select the one from which Firefly III will import the transactions.',
-    'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
+    'job_config_ynab_no_budgets'           => 'Nejsou zde k dispozici žádné rozpočty, ze kterých importovat.',
     'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
     'job_config_ynab_bad_currency'         => 'You cannot import from the following budget(s), because you do not have accounts with the same currency as these budgets.',
     'job_config_ynab_accounts_title'       => 'Vyberte účty',
@@ -260,14 +260,14 @@ return [
     'column__ignore'                  => '(ignorovat tento sloupec)',
     'column_account-iban'             => 'Asset account (IBAN)',
     'column_account-id'               => 'Asset account ID (matching FF3)',
-    'column_account-name'             => 'Asset account (name)',
-    'column_account-bic'              => 'Asset account (BIC)',
+    'column_account-name'             => 'Účet aktiv (název)',
+    'column_account-bic'              => 'Účet aktiv (BIC)',
     'column_amount'                   => 'Částka',
     'column_amount_foreign'           => 'Amount (in foreign currency)',
     'column_amount_debit'             => 'Amount (debit column)',
     'column_amount_credit'            => 'Amount (credit column)',
     'column_amount_negated'           => 'Amount (negated column)',
-    'column_amount-comma-separated'   => 'Amount (comma as decimal separator)',
+    'column_amount-comma-separated'   => 'Částka (čárka jako desetinný oddělovač)',
     'column_bill-id'                  => 'Bill ID (matching FF3)',
     'column_bill-name'                => 'Bill name',
     'column_budget-id'                => 'Budget ID (matching FF3)',

@@ -27,7 +27,7 @@ return [
     'locale'                  => 'pt-br, pt_BR.utf8, pt_BR.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%e de %B de %Y',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'DD \de MMMM \de YYYY',
     'month_and_date_day'      => '%A, %B de %e de %Y',
     'month_and_day_no_year'   => '%B de %e',
     'date_time'               => '%B %e, %Y, @ %T',

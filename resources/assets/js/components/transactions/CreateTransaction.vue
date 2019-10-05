@@ -560,7 +560,7 @@
                 this.setDefaultErrors();
                 this.error_message = "";
                 if (errors.message.length > 0) {
-                    this.error_message = $t('firefly.errors_submission');
+                    this.error_message = this.$t('firefly.errors_submission');
                 } else {
                     this.error_message = '';
                 }

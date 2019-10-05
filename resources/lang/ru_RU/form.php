@@ -102,7 +102,7 @@ return [
     'convert_Transfer'            => 'Конвертировать перевод',
 
     'amount'                      => 'Сумма',
-    'foreign_amount'              => 'Сумму в иностранной валюте',
+    'foreign_amount'              => 'Сумма в иностранной валюте',
     'existing_attachments'        => 'Существующие вложения',
     'date'                        => 'Дата',
     'interest_date'               => 'Дата выплаты',
