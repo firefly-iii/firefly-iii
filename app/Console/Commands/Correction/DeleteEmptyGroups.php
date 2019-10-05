@@ -55,28 +55,19 @@ class DeleteEmptyGroups extends Command
     public function handle(): int
     {
         $start  = microtime(true);
-        $groups = array_unique(TransactionJournal::get(['transaction_group_id'])->pluck('transaction_group_id')->toArray());
+        $groupIds  =
+            TransactionGroup
+            ::leftJoin('transaction_journals','transaction_groups.id','=','transaction_journals.transaction_group_id')
+            ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
 
-        // make chunks so SQLite can take the strain:
-        $chunks = array_chunk($groups, 500);
-        $total  = 0;
-        foreach ($chunks as $chunk) {
-            $count = TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $chunk)->count();
-            $total += $count;
-        }
-        if (0 === $total) {
-            $this->info('No empty transaction groups.');
-        }
-
-        unset($chunks, $chunk, $count);
-
+        $total = count($groupIds);
         if ($total > 0) {
             $this->info(sprintf('Deleted %d empty transaction group(s).', $total));
 
             // again, chunks for SQLite.
-            $chunks = array_chunk($groups, 500);
+            $chunks = array_chunk($groupIds, 500);
             foreach ($chunks as $chunk) {
-                TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $chunk)->delete();
+                TransactionGroup::whereNull('deleted_at')->whereIn('id', $chunk)->delete();
             }
         }
         $end = round(microtime(true) - $start, 2);
