@@ -125,7 +125,7 @@ class LinkController extends Controller
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
 
-            return redirect(route('transactions.show', [$journal->id]));
+            return redirect(route('transactions.show', [$journal->transaction_group_id]));
         }
 
         $alreadyLinked = $this->repository->findLink($journal, $other);
@@ -133,13 +133,13 @@ class LinkController extends Controller
         if ($other->id === $journal->id) {
             session()->flash('error', (string)trans('firefly.journals_link_to_self'));
 
-            return redirect(route('transactions.show', [$journal->id]));
+            return redirect(route('transactions.show', [$journal->transaction_group_id]));
         }
 
         if ($alreadyLinked) {
             session()->flash('error', (string)trans('firefly.journals_error_linked'));
 
-            return redirect(route('transactions.show', [$journal->id]));
+            return redirect(route('transactions.show', [$journal->transaction_group_id]));
         }
         Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
         $this->repository->storeLink($linkInfo, $other, $journal);
