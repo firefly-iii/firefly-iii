@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -58,7 +58,7 @@ return [
     'no_rules_for_bill'                          => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                       => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                              => 'Ga naar je budgetten',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'clone_instructions'                         => 'Om een transactie te kopiëren, zet het vinkje bij "opslaan als nieuw" als je de transactie wijzigt',
     'go_to_categories'                           => 'Ga naar je categorieën',
     'go_to_bills'                                => 'Ga naar je contracten',
     'go_to_expense_accounts'                     => 'Bekijk je crediteuren',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Huidige periode',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
     'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
-    'budget_in_period'                           => 'Alle transacties voor budget ":name" tussen :start en :end',
-    'chart_budget_in_period'                     => 'Grafiek voor alle transacties voor budget ":name" tussen :start en :end',
+    'budget_in_period'                           => 'Alle transacties voor budget ":name" tussen :start en :end in :currency',
+    'chart_budget_in_period'                     => 'Grafiek voor alle transacties voor budget ":name" tussen :start en :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'Het bedrag dat je het begroot is in :currency, dus deze grafiek laat alleen transacties in :currency zien.',
     'chart_account_in_period'                    => 'Grafiek voor alle transacties voor rekening ":name" tussen :start en :end',
     'chart_category_in_period'                   => 'Grafiek voor alle transacties voor categorie ":name" tussen :start en :end',
     'chart_category_all'                         => 'Grafiek voor alle transacties voor categorie ":name"',
@@ -253,6 +254,8 @@ return [
     'search_modifier_on'                         => 'Transactiedatum is :value',
     'search_modifier_before'                     => 'Transactiedatum is vóór :value',
     'search_modifier_after'                      => 'Transactiedatum is na :value',
+    'search_modifier_created_at'                 => 'Transactie werd gemaakt op :value',
+    'search_modifier_updated_at'                 => 'Transactie werd laatst gewijzigd op :value',
     'modifiers_applies_are'                      => 'De volgende wijzigingen worden ook toegepast op de zoekopdracht:',
     'general_search_error'                       => 'Er is een fout opgetreden tijdens het zoeken. Controleer de log-bestanden voor meer informatie.',
     'search_box'                                 => 'Zoeken',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Optionele meta-gegevens',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Wees voorzichtig met deze knoppen. Het verwijderen van dingen is permanent.',
+    'delete_all_budgets'                        => 'Verwijder ALLE budgetten',
+    'delete_all_categories'                     => 'Verwijder ALLE categorieën',
+    'delete_all_tags'                           => 'Verwijder ALLE tags',
+    'deleted_all_budgets'                       => 'Alle budgets zijn verwijderd',
+    'deleted_all_categories'                    => 'Alle categorieën zijn verwijderd',
+    'deleted_all_tags'                          => 'Alle tags zijn verwijderd',
     'change_your_password'                      => 'Verander je wachtwoord',
     'delete_account'                            => 'Verwijder je account',
     'current_password'                          => 'Huidige wachtwoord',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
+    'running_again_loss'                        => 'Eerder gekoppelde transacties met dit contract kunnen hun koppeling verliezen, als ze (niet langer) overeenkomen met de regel(s).',
     'bill_related_rules'                        => 'Regels gerelateerd aan dit contract',
     'repeats'                                   => 'Herhaalt',
     'connected_journals'                        => 'Verbonden transacties',

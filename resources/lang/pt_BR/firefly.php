@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'Seu id de usuário é <strong>:user</strong>',
     'field_supports_markdown'                    => 'Este campo suporta <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Se você precisa de mais ajuda usando o Firefly III, por favor <a href="https://github.com/firefly-iii/firefly-iii/issues">abra um ticket no Github</a>.',
-    'reenable_intro_text'                        => 'Você pode também reativar <a href="#" id="reenableGuidance">o guia de introdução</a>.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'As caixas de introdução reaparecerão quando você atualizar a página.',
     'show_all_no_filter'                         => 'Mostre todas as transações sem agrupá-las por data.',
     'expenses_by_category'                       => 'Despesa por categoria',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Período atual',
     'show_the_current_period_and_overview'       => 'Mostrar o período atual e visão geral',
     'pref_languages_locale'                      => 'Para que um idioma diferente do inglês funcione corretamente, seu sistema operacional deve estar equipado com as informações locais corretas. Se estas não estiverem presentes, os dados de moeda, as datas e os montantes podem ser formatados incorretamente.',
-    'budget_in_period'                           => 'Todas as transações para orçamento ":name" entre :start e :end',
-    'chart_budget_in_period'                     => 'Gráfico para todas as transações do orçamento ":name" entre :start e :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Gráfico para todas as transações da conta ":name" entre :start e :end',
     'chart_category_in_period'                   => 'Gráfico para todas as transações para a categoria ":name" entre :start e :end',
     'chart_category_all'                         => 'Gráfico para todas as transações para a categoria ":name"',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Data da transação é :value',
     'search_modifier_before'                     => 'Data da transação é antes de :value',
     'search_modifier_after'                      => 'Data da transação é após :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'Os seguintes modificadores são aplicados também à busca:',
-    'general_search_error'                       => 'Ocorreu um erro durante a pesquisa. Verifique os arquivos de log para obter mais informações.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Pesquisar',
     'search_box_intro'                           => 'Bem-vindo à função de pesquisa do Firefly III. Digite sua consulta de pesquisa na caixa. Certifique-se de verificar o arquivo de ajuda porque a pesquisa é bastante avançada.',
     'search_error'                               => 'Erro durante a busca',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Meta dados opcionais',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Alterar sua senha',
     'delete_account'                            => 'Apagar conta',
     'current_password'                          => 'Senha atual',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Fatura corresponde a transações entre :low e :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Regras relacionadas a essa fatura',
     'repeats'                                   => 'Repetições',
     'connected_journals'                        => 'Transações conectadas',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Gasto excedido',
     'left'                                      => 'Esquerda',
     'max-amount'                                => 'Valor Máximo',
-    'min-amount'                                => 'Valor Mínimo',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Entrada de fatura atual',
     'name'                                      => 'Nome',
     'date'                                      => 'Data',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Você não precisa usar esse recurso, mas pode ser útil se você quer controlar esse tipo de coisas.',
     'no_accounts_create_liabilities'        => 'Criar um passivo',
     'no_budgets_title_default'              => 'Vamos criar um orçamento',
-    'no_budgets_intro_default'              => 'Você ainda não tem orçamentos. Os orçamentos são usados ​​para organizar suas despesas em grupos lógicos, o que você pode usar como uma base para limitar suas despesas.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Os orçamentos são as ferramentas básicas de gestão financeira. Vamos criar um agora:',
     'no_budgets_create_default'             => 'Criar orçamento',
     'no_categories_title_default'           => 'Vamos criar uma categoria!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Nova transação recorrente',
     'help_weekend'                       => 'O que o Firefly III deve fazer quando a transação recorrente cai em um sábado ou domingo?',
     'do_nothing'                         => 'Apenas criar a transação',
-    'skip_transaction'                   => 'Pular a ocorrência',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Criar a transação na sexta-feira anterior',
     'jump_to_monday'                     => 'Criar a transação na segunda-feira seguinte',
     'will_jump_friday'                   => 'Será criada na sexta-feira em vez de nos finais de semana.',

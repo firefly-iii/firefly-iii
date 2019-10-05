@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dieses Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Wenn Sie Hilfe beim Bedienen von Firefly III brauchen, <a href="https://github.com/firefly-iii/firefly-iii/issues">erstellen Sie ein Ticket auf Github</a>.',
-    'reenable_intro_text'                        => 'Sie können auch <a href="#" id="reenableGuidance">die Einführung</a> wieder aktivieren.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'Die Einführungsfelder werden wieder angezeigt, wenn Sie die Seite aktualisieren.',
     'show_all_no_filter'                         => 'Alle Buchungen anzeigen, ohne diese nach Datum zu gruppieren.',
     'expenses_by_category'                       => 'Ausgaben nach Kategorie',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Aktueller Zeitraum',
     'show_the_current_period_and_overview'       => 'Zeigen Sie den aktuellen Zeitraum und die Übersicht',
     'pref_languages_locale'                      => 'Damit eine andere Sprache als Englisch richtig funktioniert muss Ihr Betriebssystem mit den korrekten Gebietsschema-Informationen ausgestattet werden. Wenn diese nicht vorhanden sind, können die Währungsdaten, Termine und Mengen falsch formatiert sein.',
-    'budget_in_period'                           => 'Alle Buchungen für Budget „:name” zwischen :start und :end',
-    'chart_budget_in_period'                     => 'Diagramm für alle Buchungen im Budget „:name” zwischen :start und :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Diagramm für alle Transaktionen des Kontos „:name” zwischen :start und :end',
     'chart_category_in_period'                   => 'Diagramm für alle Buchungen der Kategorie „:name” zwischen :start und :end',
     'chart_category_all'                         => 'Diagramm für alle Buchungen der Kategorie „:name”',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Buchungsdatum ist :value',
     'search_modifier_before'                     => 'Buchungsdatum ist vor :value',
     'search_modifier_after'                      => 'Buchungsdatum ist nach :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'Die folgenden Einschränkungen werden ebenfalls auf die Suche angewendet:',
-    'general_search_error'                       => 'Bei der Suche ist ein Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien für weitere Informationen.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Suche',
     'search_box_intro'                           => 'Willkommen zur Suchfunktion von Firefly III. Geben Sie Ihre Suchanfrage in das Feld ein. Stellen Sie sicher, dass Sie sich die Hilfe ansehen, da die Suche ziemlich umfangreich ist.',
     'search_error'                               => 'Fehler beim Suchen',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Optionale Metadaten',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Passwort ändern',
     'delete_account'                            => 'Konto löschen',
     'current_password'                          => 'Aktuelles Passwort',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Regeln mit Verknüpfung zu dieser Rechnung',
     'repeats'                                   => 'Wiederholungen',
     'connected_journals'                        => 'Verknüpfte Buchungen',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Zuviel ausgegeben',
     'left'                                      => 'Übrig',
     'max-amount'                                => 'Höchstbetrag',
-    'min-amount'                                => 'Mindestbetrag',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Aktueller Rechnungseintrag',
     'name'                                      => 'Name',
     'date'                                      => 'Datum',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'Sie müssen diese Funktion nicht verwenden, aber sie kann nützlich sein, wenn Sie diese Dinge im Auge behalten möchten.',
     'no_accounts_create_liabilities'        => 'Verbindlichkeit erstellen',
     'no_budgets_title_default'              => 'Lassen Sie uns jetzt ein Budget erstellen',
-    'no_budgets_intro_default'              => 'Sie verfügen noch über keine Budgets. Budgets werden verwendet, um Ihre Ausgaben in logische Gruppen zu gliedern, die Sie mit einem weichen Limit versehen können, um Ihre Ausgaben zu begrenzen.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Budgets sind die grundlegenden Instrumente des Finanzmanagements. Lassen Sie uns jetzt eines erstellen:',
     'no_budgets_create_default'             => 'Budget erstellen',
     'no_categories_title_default'           => 'Erstellen wir eine Kategorie!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'Neue Dauerauftrag',
     'help_weekend'                       => 'Was sollte Firefly III tun, wenn der Dauerauftrag auf einen Samstag oder Sonntag fällt?',
     'do_nothing'                         => 'Einfach die Buchung anlegen',
-    'skip_transaction'                   => 'Vorkommen überspringen',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Die Buchung stattdessen am vorhergehenden Freitag ausführen',
     'jump_to_monday'                     => 'Die Buchung stattdessen am darauffolgenden Montag ausführen',
     'will_jump_friday'                   => 'Wird am Freitag statt am Wochenende ausgeführt.',

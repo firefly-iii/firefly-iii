@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => 'Id pengguna Anda adalah <strong>:user</strong>',
     'field_supports_markdown'                    => 'Bidang ini mendukung <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Jika Anda memerlukan bantuan lebih banyak menggunakan Firefly III, silakan <a href="https://github.com/firefly-iii/firefly-iii/issues">opsi tiket di Github</a>.',
-    'reenable_intro_text'                        => 'Anda juga dapat mengaktifkan <a href="#" id="reenableGuidance">panduan pendahuluan</a>.',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => 'Kotak pengantar akan muncul kembali saat Anda menyegarkan halaman.',
     'show_all_no_filter'                         => 'Tampilkan semua transaksi tanpa mengelompokkan mereka menurut tanggal.',
     'expenses_by_category'                       => 'Biaya berdasarkan kategori',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => 'Periode sekarang',
     'show_the_current_period_and_overview'       => 'Tunjukkan periode dan ikhtisar saat ini',
     'pref_languages_locale'                      => 'Agar bahasa selain bahasa Inggris berfungsi dengan benar, sistem operasi Anda harus dilengkapi dengan informasi lokal yang benar. Jika ini tidak ada, data mata uang, tanggal dan jumlah mungkin salah diformat.',
-    'budget_in_period'                           => 'Semua transaksi untuk anggaran ":name" antara :start dan :end',
-    'chart_budget_in_period'                     => 'Bagan untuk semua transaksi untuk anggaran ":name" antara :start dan :end',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => 'Bagan untuk semua transaksi untuk akun ":name" antara :start dan :end',
     'chart_category_in_period'                   => 'Bagan untuk semua transaksi untuk kategori ":name" antara :start dan :end',
     'chart_category_all'                         => 'Bagan untuk semua transaksi untuk kategori ":name"',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => 'Transaction date is :value',
     'search_modifier_before'                     => 'Transaction date is before :value',
     'search_modifier_after'                      => 'Transaction date is after :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
-    'general_search_error'                       => 'Terjadi kesalahan saat mencari. Silakan periksa file log untuk informasi lebih lanjut.',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Pencarian',
     'search_box_intro'                           => 'Selamat datang di fungsi pencarian Firefly III. Masukkan kueri penelusuran Anda di dalam kotak. Pastikan Anda memeriksa file bantuan karena pencariannya cukup canggih.',
     'search_error'                               => 'Kesalahan saat mencari',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => 'Data meta opsional',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => 'Ubah password Anda',
     'delete_account'                            => 'Hapus akun',
     'current_password'                          => 'Kata sandi saat ini',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Rules related to this bill',
     'repeats'                                   => 'Berulang',
     'connected_journals'                        => 'Transaksi yang terhubung',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => 'Overspent',
     'left'                                      => 'Kiri',
     'max-amount'                                => 'Jumlah maksimum',
-    'min-amount'                                => 'Jumlah Minumum',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => 'Entri tagihan saat ini',
     'name'                                      => 'Nama',
     'date'                                      => 'Tanggal',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
     'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Mari buat anggaran',
-    'no_budgets_intro_default'              => 'Anda belum memiliki anggaran. Anggaran digunakan untuk mengatur pengeluaran Anda ke dalam kelompok logis, yang bisa Anda berikan topi lunak untuk membatasi pengeluaran Anda.',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => 'Anggaran adalah alat dasar pengelolaan keuangan. Mari kita ciptakan sekarang:',
     'no_budgets_create_default'             => 'Buat anggaran',
     'no_categories_title_default'           => 'Mari buat kategori!',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => 'New recurring transaction',
     'help_weekend'                       => 'What should Firefly III do when the recurring transaction falls on a Saturday or Sunday?',
     'do_nothing'                         => 'Just create the transaction',
-    'skip_transaction'                   => 'Skip the occurence',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => 'Create the transaction on the previous Friday instead',
     'jump_to_monday'                     => 'Create the transaction on the next Monday instead',
     'will_jump_friday'                   => 'Will be created on Friday instead of the weekends.',

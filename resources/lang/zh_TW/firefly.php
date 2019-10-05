@@ -2,22 +2,22 @@
 
 /**
  * firefly.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -111,7 +111,7 @@ return [
     'user_id_is'                                 => '您的使用者 ID 是 <strong>:user</strong>',
     'field_supports_markdown'                    => '此欄位支援 <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a> 語法。',
     'need_more_help'                             => '如果您需要更多 Firefly III 的協助，請 <a href="https://github.com/firefly-iii/firefly-iii/issues">於 GitHub 建立提問</a>。',
-    'reenable_intro_text'                        => '您也可以重新啟用 <a href="#" id="reenableGuidance">說明指導</a>。',
+    'reenable_intro_text'                        => 'You can also re-enable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
     'intro_boxes_after_refresh'                  => '當您重新整理頁面後，介紹框將會重新出現。',
     'show_all_no_filter'                         => '不以日期分組，顯示所有交易紀錄',
     'expenses_by_category'                       => '按分類的支出',
@@ -133,8 +133,9 @@ return [
     'current_period'                             => '目前區間',
     'show_the_current_period_and_overview'       => '顯示目前區間與概覽',
     'pref_languages_locale'                      => '英文以外的語言，須搭配作業系統內對應的地區資訊 (locale-information) 才能正常運作，否則貨幣資料、日期與金額或會格式有誤。',
-    'budget_in_period'                           => '預算「:name」自 :start 至 :end 的所有交易',
-    'chart_budget_in_period'                     => '預算「:name」自 :start 至 :end 所有交易的圖表',
+    'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
+    'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
     'chart_account_in_period'                    => '帳戶「:name」自 :start 至 :end 所有交易的圖表',
     'chart_category_in_period'                   => '分類「:name」自 :start 至 :end 的所有交易圖表',
     'chart_category_all'                         => '分類「:name」的所有交易圖表',
@@ -253,8 +254,10 @@ return [
     'search_modifier_on'                         => '交易日期為 :value',
     'search_modifier_before'                     => '交易日期前於 :value',
     'search_modifier_after'                      => '交易日期後於 :value',
+    'search_modifier_created_at'                 => 'Transaction was created on :value',
+    'search_modifier_updated_at'                 => 'Transaction was last updated on :value',
     'modifiers_applies_are'                      => '搜尋也套用以下條件：',
-    'general_search_error'                       => '搜尋時發生錯誤，請查閱日誌檔詳情。',
+    'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => '搜尋',
     'search_box_intro'                           => '歡迎使用 Firefly III 搜尋功能，請於方框內鍵入搜尋條件。搜尋功能相當厲害，記得查看說明檔。',
     'search_error'                               => '搜尋時發生錯誤',
@@ -536,6 +539,13 @@ return [
     'optional_field_meta_data'                  => '可選中繼資料',
 
     // profile:
+    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'delete_all_budgets'                        => 'Delete ALL your budgets',
+    'delete_all_categories'                     => 'Delete ALL your categories',
+    'delete_all_tags'                           => 'Delete ALL your tags',
+    'deleted_all_budgets'                       => 'All budgets have been deleted',
+    'deleted_all_categories'                    => 'All categories have been deleted',
+    'deleted_all_tags'                          => 'All tags have been deleted',
     'change_your_password'                      => '更改您的密碼',
     'delete_account'                            => '移除帳號',
     'current_password'                          => '目前密碼',
@@ -720,6 +730,7 @@ return [
 
     // bills:
     'match_between_amounts'                     => '帳單配合自 :low 至 :high 的交易。',
+    'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => '與此帳單相關的規則',
     'repeats'                                   => '重複',
     'connected_journals'                        => '已連接交易',
@@ -1147,7 +1158,7 @@ return [
     'overspent'                                 => '超支',
     'left'                                      => '剩餘',
     'max-amount'                                => '最小金額',
-    'min-amount'                                => '最大金額',
+    'min-amount'                                => 'Minimum amount',
     'journal-amount'                            => '目前帳單條目',
     'name'                                      => '名稱',
     'date'                                      => '日期',
@@ -1360,7 +1371,7 @@ return [
     'no_accounts_imperative_liabilities'    => '您不需使用此功能，但若您要追蹤這些東西，此功能可是很有用的。',
     'no_accounts_create_liabilities'        => '建立新債務',
     'no_budgets_title_default'              => '一起建立一筆預算',
-    'no_budgets_intro_default'              => '您目前沒有預算。預算是把您的開銷組織成具邏輯性的群組，讓你可以賦予您的支出一個軟性上限。',
+    'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_budgets_imperative_default'         => '預算是財務管理的基本工具，現在就建立一筆：',
     'no_budgets_create_default'             => '建立新預算',
     'no_categories_title_default'           => '一起建立一個分類！',
@@ -1453,7 +1464,7 @@ return [
     'new_recurring_transaction'          => '新週期性交易',
     'help_weekend'                       => '當週期性交易落於週六及週日時， Firefly III 該如何應處？',
     'do_nothing'                         => '仍建立交易',
-    'skip_transaction'                   => '略過情況',
+    'skip_transaction'                   => 'Skip the occurrence',
     'jump_to_friday'                     => '於前一個週五建立交易',
     'jump_to_monday'                     => '於次一個週一建立交易',
     'will_jump_friday'                   => '將於週五建立交易，而非週末。',

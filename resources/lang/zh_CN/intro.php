@@ -2,22 +2,22 @@
 
 /**
  * intro.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -30,26 +30,26 @@ return [
     'index_help'                                      => '如果您需要有关页面或表单的说明，请按此按钮。',
     'index_outro'                                     => 'Firefly III 的大多数页面将从像这样的小介绍开始，如果您有任何问题或意见，请与我联繫。请享受！',
     'index_sidebar-toggle'                            => '若要建立新的交易记录、帐户或其他内容，请使用此图示下的选单。',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => '这些是迄今创建的账户。您可以使用现金账户追踪现金支出，但当然不是强制性的。',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_source'           => '从这个下拉选择您最喜欢的资产帐户或负债。',
+    'transactions_create_withdrawal_destination'      => '在此选择一个费用帐户。留空即表示现金支出。',
+    'transactions_create_withdrawal_foreign_currency' => '使用此字段设置外汇和数额。',
     'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_split_add'        => '如果您想要拆分交易，按此按钮添加一笔拆分',
 
     // transactions (deposit)
     'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_destination'         => '在此选择一个资产或负债帐户。',
+    'transactions_create_deposit_foreign_currency'    => '使用此字段设置外汇和数额。',
     'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_split_add'           => '如果您想要拆分交易，按此按钮添加一笔拆分',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_source'             => '在此选择来源资产帐户。',
+    'transactions_create_transfer_destination'        => '在此选择目标资产帐户。',
+    'transactions_create_transfer_foreign_currency'   => '使用此字段设置外汇和数额。',
     'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
     'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
 
