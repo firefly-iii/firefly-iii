@@ -22,6 +22,7 @@
         "@johmun/vue-tags-input": "^2.0.1",
         "font-awesome": "^4.7.0",
         "jquery": "^3.1.1",
-        "uiv": "^0.31.5"
+        "uiv": "^0.31.5",
+        "vue-i18n": "^8.14.1"
     }
 }

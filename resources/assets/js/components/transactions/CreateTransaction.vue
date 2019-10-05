@@ -24,9 +24,9 @@
         <div class="row" v-if="error_message !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
                             aria-hidden="true">&times;</span></button>
-                    <strong>Error!</strong> {{ error_message }}
+                    <strong>{{ $t("firefly.flash_error") }}!</strong> {{ error_message }}
                 </div>
             </div>
         </div>

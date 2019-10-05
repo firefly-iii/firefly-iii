@@ -19,21 +19,11 @@
  */
 
 import CustomAttachments from "./components/transactions/CustomAttachments";
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-require('./bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue'
+import VueI18n from 'vue-i18n'
 import * as uiv from 'uiv';
-
-Vue.use(uiv);
-
 import CreateTransaction from './components/transactions/CreateTransaction';
-import EditTransaction from  './components/transactions/EditTransaction';
+import EditTransaction from './components/transactions/EditTransaction';
 import Clients from './components/passport/Clients';
 import AuthorizedClients from "./components/passport/AuthorizedClients";
 import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
@@ -52,6 +42,19 @@ import Amount from "./components/transactions/Amount";
 import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
+
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+require('./bootstrap');
+
+Vue.use(VueI18n);
+window.Vue = Vue;
+
+Vue.use(uiv);
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
@@ -82,7 +85,28 @@ Vue.component('passport-personal-access-tokens', PersonalAccessTokens);
 Vue.component('create-transaction', CreateTransaction);
 Vue.component('edit-transaction', EditTransaction);
 
+// Create VueI18n instance with options
+const i18n = new VueI18n({
+                             locale: document.documentElement.lang, // set locale
+                             fallbackLocale: 'en',
+                             messages: {
+                                 'cs': require('./locales/cs.json'),
+                                 'de': require('./locales/de.json'),
+                                 'en': require('./locales/en.json'),
+                                 'es': require('./locales/es.json'),
+                                 'fr': require('./locales/fr.json'),
+                                 'hu': require('./locales/hu.json'),
+                                 'id': require('./locales/id.json'),
+                                 'it': require('./locales/it.json'),
+                                 'nl': require('./locales/nl.json'),
+                                 'no': require('./locales/no.json'),
+                                 'pl': require('./locales/pl.json'),
+                                 'pt-br': require('./locales/pt-br.json'),
+                                 'ro': require('./locales/ro.json'),
+                                 'ru': require('./locales/ru.json'),
+                                 'zh': require('./locales/zh.json'),
+                                 'zh-tw': require('./locales/zh-tw.json'),
+                             }
+                         });
 
-const app = new Vue({
-                        el: '#app'
-                    });
+new Vue({i18n}).$mount('#app');

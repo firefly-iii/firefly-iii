@@ -101,8 +101,6 @@
             this.target = this.$refs.input;
             let types = this.allowedTypes.join(',');
             this.name = this.accountName;
-            // console.log('Mounted Types:');
-            // console.log(this.allowedTypes);
             this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             this.triggerTransactionType();
         },
@@ -115,7 +113,6 @@
                 let types = this.accountTypeFilters.join(',');
                 if (0 === this.accountTypeFilters.length) {
                     types = this.defaultAccountTypeFilters.join(',');
-                    // console.log('types was empty: ' + types);
                 }
                 this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             }

@@ -1,5 +1,5 @@
 <!--
-  - ExampleComponent.vue
+  - SomeTestComponent.vue
   - Copyright (c) 2019 thegrumpydictator@gmail.com
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,10 +23,10 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Example Component</div>
+                    <div class="panel-heading">Test Component</div>
 
                     <div class="panel-body">
-                        I'm an example component!
+                        <p>{{ $t("firefly.welcome_back") }}</p>
                     </div>
                 </div>
             </div>
