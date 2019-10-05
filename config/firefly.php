@@ -126,7 +126,7 @@ return [
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
     'version'                      => '4.8.1.2',
-    'api_version'                  => '0.10.2',
+    'api_version'                  => '0.10.3',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
