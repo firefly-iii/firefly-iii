@@ -1,4 +1,4 @@
-# 4.8.1.3
+# 4.8.1.4
 
 - [Issue 2680](https://github.com/firefly-iii/firefly-iii/issues/2680) Upgrade routine would delete all transaction groups.
 
