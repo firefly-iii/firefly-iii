@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1.2 (API 0.10.2)] - 2019-10-05
+
 ## [4.8.1.1 (API 0.10.2)] - 2019-09-12
 
 ### Changed
