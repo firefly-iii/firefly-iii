@@ -47,6 +47,8 @@ echo "Map environment variables on .env file..."
 cat $FIREFLY_PATH/.deploy/docker/.env.docker | envsubst > $FIREFLY_PATH/.env
 echo "Dump auto load..."
 composer dump-autoload
+echo "Generate app encryption key..."
+php artisan key:generate
 echo "Discover packages..."
 php artisan package:discover
 
