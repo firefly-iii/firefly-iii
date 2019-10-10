@@ -38,7 +38,7 @@
                     <div class="box-body">
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.select('trigger',allJournalTriggers()) }}
-                        {{ ExpandedForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
+                        {{ RuleForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
                         {{ ExpandedForm.checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
                         {{ ExpandedForm.checkbox('strict',1, null,{helpText: trans('firefly.rule_help_strict')}) }}
                     </div>

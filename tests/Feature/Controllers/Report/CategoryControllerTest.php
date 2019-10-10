@@ -1,33 +1,37 @@
 <?php
 /**
  * CategoryControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Category;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 /**
@@ -39,13 +43,14 @@ use Tests\TestCase;
  */
 class CategoryControllerTest extends TestCase
 {
+    use TestDataTrait;
     /**
      *
      */
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -54,11 +59,20 @@ class CategoryControllerTest extends TestCase
      */
     public function testExpenses(): void
     {
-        $first      = [1 => ['entries' => ['1', '1']]];
-        $second     = ['entries' => ['1', '1']];
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+        $first           = [1 => ['entries' => ['1', '1']]];
+        $second          = ['entries' => ['1', '1']];
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepos  = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $noCatRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
@@ -75,11 +89,23 @@ class CategoryControllerTest extends TestCase
      */
     public function testIncome(): void
     {
-        $first      = [1 => ['entries' => ['1', '1']]];
-        $second     = ['entries' => ['1', '1']];
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+        $first           = [
+            1 => ['entries' => ['1', '1']],
+            2 => ['entries' => ['0']],
+        ];
+        $second          = ['entries' => ['1', '1']];
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+        $noCatRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
@@ -96,19 +122,32 @@ class CategoryControllerTest extends TestCase
      */
     public function testOperations(): void
     {
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $category   = factory(Category::class)->make();
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+        $repository      = $this->mock(CategoryRepositoryInterface::class);
+        $opsRepository   = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepository = $this->mock(NoCategoryRepositoryInterface::class);
+        $category        = $this->getRandomCategory();
+        $fiscalHelper    = $this->mock(FiscalHelperInterface::class);
+        $date            = new Carbon;
+
+        $opsRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+        $noCatRepository->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
+        $opsRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $noCatRepository->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
+        $repository->shouldReceive('spentInPeriod')->andReturn([]);
+        $repository->shouldReceive('earnedInPeriod')->andReturn([]);
 
 
         $this->be($this->user());
         $response = $this->get(route('report-data.category.operations', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
+        $response->assertDontSee('An error prevented Firefly III from rendering: %s. Apologies.');
     }
 }

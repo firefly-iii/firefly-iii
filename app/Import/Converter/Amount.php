@@ -1,22 +1,22 @@
 <?php
 /**
  * Amount.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -33,9 +33,6 @@ class Amount implements ConverterInterface
      * Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
      * - Jamie Zawinski.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param $value
      *
      * @return string
@@ -110,7 +107,7 @@ class Amount implements ConverterInterface
      */
     private function alternativeDecimalSign(string $value): bool
     {
-        $length      = \strlen($value);
+        $length      = strlen($value);
         $altPosition = $length - 2;
 
         return $length > 1 && ('.' === $value[$altPosition] || ',' === $value[$altPosition]);
@@ -125,7 +122,7 @@ class Amount implements ConverterInterface
      */
     private function decimalIsComma(string $value): bool
     {
-        $length          = \strlen($value);
+        $length          = strlen($value);
         $decimalPosition = $length - 3;
 
         return $length > 2 && ',' === $value[$decimalPosition];
@@ -140,7 +137,7 @@ class Amount implements ConverterInterface
      */
     private function decimalIsDot(string $value): bool
     {
-        $length          = \strlen($value);
+        $length          = strlen($value);
         $decimalPosition = $length - 3;
 
         return ($length > 2 && '.' === $value[$decimalPosition]) || ($length > 2 && strpos($value, '.') > $decimalPosition);
@@ -177,7 +174,7 @@ class Amount implements ConverterInterface
      */
     private function getAlternativeDecimalSign(string $value): string
     {
-        $length      = \strlen($value);
+        $length      = strlen($value);
         $altPosition = $length - 2;
 
         return $value[$altPosition];
@@ -222,7 +219,7 @@ class Amount implements ConverterInterface
         // have to strip the € because apparantly the Postbank (DE) thinks "1.000,00 €" is a normal way to format a number.
         $value = trim((string)str_replace(['€'], '', $value));
         $str   = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
-        $len   = \strlen($str);
+        $len   = strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {
             $str = '-' . substr($str, 1, $len - 2);
         }

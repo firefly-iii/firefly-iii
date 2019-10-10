@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => 'Fikser potensielle problemer med Rabobank filer',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Fikser potensielle problemer med PC filer',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Fikser potensielle problemer med Belfius filer',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importoppsett (3/4) - Definer hver kolonnes rolle',
     'job_config_roles_text'           => 'Hver kolonne i CSV filen inneholder visse data. Vennligst indiker hvilken type data importen kan forvente. "Map" valget indikerer at du vil knytte hver oppføring funnet i kolonnen til en verdi in databasen. En ofte knyttet kolonne is kolonnen som inneholder IBAN til motstående konto. Dette kan enkelt matches mot IBAN verdier som er i databasen allerede.',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Rabobank spesifikk debet/kreditt indikator',
     'column_ing-debit-credit'         => 'ING spesifikk debet/kreditt indikator',
     'column_generic-debit-credit'     => 'Generisk bank debet/kreditt indikator',
-    'column_sepa-ct-id'               => 'SEPA ende-til-ende identifikator',
-    'column_sepa-ct-op'               => 'SEPA Motstående kontoidentifikator',
-    'column_sepa-db'                  => 'SEPA Mandat identifikator',
-    'column_sepa-cc'                  => 'SEPA klareringskode',
-    'column_sepa-ci'                  => 'SEPA kreditoridentifikator',
-    'column_sepa-ep'                  => 'SEPA Eksternt formål',
-    'column_sepa-country'             => 'SEPA landskode',
-    'column_sepa-batch-id'            => 'SEPA sats/parti ID',
+    'column_sepa_ct_id'               => 'SEPA ende-til-ende identifikator',
+    'column_sepa_ct_op'               => 'SEPA Motstående kontoidentifikator',
+    'column_sepa_db'                  => 'SEPA Mandat identifikator',
+    'column_sepa_cc'                  => 'SEPA klareringskode',
+    'column_sepa_ci'                  => 'SEPA kreditoridentifikator',
+    'column_sepa_ep'                  => 'SEPA Eksternt formål',
+    'column_sepa_country'             => 'SEPA landskode',
+    'column_sepa_batch_id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Tagger (kommaseparerte)',
     'column_tags-space'               => 'Tagger (oppdelt med mellomrom)',
     'column_account-number'           => 'Aktivakonto (kontonummer)',
     'column_opposing-number'          => 'Motkonto (kontonummer)',
     'column_note'                     => 'Notat(er)',
     'column_internal-reference'       => 'Intern referanse',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

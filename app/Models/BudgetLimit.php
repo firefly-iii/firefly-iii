@@ -1,22 +1,22 @@
 <?php
 /**
  * BudgetLimit.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -41,6 +41,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              spent
  * @property int                 $transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereBudgetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class BudgetLimit extends Model
 {
@@ -58,7 +70,7 @@ class BudgetLimit extends Model
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount'];
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount','transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

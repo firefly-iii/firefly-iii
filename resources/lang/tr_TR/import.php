@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => 'Fixes potential problems with Rabobank files',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Fixes potential problems with PC files',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import setup (3/4) - Define each column\'s role',
     'job_config_roles_text'           => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Rabobank\'a özel borç / kredi göstergesi',
     'column_ing-debit-credit'         => 'ING\'ye özel borç/kredi göstergesi',
     'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
-    'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
-    'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
-    'column_sepa-db'                  => 'SEPA Mandate Identifier',
-    'column_sepa-cc'                  => 'SEPA Clearing Code',
-    'column_sepa-ci'                  => 'SEPA Creditor Identifier',
-    'column_sepa-ep'                  => 'SEPA External Purpose',
-    'column_sepa-country'             => 'SEPA Country Code',
-    'column_sepa-batch-id'            => 'SEPA Batch ID',
+    'column_sepa_ct_id'               => 'SEPA end-to-end Identifier',
+    'column_sepa_ct_op'               => 'SEPA Opposing Account Identifier',
+    'column_sepa_db'                  => 'SEPA Mandate Identifier',
+    'column_sepa_cc'                  => 'SEPA Clearing Code',
+    'column_sepa_ci'                  => 'SEPA Creditor Identifier',
+    'column_sepa_ep'                  => 'SEPA External Purpose',
+    'column_sepa_country'             => 'SEPA Country Code',
+    'column_sepa_batch_id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Etiketler (virgülle ayrılmış)',
     'column_tags-space'               => 'Etiketler (boşlukla ayrılmış)',
     'column_account-number'           => 'Varlık hesabı (hesap numarası)',
     'column_opposing-number'          => 'Karşı hesap (hesap numarası)',
     'column_note'                     => 'Not(lar)',
     'column_internal-reference'       => 'Internal reference',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

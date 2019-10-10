@@ -1,0 +1,18 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
+{% endblock %}
+
+{% block content %}
+    <create-transaction></create-transaction>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
+        var accountToTypes = {{ accountToTypes|json_encode|raw }};
+        var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var cashAccountId = {{ cash.id }};
+        var previousUri = '{{ previousUri }}';
+    </script>
+{% endblock %}

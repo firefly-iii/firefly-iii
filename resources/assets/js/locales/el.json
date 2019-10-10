@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "\u03a4\u03b9 \u03c0\u03b1\u03af\u03b6\u03b5\u03b9;",
+        "flash_error": "\u03a3\u03c6\u03ac\u03bb\u03bc\u03b1!",
+        "flash_success": "\u0395\u03c0\u03b9\u03c4\u03c5\u03c7\u03af\u03b1!",
+        "close": "\u039a\u03bb\u03b5\u03af\u03c3\u03b9\u03bc\u03bf",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "split": "\u0394\u03b9\u03b1\u03c7\u03c9\u03c1\u03b9\u03c3\u03bc\u03cc\u03c2",
+        "transaction_journal_information": "Transaction information",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Add another split",
+        "submission": "Submission",
+        "create_another": "After storing, return here to create another one.",
+        "reset_after": "Reset form after submission",
+        "submit": "Submit",
+        "amount": "Amount",
+        "date": "Date",
+        "tags": "Tags",
+        "no_budget": "(no budget)",
+        "category": "Category",
+        "attachments": "\u03a3\u03c5\u03bd\u03bd\u03b7\u03bc\u03ad\u03bd\u03b1",
+        "notes": "Notes",
+        "update_transaction": "Update transaction",
+        "after_update_create_another": "After updating, return here to continue editing.",
+        "store_as_new": "Store as a new transaction instead of updating.",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(\u03c4\u03af\u03c0\u03bf\u03c4\u03b1)",
+        "no_piggy_bank": "(no piggy bank)",
+        "description": "Description"
+    },
+    "form": {
+        "interest_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03bf\u03ba\u03b9\u03c3\u03bc\u03bf\u03cd",
+        "book_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03b5\u03b3\u03b3\u03c1\u03b1\u03c6\u03ae\u03c2",
+        "process_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03b5\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1\u03c2",
+        "due_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c0\u03c1\u03bf\u03b8\u03b5\u03c3\u03bc\u03af\u03b1\u03c2",
+        "foreign_amount": "\u0395\u03c4\u03b5\u03c1\u03cc\u03c7\u03b8\u03c9\u03bd \u03c0\u03bf\u03c3\u03cc",
+        "payment_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ae\u03c2",
+        "invoice_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03b9\u03bc\u03bf\u03bb\u03cc\u03b3\u03b7\u03c3\u03b7\u03c2",
+        "internal_reference": "\u0395\u03c3\u03c9\u03c4\u03b5\u03c1\u03b9\u03ba\u03ae \u03b1\u03bd\u03b1\u03c6\u03bf\u03c1\u03ac"
+    },
+    "config": {
+        "html_language": "el"
+    }
+}

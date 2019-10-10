@@ -1,22 +1,22 @@
 <?php
 /**
  * EditController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -45,6 +45,7 @@ class EditController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -69,8 +70,6 @@ class EditController extends Controller
      * @param Rule    $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Rule $rule)
     {
@@ -79,19 +78,19 @@ class EditController extends Controller
         $oldActions   = [];
         $oldTriggers  = [];
         // has old input?
-        if (\count($request->old()) > 0) {
+        if (count($request->old()) > 0) {
             $oldTriggers  = $this->getPreviousTriggers($request);
-            $triggerCount = \count($oldTriggers);
+            $triggerCount = count($oldTriggers);
             $oldActions   = $this->getPreviousActions($request);
-            $actionCount  = \count($oldActions);
+            $actionCount  = count($oldActions);
         }
 
         // overrule old input when it has no rule data:
         if (0 === $triggerCount && 0 === $actionCount) {
             $oldTriggers  = $this->getCurrentTriggers($rule);
-            $triggerCount = \count($oldTriggers);
+            $triggerCount = count($oldTriggers);
             $oldActions   = $this->getCurrentActions($rule);
-            $actionCount  = \count($oldActions);
+            $actionCount  = count($oldActions);
         }
 
         $hasOldInput = null !== $request->old('_token');

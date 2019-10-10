@@ -1,22 +1,22 @@
 <?php
 /**
  * TwoFactorController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,8 @@ use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
+use PragmaRX\Google2FALaravel\Support\Authenticator;
+use Preferences;
 
 /**
  * Class TwoFactorController.
@@ -36,36 +38,87 @@ use Log;
 class TwoFactorController extends Controller
 {
     /**
-     * Show 2FA screen.
-     *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     *
-     * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function index(Request $request)
+    public function submitMFA(Request $request)
     {
-        $user = auth()->user();
+        /** @var array $mfaHistory */
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaCode    = $request->get('one_time_password');
 
-        // to make sure the validator in the next step gets the secret, we push it in session
-        $secretPreference = app('preferences')->get('twoFactorAuthSecret', null);
-        $secret           = null === $secretPreference ? null : $secretPreference->data;
-        $title            = (string)trans('firefly.two_factor_title');
+        // is in history? then refuse to use it.
+        if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
+            $this->filterMFAHistory();
+            session()->flash('error', trans('firefly.wrong_mfa_code'));
 
-        // make sure the user has two factor configured:
-        $has2FA = app('preferences')->get('twoFactorAuthEnabled', false)->data;
-        if (null === $has2FA || false === $has2FA) {
-            return redirect(route('index'));
+            return redirect(route('home'));
         }
 
-        if ('' === (string)$secret) {
-            throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
-        }
-        $request->session()->flash('two-factor-secret', $secret);
+        /** @var Authenticator $authenticator */
+        $authenticator = app(Authenticator::class)->boot($request);
 
-        return view('auth.two-factor', compact('user', 'title'));
+        if ($authenticator->isAuthenticated()) {
+            // save MFA in preferences
+            $this->addToMFAHistory($mfaCode);
+
+            // otp auth success!
+            return redirect(route('home'));
+        }
+
+        // could be user has a backup code.
+        if ($this->isBackupCode($mfaCode)) {
+            $this->removeFromBackupCodes($mfaCode);
+            $authenticator->login();
+
+            session()->flash('info', trans('firefly.mfa_backup_code'));
+
+            return redirect(route('home'));
+        }
+
+        session()->flash('error', trans('firefly.wrong_mfa_code'));
+
+        return redirect(route('home'));
+    }
+
+    /**
+     * @param string $mfaCode
+     */
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
+
+        Preferences::set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
+    }
+
+    /**
+     * Remove old entries from the preferences array.
+     */
+    private function filterMFAHistory(): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $newHistory = [];
+        $now        = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($now - $time <= 300) {
+                $newHistory[] = [
+                    'time' => $time,
+                    'code' => $code,
+                ];
+            }
+        }
+        Preferences::set('mfa_history', $newHistory);
     }
 
     /**
@@ -90,30 +143,54 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * Submit 2FA code.
+     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
+     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
      *
-     * @param TokenFormRequest $request
-     * @param CookieJar        $cookieJar
+     * @param string $mfaCode
+     * @param array  $mfaHistory
      *
-     * @return mixed
+     * @return bool
      */
-    public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
+    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
-        // wants to remember session?
-        $remember = $request->session()->get('remember_login') ?? false;
-
-        $minutes = config('session.lifetime');
-        if (true === $remember) {
-            // set cookie with a long lifetime (30 days)
-            $minutes = 43200;
+        $now = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($code === $mfaCode && $now - $time <= 300) {
+                return true;
+            }
         }
-        $cookie = $cookieJar->make(
-            'twoFactorAuthenticated', 'true', $minutes, config('session.path'), config('session.domain'), config('session.secure'), config('session.http_only')
-        );
 
-        // whatever the case, forget about it:
-        $request->session()->forget('remember_login');
+        return false;
+    }
 
-        return redirect(route('home'))->withCookie($cookie);
+    /**
+     * Checks if code is in users backup codes.
+     *
+     * @param string $mfaCode
+     *
+     * @return bool
+     */
+    private function isBackupCode(string $mfaCode): bool
+    {
+        $list = Preferences::get('mfa_recovery', [])->data;
+        if (in_array($mfaCode, $list, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove the used code from the list of backup codes.
+     *
+     * @param string $mfaCode
+     */
+    private function removeFromBackupCodes(string $mfaCode): void
+    {
+        $list    = Preferences::get('mfa_recovery', [])->data;
+        $newList = array_values(array_diff($list, [$mfaCode]));
+        Preferences::set('mfa_recovery', $newList);
     }
 }

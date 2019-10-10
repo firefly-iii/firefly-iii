@@ -1,22 +1,22 @@
 <?php
 /**
  * PiggyBankRepetition.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -33,6 +33,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $currentamount
  * @property Carbon $startdate
  * @property Carbon $targetdate
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $piggy_bank_id
+ * @property-read \FireflyIII\Models\PiggyBank $piggyBank
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition onDates(\Carbon\Carbon $start, \Carbon\Carbon $target)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition relevantOnDate(\Carbon\Carbon $date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereCurrentamount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition wherePiggyBankId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereStartdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereTargetdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class PiggyBankRepetition extends Model
 {

@@ -1,22 +1,22 @@
 <?php
 /**
  * CurrencyExchangeRate.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -39,7 +39,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon              $date
  * @property int                 $from_currency_id
  * @property int                 $to_currency_id
- *
+ * @property string|null $deleted_at
+ * @property int $user_id
+ * @property float|null $user_rate
+ * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereFromCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereToCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\CurrencyExchangeRate whereUserRate($value)
+ * @mixin \Eloquent
  */
 class CurrencyExchangeRate extends Model
 {

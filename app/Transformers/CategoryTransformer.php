@@ -1,22 +1,22 @@
 <?php
 /**
  * CategoryTransformer.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,11 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -37,8 +34,8 @@ use Log;
  */
 class CategoryTransformer extends AbstractTransformer
 {
-    /** @var CategoryRepositoryInterface */
-    private $repository;
+    /** @var OperationsRepositoryInterface */
+    private $opsRepository;
 
     /**
      * CategoryTransformer constructor.
@@ -47,9 +44,9 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->repository = app(CategoryRepositoryInterface::class);
+        $this->opsRepository = app(OperationsRepositoryInterface::class);
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -62,14 +59,15 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
-        $this->repository->setUser($category->user);
+        $this->opsRepository->setUser($category->user);
+
         $spent  = [];
         $earned = [];
         $start  = $this->parameters->get('start');
         $end    = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
-            $spent  = $this->getSpentInformation($category, $start, $end);
-            $earned = $this->getEarnedInformation($category, $start, $end);
+            $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
+            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
         $data = [
             'id'         => (int)$category->id,
@@ -90,75 +88,18 @@ class CategoryTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param array $array
      *
      * @return array
      */
-    private function getEarnedInformation(Category $category, Carbon $start, Carbon $end): array
+    private function beautify(array $array): array
     {
-        $collection = $this->repository->earnedInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $code = $transaction->transaction_currency_code;
-            if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
-            }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
-        }
-        foreach ($total as $code => $earned) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => $currency->id,
-                'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($earned, $currency->decimal_places),
-            ];
+        $return = [];
+        foreach ($array as $data) {
+            $data['sum'] = round($data['sum'], (int)$data['currency_decimal_places']);
+            $return[]    = $data;
         }
 
         return $return;
     }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     */
-    private function getSpentInformation(Category $category, Carbon $start, Carbon $end): array
-    {
-        $collection = $this->repository->spentInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $code = $transaction->transaction_currency_code;
-            if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
-            }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
-        }
-        foreach ($total as $code => $spent) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => $currency->id,
-                'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($spent, $currency->decimal_places),
-            ];
-        }
-
-        return $return;
-    }
-
 }

@@ -1,22 +1,22 @@
 <?php
 /**
  * JobStatusControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -49,7 +49,7 @@ class JobStatusControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -61,11 +61,13 @@ class JobStatusControllerTest extends TestCase
         $userRepos      = $this->mock(UserRepositoryInterface::class);
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Afake_job_' . random_int(1, 10000);
+        $job->key       = 'Afake_job_' . $this->randomInt();
         $job->status    = 'ready_to_run';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -81,17 +83,19 @@ class JobStatusControllerTest extends TestCase
      */
     public function testJson(): void
     {
-        $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Bfake_job_' . random_int(1, 10000);
+        $job->key          = 'Bfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'file';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
 
@@ -110,11 +114,11 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTag(): void
     {
         $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $tag               = $this->user()->tags()->first();
+        $userRepos         = $this->mock(UserRepositoryInterface::class);
+        $tag               = $this->getRandomTag();
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Cfake_job_' . random_int(1, 10000);
+        $job->key          = 'Cfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -122,7 +126,9 @@ class JobStatusControllerTest extends TestCase
         $job->tag()->associate($tag);
         $job->save();
 
+        $this->mockDefaultSession();
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(0);
 
         // call thing.
         $this->be($this->user());
@@ -139,7 +145,7 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTagManyJournals(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         /** @var Tag $tag */
         $tag     = $this->user()->tags()->first();
@@ -147,11 +153,14 @@ class JobStatusControllerTest extends TestCase
         $second  = $this->user()->transactionJournals()->where('id', '!=', $journal->id)->first();
         $tag->transactionJournals()->sync([$journal->id, $second->id]);
 
+        $this->mockDefaultSession();
+
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(2);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(2);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Dfake_job_' . random_int(1, 10000);
+        $job->key          = 'Dfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -174,18 +183,21 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTagOneJournal(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         /** @var Tag $tag */
         $tag     = $this->user()->tags()->first();
         $journal = $this->user()->transactionJournals()->first();
         $tag->transactionJournals()->sync([$journal->id]);
 
+        $this->mockDefaultSession();
+
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(1);
+        $importRepos->shouldReceive('countByTag')->atLeast()->once()->andReturn(1);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Efake_job_' . random_int(1, 10000);
+        $job->key          = 'Efake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -211,12 +223,14 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ffake_job_' . random_int(1, 10000);
+        $job->key          = 'Ffake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -242,12 +256,14 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Gfake_job_' . random_int(1, 10000);
+        $job->key          = 'Gfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -259,6 +275,7 @@ class JobStatusControllerTest extends TestCase
         $routine->shouldReceive('run')->andThrow(new Exception('Unknown exception'));
 
         // call thing.
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);
@@ -270,15 +287,17 @@ class JobStatusControllerTest extends TestCase
      */
     public function testStartFireflyException(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos         = $this->mock(UserRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Hfake_job_' . random_int(1, 10000);
+        $job->key          = 'Hfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -290,6 +309,7 @@ class JobStatusControllerTest extends TestCase
         $routine->shouldReceive('run')->andThrow(new FireflyException('Unknown exception'));
 
         // call thing.
+        Log::warning('The following error is part of a test.');
         $this->be($this->user());
         $response = $this->post(route('import.job.start', [$job->key]));
         $response->assertStatus(200);
@@ -302,14 +322,16 @@ class JobStatusControllerTest extends TestCase
     public function testStartInvalidState(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
         // mock calls:
         $importRepos->shouldReceive('setStatus')->withArgs([Mockery::any(), 'error'])
                     ->atLeast()->once();
 
+        $this->mockDefaultSession();
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ifake_job_' . random_int(1, 10000);
+        $job->key          = 'Ifake_job_' . $this->randomInt();
         $job->status       = 'bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -330,17 +352,19 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Jfake_job_' . random_int(1, 10000);
+        $job->key          = 'Jfake_job_' . $this->randomInt();
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
 
+        $this->mockDefaultSession();
+
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $storage    = $this->mock(ImportArrayStorage::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
@@ -362,17 +386,19 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Lfake_job_' . random_int(1, 10000);
+        $job->key          = 'Lfake_job_' . $this->randomInt();
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
 
+        $this->mockDefaultSession();
+
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $storage    = $this->mock(ImportArrayStorage::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
@@ -395,12 +421,14 @@ class JobStatusControllerTest extends TestCase
         $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Kfake_job_' . random_int(1, 10000);
+        $job->key          = 'Kfake_job_' . $this->randomInt();
         $job->status       = 'some_bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $response = $this->post(route('import.job.store', [$job->key]));

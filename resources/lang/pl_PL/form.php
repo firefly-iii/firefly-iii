@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Konto źródłowe',
     'journal_description'         => 'Opis',
     'note'                        => 'Notatki',
+    'store_new_transaction'       => 'Zapisz nową transakcję',
     'split_journal'               => 'Podziel tę transakcję',
     'split_journal_explanation'   => 'Podziel transakcję na wiele części',
     'currency'                    => 'Waluta',
     'account_id'                  => 'Konto aktywów',
     'budget_id'                   => 'Budżet',
-    'openingBalance'              => 'Bilans otwarcia',
+    'opening_balance'             => 'Saldo początkowe',
     'tagMode'                     => 'Tryb tagów',
     'tag_position'                => 'Lokalizacja taga',
-    'virtualBalance'              => 'Wirtualne saldo',
+    'virtual_balance'             => 'Wirtualne saldo',
     'targetamount'                => 'Kwota docelowa',
-    'accountRole'                 => 'Rola konta',
-    'openingBalanceDate'          => 'Data salda otwarcia',
-    'ccType'                      => 'Plan płatności kartą kredytową',
-    'ccMonthlyPaymentDate'        => 'Miesięczny termin spłaty karty kredytowej',
+    'account_role'                => 'Rola konta',
+    'opening_balance_date'        => 'Data salda otwarcia',
+    'cc_type'                     => 'Plan płatności kartą kredytową',
+    'cc_monthly_payment_date'     => 'Miesięczny termin spłaty karty kredytowej',
     'piggy_bank_id'               => 'Skarbonka',
     'returnHere'                  => 'Wróć tutaj',
     'returnHereExplanation'       => 'Po zapisaniu, wrócić tutaj.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Symbol',
     'code'                        => 'Kod',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Numer konta',
+    'account_number'              => 'Numer konta',
     'creditCardNumber'            => 'Numer karty kredytowej',
     'has_headers'                 => 'Nagłówki',
     'date_format'                 => 'Format daty',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Zatrzymaj przetwarzanie',
     'start_date'                  => 'Początek zakresu',
     'end_date'                    => 'Koniec zakresu',
-    'export_start_range'          => 'Początek okresu eksportu',
-    'export_end_range'            => 'Koniec okresu eksportu',
-    'export_format'               => 'Format pliku',
     'include_attachments'         => 'Uwzględnij dołączone załączniki',
     'include_old_uploads'         => 'Dołącz zaimportowane dane',
-    'accounts'                    => 'Eksportuj transakcje z tych kont',
     'delete_account'              => 'Usuń konto ":name"',
     'delete_bill'                 => 'Usuń rachunek ":name"',
     'delete_budget'               => 'Usuń budżet ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Kalendarz',
     'weekend'                 => 'Weekend',
     'client_secret'           => 'Sekret klienta',
+
+    'withdrawal_destination_id' => 'Konto docelowe',
+    'deposit_source_id'         => 'Konto źródłowe',
+    'expected_on'               => 'Expected on',
+    'paid'                      => 'Paid',
 
 ];

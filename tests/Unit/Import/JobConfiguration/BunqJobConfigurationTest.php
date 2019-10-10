@@ -1,22 +1,22 @@
 <?php
 /**
  * BunqJobConfigurationTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class BunqJobConfigurationTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BunqJobConfigurationTest extends TestCase
 {
@@ -44,7 +47,7 @@ class BunqJobConfigurationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -57,7 +60,7 @@ class BunqJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'bunq_jc_A' . random_int(1, 100000);
+        $job->key           = 'bunq_jc_A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -88,7 +91,7 @@ class BunqJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'bunq_jc_B' . random_int(1, 10000);
+        $job->key           = 'bunq_jc_B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -113,37 +116,37 @@ class BunqJobConfigurationTest extends TestCase
         $this->assertEquals($return, $config->configureJob($configData));
     }
 
-        /**
-         * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration
-         */
-        public function testGetNextData(): void
-        {
-            $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
-            $jobRepos->shouldReceive('setUser')->once();
-            $job                = new ImportJob;
-            $job->user_id       = $this->user()->id;
-            $job->key           = 'bunq_jc_C' . random_int(1, 10000);
-            $job->status        = 'new';
-            $job->stage         = 'new';
-            $job->provider      = 'bunq';
-            $job->file_type     = '';
-            $job->configuration = [];
-            $job->save();
-            $data = ['ssome' => 'values'];
+    /**
+     * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration
+     */
+    public function testGetNextData(): void
+    {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'bunq_jc_C' . $this->randomInt();
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'bunq';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->save();
+        $data = ['ssome' => 'values'];
 
-            // Expect "NewBunqJobHandler" because of state.
-            $handler = $this->mock(NewBunqJobHandler::class);
-            $handler->shouldReceive('setImportJob')->once();
-            $handler->shouldReceive('getNextData')->once()->andReturn($data);
+        // Expect "NewBunqJobHandler" because of state.
+        $handler = $this->mock(NewBunqJobHandler::class);
+        $handler->shouldReceive('setImportJob')->once();
+        $handler->shouldReceive('getNextData')->once()->andReturn($data);
 
-            $config = new BunqJobConfiguration;
-            try {
-                $config->setImportJob($job);
-            } catch (FireflyException $e) {
-                $this->assertTrue(false, $e->getMessage());
-            }
-            $this->assertEquals($data, $config->getNextData());
+        $config = new BunqJobConfiguration;
+        try {
+            $config->setImportJob($job);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
         }
+        $this->assertEquals($data, $config->getNextData());
+    }
 
     /**
      * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration
@@ -154,7 +157,7 @@ class BunqJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'bunq_jc_E' . random_int(1, 100000);
+        $job->key           = 'bunq_jc_E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'choose-accounts';
         $job->provider      = 'bunq';

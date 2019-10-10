@@ -1,22 +1,22 @@
 <?php
 /**
  * Attachment.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -48,6 +48,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User   $user
  * @property bool   $uploaded
  * @property bool   file_exists
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $attachable_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachable
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereAttachableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereAttachableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereMd5($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereMime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUploaded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment withoutTrashed()
+ * @mixin \Eloquent
  */
 class Attachment extends Model
 {

@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Tanımlama',
     'note'                        => 'Notlar',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Bu işlemi böl / Taksitlendir',
     'split_journal_explanation'   => 'Bu işlemi taksitlendirin',
     'currency'                    => 'Para birimi',
     'account_id'                  => 'Varlık hesabı',
     'budget_id'                   => 'Bütçe',
-    'openingBalance'              => 'Açılış bakiyesi',
+    'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Etiket modu',
     'tag_position'                => 'Etiket konumu',
-    'virtualBalance'              => 'Sanal bakiye',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Hedef tutar',
-    'accountRole'                 => 'Hesap rolü',
-    'openingBalanceDate'          => 'Açılış bakiyesi tarihi',
-    'ccType'                      => 'Kredi kartı ödeme planı',
-    'ccMonthlyPaymentDate'        => 'Kredi kartı aylık ödeme tarihi',
+    'account_role'                => 'Account role',
+    'opening_balance_date'        => 'Opening balance date',
+    'cc_type'                     => 'Credit card payment plan',
+    'cc_monthly_payment_date'     => 'Credit card monthly payment date',
     'piggy_bank_id'               => 'Kumbara',
     'returnHere'                  => 'Dön buraya',
     'returnHereExplanation'       => 'Sakladıktan sonra, başka bir tane oluşturmak için buraya dön.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Sembol',
     'code'                        => 'Kod',
     'iban'                        => 'IBAN numarası',
-    'accountNumber'               => 'Hesap numarası',
+    'account_number'              => 'Account number',
     'creditCardNumber'            => 'Kredi Kartı Numarası',
     'has_headers'                 => 'Başlıklar',
     'date_format'                 => 'Tarih formatı',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'İşlemeyi durdur',
     'start_date'                  => 'Sayfa başlangıcı',
     'end_date'                    => 'Kapsama alanı dışında',
-    'export_start_range'          => 'İhracatın başlangıcı',
-    'export_end_range'            => 'İhracatın sonu',
-    'export_format'               => 'Dosya biçimi',
     'include_attachments'         => 'Yüklenen ekleri dahil et',
     'include_old_uploads'         => 'İçe aktarılan verileri dahil et',
-    'accounts'                    => 'Bu hesaptan işlemleri çıkarın',
     'delete_account'              => '":name" adlı hesabı sil',
     'delete_bill'                 => 'Faturayı sil ":name"',
     'delete_budget'               => '":name" bütçesini sil',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Calendar',
     'weekend'                 => 'Weekend',
     'client_secret'           => 'Client secret',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
+    'expected_on'               => 'Expected on',
+    'paid'                      => 'Paid',
 
 ];

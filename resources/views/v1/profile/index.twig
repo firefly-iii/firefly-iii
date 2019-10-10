@@ -17,11 +17,26 @@
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
                     {% if not SANDSTORM %}
-                        <ul>
-                            <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
-                            <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
-                            <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul>
+                                    <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
+                                    <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
+                                    <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <p>
+                                    {{ 'permanent_delete_stuff'|_ }}
+                                </p>
+                                <ul>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-budgets') }}">{{ 'delete_all_budgets'|_ }}</a></li>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-categories') }}">{{ 'delete_all_categories'|_ }}</a></li>
+                                    <li><a onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" class="text-danger" href="{{ route('profile.delete-tags') }}">{{ 'delete_all_tags'|_ }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
                     {% endif %}
                 </div>
             </div>
@@ -85,11 +100,17 @@
                     <div class="box-body">
                         <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
                         {% if enabled2FA == true %}
+                            <p class="text-info">
+                                {{ trans('firefly.pref_two_factor_backup_code_count', {count: mfaBackupCount}) }}
+                            </p>
 
                             <div class="btn-group">
                                 <a class="btn btn-info" href="{{ route('profile.code') }}">
                                     <i class="fa fa-recycle"></i>
                                     {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                <a class="btn btn-default" href="{{ route('profile.new-backup-codes') }}">
+                                    <i class="fa fa-star"></i>
+                                    {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
                                 <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
                                     <i class="fa fa-trash"></i>
                                     {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>

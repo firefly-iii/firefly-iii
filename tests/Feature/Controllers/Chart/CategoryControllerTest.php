@@ -1,52 +1,61 @@
 <?php
 /**
  * CategoryControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Account;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
+use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Support\Chart\Category\WholePeriodChartGenerator;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 /**
  * Class CategoryControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CategoryControllerTest extends TestCase
 {
+    use TestDataTrait;
+
     /**
      *
      */
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -54,21 +63,51 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function testAll(string $range): void
     {
-
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $firstUse     = new Carbon;
-        $firstUse->subDays(3);
+        $chartGen     = $this->mock(WholePeriodChartGenerator::class);
+        $firstUseDate = null;
 
+        switch ($range) {
+            default:
+                throw new FireflyException(sprintf('No case for %s', $range));
+            case '1D':
+                $firstUseDate = Carbon::now()->subDays(3);
+                break;
+            case '1W':
+                $firstUseDate = Carbon::now()->subDays(12);
+                break;
+            case '1M':
+                $firstUseDate = Carbon::now()->subDays(40);
+                break;
+            case '3M':
+                $firstUseDate = Carbon::now()->subDays(120);
+                break;
+            case '6M':
+                $firstUseDate = Carbon::now()->subDays(160);
+                break;
+            case '1Y':
+                $firstUseDate = Carbon::now()->subDays(365);
+                break;
+            case 'custom':
+                $firstUseDate = Carbon::now()->subDays(20);
+                break;
+        }
 
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0');
-        $repository->shouldReceive('firstUseDate')->andReturn($firstUse)->once();
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $chartGen->shouldReceive('generate')->atLeast()->once()->andReturn([]);
+
+        $repository->shouldReceive('firstUseDate')->andReturn($firstUseDate)->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());
@@ -85,51 +124,24 @@ class CategoryControllerTest extends TestCase
      */
     public function testFrontPage(string $range): void
     {
-        $repository    = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $generator     = $this->mock(GeneratorInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
+        $noCatRepos   = $this->mock(NoCategoryRepositoryInterface::class);
+        $category     = $this->getRandomCategory();
+        $account      = $this->getRandomAsset();
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        // spent per currency data:
-        $spentNoCategory = [
-            1 =>
-                [
-                    'spent'                   => '-123.45',
-                    'currency_id'             => 1,
-                    'currency_code'           => 'X',
-                    'currency_symbol'         => 'x',
-                    'currency_decimal_places' => 2,
-                ],
-        ];
-        $spentData       = [
-            1 => [
-                'name'  => 'Car',
-                'spent' => [
-                    1 => [
-                        'spent'                   => '-123.45',
-                        'currency_id'             => 2,
-                        'currency_code'           => 'a',
-                        'currency_symbol'         => 'b',
-                        'currency_decimal_places' => 2,
-                    ],
-                ],
-            ],
-        ];
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->categorySumExpenses());
+        $noCatRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->categorySumExpenses());
 
-        // grab two categories from the user
-        $categories = $this->user()->categories()->take(2)->get();
-
-        // grab two the users asset accounts:
-        $accounts = $this->user()->accounts()->where('account_type_id', 3)->take(2)->get();
-
-        // repository will return these.
-        $repository->shouldReceive('getCategories')->andReturn($categories)->once();
-        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn($accounts);
-
-        $repository->shouldReceive('spentInPeriodPerCurrency')->times(2)->andReturn($spentData);
-        $repository->shouldReceive('spentInPeriodPcWoCategory')->once()->andReturn($spentNoCategory);
-
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $repository->shouldReceive('getCategories')->atLeast()->once()->andReturn(new Collection([$category]));
+        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(
+            new Collection([$account])
+        );
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
@@ -143,14 +155,21 @@ class CategoryControllerTest extends TestCase
      */
     public function testReportPeriod(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
         $date         = new Carbon;
+
+        $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
+        $opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $repository->shouldReceive('periodExpenses')->andReturn([])->once();
-        $repository->shouldReceive('periodIncome')->andReturn([])->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
@@ -163,14 +182,21 @@ class CategoryControllerTest extends TestCase
      */
     public function testReportPeriodNoCategory(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $noCatRepos   = $this->mock(NoCategoryRepositoryInterface::class);
         $date         = new Carbon;
+
+        $noCatRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
+        $noCatRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $repository->shouldReceive('periodExpensesNoCategory')->andReturn([])->once();
-        $repository->shouldReceive('periodIncomeNoCategory')->andReturn([])->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
@@ -183,21 +209,29 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws Exception
      */
     public function testSpecificPeriod(string $range): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
-        $account      = factory(Account::class)->make();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $chartGen     = $this->mock(WholePeriodChartGenerator::class);
+        $account      = $this->getRandomAsset();
         $date         = new Carbon;
+
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $chartGen->shouldReceive('generate')->atLeast()->once()->andReturn([]);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0');
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

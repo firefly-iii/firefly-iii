@@ -1,22 +1,22 @@
 <?php
 /**
  * AccountTransformerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -35,6 +35,10 @@ use Tests\TestCase;
 
 /**
  * Class AccountTransformerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountTransformerTest extends TestCase
 {
@@ -44,7 +48,7 @@ class AccountTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -56,7 +60,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $parameters = new ParameterBag;
@@ -72,9 +76,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // opening balance:
@@ -127,7 +131,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -140,9 +144,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // opening balance:
@@ -195,7 +199,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -208,14 +212,14 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('ccAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // credit card fields:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-01-01')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_type'])->andReturn('monthlyFull')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_monthly_payment_date'])->andReturn('2018-01-01')->atLeast()->once();
 
 
         // opening balance:
@@ -270,7 +274,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -283,9 +287,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // data for liability
@@ -344,7 +348,7 @@ class AccountTransformerTest extends TestCase
     {
         // mock stuff and get object:
         $account      = $this->getRandomExpense();
-        $euro         = TransactionCurrency::find(1);
+        $euro         = $this->getEuro();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transformer = app(AccountTransformer::class);
@@ -357,9 +361,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
         // get all kinds of meta values:
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('12345')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
 
         // steam is also called for the account balance:

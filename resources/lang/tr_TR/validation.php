@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -33,15 +33,19 @@ return [
     'rule_trigger_value'             => 'Bu eylem, seçili işlem için geçersizdir.',
     'rule_action_value'              => 'Bu eylem seçili işlem için geçersizdir.',
     'file_already_attached'          => 'Yüklenen dosya ":name" zaten bu nesneye bağlı.',
-    'file_attached'                  => '":name" dosyası başarıyla yüklendi.',
+    'file_attached'                  => 'Successfully uploaded file ":name".',
     'must_exist'                     => 'ID alanı :attribute veritabanın içinde yok.',
     'all_accounts_equal'             => 'Bu alandaki tüm hesapları eşit olmalıdır.',
+    'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',
+    'transaction_types_equal'        => 'All splits must be of the same type.',
+    'invalid_transaction_type'       => 'Invalid transaction type.',
     'invalid_selection'              => 'Seçiminiz geçersiz.',
     'belongs_user'                   => 'Bu değer bu alan için geçerli değil.',
     'at_least_one_transaction'       => 'En az bir işlem gerekir.',
     'at_least_one_repetition'        => 'En az bir tekrarı gerekir.',
     'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeat_until). Not both.',
     'require_currency_info'          => 'Bu alanın içeriği para birimi bilgileri geçersiz.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'İşlem açıklaması genel açıklama eşit değildir.',
     'file_invalid_mime'              => '":name" dosyası ":mime" türünde olup yeni bir yükleme olarak kabul edilemez.',
     'file_too_large'                 => '":name" dosyası çok büyük.',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute bir dizi olmalıdır.',
     'url'                            => ':attribute biçimi geçersiz.',
     'timezone'                       => ':attribute geçerli bir bölge olmalıdır.',
-    '2fa_code'                       => ':attribute alanı geçersiz.',
-    'dimensions'                     => ':attribute geçersiz görüntü boyutlarına sahip.',
-    'distinct'                       => ':attribute alanı yinelenen bir değere sahip.',
-    'file'                           => ':attribute bir dosya olmalıdır.',
-    'in_array'                       => ':attribute alanı :other içinde olamaz.',
-    'present'                        => ':attribute alanı mevcut olmalıdır.',
-    'amount_zero'                    => 'Toplam tutarı sıfır olamaz.',
-    'unique_piggy_bank_for_user'     => 'Kumbara adı benzersiz olmalıdır.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions.',
-    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
-    'invalid_account_info'           => 'Invalid account information.',
+    '2fa_code'                    => ':attribute alanı geçersiz.',
+    'dimensions'                  => ':attribute geçersiz görüntü boyutlarına sahip.',
+    'distinct'                    => ':attribute alanı yinelenen bir değere sahip.',
+    'file'                        => ':attribute bir dosya olmalıdır.',
+    'in_array'                    => ':attribute alanı :other içinde olamaz.',
+    'present'                     => ':attribute alanı mevcut olmalıdır.',
+    'amount_zero'                 => 'Toplam tutarı sıfır olamaz.',
+    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'unique_piggy_bank_for_user'  => 'Kumbara adı benzersiz olmalıdır.',
+    'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Invalid repetition type for recurring transactions.',
+    'valid_recurrence_rep_moment' => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'        => 'Invalid account information.',
     'attributes'                     => [
         'email'                   => 'E-posta adresi',
         'description'             => 'Açıklama',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'adı',
         'piggy_bank_id'           => 'Kumbara ID',
         'targetamount'            => 'Hedef tutar',
-        'openingBalanceDate'      => 'Açılış bakiyesi',
-        'openingBalance'          => 'Açılış bakiyesi',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'Eşleşme',
         'amount_min'              => 'Minimum tutar',
         'amount_max'              => 'Maksimum tutar',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'kural tetikleyici #4',
         'rule-trigger.5'          => 'kural tetikleyici #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

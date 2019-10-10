@@ -14,28 +14,35 @@
                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
             </td>
             <td class="hidden-xs" data-value="{{ account.start_balance }}" style="text-align: right;">
-                {{ formatAmountByCurrency(account.currency, account.start_balance) }}
+                {{ formatAmountBySymbol(account.start_balance, account.currency_symbol, account.currency_decimal_places) }}
             </td>
             <td class="hidden-xs" data-value="{{ account.end_balance }}" style="text-align: right;">
-                {{ formatAmountByCurrency(account.currency, account.end_balance) }}</td>
+                {{ formatAmountBySymbol(account.end_balance, account.currency_symbol, account.currency_decimal_places) }}
+            </td>
             <td style="text-align: right;"
                 data-value="{{ (account.end_balance - account.start_balance) }}">
-                {{ formatAmountByCurrency(account.currency, (account.end_balance - account.start_balance)) }}
+                {{ formatAmountBySymbol(account.end_balance - account.start_balance, account.currency_symbol, account.currency_decimal_places) }}
             </td>
         </tr>
     {% endfor %}
+    <tr>
+        <td colspan="4"><em>{{ 'sumOfSums'|_ }}</em></td>
+    </tr>
+    {% for sum in accountReport.sums %}
+    <tr>
+        <td>
+            &nbsp;
+        </td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.start, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.end, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+        <td style="text-align: right;">
+            {{ formatAmountBySymbol(sum.difference, sum.currency_symbol, sum.currency_decimal_places) }}
+        </td>
+    </tr>
+    {% endfor %}
     </tbody>
-    <tfoot>
-    <tr>
-        <td><em>{{ 'sumOfSums'|_ }}</em></td>
-        <td class="hidden-xs" style="text-align: right;">{{ accountReport.start|formatAmount }}</td>
-        <td class="hidden-xs" style="text-align: right;">{{ accountReport.end|formatAmount }}</td>
-        <td style="text-align: right;">{{ accountReport.difference|formatAmount }}</td>
-    </tr>
-    {% if accountReport.currencies > 1 %}
-    <tr>
-        <td colspan="4"><small class="text-warning">{{ 'multi_currency_report_sum'|_ }}</small></td>
-    </tr>
-    {% endif %}
-    </tfoot>
 </table>

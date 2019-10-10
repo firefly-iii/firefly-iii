@@ -1,22 +1,22 @@
 <?php
 /**
  * SelectController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Rule;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -34,6 +35,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +47,6 @@ use Throwable;
 /**
  * Class SelectController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SelectController extends Controller
 {
@@ -76,7 +77,7 @@ class SelectController extends Controller
      * Execute the given rule on a set of existing transactions.
      *
      * @param SelectTransactionsRequest $request
-     * @param Rule                      $rule
+     * @param Rule $rule
      *
      * @return RedirectResponse
      */
@@ -88,18 +89,26 @@ class SelectController extends Controller
         $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));
         $startDate = new Carbon($request->get('start_date'));
         $endDate   = new Carbon($request->get('end_date'));
+        $rules = [$rule->id];
 
-        // Create a job to do the work asynchronously
-        $job = new ExecuteRuleOnExistingTransactions($rule);
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser(auth()->user());
+        $ruleEngine->setRulesToApply($rules);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
 
-        // Apply parameters to the job
-        $job->setUser($user);
-        $job->setAccounts($accounts);
-        $job->setStartDate($startDate);
-        $job->setEndDate($endDate);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($accounts);
+        $collector->setRange($startDate, $endDate);
+        $journals = $collector->getExtractedJournals();
 
-        // Dispatch a new job to execute it in a queue
-        $this->dispatch($job);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            Log::debug('Start of new journal.');
+            $ruleEngine->processJournalArray($journal);
+            Log::debug('Done with all rules for this group + done with journal.');
+        }
 
         // Tell the user that the job is queued
         session()->flash('success', (string)trans('firefly.applied_rule_selection', ['title' => $rule->title]));
@@ -137,15 +146,13 @@ class SelectController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build trigger array from response
         $triggers = $this->getValidTriggerList($request);
 
-        if (0 === \count($triggers)) {
+        if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
@@ -171,21 +178,22 @@ class SelectController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if ($matchingTransactions->count() === $limit) {
+        if (count($matchingTransactions) === $limit) {
             $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
-        if (0 === $matchingTransactions->count()) {
+        if (0 === count($matchingTransactions)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
+            $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
         }
 
         // @codeCoverageIgnoreEnd
@@ -205,14 +213,12 @@ class SelectController extends Controller
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testTriggersByRule(Rule $rule): JsonResponse
     {
         $triggers = $rule->ruleTriggers;
 
-        if (0 === \count($triggers)) {
+        if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
@@ -236,17 +242,17 @@ class SelectController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if ($matchingTransactions->count() === $limit) {
+        if (count($matchingTransactions) === $limit) {
             $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
-        if (0 === $matchingTransactions->count()) {
+        if (0 === count($matchingTransactions)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));

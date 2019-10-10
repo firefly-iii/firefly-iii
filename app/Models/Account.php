@@ -1,22 +1,22 @@
 <?php
 /**
  * Account.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -36,28 +36,53 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account.
  *
- * @property int         $id
- * @property string      $name
- * @property string      $iban
- * @property AccountType $accountType
- * @property bool        $active
- * @property string      $virtual_balance
- * @property User        $user
- * @property string      startBalance
- * @property string      endBalance
- * @property string      difference
- * @property Carbon      lastActivityDate
- * @property Collection  accountMeta
- * @property bool        encrypted
- * @property int         account_type_id
- * @property Collection  piggyBanks
- * @property string      $interest
- * @property string      $interestPeriod
- * @property string      accountTypeString
- * @property Carbon      created_at
- * @property Carbon      updated_at
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @property int                                                                            $id
+ * @property string                                                                         $name
+ * @property string                                                                         $iban
+ * @property AccountType                                                                    $accountType
+ * @property bool                                                                           $active
+ * @property string                                                                         $virtual_balance
+ * @property User                                                                           $user
+ * @property string                                                                         startBalance
+ * @property string                                                                         endBalance
+ * @property string                                                                         difference
+ * @property Carbon                                                                         lastActivityDate
+ * @property Collection                                                                     accountMeta
+ * @property bool                                                                           encrypted
+ * @property int                                                                            account_type_id
+ * @property Collection                                                                     piggyBanks
+ * @property string                                                                         $interest
+ * @property string                                                                         $interestPeriod
+ * @property string                                                                         accountTypeString
+ * @property Carbon                                                                         created_at
+ * @property Carbon                                                                         updated_at
+ * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
+ * @property \Illuminate\Support\Carbon|null                                                $deleted_at
+ * @property int                                                                            $user_id
+ * @property-read string                                                                    $edit_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]        $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereAccountTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereIban($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereVirtualBalance($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account withoutTrashed()
+ * @mixin \Eloquent
  */
 class Account extends Model
 {
@@ -72,6 +97,7 @@ class Account extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'user_id'    => 'integer',
             'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
@@ -137,24 +163,6 @@ class Account extends Model
         }
 
         return $name;
-    }
-
-    /**
-     * Returns the opening balance.
-     *
-     * @return TransactionJournal
-     */
-    public function getOpeningBalance(): TransactionJournal
-    {
-        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $this->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
-                                     ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return new TransactionJournal;
-        }
-
-        return $journal;
     }
 
     /**

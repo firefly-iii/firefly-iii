@@ -1,22 +1,22 @@
 <?php
 /**
  * NetWorthTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Report\NetWorth;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -40,6 +39,9 @@ use Tests\TestCase;
 /**
  *
  * Class NetWorthTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NetWorthTest extends TestCase
 {
@@ -49,7 +51,7 @@ class NetWorthTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -70,15 +72,15 @@ class NetWorthTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls to facades
-        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn(TransactionCurrency::find(1));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn($this->getEuro());
         Steam::shouldReceive('balancesByAccounts')->once()->withAnyArgs()->andReturn($balanceInfo);
 
         // mock other calls:
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->times(2)->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset');
         $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->times(1);
 
 
         $helper = new NetWorth();
@@ -107,15 +109,15 @@ class NetWorthTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls to facades
-        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn(TransactionCurrency::find(1));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->once()->andReturn($this->getEuro());
         Steam::shouldReceive('balancesByAccounts')->once()->withAnyArgs()->andReturn($balanceInfo);
 
         // mock other calls:
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->times(2)->andReturn('defaultAsset', 'ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset', 'ccAsset');
         $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro())->times(1);
 
 
         $helper = new NetWorth();

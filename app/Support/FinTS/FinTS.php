@@ -1,22 +1,22 @@
 <?php
 /**
  * FinTS.php
- * Copyright (c) 2018 https://github.com/bnw
+ * Copyright (c) 2019 https://github.com/bnw
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Crypt;
 
 /**
- *
+ * @codeCoverageIgnore
  * Class FinTS
  */
 class FinTS
@@ -50,7 +50,7 @@ class FinTS
             $config['fints_port'],
             $config['fints_bank_code'],
             $config['fints_username'],
-            Crypt::decrypt($config['fints_password'])
+            Crypt::decrypt($config['fints_password']) // verified
         );
     }
 

@@ -1,22 +1,22 @@
 <?php
 /**
  * RequestInformation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,29 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Help\HelpInterface;
-use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Log;
 use Route as RouteFacade;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Trait RequestInformation
@@ -54,56 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 trait RequestInformation
 {
-    /**
-     * Create data-array from a journal.
-     *
-     * @param SplitJournalFormRequest|Request $request
-     * @param TransactionJournal              $journal
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    protected function arrayFromJournal(Request $request, TransactionJournal $journal): array // convert user input.
-    {
-        /** @var JournalRepositoryInterface $repository */
-        $repository          = app(JournalRepositoryInterface::class);
-        $sourceAccounts      = $repository->getJournalSourceAccounts($journal);
-        $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
-        $array               = [
-            'journal_description'    => $request->old('journal_description', $journal->description),
-            'journal_amount'         => '0',
-            'journal_foreign_amount' => '0',
-            'sourceAccounts'         => $sourceAccounts,
-            'journal_source_id'      => $request->old('journal_source_id', $sourceAccounts->first()->id),
-            'journal_source_name'    => $request->old('journal_source_name', $sourceAccounts->first()->name),
-            'journal_destination_id' => $request->old('journal_destination_id', $destinationAccounts->first()->id),
-            'destinationAccounts'    => $destinationAccounts,
-            'what'                   => strtolower($this->repository->getTransactionType($journal)),
-            'date'                   => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                   => implode(',', $journal->tags->pluck('tag')->toArray()),
 
-            // all custom fields:
-            'interest_date'          => $request->old('interest_date', $repository->getMetaField($journal, 'interest_date')),
-            'book_date'              => $request->old('book_date', $repository->getMetaField($journal, 'book_date')),
-            'process_date'           => $request->old('process_date', $repository->getMetaField($journal, 'process_date')),
-            'due_date'               => $request->old('due_date', $repository->getMetaField($journal, 'due_date')),
-            'payment_date'           => $request->old('payment_date', $repository->getMetaField($journal, 'payment_date')),
-            'invoice_date'           => $request->old('invoice_date', $repository->getMetaField($journal, 'invoice_date')),
-            'internal_reference'     => $request->old('internal_reference', $repository->getMetaField($journal, 'internal_reference')),
-            'notes'                  => $request->old('notes', $repository->getNoteText($journal)),
-
-            // transactions.
-            'transactions'           => $this->getTransactionDataFromJournal($journal),
-        ];
-        // update transactions array with old request data.
-        $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
-
-        // update journal amount and foreign amount:
-        $array['journal_amount']         = array_sum(array_column($array['transactions'], 'amount'));
-        $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
-
-        return $array;
-    }
 
     /**
      * Get the domain of FF system.
@@ -125,8 +65,7 @@ trait RequestInformation
      * @param string $language
      *
      * @return string
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getHelpText(string $route, string $language): string // get from internet.
     {
@@ -165,7 +104,7 @@ trait RequestInformation
             }
             $baseHref   = route('index');
             $helpString = sprintf(
-                '<p><em><img alt="" src="%s/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
+                '<p><em><img alt="" src="%s/v1/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
             );
             $content    = $helpString . $help->getFromGitHub($route, $language);
         }
@@ -177,7 +116,7 @@ trait RequestInformation
             return $content;
         }
 
-        return '<p>' . trans('firefly.route_has_no_help') . '</p>';
+        return '<p>' . trans('firefly.route_has_no_help') . '</p>'; // @codeCoverageIgnore
     }
 
     /**
@@ -194,68 +133,6 @@ trait RequestInformation
     }
 
     /**
-     * @return string
-     */
-    protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('what') ? '' : '_' . RouteFacade::current()->parameter('what');
-    }
-
-    /**
-     * Get transaction overview from journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
-    {
-        // use collector to collect transactions.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getTransactions();
-        $transactions = [];
-
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
-        $transformer->setParameters(new ParameterBag());
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $res = [];
-            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-
-            if (\count($res) > 0) {
-                $res['amount']         = app('steam')->positive((string)$res['amount']);
-                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
-                $transactions[]        = $res;
-            }
-        }
-
-        return $transactions;
-    }
-
-    /**
      * Get a list of triggers.
      *
      * @param TestRuleFormRequest $request
@@ -266,7 +143,7 @@ trait RequestInformation
     {
         $triggers = [];
         $data     = $request->get('triggers');
-        if (\is_array($data)) {
+        if (is_array($data)) {
             foreach ($data as $index => $triggerInfo) {
                 $triggers[] = [
                     'type'            => $triggerInfo['type'] ?? '',
@@ -289,21 +166,44 @@ trait RequestInformation
         $page         = $this->getPageName();
         $specificPage = $this->getSpecificPageName();
 
+
+
         // indicator if user has seen the help for this page ( + special page):
-        $key = 'shown_demo_' . $page . $specificPage;
+        $key = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?
-        $intro        = config('intro.' . $page) ?? [];
-        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
+        $intro        = config(sprintf('intro.%s', $page)) ?? [];
+        $specialIntro = config(sprintf('intro.%s%s', $page, $specificPage)) ?? [];
         // some routes have a "what" parameter, which indicates a special page:
 
         $shownDemo = true;
         // both must be array and either must be > 0
-        if (\count($intro) > 0 || \count($specialIntro) > 0) {
+        if (count($intro) > 0 || count($specialIntro) > 0) {
             $shownDemo = app('preferences')->get($key, false)->data;
-            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
+            //Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %s', $key, var_export($shownDemo, true)));
+        }
+        if (!is_bool($shownDemo)) {
+            $shownDemo = true; // @codeCoverageIgnore
         }
 
         return $shownDemo;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**
@@ -312,7 +212,7 @@ trait RequestInformation
      * @param Carbon $date
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {
@@ -344,7 +244,7 @@ trait RequestInformation
         $attributes['location'] = $attributes['location'] ?? '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         try {
-            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
+            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate'])->startOfDay();
         } catch (InvalidArgumentException $e) {
             Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
             $date                    = Carbon::now()->startOfMonth();
@@ -352,7 +252,7 @@ trait RequestInformation
         }
 
         try {
-            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate']);
+            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate'])->endOfDay();
         } catch (InvalidArgumentException $e) {
             Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
             $date                  = Carbon::now()->startOfMonth();
@@ -363,47 +263,9 @@ trait RequestInformation
     }
 
     /**
-     * Get info from old input.
-     *
-     * @param $array
-     * @param $old
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function updateWithPrevious($array, $old): array // update object with new info
-    {
-        if (0 === \count($old) || !isset($old['transactions'])) {
-            return $array;
-        }
-        $old = $old['transactions'];
-
-        foreach ($old as $index => $row) {
-            if (isset($array[$index])) {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $array[$index] = array_merge($array[$index], $row);
-                continue;
-            }
-            // take some info from first transaction, that should at least exist.
-            $array[$index]                            = $row;
-            $array[$index]['currency_id']             = $array[0]['currency_id'];
-            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
-            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
-            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
-            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
-            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
-            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
-        }
-
-        return $array;
-    }
-
-    /**
      * Validate users new password.
      *
-     * @param User   $user
+     * @param User $user
      * @param string $current
      * @param string $new
      *
@@ -430,6 +292,7 @@ trait RequestInformation
      * @param array $data
      *
      * @return ValidatorContract
+     * @codeCoverageIgnore
      */
     protected function validator(array $data): ValidatorContract
     {

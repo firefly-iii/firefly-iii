@@ -1,22 +1,22 @@
 <?php
 /**
  * FireflyValidator.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -46,8 +46,6 @@ use Illuminate\Validation\Validator;
 class FireflyValidator extends Validator
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -55,7 +53,7 @@ class FireflyValidator extends Validator
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!\is_string($value) || null === $value || 6 !== \strlen($value)) {
+        if (!\is_string($value) || null === $value || 6 !== strlen($value)) {
             return false;
         }
 
@@ -65,8 +63,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -86,8 +82,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -108,8 +102,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      *
@@ -117,7 +109,7 @@ class FireflyValidator extends Validator
      */
     public function validateIban($attribute, $value): bool
     {
-        if (!\is_string($value) || null === $value || \strlen($value) < 6) {
+        if (!\is_string($value) || null === $value || strlen($value) < 6) {
             return false;
         }
         // strip spaces
@@ -191,8 +183,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @return bool
      */
     public function validateLess($attribute, $value, $parameters): bool
@@ -207,8 +197,6 @@ class FireflyValidator extends Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @return bool
      */
     public function validateMore($attribute, $value, $parameters): bool
@@ -220,8 +208,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -268,6 +254,7 @@ class FireflyValidator extends Validator
             $repository = app(BudgetRepositoryInterface::class);
             $budgets    = $repository->getBudgets();
             // count budgets, should have at least one
+            // TODO no longer need to loop like this
             $count = $budgets->filter(
                 function (Budget $budget) use ($value) {
                     return $budget->name === $value;
@@ -327,7 +314,7 @@ class FireflyValidator extends Validator
 
         // these trigger types need a numerical check:
         $numerical = ['amount_less', 'amount_more', 'amount_exactly'];
-        if (\in_array($triggerType, $numerical, true)) {
+        if (in_array($triggerType, $numerical, true)) {
             return is_numeric($value);
         }
 
@@ -335,13 +322,13 @@ class FireflyValidator extends Validator
         $length = ['from_account_starts', 'from_account_ends', 'from_account_is', 'from_account_contains', 'to_account_starts', 'to_account_ends',
                    'to_account_is', 'to_account_contains', 'description_starts', 'description_ends', 'description_contains', 'description_is', 'category_is',
                    'budget_is', 'tag_is', 'currency_is', 'notes_contain', 'notes_start', 'notes_end', 'notes_are',];
-        if (\in_array($triggerType, $length, true)) {
+        if (in_array($triggerType, $length, true)) {
             return '' !== $value;
         }
 
         // check transaction type.
         if ('transaction_type' === $triggerType) {
-            $count = TransactionType::where('type', strtolower($value))->count();
+            $count = TransactionType::where('type', ucfirst($value))->count();
 
             return 1 === $count;
         }
@@ -380,8 +367,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -391,10 +376,10 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
+
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
-
         if (isset($this->data['what'])) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
         }
@@ -409,12 +394,11 @@ class FireflyValidator extends Validator
             return $this->validateByAccountId($value);
         }
 
-        return false;
+        // without type, just try to validate the name.
+        return $this->validateByAccountName($value);
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -431,7 +415,7 @@ class FireflyValidator extends Validator
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                             ->whereNull('accounts.deleted_at')
                             ->where('accounts.user_id', auth()->user()->id)
-                            ->where('account_meta.name', 'accountNumber');
+                            ->where('account_meta.name', 'account_number');
 
         if ($accountId > 0) {
             // exclude current account from check.
@@ -450,7 +434,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Validate an object and its unicity. Checks for encryption / encrypted values as well.
      *
      * parameter 0: the table
@@ -494,8 +478,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -538,6 +520,7 @@ class FireflyValidator extends Validator
         $value = $this->data['name'];
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -563,6 +546,7 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -586,8 +570,10 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
+            // TODO no longer need to loop like this.
             if ($entry->name === $value) {
                 return false;
             }
@@ -598,7 +584,7 @@ class FireflyValidator extends Validator
 
     /**
      * @param string $value
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $type
      *
      * @return bool
@@ -618,6 +604,7 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
         $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
+        // TODO no longer need to loop like this
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -626,5 +613,14 @@ class FireflyValidator extends Validator
         }
 
         return true;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    private function validateByAccountName(string $value): bool
+    {
+        return auth()->user()->accounts()->where('name', $value)->count() === 0;
     }
 }

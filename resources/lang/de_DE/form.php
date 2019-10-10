@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -53,24 +53,25 @@ return [
     'destination_account'         => 'Zielkonto',
     'journal_destination_id'      => 'Anlagenkonto (Ziel)',
     'asset_destination_account'   => 'Zielkonto',
-    'include_net_worth'           => 'Im Nettovermögen enthalten',
+    'include_net_worth'           => 'Im Eigenkapital enthalten',
     'asset_source_account'        => 'Quellkonto',
     'journal_description'         => 'Beschreibung',
     'note'                        => 'Notizen',
+    'store_new_transaction'       => 'Neue Buchung speichern',
     'split_journal'               => 'Diese Überweisung aufteilen',
     'split_journal_explanation'   => 'Diese Überweisung in mehrere Teile aufteilen',
     'currency'                    => 'Währung',
     'account_id'                  => 'Bestandskonto',
     'budget_id'                   => 'Budget',
-    'openingBalance'              => 'Eröffnungsbilanz',
+    'opening_balance'             => 'Eröffnungsbilanz',
     'tagMode'                     => 'Schlagwort-Modus',
     'tag_position'                => 'Schlagwort-Speicherort',
-    'virtualBalance'              => 'Virtueller Kontostand',
+    'virtual_balance'             => 'Virtueller Kontostand',
     'targetamount'                => 'Zielbetrag',
-    'accountRole'                 => 'Rolle des Kontos',
-    'openingBalanceDate'          => 'Eröffnungsbilanzdatum',
-    'ccType'                      => 'Zahlungsplan der Kreditkarte',
-    'ccMonthlyPaymentDate'        => 'Monatliches Zahlungsdatum der Kreditkarte',
+    'account_role'                => 'Kontenfunktion',
+    'opening_balance_date'        => 'Eröffnungsbilanzdatum',
+    'cc_type'                     => 'Kreditkartenzahlungsplan',
+    'cc_monthly_payment_date'     => 'Monatlicher Kreditkartenzahlungsplan',
     'piggy_bank_id'               => 'Sparschwein',
     'returnHere'                  => 'Hierhin zurückkehren',
     'returnHereExplanation'       => 'Nach dem Speichern hierher zurückkehren, um ein weiteres Element zu erstellen.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Zeichen',
     'code'                        => 'Schlüssel',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Kontonummer',
+    'account_number'              => 'Kontonummer',
     'creditCardNumber'            => 'Kreditkartennummer',
     'has_headers'                 => 'Kopfzeilen',
     'date_format'                 => 'Datumsformat',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Verarbeitung beenden',
     'start_date'                  => 'Anfang des Bereichs',
     'end_date'                    => 'Ende des Bereichs',
-    'export_start_range'          => 'Beginn des Exportbereichs',
-    'export_end_range'            => 'Ende des Exportbereichs',
-    'export_format'               => 'Dateiformat',
     'include_attachments'         => 'Hochgeladene Anhänge hinzufügen',
     'include_old_uploads'         => 'Importierte Daten hinzufügen',
-    'accounts'                    => 'Exportiere die Überweisungen von diesem Konto',
     'delete_account'              => 'Konto „:name” löschen',
     'delete_bill'                 => 'Rechnung „:name” löschen',
     'delete_budget'               => 'Budget „:name” löschen',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Kalender',
     'weekend'                 => 'Wochenende',
     'client_secret'           => 'Kundengeheimnis',
+
+    'withdrawal_destination_id' => 'Zielkonto',
+    'deposit_source_id'         => 'Quellkonto',
+    'expected_on'               => 'Erwartet am',
+    'paid'                      => 'Bezahlt',
 
 ];

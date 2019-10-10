@@ -44,17 +44,17 @@ spec:
       - image: firefly-local
         name: firefly-local
         env:
-        - name: FF_APP_ENV
+        - name: APP_ENV
           value: "local"
-        - name: FF_APP_KEY
+        - name: APP_KEY
           value: "S0m3R@nd0mString0f32Ch@rsEx@ct1y"
-        - name: FF_DB_HOST
+        - name: DB_HOST
           value: "172.17.0.9" 
-        - name: FF_DB_NAME
+        - name: DB_NAME
           value: "firefly_db"
-        - name: FF_DB_USER
+        - name: DB_USER
           value: "firefly_db"
-        - name: FF_DB_PASSWORD
+        - name: DB_PASSWORD
           value: "password" 
         volumeMounts:
         - mountPath: "/var/www/firefly-iii/storage/export"

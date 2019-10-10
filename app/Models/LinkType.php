@@ -1,22 +1,22 @@
 <?php
 /**
  * LinkType.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * FireflyIII\Models\LinkType
+ *
  * @property int    $journalCount
  * @property string $inward
  * @property string $outward
@@ -38,7 +40,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property int    $id
  * Class LinkType
- *
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $transactionJournalLinks
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereEditable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereInward($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereOutward($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType withoutTrashed()
+ * @mixin \Eloquent
  */
 class LinkType extends Model
 {

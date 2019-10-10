@@ -1,22 +1,22 @@
 <?php
 /**
  * RuleRepository.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -34,7 +34,6 @@ use Log;
 /**
  * Class RuleRepository.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleRepository implements RuleRepositoryInterface
 {
@@ -47,7 +46,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -277,7 +276,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
     {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+        $ruleGroup->rules()->withTrashed()->whereNotNull('deleted_at')->update(['order' => 0]);
 
         $set   = $ruleGroup->rules()
                            ->orderBy('order', 'ASC')
@@ -325,7 +324,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->strict          = $data['strict'];
         $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];
-        $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
+        $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
 
         $rule->save();
 
@@ -387,25 +386,29 @@ class RuleRepository implements RuleRepositoryInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
-        $rule->rule_group_id   = $data['rule_group_id'];
-        $rule->active          = $data['active'];
-        $rule->stop_processing = $data['stop_processing'];
-        $rule->title           = $data['title'];
-        $rule->strict          = $data['strict'] ?? false;
-        $rule->description     = $data['description'];
+
+        $rule->rule_group_id   = $data['rule_group_id'] ?? $rule->rule_group_id;
+        $rule->active          = $data['active'] ?? $rule->active;
+        $rule->stop_processing = $data['stop_processing'] ?? $rule->stop_processing;
+        $rule->title           = $data['title'] ?? $rule->title;
+        $rule->strict          = $data['strict'] ?? $rule->strict;
+        $rule->description     = $data['description'] ?? $rule->description;
         $rule->save();
 
-        // delete triggers:
-        $rule->ruleTriggers()->delete();
+        if (null !== $data['triggers']) {
+            // delete triggers:
+            $rule->ruleTriggers()->delete();
 
-        // delete actions:
-        $rule->ruleActions()->delete();
+            // recreate triggers:
+            $this->storeTriggers($rule, $data);
+        }
+        if (null !== $data['actions']) {
+            // delete actions:
+            $rule->ruleActions()->delete();
 
-        // recreate triggers:
-        $this->storeTriggers($rule, $data);
-
-        // recreate actions:
-        $this->storeActions($rule, $data);
+            // recreate actions:
+            $this->storeActions($rule, $data);
+        }
 
         return $rule;
     }

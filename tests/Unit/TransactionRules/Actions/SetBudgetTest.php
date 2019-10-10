@@ -1,30 +1,28 @@
 <?php
 /**
  * SetBudgetTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\SetBudget;
 use Illuminate\Support\Collection;
@@ -32,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class SetBudgetTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetBudgetTest extends TestCase
 {
@@ -41,11 +42,50 @@ class SetBudgetTest extends TestCase
     public function testAct(): void
     {
         // get journal, remove all budgets
-        $journal     = TransactionJournal::inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
-        $budget      = $journal->user->budgets()->first();
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
+        $journal     = $this->getRandomWithdrawal();
+        $budget      = $this->getRandomBudget();
+
+        $journal->budgets()->sync([]);
+        $this->assertEquals(0, $journal->budgets()->count());
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = $budget->name;
+        $action                   = new SetBudget($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertTrue($result);
+        $this->assertEquals(1, $journal->budgets()->count());
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Actions\SetBudget
+     */
+    public function testActNull(): void
+    {
+        // get journal, remove all budgets
+        $journal     = $this->getRandomWithdrawal();
+
+        $journal->budgets()->sync([]);
+        $this->assertEquals(0, $journal->budgets()->count());
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = 'non-existing budget #' . $this->randomInt();
+        $action                   = new SetBudget($ruleAction);
+        $result                   = $action->act($journal);
+        $this->assertFalse($result);
+        $this->assertEquals(0, $journal->budgets()->count());
+    }
+
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Actions\SetBudget
+     */
+    public function testActDeposit(): void
+    {
+        // get journal, remove all budgets
+        $journal     = $this->getRandomDeposit();
+        $budget      = $this->getRandomBudget();
 
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
@@ -56,10 +96,6 @@ class SetBudgetTest extends TestCase
         $action                   = new SetBudget($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $this->assertEquals(1, $transaction->budgets()->count());
-            $this->assertEquals($budget->name, $transaction->budgets()->first()->name);
-        }
+        $this->assertEquals(0, $journal->budgets()->count());
     }
 }

@@ -1,22 +1,22 @@
 <?php
 /**
  * SetSourceAccountTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -33,6 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class SetSourceAccountTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetSourceAccountTest extends TestCase
 {
@@ -78,7 +81,7 @@ class SetSourceAccountTest extends TestCase
     public function testActDepositRevenue(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->user()->accounts()->inRandomOrder()->where('account_type_id', 5)->first();
+        $account      = $this->getRandomRevenue();
         $deposit      = $this->getRandomDeposit();
 
         $accountRepos->shouldReceive('setUser');
@@ -87,7 +90,7 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new revenue #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new revenue #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($deposit);
         $this->assertTrue($result);
@@ -143,32 +146,9 @@ class SetSourceAccountTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new account #' . random_int(1, 10000);
+        $ruleAction->action_value = 'Some new account #' . $this->randomInt();
         $action                   = new SetSourceAccount($ruleAction);
         $result                   = $action->act($withdrawal);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * Test this on a split journal.
-     *
-     * @covers \FireflyIII\TransactionRules\Actions\SetSourceAccount
-     */
-    public function testSplitJournal(): void
-    {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transaction  = Transaction::orderBy('count', 'DESC')->groupBy('transaction_journal_id')
-                                   ->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as count')])
-                                   ->first();
-        $journal      = TransactionJournal::find($transaction->transaction_journal_id);
-
-        // mock
-        $accountRepos->shouldReceive('setUser');
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Some new asset ' . random_int(1, 10000);
-        $action                   = new SetSourceAccount($ruleAction);
-        $result                   = $action->act($journal);
         $this->assertFalse($result);
     }
 }

@@ -1,55 +1,65 @@
 <?php
 /**
  * IndexControllerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Budget;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use Exception;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
+use Tests\Support\TestDataTrait;
 use Tests\TestCase;
 
 /**
  *
  * Class IndexControllerTest
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IndexControllerTest extends TestCase
 {
+    use TestDataTrait;
     /**
      *
      */
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -60,40 +70,37 @@ class IndexControllerTest extends TestCase
      */
     public function testIndex(string $range): void
     {
-
-
-        Log::info(sprintf('Now in testIndex(%s)', $range));
         // mock stuff
-        $budget      = factory(Budget::class)->make();
-        $budgetLimit = factory(BudgetLimit::class)->make();
-
-        // set budget limit to current month:
+        $budget                  = $this->getRandomBudget();
+        $budgetLimit             = $this->getRandomBudgetLimit();
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
-        $budgetInfo              = [
-            $budget->id => [
-                'spent'      => '0',
-                'budgeted'   => '0',
-                'currentRep' => false,
-            ],
-        ];
 
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $opsRepos      = $this->mock(OperationsRepositoryInterface::class);
+        $abRepos       = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $blRepos       = $this->mock(BudgetLimitRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
-        $repository->shouldReceive('cleanupBudgets');
-        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+        $repository->shouldReceive('cleanupBudgets')->atLeast()->once();
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection)->atLeast()->once();
+
+        $abRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+
+        $blRepos->shouldReceive('budgeted')->andReturn('1')->atLeast()->once();
+        $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection)->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
+
+        $currencyRepos->shouldReceive('getEnabled')->atLeast()->once()->andReturn(new Collection([$this->getEuro()]));
+
+
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_budgets_index');
+        Amount::shouldReceive('formatAnything')->andReturn('123');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -108,13 +115,13 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws Exception
      */
     public function testIndexOutOfRange(string $range): void
     {
-        Log::info(sprintf('Now in testIndexOutOfRange(%s)', $range));
-        // mock stuff
-        $budget      = factory(Budget::class)->make();
-        $budgetLimit = factory(BudgetLimit::class)->make();
+        $budget      = $this->getRandomBudget();
+        $budgetLimit = $this->getRandomBudgetLimit();
         $budgetInfo  = [
             $budget->id => [
                 'spent'      => '0',
@@ -129,24 +136,32 @@ class IndexControllerTest extends TestCase
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
+        $abRepos      = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $blRepos      = $this->mock(BudgetLimitRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+
+
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('cleanupBudgets')->atLeast()->once();
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection)->atLeast()->once();
 
-        $repository->shouldReceive('cleanupBudgets');
-        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
+        $abRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $blRepos->shouldReceive('budgeted')->andReturn('1')->atLeast()->once();
+        $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection)->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
+        $currencyRepos->shouldReceive('getEnabled')->atLeast()->once()->andReturn(new Collection([$this->getEuro()]));
+
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_budgets_index');
+        Amount::shouldReceive('formatAnything')->andReturn('123');
 
         $this->be($this->user());
         $today = new Carbon;
@@ -163,13 +178,13 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws Exception
      */
     public function testIndexWithDate(string $range): void
     {
-        Log::info(sprintf('Now in testIndexWithDate(%s)', $range));
-        // mock stuff
-        $budget      = factory(Budget::class)->make();
-        $budgetLimit = factory(BudgetLimit::class)->make();
+        $budget      = $this->getRandomBudget();
+        $budgetLimit = $this->getRandomBudgetLimit();
         $budgetInfo  = [
             $budget->id => [
                 'spent'      => '0',
@@ -184,24 +199,30 @@ class IndexControllerTest extends TestCase
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
+        $opsRepos     = $this->mock(OperationsRepositoryInterface::class);
+        $abRepos      = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $blRepos      = $this->mock(BudgetLimitRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('cleanupBudgets')->atLeast()->once();
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection)->atLeast()->once();
 
-        $repository->shouldReceive('cleanupBudgets');
-        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
+        $abRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $blRepos->shouldReceive('budgeted')->andReturn('1')->atLeast()->once();
+        $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection)->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
+        $currencyRepos->shouldReceive('getEnabled')->atLeast()->once()->andReturn(new Collection([$this->getEuro()]));
+
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_budgets_index');
+        Amount::shouldReceive('formatAnything')->andReturn('123');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -216,38 +237,33 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     *
+     * @throws Exception
      */
     public function testIndexWithInvalidDate(string $range): void
     {
-        Log::info(sprintf('Now in testIndexWithInvalidDate(%s)', $range));
-        // mock stuff
-        $budget      = factory(Budget::class)->make();
-        $budgetLimit = factory(BudgetLimit::class)->make();
+        $budgetLimit = $this->getRandomBudgetLimit();
 
         // set budget limit to current month:
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
-        $budgetInfo              = [
-            $budget->id => [
-                'spent'      => '0',
-                'budgeted'   => '0',
-                'currentRep' => false,
-            ],
-        ];
+        $accountRepos            = $this->mock(AccountRepositoryInterface::class);
+        $repository              = $this->mock(BudgetRepositoryInterface::class);
+        $opsRepos                = $this->mock(OperationsRepositoryInterface::class);
+        $abRepos                 = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $blRepos                 = $this->mock(BudgetLimitRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(UserRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-
         $repository->shouldReceive('cleanupBudgets');
+
+        $this->mockDefaultSession();
+        Amount::shouldReceive('formatAnything')->andReturn('123');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -260,10 +276,17 @@ class IndexControllerTest extends TestCase
      */
     public function testReorder(): void
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $this->mockDefaultSession();
+
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $opsRepos   = $this->mock(OperationsRepositoryInterface::class);
+        $abRepos    = $this->mock(AvailableBudgetRepositoryInterface::class);
+        $blRepos    = $this->mock(BudgetLimitRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $data = [
-            'budgetIds' => [1,2],
-            'page' => 1,
+            'budgetIds' => [1, 2],
+            'page'      => 1,
         ];
 
         $repository->shouldReceive('cleanupBudgets')->atLeast()->once();

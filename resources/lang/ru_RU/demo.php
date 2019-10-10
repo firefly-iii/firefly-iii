@@ -2,22 +2,22 @@
 
 /**
  * demo.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -28,7 +28,7 @@ return [
     'index'                  => 'Добро пожаловать в <strong>Firefly III</strong>! На этой странице вы видите вашу финансовую ситуацию в общих чертах. Более подробная информация доступна на страницах &rarr; <a href=":asset">Активные счета</a> <a href=":budgets">Бюджет</a> и <a href=":reports">Отчёты</a>. Или просто внимательно оглядитесь и изучите всё вокруг.',
     'accounts-index'         => 'Основные счета - это ваши личные банковские счета. Счёта расходов - это счета, на которые вы тратите деньги, например, магазины и друзья. Счета доходов - это счета, с которых вы получаете деньги, например, ваша работа, правительство или другие источники дохода. Долги - это ваши дебиты и кредиты, такие как займы по кредитной карте или студенческие займы. На этой странице вы можете редактировать или удалять их.',
     'budgets-index'          => 'На этой странице вы видите все свои бюджеты. На верхней панели показана сумма, доступная в рамках бюджета. Бюджет можно настроить на любой период, щёлкнув сумму справа. Сумма, которую вы фактически потратили, показана на диаграмме внизу. Ещё ниже показаны в сравнении ваши фактически расходы и запланированный бюджет.',
-    'reports-index-start'    => 'Firefly III поддерживает несколько типов отчетов. Вы можете узнать про них, нажав на значок <i class="fa fa-question-circle"></i> в правом верхнем углу.',
+    'reports-index-start'    => 'Firefly III поддерживает несколько типов отчётов. Вы можете узнать про них, нажав на значок <i class="fa fa-question-circle"></i> в правом верхнем углу.',
     'reports-index-examples' => 'Обязательно ознакомьтесь с этими примерами: <a href=":one">a ежемесячный финансовый обзор</a>, <a href=":two">a годовой финансовый обзор</a> и <a href=":three">a обзор бюджета</a>.',
     'currencies-index'       => 'Firefly III поддерживает несколько валют. Хотя по умолчанию используется Евро, вы можете сделать основной валютой доллары США или любую другую валюту. Как вы видите, несколько валют уже есть в списке, но вы можете добавить любую другую, если это требуется. Обратите внимание, что выбор новой валюты по умолчанию не повлияет на уже существующие транзакции: Firefly III поддерживает одновременное использование нескольких валют.',
     'transactions-index'     => 'Эти расходы, доходы и переводы не очень интересны. Они были созданы автоматически.',

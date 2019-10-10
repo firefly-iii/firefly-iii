@@ -2,22 +2,22 @@
 
 /**
  * StageFinalHandler.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -67,18 +67,22 @@ class StageFinalHandler
                 // transaction data:
                 'transactions'       => [
                     [
-                        'currency_id'           => null,
-                        'currency_code'         => 'EUR',
-                        'description'           => null,
-                        'amount'                => random_int(500, 5000) / 100,
-                        'budget_id'             => null,
-                        'budget_name'           => null,
-                        'category_id'           => null,
-                        'category_name'         => null,
-                        'source_id'             => null,
-                        'source_name'           => 'Checking Account',
-                        'destination_id'        => null,
-                        'destination_name'      => 'Random expense account #' . random_int(1, 10000),
+                        'type'             => 'withdrawal',
+                        'date'             => Carbon::now()->format('Y-m-d'),
+                        'currency_id'      => null,
+                        'currency_code'    => 'EUR',
+                        'description'      => 'Some random description #' . random_int(1, 10000),
+                        'amount'           => random_int(500, 5000) / 100,
+                        'tags'             => [],
+                        'user'             => $this->importJob->user_id,
+                        'budget_id'        => null,
+                        'budget_name'      => null,
+                        'category_id'      => null,
+                        'category_name'    => null,
+                        'source_id'        => null,
+                        'source_name'      => 'Checking Account',
+                        'destination_id'   => null,
+                        'destination_name' => 'Random expense account #' . random_int(1, 10000),
                         'foreign_currency_id'   => null,
                         'foreign_currency_code' => null,
                         'foreign_amount'        => null,
@@ -112,9 +116,13 @@ class StageFinalHandler
             // transaction data:
             'transactions'       => [
                 [
+                    'type'                  => 'transfer',
+                    'user'                  => $this->importJob->user_id,
+                    'date'                  => '2017-02-28',
                     'currency_id'           => null,
                     'currency_code'         => 'EUR',
-                    'description'           => null,
+                    'tags'                  => [],
+                    'description'           => 'Saving money for February',
                     'amount'                => '140',
                     'budget_id'             => null,
                     'budget_name'           => null,

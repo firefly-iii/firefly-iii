@@ -1,22 +1,22 @@
 <?php
 /**
  * DeleteControllerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,17 +24,19 @@ declare(strict_types=1);
 namespace tests\Feature\Controllers\Rule;
 
 
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
  *
  * Class DeleteControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DeleteControllerTest extends TestCase
 {
@@ -44,7 +46,7 @@ class DeleteControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -54,13 +56,13 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('rules.delete', [1]));
@@ -74,10 +76,11 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(RuleRepositoryInterface::class);
         $repository->shouldReceive('destroy');
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['rules.delete.uri' => 'http://localhost']);
         $this->be($this->user());

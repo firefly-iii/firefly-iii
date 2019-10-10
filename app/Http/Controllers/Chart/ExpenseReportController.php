@@ -1,24 +1,24 @@
 <?php
 /**
  * ExpenseReportController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MoreThanThreeArgumentsInspection */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -49,6 +49,7 @@ class ExpenseReportController extends Controller
 
     /**
      * ExpenseReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -63,7 +64,7 @@ class ExpenseReportController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
@@ -71,14 +72,11 @@ class ExpenseReportController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
@@ -89,7 +87,7 @@ class ExpenseReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -97,44 +95,43 @@ class ExpenseReportController extends Controller
         $chartData    = [];
         $currentStart = clone $start;
         $combined     = $this->combineAccounts($expense);
-
         // make "all" set:
         $all = new Collection;
-        foreach ($combined as $name => $combi) {
-            $all = $all->merge($combi);
+        foreach ($combined as $name => $combination) {
+            $all = $all->merge($combination);
         }
 
         // prep chart data:
         /**
-         * @var string     $name
-         * @var Collection $combi
+         * @var string $name
+         * @var Collection $combination
          */
-        foreach ($combined as $name => $combi) {
+        foreach ($combined as $name => $combination) {
             // first is always expense account:
             /** @var Account $exp */
-            $exp                          = $combi->first();
+            $exp                          = $combination->first();
             $chartData[$exp->id . '-in']  = [
-                'label'   => $name . ' (' . strtolower((string)trans('firefly.income')) . ')',
+                'label'   => sprintf('%s (%s)', $name, strtolower((string)trans('firefly.income'))),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-out'] = [
-                'label'   => $name . ' (' . strtolower((string)trans('firefly.expenses')) . ')',
+                'label'   => sprintf('%s (%s)', $name, strtolower((string)trans('firefly.expenses'))),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
             $chartData[$exp->id . '-total-in']  = [
-                'label'   => $name . ' (' . strtolower((string)trans('firefly.sum_of_income')) . ')',
+                'label'   => sprintf('%s (%s)', $name, strtolower((string)trans('firefly.sum_of_income'))),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-total-out'] = [
-                'label'   => $name . ' (' . strtolower((string)trans('firefly.sum_of_expenses')) . ')',
+                'label'   => sprintf('%s (%s)', $name, strtolower((string)trans('firefly.sum_of_expenses'))),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
@@ -154,15 +151,15 @@ class ExpenseReportController extends Controller
             $income   = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
             $label    = $currentStart->formatLocalized($format);
 
-            foreach ($combined as $name => $combi) {
+            foreach ($combined as $name => $combination) {
                 // first is always expense account:
                 /** @var Account $exp */
-                $exp            = $combi->first();
+                $exp            = $combination->first();
                 $labelIn        = $exp->id . '-in';
                 $labelOut       = $exp->id . '-out';
                 $labelSumIn     = $exp->id . '-total-in';
                 $labelSumOut    = $exp->id . '-total-out';
-                $currentIncome  = $income[$name] ?? '0';
+                $currentIncome  = bcmul($income[$name] ?? '0', '-1');
                 $currentExpense = $expenses[$name] ?? '0';
 
                 // add to sum:
@@ -180,15 +177,16 @@ class ExpenseReportController extends Controller
             /** @var Carbon $currentStart */
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
+            $currentStart->startOfDay();
         }
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key];
+                $newSet[$key] = $chartData[$key]; // @codeCoverageIgnore
             }
         }
-        if (0 === \count($newSet)) {
+        if (0 === count($newSet)) {
             $newSet = $chartData; // @codeCoverageIgnore
         }
         $data = $this->generator->multiSet($newSet);

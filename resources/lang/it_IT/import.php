@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => 'Risolvi i possibili problemi con i file Rabobank',
     'specific_pres_name'              => 'CA finanziaria scelta dal Presidente',
     'specific_pres_descr'             => 'Risolvi i possibili problemi con i file da PC',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Risolve possibili problemi con file di Belfius',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Risolve possibili problemi con i file di ING Belgium',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configurazione di importazione (3/4) - Definisci il ruolo di ogni colonna',
     'job_config_roles_text'           => 'Ogni colonna nel tuo file CSV contiene determinati dati. Si prega di indicare il tipo di dati che l\'importatore dovrebbe aspettarsi. L\'opzione per "mappare" i dati significa che collegherete ogni voce trovata nella colonna con un valore nel vostro database. Una colonna spesso mappata è la colonna che contiene l\'IBAN del conto. Questo può essere facilmente abbinato all\'IBAN già presente nel tuo database.',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Indicatore di addebito/accredito specifico di Rabobank',
     'column_ing-debit-credit'         => 'Indicatore di debito/credito specifico di ING',
     'column_generic-debit-credit'     => 'Indicatore generico di debito/credito bancario',
-    'column_sepa-ct-id'               => 'ID end-to-end del bonifico SEPA',
-    'column_sepa-ct-op'               => 'Identificatore SEPA conto controparte',
-    'column_sepa-db'                  => 'Addebito diretto SEPA',
-    'column_sepa-cc'                  => 'Codice Compensazione SEPA',
-    'column_sepa-ci'                  => 'Identificativo Creditore SEPA',
-    'column_sepa-ep'                  => 'SEPA External Purpose',
-    'column_sepa-country'             => 'Codice Paese SEPA',
-    'column_sepa-batch-id'            => 'ID Batch SEPA',
+    'column_sepa_ct_id'               => 'Identificativo End-To-End SEPA',
+    'column_sepa_ct_op'               => 'Identificatore SEPA conto controparte',
+    'column_sepa_db'                  => 'Identificativo Mandato SEPA',
+    'column_sepa_cc'                  => 'Codice Compensazione SEPA',
+    'column_sepa_ci'                  => 'Identificativo Creditore SEPA',
+    'column_sepa_ep'                  => 'SEPA External Purpose',
+    'column_sepa_country'             => 'Codice Paese SEPA',
+    'column_sepa_batch_id'            => 'ID Batch SEPA',
     'column_tags-comma'               => 'Etichette (separate da virgola)',
     'column_tags-space'               => 'Etichette (separate con spazio)',
     'column_account-number'           => 'Conto attività (numero conto)',
     'column_opposing-number'          => 'Conto controparte (numero conto)',
     'column_note'                     => 'Note',
     'column_internal-reference'       => 'Riferimento interno',
+
+    // error message
+    'duplicate_row'                   => 'La riga #:row (":description") non può essere importato poiché è già esistente.',
 
 ];

@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'File caricato con successo ":name".',
     'must_exist'                     => 'L\'ID nel campo :attribute non esiste nel database.',
     'all_accounts_equal'             => 'Tutti i conti in questo campo devono essere uguali.',
+    'group_title_mandatory'          => 'Il titolo del gruppo è obbligatorio quando ci sono più di una transazione.',
+    'transaction_types_equal'        => 'Tutte le suddivisioni devono essere dello stesso tipo.',
+    'invalid_transaction_type'       => 'Tipo della transazione non valido.',
     'invalid_selection'              => 'La tua selezione non è valida.',
     'belongs_user'                   => 'Questo valore non è valido per questo campo.',
     'at_least_one_transaction'       => 'Hai bisogno di almeno una transazione.',
     'at_least_one_repetition'        => 'È necessaria almeno una ripetizione.',
     'require_repeat_until'           => 'Richiede un numero di ripetizioni o una data di fine (ripeti fino al), non entrambi.',
     'require_currency_info'          => 'Il contenuto di questo campo non è valido senza informazioni sulla valuta.',
+    'require_currency_amount'        => 'Il contenuto di questo campo non è valido senza le informazioni sull\'importo estero.',
     'equal_description'              => 'La descrizione della transazione non deve essere uguale alla descrizione globale.',
     'file_invalid_mime'              => 'Il file ":name" è di tipo ":mime" che non è accettato come nuovo caricamento.',
     'file_too_large'                 => 'Il file ":name" è troppo grande.',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute deve essere una stringa.',
     'url'                            => ':attribute il formato non è valido.',
     'timezone'                       => ':attribute deve essere una zona valida.',
-    '2fa_code'                       => 'Il campo :attribute non è valido.',
-    'dimensions'                     => ':attribute ha dimensioni di immagine non valide.',
-    'distinct'                       => ':attribute il campo ha un valore doppio.',
-    'file'                           => ':attribute deve essere un file.',
-    'in_array'                       => ':attribute il campo non esiste in :other.',
-    'present'                        => ':attribute il campo deve essere presente.',
-    'amount_zero'                    => 'L\'importo totale non può essere zero.',
-    'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
-    'secure_password'                => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
-    'valid_recurrence_rep_moment'    => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
-    'invalid_account_info'           => 'Informazione sul conto non valida.',
+    '2fa_code'                    => 'Il campo :attribute non è valido.',
+    'dimensions'                  => ':attribute ha dimensioni di immagine non valide.',
+    'distinct'                    => ':attribute il campo ha un valore doppio.',
+    'file'                        => ':attribute deve essere un file.',
+    'in_array'                    => ':attribute il campo non esiste in :other.',
+    'present'                     => ':attribute il campo deve essere presente.',
+    'amount_zero'                 => 'L\'importo totale non può essere zero.',
+    'current_target_amount'       => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
+    'unique_piggy_bank_for_user'  => 'Il nome del salvadanaio deve essere unico.',
+    'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
+    'valid_recurrence_rep_moment' => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
+    'invalid_account_info'        => 'Informazione sul conto non valida.',
     'attributes'                     => [
         'email'                   => 'indirizzo email',
         'description'             => 'descrizione',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'nome',
         'piggy_bank_id'           => 'ID salvadanaio',
         'targetamount'            => 'importo obiettivo',
-        'openingBalanceDate'      => 'data saldo di apertura',
-        'openingBalance'          => 'saldo di apertura',
+        'opening_balance_date'    => 'data saldo di apertura',
+        'opening_balance'         => 'saldo di apertura',
         'match'                   => 'abbinamento',
         'amount_min'              => 'importo minimo',
         'amount_max'              => 'importo massimo',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'trigger #4 della regola',
         'rule-trigger.5'          => 'trigger #5 della regola',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'withdrawal_source_bad_data'     => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'withdrawal_dest_need_data'      => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'withdrawal_dest_bad_data'       => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+
+    'deposit_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'deposit_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'deposit_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'deposit_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+
+    'transfer_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'transfer_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'transfer_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'transfer_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'need_id_in_edit'           => 'Ogni suddivisione deve avere un "transaction_journal_id" (un ID valido oppure 0).',
+
+    'ob_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'ob_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'ob_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+
+    'generic_invalid_source' => 'Non puoi utilizzare questo conto come conto di origine.',
+    'generic_invalid_destination' => 'Non puoi utilizzare questo conto come conto di destinazione.',
 ];

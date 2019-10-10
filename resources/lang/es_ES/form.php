@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Cuenta de origen',
     'journal_description'         => 'Descripción',
     'note'                        => 'Notas',
+    'store_new_transaction'       => 'Guardar nueva transacción',
     'split_journal'               => 'Dividir esta transacción',
     'split_journal_explanation'   => 'Dividir esta transacción en múltiples partes',
     'currency'                    => 'Divisa',
     'account_id'                  => 'Cuenta',
     'budget_id'                   => 'Presupuesto',
-    'openingBalance'              => 'Saldo inicial',
+    'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo de etiqueta',
     'tag_position'                => 'Etiquetar ubicación',
-    'virtualBalance'              => 'Saldo virtual',
+    'virtual_balance'             => 'Saldo virtual',
     'targetamount'                => 'Cantidad objetivo',
-    'accountRole'                 => 'Tipo de cuenta',
-    'openingBalanceDate'          => 'Fecha del saldo inicial',
-    'ccType'                      => 'Plan de pagos con tarjeta de crédito',
-    'ccMonthlyPaymentDate'        => 'Fecha de pago mensual de la tarjeta de crédito',
+    'account_role'                => 'Rol de cuenta',
+    'opening_balance_date'        => 'Fecha del saldo inicial',
+    'cc_type'                     => 'Plan de pagos con tarjeta de crédito',
+    'cc_monthly_payment_date'     => 'Fecha de pago mensual de la tarjeta de crédito',
     'piggy_bank_id'               => 'Hucha',
     'returnHere'                  => 'Volver aquí',
     'returnHereExplanation'       => 'Después de guardar, vuelve aquí para crear otro.',
@@ -118,16 +119,16 @@ return [
     'symbol'                      => 'Símbolo',
     'code'                        => 'Código',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Número de cuenta',
+    'account_number'              => 'Número de cuenta',
     'creditCardNumber'            => 'Número de la tarjeta de crédito',
     'has_headers'                 => 'Encabezados',
     'date_format'                 => 'Formato de fecha',
     'specifix'                    => 'Banco- o archivo de soluciones especificas',
     'attachments[]'               => 'Adjuntos',
-    'store_new_withdrawal'        => 'Guardar rueva retirada de efectivo',
+    'store_new_withdrawal'        => 'Guardar nuevo retiro',
     'store_new_deposit'           => 'Guardar nuevo depósito',
     'store_new_transfer'          => 'Guardar nueva transferencia',
-    'add_new_withdrawal'          => 'Añadir rueva retirada de efectivo',
+    'add_new_withdrawal'          => 'Añadir un nuevo retiro',
     'add_new_deposit'             => 'Añadir nuevo depósito',
     'add_new_transfer'            => 'Añadir nueva transferencia',
     'title'                       => 'Título',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Detener el procesamiento',
     'start_date'                  => 'Inicio del rango',
     'end_date'                    => 'Final del rango',
-    'export_start_range'          => 'Inicio del rango de exportación',
-    'export_end_range'            => 'Fin del rango de exportación',
-    'export_format'               => 'Formato del archivo',
     'include_attachments'         => 'Incluir archivos adjuntos subidos',
     'include_old_uploads'         => 'Incluir datos importados',
-    'accounts'                    => 'Exportar transacciones de estas cuentas',
     'delete_account'              => 'Borrar cuenta ":name"',
     'delete_bill'                 => 'Eliminar factura ":name"',
     'delete_budget'               => 'Eliminar presupuesto ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Calendario',
     'weekend'                 => 'Fin de semana',
     'client_secret'           => 'Secreto del cliente',
+
+    'withdrawal_destination_id' => 'Cuenta de destino',
+    'deposit_source_id'         => 'Cuenta de origen',
+    'expected_on'               => 'Esperado para',
+    'paid'                      => 'Pagado',
 
 ];

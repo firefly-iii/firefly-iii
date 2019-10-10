@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => 'Текущий баланс',
     'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
+    'percentage'              => 'процентов',
+    'next_due'                => 'Следующий срок',
+    'transaction_type'        => 'Тип',
     'lastActivity'            => 'Последняя активность',
     'balanceDiff'             => 'Разность баланса',
     'matchesOn'               => 'Совпадает на',
+    'other_meta_data'         => 'Другие метаданные',
     'account_type'            => 'Тип профиля',
     'created_at'              => 'Создан',
     'account'                 => 'Счёт',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => 'Всего вложений',
     'bills_count'             => 'Всего счетов к оплате',
     'categories_count'        => 'Всего категорий',
-    'export_jobs_count'       => 'Задачи по экспорту',
     'import_jobs_count'       => 'Задачи по импорту',
     'budget_count'            => 'Всего категорий бюджета',
     'rule_and_groups_count'   => 'Всего правил и групп правил',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => 'Счёт (Spectre)',
     'account_on_ynab'         => 'Счёт (YNAB)',
     'do_import'               => 'Импортировать с этого счёта',
-    'sepa-ct-id'              => 'Идентификатор SEPA end-to-end',
-    'sepa-ct-op'              => 'Идентификатор учетной записи SEPA',
-    'sepa-db'                 => 'Идентификатор SEPA Mandate',
-    'sepa-country'            => 'Страна SEPA',
-    'sepa-cc'                 => 'Код очистки SEPA',
-    'sepa-ep'                 => 'Внешняя цель SEPA',
-    'sepa-ci'                 => 'Идентификатор кредитора SEPA',
-    'sepa-batch-id'           => 'SEPA Batch ID',
+    'sepa_ct_id'              => 'Идентификатор SEPA end-to-end',
+    'sepa_ct_op'              => 'Идентификатор учетной записи SEPA',
+    'sepa_db'                 => 'Идентификатор SEPA Mandate',
+    'sepa_country'            => 'Страна SEPA',
+    'sepa_cc'                 => 'Код очистки SEPA',
+    'sepa_ep'                 => 'Внешняя цель SEPA',
+    'sepa_ci'                 => 'Идентификатор кредитора SEPA',
+    'sepa_batch_id'           => 'SEPA Batch ID',
     'external_id'             => 'Внешний ID',
     'account_at_bunq'         => 'Счёт с bunq',
     'file_name'               => 'Имя файла',

@@ -1,22 +1,22 @@
 <?php
 /**
  * ValidRecurrenceRepetitionValue.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class ValidRecurrenceRepetitionValue
+ * @codeCoverageIgnore
  */
 class ValidRecurrenceRepetitionValue implements Rule
 {
@@ -52,8 +53,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function passes($attribute, $value): bool
     {
@@ -103,12 +103,11 @@ class ValidRecurrenceRepetitionValue implements Rule
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function validateNdom(string $value): bool
     {
         $parameters = explode(',', substr($value, 5));
-        if (2 !== \count($parameters)) {
+        if (2 !== count($parameters)) {
             return false;
         }
         $nthDay    = (int)($parameters[0] ?? 0.0);

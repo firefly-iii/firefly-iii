@@ -1,22 +1,22 @@
 <?php
 /**
  * MonthReportGenerator.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -52,17 +52,17 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function generate(): string
     {
         $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $expenseIds      = implode(',', $this->expense->pluck('id')->toArray());
+        $doubleIds      = implode(',', $this->expense->pluck('id')->toArray());
         $reportType      = 'account';
         $preferredPeriod = $this->preferredPeriod();
         try {
-            $result = view(
-                'reports.account.report',
-                compact('accountIds', 'reportType', 'expenseIds', 'preferredPeriod')
-            )->with('start', $this->start)->with('end', $this->end)->render();
+            $result = view('reports.double.report', compact('accountIds', 'reportType', 'doubleIds', 'preferredPeriod'))
+                ->with('start', $this->start)->with('end', $this->end)
+                                             ->with('doubles', $this->expense)
+                                             ->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;

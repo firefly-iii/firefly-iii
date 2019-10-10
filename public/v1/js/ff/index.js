@@ -1,21 +1,21 @@
 /*
  * index.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /** global: accountFrontpageUri, today, piggyInfoUri, token, billCount, accountExpenseUri, accountRevenueUri */
@@ -106,26 +106,42 @@ function getBalanceBox() {
             // show balance in "sums", show single entry in list.
             for (x in data.sums) {
                 $('#box-balance-sums').html(data.sums[x]);
-                $('#box-balance-list').html(data.incomes[x] + ' / ' + data.expenses[x]);
+                $('#box-balance-list').html(data.incomes[x] + ' + ' + data.expenses[x]);
             }
             return;
         }
         // do not use "sums", only use list.
         $('#box-balance-progress').remove();
         var expense, string, sum, income, current;
+
+        // first loop, echo only "preferred".
+        for (x in data.sums) {
+            current = $('#box-balance-list').html();
+            sum = data.sums[x];
+            expense = data.expenses[x];
+            income = data.incomes[x];
+            string = income + ' + ' + expense + ': ' + sum;
+            if (data.preferred == x) {
+                $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
+            }
+        }
+        // then list the others (only 1 space)
+
         var count = 0;
         for (x in data.sums) {
-            if (count > 1) {
+            if (count > 2) {
                 return;
             }
             current = $('#box-balance-list').html();
             sum = data.sums[x];
             expense = data.expenses[x];
             income = data.incomes[x];
-            string = income + ' / ' + expense + ': ' + sum;
-
-            $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
+            string = income + ' + ' + expense + ': ' + sum;
+            if (data.preferred != x) {
+                $('#box-balance-list').html(current + '<span title="' + string + '">' + string + '</span>' + '<br>');
+            }
             count++;
+
         }
     });
 }

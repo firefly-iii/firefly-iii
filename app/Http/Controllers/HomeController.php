@@ -1,30 +1,31 @@
 <?php
 /**
  * HomeController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -42,6 +43,7 @@ class HomeController extends Controller
 {
     /**
      * HomeController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -55,8 +57,8 @@ class HomeController extends Controller
      * Change index date range.
      *
      * @param Request $request
-     *
      * @return JsonResponse
+     * @throws Exception
      */
     public function dateRange(Request $request): JsonResponse
     {
@@ -96,14 +98,13 @@ class HomeController extends Controller
      * Show index.
      *
      * @param AccountRepositoryInterface $repository
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws Exception
      */
     public function index(AccountRepositoryInterface $repository)
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
-
         Log::channel('audit')->info('User visits homepage.');
 
         if (0 === $count) {
@@ -125,11 +126,11 @@ class HomeController extends Controller
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
-
         foreach ($accounts as $account) {
-            $collector = app(TransactionCollectorInterface::class);
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set            = $collector->getTransactions();
+            $set            = $collector->getGroups();
             $transactions[] = [$set, $account];
         }
 

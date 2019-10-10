@@ -2,7 +2,6 @@
 
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
-
 # get qemu-arm-static binary
 mkdir tmp
 pushd tmp && \

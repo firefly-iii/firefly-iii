@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => 'Balance actual',
     'linked_to_rules'         => 'Reglas asociadas',
     'active'                  => '¿Está Activo?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
+    'transaction_type'        => 'Tipo',
     'lastActivity'            => 'Actividad más reciente',
     'balanceDiff'             => 'Diferencia de saldo',
     'matchesOn'               => 'Encontrado en',
+    'other_meta_data'         => 'Other meta data',
     'account_type'            => 'Tipo de cuenta',
     'created_at'              => 'Fecha de creación',
     'account'                 => 'Cuenta',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => 'Núm. de datos adjuntos',
     'bills_count'             => 'Número de facturas',
     'categories_count'        => 'Número de categorías',
-    'export_jobs_count'       => 'Número de operaciones de exportación',
     'import_jobs_count'       => 'Número de operaciones de importación',
     'budget_count'            => 'Número de presupuestos',
     'rule_and_groups_count'   => 'Número de reglas y grupos de reglas',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => 'Cuenta (espectro)',
     'account_on_ynab'         => 'Cuenta (YNAB)',
     'do_import'               => 'Importar desde esta cuenta',
-    'sepa-ct-id'              => 'Identificador de extremo a extremo SEPA',
-    'sepa-ct-op'              => 'Identificador de cuenta opuesta SEPA',
-    'sepa-db'                 => 'Identificador de mandato SEPA',
-    'sepa-country'            => 'País SEPA',
-    'sepa-cc'                 => 'Código de limpieza SEPA',
-    'sepa-ep'                 => 'Propósito externo SEPA',
-    'sepa-ci'                 => 'Identificador de acreedor SEPA',
-    'sepa-batch-id'           => 'ID de lote SEPA',
+    'sepa_ct_id'              => 'Identificador de extremo a extremo SEPA',
+    'sepa_ct_op'              => 'Identificador de cuenta opuesta SEPA',
+    'sepa_db'                 => 'Identificador de mandato SEPA',
+    'sepa_country'            => 'País SEPA',
+    'sepa_cc'                 => 'Código de limpieza SEPA',
+    'sepa_ep'                 => 'Propósito externo SEPA',
+    'sepa_ci'                 => 'Identificador de acreedor SEPA',
+    'sepa_batch_id'           => 'ID de lote SEPA',
     'external_id'             => 'ID Externo',
     'account_at_bunq'         => 'Cuenta con bunq',
     'file_name'               => 'Nombre de fichero',

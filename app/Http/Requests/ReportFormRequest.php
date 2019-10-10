@@ -1,22 +1,22 @@
 <?php
 /**
  * ReportFormRequest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -60,7 +60,7 @@ class ReportFormRequest extends Request
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('accounts');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
@@ -83,7 +83,7 @@ class ReportFormRequest extends Request
         $repository = app(BudgetRepositoryInterface::class);
         $set        = $this->get('budget');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $budgetId) {
                 $budget = $repository->findNull((int)$budgetId);
                 if (null !== $budget) {
@@ -106,7 +106,7 @@ class ReportFormRequest extends Request
         $repository = app(CategoryRepositoryInterface::class);
         $set        = $this->get('category');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $categoryId) {
                 $category = $repository->findNull((int)$categoryId);
                 if (null !== $category) {
@@ -130,7 +130,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
                 // @codeCoverageIgnoreStart
@@ -147,17 +147,17 @@ class ReportFormRequest extends Request
     }
 
     /**
-     * Validate list of expense accounts.
+     * Validate list of accounts which exist twice in system.
      *
      * @return Collection
      */
-    public function getExpenseList(): Collection
+    public function getDoubleList(): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $set        = $this->get('exp_rev');
+        $set        = $this->get('double');
         $collection = new Collection;
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->findNull((int)$accountId);
                 if (null !== $account) {
@@ -181,7 +181,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
                 // @codeCoverageIgnoreStart
@@ -208,7 +208,7 @@ class ReportFormRequest extends Request
         $set        = $this->get('tag');
         $collection = new Collection;
         Log::debug('Set is:', $set ?? []);
-        if (\is_array($set)) {
+        if (is_array($set)) {
             foreach ($set as $tagTag) {
                 Log::debug(sprintf('Now searching for "%s"', $tagTag));
                 $tag = $repository->findByTag($tagTag);
@@ -235,7 +235,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget,tag,account',
+            'report_type' => 'in:audit,default,category,budget,tag,double',
         ];
     }
 }

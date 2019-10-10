@@ -1,21 +1,21 @@
 /*
  * edit.js
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /** global: Modernizr, currencies */
@@ -183,39 +183,55 @@ function initializeButtons() {
 function updateFormFields() {
 
     if (transactionType === 'withdrawal') {
-        // hide source account name:
-        $('#source_name_holder').hide();
+        // hide source ID for deposits
+        $('#deposit_source_id_holder').hide();
 
-        // show source account ID:
+        // show source ID for other transaction types
         $('#source_id_holder').show();
 
-        // show destination name:
-        $('#destination_name_holder').show();
+        // show destination ID for withdrawal:
+        $('#withdrawal_destination_id_holder').show();
 
-        // hide destination ID:
+        // hide destination ID for other types
         $('#destination_id_holder').hide();
 
         // show budget
         $('#budget_id_holder').show();
-
-        // hide piggy bank:
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'deposit') {
-        $('#source_name_holder').show();
+        // show source ID for deposits
+        $('#deposit_source_id_holder').show();
+
+        // hide source ID for other transaction types
         $('#source_id_holder').hide();
-        $('#destination_name_holder').hide();
+
+        // hide destination ID for withdrawal:
+        $('#withdrawal_destination_id_holder').hide();
+
+        // show destination ID for other types:
         $('#destination_id_holder').show();
+
+        // the rest
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'transfer') {
-        $('#source_name_holder').hide();
+        // hide source ID for deposits
+        $('#deposit_source_id_holder').hide();
+
+        // show source ID for others
         $('#source_id_holder').show();
-        $('#destination_name_holder').hide();
+
+        // hide destination ID for withdrawal
+        $('#withdrawal_destination_id_holder').hide();
+
+        // show destination ID for others
         $('#destination_id_holder').show();
+
+        // the rest
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').show();
     }

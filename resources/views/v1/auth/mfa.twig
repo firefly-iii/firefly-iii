@@ -1,0 +1,40 @@
+{% extends "./layout/guest" %}
+
+{% block content %}
+    {% if session_has('error') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <strong>{{ 'flash_error'|_ }}</strong> {{ session('error') }}
+        </div>
+    {% endif %}
+
+    <div class="login-box-body">
+        <p class="login-box-msg">{{ trans('firefly.two_factor_welcome', {user: user.email}) }}</p>
+        <p class="login-box-msg">{{ 'two_factor_enter_code'|_ }}</p>
+
+        <form action="{{ route('two-factor.submit') }}" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <div class="form-group has-feedback">
+                <input type="text" name="one_time_password" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}"/>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-6">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'authenticate'|_ }}</button>
+                </div>
+            </div>
+        </form>
+
+
+
+
+        <a href="{{ route('two-factor.lost') }}">{{ 'two_factor_forgot'|_ }}</a>
+    </div>
+
+
+
+
+{% endblock %}

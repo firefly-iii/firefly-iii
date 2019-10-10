@@ -1,28 +1,27 @@
 <?php
 /**
  * AttachmentRepository.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Carbon\Carbon;
 use Crypt;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -31,6 +30,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +38,7 @@ use Log;
 
 /**
  * Class AttachmentRepository.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -51,7 +51,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -91,40 +91,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param int $attachmentId
-     *
-     * @return Attachment|null
-     */
-    public function findWithoutUser(int $attachmentId): ?Attachment
-    {
-
-        return Attachment::find($attachmentId);
-    }
-
-    /**
      * @return Collection
      */
     public function get(): Collection
     {
         return $this->user->attachments()->get();
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getBetween(Carbon $start, Carbon $end): Collection
-    {
-        $query = $this->user
-            ->attachments()
-            ->leftJoin('transaction_journals', 'attachments.attachable_id', '=', 'transaction_journals.id')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->get(['attachments.*']);
-
-        return $query;
     }
 
     /**
@@ -135,25 +106,27 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
-        $disk    = Storage::disk('upload');
-        $file    = $attachment->fileName();
-        $content = '';
+        $disk               = Storage::disk('upload');
+        $file               = $attachment->fileName();
+        $unencryptedContent = '';
 
         if ($disk->exists($file)) {
+            $encryptedContent = '';
             try {
-                $content = Crypt::decrypt($disk->get($file));
+                $encryptedContent = $disk->get($file);
             } catch (FileNotFoundException $e) {
-                Log::debug(sprintf('File not found: %e', $e->getMessage()));
-                $content = false;
+                Log::error($e->getMessage());
+            }
+
+            try {
+                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
+            } catch (DecryptException $e) {
+                Log::debug(sprintf('Could not decrypt: %e', $e->getMessage()));
+                $unencryptedContent = $encryptedContent;
             }
         }
-        if (\is_bool($content)) {
-            Log::error(sprintf('Attachment #%d may be corrupted: the content could not be decrypted.', $attachment->id));
 
-            return '';
-        }
-
-        return $content;
+        return $unencryptedContent;
     }
 
     /**

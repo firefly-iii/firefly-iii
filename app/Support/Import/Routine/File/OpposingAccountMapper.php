@@ -1,22 +1,22 @@
 <?php
 /**
  * OpposingAccountMapper.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -45,11 +45,11 @@ class OpposingAccountMapper
      * @param array    $data
      *
      * @return Account
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function map(?int $accountId, string $amount, array $data): Account
     {
-        Log::debug('Now in OpposingAccountMapper::map()');
+        Log::debug(sprintf('Now in OpposingAccountMapper::map(%d, "%s")', $accountId, $amount), $data);
         // default assumption is we're looking for an expense account.
         $expectedType = AccountType::EXPENSE;
         $result       = null;
@@ -60,15 +60,19 @@ class OpposingAccountMapper
             Log::debug(sprintf('Because amount is %s, will instead search for accounts of type %s', $amount, $expectedType));
         }
 
+        // append expected types with liability types:
+        $expectedTypes = [$expectedType, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+
+
         if ((int)$accountId > 0) {
             // find any account with this ID:
             $result = $this->repository->findNull($accountId);
-            if (null !== $result && ($result->accountType->type === $expectedType || $result->accountType->type === AccountType::ASSET)) {
+            if (null !== $result && (in_array($result->accountType->type, $expectedTypes, true) || $result->accountType->type === AccountType::ASSET)) {
                 Log::debug(sprintf('Found account "%s" (%s) based on given ID %d. Return it!', $result->name, $result->accountType->type, $accountId));
 
                 return $result;
             }
-            if (null !== $result && $result->accountType->type !== $expectedType) {
+            if (null !== $result && !in_array($result->accountType->type, $expectedTypes, true)) {
                 Log::warning(
                     sprintf(
                         'Found account "%s" (%s) based on given ID %d, but need a %s. Return nothing.', $result->name, $result->accountType->type, $accountId,
@@ -90,7 +94,7 @@ class OpposingAccountMapper
         }
 
         // first search for $expectedType, then find asset:
-        $searchTypes = [$expectedType, AccountType::ASSET];
+        $searchTypes = [$expectedType, AccountType::ASSET, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN];
         foreach ($searchTypes as $type) {
             // find by (respectively):
             // IBAN, accountNumber, name,
@@ -114,9 +118,9 @@ class OpposingAccountMapper
         $creation = [
             'name'            => $data['name'] ?? '(no name)',
             'iban'            => $data['iban'] ?? null,
-            'accountNumber'   => $data['number'] ?? null,
+            'account_number'  => $data['number'] ?? null,
             'account_type_id' => null,
-            'accountType'     => $expectedType,
+            'account_type'    => $expectedType,
             'active'          => true,
             'BIC'             => $data['bic'] ?? null,
         ];

@@ -2,22 +2,22 @@
 
 /**
  * BillRequest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -29,6 +29,10 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class BillRequest
+ *
+ * TODO AFTER 4.8,0: split this into two request classes.
+ *
+ * @codeCoverageIgnore
  */
 class BillRequest extends Request
 {
@@ -66,7 +70,7 @@ class BillRequest extends Request
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
             'active'        => $active,
-            'notes'         => $this->string('notes'),
+            'notes'         => $this->nlString('notes'),
         ];
 
         return $data;
@@ -76,6 +80,7 @@ class BillRequest extends Request
      * The rules that the incoming request must be matched against.
      *
      * @return array
+     *
      */
     public function rules(): array
     {
@@ -88,7 +93,6 @@ class BillRequest extends Request
             'date'          => 'required|date',
             'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
             'skip'          => 'between:0,31',
-            'automatch'     => [new IsBoolean],
             'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',
         ];
@@ -108,14 +112,14 @@ class BillRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator) {
                 $data = $validator->getData();
                 $min  = (float)($data['amount_min'] ?? 0);
                 $max  = (float)($data['amount_max'] ?? 0);

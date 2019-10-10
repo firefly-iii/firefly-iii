@@ -1,22 +1,22 @@
 <?php
 /**
  * NoCategoryController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -25,8 +25,7 @@ namespace FireflyIII\Http\Controllers\Category;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -47,10 +46,12 @@ class NoCategoryController extends Controller
 
     /**
      * CategoryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
+        app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -66,7 +67,7 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
+     * @param Request $request
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -90,15 +91,16 @@ class NoCategoryController extends Controller
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('categories.no-category'));
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('categories.no-category'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 
 
@@ -125,14 +127,14 @@ class NoCategoryController extends Controller
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('categories.no-category.all'));
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('categories.no-category.all'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 }

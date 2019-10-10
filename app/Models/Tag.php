@@ -1,22 +1,22 @@
 <?php
 /**
  * Tag.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -46,6 +46,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string         tagMode
  * @property Carbon         created_at
  * @property Carbon         updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property-read \FireflyIII\User $user
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTagMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withoutTrashed()
+ * @mixin \Eloquent
  */
 class Tag extends Model
 {

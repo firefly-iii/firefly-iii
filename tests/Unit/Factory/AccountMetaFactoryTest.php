@@ -1,22 +1,22 @@
 <?php
 /**
  * AccountMetaFactoryTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -25,24 +25,26 @@ namespace Tests\Unit\Factory;
 
 
 use FireflyIII\Factory\AccountMetaFactory;
+use FireflyIII\Models\AccountMeta;
 use Log;
 use Tests\TestCase;
 
 /**
  *
  * Class AccountMetaFactoryTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountMetaFactoryTest extends TestCase
 {
-
-
     /**
      *
      */
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,16 +52,17 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCreate(): void
     {
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
             'name'       => 'Some name',
             'data'       => 'Some value',
         ];
 
-        $factory = new AccountMetaFactory;
+        $factory = app(AccountMetaFactory::class);
         $result  = $factory->create($data);
         $this->assertEquals($data['name'], $result->name);
+        $result->forceDelete();
     }
 
     /**
@@ -67,19 +70,20 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudDelete(): void
     {
-        $factory = new AccountMetaFactory;
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
-            'name'       => 'Some name ' . random_int(1, 100000),
+            'name'       => sprintf('Some name %d', $this->randomInt()),
             'data'       => 'Some value',
         ];
 
-        $factory->create($data);
+        $new = $factory->create($data);
 
         // update existing one
         $result = $factory->crud($account, $data['name'], '');
         $this->assertNull($result);
+        $this->assertCount(0, AccountMeta::where('id', $new->id)->get());
     }
 
     /**
@@ -87,11 +91,11 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudExisting(): void
     {
-        $factory = new AccountMetaFactory;
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,
-            'name'       => 'Some name ' . random_int(1, 100000),
+            'name'       => sprintf('Some name %d', $this->randomInt()),
             'data'       => 'Some value',
         ];
 
@@ -103,7 +107,6 @@ class AccountMetaFactoryTest extends TestCase
         $this->assertEquals($result->account_id, $account->id);
         $this->assertEquals($existing->name, $result->name);
         $this->assertEquals('Some NEW value', $result->data);
-
     }
 
     /**
@@ -111,9 +114,9 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCrudNew(): void
     {
-        $account = $this->user()->accounts()->inRandomOrder()->first();
-        $factory = new AccountMetaFactory;
-        $result  = $factory->crud($account, 'random name ' . random_int(1, 100000), 'Some value');
+        $factory = app(AccountMetaFactory::class);
+        $account = $this->getRandomAsset();
+        $result  = $factory->crud($account, 'random name ' . $this->randomInt(), 'Some value');
         $this->assertNotNull($result);
         $this->assertEquals($result->account_id, $account->id);
 

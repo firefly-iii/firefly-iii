@@ -1,22 +1,22 @@
 <?php
 /**
  * ConfigureMappingHandler.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -67,7 +67,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
         $specifics      = $config['specifics'] ?? [];
         $names          = array_keys($specifics);
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class = config(sprintf('csv.import_specifics.%s', $name));
@@ -92,7 +92,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         $config = $this->importJob->configuration;
 
-        if (isset($data['mapping']) && \is_array($data['mapping'])) {
+        if (isset($data['mapping']) && is_array($data['mapping'])) {
             foreach ($data['mapping'] as $index => $array) {
                 $config['column-mapping-config'][$index] = [];
                 foreach ($array as $value => $mapId) {
@@ -272,7 +272,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
     {
@@ -311,8 +311,8 @@ class ConfigureMappingHandler implements FileConfigurationInterface
             $columnConfig[$columnIndex]['values'] = array_unique($columnConfig[$columnIndex]['values']);
             asort($columnConfig[$columnIndex]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (0 === \count($columnConfig[$columnIndex]['values'])) {
-                unset($columnConfig[$columnIndex]);
+            if (0 === count($columnConfig[$columnIndex]['values'])) {
+                unset($columnConfig[$columnIndex]); // @codeCoverageIgnore
             }
         }
 
@@ -331,7 +331,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         /** @var array $validColumns */
         $validColumns = array_keys(config('csv.import_roles'));
-        if (!\in_array($name, $validColumns, true)) {
+        if (!in_array($name, $validColumns, true)) {
             $name = '_ignore';
         }
 

@@ -1,22 +1,22 @@
 <?php
 /**
  * CreateControllerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -39,7 +37,11 @@ use Tests\TestCase;
 
 /**
  *
- * Class CreateControllerTest
+ * Class CreateControllerTest.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateControllerTest extends TestCase
 {
@@ -49,7 +51,7 @@ class CreateControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -59,15 +61,18 @@ class CreateControllerTest extends TestCase
     public function testCreate(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
+        // mock default calls
+        $this->mockDefaultSession();
+        $this->mockIntroPreference('shown_demo_accounts_create_asset');
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -89,25 +94,33 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
 
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
+
+        $repository->shouldReceive('store')->once()->andReturn($asset);
+
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // change the preference:
-        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
-        $this->session(['accounts.create.uri' => 'http://localhost']);
+        $this->session(['accounts.create.uri' => 'http://localhost/x']);
         $this->be($this->user());
         $data = [
-            'name' => 'new account ' . random_int(1000, 9999),
-            'what' => 'asset',
+            'name'       => 'new account ' . $this->randomInt(),
+            'objectType' => 'asset',
         ];
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+        $response->assertRedirect('http://localhost/x');
     }
 
     /**
@@ -118,23 +131,37 @@ class CreateControllerTest extends TestCase
     public function testStoreAnother(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
 
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('store')->once()->andReturn($asset);
+
+        // change the preference:
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
+
+
+        // mock default session stuff
+        $this->mockDefaultSession();
+
+
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'new account ' . random_int(1000, 9999),
-            'what'           => 'asset',
+            'name'           => 'new account ' . $this->randomInt(),
+            'objectType'     => 'asset',
             'create_another' => 1,
         ];
+
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+        $response->assertRedirect('http://localhost/accounts/create/asset');
     }
 
     /**
@@ -145,23 +172,28 @@ class CreateControllerTest extends TestCase
     public function testStoreLiability(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $liability  = $this->getRandomLoan();
+        $loan       = AccountType::where('type', AccountType::LOAN)->first();
+        $repository->shouldReceive('store')->once()->andReturn($liability);
 
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // change the preference:
-        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'              => 'new liability account ' . random_int(1000, 9999),
-            'what'              => 'liabilities',
-            'liability_type_id' => AccountType::where('type', AccountType::LOAN)->first()->id,
-            'openingBalance'    => '100',
-            'openingBalanceDate' => '2018-01-01',
+            'name'                 => 'new liability account ' . $this->randomInt(),
+            'objectType'           => 'liabilities',
+            'liability_type_id'    => $loan->id,
+            'opening_balance'      => '-100',
+            'opening_balance_date' => '2018-01-01',
         ];
 
         $response = $this->post(route('accounts.store', ['liabilities']), $data);

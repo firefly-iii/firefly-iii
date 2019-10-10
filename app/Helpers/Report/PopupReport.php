@@ -1,33 +1,33 @@
 <?php
 /**
  * PopupReport.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -45,63 +45,100 @@ class PopupReport implements PopupReportInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
     /**
-     * Collect the tranactions for one account and one budget.
+     * Collect the transactions for one account and one budget.
      *
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function balanceForBudget(Budget $budget, Account $account, array $attributes): Collection
+    public function balanceForBudget(Budget $budget, Account $account, array $attributes): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
-     * Collect the tranactions for one account and no budget.
+     * Collect the transactions for one account and no budget.
      *
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function balanceForNoBudget(Account $account, array $attributes): Collection
+    public function balanceForNoBudget(Account $account, array $attributes): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        // filter by currency, if set.
+        $currencyId = $attributes['currencyId'] ?? null;
+        $currency   = null;
+        if (null !== $currencyId) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos    = app(CurrencyRepositoryInterface::class);
+            $currency = $repos->find((int)$currencyId);
+        }
+
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setTypes([TransactionType::WITHDRAWAL])
+            ->withAccountInformation()
+            ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withoutBudget();
 
-        return $collector->getTransactions();
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
+
+        return $collector->getExtractedJournals();
     }
 
     /**
-     * Collect the tranactions for a budget.
+     * Collect the transactions for a budget.
      *
      * @param Budget $budget
      * @param array  $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byBudget(Budget $budget, array $attributes): Collection
+    public function byBudget(Budget $budget, array $attributes): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        // filter by currency, if set.
+        $currencyId = $attributes['currencyId'] ?? null;
+        $currency   = null;
+        if (null !== $currencyId) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos    = app(CurrencyRepositoryInterface::class);
+            $currency = $repos->find((int)$currencyId);
+        }
 
-        $collector->setAccounts($attributes['accounts'])->setRange($attributes['startDate'], $attributes['endDate']);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($attributes['accounts'])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->setRange($attributes['startDate'], $attributes['endDate']);
+
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
 
         if (null === $budget->id) {
             $collector->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
@@ -110,26 +147,50 @@ class PopupReport implements PopupReportInterface
             $collector->setBudget($budget);
         }
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
      * Collect journals by a category.
      *
-     * @param Category $category
+     * @param Category|null $category
      * @param array    $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byCategory(Category $category, array $attributes): Collection
+    public function byCategory(?Category $category, array $attributes): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($attributes['accounts'])->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setRange($attributes['startDate'], $attributes['endDate'])->withOpposingAccount()
-                  ->setCategory($category);
+        // filter by currency, if set.
+        $currencyId = $attributes['currencyId'] ?? null;
+        $currency   = null;
+        if (null !== $currencyId) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos    = app(CurrencyRepositoryInterface::class);
+            $currency = $repos->find((int)$currencyId);
+        }
 
-        return $collector->getTransactions();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($attributes['accounts'])
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation();
+
+        if(null!== $category) {
+            $collector->setCategory($category);
+        }
+        if(null === $category) {
+            $collector->withoutCategory();
+        }
+
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
+
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -138,35 +199,38 @@ class PopupReport implements PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byExpenses(Account $account, array $attributes): Collection
+    public function byExpenses(Account $account, array $attributes): array
     {
+        // filter by currency, if set.
+        $currencyId = $attributes['currencyId'] ?? null;
+        $currency   = null;
+        if (null !== $currencyId) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos    = app(CurrencyRepositoryInterface::class);
+            $currency = $repos->find((int)$currencyId);
+        }
+
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
+        $collector->setAccounts(new Collection([$account]))
+                  ->setRange($attributes['startDate'], $attributes['endDate'])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
-        $transactions = $collector->getTransactions();
 
-        $report = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
 
-        // filter for transfers and withdrawals TO the given $account
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) use ($report, $repository) {
-                // get the destinations:
-                $sources = $repository->getJournalSourceAccounts($transaction->transactionJournal)->pluck('id')->toArray();
-
-                // do these intersect with the current list?
-                return !empty(array_intersect($report, $sources));
-            }
-        );
-
-        return $transactions;
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -175,32 +239,25 @@ class PopupReport implements PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byIncome(Account $account, array $attributes): Collection
+    public function byIncome(Account $account, array $attributes): array
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
-                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $transactions = $collector->getTransactions();
-        $report       = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setSourceAccounts(new Collection([$account]))
+            ->setDestinationAccounts($attributes['accounts'])
+            ->setRange($attributes['startDate'], $attributes['endDate'])
+            ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+            ->withAccountInformation()
+            ->withBudgetInformation()
+            ->withCategoryInformation()
+            ->withAccountInformation();
 
-        // filter the set so the destinations outside of $attributes['accounts'] are not included.
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) use ($report, $repository) {
-                // get the destinations:
-                $journal      = $transaction->transactionJournal;
-                $destinations = $repository->getJournalDestinationAccounts($journal)->pluck('id')->toArray();
-
-                // do these intersect with the current list?
-                return !empty(array_intersect($report, $destinations));
-            }
-        );
-
-        return $transactions;
+        return $collector->getExtractedJournals();
     }
 }

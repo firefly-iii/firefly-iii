@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Opplasting av fil ":name" var vellykket.',
     'must_exist'                     => 'IDen i feltet :attribute finnes ikke i databasen.',
     'all_accounts_equal'             => 'Alle kontoer i dette feltet må være like.',
+    'group_title_mandatory'          => 'En gruppetittel er obligatorisk når det er mer enn én transaksjon.',
+    'transaction_types_equal'        => 'Alle deler må være av samme type.',
+    'invalid_transaction_type'       => 'Ugyldig transaksjonstype.',
     'invalid_selection'              => 'Dine valg er ugyldig.',
     'belongs_user'                   => 'Denne verdien er ugyldig for dette feltet.',
     'at_least_one_transaction'       => 'Trenger minst én transaksjon.',
     'at_least_one_repetition'        => 'Trenger minst en gjentagelse.',
     'require_repeat_until'           => 'Krever enten et antall repetisjoner eller en slutt dato (gjentas til). Ikke begge.',
     'require_currency_info'          => 'Innholdet i dette feltet er ugyldig uten valutainformasjon.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Transaksjonsbeskrivelsen bør ikke være lik global beskrivelse.',
     'file_invalid_mime'              => 'Kan ikke akseptere fil ":name" av typen ":mime" for opplasting.',
     'file_too_large'                 => '":name"-filen er for stor.',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute må være en streng.',
     'url'                            => ':attribute formatet er ugyldig.',
     'timezone'                       => ':attribute må være en gyldig tidssone.',
-    '2fa_code'                       => ':attribute formatet er ugyldig.',
-    'dimensions'                     => ':attribute har ugyldig bilde dimensjoner.',
-    'distinct'                       => ':attribute feltet har en duplikatverdi.',
-    'file'                           => ':attribute må være en fil.',
-    'in_array'                       => 'Feltet :attribute finnes ikke i :other.',
-    'present'                        => ':attribute feltet må være definert.',
-    'amount_zero'                    => 'Totalbeløpet kan ikke være null.',
-    'unique_piggy_bank_for_user'     => 'Navnet på sparegris må være unik.',
-    'secure_password'                => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
-    'valid_recurrence_rep_moment'    => 'Ugyldig repetisjons tid for denne type repetisjon.',
-    'invalid_account_info'           => 'Ugyldig konto informasjon.',
+    '2fa_code'                    => ':attribute formatet er ugyldig.',
+    'dimensions'                  => ':attribute har ugyldig bilde dimensjoner.',
+    'distinct'                    => ':attribute feltet har en duplikatverdi.',
+    'file'                        => ':attribute må være en fil.',
+    'in_array'                    => 'Feltet :attribute finnes ikke i :other.',
+    'present'                     => ':attribute feltet må være definert.',
+    'amount_zero'                 => 'Totalbeløpet kan ikke være null.',
+    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'unique_piggy_bank_for_user'  => 'Navnet på sparegris må være unik.',
+    'secure_password'             => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
+    'valid_recurrence_rep_moment' => 'Ugyldig repetisjons tid for denne type repetisjon.',
+    'invalid_account_info'        => 'Ugyldig konto informasjon.',
     'attributes'                     => [
         'email'                   => 'epostadresse',
         'description'             => 'beskrivelse',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'navn',
         'piggy_bank_id'           => 'sparegris ID',
         'targetamount'            => 'målbeløp',
-        'openingBalanceDate'      => 'åpningssaldo dato',
-        'openingBalance'          => 'åpningssaldo',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'match',
         'amount_min'              => 'minimumsbeløp',
         'amount_max'              => 'maksimumsbeløp',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'regel trigger #4',
         'rule-trigger.5'          => 'regel trigger #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'withdrawal_source_bad_data'     => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'withdrawal_dest_need_data'      => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'deposit_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'deposit_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
+
+    'transfer_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'transfer_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'transfer_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'transfer_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

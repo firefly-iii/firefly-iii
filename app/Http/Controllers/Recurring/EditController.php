@@ -1,22 +1,22 @@
 <?php
 /**
  * EditController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -47,6 +47,7 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -70,14 +71,12 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \FireflyIII\Exceptions\FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
@@ -92,7 +91,7 @@ class EditController extends Controller
         $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ',' . $repetition->repetition_moment;
+            $currentRepType .= ',' . $repetition->repetition_moment; // @codeCoverageIgnore
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -123,10 +122,14 @@ class EditController extends Controller
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'transaction_type' => strtolower($recurrence->transactionType->type),
-            'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
-            'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+            'transaction_type'          => strtolower($recurrence->transactionType->type),
+            'active'                    => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
+            'apply_rules'               => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+            'deposit_source_id'         => $array['transactions'][0]['source_id'],
+            'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
+
+        $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
         return view(
             'recurring.edit',
@@ -138,7 +141,7 @@ class EditController extends Controller
      * Update the recurring transaction.
      *
      * @param RecurrenceFormRequest $request
-     * @param Recurrence            $recurrence
+     * @param Recurrence $recurrence
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -146,6 +149,7 @@ class EditController extends Controller
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
         $data = $request->getAll();
+
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));

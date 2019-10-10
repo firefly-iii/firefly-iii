@@ -1,32 +1,33 @@
 <?php
 /**
  * BalanceControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Balance;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -44,7 +45,7 @@ class BalanceControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -53,12 +54,16 @@ class BalanceControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
-        $balance = $this->mock(BalanceReportHelperInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $this->mockDefaultSession();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $date         = new Carbon;
+        $budget       = $this->getRandomBudget();
+
+        $repository->shouldReceive('getBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);
 
         $this->be($this->user());
         $response = $this->get(route('report-data.balance.general', ['1', '20120101', '20120131']));

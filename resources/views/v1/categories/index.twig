@@ -35,7 +35,7 @@
     </div>
 </div>
 {% else %}
-        {% include 'partials.empty' with {what: 'default', type: 'categories',route: route('categories.create')} %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'categories',route: route('categories.create')} %}
     {% endif %}
 {% endblock %}
 

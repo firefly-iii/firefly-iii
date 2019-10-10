@@ -1,22 +1,22 @@
 <?php
 /**
  * BillController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -24,10 +24,11 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -39,12 +40,10 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use URL;
 
 /**
  * Class BillController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillController extends Controller
 {
@@ -55,6 +54,8 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -64,6 +65,7 @@ class BillController extends Controller
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         app('view')->share('uploadSize', $uploadSize);
+        app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -191,11 +193,11 @@ class BillController extends Controller
      */
     public function index()
     {
-        $start      = session('start');
-        $end        = session('end');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $paginator  = $this->billRepository->getPaginator($pageSize);
-        $parameters = new ParameterBag();
+        $start           = session('start');
+        $end             = session('end');
+        $unfiltered      = $this->billRepository->getBills();
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $parameters      = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 
@@ -204,33 +206,34 @@ class BillController extends Controller
         $transformer->setParameters($parameters);
 
         /** @var Collection $bills */
-        $bills = $paginator->getCollection()->map(
-            function (Bill $bill) use ($transformer) {
-                $return             = $transformer->transform($bill);
-                $return['currency'] = $bill->transactionCurrency;
+        $bills = $unfiltered->map(
+            static function (Bill $bill) use ($transformer, $defaultCurrency) {
+                $return                            = $transformer->transform($bill);
+                $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
+                $return['currency_id']             = $currency->id;
+                $return['currency_name']           = $currency->name;
+                $return['currency_symbol']         = $currency->symbol;
+                $return['currency_code']           = $currency->code;
+                $return['currency_decimal_places'] = $currency->decimal_places;
 
                 return $return;
             }
         );
-        $bills = $bills->sortBy(
-            function (array $bill) {
-                return (int)!$bill['active'] . strtolower($bill['name']);
-            }
-        );
 
         // add info about rules:
-        $rules = $this->billRepository->getRulesForBills($paginator->getCollection());
+        $rules = $this->billRepository->getRulesForBills($unfiltered);
         $bills = $bills->map(
-            function (array $bill) use ($rules) {
+            static function (array $bill) use ($rules) {
                 $bill['rules'] = $rules[$bill['id']] ?? [];
 
                 return $bill;
             }
         );
 
-        $paginator->setPath(route('bills.index'));
+        // summarise per currency:
+        $sums = $this->getSums($bills);
 
-        return view('bills.index', compact('bills', 'paginator'));
+        return view('bills.index', compact('bills', 'sums'));
     }
 
     /**
@@ -244,30 +247,43 @@ class BillController extends Controller
      */
     public function rescan(Request $request, Bill $bill)
     {
+        $total = 0;
         if (false === $bill->active) {
             $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
+
+            return redirect(route('bills.show', [$bill->id]));
         }
+        $set = new Collection;
         if (true === $bill->active) {
             $set   = $this->billRepository->getRulesForBill($bill);
             $total = 0;
-            foreach ($set as $rule) {
-                // simply fire off all rules?
-                /** @var TransactionMatcher $matcher */
-                $matcher = app(TransactionMatcher::class);
-                $matcher->setSearchLimit(100000); // large upper limit
-                $matcher->setTriggeredLimit(100000); // large upper limit
-                $matcher->setRule($rule);
-                $matchingTransactions = $matcher->findTransactionsByRule();
-                $total                += $matchingTransactions->count();
-                $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
-            }
+        }
+        if (0 === $set->count()) {
+            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 
-
-            $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
-            app('preferences')->mark();
+            return redirect(route('bills.show', [$bill->id]));
         }
 
-        return redirect(URL::previous());
+        // unlink all journals:
+        $this->billRepository->unlinkAll($bill);
+
+        foreach ($set as $rule) {
+            // simply fire off all rules?
+            /** @var TransactionMatcher $matcher */
+            $matcher = app(TransactionMatcher::class);
+            $matcher->setSearchLimit(100000); // large upper limit
+            $matcher->setTriggeredLimit(100000); // large upper limit
+            $matcher->setRule($rule);
+            $matchingTransactions = $matcher->findTransactionsByRule();
+            $total                += count($matchingTransactions);
+            $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
+        }
+
+
+        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
+        app('preferences')->mark();
+
+        return redirect(route('bills.show', [$bill->id]));
     }
 
     /**
@@ -309,29 +325,32 @@ class BillController extends Controller
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
-        // use collector:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withCategoryInformation();
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('bills.show', [$bill->id]));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
+                  ->withCategoryInformation()->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
         $collection  = $this->billRepository->getAttachments($bill);
         $attachments = new Collection;
+
+        // @codeCoverageIgnoreStart
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
             $attachments = $collection->each(
-                function (Attachment $attachment) use ($transformer) {
+                static function (Attachment $attachment) use ($transformer) {
                     return $transformer->transform($attachment);
                 }
             );
         }
 
+        // @codeCoverageIgnoreEnd
 
-        return view('bills.show', compact('attachments', 'transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+
+        return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
 
@@ -342,8 +361,6 @@ class BillController extends Controller
      *
      * @return RedirectResponse
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(BillFormRequest $request): RedirectResponse
     {
@@ -362,7 +379,7 @@ class BillController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
@@ -390,7 +407,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
@@ -404,5 +421,41 @@ class BillController extends Controller
         }
 
         return $redirect;
+    }
+
+    /**
+     * @param Collection $bills
+     *
+     * @return array
+     */
+    private function getSums(Collection $bills): array
+    {
+        $sums = [];
+
+        /** @var array $bill */
+        foreach ($bills as $bill) {
+            if (false === $bill['active']) {
+                continue;
+            }
+            if (0 === count($bill['pay_dates'])) {
+                continue;
+            }
+            /** @var TransactionCurrency $currency */
+            $currencyId        = $bill['currency_id'];
+            $sums[$currencyId] = $sums[$currencyId] ?? [
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $bill['currency_code'],
+                    'currency_name'           => $bill['currency_name'],
+                    'currency_symbol'         => $bill['currency_symbol'],
+                    'currency_decimal_places' => $bill['currency_decimal_places'],
+                    'avg'                     => '0',
+                ];
+
+            $avg                      = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+            $avg                      = bcmul($avg, (string)count($bill['pay_dates']));
+            $sums[$currencyId]['avg'] = bcadd($sums[$currencyId]['avg'], $avg);
+        }
+
+        return $sums;
     }
 }

@@ -1,22 +1,22 @@
 <?php
 /**
  * StageImportDataHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -48,6 +48,9 @@ use Tests\TestCase;
 
 /**
  * Class StageImportDataHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StageImportDataHandlerTest extends TestCase
 {
@@ -57,7 +60,7 @@ class StageImportDataHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -67,7 +70,7 @@ class StageImportDataHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+        $job->key           = 'sidh_bbunq_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -117,7 +120,7 @@ class StageImportDataHandlerTest extends TestCase
         $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
         $payment->setAmount($amount);
         $payment->setCounterpartyAlias($labelMonetaryAccount);
-        $payment->setDescription('Random description #' . random_int(1, 10000));
+        $payment->setDescription('Random description #' . $this->randomInt());
         $value = [$payment];
         $list  = new BunqResponsePaymentList($value, [], null);
 
@@ -216,7 +219,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidA_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidA_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -290,7 +293,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidh_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -328,7 +331,6 @@ class StageImportDataHandlerTest extends TestCase
     //        // todo: improve test thing:
     //        Preferences::shouldReceive('setForUser');
     //
-    //
     //        // ignore the deprecated fields:
     //        $amount->setValue('150');
     //        $amount->setCurrency('EUR');
@@ -344,7 +346,7 @@ class StageImportDataHandlerTest extends TestCase
     //
     //        $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
     //        $payment->setAmount($amount);
-    //        $payment->setDescription('Some random thing #' . random_int(1, 10000));
+    //        $payment->setDescription('Some random thing #' . $this->randomInt());
     //        $payment->setCounterpartyAlias($labelMonetaryAccount);
     //        $value = [$payment];
     //        $list  = new BunqResponsePaymentList($value, [], null);
@@ -407,7 +409,6 @@ class StageImportDataHandlerTest extends TestCase
     //        $payment->shouldReceive('listing')->once()->andReturn($list);
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::REVENUE]])->once()->andReturn($deposit);
     //
-    //
     //        $handler = new StageImportDataHandler;
     //        $handler->setImportJob($job);
     //        try {
@@ -427,7 +428,7 @@ class StageImportDataHandlerTest extends TestCase
     //    {
     //        $job                = new ImportJob;
     //        $job->user_id       = $this->user()->id;
-    //        $job->key           = 'sidh_bbunq_' . random_int(1, 10000);
+    //        $job->key           = 'sidh_bbunq_' . $this->randomInt();
     //        $job->status        = 'new';
     //        $job->stage         = 'new';
     //        $job->provider      = 'bunq';
@@ -477,7 +478,7 @@ class StageImportDataHandlerTest extends TestCase
     //        $payment = new BunqPayment($amount, $pointer, 'Some descr', null, null);
     //        $payment->setAmount($amount);
     //        $payment->setCounterpartyAlias($labelMonetaryAccount);
-    //        $payment->setDescription('Random transfer #' . random_int(1, 10000));
+    //        $payment->setDescription('Random transfer #' . $this->randomInt());
     //        $value = [$payment];
     //        $list  = new BunqResponsePaymentList($value, [], null);
     //
@@ -543,7 +544,6 @@ class StageImportDataHandlerTest extends TestCase
     //        $payment->shouldReceive('listing')->once()->andReturn($list);
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::REVENUE]])->once()->andReturnNull();
     //        $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::ASSET]])->once()->andReturn($asset);
-    //
     //
     //        // set new last transaction ID:
     //        $lastPref       = new Preference;

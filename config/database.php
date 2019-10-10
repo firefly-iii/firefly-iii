@@ -1,22 +1,22 @@
 <?php
 /**
  * database.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -27,13 +27,16 @@ $host        = '';
 $username    = '';
 $password    = '';
 $database    = '';
+$port        = '';
 
 if (!(false === $databaseUrl)) {
+
     $options  = parse_url($databaseUrl);
-    $host     = $options['host'];
-    $username = $options['user'];
-    $password = $options['pass'];
-    $database = substr($options['path'], 1);
+    $host     = $options['host'] ?? 'firefly_iii_db';
+    $username = $options['user'] ?? 'firefly';
+    $port     = $options['port'] ?? '5432';
+    $password = $options['pass'] ?? 'secret_firefly_password';
+    $database = substr($options['path'] ?? '/firefly', 1);
 }
 
 return [
@@ -47,11 +50,11 @@ return [
         ],
         'mysql'  => [
             'driver'      => 'mysql',
-            'host'        => envNonEmpty('DB_HOST', '127.0.0.1'),
-            'port'        => envNonEmpty('DB_PORT', '3306'),
-            'database'    => envNonEmpty('DB_DATABASE', 'forge'),
-            'username'    => envNonEmpty('DB_USERNAME', 'forge'),
-            'password'    => env('DB_PASSWORD', ''),
+            'host'        => envNonEmpty('DB_HOST', $host),
+            'port'        => envNonEmpty('DB_PORT', $port),
+            'database'    => envNonEmpty('DB_DATABASE', $database),
+            'username'    => envNonEmpty('DB_USERNAME', $username),
+            'password'    => env('DB_PASSWORD', $password),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset'     => 'utf8mb4',
             'collation'   => 'utf8mb4_unicode_ci',
@@ -62,7 +65,7 @@ return [
         'pgsql'  => [
             'driver'      => 'pgsql',
             'host'        => envNonEmpty('DB_HOST', $host),
-            'port'        => envNonEmpty('DB_PORT', '5432'),
+            'port'        => envNonEmpty('DB_PORT', $port),
             'database'    => envNonEmpty('DB_DATABASE', $database),
             'username'    => envNonEmpty('DB_USERNAME', $username),
             'password'    => env('DB_PASSWORD', $password),

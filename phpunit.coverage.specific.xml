@@ -32,15 +32,14 @@
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
     </listeners>
     <testsuites>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
+        <testsuite name="Api">
+            <directory suffix="Test.php">./tests/Api</directory>
         </testsuite>
-
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
-        <testsuite name="Api">
-            <directory suffix="Test.php">./tests/Api</directory>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
     <filter>

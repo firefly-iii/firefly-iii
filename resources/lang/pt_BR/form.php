@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Conta de origem',
     'journal_description'         => 'Descrição',
     'note'                        => 'Notas',
+    'store_new_transaction'       => 'Armazenar uma nova transação',
     'split_journal'               => 'Dividir essa transação',
     'split_journal_explanation'   => 'Dividir essa transação em várias partes',
     'currency'                    => 'Moeda',
     'account_id'                  => 'Conta de ativo',
     'budget_id'                   => 'Orçamento',
-    'openingBalance'              => 'Saldo inicial',
+    'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo de tag',
     'tag_position'                => 'Localização do indexador',
-    'virtualBalance'              => 'Saldo virtual',
+    'virtual_balance'             => 'Saldo virtual',
     'targetamount'                => 'Valor alvo',
-    'accountRole'                 => 'Tipo de conta',
-    'openingBalanceDate'          => 'Data do Saldo inicial',
-    'ccType'                      => 'Plano de pagamento do Cartão de Crédito',
-    'ccMonthlyPaymentDate'        => 'Data do pagamento mensal do Cartão de Crédito',
+    'account_role'                => 'Função de conta',
+    'opening_balance_date'        => 'Data do saldo inicial',
+    'cc_type'                     => 'Plano de pagamento do Cartão de Crédito',
+    'cc_monthly_payment_date'     => 'Data do pagamento mensal do Cartão de Crédito',
     'piggy_bank_id'               => 'Cofrinho',
     'returnHere'                  => 'Retornar aqui',
     'returnHereExplanation'       => 'Depois de armazenar, retorne aqui para criar outro.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Símbolo',
     'code'                        => 'Código',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Número de conta',
+    'account_number'              => 'Número de conta',
     'creditCardNumber'            => 'Número do cartão de crédito',
     'has_headers'                 => 'Cabeçalhos',
     'date_format'                 => 'Formato da Data',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Parar processamento',
     'start_date'                  => 'Início do intervalo',
     'end_date'                    => 'Final do intervalo',
-    'export_start_range'          => 'Início do intervalo de exportação',
-    'export_end_range'            => 'Fim do intervalo de exportação',
-    'export_format'               => 'Formato do arquivo',
     'include_attachments'         => 'Incluir anexos enviados',
     'include_old_uploads'         => 'Incluir dados importados',
-    'accounts'                    => 'Exportar transações destas contas',
     'delete_account'              => 'Apagar conta ":name"',
     'delete_bill'                 => 'Apagar fatura ":name"',
     'delete_budget'               => 'Excluir o orçamento ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Calendário',
     'weekend'                 => 'Fim de Semana',
     'client_secret'           => 'Chave secreta',
+
+    'withdrawal_destination_id' => 'Conta de destino',
+    'deposit_source_id'         => 'Conta de origem',
+    'expected_on'               => 'Esperado em',
+    'paid'                      => 'Pago',
 
 ];

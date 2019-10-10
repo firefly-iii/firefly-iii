@@ -1,22 +1,22 @@
 <?php
 /**
  * PopupReportInterface.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
  */
 interface PopupReportInterface
 {
+
     /**
      * Get balances for budget.
      *
@@ -39,9 +40,9 @@ interface PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function balanceForBudget(Budget $budget, Account $account, array $attributes): Collection;
+    public function balanceForBudget(Budget $budget, Account $account, array $attributes): array;
 
     /**
      * Get balances for transactions without a budget.
@@ -49,9 +50,9 @@ interface PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function balanceForNoBudget(Account $account, array $attributes): Collection;
+    public function balanceForNoBudget(Account $account, array $attributes): array;
 
     /**
      * Group by budget.
@@ -59,19 +60,19 @@ interface PopupReportInterface
      * @param Budget $budget
      * @param array  $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byBudget(Budget $budget, array $attributes): Collection;
+    public function byBudget(Budget $budget, array $attributes): array;
 
     /**
      * Group by category.
      *
-     * @param Category $category
+     * @param Category|null $category
      * @param array    $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byCategory(Category $category, array $attributes): Collection;
+    public function byCategory(?Category $category, array $attributes): array;
 
     /**
      * Do something with expense. Sorry, I am not very inspirational here.
@@ -79,9 +80,9 @@ interface PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byExpenses(Account $account, array $attributes): Collection;
+    public function byExpenses(Account $account, array $attributes): array;
 
     /**
      * Do something with income. Sorry, I am not very inspirational here.
@@ -89,7 +90,7 @@ interface PopupReportInterface
      * @param Account $account
      * @param array   $attributes
      *
-     * @return Collection
+     * @return array
      */
-    public function byIncome(Account $account, array $attributes): Collection;
+    public function byIncome(Account $account, array $attributes): array;
 }

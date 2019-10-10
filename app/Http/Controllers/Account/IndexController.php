@@ -1,22 +1,22 @@
 <?php
 /**
  * IndexController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
@@ -43,6 +43,7 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -65,30 +66,21 @@ class IndexController extends Controller
      * Show list of accounts.
      *
      * @param Request $request
-     * @param string  $what
+     * @param string $objectType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, string $what)
+    public function index(Request $request, string $objectType)
     {
-        $what         = $what ?? 'asset';
-        $subTitle     = (string)trans('firefly.' . $what . '_accounts');
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $types        = config('firefly.accountTypesByIdentifier.' . $what);
+        $objectType   = $objectType ?? 'asset';
+        $subTitle     = (string)trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
-
-        // sort collection:
-        $collection = $collection->sortBy(
-            function (Account $account) {
-                return ($account->active ? '0' : '1') . $account->name;
-            }
-        );
-
-
-        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $accounts = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
@@ -108,16 +100,16 @@ class IndexController extends Controller
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
                 $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
-                $account->interestPeriod    = (string)trans('firefly.interest_calc_' . $this->repository->getMetaValue($account, 'interest_period'));
-                $account->accountTypeString = (string)trans('firefly.account_type_' . $account->accountType->type);
+                $account->interestPeriod    = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+                $account->accountTypeString = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
             }
         );
 
         // make paginator:
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
-        $accounts->setPath(route('accounts.index', [$what]));
+        $accounts->setPath(route('accounts.index', [$objectType]));
 
-        return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
+        return view('accounts.index', compact('objectType', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
 

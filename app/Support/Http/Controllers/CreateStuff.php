@@ -1,22 +1,22 @@
 <?php
 /**
  * CreateStuff.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -47,7 +47,7 @@ trait CreateStuff
     /**
      * Creates an asset account.
      *
-     * @param NewUserFormRequest  $request
+     * @param NewUserFormRequest $request
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -57,16 +57,16 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'               => $request->get('bank_name'),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'virtualBalance'     => 0,
-            'account_type_id'    => null,
-            'active'             => true,
-            'accountRole'        => 'defaultAsset',
-            'openingBalance'     => $request->input('bank_balance'),
-            'openingBalanceDate' => new Carbon,
-            'currency_id'        => $currency->id,
+            'name'                 => $request->get('bank_name'),
+            'iban'                 => null,
+            'account_type'         => 'asset',
+            'virtual_balance'      => 0,
+            'account_type_id'      => null,
+            'active'               => true,
+            'account_role'          => 'defaultAsset',
+            'opening_balance'      => $request->input('bank_balance'),
+            'opening_balance_date' => new Carbon,
+            'currency_id'          => $currency->id,
         ];
 
         $repository->store($assetAccount);
@@ -78,7 +78,7 @@ trait CreateStuff
      * Creates a cash wallet.
      *
      * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param string $language
      *
      * @return bool
      */
@@ -87,16 +87,16 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'               => (string)trans('firefly.cash_wallet', [], $language),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'virtualBalance'     => 0,
-            'account_type_id'    => null,
-            'active'             => true,
-            'accountRole'        => 'cashWalletAsset',
-            'openingBalance'     => null,
-            'openingBalanceDate' => null,
-            'currency_id'        => $currency->id,
+            'name'                 => (string)trans('firefly.cash_wallet', [], $language),
+            'iban'                 => null,
+            'account_type'         => 'asset',
+            'virtual_balance'      => 0,
+            'account_type_id'      => null,
+            'active'               => true,
+            'account_role'          => 'cashWalletAsset',
+            'opening_balance'      => null,
+            'opening_balance_date' => null,
+            'currency_id'          => $currency->id,
         ];
 
         $repository->store($assetAccount);
@@ -130,9 +130,9 @@ trait CreateStuff
     /**
      * Create a savings account.
      *
-     * @param NewUserFormRequest  $request
+     * @param NewUserFormRequest $request
      * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param string $language
      *
      * @return bool
      */
@@ -141,16 +141,16 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'               => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'account_type_id'    => null,
-            'virtualBalance'     => 0,
-            'active'             => true,
-            'accountRole'        => 'savingAsset',
-            'openingBalance'     => $request->input('savings_balance'),
-            'openingBalanceDate' => new Carbon,
-            'currency_id'        => $currency->id,
+            'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'iban'                 => null,
+            'account_type'         => 'asset',
+            'account_type_id'      => null,
+            'virtual_balance'      => 0,
+            'active'               => true,
+            'account_role'         => 'savingAsset',
+            'opening_balance'      => $request->input('savings_balance'),
+            'opening_balance_date' => new Carbon,
+            'currency_id'          => $currency->id,
         ];
         $repository->store($savingsAccount);
 

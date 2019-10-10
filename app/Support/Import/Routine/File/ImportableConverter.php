@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportableConverter.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -69,7 +69,7 @@ class ImportableConverter
      */
     public function convert(array $importables): array
     {
-        $total = \count($importables);
+        $total = count($importables);
         Log::debug(sprintf('Going to convert %d import transactions', $total));
         $result = [];
         /** @var ImportTransaction $importable */
@@ -160,8 +160,8 @@ class ImportableConverter
     /**
      * @param ImportTransaction $importable
      *
-     * @throws FireflyException
      * @return array
+     * @throws FireflyException
      */
     private function convertSingle(ImportTransaction $importable): array
     {
@@ -178,18 +178,18 @@ class ImportableConverter
             throw new FireflyException('No transaction amount information.');
         }
 
-        $source          = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
-        $destination     = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
-        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
-        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
+        // amount is 0? skip
+        if (0 === bccomp($amount, '0')) {
+            throw new FireflyException('Amount of transaction is zero.');
+        }
 
-        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
+        $source      = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
+        $destination = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
 
-
-        // amount is positive? Then switch:
+        // if the amount is positive, switch source and destination (account and opposing account)
         if (1 === bccomp($amount, '0')) {
-
-            [$destination, $source] = [$source, $destination];
+            $source      = $this->opposingMapper->map($importable->opposingId, $amount, $importable->getOpposingAccountData());
+            $destination = $this->assetMapper->map($importable->accountId, $importable->getAccountData());
             Log::debug(
                 sprintf(
                     '%s is positive, so "%s" (#%d) is now source and "%s" (#%d) is now destination.',
@@ -197,6 +197,12 @@ class ImportableConverter
                 )
             );
         }
+
+        $currency        = $this->currencyMapper->map($importable->currencyId, $importable->getCurrencyData());
+        $foreignCurrency = $this->currencyMapper->map($importable->foreignCurrencyId, $importable->getForeignCurrencyData());
+
+        Log::debug(sprintf('"%s" (#%d) is source and "%s" (#%d) is destination.', $source->name, $source->id, $destination->name, $destination->id));
+
 
         if ($destination->id === $source->id) {
             throw new FireflyException(
@@ -218,60 +224,72 @@ class ImportableConverter
         }
 
         return [
-            'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
-            'tags'               => $importable->tags,
-            'user'               => $this->importJob->user_id,
-            'notes'              => $importable->note,
 
-            // all custom fields:
-            'internal_reference' => $importable->meta['internal-reference'] ?? null,
-            'sepa-cc'            => $importable->meta['sepa-cc'] ?? null,
-            'sepa-ct-op'         => $importable->meta['sepa-ct-op'] ?? null,
-            'sepa-ct-id'         => $importable->meta['sepa-ct-id'] ?? null,
-            'sepa-db'            => $importable->meta['sepa-db'] ?? null,
-            'sepa-country'       => $importable->meta['sepa-country'] ?? null,
-            'sepa-ep'            => $importable->meta['sepa-ep'] ?? null,
-            'sepa-ci'            => $importable->meta['sepa-ci'] ?? null,
-            'sepa-batch-id'      => $importable->meta['sepa-batch-id'] ?? null,
-            'interest_date'      => $this->convertDateValue($importable->meta['date-interest'] ?? null),
-            'book_date'          => $this->convertDateValue($importable->meta['date-book'] ?? null),
-            'process_date'       => $this->convertDateValue($importable->meta['date-process'] ?? null),
-            'due_date'           => $this->convertDateValue($importable->meta['date-due'] ?? null),
-            'payment_date'       => $this->convertDateValue($importable->meta['date-payment'] ?? null),
-            'invoice_date'       => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
-            'external_id'        => $importable->externalId,
-            'original-source'    => $importable->meta['original-source'] ?? null,
-            // journal data:
-            'description'        => $importable->description,
-            'piggy_bank_id'      => null,
-            'piggy_bank_name'    => null,
-            'bill_id'            => $importable->billId,
-            'bill_name'          => $importable->billName,
-
-            // transaction data:
-            'transactions'       => [
+            'user'         => $this->importJob->user_id,
+            'group_title'  => null,
+            'transactions' => [
                 [
-                    'currency_id'           => $currency->id,
-                    'currency_code'         => null,
-                    'description'           => null,
-                    'amount'                => $amount,
-                    'budget_id'             => $importable->budgetId,
-                    'budget_name'           => $importable->budgetName,
-                    'category_id'           => $importable->categoryId,
-                    'category_name'         => $importable->categoryName,
-                    'source_id'             => $source->id,
-                    'source_name'           => null,
-                    'destination_id'        => $destination->id,
-                    'destination_name'      => null,
+                    'user'  => $this->importJob->user_id,
+                    'type'  => strtolower($transactionType),
+                    'date'  => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
+                    'order' => 0,
+
+                    'currency_id'   => $currency->id,
+                    'currency_code' => null,
+
                     'foreign_currency_id'   => $importable->foreignCurrencyId,
                     'foreign_currency_code' => null === $foreignCurrency ? null : $foreignCurrency->code,
-                    'foreign_amount'        => $foreignAmount,
-                    'reconciled'            => false,
-                    'identifier'            => 0,
+
+                    'amount'         => $amount,
+                    'foreign_amount' => $foreignAmount,
+
+                    'description' => $importable->description,
+
+                    'source_id'        => $source->id,
+                    'source_name'      => null,
+                    'destination_id'   => $destination->id,
+                    'destination_name' => null,
+
+                    'budget_id'   => $importable->budgetId,
+                    'budget_name' => $importable->budgetName,
+
+                    'category_id'   => $importable->categoryId,
+                    'category_name' => $importable->categoryName,
+
+                    'bill_id'   => $importable->billId,
+                    'bill_name' => $importable->billName,
+
+                    'piggy_bank_id'   => null,
+                    'piggy_bank_name' => null,
+
+                    'reconciled' => false,
+
+                    'notes' => $importable->note,
+                    'tags'  => $importable->tags,
+
+                    'internal_reference' => $importable->meta['internal-reference'] ?? null,
+                    'external_id'        => $importable->externalId,
+                    'original_source'    => $importable->meta['original-source'] ?? null,
+
+                    'sepa_cc'       => $importable->meta['sepa_cc'] ?? null,
+                    'sepa_ct_op'    => $importable->meta['sepa_ct_op'] ?? null,
+                    'sepa_ct_id'    => $importable->meta['sepa_ct_id'] ?? null,
+                    'sepa_db'       => $importable->meta['sepa_db'] ?? null,
+                    'sepa_country'  => $importable->meta['sepa_country'] ?? null,
+                    'sepa_ep'       => $importable->meta['sepa_ep'] ?? null,
+                    'sepa_ci'       => $importable->meta['sepa_ci'] ?? null,
+                    'sepa_batch_id' => $importable->meta['sepa_batch_id'] ?? null,
+
+                    'interest_date' => $this->convertDateValue($importable->meta['date-interest'] ?? null),
+                    'book_date'     => $this->convertDateValue($importable->meta['date-book'] ?? null),
+                    'process_date'  => $this->convertDateValue($importable->meta['date-process'] ?? null),
+                    'due_date'      => $this->convertDateValue($importable->meta['date-due'] ?? null),
+                    'payment_date'  => $this->convertDateValue($importable->meta['date-payment'] ?? null),
+                    'invoice_date'  => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
                 ],
             ],
         ];
+
     }
 
     /**
@@ -314,17 +332,11 @@ class ImportableConverter
     {
         $type = 'unknown';
 
-        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $type = 'transfer';
-        }
-        if ($source === AccountType::REVENUE) {
-            Log::debug('Source is a revenue account. This is a deposit.');
-            $type = 'deposit';
-        }
-        if ($destination === AccountType::EXPENSE) {
-            Log::debug('Destination is an expense account. This is a withdrawal.');
-            $type = 'withdrawal';
+        $newType = config(sprintf('firefly.account_to_transaction.%s.%s', $source, $destination));
+        if (null !== $newType) {
+            Log::debug(sprintf('Source is %s, destination is %s, so this is a %s.', $source, $destination, $newType));
+
+            return (string)$newType;
         }
 
         return $type;

@@ -1,22 +1,22 @@
 <?php
 /**
- * ChooseAccount.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * ChooseAccountsHandler.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -63,7 +63,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         Log::debug('Now in ChooseAccountsHandler::configurationComplete()');
         $config         = $this->importJob->configuration;
         $importAccounts = $config['account_mapping'] ?? [];
-        $complete       = \count($importAccounts) > 0 && $importAccounts !== [0 => 0];
+        $complete       = count($importAccounts) > 0 && $importAccounts !== [0 => 0];
         if ($complete) {
             Log::debug('Looks like user has mapped import accounts to Firefly III accounts', $importAccounts);
             $this->repository->setStage($this->importJob, 'go-for-import');
@@ -98,7 +98,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $config['account_mapping'] = $final;
         $config['apply-rules']     = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
-        if ($final === [0 => 0] || 0 === \count($final)) {
+        if ($final === [0 => 0] || 0 === count($final)) {
             $messages->add('count', (string)trans('import.spectre_no_mapping'));
         }
 
@@ -110,14 +110,14 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
      *
      * @return array
      * @throws FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function getNextData(): array
     {
         Log::debug('Now in ChooseAccountsHandler::getnextData()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
-        if (0 === \count($accounts)) {
+        if (0 === count($accounts)) {
             throw new FireflyException('It seems you have no accounts with this bank. The import cannot continue.'); // @codeCoverageIgnore
         }
         $converted = [];
@@ -129,7 +129,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $login    = null;
         $logins   = $config['all-logins'] ?? [];
         $selected = $config['selected-login'] ?? 0;
-        if (0 === \count($logins)) {
+        if (0 === count($logins)) {
             throw new FireflyException('It seems you have no configured logins in this import job. The import cannot continue.'); // @codeCoverageIgnore
         }
         Log::debug(sprintf('Selected login to use is %d', $selected));
@@ -157,6 +157,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         /** @var AccountModel $account */
         foreach ($accounts as $account) {
             $accountId         = $account->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId        = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currency          = $this->getCurrency($currencyId);
             $array[$accountId] = [

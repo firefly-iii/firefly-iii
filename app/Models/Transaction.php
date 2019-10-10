@@ -1,35 +1,33 @@
 <?php
 /**
  * Transaction.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Transaction.
@@ -101,7 +99,35 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              created_at
  * @property Carbon              updated_at
  * @property string              foreign_currency_code
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings (PHPMD.TooManyPublicMethods)
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction after(\Carbon\Carbon $date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction before(\Carbon\Carbon $date)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction transactionTypes($types)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereForeignAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereForeignCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereReconciled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction withoutTrashed()
+ * @mixin \Eloquent
  */
 class Transaction extends Model
 {
@@ -131,8 +157,6 @@ class Transaction extends Model
     /**
      * Check if a table is joined.
      *
-     *
-     *
      * @param Builder $query
      * @param string  $table
      *
@@ -152,30 +176,6 @@ class Transaction extends Model
         }
 
         return false;
-    }
-
-    /**
-     * Route binder. Converts the key in the URL to the specified object (or throw 404).
-     *
-     * @param string $value
-     *
-     * @return Transaction
-     * @throws NotFoundHttpException
-     */
-    public static function routeBinder(string $value): Transaction
-    {
-        if (auth()->check()) {
-            $transactionId = (int)$value;
-            /** @var User $user */
-            $user = auth()->user();
-            /** @var Transaction $transaction */
-            $transaction = $user->transactions()->where('transactions.id', $transactionId)->first(['transactions.*']);
-            if (null !== $transaction) {
-                return $transaction;
-            }
-        }
-
-        throw new NotFoundHttpException;
     }
 
 

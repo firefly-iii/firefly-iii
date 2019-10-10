@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Kildekonto',
     'journal_description'         => 'Beskrivelse',
     'note'                        => 'Notater',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Del opp denne transaksjonen',
     'split_journal_explanation'   => 'Del denne transaksjonen opp i flere deler',
     'currency'                    => 'Valuta',
     'account_id'                  => 'Aktivakonto',
     'budget_id'                   => 'Busjett',
-    'openingBalance'              => 'Startsaldo',
+    'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Taggmodus',
     'tag_position'                => 'Stedtagg',
-    'virtualBalance'              => 'Virtuell balanse',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Målbeløp',
-    'accountRole'                 => 'Kontorolle',
-    'openingBalanceDate'          => 'Startsaldodato',
-    'ccType'                      => 'Betalingsplan for kredittkort',
-    'ccMonthlyPaymentDate'        => 'Månedlig betalingsdato for kredittkort',
+    'account_role'                => 'Account role',
+    'opening_balance_date'        => 'Opening balance date',
+    'cc_type'                     => 'Credit card payment plan',
+    'cc_monthly_payment_date'     => 'Credit card monthly payment date',
     'piggy_bank_id'               => 'Sparegris',
     'returnHere'                  => 'Gå tilbake hit',
     'returnHereExplanation'       => 'Gå tilbake hit etter lagring for å legge til på nytt.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Symbol',
     'code'                        => 'Kode',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Kontonummer',
+    'account_number'              => 'Account number',
     'creditCardNumber'            => 'Kredittkortnummer',
     'has_headers'                 => 'Overskrifter',
     'date_format'                 => 'Datoformat',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Stopp prosessering',
     'start_date'                  => 'Startgrense',
     'end_date'                    => 'Sluttgrense',
-    'export_start_range'          => 'Start på eksportgrense',
-    'export_end_range'            => 'Slutt på eksportgrense',
-    'export_format'               => 'Filformat',
     'include_attachments'         => 'Ta med opplastede vedlegg',
     'include_old_uploads'         => 'Ta med importert data',
-    'accounts'                    => 'Eksporter transaksjoner fra disse kontoene',
     'delete_account'              => 'Slett konto ":name"',
     'delete_bill'                 => 'Slett regning ":name"',
     'delete_budget'               => 'Slett budsjett ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Kalender',
     'weekend'                 => 'Helg',
     'client_secret'           => 'Client Secret',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
+    'expected_on'               => 'Expected on',
+    'paid'                      => 'Paid',
 
 ];

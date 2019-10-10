@@ -1,36 +1,36 @@
 <?php
 /**
  * JavascriptControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
 use Amount;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -48,7 +48,7 @@ class JavascriptControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -57,15 +57,18 @@ class JavascriptControllerTest extends TestCase
      */
     public function testAccounts(): void
     {
+        $this->mockDefaultSession();
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $account       = factory(Account::class)->make();
+        $account       = $this->getRandomAsset();
+        $euro          = $this->getEuro();
+        $pref          = new Preference;
+        $pref->data    = 'EUR';
 
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))
-                     ->withArgs(
-                         [[AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]]
-                     )->once();
-        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
+        Preferences::shouldReceive('get')->withArgs(['currencyPreference', 'EUR'])->atLeast()->once()->andReturn($pref);
+
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))->withArgs([[AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]])->once();
+        $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn($euro);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
 
         $this->be($this->user());
@@ -78,10 +81,10 @@ class JavascriptControllerTest extends TestCase
      */
     public function testCurrencies(): void
     {
+        $this->mockDefaultSession();
         $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $currency   = factory(TransactionCurrency::class)->make();
-        $repository->shouldReceive('get')->andReturn(new Collection([$currency]));
-
+        $euro       = $this->getEuro();
+        $repository->shouldReceive('get')->andReturn(new Collection([$euro]));
 
         $this->be($this->user());
         $response = $this->get(route('javascript.currencies'));
@@ -90,7 +93,6 @@ class JavascriptControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *
@@ -98,11 +100,17 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariables(string $range): void
     {
+        $this->mockDefaultSession();
+        $account       = $this->getRandomAsset();
+        $euro          = $this->getEuro();
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
+        $accountRepos->shouldReceive('findNull')->andReturn($account);
+        $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        Amount::shouldReceive('getJsConfig')->andReturn([])->once();
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('javascript.variables'));
@@ -118,11 +126,16 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariablesCustom(string $range): void
     {
+        $this->mockDefaultSession();
+        $account       = $this->getRandomAsset();
+        $euro          = $this->getEuro();
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
+        $accountRepos->shouldReceive('findNull')->andReturn($account);
+        $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        Amount::shouldReceive('getJsConfig')->andReturn([])->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -140,12 +153,15 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariablesNull(string $range): void
     {
-        Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(1))->times(2);
+        $this->mockDefaultSession();
+        $account = $this->getRandomAsset();
+        $euro    = $this->getEuro();
+        //Amount::shouldReceive('getDefaultCurrency')->andReturn($euro)->times(2);
         Amount::shouldReceive('getJsConfig')->andReturn([])->once();
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
+        $accountRepos->shouldReceive('findNull')->andReturn($account);
         $currencyRepos->shouldReceive('findNull')->andReturn(null);
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');

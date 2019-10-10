@@ -1,22 +1,22 @@
 <?php
 /**
  * IndexController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -48,6 +47,8 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -67,19 +68,23 @@ class IndexController extends Controller
     }
 
     /**
+     * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function index(Request $request)
     {
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
+        $today      = new Carbon;
+        $year       = new Carbon;
+        $year->addYear();
 
         // split collection
         $total = $collection->count();
@@ -97,6 +102,7 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            $array['occurrences']  = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year),0,1);
             $recurring[]           = $array;
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
@@ -105,35 +111,6 @@ class IndexController extends Controller
         $this->verifyRecurringCronJob();
 
         return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
-    }
-
-    /**
-     * Show a single recurring transaction.
-     *
-     * @param Recurrence $recurrence
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws FireflyException
-     */
-    public function show(Recurrence $recurrence)
-    {
-        /** @var RecurrenceTransformer $transformer */
-        $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
-
-        $array        = $transformer->transform($recurrence);
-        $transactions = $this->recurring->getTransactions($recurrence);
-
-        // transform dates back to Carbon objects:
-        foreach ($array['recurrence_repetitions'] as $index => $repetition) {
-            foreach ($repetition['occurrences'] as $item => $occurrence) {
-                $array['recurrence_repetitions'][$index]['occurrences'][$item] = new Carbon($occurrence);
-            }
-        }
-
-        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
-
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'transactions'));
     }
 
 }

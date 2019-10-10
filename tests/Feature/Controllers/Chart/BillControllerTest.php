@@ -1,39 +1,41 @@
 <?php
 /**
  * BillControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
  * Class BillControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BillControllerTest extends TestCase
 {
@@ -43,7 +45,7 @@ class BillControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -58,12 +60,16 @@ class BillControllerTest extends TestCase
         $repository    = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $amounts = [
             1 => '100',
             2 => '100',
         ];
 
-        $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1))->withArgs([1]);
+        $currencyRepos->shouldReceive('findNull')->once()->andReturn($this->getEuro())->withArgs([1]);
         $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(2))->withArgs([2]);
 
         $repository->shouldReceive('getBillsPaidInRangePerCurrency')->once()->andReturn($amounts);
@@ -81,14 +87,16 @@ class BillControllerTest extends TestCase
      */
     public function testSingle(): void
     {
-        $transaction = factory(Transaction::class)->make();
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setBills')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
+        $collector->shouldReceive('setBill')->andReturnSelf()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());

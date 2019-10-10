@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportJob.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -48,6 +48,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereErrors($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTransactions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUserId($value)
+ * @mixin \Eloquent
  */
 class ImportJob extends Model
 {

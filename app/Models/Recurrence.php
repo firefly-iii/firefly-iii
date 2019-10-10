@@ -1,22 +1,22 @@
 <?php
 /**
  * Recurrence.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,7 +57,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Illuminate\Support\Collection     $recurrenceMeta
  * @property \Illuminate\Support\Collection     $recurrenceTransactions
  * @property \FireflyIII\Models\TransactionType $transactionType
- *
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereApplyRules($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereFirstDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereLatestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereRepeatUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereRepetitions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence withoutTrashed()
+ * @mixin \Eloquent
  */
 class Recurrence extends Model
 {

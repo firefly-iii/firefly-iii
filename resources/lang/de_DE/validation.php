@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Datei „:name” erfolgreich hochgeladen.',
     'must_exist'                     => 'Die ID in Feld :attribute existiert nicht in der Datenbank.',
     'all_accounts_equal'             => 'Alle Konten in diesem Feld müssen identisch sein.',
+    'group_title_mandatory'          => 'Ein Gruppentitel ist zwingend erforderlich, wenn mehr als eine Buchung vorliegt.',
+    'transaction_types_equal'        => 'Alle Aufteilungen müssen vom gleichen Typ sein.',
+    'invalid_transaction_type'       => 'Ungültige Transaktionstyp',
     'invalid_selection'              => 'Ihre Auswahl ist ungültig.',
     'belongs_user'                   => 'Dieser Wert ist für dieses Feld ungültig.',
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
     'at_least_one_repetition'        => 'Mindestens eine Wiederholung erforderlich.',
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
+    'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Fremdbetragsangaben ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
     'file_too_large'                 => 'Die Datei „:name” ist zu groß.',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute muss eine Zeichenfolge sein.',
     'url'                            => ':attribute Format ist ungültig.',
     'timezone'                       => ':attribute muss in einem gültigen Bereich liegen.',
-    '2fa_code'                       => ':attribute Feld ist ungültig.',
-    'dimensions'                     => 'Das :attribute hat eine ungültige Auflösung.',
-    'distinct'                       => 'Der Wert von :attribute existiert bereits.',
-    'file'                           => 'Das :attribute muss eine Datei sein.',
-    'in_array'                       => ':attribute existiert nicht in :other.',
-    'present'                        => 'Das :attribute Feld muss vorhanden sein.',
-    'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein.',
-    'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
-    'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
-    'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',
-    'valid_recurrence_rep_moment'    => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
-    'invalid_account_info'           => 'Ungültige Kontodaten.',
+    '2fa_code'                    => ':attribute Feld ist ungültig.',
+    'dimensions'                  => 'Das :attribute hat eine ungültige Auflösung.',
+    'distinct'                    => 'Der Wert von :attribute existiert bereits.',
+    'file'                        => 'Das :attribute muss eine Datei sein.',
+    'in_array'                    => ':attribute existiert nicht in :other.',
+    'present'                     => 'Das :attribute Feld muss vorhanden sein.',
+    'amount_zero'                 => 'Der Gesamtbetrag darf nicht Null sein.',
+    'current_target_amount'       => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
+    'unique_piggy_bank_for_user'  => 'Der Name des Sparschweins muss eindeutig sein.',
+    'secure_password'             => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
+    'valid_recurrence_rep_type'   => 'Ungültige Wiederholungsart für Daueraufträge.',
+    'valid_recurrence_rep_moment' => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
+    'invalid_account_info'        => 'Ungültige Kontodaten.',
     'attributes'                     => [
         'email'                   => 'E-Mail Adresse',
         'description'             => 'Beschreibung',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'Name',
         'piggy_bank_id'           => 'Sparschwein ID',
         'targetamount'            => 'Zielbetrag',
-        'openingBalanceDate'      => 'Datum des Eröffnungskontostands',
-        'openingBalance'          => 'Eröffnungskontostand',
+        'opening_balance_date'    => 'Datum des Eröffnungskontostands',
+        'opening_balance'         => 'Eröffnungskontostand',
         'match'                   => 'Übereinstimmung',
         'amount_min'              => 'Mindestbetrag',
         'amount_max'              => 'Höchstbetrag',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'Regel 4 auslösen',
         'rule-trigger.5'          => 'Regel #5 auslösen',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'withdrawal_source_bad_data'     => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'withdrawal_dest_need_data'      => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'withdrawal_dest_bad_data'       => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
+
+    'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'deposit_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
+
+    'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'transfer_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'transfer_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
+    'need_id_in_edit'           => 'Jeder Aufteilungen muss eine transaction_journal_id (entweder gültige ID oder 0) aufweisen.',
+
+    'ob_source_need_data' => 'Sie benötigen eine gültige Quellkontonummer und/oder einen gültigen Quellkontonamen, um fortzufahren.',
+    'ob_dest_need_data'   => 'Sie benötigen eine gültige Zielkontennummer und/oder einen gültigen Zielkontonamen, um fortzufahren.',
+    'ob_dest_bad_data'    => 'Bei der Suche nach der ID ":id" oder dem Namen ":name" konnte kein gültiges Zielkonto gefunden werden.',
+
+    'generic_invalid_source' => 'Sie können dieses Konto nicht als Quellkonto verwenden.',
+    'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 ];

@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,9 +207,13 @@ return [
     'specific_rabo_descr'             => 'Lost mogelijke problemen op met Rabobank txt-bestanden',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Lost mogelijke problemen op met PC bestanden',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Lost mogelijke problemen op met Belfius-bestanden',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Lost mogelijke problemen op met ING België bestanden',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Importinstellingen (3/4) - rol van elke kolom definiëren',
-    'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
+    'job_config_roles_text'           => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Geef hier aan wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat je elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',
     'job_config_roles_submit'         => 'Volgende',
     'job_config_roles_column_name'    => 'Kolomnaam',
     'job_config_roles_column_example' => 'Voorbeeldgegevens',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Rabobankspecifiek bij/af indicator',
     'column_ing-debit-credit'         => 'ING-specifieke bij/af indicator',
     'column_generic-debit-credit'     => 'Generieke bank debet/credit indicator',
-    'column_sepa-ct-id'               => 'SEPA end-to-end identificatie',
-    'column_sepa-ct-op'               => 'SEPA identificatie tegenpartij',
-    'column_sepa-db'                  => 'SEPA mandaatidentificatie',
-    'column_sepa-cc'                  => 'SEPA vrijwaringscode',
-    'column_sepa-ci'                  => 'SEPA crediteuridentificatie',
-    'column_sepa-ep'                  => 'SEPA transactiedoeleinde',
-    'column_sepa-country'             => 'SEPA landcode',
-    'column_sepa-batch-id'            => 'SEPA batchnummer',
+    'column_sepa_ct_id'               => 'SEPA end-to-end identificatie',
+    'column_sepa_ct_op'               => 'SEPA tegenrekening identificatie',
+    'column_sepa_db'                  => 'SEPA mandaatidentificatie',
+    'column_sepa_cc'                  => 'SEPA vrijwaringscode',
+    'column_sepa_ci'                  => 'SEPA crediteuridentificatie',
+    'column_sepa_ep'                  => 'SEPA transactiedoeleinde',
+    'column_sepa_country'             => 'SEPA landcode',
+    'column_sepa_batch_id'            => 'SEPA batchnummer',
     'column_tags-comma'               => 'Tags (kommagescheiden)',
     'column_tags-space'               => 'Tags (spatiegescheiden)',
     'column_account-number'           => 'Betaalrekening (rekeningnummer)',
     'column_opposing-number'          => 'Tegenrekening (rekeningnummer)',
     'column_note'                     => 'Opmerking(en)',
     'column_internal-reference'       => 'Interne referentie',
+
+    // error message
+    'duplicate_row'                   => 'Rij #:row (":description) kan niet worden geïmporteerd. Deze bestaat al.',
 
 ];

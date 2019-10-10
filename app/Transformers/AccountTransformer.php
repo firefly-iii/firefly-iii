@@ -1,22 +1,22 @@
 <?php
 /**
  * AccountTransformer.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -46,7 +46,7 @@ class AccountTransformer extends AbstractTransformer
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
 
         $this->repository = app(AccountRepositoryInterface::class);
@@ -105,7 +105,7 @@ class AccountTransformer extends AbstractTransformer
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
             'credit_card_type'        => $creditCardType,
-            'account_number'          => $this->repository->getMetaValue($account, 'accountNumber'),
+            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'         => round($account->virtual_balance, $decimalPlaces),
@@ -137,7 +137,7 @@ class AccountTransformer extends AbstractTransformer
      */
     private function getAccountRole(Account $account, string $accountType): ?string
     {
-        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
+        $accountRole = $this->repository->getMetaValue($account, 'account_role');
         if ('asset' !== $accountType || '' === (string)$accountRole) {
             $accountRole = null;
         }
@@ -157,8 +157,8 @@ class AccountTransformer extends AbstractTransformer
         $monthlyPaymentDate = null;
         $creditCardType     = null;
         if ('ccAsset' === $accountRole && 'asset' === $accountType) {
-            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
-            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
+            $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
 
         return [$creditCardType, $monthlyPaymentDate];
@@ -229,7 +229,7 @@ class AccountTransformer extends AbstractTransformer
     {
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
+        if (in_array($accountType, ['asset', 'liabilities'], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);

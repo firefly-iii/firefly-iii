@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -33,15 +33,19 @@ return [
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
     'file_already_attached'          => 'Le fichier téléchargé ":name" est déjà attaché à cet objet.',
-    'file_attached'                  => 'Envoi du fichier ":name" avec succès.',
+    'file_attached'                  => 'Fichier ":name" téléchargé avec succès.',
     'must_exist'                     => 'L\'ID dans le champ :attribute n\'existe pas dans la base de données.',
     'all_accounts_equal'             => 'Tous les comptes dans ce champ doivent être égaux.',
+    'group_title_mandatory'          => 'Un titre de groupe est obligatoire lorsqu\'il y a plus d\'une transaction.',
+    'transaction_types_equal'        => 'Toutes les ventilations doivent être de même type.',
+    'invalid_transaction_type'       => 'Type de transaction non valide.',
     'invalid_selection'              => 'Votre sélection est invalide.',
     'belongs_user'                   => 'Cette valeur n\'est pas valide pour ce champ.',
     'at_least_one_transaction'       => 'Besoin d\'au moins une transaction.',
     'at_least_one_repetition'        => 'Besoin d\'au moins une répétition.',
     'require_repeat_until'           => 'Besoin d’un certain nombre de répétitions ou d\'une date de fin (repeat_until). Pas les deux.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
+    'require_currency_amount'        => 'Le contenu de ce champ est invalide sans informations sur le montant étranger.',
     'equal_description'              => 'La description de la transaction ne doit pas être identique à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
@@ -116,18 +120,19 @@ return [
     'string'                         => 'Le champ :attribute doit être une chaîne de caractères.',
     'url'                            => 'Le format de l\'URL de :attribute n\'est pas valide.',
     'timezone'                       => 'Le champ :attribute doit être un fuseau horaire valide.',
-    '2fa_code'                       => 'Le champ :attribute est invalide.',
-    'dimensions'                     => 'Le :attribute possède des dimensions d’image non valides.',
-    'distinct'                       => ':attribute possède une valeur en double.',
-    'file'                           => 'Le :attribute doit être un fichier.',
-    'in_array'                       => 'Le champ :attribute n\'existe pas dans :other.',
-    'present'                        => 'Le champs :attribute doit être rempli.',
-    'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
-    'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
-    'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
-    'valid_recurrence_rep_moment'    => 'Période de répétition non valide pour ce type de répétition.',
-    'invalid_account_info'           => 'Informations de compte non valides.',
+    '2fa_code'                    => 'Le champ :attribute est invalide.',
+    'dimensions'                  => 'Le :attribute possède des dimensions d’image non valides.',
+    'distinct'                    => ':attribute possède une valeur en double.',
+    'file'                        => 'Le :attribute doit être un fichier.',
+    'in_array'                    => 'Le champ :attribute n\'existe pas dans :other.',
+    'present'                     => 'Le champs :attribute doit être rempli.',
+    'amount_zero'                 => 'Le montant total ne peut pas être zéro.',
+    'current_target_amount'       => 'Le montant actuel doit être inférieur au montant cible.',
+    'unique_piggy_bank_for_user'  => 'Le nom de la tirelire doit être unique.',
+    'secure_password'             => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Type de répétition non valide pour des opérations périodiques.',
+    'valid_recurrence_rep_moment' => 'Période de répétition non valide pour ce type de répétition.',
+    'invalid_account_info'        => 'Informations de compte non valides.',
     'attributes'                     => [
         'email'                   => 'adresse email',
         'description'             => 'description',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'nom',
         'piggy_bank_id'           => 'ID de tirelire',
         'targetamount'            => 'montant cible',
-        'openingBalanceDate'      => 'date du solde initial',
-        'openingBalance'          => 'solde initial',
+        'opening_balance_date'    => 'date du solde initial',
+        'opening_balance'         => 'solde initial',
         'match'                   => 'correspondance',
         'amount_min'              => 'montant minimum',
         'amount_max'              => 'montant maximum',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'déclencheur de règle #4',
         'rule-trigger.5'          => 'déclencheur de règle #4',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'withdrawal_source_bad_data'     => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'withdrawal_dest_need_data'      => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'withdrawal_dest_bad_data'       => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+
+    'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'deposit_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'deposit_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'deposit_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+
+    'transfer_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'transfer_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'transfer_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'transfer_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'need_id_in_edit'           => 'Chaque ventilation doit avoir transaction_journal_id (ID valide ou 0).',
+
+    'ob_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'ob_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'ob_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+
+    'generic_invalid_source' => 'Vous ne pouvez pas utiliser ce compte comme compte source.',
+    'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',
 ];

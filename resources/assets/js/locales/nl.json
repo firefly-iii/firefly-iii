@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "Hoe staat het er voor?",
+        "flash_error": "Fout!",
+        "flash_success": "Gelukt!",
+        "close": "Sluiten",
+        "split_transaction_title": "Beschrijving van de gesplitste transactie",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "split": "Splitsen",
+        "transaction_journal_information": "Transactieinformatie",
+        "source_account": "Bronrekening",
+        "destination_account": "Doelrekening",
+        "add_another_split": "Voeg een split toe",
+        "submission": "Submission",
+        "create_another": "After storing, return here to create another one.",
+        "reset_after": "Reset form after submission",
+        "submit": "Invoeren",
+        "amount": "Bedrag",
+        "date": "Datum",
+        "tags": "Tags",
+        "no_budget": "(geen budget)",
+        "category": "Categorie",
+        "attachments": "Bijlagen",
+        "notes": "Notities",
+        "update_transaction": "Update transaction",
+        "after_update_create_another": "After updating, return here to continue editing.",
+        "store_as_new": "Store as a new transaction instead of updating.",
+        "split_title_help": "Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.",
+        "none_in_select_list": "(geen)",
+        "no_piggy_bank": "(no piggy bank)",
+        "description": "Omschrijving"
+    },
+    "form": {
+        "interest_date": "Rentedatum",
+        "book_date": "Boekdatum",
+        "process_date": "Verwerkingsdatum",
+        "due_date": "Vervaldatum",
+        "foreign_amount": "Bedrag in vreemde valuta",
+        "payment_date": "Betalingsdatum",
+        "invoice_date": "Factuurdatum",
+        "internal_reference": "Interne verwijzing"
+    },
+    "config": {
+        "html_language": "nl"
+    }
+}

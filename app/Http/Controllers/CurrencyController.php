@@ -1,22 +1,22 @@
 <?php
 /**
  * CurrencyController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -47,6 +47,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -77,7 +78,7 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
 
             return redirect(route('currencies.index'));
         }
@@ -131,7 +132,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->info(sprintf('Tried to visit page to delete currency %s but is not site owner.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -139,7 +140,9 @@ class CurrencyController extends Controller
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $location = $this->repository->currencyInUseAt($currency);
+            $message  = (string)trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+            $request->session()->flash('error', $message);
             Log::channel('audit')->info(sprintf('Tried to visit page to delete currency %s but currency is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -167,7 +170,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->info(sprintf('Tried to delete currency %s but is not site owner.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -175,7 +178,7 @@ class CurrencyController extends Controller
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $request->session()->flash('error', (string)trans('firefly.cannot_delete_currency', ['name' => e($currency->name)]));
             Log::channel('audit')->info(sprintf('Tried to delete currency %s but is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -203,7 +206,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->info(sprintf('Tried to disable currency %s but is not site owner.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -211,7 +214,11 @@ class CurrencyController extends Controller
         }
 
         if ($this->repository->currencyInUse($currency)) {
-            $request->session()->flash('error', (string)trans('firefly.cannot_disable_currency', ['name' => $currency->name]));
+
+            $location = $this->repository->currencyInUseAt($currency);
+            $message  = (string)trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+
+            $request->session()->flash('error', $message);
             Log::channel('audit')->info(sprintf('Tried to disable currency %s but is in use.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -230,6 +237,10 @@ class CurrencyController extends Controller
             $this->repository->enable($first);
             app('preferences')->set('currencyPreference', $first->code);
             app('preferences')->mark();
+        }
+
+        if ('EUR' === $currency->code) {
+            session()->flash('warning', (string)trans('firefly.disable_EUR_side_effects'));
         }
 
         session()->flash('success', (string)trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
@@ -251,7 +262,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->info(sprintf('Tried to edit currency %s but is not owner.', $currency->code));
 
             return redirect(route('currencies.index'));
@@ -311,13 +322,6 @@ class CurrencyController extends Controller
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
         $total      = $collection->count();
-        $collection = $collection->sortBy(
-            function (TransactionCurrency $currency) {
-                $intEnabled = $currency->enabled ? 0 : 1;
-
-                return $intEnabled . $currency->name;
-            }
-        );
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));
@@ -339,8 +343,6 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(CurrencyFormRequest $request)
     {
@@ -393,9 +395,13 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $data = $request->getCurrencyData();
+
+        if (false === $data['enabled'] && $this->repository->currencyInUse($currency)) {
+            $data['enabled'] = true;
+        }
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->info('Tried to update (POST) currency without admin rights.', $data);
 
             return redirect(route('currencies.index'));

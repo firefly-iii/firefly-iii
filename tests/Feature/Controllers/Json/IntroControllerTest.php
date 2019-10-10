@@ -1,28 +1,29 @@
 <?php
 /**
  * IntroControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Json;
 
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -40,7 +41,7 @@ class IntroControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -48,6 +49,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroSteps(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['index']));
         $response->assertStatus(200);
@@ -58,6 +60,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroStepsAsset(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['accounts_create', 'asset']));
         $response->assertStatus(200);
@@ -68,6 +71,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroStepsOutro(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['reports_report', 'category']));
         $response->assertStatus(200);
@@ -78,6 +82,10 @@ class IntroControllerTest extends TestCase
      */
     public function testPostEnable(): void
     {
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('set')->withArgs(['shown_demo_accounts_create_asset', false])->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->post(route('json.intro.enable', ['accounts_create', 'asset']));
         $response->assertStatus(200);
@@ -88,6 +96,10 @@ class IntroControllerTest extends TestCase
      */
     public function testPostFinished(): void
     {
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('set')->withArgs(['shown_demo_accounts_create_asset', true])->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->post(route('json.intro.finished', ['accounts_create', 'asset']));
         $response->assertStatus(200);

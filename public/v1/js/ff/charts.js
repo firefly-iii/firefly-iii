@@ -1,21 +1,21 @@
 /*
  * charts.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart, todayText */
 var allCharts = {};
@@ -87,6 +87,57 @@ function lineChart(URI, container) {
 
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
+    var chartType = 'line';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ * Overrules the currency the line chart is drawn in.
+ *
+ * @param URI
+ * @param container
+ */
+function otherCurrencyLineChart(URI, container, currencySymbol) {
+    "use strict";
+
+    var colorData = true;
+
+    var newOpts = {
+        scales: {
+            xAxes: [
+                {
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        // break ticks when too long.
+                        callback: function (value, index, values) {
+                            return formatLabel(value, 20);
+                        }
+                    }
+                }
+            ],
+            yAxes: [{
+                display: true,
+                //hello: 'fresh',
+                ticks: {
+                    callback: function (tickValue) {
+                        "use strict";
+                        // use first symbol or null:
+                        return accounting.formatMoney(tickValue);
+
+                    },
+                    beginAtZero: true
+                }
+            }]
+        },
+    };
+
+    //var options = $.extend(true, newOpts, defaultChartOptions);
+    var options = $.extend(true, defaultChartOptions, newOpts);
+
+    console.log(options);
     var chartType = 'line';
 
     drawAChart(URI, container, chartType, options, colorData);
@@ -305,7 +356,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
         return;
     }
 
-
     $.getJSON(URI).done(function (data) {
         containerObj.removeClass('general-chart-error');
         if (data.labels.length === 0) {
@@ -323,7 +373,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
             }
             return;
         }
-
 
         if (colorData) {
             data = colorizeData(data);

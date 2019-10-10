@@ -1,78 +1,48 @@
 /*
  * month.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-/** global: tagIncomeUri, tagExpenseUri, accountIncomeUri, accountExpenseUri, tagBudgetUri, tagCategoryUri, mainUri */
 
 $(function () {
     "use strict";
-    drawChart();
+    loadAjaxPartial('accountsHolder', accountsUri);
+    loadAjaxPartial('tagsHolder', tagsUri);
+    loadAjaxPartial('accountPerTagHolder', accountPerTagUri);
 
-    $('#tags-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('tags-in-pie-chart', tagIncomeUri);
+    $.each($('.main_tag_canvas'), function (i, v) {
+        var canvas = $(v);
+        columnChart(canvas.data('url'), canvas.attr('id'));
     });
 
-    $('#tags-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('tags-out-pie-chart', tagExpenseUri);
-    });
+    multiCurrencyPieChart(tagOutUri, 'tag-out-pie-chart');
+    multiCurrencyPieChart(tagInUri, 'tag-in-pie-chart');
+    multiCurrencyPieChart(categoryOutUri, 'category-out-pie-chart');
+    multiCurrencyPieChart(categoryInUri, 'category-in-pie-chart');
+    multiCurrencyPieChart(budgetsOutUri, 'budgets-out-pie-chart');
+    multiCurrencyPieChart(sourceOutUri, 'source-out-pie-chart');
+    multiCurrencyPieChart(sourceInUri, 'source-in-pie-chart');
+    multiCurrencyPieChart(destOutUri, 'dest-out-pie-chart');
+    multiCurrencyPieChart(destInUri, 'dest-in-pie-chart');
 
-    $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
-    });
-
-    $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-    });
-
-    // two extra charts:
-    pieChart(tagBudgetUri, 'budgets-out-pie-chart');
-    pieChart(tagCategoryUri, 'categories-out-pie-chart');
+    loadAjaxPartial('topExpensesHolder', topExpensesUri);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
+    loadAjaxPartial('topIncomeHolder', topIncomeUri);
+    loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
 
 });
 
-
-function drawChart() {
-    "use strict";
-
-    // month view:
-    doubleYChart(mainUri, 'in-out-chart');
-
-    // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('tags-in-pie-chart', tagIncomeUri);
-    redrawPieChart('tags-out-pie-chart', tagExpenseUri);
-    redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
-    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-
-
-}
-
-function redrawPieChart(container, uri) {
-    "use strict";
-    var checkbox = $('#' + container + '-checked');
-
-    var others = '0';
-    // check if box is checked:
-    if (checkbox.prop('checked')) {
-        others = '1';
-    }
-    uri = uri.replace('OTHERS', others);
-
-    pieChart(uri, container);
-
-}

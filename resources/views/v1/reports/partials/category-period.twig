@@ -9,27 +9,27 @@
     </tr>
     </thead>
     <tbody>
-    {% for id, info in report %}
+    {% for info in report %}
         <tr>
             <td>
-                {% if id != 0 %}
-                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link"></i></a>
+                {% if info.id != 0 %}
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [info.id]) }}"><i class="fa fa-external-link"></i></a>
                 {% else %}
                     <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </td>
-            <td data-value="{{ info.name }}">
-                <a title="{{ info.name }}" href="#" data-category="{{ id }}" class="category-chart-activate">{{ info.name }}</a>
+            <td data-value="{{ info.title }}">
+                <a title="{{ info.title }}" href="#" data-currency="{{ info.currency_id }}" data-category="{{ info.id }}" class="category-chart-activate">{{ info.title }}</a>
             </td>
             {% for key, period in periods %}
                 {# income first #}
                 {% if(info.entries[key]) %}
                     <td data-value="{{ info.entries[key] }}" style="text-align: right;">
-                        {{ info.entries[key]|formatAmount }}
+                        {{ formatAmountBySymbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 {% else %}
                     <td data-value="0" style="text-align: right;">
-                        {{ 0|formatAmount }}
+                        {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 {% endif %}
             {% endfor %}
@@ -37,11 +37,11 @@
             {# if sum of income, display: #}
             {% if info.sum %}
                 <td data-value="{{ info.sum }}" style="text-align: right;">
-                    {{ info.sum|formatAmount }}
+                    {{ formatAmountBySymbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             {% else %}
                 <td data-value="0" style="text-align: right;">
-                    {{ 0|formatAmount }}
+                    {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             {% endif %}
         </tr>

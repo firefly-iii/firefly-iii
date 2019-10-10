@@ -1,22 +1,22 @@
 <?php
 /**
  * SpectreRoutineTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -31,12 +31,15 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class SpectreRoutineTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SpectreRoutineTest extends TestCase
 {
@@ -46,7 +49,7 @@ class SpectreRoutineTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -57,7 +60,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR2b' . random_int(1, 10000);
+        $job->key           = 'SR2b' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'authenticated';
         $job->provider      = 'spectre';
@@ -95,7 +98,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR1A' . random_int(1, 10000);
+        $job->key           = 'SR1A' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'do-authenticate';
         $job->provider      = 'spectre';
@@ -126,7 +129,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR3c' . random_int(1, 10000);
+        $job->key           = 'SR3c' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'spectre';
@@ -165,7 +168,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR4A' . random_int(1, 10000);
+        $job->key           = 'SR4A' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -205,7 +208,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR5A' . random_int(1, 10000);
+        $job->key           = 'SR5A' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

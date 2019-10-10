@@ -1,22 +1,22 @@
 <?php
 /**
  * RangeTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,15 +24,22 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\Range;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Log;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
+use Preferences;
+use Mockery;
+use Amount;
 
 /**
  * Class RangeTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RangeTest extends TestCase
 {
@@ -42,7 +49,7 @@ class RangeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
         Route::middleware(Range::class)->any(
             '/_test/range', function () {
             return view('test.test');
@@ -58,6 +65,27 @@ class RangeTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->andReturn(TransactionJournal::first());
         $this->withoutExceptionHandling();
+
+        $viewPreference = new Preference;
+        $viewPreference->data = '1M';
+
+        $langPreference = new Preference;
+        $langPreference->data = 'en_US';
+
+        $currPreference = new Preference;
+        $currPreference->data = 'EUR';
+
+        $listPreference = new Preference;
+        $listPreference->data = 10;
+
+
+        Preferences::shouldReceive('get')->withArgs(['viewRange','1M'])->atLeast()->once()->andReturn($viewPreference);
+        Preferences::shouldReceive('get')->withArgs(['language','en_US'])->atLeast()->once()->andReturn($langPreference);
+        Preferences::shouldReceive('get')->withArgs(['list-length',10])->atLeast()->once()->andReturn($listPreference);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($this->getEuro());
+        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
         $this->be($this->user());
         $response = $this->get('/_test/range');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());

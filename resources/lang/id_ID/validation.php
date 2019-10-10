@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -33,15 +33,19 @@ return [
     'rule_trigger_value'             => 'Nilai ini tidak validi untuk trigger yang dipilih.',
     'rule_action_value'              => 'Nilai ini tidak valid untuk tindakan yang dipilih.',
     'file_already_attached'          => 'Upload file ";name" sudah terpasang pada objek ini.',
-    'file_attached'                  => 'File yang diupload dengan sukses ":name.',
+    'file_attached'                  => 'Successfully uploaded file ":name".',
     'must_exist'                     => 'ID di bidang :attribute tidak ada di database.',
     'all_accounts_equal'             => 'Semua akun di bidang ini harus sama.',
+    'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',
+    'transaction_types_equal'        => 'All splits must be of the same type.',
+    'invalid_transaction_type'       => 'Invalid transaction type.',
     'invalid_selection'              => 'Pilihan Anda tidak valid.',
     'belongs_user'                   => 'Nilai ini tidak sah untuk bidang ini.',
     'at_least_one_transaction'       => 'Minimal harus ada satu transaksi.',
     'at_least_one_repetition'        => 'Minimal harus ada satu pengulangan.',
     'require_repeat_until'           => 'Dibutuhkan hanya sebuah angka pengulangan, atau tanggal akhir (repeat_until). Bukan keduanya.',
     'require_currency_info'          => 'Isi dalam bidang ini tidak valid jika tidak disertai informasi mata uang.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Deskripsi transaksi harus berbeda dari deskripsi umum.',
     'file_invalid_mime'              => 'File ":name" adalah tipe ":mime" yang tidak diterima sebagai upload baru.',
     'file_too_large'                 => 'File "; name" terlalu besar.',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute harus sebuah string.',
     'url'                            => 'Format atribut tidak valid.',
     'timezone'                       => ':attribute harus zona yang valid.',
-    '2fa_code'                       => 'Bidang :attribute tidak valid.',
-    'dimensions'                     => ':attribute memiliki dimensi gambar yang tidak valid.',
-    'distinct'                       => 'Bidang :attribute memiliki nilai duplikat.',
-    'file'                           => ':attribute harus berupa file.',
-    'in_array'                       => 'Bidang :attribute tidak ada in :other.',
-    'present'                        => 'Bidang :attribute harus ada.',
-    'amount_zero'                    => 'Jumlah total tidak boleh nol.',
-    'unique_piggy_bank_for_user'     => 'Nama celengan harus unik.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Tipe pengulangan yang tidak valid untuk transaksi berkala.',
-    'valid_recurrence_rep_moment'    => 'Waktu pengulangan tidaklah valid untuk tipe pengulangan ini.',
-    'invalid_account_info'           => 'Informasi akun tidak valid.',
+    '2fa_code'                    => 'Bidang :attribute tidak valid.',
+    'dimensions'                  => ':attribute memiliki dimensi gambar yang tidak valid.',
+    'distinct'                    => 'Bidang :attribute memiliki nilai duplikat.',
+    'file'                        => ':attribute harus berupa file.',
+    'in_array'                    => 'Bidang :attribute tidak ada in :other.',
+    'present'                     => 'Bidang :attribute harus ada.',
+    'amount_zero'                 => 'Jumlah total tidak boleh nol.',
+    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'unique_piggy_bank_for_user'  => 'Nama celengan harus unik.',
+    'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Tipe pengulangan yang tidak valid untuk transaksi berkala.',
+    'valid_recurrence_rep_moment' => 'Waktu pengulangan tidaklah valid untuk tipe pengulangan ini.',
+    'invalid_account_info'        => 'Informasi akun tidak valid.',
     'attributes'                     => [
         'email'                   => 'alamat email',
         'description'             => 'keterangan',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'nama',
         'piggy_bank_id'           => 'celengan ID',
         'targetamount'            => 'target dana',
-        'openingBalanceDate'      => 'tanggal saldo awal',
-        'openingBalance'          => 'saldo awal',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'cocok',
         'amount_min'              => 'jumlah minimal',
         'amount_max'              => 'jumlah maksimal',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'pemicu aturan #4',
         'rule-trigger.5'          => 'pemicu aturan #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

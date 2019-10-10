@@ -1,22 +1,22 @@
 <?php
 /**
  * Rule.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -38,7 +38,7 @@ class Rule extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'allRuleActions',
-            function () {
+            static function () {
                 // array of valid values for actions
                 $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
                 $possibleActions = [];
@@ -60,7 +60,7 @@ class Rule extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'allJournalTriggers',
-            function () {
+            static function () {
                 return [
                     'store-journal'  => (string)trans('firefly.rule_trigger_store_journal'),
                     'update-journal' => (string)trans('firefly.rule_trigger_update_journal'),
@@ -76,7 +76,7 @@ class Rule extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'allRuleTriggers',
-            function () {
+            static function () {
                 $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {

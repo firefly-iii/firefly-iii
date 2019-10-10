@@ -1,36 +1,34 @@
 /*
  * month.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-/** global: budgetExpenseUri, accountExpenseUri, mainUri */
 
 $(function () {
     "use strict";
     drawChart();
 
-    $('#budgets-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
-    });
+    loadAjaxPartial('accountsHolder', accountsUri);
+    loadAjaxPartial('budgetsHolder', budgetsUri);
+    loadAjaxPartial('accountPerbudgetHolder', accountPerBudgetUri);
 
-    $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
-    });
+    loadAjaxPartial('topExpensesHolder', topExpensesUri);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
+
 
 });
 
@@ -38,27 +36,21 @@ $(function () {
 function drawChart() {
     "use strict";
 
-    // month view:
-    doubleYNonStackedChart(mainUri, 'in-out-chart');
+    $.each($('.main_budget_canvas'), function (i, v) {
+        var canvas = $(v);
+        columnChart(canvas.data('url'), canvas.attr('id'));
+    });
 
     // draw pie chart of income, depending on "show other transactions too":
     redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
-    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
+    redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
+    redrawPieChart('source-accounts-pie-chart', sourceExpenseUri);
+    redrawPieChart('dest-accounts-pie-chart', destinationExpenseUri);
 
 
 }
 
 function redrawPieChart(container, uri) {
     "use strict";
-    var checkbox = $('#' + container + '-checked');
-
-    var others = '0';
-    // check if box is checked:
-    if (checkbox.prop('checked')) {
-        others = '1';
-    }
-    uri = uri.replace('OTHERS', others);
-
-    pieChart(uri, container);
-
+    multiCurrencyPieChart(uri, container);
 }

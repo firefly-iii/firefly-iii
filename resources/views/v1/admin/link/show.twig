@@ -33,16 +33,17 @@
                                     </div>
                                 </td>
                                 <td data-value="{{ link.source.description }}">
-                                    <a href="{{ route('transactions.show', [link.source_id]) }}">{{ link.source.description }}</a>
-                                </td>
-                                <td>{{ link.source|journalTotalAmount }}</td>
-                                <td>{{ journalLinkTranslation('outward', linkType.outward) }}</td>
-                                <td data-value="{{ link.destination.description }}">
-                                    <a href="{{ route('transactions.show', [link.destination_id]) }}">{{ link.destination.description }}</a>
+                                    <a href="{{ route('transactions.show', [link.source.transaction_group_id]) }}">{{ link.source.description }}</a>
                                 </td>
                                 <td>
-                                    {{ link.destination|journalTotalAmount }}
-
+                                    {{ journalObjectAmount(link.source) }}
+                                </td>
+                                <td>{{ journalLinkTranslation('outward', linkType.outward) }}</td>
+                                <td data-value="{{ link.destination.description }}">
+                                    <a href="{{ route('transactions.show', [link.destination.transaction_group_id]) }}">{{ link.destination.description }}</a>
+                                </td>
+                                <td>
+                                    {{ journalObjectAmount(link.destination) }}
                                 </td>
                             </tr>
                         {% endfor %}

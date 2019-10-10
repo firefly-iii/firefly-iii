@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Исходный счёт',
     'journal_description'         => 'Описание',
     'note'                        => 'Заметки',
+    'store_new_transaction'       => 'Сохранить новую транзакцию',
     'split_journal'               => 'Разделить эту транзакцию',
     'split_journal_explanation'   => 'Разделить эту транзакцию на несколько частей',
     'currency'                    => 'Валюта',
     'account_id'                  => 'Основной счёт',
     'budget_id'                   => 'Бюджет',
-    'openingBalance'              => 'Начальный баланс',
+    'opening_balance'             => 'Начальный баланс',
     'tagMode'                     => 'Режим метки',
     'tag_position'                => 'Расположение метки',
-    'virtualBalance'              => 'Виртуальный баланс',
+    'virtual_balance'             => 'Виртуальный баланс',
     'targetamount'                => 'Целевая сумма',
-    'accountRole'                 => 'Роль учётной записи',
-    'openingBalanceDate'          => 'Дата начального баланса',
-    'ccType'                      => 'План оплаты по кредитной карте',
-    'ccMonthlyPaymentDate'        => 'Дата ежемесячного платежа по кредитной карте',
+    'account_role'                => 'Роль учётной записи',
+    'opening_balance_date'        => 'Дата начального баланса',
+    'cc_type'                     => 'План оплаты по кредитной карте',
+    'cc_monthly_payment_date'     => 'Дата ежемесячного платежа по кредитной карте',
     'piggy_bank_id'               => 'Копилка',
     'returnHere'                  => 'Вернуться сюда',
     'returnHereExplanation'       => 'После сохранения вернуться сюда и создать ещё одну аналогичную запись.',
@@ -101,7 +102,7 @@ return [
     'convert_Transfer'            => 'Конвертировать перевод',
 
     'amount'                      => 'Сумма',
-    'foreign_amount'              => 'Сумму в иностранной валюте',
+    'foreign_amount'              => 'Сумма в иностранной валюте',
     'existing_attachments'        => 'Существующие вложения',
     'date'                        => 'Дата',
     'interest_date'               => 'Дата выплаты',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Символ',
     'code'                        => 'Код',
     'iban'                        => 'IBAN',
-    'accountNumber'               => 'Номер счета',
+    'account_number'              => 'Номер счёта',
     'creditCardNumber'            => 'Номер кредитной карты',
     'has_headers'                 => 'Заголовки',
     'date_format'                 => 'Формат даты',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Остановить обработку',
     'start_date'                  => 'Начало диапазона',
     'end_date'                    => 'Конец диапазона',
-    'export_start_range'          => 'Начало диапазона для экспорта',
-    'export_end_range'            => 'Конец диапазона для экспорта',
-    'export_format'               => 'Формат файла',
     'include_attachments'         => 'Включить загруженные вложения',
     'include_old_uploads'         => 'Включить импортированные данные',
-    'accounts'                    => 'Экспорт транзакций с этих счетов',
     'delete_account'              => 'Удалить счёт ":name"',
     'delete_bill'                 => 'Удаление счёта к оплате ":name"',
     'delete_budget'               => 'Удалить бюджет ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Календарь',
     'weekend'                 => 'Выходные',
     'client_secret'           => 'Закрытый ключ клиента',
+
+    'withdrawal_destination_id' => 'Счёт назначения',
+    'deposit_source_id'         => 'Исходный счёт',
+    'expected_on'               => 'Ожидаем',
+    'paid'                      => 'Оплачено',
 
 ];

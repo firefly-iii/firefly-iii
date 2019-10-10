@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => '修正 Rabobank 檔案中的潛在問題',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => '修正 PC 檔案中的潛在問題',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => '修正 Belfius 檔案中的潛在問題',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => '匯入設定 (3/4) - 定義每個欄的角色',
     'job_config_roles_text'           => '在您 CSV 檔案中的每個欄均含某些資料，請說明係核種資料供匯入器參照。用以「映射」資料的選項，即您將連結每個欄中的資料至您資料庫的一個值。一個常見的「已映射」的欄，是包含 IBAN 相對帳戶的欄，這便可輕易地媒合至您資料庫既存的 IBAN 帳戶。',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Rabobank 獨有現金/信用卡指標',
     'column_ing-debit-credit'         => 'ING 獨有 現金/信用卡 指標',
     'column_generic-debit-credit'     => '通用銀行債務/信用指標',
-    'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
-    'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
-    'column_sepa-db'                  => 'SEPA Mandate Identifier',
-    'column_sepa-cc'                  => 'SEPA Clearing Code',
-    'column_sepa-ci'                  => 'SEPA Creditor Identifier',
-    'column_sepa-ep'                  => 'SEPA External Purpose',
-    'column_sepa-country'             => 'SEPA Country',
-    'column_sepa-batch-id'            => 'SEPA Batch ID',
+    'column_sepa_ct_id'               => 'SEPA end-to-end Identifier',
+    'column_sepa_ct_op'               => 'SEPA Opposing Account Identifier',
+    'column_sepa_db'                  => 'SEPA Mandate Identifier',
+    'column_sepa_cc'                  => 'SEPA Clearing Code',
+    'column_sepa_ci'                  => 'SEPA Creditor Identifier',
+    'column_sepa_ep'                  => 'SEPA External Purpose',
+    'column_sepa_country'             => 'SEPA Country Code',
+    'column_sepa_batch_id'            => 'SEPA Batch ID',
     'column_tags-comma'               => '標籤 (以逗號分隔)',
     'column_tags-space'               => '標籤 (以空白鍵分隔)',
     'column_account-number'           => '資產帳戶 (帳戶號碼)',
     'column_opposing-number'          => '相對帳戶 (帳戶號碼)',
     'column_note'                     => '備註',
     'column_internal-reference'       => '內部參照',
+
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
 
 ];

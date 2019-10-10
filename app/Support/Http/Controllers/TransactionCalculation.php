@@ -1,22 +1,22 @@
 <?php
 /**
  * TransactionCalculation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,11 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 
@@ -43,18 +39,23 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    protected function getExpensesForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getExpensesForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setOpposingAccounts($opposing);
+        $total = $accounts->merge($opposing);
 
-        return $collector->getTransactions();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($total)
+                  ->setRange($start, $end)
+                  ->withAccountInformation()
+                  ->setTypes([TransactionType::WITHDRAWAL]);
+
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -62,24 +63,21 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      *
      */
-    protected function getExpensesForTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getExpensesForTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($tags)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
+                  ->setTags($tags)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -87,23 +85,19 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    protected function getExpensesInBudgets(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection // get data + augment with info
+    protected function getExpensesInBudgets(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setBudgets($budgets)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
+                  ->setBudgets($budgets)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -111,25 +105,23 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
-     *
-     *
+     * @return array
      */
-    protected function getExpensesInCategories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getExpensesInCategories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts($accounts)
+            ->setRange($start, $end)
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+            ->setCategories($categories)
+            ->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -137,22 +129,19 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    protected function getIncomeForCategories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getIncomeForCategories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount();
+                  ->setCategories($categories)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -160,18 +149,19 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    protected function getIncomeForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getIncomeForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setOpposingAccounts($opposing);
+        $total  =$accounts->merge($opposing);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($total)->setRange($start, $end)->withAccountInformation()->setTypes([TransactionType::DEPOSIT]);
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -179,24 +169,19 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    protected function getIncomeForTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
+    protected function getIncomeForTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setTags($tags)->withOpposingAccount();
+                  ->setTags($tags)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
 }

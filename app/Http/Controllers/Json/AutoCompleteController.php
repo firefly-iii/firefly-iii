@@ -1,238 +1,371 @@
 <?php
 /**
  * AutoCompleteController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Controllers\AutoCompleteCollector;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class AutoCompleteController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * TODO autocomplete for transaction types.
+ *
  */
 class AutoCompleteController extends Controller
 {
-    use AutoCompleteCollector;
 
     /**
-     * List of all journals.
-     *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function allTransactionJournals(Request $request, TransactionCollectorInterface $collector): JsonResponse
+    public function accounts(Request $request): JsonResponse
+    {
+        $accountTypes = explode(',', $request->get('types') ?? '');
+        $search       = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes  = [AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $balanceTypes         = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $filteredAccountTypes = [];
+        foreach ($accountTypes as $type) {
+            if (in_array($type, $allowedAccountTypes, true)) {
+                $filteredAccountTypes[] = $type;
+            }
+        }
+        if (0 === count($filteredAccountTypes)) {
+            $filteredAccountTypes = $allowedAccountTypes;
+        }
+        Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
+
+        $return          = [];
+        $result          = $repository->searchAccount((string)$search, $filteredAccountTypes);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $nameWithBalance = $account->name;
+            $currency        = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+
+            if (in_array($account->accountType->type, $balanceTypes, true)) {
+                $balance         = app('steam')->balance($account, new Carbon);
+                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
+            }
+
+            $return[] = [
+                'id'                      => $account->id,
+                'name'                    => $account->name,
+                'name_with_balance'       => $nameWithBalance,
+                'type'                    => $account->accountType->type,
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+            ];
+        }
+
+
+        return response()->json($return);
+    }
+
+    /**
+     * Searches in the titles of all transaction journals.
+     * The result is limited to the top 15 unique results.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function allJournals(Request $request): JsonResponse
     {
         $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-all-journals');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        $collector->setLimit(250)->setPage(1);
-        $return = array_values(array_unique($collector->getTransactions()->pluck('description')->toArray()));
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+        $result     = $repository->searchJournalDescriptions($search);
 
-        if ('' !== $search) {
-            $return = array_values(
-                array_unique(
-                    array_filter(
-                        $return, function (string $value) use ($search) {
-                        return !(false === stripos($value, $search));
-                    }, ARRAY_FILTER_USE_BOTH
-                    )
-                )
-            );
+        // limit and unique
+        $filtered = $result->unique('description');
+        $limited  = $filtered->slice(0, 15);
+        $array    = $limited->toArray();
+
+        return response()->json(array_values($array));
+    }
+
+    /**
+     * Searches in the titles of all transaction journals.
+     * The result is limited to the top 15 unique results.
+     *
+     * If the query is numeric, it will append the journal with that particular ID.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function allJournalsWithID(Request $request): JsonResponse
+    {
+        $search = (string)$request->get('search');
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+
+        /** @var TransactionGroupRepositoryInterface $groupRepos */
+        $groupRepos = app(TransactionGroupRepositoryInterface::class);
+
+        $result = $repository->searchJournalDescriptions($search);
+        $array  = [];
+        if (is_numeric($search)) {
+            // search for group, not journal.
+            $firstResult = $groupRepos->find((int)$search);
+            if (null !== $firstResult) {
+                // group may contain multiple journals, each a result:
+                foreach ($firstResult->transactionJournals as $journal) {
+                    $array[] = $journal->toArray();
+                }
+            }
         }
-        $cache->store($return);
+        // if not numeric, search ahead!
+
+        // limit and unique
+        $limited = $result->slice(0, 15);
+        $array   = array_merge($array, $limited->toArray());
+        foreach ($array as $index => $item) {
+            // give another key for consistency
+            $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
+        }
+
+
+        return response()->json($array);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function budgets(Request $request): JsonResponse
+    {
+        $search = (string)$request->get('search');
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $result     = $repository->searchBudget($search);
+
+        return response()->json($result->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function categories(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $result     = $repository->searchCategory($query);
+
+        return response()->json($result->toArray());
+    }
+
+    /**
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function currencies(): JsonResponse
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $return     = [];
+        $collection = $repository->getAll();
+
+        /** @var TransactionCurrency $currency */
+        foreach ($collection as $currency) {
+            $return[] = [
+                'id'             => $currency->id,
+                'name'           => $currency->name,
+                'code'           => $currency->code,
+                'symbol'         => $currency->symbol,
+                'enabled'        => $currency->enabled,
+                'decimal_places' => $currency->decimal_places,
+            ];
+        }
 
         return response()->json($return);
     }
 
     /**
      * @param Request $request
-     * @param string  $subject
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
-    public function autoComplete(Request $request, string $subject): JsonResponse
+    public function currencyNames(Request $request): JsonResponse
     {
-        $search     = (string)$request->get('search');
-        $unfiltered = null;
-        $filtered   = null;
-
-        switch ($subject) {
-            default:
-                break;
-            case 'all-accounts':
-                $unfiltered = $this->getAccounts(
-                    [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN,
-                     AccountType::DEBT, AccountType::MORTGAGE]
-                );
-                break;
-            case 'expense-accounts':
-                $unfiltered = $this->getAccounts([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-                break;
-            case 'revenue-accounts':
-                $unfiltered = $this->getAccounts([AccountType::REVENUE]);
-                break;
-            case 'asset-accounts':
-                $unfiltered = $this->getAccounts([AccountType::ASSET, AccountType::DEFAULT]);
-                break;
-            case 'categories':
-                $unfiltered = $this->getCategories();
-                break;
-            case 'budgets':
-                $unfiltered = $this->getBudgets();
-                break;
-            case 'tags':
-                $unfiltered = $this->getTags();
-                break;
-            case 'bills':
-                $unfiltered = $this->getBills();
-                break;
-            case 'currency-names':
-                $unfiltered = $this->getCurrencyNames();
-                break;
-            case 'transaction-types':
-            case 'transaction_types':
-                $unfiltered = $this->getTransactionTypes();
-                break;
-        }
-        $filtered = $this->filterResult($unfiltered, $search);
-
-        if (null === $filtered) {
-            throw new FireflyException(sprintf('Auto complete handler cannot handle "%s"', $subject)); // @codeCoverageIgnore
+        $query = (string)$request->get('search');
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $result     = $repository->searchCurrency($query)->toArray();
+        foreach ($result as $index => $item) {
+            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
         }
 
-        return response()->json($filtered);
+        return response()->json($result);
     }
 
     /**
-     * List of journals with their ID.
+     * An auto-complete specifically for expense accounts, used when mass updating mostly.
      *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
-     * @param TransactionJournal            $except
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function journalsWithId(Request $request, TransactionCollectorInterface $collector, TransactionJournal $except): JsonResponse
+    public function expenseAccounts(Request $request): JsonResponse
     {
-        $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-expense-accounts');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        $collector->setLimit(400)->setPage(1);
-        $set    = $collector->getTransactions()->pluck('description', 'journal_id')->toArray();
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::EXPENSE];
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
+
         $return = [];
-        foreach ($set as $id => $description) {
-            $id = (int)$id;
-            if ($id !== $except->id) {
-                $return[] = [
-                    'id'   => $id,
-                    'name' => $id . ': ' . $description,
-                ];
-            }
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
         }
-
-        sort($return);
-
-        if ('' !== $search) {
-            $return = array_filter(
-                $return, function (array $array) use ($search) {
-                $haystack = $array['name'];
-                $result   = stripos($haystack, $search);
-
-                return !(false === $result);
-            }
-            );
-
-        }
-        $cache->store($return);
 
         return response()->json($return);
     }
 
     /**
-     * List of journals by type.
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function piggyBanks(): JsonResponse
+    {
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+
+        return response()->json($repository->getPiggyBanks()->toArray());
+    }
+
+    /**
+     * An auto-complete specifically for revenue accounts, used when converting transactions mostly.
      *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
-     * @param string                        $what
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function transactionJournals(Request $request, TransactionCollectorInterface $collector, string $what): JsonResponse
+    public function revenueAccounts(Request $request): JsonResponse
     {
-        $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-journals');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        $type  = config('firefly.transactionTypesByWhat.' . $what);
-        $types = [$type];
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
 
-        $collector->setTypes($types)->setLimit(250)->setPage(1);
-        $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
-        sort($return);
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::REVENUE];
+        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
 
-        if ('' !== $search) {
-            $return = array_values(
-                array_unique(
-                    array_filter(
-                        $return, function (string $value) use ($search) {
-                        return !(false === stripos($value, $search));
-                    }, ARRAY_FILTER_USE_BOTH
-                    )
-                )
-            );
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
         }
-        $cache->store($return);
 
         return response()->json($return);
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function tags(Request $request): JsonResponse
+    {
+        $search = (string)$request->get('search');
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $result     = $repository->searchTags($search);
+        $array      = $result->toArray();
+        foreach ($array as $index => $item) {
+            // rename field for consistency.
+            $array[$index]['name'] = $item['tag'];
+        }
+
+        return response()->json($array);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function transactionTypes(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var TransactionTypeRepositoryInterface $repository */
+        $repository = app(TransactionTypeRepositoryInterface::class);
+        $array      = $repository->searchTypes($query)->toArray();
+
+        foreach ($array as $index => $item) {
+            // different key for consistency.
+            $array[$index]['name'] = $item['type'];
+        }
+
+        return response()->json($array);
+    }
+
 }

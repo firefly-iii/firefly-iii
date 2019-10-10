@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => 'Corrige d\'éventuels problèmes avec les fichiers Rabobank',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Corrige d\'éventuels problèmes avec les fichiers PC',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Corrige d\'éventuels problèmes avec les fichiers Belfius',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Corrige d\'éventuels problèmes avec les fichiers ING Belgium',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configuration de l\'importation (3/4) - Définir le rôle de chaque colonne',
     'job_config_roles_text'           => 'Chaque colonne de votre fichier CSV contient des données différentes. Veuillez indiquer quel type de données l’importateur doit attendre. L’option de « mapper » les données signifie que vous allez lier chaque entrée trouvée dans la colonne à une valeur dans votre base de données. Une colonne souvent mappée est celle contenant l\'IBAN du compte opposé. Il est facile de le faire correspondre avec un IBAN déjà présent dans votre base de données.',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Indicateur de débit/crédit spécifique à Rabobank',
     'column_ing-debit-credit'         => 'Indicateur de débit/crédit spécifique à ING',
     'column_generic-debit-credit'     => 'Indicateur générique de débit/crédit bancaire',
-    'column_sepa-ct-id'               => 'Référence de bout en bout SEPA',
-    'column_sepa-ct-op'               => 'Référence SEPA du compte opposé',
-    'column_sepa-db'                  => 'Référence Unique de Mandat SEPA',
-    'column_sepa-cc'                  => 'Code de rapprochement SEPA',
-    'column_sepa-ci'                  => 'Identifiant Créancier SEPA',
-    'column_sepa-ep'                  => 'Objectif externe SEPA',
-    'column_sepa-country'             => 'Code de pays SEPA',
-    'column_sepa-batch-id'            => 'ID de lot SEPA',
+    'column_sepa_ct_id'               => 'Identificateur de bout en bout SEPA',
+    'column_sepa_ct_op'               => 'Identifiant de compte SEPA opposable',
+    'column_sepa_db'                  => 'Identifiant de mandat SEPA',
+    'column_sepa_cc'                  => 'Code de rapprochement SEPA',
+    'column_sepa_ci'                  => 'Identifiant Créancier SEPA',
+    'column_sepa_ep'                  => 'Usage externe SEPA',
+    'column_sepa_country'             => 'Pays SEPA',
+    'column_sepa_batch_id'            => 'ID de lot SEPA',
     'column_tags-comma'               => 'Tags (séparés par des virgules)',
     'column_tags-space'               => 'Tags (séparés par un espace)',
     'column_account-number'           => 'Compte d’actif (numéro de compte)',
     'column_opposing-number'          => 'Compte opposé (numéro de compte)',
     'column_note'                     => 'Note(s)',
     'column_internal-reference'       => 'Référence interne',
+
+    // error message
+    'duplicate_row'                   => 'La ligne n°:row (":description") n\'a pas pu être importée. Elle existe déjà.',
 
 ];

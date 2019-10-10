@@ -1,22 +1,22 @@
 <?php
 /**
  * GetConfigurationData.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -68,7 +68,7 @@ trait GetConfigurationData
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
         $steps    = [];
-        if (\is_array($elements) && \count($elements) > 0) {
+        if (is_array($elements) && count($elements) > 0) {
             foreach ($elements as $key => $options) {
                 $currentStep = $options;
 
@@ -79,7 +79,7 @@ trait GetConfigurationData
                 $steps[] = $currentStep;
             }
         }
-        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, \count($steps)));
+        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
 
         return $steps;
     }
@@ -88,7 +88,7 @@ trait GetConfigurationData
      * Get config for date range.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
@@ -106,12 +106,12 @@ trait GetConfigurationData
             // first range is the current range:
             $title => [$start, $end],
         ];
-        Log::debug(sprintf('viewRange is %s', $viewRange));
-        Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
+        //Log::debug(sprintf('viewRange is %s', $viewRange));
+        //Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
-            Log::debug('Custom is true.');
+            //Log::debug('Custom is true.');
             $index             = app('navigation')->periodShow($start, $viewRange);
             $customPeriodStart = app('navigation')->startOfPeriod($start, $viewRange);
             $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);
@@ -177,7 +177,7 @@ trait GetConfigurationData
      * @param string $specificPage
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function getSpecificSteps(string $route, string $specificPage): array // get config values
     {
@@ -188,7 +188,7 @@ trait GetConfigurationData
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (\is_array($elements) && \count($elements) > 0) {
+            if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
@@ -200,36 +200,10 @@ trait GetConfigurationData
                 }
             }
         }
-        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, \count($steps)));
+        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
 
         return $steps;
     }
-
-    /**
-     * Check if forbidden functions are set.
-     *
-     * @return bool
-     */
-    protected function hasForbiddenFunctions(): bool // validate system config
-    {
-        $list      = ['proc_close'];
-        $forbidden = explode(',', ini_get('disable_functions'));
-        $trimmed   = array_map(
-            function (string $value) {
-                return trim($value);
-            }, $forbidden
-        );
-        foreach ($list as $entry) {
-            if (\in_array($entry, $trimmed, true)) {
-                Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      *
      */

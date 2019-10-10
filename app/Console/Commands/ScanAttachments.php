@@ -1,22 +1,22 @@
 <?php
 /**
  * ScanAttachments.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /** @noinspection PhpDynamicAsStaticMethodCallInspection */
@@ -30,6 +30,7 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Log;
 use Storage;
 
 /**
@@ -51,7 +52,7 @@ class ScanAttachments extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:scan-attachments';
+    protected $signature = 'firefly-iii:scan-attachments';
 
     /**
      * Execute the console command.
@@ -62,23 +63,24 @@ class ScanAttachments extends Command
         $disk        = Storage::disk('upload');
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
-            $fileName = $attachment->fileName();
+            $fileName         = $attachment->fileName();
+            $decryptedContent = '';
             try {
-                $content = $disk->get($fileName);
+                $encryptedContent = $disk->get($fileName);
             } catch (FileNotFoundException $e) {
                 $this->error(sprintf('Could not find data for attachment #%d: %s', $attachment->id, $e->getMessage()));
                 continue;
             }
             try {
-                $decrypted = Crypt::decrypt($content);
+                $decryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                $this->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
-                continue;
+                Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+                $decryptedContent = $encryptedContent;
             }
-            $tmpfname = tempnam(sys_get_temp_dir(), 'FireflyIII');
-            file_put_contents($tmpfname, $decrypted);
-            $md5              = md5_file($tmpfname);
-            $mime             = mime_content_type($tmpfname);
+            $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            file_put_contents($tempFileName, $decryptedContent);
+            $md5              = md5_file($tempFileName);
+            $mime             = mime_content_type($tempFileName);
             $attachment->md5  = $md5;
             $attachment->mime = $mime;
             $attachment->save();

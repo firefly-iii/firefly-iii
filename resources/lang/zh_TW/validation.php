@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,12 +36,16 @@ return [
     'file_attached'                  => '已成功上傳檔案 ":name"。',
     'must_exist'                     => '欄位 :attribute 的 ID 不存在於資料庫。',
     'all_accounts_equal'             => '此欄位中的所有帳戶必須相等。',
+    'group_title_mandatory'          => '多於一筆交易時，須要群組標題。',
+    'transaction_types_equal'        => '所有拆分須為同一類型。',
+    'invalid_transaction_type'       => '交易類型無效。',
     'invalid_selection'              => '您的選擇無效。',
     'belongs_user'                   => '此欄位不接受此值。',
     'at_least_one_transaction'       => '至少需要一個交易。',
     'at_least_one_repetition'        => '至少需要一次重複。',
     'require_repeat_until'           => '要嘛重複次數，要嘛結束日期 (repeat_until)，須二擇其一。',
     'require_currency_info'          => '此欄位內容須要貨幣資訊。',
+    'require_currency_amount'        => '此欄位內容須要外幣資訊。',
     'equal_description'              => '交易描述不應等同全域描述。',
     'file_invalid_mime'              => '檔案 ":name" 類型為 ":mime"，不允許上載。',
     'file_too_large'                 => '檔案 ":name" 過大。',
@@ -116,18 +120,19 @@ return [
     'string'                         => ':attribute 必須是字串。',
     'url'                            => ':attribute 格式無效。',
     'timezone'                       => ':attribute 必須是有效的時區。',
-    '2fa_code'                       => '欄位 :attribute 無效。',
-    'dimensions'                     => ':attribute 圖片尺寸無效。',
-    'distinct'                       => '欄位 :attribute 有重複值。',
-    'file'                           => ':attribute 必須是檔案。',
-    'in_array'                       => '欄位 :attribute 不存在於 :other。',
-    'present'                        => ':attribute 欄位必須存在。',
-    'amount_zero'                    => '總金額不能為零。',
-    'unique_piggy_bank_for_user'     => '小豬撲滿的名稱必須是獨一無二的。',
-    'secure_password'                => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => '定期重複交易的重複類型無效。',
-    'valid_recurrence_rep_moment'    => '重複時刻在此重複類型無效。',
-    'invalid_account_info'           => '無效的帳戶資訊。',
+    '2fa_code'                    => '欄位 :attribute 無效。',
+    'dimensions'                  => ':attribute 圖片尺寸無效。',
+    'distinct'                    => '欄位 :attribute 有重複值。',
+    'file'                        => ':attribute 必須是檔案。',
+    'in_array'                    => '欄位 :attribute 不存在於 :other。',
+    'present'                     => ':attribute 欄位必須存在。',
+    'amount_zero'                 => '總金額不能為零。',
+    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'unique_piggy_bank_for_user'  => '小豬撲滿的名稱必須是獨一無二的。',
+    'secure_password'             => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => '定期重複交易的重複類型無效。',
+    'valid_recurrence_rep_moment' => '重複時刻在此重複類型無效。',
+    'invalid_account_info'        => '無效的帳戶資訊。',
     'attributes'                     => [
         'email'                   => '電子郵件地址',
         'description'             => '描述',
@@ -135,8 +140,8 @@ return [
         'name'                    => '名稱',
         'piggy_bank_id'           => '小豬撲滿 ID',
         'targetamount'            => '目標金額',
-        'openingBalanceDate'      => '初始餘額日期',
-        'openingBalance'          => '初始餘額',
+        'opening_balance_date'    => '初始餘額日期',
+        'opening_balance'         => '初始餘額',
         'match'                   => '符合',
         'amount_min'              => '最小金額',
         'amount_max'              => '最大金額',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => '規則觸發器 #4',
         'rule-trigger.5'          => '規則觸發器 #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'withdrawal_source_bad_data'     => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
+    'withdrawal_dest_need_data'      => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'withdrawal_dest_bad_data'       => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+
+    'deposit_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'deposit_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
+    'deposit_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'deposit_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+
+    'transfer_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'transfer_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
+    'transfer_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'transfer_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'need_id_in_edit'           => '每筆拆分須有 transaction_journal_id (為有效的 ID 或是 0)。',
+
+    'ob_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'ob_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'ob_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

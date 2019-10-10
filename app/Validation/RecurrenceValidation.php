@@ -1,22 +1,22 @@
 <?php
 /**
- * ApiValidation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * RecurrenceValidation.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -37,6 +37,57 @@ use Log;
  */
 trait RecurrenceValidation
 {
+
+
+    /**
+     * Validate account information input for recurrences which are being updated.
+     *
+     * TODO must always trigger when the type of the recurrence changes.
+     *
+     * @param Validator $validator
+     */
+    public function valUpdateAccountInfo(Validator $validator): void
+    {
+        //Log::debug('Now in validateAccountInformation()');
+        $data = $validator->getData();
+
+        $transactionType = $data['type'] ?? 'invalid';
+        $transactions    = $data['transactions'] ?? [];
+
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+
+        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
+        foreach ($transactions as $index => $transaction) {
+            $transactionType = $transaction['type'] ?? $transactionType;
+            $accountValidator->setTransactionType($transactionType);
+
+            // validate source account.
+            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
+            $sourceName  = $transaction['source_name'] ?? null;
+            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+
+            // do something with result:
+            if (false === $validSource) {
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+
+                return;
+            }
+            // validate destination account
+            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
+            $destinationName  = $transaction['destination_name'] ?? null;
+            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+            // do something with result:
+            if (false === $validDestination) {
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+
+                return;
+            }
+        }
+    }
+
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
@@ -47,8 +98,26 @@ trait RecurrenceValidation
         $data        = $validator->getData();
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
-        if (0 === \count($repetitions)) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
+        if (0 === count($repetitions)) {
+            $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    public function validateOneRepetitionUpdate(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['repetitions'] ?? null;
+        if (null === $repetitions) {
+            return;
+        }
+        // need at least one transaction
+        if (0 === count($repetitions)) {
+            $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
         }
     }
 
@@ -82,7 +151,7 @@ trait RecurrenceValidation
          * @var array $repetition
          */
         foreach ($repetitions as $index => $repetition) {
-            switch ($repetition['type']) {
+            switch ($repetition['type'] ?? 'empty') {
                 default:
                     $validator->errors()->add(sprintf('repetitions.%d.type', $index), (string)trans('validation.valid_recurrence_rep_type'));
 
@@ -145,7 +214,7 @@ trait RecurrenceValidation
     protected function validateNdom(Validator $validator, int $index, string $moment): void
     {
         $parameters = explode(',', $moment);
-        if (2 !== \count($parameters)) {
+        if (2 !== count($parameters)) {
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
 
             return;

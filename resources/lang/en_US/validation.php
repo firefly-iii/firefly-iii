@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -33,15 +33,19 @@ return [
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
-    'file_attached'                  => 'Succesfully uploaded file ":name".',
+    'file_attached'                  => 'Successfully uploaded file ":name".',
     'must_exist'                     => 'The ID in field :attribute does not exist in the database.',
     'all_accounts_equal'             => 'All accounts in this field must be equal.',
+    'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',
+    'transaction_types_equal'        => 'All splits must be of the same type.',
+    'invalid_transaction_type'       => 'Invalid transaction type.',
     'invalid_selection'              => 'Your selection is invalid.',
     'belongs_user'                   => 'This value is invalid for this field.',
     'at_least_one_transaction'       => 'Need at least one transaction.',
     'at_least_one_repetition'        => 'Need at least one repetition.',
     'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeat_until). Not both.',
     'require_currency_info'          => 'The content of this field is invalid without currency information.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Transaction description should not equal global description.',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
     'file_too_large'                 => 'File ":name" is too large.',
@@ -116,18 +120,19 @@ return [
     'string'                         => 'The :attribute must be a string.',
     'url'                            => 'The :attribute format is invalid.',
     'timezone'                       => 'The :attribute must be a valid zone.',
-    '2fa_code'                       => 'The :attribute field is invalid.',
-    'dimensions'                     => 'The :attribute has invalid image dimensions.',
-    'distinct'                       => 'The :attribute field has a duplicate value.',
-    'file'                           => 'The :attribute must be a file.',
-    'in_array'                       => 'The :attribute field does not exist in :other.',
-    'present'                        => 'The :attribute field must be present.',
-    'amount_zero'                    => 'The total amount cannot be zero.',
-    'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions.',
-    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
-    'invalid_account_info'           => 'Invalid account information.',
+    '2fa_code'                    => 'The :attribute field is invalid.',
+    'dimensions'                  => 'The :attribute has invalid image dimensions.',
+    'distinct'                    => 'The :attribute field has a duplicate value.',
+    'file'                        => 'The :attribute must be a file.',
+    'in_array'                    => 'The :attribute field does not exist in :other.',
+    'present'                     => 'The :attribute field must be present.',
+    'amount_zero'                 => 'The total amount cannot be zero.',
+    'current_target_amount'       => 'The current amount must be less than the target amount.',
+    'unique_piggy_bank_for_user'  => 'The name of the piggy bank must be unique.',
+    'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Invalid repetition type for recurring transactions.',
+    'valid_recurrence_rep_moment' => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'        => 'Invalid account information.',
     'attributes'                     => [
         'email'                   => 'email address',
         'description'             => 'description',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'name',
         'piggy_bank_id'           => 'piggy bank ID',
         'targetamount'            => 'target amount',
-        'openingBalanceDate'      => 'opening balance date',
-        'openingBalance'          => 'opening balance',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'match',
         'amount_min'              => 'minimum amount',
         'amount_max'              => 'maximum amount',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'rule trigger #4',
         'rule-trigger.5'          => 'rule trigger #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_invalid_source' => 'You can\'t use this account as the source account.',
+    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 ];

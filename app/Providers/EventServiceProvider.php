@@ -1,22 +1,22 @@
 <?php
 /**
  * EventServiceProvider.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -28,8 +28,8 @@ use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
@@ -46,11 +46,11 @@ use Session;
 
 /**
  * Class EventServiceProvider.
+ * @codeCoverageIgnore
  */
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * @codeCoverageIgnore
      * The event listener mappings for the application.
      *
      * @var array
@@ -89,12 +89,12 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            StoredTransactionJournal::class    => [
-                'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
+            StoredTransactionGroup::class    => [
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
-            UpdatedTransactionJournal::class   => [
-                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
+            UpdatedTransactionGroup::class   => [
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
             ],
             // API related events:
             AccessTokenCreated::class          => [
@@ -103,7 +103,6 @@ class EventServiceProvider extends ServiceProvider
         ];
 
     /**
-     * @codeCoverageIgnore
      * Register any events for your application.
      */
     public function boot(): void
@@ -113,13 +112,13 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     protected function registerCreateEvents(): void
     {
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
-            function (PiggyBank $piggyBank) {
+            static function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = $piggyBank->startdate;
@@ -129,7 +128,7 @@ class EventServiceProvider extends ServiceProvider
             }
         );
         Client::created(
-            function (Client $oauthClient) {
+            static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
                 $user       = $repository->findNull((int)$oauthClient->user_id);

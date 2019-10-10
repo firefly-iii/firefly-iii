@@ -1,22 +1,22 @@
 <?php
 /**
  * AttachmentHelper.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -56,6 +56,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * AttachmentHelper constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -67,7 +68,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk    = Storage::disk('upload');
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -83,22 +84,27 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
-
+        $encryptedData = '';
         try {
-            $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
+            $encryptedData = $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
+        } catch (FileNotFoundException $e) {
+            Log::error($e->getMessage());
+        }
+        try {
+            $unencryptedData = Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
-            $content = '';
+            $unencryptedData = $encryptedData;
         }
 
-        return $content;
+        return $unencryptedData;
     }
 
     /**
      * Returns the file path relative to upload disk for an attachment,
      *
      * @param Attachment $attachment
-     *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getAttachmentLocation(Attachment $attachment): string
@@ -108,7 +114,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Get all attachments.
-     *
+     * @codeCoverageIgnore
      * @return Collection
      */
     public function getAttachments(): Collection
@@ -120,6 +126,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all errors.
      *
      * @return MessageBag
+     * @codeCoverageIgnore
      */
     public function getErrors(): MessageBag
     {
@@ -130,13 +137,13 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all messages.
      *
      * @return MessageBag
+     * @codeCoverageIgnore
      */
     public function getMessages(): MessageBag
     {
         return $this->messages;
     }
 
-    /** @noinspection MultipleReturnStatementsInspection */
     /**
      * Uploads a file as a string.
      *
@@ -160,19 +167,18 @@ class AttachmentHelper implements AttachmentHelperInterface
         $finfo       = finfo_open(FILEINFO_MIME_TYPE);
         $mime        = finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
-        if (!\in_array($mime, $allowedMime, true)) {
+        if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
 
             return false;
         }
-        // is allowed? Save the file!
-        $encrypted = Crypt::encrypt($content);
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        // is allowed? Save the file, without encryption.
+        $this->uploadDisk->put($attachment->fileName(), $content);
 
         // update attachment.
         $attachment->md5      = md5_file($path);
         $attachment->mime     = $mime;
-        $attachment->size     = \strlen($content);
+        $attachment->size     = strlen($content);
         $attachment->uploaded = true;
         $attachment->save();
 
@@ -193,8 +199,8 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!($model instanceof Model)) {
             return false; // @codeCoverageIgnore
         }
-        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
-        if (\is_array($files)) {
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
+        if (is_array($files)) {
             Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
@@ -204,7 +210,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
             Log::debug('Done processing uploads.');
         }
-        if (!\is_array($files) || (\is_array($files) && 0 === \count($files))) {
+        if (!is_array($files) || (is_array($files) && 0 === count($files))) {
             Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
         }
 
@@ -223,7 +229,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
-        $class = \get_class($model);
+        $class = get_class($model);
         /** @noinspection PhpUndefinedFieldInspection */
         $count  = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         $result = false;
@@ -273,12 +279,10 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
 
             $content   = $fileObject->fread($file->getSize());
-            $encrypted = Crypt::encrypt($content);
-            Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
-            Log::debug(sprintf('Encrypted content is %d', \strlen($encrypted)));
+            Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it:
-            $this->uploadDisk->put($attachment->fileName(), $encrypted);
+            $this->uploadDisk->put($attachment->fileName(), $content);
             $attachment->uploaded = true; // update attachment
             $attachment->save();
             $this->attachments->push($attachment);
@@ -307,7 +311,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug('Valid mimes are', $this->allowedMimes);
         $result = true;
 
-        if (!\in_array($mime, $this->allowedMimes, true)) {
+        if (!in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);

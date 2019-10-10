@@ -1,22 +1,22 @@
 <?php
 /**
  * StageNewHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -40,14 +40,17 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\Bunq\MonetaryAccount;
 use FireflyIII\Support\Import\Routine\Bunq\StageNewHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\Object\FakeApiContext;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class StageNewHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class StageNewHandlerTest extends TestCase
 {
@@ -57,7 +60,7 @@ class StageNewHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -67,7 +70,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'snh_bunq_' . random_int(1, 10000);
+        $job->key           = 'snh_bunq_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -82,7 +85,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting = new MonetaryAccountSetting(null, null, null);
         $mab     = new BunqMonetaryAccountBank('EUR', 'Some descr', null, null, null, null, null, null, null, null);
-        $ma      = new BunqMonetaryAccount;
+        $monAcc  = new BunqMonetaryAccount;
         $alias   = new Pointer('a', 'b', null);
 
 
@@ -93,10 +96,10 @@ class StageNewHandlerTest extends TestCase
         $setting->setColor('FFFFFF');
         $mab->setSetting($setting);
         $mab->setAlias([$alias]);
-        $ma->setMonetaryAccountBank($mab);
+        $monAcc->setMonetaryAccountBank($mab);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
@@ -154,7 +157,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'snha_bunq_' . random_int(1, 10000);
+        $job->key           = 'snha_bunq_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -169,7 +172,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting   = new MonetaryAccountSetting(null, null, null);
         $maj       = new MonetaryAccountJoint('EUR', [], 'Some descr', null, null, null, null, null, null, null, null);
-        $ma        = new BunqMonetaryAccount;
+        $monAcc    = new BunqMonetaryAccount;
         $alias     = new Pointer('a', 'b', null);
         $labelUser = new LabelUser('x', 'James', 'NL');
         $coOwner   = new CoOwner($alias);
@@ -183,11 +186,11 @@ class StageNewHandlerTest extends TestCase
         $maj->setSetting($setting);
         $maj->setAlias([$alias]);
         $maj->setAllCoOwner([$coOwner]);
-        $ma->setMonetaryAccountJoint($maj);
+        $monAcc->setMonetaryAccountJoint($maj);
         $coOwner->setAlias($labelUser);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
@@ -211,7 +214,7 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
-                    'iban' => 'SM72C9584723533916792029340'
+                    'iban'          => 'SM72C9584723533916792029340',
                 ],
             ],
         ];
@@ -246,7 +249,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'snh_bbunq_' . random_int(1, 10000);
+        $job->key           = 'snh_bbunq_' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -261,7 +264,7 @@ class StageNewHandlerTest extends TestCase
         // create fake bunq object:
         $setting = new MonetaryAccountSetting(null, null, null);
         $mal     = new MonetaryAccountLight('EUR', 'Some descr', null, null, null, null, null, null, null, null);
-        $ma      = new BunqMonetaryAccount;
+        $monAcc  = new BunqMonetaryAccount;
         $alias   = new Pointer('a', 'b', null);
 
 
@@ -272,10 +275,10 @@ class StageNewHandlerTest extends TestCase
         $setting->setColor('FFFFFF');
         $mal->setSetting($setting);
         $mal->setAlias([$alias]);
-        $ma->setMonetaryAccountLight($mal);
+        $monAcc->setMonetaryAccountLight($mal);
 
         // response list.
-        $list = new BunqResponseMonetaryAccountList([$ma], []);
+        $list = new BunqResponseMonetaryAccountList([$monAcc], []);
 
         $expectedConfig = [
             'accounts' => [
@@ -298,7 +301,7 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
-                    'iban' => 'SM72C9584723533916792029340'
+                    'iban'          => 'SM72C9584723533916792029340',
                 ],
 
             ],

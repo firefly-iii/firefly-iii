@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportProvider.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -27,7 +27,6 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,15 +36,20 @@ class ImportProvider implements BinderInterface
 {
     /**
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      */
     public static function getProviders(): array
     {
         $repository = app(UserRepositoryInterface::class);
         // get and filter all import routines:
+
+        if (!auth()->check()) {
+            return [];
+        }
+
         /** @var User $user */
         $user = auth()->user();
+
         /** @var array $config */
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];
@@ -55,12 +59,15 @@ class ImportProvider implements BinderInterface
             // only consider enabled providers
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
+            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             if (false === $enabled) {
                 continue;
             }
-
-            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
-                continue; // @codeCoverageIgnore
+            if (false === $allowedForUser && !$isDemoUser) {
+                continue;
+            }
+            if (false === $allowedForDemo && $isDemoUser) {
+                continue;
             }
 
             $providers[$providerName] = [
@@ -78,7 +85,7 @@ class ImportProvider implements BinderInterface
             }
             $providers[$providerName]['prereq_complete'] = $result;
         }
-        Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
+        //Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
 
         return $providers;
     }
@@ -93,7 +100,7 @@ class ImportProvider implements BinderInterface
     public static function routeBinder(string $value, Route $route): string
     {
         $providers = array_keys(self::getProviders());
-        if (\in_array($value, $providers, true)) {
+        if (in_array($value, $providers, true)) {
             return $value;
         }
         throw new NotFoundHttpException;

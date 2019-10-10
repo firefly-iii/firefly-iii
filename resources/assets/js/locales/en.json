@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "What's playing?",
+        "flash_error": "Error!",
+        "flash_success": "Success!",
+        "close": "Close",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "split": "Split",
+        "transaction_journal_information": "Transaction information",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Add another split",
+        "submission": "Submission",
+        "create_another": "After storing, return here to create another one.",
+        "reset_after": "Reset form after submission",
+        "submit": "Submit",
+        "amount": "Amount",
+        "date": "Date",
+        "tags": "Tags",
+        "no_budget": "(no budget)",
+        "category": "Category",
+        "attachments": "Attachments",
+        "notes": "Notes",
+        "update_transaction": "Update transaction",
+        "after_update_create_another": "After updating, return here to continue editing.",
+        "store_as_new": "Store as a new transaction instead of updating.",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(none)",
+        "no_piggy_bank": "(no piggy bank)",
+        "description": "Description"
+    },
+    "form": {
+        "interest_date": "Interest date",
+        "book_date": "Book date",
+        "process_date": "Processing date",
+        "due_date": "Due date",
+        "foreign_amount": "Foreign amount",
+        "payment_date": "Payment date",
+        "invoice_date": "Invoice date",
+        "internal_reference": "Internal reference"
+    },
+    "config": {
+        "html_language": "en"
+    }
+}

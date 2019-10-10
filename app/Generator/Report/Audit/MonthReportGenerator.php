@@ -1,22 +1,22 @@
 <?php
 /**
  * MonthReportGenerator.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /** @noinspection PhpUndefinedMethodInspection */
@@ -28,11 +28,10 @@ namespace FireflyIII\Generator\Report\Audit;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -72,13 +71,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $reportType  = 'audit';
         $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
-                        'interest_date', 'book_date', 'process_date',
-                        // three new optional fields.
-                        'due_date', 'payment_date', 'invoice_date',
+
                         'from', 'to', 'budget', 'category', 'bill',
+
                         // more new optional fields
-                        'internal_reference', 'notes',
                         'create_date', 'update_date',
+
+                        // date fields.
+                        'interest_date', 'book_date', 'process_date',
+                        'due_date', 'payment_date', 'invoice_date',
         ];
         try {
             $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
@@ -86,7 +87,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            Log::error($e->getTraceAsString());
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;
@@ -100,48 +102,63 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
      * @throws FireflyException
      */
     public function getAuditReport(Account $account, Carbon $date): array
     {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($account->user);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
-        $journals         = $collector->getTransactions();
-        $journals         = $journals->reverse();
+        /** @var JournalRepositoryInterface $journalRepository */
+        $journalRepository = app(JournalRepositoryInterface::class);
+        $journalRepository->setUser($account->user);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
+            ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
+        $journals         = $collector->getExtractedJournals();
+        $journals         = array_reverse($journals, true);
         $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-        $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
+        $defaultCurrency  = app('amount')->getDefaultCurrencyByUser($account->user);
+        $currency         = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
-        if (null === $currency) {
-            throw new FireflyException('Unexpected NULL value in account currency preference.');
-        }
+        foreach ($journals as $index => $journal) {
+            $journals[$index]['balance_before'] = $startBalance;
+            $transactionAmount                  = $journal['amount'];
 
-        /** @var Transaction $transaction */
-        foreach ($journals as $transaction) {
-            $transaction->before = $startBalance;
-            $transactionAmount   = $transaction->transaction_amount;
-
-            if ($currency->id === $transaction->foreign_currency_id) {
-                $transactionAmount = $transaction->transaction_foreign_amount;
+            // make sure amount is in the right "direction".
+            if ($account->id === $journal['destination_account_id']) {
+                $transactionAmount = app('steam')->positive($journal['amount']);
             }
 
-            $newBalance         = bcadd($startBalance, $transactionAmount);
-            $transaction->after = $newBalance;
-            $startBalance       = $newBalance;
+            if ($currency->id === $journal['foreign_currency_id']) {
+                $transactionAmount = $journal['foreign_amount'];
+                if ($account->id === $journal['destination_account_id']) {
+                    $transactionAmount = app('steam')->positive($journal['foreign_amount']);
+                }
+            }
+
+            $newBalance                        = bcadd($startBalance, $transactionAmount);
+            $journals[$index]['balance_after'] = $newBalance;
+            $startBalance                      = $newBalance;
+
+            // add meta dates for each journal.
+            $journals[$index]['interest_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
+            $journals[$index]['book_date']     = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
+            $journals[$index]['process_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
+            $journals[$index]['due_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
+            $journals[$index]['payment_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
+            $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
+
         }
 
         $return = [
-            'journals'         => $journals->reverse(),
-            'exists'           => $journals->count() > 0,
+            'journals'         => $journals,
+            'currency'         => $currency,
+            'exists'           => count($journals) > 0,
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
             'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
@@ -217,6 +234,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
+        // doesn't use expense collection.
         return $this;
     }
 

@@ -1,22 +1,22 @@
 <?php
 /**
  * PrependDescriptionTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class PrependDescriptionTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PrependDescriptionTest extends TestCase
 {
@@ -38,9 +41,9 @@ class PrependDescriptionTest extends TestCase
     public function testAct(): void
     {
         // get journal, give fixed description
-        $description          = 'text' . random_int(1, 10000);
-        $prepend              = 'prepend' . random_int(1, 1234);
-        $journal              = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $description          = 'text' . $this->randomInt();
+        $prepend              = 'prepend' . $this->randomInt();
+        $journal              = $this->getRandomWithdrawal();
         $journal->description = $description;
         $journal->save();
 

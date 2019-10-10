@@ -1,22 +1,22 @@
 <?php
 /**
  * ChooseAccountsHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -38,12 +38,15 @@ use FireflyIII\Services\Spectre\Object\Holder;
 use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ChooseAccountsHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ChooseAccountsHandlerTest extends TestCase
 {
@@ -53,8 +56,9 @@ class ChooseAccountsHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler
      */
@@ -63,7 +67,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-A' . random_int(1, 10000);
+        $job->key           = 'sca-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -98,7 +102,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-B' . random_int(1, 10000);
+        $job->key           = 'sca-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -137,7 +141,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-c' . random_int(1, 10000);
+        $job->key           = 'sca-c' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -196,7 +200,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-E' . random_int(1, 10000);
+        $job->key           = 'sca-E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -255,7 +259,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-D' . random_int(1, 10000);
+        $job->key           = 'sca-D' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -312,7 +316,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-E' . random_int(1, 10000);
+        $job->key           = 'sca-E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -442,7 +446,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-F' . random_int(1, 10000);
+        $job->key           = 'sca-F' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -468,8 +472,8 @@ class ChooseAccountsHandlerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setUser')->once();
 
-        $euro   = TransactionCurrency::where('code', 'EUR')->first();
-        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $euro   = $this->getEuro();
+        $usd    = $this->getDollar();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])
@@ -595,7 +599,7 @@ class ChooseAccountsHandlerTest extends TestCase
         // fake job:
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sca-F' . random_int(1, 10000);
+        $job->key           = 'sca-F' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -621,8 +625,8 @@ class ChooseAccountsHandlerTest extends TestCase
         $currencyRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setUser')->once();
 
-        $euro   = TransactionCurrency::where('code', 'EUR')->first();
-        $usd    = TransactionCurrency::where('code', 'USD')->first();
+        $euro   = $this->getEuro();
+        $usd    = $this->getDollar();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])

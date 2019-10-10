@@ -1,16 +1,37 @@
 <?php
+/**
+ * twigbridge.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-use TwigBridge\Extension\Laravel\Url;
-use TwigBridge\Extension\Laravel\Str;
-use TwigBridge\Extension\Laravel\Translator;
-use TwigBridge\Extension\Laravel\Session;
+declare(strict_types=1);
+
+use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Config;
 use TwigBridge\Extension\Laravel\Dump;
 use TwigBridge\Extension\Laravel\Input;
-use TwigBridge\Extension\Laravel\Config;
-use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Extension\Laravel\Str;
+use TwigBridge\Extension\Laravel\Translator;
+use TwigBridge\Extension\Laravel\Url;
+use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Extension\Loader\Filters;
 use TwigBridge\Extension\Loader\Functions;
-use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Twig\Template;
 
 /**
@@ -158,7 +179,7 @@ return [
         |
         */
         'facades'   => [
-            'Breadcrumbs'  => [
+            'Breadcrumbs'   => [
                 'is_safe' => [
                     'render',
                 ],
@@ -172,12 +193,36 @@ return [
             'Steam',
             'Config',
             'Request',
-            'ExpandedForm' => [
-                'is_safe' => ['date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file',
-                              'staticText', 'password', 'nonSelectableAmount', 'number', 'assetAccountList', 'amountNoCurrency', 'currencyList',
-                              'ruleGroupList', 'assetAccountCheckList', 'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty',
-                              'activeAssetAccountList', 'percentage', 'activeLongAccountList', 'longAccountList','balanceAll'],],
-            'Form'         => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],
+            'Form'          => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],],
+            'ExpandedForm'  => [
+                'is_safe' => [
+                    'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
+                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'percentage',
+
+
+                ],
+            ],
+            'AccountForm'   => [
+                'is_safe' => [
+                    'activeAssetAccountList', 'activeLongAccountList', 'activeWithdrawalDestinations', 'activeDepositDestinations',
+                    'assetAccountCheckList', 'assetAccountList', 'longAccountList',
+                ],
+            ],
+            'CurrencyForm'  => [
+                'is_safe' => [
+                    'currencyList', 'currencyListEmpty', 'balanceAll',
+                ],
+            ],
+            'PiggyBankForm' =>
+                [
+                    'is_safe' => [
+                        'piggyBankList',
+                    ],
+                ],
+            'RuleForm'      => [
+                'is_safe' => [
+                    'ruleGroupList', 'ruleGroupListWithEmpty',
+                ],
             ],
         ],
 

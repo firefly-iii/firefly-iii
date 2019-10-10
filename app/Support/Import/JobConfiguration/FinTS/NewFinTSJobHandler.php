@@ -1,22 +1,22 @@
 <?php
 /**
  * NewFinTSJobHandler.php
- * Copyright (c) 2018 https://github.com/bnw
+ * Copyright (c) 2019 https://github.com/bnw
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -32,8 +32,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\MessageBag;
 
 /**
- *
  * Class NewFinTSJobHandler
+ * @codeCoverageIgnore
  */
 class NewFinTSJobHandler implements FinTSConfigurationInterface
 {
@@ -57,11 +57,13 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_port']      = (int)($data['fints_port'] ?? '');
         $config['fints_bank_code'] = (string)($data['fints_bank_code'] ?? '');
         $config['fints_username']  = (string)($data['fints_username'] ?? '');
-        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
-        $config['apply-rules']     = 1 === (int)$data['apply_rules'];
+        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? ''); // verified
+        $config['apply-rules']     = 1 === (int)($data['apply_rules'] ?? 0);
+
+        // sanitize FinTS URL.
+        $config['fints_url'] = $this->validURI($config['fints_url']) ? $config['fints_url'] : '';
 
         $this->repository->setConfiguration($this->importJob, $config);
-
 
         $incomplete = false;
         foreach ($config as $value) {
@@ -107,5 +109,22 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }
+
+    /**
+     * @param string $fints_url
+     *
+     * @return bool
+     */
+    private function validURI(string $fintsUri): bool
+    {
+        $res = filter_var($fintsUri, FILTER_VALIDATE_URL);
+        if (false === $res) {
+            return false;
+        }
+        $scheme = parse_url($fintsUri, PHP_URL_SCHEME);
+
+        return 'https' === $scheme;
+    }
+
 
 }

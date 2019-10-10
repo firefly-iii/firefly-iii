@@ -1,22 +1,22 @@
 <?php
 /**
  * EditController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -27,9 +27,10 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 
 /**
@@ -38,6 +39,7 @@ use Illuminate\Http\Request;
  */
 class EditController extends Controller
 {
+    use ModelInformation, UserNavigation;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var AccountRepositoryInterface The account repository */
@@ -67,35 +69,24 @@ class EditController extends Controller
     /**
      * Edit account overview.
      *
-     * @param Request                    $request
-     * @param Account                    $account
+     * @param Request $request
+     * @param Account $account
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
-        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = (string)trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $roles        = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans('firefly.account_role_' . $role);
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
 
-        // types of liability:
-        $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
-        $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        $liabilityTypes = [
-            $debt->id     => (string)trans('firefly.account_type_' . AccountType::DEBT),
-            $loan->id     => (string)trans('firefly.account_type_' . AccountType::LOAN),
-            $mortgage->id => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
-        ];
-        asort($liabilityTypes);
+        $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle       = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $roles          = $this->getRoles();
+        $liabilityTypes = $this->getLiabilityTypes();
 
         // interest calculation periods:
         $interestPeriods = [
@@ -112,44 +103,36 @@ class EditController extends Controller
 
         $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $default              = app('amount')->getDefaultCurrency();
-        $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+        $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
         // include this account in net-worth charts?
         $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
         $includeNetWorth = null === $includeNetWorth ? true : '1' === $includeNetWorth;
 
-        if (null === $currency) {
-            $currency = $default;
-        }
-
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
-            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
-            'ccType'               => $repository->getMetaValue($account, 'ccType'),
-            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
-            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
-            'openingBalanceDate'   => $openingBalanceDate,
-            'liability_type_id'    => $account->account_type_id,
-            'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => $account->virtual_balance,
-            'currency_id'          => $currency->id,
-            'include_net_worth'    => $includeNetWorth,
-            'interest'             => $repository->getMetaValue($account, 'interest'),
-            'interest_period'      => $repository->getMetaValue($account, 'interest_period'),
-            'notes'                => $this->repository->getNoteText($account),
-            'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
+            'account_number'          => $repository->getMetaValue($account, 'account_number'),
+            'account_role'            => $repository->getMetaValue($account, 'account_role'),
+            'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
+            'cc_monthly_payment_date' => $repository->getMetaValue($account, 'cc_monthly_payment_date'),
+            'BIC'                     => $repository->getMetaValue($account, 'BIC'),
+            'opening_balance_date'    => $openingBalanceDate,
+            'liability_type_id'       => $account->account_type_id,
+            'opening_balance'         => $openingBalanceAmount,
+            'virtual_balance'         => $account->virtual_balance,
+            'currency_id'             => $currency->id,
+            'include_net_worth'       => $includeNetWorth,
+            'interest'                => $repository->getMetaValue($account, 'interest'),
+            'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
+            'notes'                   => $this->repository->getNoteText($account),
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
-        if ('liabilities' === $what) {
-            $preFilled['openingBalance'] = bcmul($preFilled['openingBalance'], '-1');
-        }
 
         $request->session()->flash('preFilled', $preFilled);
 
         return view(
-            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
+            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
         );
     }
 
@@ -158,12 +141,16 @@ class EditController extends Controller
      * Update the account.
      *
      * @param AccountFormRequest $request
-     * @param Account            $account
+     * @param Account $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(AccountFormRequest $request, Account $account)
     {
+        if (!$this->isEditableAccount($account)) {
+            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+        }
+
         $data = $request->getAccountData();
         $this->repository->update($account, $data);
 

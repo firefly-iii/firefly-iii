@@ -35,7 +35,7 @@
                             </p>
 
                             <p>
-                                {{ ExpandedForm.ruleGroupListWithEmpty('move_rules_before_delete',null, {'hidden': ruleGroup.id}) }}
+                                {{ RuleForm.ruleGroupListWithEmpty('move_rules_before_delete',null, {'hidden': ruleGroup.id}) }}
                             </p>
                         {% else %}
                             <input type="hidden" name="move_rules_before_delete" value="0"/>

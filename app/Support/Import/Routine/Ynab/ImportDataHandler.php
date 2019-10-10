@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportDataHandler.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -78,7 +78,7 @@ class ImportDataHandler
         }
 
         $totalSet = array_merge(...$total);
-        Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
+        Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
         $this->repository->setTransactions($this->importJob, $totalSet);
 
         // assuming this works, store today's date as a preference
@@ -114,9 +114,9 @@ class ImportDataHandler
     {
         $config = $this->repository->getConfiguration($this->importJob);
         $array  = [];
-        $total  = \count($transactions);
+        $total  = count($transactions);
         $budget = $this->getSelectedBudget();
-        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
+        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', count($transactions)));
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
             $description = $transaction['memo'] ?? '(empty)';
@@ -182,16 +182,26 @@ class ImportDataHandler
                 // transaction data:
                 'transactions'    => [
                     [
+                        'type'                  => $type,
+                        'date'                  => $transaction['date'] ?? date('Y-m-d'),
+                        'tags'                  => $tags,
+                        'user'                  => $this->importJob->user_id,
+                        'notes'                 => null,
                         'currency_id'           => null,
                         'currency_code'         => $budget['currency_code'] ?? $this->defaultCurrency->code,
-                        'description'           => null,
                         'amount'                => bcdiv((string)$transaction['amount'], '1000'),
                         'budget_id'             => null,
+                        'original-source'       => sprintf('ynab-v%s', config('firefly.version')),
                         'budget_name'           => null,
                         'category_id'           => null,
                         'category_name'         => $transaction['category_name'],
                         'source_id'             => $source->id,
                         'source_name'           => null,
+                        // all custom fields:
+                        'external_id'           => $transaction['id'] ?? '',
+
+                        // journal data:
+                        'description'           => $description,
                         'destination_id'        => $destination->id,
                         'destination_name'      => null,
                         'foreign_currency_id'   => null,

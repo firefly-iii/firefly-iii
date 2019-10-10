@@ -1,22 +1,22 @@
 <?php
 /**
  * PiggyBankEventTransformerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -37,6 +37,9 @@ use Tests\TestCase;
 
 /**
  * Class PiggyBankEventTransformerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankEventTransformerTest extends TestCase
 {
@@ -46,8 +49,9 @@ class PiggyBankEventTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
+
     /**
      * Basic test with no meta data.
      *
@@ -66,17 +70,19 @@ class PiggyBankEventTransformerTest extends TestCase
 
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn($this->getEuro());
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
+
+
+
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 
@@ -99,18 +105,17 @@ class PiggyBankEventTransformerTest extends TestCase
         // mock calls:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn(1);
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
-        $piggyRepos->shouldReceive('getTransactionWithEvent')->atLeast()->once()->andReturn(123);
 
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($this->getEuro())->atLeast()->once();
 
-        $event       = PiggyBankEvent::first();
+        $event       = $this->getRandomPiggyBankEvent();
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
         $result = $transformer->transform($event);
         $this->assertEquals($event->id, $result['id']);
-        $this->assertEquals(245, $result['amount']);
-        $this->assertEquals(123, $result['transaction_id']);
+        $this->assertEquals($event->amount, $result['amount']);
+        $this->assertEquals($event->transaction_journal_id, $result['transaction_journal_id']);
 
     }
 }

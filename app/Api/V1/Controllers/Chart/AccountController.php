@@ -4,20 +4,20 @@
  * AccountController.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -26,22 +26,22 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 /**
  * Class AccountController
  */
 class AccountController extends Controller
 {
+    use ApiSupport;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var AccountRepositoryInterface */
@@ -49,6 +49,8 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -69,22 +71,19 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function expenseOverview(Request $request): JsonResponse
+    public function expenseOverview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
+        $dates = $request->getAll();
+        /** @var Carbon $start */
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
 
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
         $start->subDay();
 
         // prep some vars:
@@ -156,32 +155,31 @@ class AccountController extends Controller
         return response()->json($chartData);
     }
 
+
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function overview(Request $request): JsonResponse
+    public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
-
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $dates = $request->getAll();
+        /** @var Carbon $start */
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
 
         // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
+        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
-        if (0 === \count($frontPage->data)) {
+        // @codeCoverageIgnoreStart
+        if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
+        // @codeCoverageIgnoreEnd
 
         // get accounts:
         $accounts  = $this->repository->getAccountsById($frontPage->data);
@@ -190,7 +188,7 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default;
+                $currency = $default; // @codeCoverageIgnore
             }
             $currentSet = [
                 'label'                   => $account->name,
@@ -202,7 +200,7 @@ class AccountController extends Controller
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
             ];
-
+            /** @var Carbon $currentStart */
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = round(array_values($range)[0], 12);
@@ -221,22 +219,19 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function revenueOverview(Request $request): JsonResponse
+    public function revenueOverview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
+        $dates = $request->getAll();
+        /** @var Carbon $start */
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
 
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
         $start->subDay();
 
         // prep some vars:
@@ -267,7 +262,8 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => bcmul($diff, '-1'),
-                        'diff_float'  => (float)$diff * -1,
+                        //  For some reason this line is never covered in code coverage:
+                        'diff_float'  => ((float)$diff) * -1, // @codeCoverageIgnore
                         'currency_id' => $currencyId,
                     ];
                 }
@@ -306,43 +302,6 @@ class AccountController extends Controller
         $chartData = array_values($chartData);
 
         return response()->json($chartData);
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    protected function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    protected function extractNames(Collection $accounts): array
-    {
-        $return = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $return[$account->id] = $account->name;
-        }
-
-        return $return;
     }
 
 }

@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "Hvordan g\u00e5r det?",
+        "flash_error": "Feil!",
+        "flash_success": "Suksess!",
+        "close": "Lukk",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "split": "Del opp",
+        "transaction_journal_information": "Transaksjonsinformasjon",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Legg til en oppdeling til",
+        "submission": "Submission",
+        "create_another": "After storing, return here to create another one.",
+        "reset_after": "Reset form after submission",
+        "submit": "Send inn",
+        "amount": "Bel\u00f8p",
+        "date": "Dato",
+        "tags": "Tagger",
+        "no_budget": "(ingen budsjett)",
+        "category": "Kategori",
+        "attachments": "Vedlegg",
+        "notes": "Notater",
+        "update_transaction": "Update transaction",
+        "after_update_create_another": "After updating, return here to continue editing.",
+        "store_as_new": "Store as a new transaction instead of updating.",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(ingen)",
+        "no_piggy_bank": "(no piggy bank)",
+        "description": "Beskrivelse"
+    },
+    "form": {
+        "interest_date": "Rentedato",
+        "book_date": "Bokf\u00f8ringsdato",
+        "process_date": "Prosesseringsdato",
+        "due_date": "Forfallsdato",
+        "foreign_amount": "Utenlandske bel\u00f8p",
+        "payment_date": "Betalingsdato",
+        "invoice_date": "Fakturadato",
+        "internal_reference": "Intern referanse"
+    },
+    "config": {
+        "html_language": "nb"
+    }
+}

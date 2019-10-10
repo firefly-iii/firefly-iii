@@ -8,7 +8,7 @@
     <form method="POST" action="{{ route('profile.code.store') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'pref_two_factor_auth_code'|_ }}</h3>
@@ -23,15 +23,19 @@
                                      style="border:1px #ddd solid;"/>
                             </div>
                             <p>
-                                {{ trans('firefly.2fa_use_secret_instead', {secret: secret}) }}
+                                {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}
                             </p>
+                            <p>
+                                {{ '2fa_backup_codes'|_ }}
+                            </p>
+                            <pre>{{ codes }}</pre>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-body">
                         {{ ExpandedForm.text('code', code) }}

@@ -4,20 +4,20 @@
  * DecryptDatabase.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -28,7 +28,6 @@ use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
-use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
@@ -50,14 +49,15 @@ class DecryptDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:decrypt-all';
+    protected $signature = 'firefly-iii:decrypt-all';
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
+     * @throws FireflyException
      */
-    public function handle()
+    public function handle(): int
     {
         $this->line('Going to decrypt the database.');
         $tables = [
@@ -113,7 +113,7 @@ class DecryptDatabase extends Command
             $this->line(sprintf('Decrypted the data in table "%s".', $table));
             // mark as decrypted:
             $configName = sprintf('is_decrypted_%s', $table);
-            FireflyConfig::set($configName, true);
+            app('fireflyconfig')->set($configName, true);
 
         }
         $this->info('Done!');
@@ -129,7 +129,7 @@ class DecryptDatabase extends Command
     private function isDecrypted(string $table): bool
     {
         $configName = sprintf('is_decrypted_%s', $table);
-        $configVar  = FireflyConfig::get($configName, false);
+        $configVar  = app('fireflyconfig')->get($configName, false);
         if (null !== $configVar) {
             return (bool)$configVar->data;
         }
@@ -139,17 +139,19 @@ class DecryptDatabase extends Command
 
 
     /**
-     * @param $value
+     * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
      *
-     * @return mixed
+     * @param $value
+     * @return string
+     * @throws FireflyException
      */
     private function tryDecrypt($value)
     {
         try {
-            $value = Crypt::decrypt($value);
+            $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
-                throw new FireflyException($e->getMessage());
+                throw new FireflyException($e->getMessage()); // @codeCoverageIgnore
             }
             Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }

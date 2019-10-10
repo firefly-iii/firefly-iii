@@ -1,22 +1,22 @@
 <?php
 /**
  * ConfigureRolesHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -34,12 +34,15 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use Illuminate\Support\Collection;
 use League\Csv\Reader;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ConfigureRolesHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConfigureRolesHandlerTest extends TestCase
 {
@@ -49,7 +52,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -58,7 +61,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteBasic(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-count' => 5,
@@ -81,6 +84,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteForeign(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-count' => 5,
@@ -107,7 +111,8 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testConfigurationCompleteNoAmount(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $config  = [
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+        $config      = [
             'column-count' => 5,
             'column-roles' => [
                 0 => 'sepa-cc',
@@ -117,8 +122,8 @@ class ConfigureRolesHandlerTest extends TestCase
                 4 => 'amount_foreign',
             ],
         ];
-        $handler = new ConfigureRolesHandler();
-        $result  = $handler->configurationComplete($config);
+        $handler     = new ConfigureRolesHandler();
+        $result      = $handler->configurationComplete($config);
         $this->assertCount(1, $result);
         $this->assertEquals(
             'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
@@ -134,7 +139,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-B' . random_int(1, 10000);
+        $job->key           = 'role-B' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -170,6 +175,7 @@ class ConfigureRolesHandlerTest extends TestCase
         ];
 
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStage')->once()->withArgs([Mockery::any(), 'ready_to_run']);
         $repository->shouldReceive('setStage')->once()->withArgs([Mockery::any(), 'map']);
@@ -186,7 +192,8 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetExampleFromLine(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $lines = [
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+        $lines       = [
             ['one', 'two', '', 'three'],
             ['four', 'five', '', 'six'],
         ];
@@ -209,13 +216,14 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetExamplesFromFile(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $importRepos->shouldReceive('setConfiguration')->once()
                     ->withAnyArgs();
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -252,6 +260,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetHeadersHas(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         //$importRepos->shouldReceive('setUser')->once();
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
@@ -275,6 +284,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testGetHeadersNone(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
@@ -297,7 +307,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -368,7 +378,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-x' . random_int(1, 10000);
+        $job->key           = 'role-x' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -415,7 +425,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIgnoreUnmappableColumns(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $config   = [
             'column-count'      => 5,
             'column-roles'      => [
@@ -460,6 +470,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIsMappingNecessaryNo(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-do-mapping' => [false, false, false],
@@ -475,6 +486,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testIsMappingNecessaryYes(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $config  = [
             'column-do-mapping' => [false, true, false, false],
@@ -490,6 +502,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testMakeExamplesUnique(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $lines = [
             ['one', 'two', '', 'three'],
@@ -518,6 +531,7 @@ class ConfigureRolesHandlerTest extends TestCase
     public function testProcessSpecifics(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
 
         $line   = [];
         $config = [
@@ -543,7 +557,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'role-A' . random_int(1, 10000);
+        $job->key           = 'role-A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -552,6 +566,8 @@ class ConfigureRolesHandlerTest extends TestCase
         $job->save();
 
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('setConfiguration')->once()
                    ->withArgs([Mockery::any(), ['column-count' => 0]]);

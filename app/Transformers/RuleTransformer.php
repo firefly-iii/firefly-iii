@@ -1,22 +1,22 @@
 <?php
 /**
  * RuleTransformer.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -47,7 +48,7 @@ class RuleTransformer extends AbstractTransformer
     {
         $this->ruleRepository = app(RuleRepositoryInterface::class);
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -57,6 +58,7 @@ class RuleTransformer extends AbstractTransformer
      * @param Rule $rule
      *
      * @return array
+     * @throws FireflyException
      */
     public function transform(Rule $rule): array
     {
@@ -73,6 +75,7 @@ class RuleTransformer extends AbstractTransformer
             'active'          => $rule->active,
             'strict'          => $rule->strict,
             'stop_processing' => $rule->stop_processing,
+            'trigger'         => $this->getRuleTrigger($rule),
             'triggers'        => $this->triggers($rule),
             'actions'         => $this->actions($rule),
             'links'           => [
@@ -115,6 +118,29 @@ class RuleTransformer extends AbstractTransformer
     /**
      * @param Rule $rule
      *
+     * @return string
+     * @throws FireflyException
+     */
+    private function getRuleTrigger(Rule $rule): string
+    {
+        $moment   = null;
+        $triggers = $this->ruleRepository->getRuleTriggers($rule);
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($triggers as $ruleTrigger) {
+            if ('user_action' === $ruleTrigger->trigger_type) {
+                $moment = $ruleTrigger->trigger_value;
+            }
+        }
+        if (null === $moment) {
+            throw new FireflyException(sprintf('Rule #%d has no valid trigger moment. Edit it in the Firefly III user interface to correct this.', $rule->id));
+        }
+
+        return $moment;
+    }
+
+    /**
+     * @param Rule $rule
+     *
      * @return array
      */
     private function triggers(Rule $rule): array
@@ -123,6 +149,9 @@ class RuleTransformer extends AbstractTransformer
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
+            if ('user_action' === $ruleTrigger->trigger_type) {
+                continue;
+            }
             $result[] = [
                 'id'              => (int)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),

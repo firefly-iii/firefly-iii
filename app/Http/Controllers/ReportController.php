@@ -1,22 +1,22 @@
 <?php
 /**
  * ReportController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
@@ -38,7 +38,6 @@ use Log;
 /**
  * Class ReportController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportController extends Controller
 {
@@ -69,7 +68,7 @@ class ReportController extends Controller
             }
         );
     }
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show account report.
      *
@@ -81,18 +80,18 @@ class ReportController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function accountReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', (string)trans('firefly.end_after_start_date')); // @codeCoverageIgnore
+            [$start, $end] = [$end, $start];
         }
 
         $this->repository->cleanupBudgets();
 
         app('view')->share(
             'subTitle', trans(
-                          'firefly.report_account',
-                          ['start' => $start->formatLocalized($this->monthFormat), 'end' => $end->formatLocalized($this->monthFormat)]
+                          'firefly.report_double',
+                          ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
                       )
         );
 
@@ -126,8 +125,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_audit',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );
@@ -138,7 +137,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show budget report.
      *
@@ -163,8 +162,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_budget',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );
@@ -176,7 +175,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show category report.
      *
@@ -201,8 +200,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_category',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );
@@ -238,8 +237,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_default',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );
@@ -276,7 +275,7 @@ class ReportController extends Controller
      * @param string $reportType
      *
      * @return mixed
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function options(string $reportType)
     {
@@ -293,8 +292,8 @@ class ReportController extends Controller
             case 'tag':
                 $result = $this->tagReportOptions();
                 break;
-            case 'account':
-                $result = $this->accountReportOptions();
+            case 'double':
+                $result = $this->doubleReportOptions();
                 break;
         }
 
@@ -310,9 +309,6 @@ class ReportController extends Controller
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function postIndex(ReportFormRequest $request)
     {
@@ -324,7 +320,7 @@ class ReportController extends Controller
         $categories = implode(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
         $tags       = implode(',', $request->getTagList()->pluck('id')->toArray());
-        $expense    = implode(',', $request->getExpenseList()->pluck('id')->toArray());
+        $double    = implode(',', $request->getDoubleList()->pluck('id')->toArray());
         $uri        = route('reports.index');
 
         if (0 === $request->getAccountList()->count()) {
@@ -352,7 +348,7 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
-        if ('account' === $reportType && 0 === $request->getExpenseList()->count()) {
+        if ('double' === $reportType && 0 === $request->getDoubleList()->count()) {
             session()->flash('error', (string)trans('firefly.select_at_least_one_expense'));
 
             return redirect(route('reports.index'));
@@ -378,15 +374,15 @@ class ReportController extends Controller
             case 'tag':
                 $uri = route('reports.report.tag', [$accounts, $tags, $start, $end]);
                 break;
-            case 'account':
-                $uri = route('reports.report.account', [$accounts, $expense, $start, $end]);
+            case 'double':
+                $uri = route('reports.report.double', [$accounts, $double, $start, $end]);
                 break;
         }
 
         return redirect($uri);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get a tag report.
      *
@@ -410,8 +406,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_tag',
                 [
-                    'start' => $start->formatLocalized($this->monthFormat),
-                    'end'   => $end->formatLocalized($this->monthFormat),
+                    'start' => $start->formatLocalized($this->monthAndDayFormat),
+                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
                 ]
             )
         );

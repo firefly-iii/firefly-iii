@@ -1,22 +1,22 @@
 <?php
 /**
  * StageImportDataHandler.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -325,7 +325,7 @@ class StageImportDataHandler
             /*
              * After the loop, check if Firefly III must loop again.
              */
-            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            Log::debug(sprintf('Count of result is now %d', count($return)));
             $count++;
             if (null === $olderId) {
                 Log::debug('Older ID is NULL, so stop looping cause we are done!');
@@ -351,7 +351,7 @@ class StageImportDataHandler
         // store newest and oldest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-oldest-transaction-%d', $bunqAccountId), $oldestTransaction);
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
-        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', count($return)));
 
         return $return;
     }
@@ -428,7 +428,7 @@ class StageImportDataHandler
             /*
              * After the loop, check if Firefly III must loop again.
             */
-            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            Log::debug(sprintf('Count of result is now %d', count($return)));
             $count++;
             if (null === $newerId) {
                 Log::debug('Newer ID is NULL, so stop looping cause we are done!');
@@ -446,7 +446,7 @@ class StageImportDataHandler
 
         // store newest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
-        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', count($return)));
 
         return $return;
     }

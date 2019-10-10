@@ -2,22 +2,22 @@
 
 /**
  * import.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -207,6 +207,10 @@ return [
     'specific_rabo_descr'             => 'Behebt mögliche Probleme mit Rabobank-Dateien',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Behebt mögliche Probleme mit PC-Dateien',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Behebt mögliche Probleme mit Belfius-Dateien',
+    'specific_ingbelgium_name'        => 'ING BE',
+    'specific_ingbelgium_descr'       => 'Behebt mögliche Probleme mit ING Belgien Dateien',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import einrichten (3/4) • Funktion jeder Spalte festlegen',
     'job_config_roles_text'           => 'Jede Spalte in Ihrer CSV-Datei enthält bestimmte Daten. Bitte geben Sie an, welche Art von Daten enthalten sind. Die Option "Daten zuordnen" bedeutet, dass jeder Eintrag in der Spalte mit einem Wert aus Ihrer der Datenbank ersetzt wird. Eine oft zugeordnete Spalte ist die Spalte, welche die IBAN des fremden Kontos enthält. Diese können leicht mit bereits angelegten IBANs in Ihrer Datenbank verglichen werden.',
@@ -291,19 +295,22 @@ return [
     'column_rabo-debit-credit'        => 'Rabobank-spezifisches Belastungs- und Kreditkennzeichen',
     'column_ing-debit-credit'         => 'ING-spezifisches Belastungs- und Kreditkennzeichen',
     'column_generic-debit-credit'     => 'Allgemeine Überziehungs- und Kreditanzeige',
-    'column_sepa-ct-id'               => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
-    'column_sepa-ct-op'               => 'SEPA • Zielkonto-Identifikationsnummer',
-    'column_sepa-db'                  => 'SEPA - Mandatskennung',
-    'column_sepa-cc'                  => 'SEPA • Verrechnungsschlüssel',
-    'column_sepa-ci'                  => 'SEPA • Identifikationsnummer des Zahlungsempfängers',
-    'column_sepa-ep'                  => 'SEPA • Externer Verwendungszweck',
-    'column_sepa-country'             => 'SEPA • Landesschlüssel',
-    'column_sepa-batch-id'            => 'SEPA Batch-Kennung',
+    'column_sepa_ct_id'               => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
+    'column_sepa_ct_op'               => 'SEPA-Gläubiger-Identifikationsnummer',
+    'column_sepa_db'                  => 'SEPA • Mandatskennung',
+    'column_sepa_cc'                  => 'SEPA • Verrechnungsschlüssel',
+    'column_sepa_ci'                  => 'SEPA • Identifikationsnummer des Zahlungsempfängers',
+    'column_sepa_ep'                  => 'SEPA • Externer Verwendungszweck',
+    'column_sepa_country'             => 'SEPA • Landesschlüssel',
+    'column_sepa_batch_id'            => 'SEPA • Stapel-Kennung',
     'column_tags-comma'               => 'Schlagwörter (durch Kommata getrennt)',
     'column_tags-space'               => 'Schlagwörter (durch Leerzeichen getrennt)',
     'column_account-number'           => 'Bestandskonto (Kontonr.)',
     'column_opposing-number'          => 'Zielkonto (Kontonr.)',
     'column_note'                     => 'Notiz(en)',
     'column_internal-reference'       => 'Interne Referenz',
+
+    // error message
+    'duplicate_row'                   => 'Zeile #:row (":description") konnte nicht importiert werden, da sie bereits existiert.',
 
 ];

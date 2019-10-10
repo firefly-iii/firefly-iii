@@ -1,22 +1,22 @@
 <?php
 /**
  * CreateController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -45,6 +45,7 @@ class CreateController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -69,8 +70,6 @@ class CreateController extends Controller
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request, RuleGroup $ruleGroup = null)
     {
@@ -88,8 +87,8 @@ class CreateController extends Controller
             $oldActions  = $this->getPreviousActions($request);
         }
 
-        $triggerCount = \count($oldTriggers);
-        $actionCount  = \count($oldActions);
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
 
         // title depends on whether or not there is a rule group:
@@ -119,12 +118,10 @@ class CreateController extends Controller
      * @param Bill    $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function createFromBill(Request $request, Bill $bill)
     {
-        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_bill', ['name' => $bill->name]));
+        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_bill', ['name' => e($bill->name)]));
 
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
@@ -140,8 +137,8 @@ class CreateController extends Controller
         $oldTriggers = $this->getTriggersForBill($bill);
         $oldActions  = $this->getActionsForBill($bill);
 
-        $triggerCount = \count($oldTriggers);
-        $actionCount  = \count($oldActions);
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
 
         // title depends on whether or not there is a rule group:
@@ -167,7 +164,7 @@ class CreateController extends Controller
      * @param RuleFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function store(RuleFormRequest $request)
     {

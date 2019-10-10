@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => '目前馀额',
     'linked_to_rules'         => '相关规则',
     'active'                  => '是否启用？',
+    'percentage'              => '%',
+    'next_due'                => '下次到期日',
+    'transaction_type'        => '类别',
     'lastActivity'            => '上次活动',
     'balanceDiff'             => '馀额差',
     'matchesOn'               => '配对于',
+    'other_meta_data'         => '其它元信息',
     'account_type'            => '帐户类型',
     'created_at'              => '建立于',
     'account'                 => '帐户',
@@ -62,7 +66,7 @@ return [
     'interal_reference'       => '内部参考',
     'notes'                   => '备注',
     'from'                    => '自',
-    'piggy_bank'              => '小猪存钱罐',
+    'piggy_bank'              => '存钱罐',
     'to'                      => '至',
     'budget'                  => '预算',
     'category'                => '分类',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => '附加档案数量',
     'bills_count'             => '帐单数量',
     'categories_count'        => '分类数量',
-    'export_jobs_count'       => '汇出工作数量',
     'import_jobs_count'       => '导入工作数量',
     'budget_count'            => '预算数量',
     'rule_and_groups_count'   => '规则及规则群组数量',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => '帐户 (Spectre)',
     'account_on_ynab'         => '帐户 (YNAB)',
     'do_import'               => '自此帐户导入',
-    'sepa-ct-id'              => 'SEPA 端到端标识符',
-    'sepa-ct-op'              => 'SEPA 反对账户标识符',
-    'sepa-db'                 => 'SEPA 授权标识符',
-    'sepa-country'            => 'SEPA 国家',
-    'sepa-cc'                 => 'SEPA 清关代码',
-    'sepa-ep'                 => 'SEPA 外部用途',
-    'sepa-ci'                 => 'SEPA 债权人标识符',
-    'sepa-batch-id'           => 'SEPA 批次 ID',
+    'sepa_ct_id'              => 'SEPA 端到端标识符',
+    'sepa_ct_op'              => 'SEPA 对方帐户标识符',
+    'sepa_db'                 => 'SEPA Mandate Identifier',
+    'sepa_country'            => 'SEPA Country',
+    'sepa_cc'                 => 'SEPA Clearing Code',
+    'sepa_ep'                 => 'SEPA External Purpose',
+    'sepa_ci'                 => 'SEPA Creditor Identifier',
+    'sepa_batch_id'           => 'SEPA Batch ID',
     'external_id'             => '外部 ID',
     'account_at_bunq'         => 'bunq 帐户',
     'file_name'               => '档案名称',

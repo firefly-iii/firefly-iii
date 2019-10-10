@@ -1,22 +1,22 @@
 <?php
 /**
  * ConfigureMappingHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -41,6 +41,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigureMappingHandlerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  *
  */
 class ConfigureMappingHandlerTest extends TestCase
@@ -51,7 +54,7 @@ class ConfigureMappingHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -59,11 +62,13 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testApplySpecifics(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapG' . random_int(1, 10000);
+        $job->key           = 'mapG' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -131,7 +136,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapA' . random_int(1, 10000);
+        $job->key           = 'mapA' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -142,6 +147,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         // mock repos
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $helper     = $this->mock(AttachmentHelperInterface::class);
 
         // run configure mapping handler.
         // expect specific results:
@@ -161,11 +167,12 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testDoColumnConfig(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapE' . random_int(1, 10000);
+        $job->key           = 'mapE' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -226,11 +233,13 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testDoMapOfColumn(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapC' . random_int(1, 10000);
+        $job->key           = 'mapC' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -260,7 +269,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapH' . random_int(1, 10000);
+        $job->key           = 'mapH' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -339,11 +348,13 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testGetPreProcessorName(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapD' . random_int(1, 10000);
+        $job->key           = 'mapD' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -372,7 +383,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapF' . random_int(1, 10000);
+        $job->key           = 'mapF' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -419,6 +430,8 @@ class ConfigureMappingHandlerTest extends TestCase
     public function testGetValuesForMapping(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+
         $importRepos->shouldReceive('setUser')->once();
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
@@ -461,7 +474,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 10000);
+        $job->key           = 'mapB' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -487,11 +500,12 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testSanitizeColumnName(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $helper      = $this->mock(AttachmentHelperInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 10000);
+        $job->key           = 'mapB' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

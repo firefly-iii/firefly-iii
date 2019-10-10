@@ -1,22 +1,22 @@
 <?php
 /**
  * ConfigurationControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -27,10 +27,15 @@ use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
  * Class ConfigurationControllerTest
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConfigurationControllerTest extends TestCase
 {
@@ -40,18 +45,22 @@ class ConfigurationControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
+        // for session
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        //Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $this->mockDefaultPreferences();
 
         $this->be($this->user());
         $falseConfig       = new Configuration;
@@ -61,7 +70,7 @@ class ConfigurationControllerTest extends TestCase
         $trueConfig->data = true;
 
         FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', true])->once()->andReturn($trueConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->times(2)->andReturn($falseConfig);
+        //FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->times(2)->andReturn($falseConfig);
 
         $response = $this->get(route('admin.configuration.index'));
         $response->assertStatus(200);
@@ -72,10 +81,18 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
+     * @covers \FireflyIII\Http\Requests\ConfigurationRequest
      */
     public function testPostIndex(): void
     {
+        $this->mockDefaultSession();
         $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        // for session
+
+
+        //Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $this->mockDefaultPreferences();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
@@ -83,9 +100,10 @@ class ConfigurationControllerTest extends TestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
 
-        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        //FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->post(route('admin.configuration.index.post'));

@@ -1,22 +1,22 @@
 <?php
 /**
  * ShowController.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -24,21 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
  * Class ShowController
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShowController extends Controller
 {
@@ -48,10 +45,12 @@ class ShowController extends Controller
 
     /**
      * CategoryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
+        app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {
@@ -65,12 +64,12 @@ class ShowController extends Controller
     }
 
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Show a single category.
      *
-     * @param Request     $request
-     * @param Category    $category
+     * @param Request $request
+     * @param Category $category
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -78,7 +77,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
-        Log::debug('Now in show()');
+        //Log::debug('Now in show()');
         /** @var Carbon $start */
         $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -86,7 +85,8 @@ class ShowController extends Controller
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $periods      = $this->getCategoryPeriodOverview($category, $end);
+        $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
+        $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
             'firefly.journals_in_period_for_category',
@@ -94,23 +94,24 @@ class ShowController extends Controller
              'end'  => $end->formatLocalized($this->monthAndDayFormat),]
         );
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
+                  ->withAccountInformation()
                   ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
 
-        Log::debug('End of show()');
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
 
-        return view('categories.show', compact('category', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        //Log::debug('End of show()');
+
+        return view('categories.show', compact('category', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
      * Show all transactions within a category.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Category $category
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -133,14 +134,15 @@ class ShowController extends Controller
         $path  = route('categories.show.all', [$category->id]);
 
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
+                  ->withAccountInformation()
                   ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
 
-        return view('categories.show', compact('category', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
+
+        return view('categories.show', compact('category', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 }

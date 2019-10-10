@@ -2,22 +2,22 @@
 
 /**
  * form.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -57,20 +57,21 @@ return [
     'asset_source_account'        => 'Compte d\'origine',
     'journal_description'         => 'Description',
     'note'                        => 'Notes',
+    'store_new_transaction'       => 'Créer une nouvelle opération',
     'split_journal'               => 'Ventiler cette opération',
     'split_journal_explanation'   => 'Ventiler cette opération en plusieurs parties',
     'currency'                    => 'Devise',
     'account_id'                  => 'Compte d’actif',
     'budget_id'                   => 'Budget',
-    'openingBalance'              => 'Solde initial',
+    'opening_balance'             => 'Solde initial',
     'tagMode'                     => 'Mode du tag',
     'tag_position'                => 'Localisation du tag',
-    'virtualBalance'              => 'Solde virtuel',
+    'virtual_balance'             => 'Solde virtuel',
     'targetamount'                => 'Montant cible',
-    'accountRole'                 => 'Rôle du compte',
-    'openingBalanceDate'          => 'Date du solde initial',
-    'ccType'                      => 'Plan de paiement de carte de crédit',
-    'ccMonthlyPaymentDate'        => 'Date de paiement mensuelle de carte de crédit',
+    'account_role'                => 'Rôle du compte',
+    'opening_balance_date'        => 'Date du solde initial',
+    'cc_type'                     => 'Plan de paiement de carte de crédit',
+    'cc_monthly_payment_date'     => 'Date de paiement mensuelle de la carte de crédit',
     'piggy_bank_id'               => 'Tirelire',
     'returnHere'                  => 'Retourner ici',
     'returnHereExplanation'       => 'Après enregistrement, revenir ici pour en créer un nouveau.',
@@ -118,7 +119,7 @@ return [
     'symbol'                      => 'Symbole',
     'code'                        => 'Code',
     'iban'                        => 'Numéro IBAN',
-    'accountNumber'               => 'N° de compte',
+    'account_number'              => 'Numéro de compte',
     'creditCardNumber'            => 'Numéro de carte de crédit',
     'has_headers'                 => 'Entêtes ',
     'date_format'                 => 'Format de la date',
@@ -139,12 +140,8 @@ return [
     'stop_processing'             => 'Arrêter le traitement',
     'start_date'                  => 'Début de l\'étendue',
     'end_date'                    => 'Fin de l\'étendue',
-    'export_start_range'          => 'Début de l’étendue d’exportation',
-    'export_end_range'            => 'Fin de l’étendue d\'exportation',
-    'export_format'               => 'Format de fichier',
     'include_attachments'         => 'Inclure les pièces jointes téléchargées',
     'include_old_uploads'         => 'Inclure les données importées',
-    'accounts'                    => 'Exporter les opérations depuis ces comptes',
     'delete_account'              => 'Supprimer le compte ":name"',
     'delete_bill'                 => 'Supprimer la facture ":name"',
     'delete_budget'               => 'Supprimer le budget ":name"',
@@ -255,5 +252,10 @@ return [
     'calendar'                => 'Calendrier',
     'weekend'                 => 'Week-end',
     'client_secret'           => 'Clé secrète',
+
+    'withdrawal_destination_id' => 'Compte de destination',
+    'deposit_source_id'         => 'Compte source',
+    'expected_on'               => 'Prévu le',
+    'paid'                      => 'Payé',
 
 ];

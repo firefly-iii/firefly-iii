@@ -1,22 +1,22 @@
 <?php
 /**
  * RemoveTagTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -30,6 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class RemoveTagTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveTagTest extends TestCase
 {
@@ -60,21 +63,20 @@ class RemoveTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag()
      * @covers \FireflyIII\TransactionRules\Actions\RemoveTag
      */
     public function testActNoTag(): void
     {
         // get journal, link al tags:
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $journal = $this->getRandomWithdrawal();
         $tags    = $journal->user->tags()->get();
         $journal->tags()->sync($tags->pluck('id')->toArray());
         $this->assertEquals($tags->count(), $journal->tags()->get()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = random_int(1, 1234) . 'nosuchtag';
+        $ruleAction->action_value = $this->randomInt() . 'nosuchtag';
         $action                   = new RemoveTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);

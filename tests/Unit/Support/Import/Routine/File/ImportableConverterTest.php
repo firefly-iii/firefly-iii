@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportableConverterTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -45,6 +45,9 @@ use Tests\TestCase;
  * todo test foreign currency
  *
  * Class ImportableConverterTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ImportableConverterTest extends TestCase
 {
@@ -54,7 +57,7 @@ class ImportableConverterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -87,8 +90,8 @@ class ImportableConverterTest extends TestCase
         $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
-        $euro = TransactionCurrency::whereCode('EUR')->first();
-        $usd  = TransactionCurrency::whereCode('USD')->first();
+        $euro = $this->getEuro();
+        $usd  = $this->getDollar();
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro)->once();
 
         // set user and config:
@@ -113,9 +116,9 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('withdrawal', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals($importable->tags, $result[0]['tags']);
+        $this->assertEquals('withdrawal', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals($importable->tags, $result[0]['transactions'][0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
     }
 
@@ -144,8 +147,7 @@ class ImportableConverterTest extends TestCase
         $currencyMapper = $this->mock(CurrencyMapper::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getMetaValue')
-            ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -162,12 +164,12 @@ class ImportableConverterTest extends TestCase
         $asset = $this->user()->accounts()->where('account_type_id', 3)->first();
         $other = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $asset->id)->first();
 
-        $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
-        $opposingMapper->shouldReceive('map')->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
+        $assetMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, $nullAccount])->andReturn($asset);
+        $opposingMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
 
-        $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn(null);
-        $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
-        $currencyMapper->shouldReceive('map')->times(2)->withArgs([$euro->id, []])->andReturn($euro);
+        $currencyMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn(null);
+        $currencyMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, ['code' => null]])->andReturn(null);
+        $currencyMapper->shouldReceive('map')->atLeast()->once()->withArgs([$euro->id, []])->andReturn($euro);
 
 
         $converter = new ImportableConverter;
@@ -176,9 +178,9 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $today = new Carbon();
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals($today->format('Y-m-d H:i:s'), $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals($today->format('Y-m-d H:i:s'), $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
         $this->assertEquals($euro->id, $result[0]['transactions'][0]['currency_id']);
     }
 
@@ -226,8 +228,8 @@ class ImportableConverterTest extends TestCase
         $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $revenue = $this->user()->accounts()->where('account_type_id', 5)->first();
 
-        $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
-        $opposingMapper->shouldReceive('map')->once()->withArgs([null, '45.67', $nullAccount])->andReturn($revenue);
+        $assetMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, $nullAccount])->andReturn($asset);
+        $opposingMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, '45.67', $nullAccount])->andReturn($revenue);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn($usd);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
 
@@ -237,13 +239,13 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('deposit', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
+        $this->assertEquals('deposit', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
         $this->assertEquals($revenue->id, $result[0]['transactions'][0]['source_id']);
         $this->assertEquals($asset->id, $result[0]['transactions'][0]['destination_id']);
-        $this->assertEquals('2018-01-02 00:00:00', $result[0]['book_date']);
+        $this->assertEquals('2018-01-02 00:00:00', $result[0]['transactions'][0]['book_date']);
 
     }
 
@@ -289,8 +291,8 @@ class ImportableConverterTest extends TestCase
         // respond to mapping call:
         $asset = $this->user()->accounts()->where('account_type_id', 3)->first();
 
-        $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
-        $opposingMapper->shouldReceive('map')->once()->withArgs([null, '-45.67', $nullAccount])->andReturn($asset);
+        $assetMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, $nullAccount])->andReturn($asset);
+        $opposingMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, '-45.67', $nullAccount])->andReturn($asset);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn($usd);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
         $repository->shouldReceive('addErrorMessage')->withArgs(
@@ -349,8 +351,8 @@ class ImportableConverterTest extends TestCase
         $asset = $this->user()->accounts()->where('account_type_id', 3)->first();
         $other = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $asset->id)->first();
 
-        $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
-        $opposingMapper->shouldReceive('map')->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
+        $assetMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, $nullAccount])->andReturn($asset);
+        $opposingMapper->shouldReceive('map')->atLeast()->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
 
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn($usd);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
@@ -361,11 +363,11 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
-        $this->assertEquals(2, $result[0]['bill_id']); // will NOT be ignored.
-        $this->assertEquals($importable->billName, $result[0]['bill_name']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
+        $this->assertEquals(2, $result[0]['transactions'][0]['bill_id']); // will NOT be ignored.
+        $this->assertEquals($importable->billName, $result[0]['transactions'][0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
 
         // since amount is positive, $asset recieves the money
@@ -434,11 +436,11 @@ class ImportableConverterTest extends TestCase
         $result = $converter->convert($importables);
 
         // verify content of $result
-        $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
-        $this->assertEquals([], $result[0]['tags']);
-        $this->assertEquals(3, $result[0]['bill_id']);
-        $this->assertEquals($importable->billName, $result[0]['bill_name']);
+        $this->assertEquals('transfer', $result[0]['transactions'][0]['type']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['transactions'][0]['date']);
+        $this->assertEquals([], $result[0]['transactions'][0]['tags']);
+        $this->assertEquals(3, $result[0]['transactions'][0]['bill_id']);
+        $this->assertEquals($importable->billName, $result[0]['transactions'][0]['bill_name']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
 
         // since amount is negative, $asset sends the money

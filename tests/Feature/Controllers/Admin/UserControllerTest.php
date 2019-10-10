@@ -1,22 +1,22 @@
 <?php
 /**
  * UserControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -26,10 +26,14 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
  * Class UserControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UserControllerTest extends TestCase
 {
@@ -39,7 +43,7 @@ class UserControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -50,8 +54,11 @@ class UserControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
+
+        $this->mockDefaultSession();
+
         $this->be($this->user());
-        $response = $this->get(route('admin.users.delete', [1]));
+        $response = $this->get(route('admin.users.delete', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -67,8 +74,10 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
+        $this->mockDefaultSession();
+
         $this->be($this->user());
-        $response = $this->post(route('admin.users.destroy', ['2']));
+        $response = $this->post(route('admin.users.destroy', [$this->user()->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
@@ -81,8 +90,11 @@ class UserControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
+
+        $this->mockDefaultSession();
+
         $this->be($this->user());
-        $response = $this->get(route('admin.users.edit', [1]));
+        $response = $this->get(route('admin.users.edit', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -97,6 +109,7 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(3)->andReturn(true);
         $user = $this->user();
         $repository->shouldReceive('all')->andReturn(new Collection([$user]));
+        $this->mockDefaultSession();
 
         $this->be($user);
         $response = $this->get(route('admin.users'));
@@ -120,8 +133,10 @@ class UserControllerTest extends TestCase
             ]
         );
 
+        $this->mockDefaultSession();
+
         $this->be($this->user());
-        $response = $this->get(route('admin.users.show', [1]));
+        $response = $this->get(route('admin.users.show', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -129,6 +144,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController
+     * @covers \FireflyIII\Http\Requests\UserFormRequest
      */
     public function testUpdate(): void
     {
@@ -138,6 +154,10 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('updateEmail')->once();
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark');
+
         $data = [
             'id'                    => 1,
             'email'                 => 'test@example.com',

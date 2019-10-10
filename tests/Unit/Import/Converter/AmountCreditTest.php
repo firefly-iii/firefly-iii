@@ -1,22 +1,22 @@
 <?php
 /**
  * AmountCreditTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -28,6 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class AmountCreditTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AmountCreditTest extends TestCase
 {
@@ -37,7 +40,7 @@ class AmountCreditTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -152,22 +155,22 @@ class AmountCreditTest extends TestCase
             '63 5212.4440'            => '635212.4440',
             '163 5219.1634567898'     => '1635219.1634567898',
             '444 163 5219.1634567898' => '4441635219.1634567898',
-            '-0.34918323'             => '0.34918323',
+            '-0.34918323'             => '0.349183230000',
             '0.208'                   => '0.208',
-            '-0.15'                   => '0.15',
-            '-0.03881677'             => '0.03881677',
+            '-0.15'                   => '0.150000000000',
+            '-0.03881677'             => '0.038816770000',
             '0.33'                    => '0.33',
-            '-0.1'                    => '0.1',
+            '-0.1'                    => '0.100000000000',
             '0.01124'                 => '0.01124',
-            '-0.01124'                => '0.01124',
+            '-0.01124'                => '0.011240000000',
             '0.115'                   => '0.115',
-            '-0.115'                  => '0.115',
+            '-0.115'                  => '0.115000000000',
             '1.33'                    => '1.33',
             '$1.23'                   => '1.23',
             '€1,44'                   => '1.44',
-            '(33.52)'                 => '33.52',
-            '€(63.12)'                => '63.12',
-            '($182.77)'               => '182.77',
+            '(33.52)'                 => '33.520000000000',
+            '€(63.12)'                => '63.120000000000',
+            '($182.77)'               => '182.770000000000',
 
             // double minus because why the hell not
             '--0.03881677'            => '0.03881677',

@@ -1,22 +1,22 @@
 <?php
 /**
  * ImportJobRepository.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class ImportJobRepository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
@@ -55,7 +54,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $this->uploadDisk    = Storage::disk('upload');
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -91,9 +90,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         Log::debug(sprintf('Now in appendTransactions(%s)', $job->key));
         $existingTransactions = $this->getTransactions($job);
         $new                  = array_merge($existingTransactions, $transactions);
-        Log::debug(sprintf('Old transaction count: %d', \count($existingTransactions)));
-        Log::debug(sprintf('To be added transaction count: %d', \count($transactions)));
-        Log::debug(sprintf('New count: %d', \count($new)));
+        Log::debug(sprintf('Old transaction count: %d', count($existingTransactions)));
+        Log::debug(sprintf('To be added transaction count: %d', count($transactions)));
+        Log::debug(sprintf('New count: %d', count($new)));
         $this->setTransactions($job, $new);
 
         return $job;
@@ -224,7 +223,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function getExtendedStatus(ImportJob $job): array
     {
         $status = $job->extended_status;
-        if (\is_array($status)) {
+        if (is_array($status)) {
             return $status;
         }
 
@@ -243,10 +242,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         // this will overwrite all transactions currently in the job.
         $disk     = Storage::disk('upload');
-        $filename = sprintf('%s-%s.crypt.json', $job->created_at->format('Ymd'), $job->key);
+        $filename = sprintf('%s-%s.json', $job->created_at->format('Ymd'), $job->key);
         $array    = [];
         if ($disk->exists($filename)) {
-            $json  = Crypt::decrypt($disk->get($filename));
+            $json  = $disk->get($filename);
             $array = json_decode($json, true);
         }
         if (false === $array) {
@@ -329,11 +328,11 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         // this will overwrite all transactions currently in the job.
         $disk     = Storage::disk('upload');
-        $filename = sprintf('%s-%s.crypt.json', $job->created_at->format('Ymd'), $job->key);
-        $json     = Crypt::encrypt(json_encode($transactions));
+        $filename = sprintf('%s-%s.json', $job->created_at->format('Ymd'), $job->key);
+        $json     = json_encode($transactions);
 
         // set count for easy access
-        $array             = ['count' => \count($transactions)];
+        $array             = ['count' => count($transactions)];
         $job->transactions = $array;
         $job->save();
         // store file.
@@ -386,12 +385,11 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->md5      = md5($content);
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
-        $attachment->size     = \strlen($content);
+        $attachment->size     = strlen($content);
         $attachment->uploaded = false;
         $attachment->save();
-        $encrypted = Crypt::encrypt($content);
 
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $this->uploadDisk->put($attachment->fileName(), $content);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 
@@ -446,8 +444,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         $content   = $fileObject->fread($file->getSize());
-        $encrypted = Crypt::encrypt($content);
-        $this->uploadDisk->put($attachment->fileName(), $encrypted);
+        $this->uploadDisk->put($attachment->fileName(), $content);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 
@@ -466,5 +463,15 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $size = $file->getSize();
 
         return $size > $this->maxUploadSize;
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return int
+     */
+    public function countByTag(ImportJob $job): int
+    {
+        return $job->tag->transactionJournals->count();
     }
 }

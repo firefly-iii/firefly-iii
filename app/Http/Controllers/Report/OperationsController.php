@@ -1,22 +1,22 @@
 <?php
 /**
  * OperationsController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -41,6 +41,8 @@ class OperationsController extends Controller
 
     /**
      * OperationsController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -77,10 +79,10 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $type    = 'expense-entry';
+        $report = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $type   = 'expense-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
@@ -112,17 +114,16 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $entries = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $type    = 'income-entry';
+        $report = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $type   = 'income-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
         // @codeCoverageIgnoreEnd
-
         $cache->store($result);
 
         return $result;
@@ -149,33 +150,33 @@ class OperationsController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $incomes   = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $expenses  = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $incomeSum = array_sum(
-            array_map(
-                function ($item) {
-                    return $item['sum'];
-                },
-                $incomes
-            )
-        );
+        $incomes  = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $expenses = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $sums     = [];
+        $keys     = array_unique(array_merge(array_keys($incomes['sums']), array_keys($expenses['sums'])));
 
-        $expensesSum = array_sum(
-            array_map(
-                function ($item) {
-                    return $item['sum'];
-                },
-                $expenses
-            )
-        );
+        /** @var int $currencyId */
+        foreach ($keys as $currencyId) {
+            $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
+            $sums[$currencyId]        = $sums[$currencyId] ?? [
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $currencyInfo['currency_name'],
+                    'currency_code'           => $currencyInfo['currency_code'],
+                    'currency_symbol'         => $currencyInfo['currency_symbol'],
+                    'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                    'in'                      => $incomes['sums'][$currencyId]['sum'] ?? '0',
+                    'out'                     => $expenses['sums'][$currencyId]['sum'] ?? '0',
+                    'sum'                     => '0',
+                ];
+            $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['in'], $sums[$currencyId]['out']);
+        }
+
         try {
-            $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
-            // @codeCoverageIgnoreStart
+            $result = view('reports.partials.operations', compact('sums'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;

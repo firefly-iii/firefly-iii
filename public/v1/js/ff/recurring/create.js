@@ -1,21 +1,21 @@
 /*
  * create.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /** global: Modernizr, currencies */
@@ -183,16 +183,18 @@ function updateFormFields() {
 
     if (transactionType === 'withdrawal') {
         // hide source account name:
-        $('#source_name_holder').hide();
+        // $('#source_name_holder').hide(); // source_name no longer exists
+        $('#deposit_source_id_holder').hide(); // new one!
 
         // show source account ID:
         $('#source_id_holder').show();
 
+        // show destination name:
+        // $('#destination_name_holder').show(); // old one
+        $('#withdrawal_destination_id_holder').show();
+
         // hide destination ID:
         $('#destination_id_holder').hide();
-
-        // show destination name:
-        $('#destination_name_holder').show();
 
         // show budget
         $('#budget_id_holder').show();
@@ -202,18 +204,28 @@ function updateFormFields() {
     }
 
     if (transactionType === 'deposit') {
-        $('#source_name_holder').show();
+        // $('#source_name_holder').show(); // source name no longer exists.
+        $('#deposit_source_id_holder').show(); // new one!
+
         $('#source_id_holder').hide();
-        $('#destination_name_holder').hide();
+
+        // $('#destination_name_holder').hide(); // old one
+        $('#withdrawal_destination_id_holder').hide();
+
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
     if (transactionType === 'transfer') {
-        $('#source_name_holder').hide();
+        // $('#source_name_holder').hide(); // source name no longer exists.
+        $('#deposit_source_id_holder').hide(); // new one!
+
         $('#source_id_holder').show();
-        $('#destination_name_holder').hide();
+
+        // $('#destination_name_holder').hide(); // old one
+        $('#withdrawal_destination_id_holder').hide();
+
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
         $('#piggy_bank_id_holder').show();

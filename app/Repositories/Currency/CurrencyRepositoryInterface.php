@@ -1,22 +1,22 @@
 <?php
 /**
  * CurrencyRepositoryInterface.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -47,6 +47,15 @@ interface CurrencyRepositoryInterface
      * @return bool
      */
     public function currencyInUse(TransactionCurrency $currency): bool;
+
+    /**
+     * Currency is in use where exactly.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return string|null
+     */
+    public function currencyInUseAt(TransactionCurrency $currency): ?string;
 
     /**
      * @param TransactionCurrency $currency
@@ -133,6 +142,26 @@ interface CurrencyRepositoryInterface
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
 
     /**
+     * Find by object, ID or code. Returns user default or system default.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
+
+    /**
+     * Find by object, ID or code. Returns NULL if nothing found.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
+
+    /**
      * Find by ID, return NULL if not found.
      *
      * @param int $currencyId
@@ -166,6 +195,11 @@ interface CurrencyRepositoryInterface
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
 
     /**
+     * @return Collection
+     */
+    public function getEnabled(): Collection;
+
+    /**
      * Get currency exchange rate.
      *
      * @param TransactionCurrency $fromCurrency
@@ -184,6 +218,13 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function getExchangeRates(TransactionCurrency $currency): Collection;
+
+    /**
+     * @param string $search
+     *
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection;
 
     /**
      * @param User $user

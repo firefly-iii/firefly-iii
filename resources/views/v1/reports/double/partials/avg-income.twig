@@ -1,0 +1,46 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'account'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent_average'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in result %}
+        {% if loop.index > listLength %}
+            <tr class="overListLength">
+        {% else %}
+            <tr>
+        {% endif %}
+        <td data-sortable="false">
+            <a href="{{ route('accounts.show', row.destination_account_id) }}">
+                {{ row.destination_account_name }}
+            </a>
+        </td>
+        <td data-value="{{ row.avg }}" style="text-align: right;">
+            {{ formatAmountBySymbol(row.avg, row.currency_symbol, row.currency_decimal_places) }}
+        </td>
+
+        <td data-value="{{ row.sum }}" style="text-align: right;">
+            {{ formatAmountBySymbol(row.sum, row.currency_symbol, row.currency_decimal_places) }}
+        </td>
+
+        <td data-value="{{ row.transactions }}">
+            {{ row.transactions }}
+        </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% if result|length > listLength %}
+        <tr>
+            <td colspan="5" class="active">
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+            </td>
+        </tr>
+    {% endif %}
+    </tfoot>
+</table>

@@ -1,22 +1,22 @@
 <?php
 /**
  * SelectAccountsHandler.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -59,7 +59,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         Log::debug('Now in SelectAccountsHandler::configurationComplete()');
         $config  = $this->importJob->configuration;
         $mapping = $config['mapping'] ?? [];
-        if (\count($mapping) > 0) {
+        if (count($mapping) > 0) {
             // mapping is complete.
             Log::debug('Looks like user has mapped YNAB accounts to Firefly III accounts', $mapping);
             $this->repository->setStage($this->importJob, 'go-for-import');
@@ -97,7 +97,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         $config['mapping']     = $final;
         $config['apply-rules'] = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
-        if ($final === ['' => 0] || 0 === \count($final)) {
+        if ($final === ['' => 0] || 0 === count($final)) {
             $messages->add('count', (string)trans('import.ynab_no_mapping'));
         }
 
@@ -117,7 +117,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         $config       = $this->importJob->configuration;
         $ynabAccounts = $config['accounts'] ?? [];
         $budget       = $this->getSelectedBudget();
-        if (0 === \count($ynabAccounts)) {
+        if (0 === count($ynabAccounts)) {
             throw new FireflyException('It seems you have no accounts with this budget. The import cannot continue.'); // @codeCoverageIgnore
         }
         // list the users accounts:
@@ -127,6 +127,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         /** @var Account $account */
         foreach ($ffAccounts as $account) {
             $accountId         = $account->id;
+            // TODO we can use getAccountCurrency() instead
             $currencyId        = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currency          = $this->getCurrency($currencyId);
             $array[$accountId] = [

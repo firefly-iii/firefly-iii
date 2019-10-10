@@ -1,0 +1,37 @@
+<?php
+
+namespace FireflyIII\Console\Commands\Integrity;
+
+use Illuminate\Console\Command;
+
+/**
+ * Class ReportSkeleton
+ */
+class ReportSkeleton extends Command
+{
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'DESCRIPTION HERE';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:INT_COMMAND';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle(): int
+    {
+        //
+        $this->warn('Congrats, you found the skeleton command. Boo!');
+
+        return 0;
+    }
+}

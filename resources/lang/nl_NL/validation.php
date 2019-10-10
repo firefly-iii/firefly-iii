@@ -2,22 +2,22 @@
 
 /**
  * validation.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -33,15 +33,19 @@ return [
     'rule_trigger_value'             => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
     'rule_action_value'              => 'Deze waarde is niet geldig voor de geselecteerde actie.',
     'file_already_attached'          => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
-    'file_attached'                  => 'Bestand met naam ":name" is met succes geuploaded.',
+    'file_attached'                  => 'Bestand ":name" is succesvol geüpload.',
     'must_exist'                     => 'Het ID in veld :attribute bestaat niet.',
     'all_accounts_equal'             => 'Alle rekeningen in dit veld moeten gelijk zijn.',
+    'group_title_mandatory'          => 'Een groepstitel is verplicht wanneer er meer dan één transactie is.',
+    'transaction_types_equal'        => 'Alle splits moeten van hetzelfde type zijn.',
+    'invalid_transaction_type'       => 'Ongeldig transactietype.',
     'invalid_selection'              => 'Ongeldige selectie.',
     'belongs_user'                   => 'Deze waarde is ongeldig voor dit veld.',
     'at_least_one_transaction'       => 'Er is op zijn minst één transactie nodig.',
     'at_least_one_repetition'        => 'Er is op zijn minst één herhaling nodig.',
     'require_repeat_until'           => 'Je moet een aantal herhalingen opgeven, of een einddatum (repeat_until). Niet beide.',
     'require_currency_info'          => 'De inhoud van dit veld is ongeldig zonder valutagegevens.',
+    'require_currency_amount'        => 'De inhoud van dit veld is ongeldig zonder bedrag in vreemde valuta.',
     'equal_description'              => 'Transactiebeschrijving mag niet gelijk zijn aan globale beschrijving.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
     'file_too_large'                 => 'Bestand ":name" is te groot.',
@@ -116,18 +120,19 @@ return [
     'string'                         => 'Het :attribute moet een tekenreeks zijn.',
     'url'                            => ':attribute is geen geldige URL.',
     'timezone'                       => 'Het :attribute moet een geldige zone zijn.',
-    '2fa_code'                       => 'De waarde in het :attribute-veld is niet geldig.',
-    'dimensions'                     => 'Het :attribute heeft het verkeerde afbeeldingsformaat.',
-    'distinct'                       => 'Het :attribute veld heeft een dubbele waarde.',
-    'file'                           => ':attribute moet een bestand zijn.',
-    'in_array'                       => 'Het :attribute veld bestaat niet in :other.',
-    'present'                        => 'Het :attribute veld moet aanwezig zijn.',
-    'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn.',
-    'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
-    'secure_password'                => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties.',
-    'valid_recurrence_rep_moment'    => 'Ongeldig herhaalmoment voor dit type herhaling.',
-    'invalid_account_info'           => 'Ongeldige rekeninginformatie.',
+    '2fa_code'                    => 'De waarde in het :attribute-veld is niet geldig.',
+    'dimensions'                  => 'Het :attribute heeft het verkeerde afbeeldingsformaat.',
+    'distinct'                    => 'Het :attribute veld heeft een dubbele waarde.',
+    'file'                        => ':attribute moet een bestand zijn.',
+    'in_array'                    => 'Het :attribute veld bestaat niet in :other.',
+    'present'                     => 'Het :attribute veld moet aanwezig zijn.',
+    'amount_zero'                 => 'Het totaalbedrag kan niet nul zijn.',
+    'current_target_amount'       => 'Het huidige bedrag moet minder zijn dan het doelbedrag.',
+    'unique_piggy_bank_for_user'  => 'De naam van de spaarpot moet uniek zijn.',
+    'secure_password'             => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Dit is geen geldige herhaling voor periodieke transacties.',
+    'valid_recurrence_rep_moment' => 'Ongeldig herhaalmoment voor dit type herhaling.',
+    'invalid_account_info'        => 'Ongeldige rekeninginformatie.',
     'attributes'                     => [
         'email'                   => 'e-mailadres',
         'description'             => 'omschrijving',
@@ -135,8 +140,8 @@ return [
         'name'                    => 'naam',
         'piggy_bank_id'           => 'spaarpot ID',
         'targetamount'            => 'doelbedrag',
-        'openingBalanceDate'      => 'startsaldodatum',
-        'openingBalance'          => 'startsaldo',
+        'opening_balance_date'    => 'startsaldodatum',
+        'opening_balance'         => 'startsaldo',
         'match'                   => 'overeenkomst',
         'amount_min'              => 'minimumbedrag',
         'amount_max'              => 'maximumbedrag',
@@ -164,4 +169,28 @@ return [
         'rule-trigger.4'          => 'regeltrigger #4',
         'rule-trigger.5'          => 'regeltrigger #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'withdrawal_source_bad_data'     => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'withdrawal_dest_need_data'      => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'withdrawal_dest_bad_data'       => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+
+    'deposit_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'deposit_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'deposit_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
+    'deposit_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+
+    'transfer_source_need_data' => 'Om door te gaan moet een geldig bronaccount ID en/of geldige bronaccountnaam worden gevonden.',
+    'transfer_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'transfer_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
+    'transfer_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'need_id_in_edit'           => 'Elke split moet een transaction_journal_id hebben (een geldig ID of 0).',
+
+    'ob_source_need_data' => 'Om door te gaan moet er een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'ob_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
+    'ob_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+
+    'generic_invalid_source' => 'Je kan deze rekening niet gebruiken als bronrekening.',
+    'generic_invalid_destination' => 'Je kan deze rekening niet gebruiken als doelrekening.',
 ];

@@ -56,25 +56,11 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
-
-                            <div class="box-tools pull-right">
-                                <div class="btn-group">
-                                    <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{ route('transactions.create','withdrawal') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','deposit') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','transfer') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
 
                         {% if data[0].count > 0 %}
                             <div class="box-body no-padding">
-                                {% include 'list.journals-tiny' with {'transactions': data[0],'account': data[1]} %}
+                                {% include 'list.groups-tiny' with {'groups': data[0],'account': data[1]} %}
                             </div>
                         {% else %}
                             <div class="box-body">
@@ -95,22 +81,8 @@
                             <div class="btn-group" role="group" aria-label="...">
 
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('transactions.create','withdrawal') }}?source={{ data[1].id }}" class="btn btn-success"><i
+                                    <a href="{{ route('transactions.create', ['withdrawal']) }}" class="btn btn-success"><i
                                                 class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
-                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ route('transactions.create','withdrawal') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','deposit') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','transfer') }}?source={{ data[1].id }}"><i
-                                                        class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}
-                                            </a></li>
-                                    </ul>
                                 </div>
                                 <a class="btn btn-default"
                                    href="{{ route('accounts.show',data[1].id) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>

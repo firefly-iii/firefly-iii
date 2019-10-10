@@ -1,22 +1,22 @@
 <?php
 /**
  * BillRepositoryInterface.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -33,6 +33,12 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
+
+    /**
+     * @param Bill $bill
+     */
+    public function unlinkAll(Bill $bill): void;
+
     /**
      * @param Bill $bill
      *
@@ -48,6 +54,16 @@ interface BillRepositoryInterface
      * @return Bill|null
      */
     public function find(int $billId): ?Bill;
+
+    /**
+     * Find bill by parameters.
+     *
+     * @param int|null    $billId
+     * @param string|null $billName
+     *
+     * @return Bill|null
+     */
+    public function findBill(?int $billId, ?string $billName): ?Bill;
 
     /**
      * Find a bill by name.
@@ -212,9 +228,9 @@ interface BillRepositoryInterface
      * Link a set of journals to a bill.
      *
      * @param Bill       $bill
-     * @param Collection $journals
+     * @param array $transactions
      */
-    public function linkCollectionToBill(Bill $bill, Collection $journals): void;
+    public function linkCollectionToBill(Bill $bill, array $transactions): void;
 
     /**
      * Given a bill and a date, this method will tell you at which moment this bill expects its next

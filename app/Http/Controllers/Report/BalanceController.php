@@ -1,31 +1,34 @@
 <?php
 /**
  * BalanceController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -35,6 +38,25 @@ use Throwable;
  */
 class BalanceController extends Controller
 {
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
+    /**
+     * BalanceController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(BudgetRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
 
     /**
      * Show overview of budget balances.
@@ -47,27 +69,82 @@ class BalanceController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('balance-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+        $report = [
+            'budgets'  => [],
+            'accounts' => [],
+        ];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $report['accounts'][$account->id] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'iban' => $account->iban,
+                'sum'  => '0',
+            ];
         }
-        $helper  = app(BalanceReportHelperInterface::class);
-        $balance = $helper->getBalanceReport($accounts, $start, $end);
+
+        $budgets = $this->repository->getBudgets();
+
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId                     = $budget->id;
+            $report['budgets'][$budgetId] = [
+                'budget_id'   => $budgetId,
+                'budget_name' => $budget->name,
+                'spent'       => [], // per account
+                'sums'        => [], // per currency
+            ];
+            $spent                        = [];
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $journals  = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
+                                   ->getExtractedJournals();
+            /** @var array $journal */
+            foreach ($journals as $journal) {
+                $sourceAccount                  = $journal['source_account_id'];
+                $currencyId                     = $journal['currency_id'];
+                $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
+                        'source_account_id'       => $sourceAccount,
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                        'spent'                   => '0',
+                    ];
+                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
+
+                // also fix sum:
+                $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
+                        'sum'                     => '0',
+                        'currency_id'             => $journal['currency_id'],
+                        'currency_code'           => $journal['currency_code'],
+                        'currency_name'           => $journal['currency_name'],
+                        'currency_symbol'         => $journal['currency_symbol'],
+                        'currency_decimal_places' => $journal['currency_decimal_places'],
+                    ];
+                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
+
+                // add currency info for account sum
+                $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];
+                $report['accounts'][$sourceAccount]['currency_code']           = $journal['currency_code'];
+                $report['accounts'][$sourceAccount]['currency_name']           = $journal['currency_name'];
+                $report['accounts'][$sourceAccount]['currency_symbol']         = $journal['currency_symbol'];
+                $report['accounts'][$sourceAccount]['currency_decimal_places'] = $journal['currency_decimal_places'];
+            }
+            $report['budgets'][$budgetId]['spent'] = $spent;
+            // get transactions in budget
+        }
+
+
         try {
-            $result = view('reports.partials.balance', compact('balance'))->render();
+            $result = view('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-        // @codeCoverageIgnoreEnd
-        $cache->store($result);
 
         return $result;
     }

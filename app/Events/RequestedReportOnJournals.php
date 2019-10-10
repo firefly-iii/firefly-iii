@@ -2,47 +2,29 @@
 
 /**
  * RequestedReportOnJournals.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
-/**
- * RequestedReportOnJournals.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
- *
- * This file is part of Firefly III.
- *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Firefly III is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
- */
 
 namespace FireflyIII\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -59,8 +41,8 @@ class RequestedReportOnJournals
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var Collection The journals to report on. */
-    public $journals;
+    /** @var Collection The transaction groups to report on. */
+    public $groups;
     /** @var int The ID of the user. */
     public $userId;
 
@@ -68,19 +50,19 @@ class RequestedReportOnJournals
      * Create a new event instance.
      *
      * @param int        $userId
-     * @param Collection $journals
+     * @param Collection $groups
      */
-    public function __construct(int $userId, Collection $journals)
+    public function __construct(int $userId, Collection $groups)
     {
         Log::debug('In event RequestedReportOnJournals.');
         $this->userId   = $userId;
-        $this->journals = $journals;
+        $this->groups = $groups;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {

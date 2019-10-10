@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -37,9 +37,13 @@ return [
     'linked_to_rules'         => '
 İlgili kurallar',
     'active'                  => 'Aktif mi?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
+    'transaction_type'        => 'Type',
     'lastActivity'            => 'Son Etkinlik',
     'balanceDiff'             => 'Bakiye farkı',
     'matchesOn'               => 'Eşleşti',
+    'other_meta_data'         => 'Other meta data',
     'account_type'            => 'Hesap Türü',
     'created_at'              => 'Tarihinde oluşturuldu',
     'account'                 => 'Hesap',
@@ -88,7 +92,6 @@ return [
     'attachments_count'       => 'Eklerin sayısı',
     'bills_count'             => 'Fatura sayısı',
     'categories_count'        => 'Kategori sayısı',
-    'export_jobs_count'       => 'İhracat sayısı',
     'import_jobs_count'       => 'İthalat sayısı',
     'budget_count'            => 'Bütçelerin sayısı',
     'rule_and_groups_count'   => 'Kuralların ve kural gruplarının sayısı',
@@ -107,14 +110,14 @@ return [
     'account_on_spectre'      => '(Spectre) Hesabı',
     'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Bu hesaptan içeri aktar',
-    'sepa-ct-id'              => 'SEPA End to End Identifier',
-    'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
-    'sepa-db'                 => 'SEPA Mandate Identifier',
-    'sepa-country'            => 'SEPA Country',
-    'sepa-cc'                 => 'SEPA Clearing Code',
-    'sepa-ep'                 => 'SEPA External Purpose',
-    'sepa-ci'                 => 'SEPA Creditor Identifier',
-    'sepa-batch-id'           => 'SEPA Batch ID',
+    'sepa_ct_id'              => 'SEPA End to End Identifier',
+    'sepa_ct_op'              => 'SEPA Opposing Account Identifier',
+    'sepa_db'                 => 'SEPA Mandate Identifier',
+    'sepa_country'            => 'SEPA Country',
+    'sepa_cc'                 => 'SEPA Clearing Code',
+    'sepa_ep'                 => 'SEPA External Purpose',
+    'sepa_ci'                 => 'SEPA Creditor Identifier',
+    'sepa_batch_id'           => 'SEPA Batch ID',
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'Dosya adı',

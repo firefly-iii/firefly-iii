@@ -1,22 +1,22 @@
 <?php
 /**
  * SetDestinationAccount.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -69,13 +69,6 @@ class SetDestinationAccount implements ActionInterface
         $this->journal    = $journal;
         $this->repository = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
-        $count = $journal->transactions()->count();
-        if ($count > 2) {
-            Log::error(sprintf('Cannot change destination account of journal #%d because it is a split journal.', $journal->id));
-
-            return false;
-        }
-
         // journal type:
         $type = $journal->transactionType->type;
 
@@ -103,7 +96,7 @@ class SetDestinationAccount implements ActionInterface
         // get destination transaction:
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         if (null === $transaction) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
         $transaction->account_id = $this->newDestinationAccount->id;
         $transaction->save();
@@ -140,9 +133,9 @@ class SetDestinationAccount implements ActionInterface
         if (null === $account) {
             $data    = [
                 'name'            => $this->action->action_value,
-                'accountType'     => 'expense',
+                'account_type'    => 'expense',
                 'account_type_id' => null,
-                'virtualBalance'  => 0,
+                'virtual_balance' => 0,
                 'active'          => true,
                 'iban'            => null,
             ];

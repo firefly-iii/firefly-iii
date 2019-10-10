@@ -12,22 +12,22 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            <li class="{{ activeRoutePartialWhat('accounts', 'asset') }}">
+            <li class="{{ activeRoutePartialObjectType('accounts', 'asset') }}">
                 <a href="{{ route('accounts.index','asset') }}">
                     <i class="fa fa-money fa-fw"></i> {{ 'asset_accounts'|_ }}
                 </a>
             </li>
-            <li class="{{ activeRoutePartialWhat('accounts', 'expense') }}">
+            <li class="{{ activeRoutePartialObjectType('accounts', 'expense') }}">
                 <a href="{{ route('accounts.index','expense') }}">
                     <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expense_accounts'|_ }}
                 </a>
             </li>
-            <li class="{{ activeRoutePartialWhat('accounts', 'revenue') }}">
+            <li class="{{ activeRoutePartialObjectType('accounts', 'revenue') }}">
                 <a href="{{ route('accounts.index','revenue') }}">
                     <i class="fa fa-download fa-fw"></i> {{ 'revenue_accounts'|_ }}
                 </a>
             </li>
-            <li class="{{ activeRoutePartialWhat('accounts', 'liabilities') }}">
+            <li class="{{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
                 <a href="{{ route('accounts.index','liabilities') }}">
                     <i class="fa fa-ticket fa-fw"></i> {{ 'liabilities_accounts'|_ }}
                 </a>
@@ -58,6 +58,14 @@
             <span>{{ 'reports'|_ }}</span>
         </a>
     </li>
+
+    <li class="{{ activeRoutePartial('import') }}">
+        <a href="{{ route('import.index') }}">
+            <i class="fa fa-archive fa-fw"></i>
+            <span>{{ 'import_transactions'|_ }}</span>
+        </a>
+    </li>
+
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
             <i class="fa fa-repeat fa-fw"></i>
@@ -67,15 +75,15 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            <li class="{{ activeRoutePartialWhat('transactions','withdrawal') }}">
+            <li class="{{ activeRoutePartialObjectType('transactions','withdrawal') }}">
                 <a href="{{ route('transactions.index','withdrawal') }}">
                     <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'expenses'|_ }}</a>
             </li>
-            <li class="{{ activeRoutePartialWhat('transactions','deposit') }}">
+            <li class="{{ activeRoutePartialObjectType('transactions','deposit') }}">
                 <a href="{{ route('transactions.index','deposit') }}"><i
                             class="fa fa-long-arrow-right fa-fw"></i> {{ 'income'|_ }}</a>
             </li>
-            <li class="{{ activeRoutePartialWhat('transactions','transfers') }}">
+            <li class="{{ activeRoutePartialObjectType('transactions','transfers') }}">
                 <a href="{{ route('transactions.index','transfers') }}">
                     <i class="fa fa-fw fa-exchange"></i> {{ 'transfers'|_ }}</a>
             </li>
@@ -110,26 +118,10 @@
         </ul>
 
     </li>
-    <li class="{{ activeRoutePartial('export') }} {{ activeRoutePartial('import') }} treeview">
-        <a href="#">
-            <i class="fa fa-arrows-alt fa-fw"></i>
-            <span>
-                {{ 'import_and_export'|_ }}
-            </span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <li class="{{ activeRoutePartial('import') }}">
-                <a href="{{ route('import.index') }}"><i class="fa fa-archive fa-fw"></i> {{ 'import_transactions'|_ }}</a>
-            </li>
-            <li class="{{ activeRoutePartial('export') }}">
-                <a href="{{ route('export.index') }}"><i class="fa fa-file-archive-o fa-fw"></i> {{ 'export_and_backup_data'|_ }}</a>
-            </li>
-        </ul>
 
-    </li>
+
+
+
     <li id="option-menu"
         class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview">
         <a href="#">

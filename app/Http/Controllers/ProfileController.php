@@ -1,22 +1,22 @@
 <?php
 /**
  * ProfileController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -45,13 +45,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Laravel\Passport\ClientRepository;
 use Log;
+use PragmaRX\Recovery\Recovery;
 
 /**
  * Class ProfileController.
  *
  * @method Guard guard()
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *
  */
 class ProfileController extends Controller
 {
@@ -59,13 +59,14 @@ class ProfileController extends Controller
 
     /**
      * ProfileController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.profile'));
                 app('view')->share('mainTitleIcon', 'fa-user');
 
@@ -89,7 +90,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -115,7 +116,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -136,12 +137,42 @@ class ProfileController extends Controller
     public function code()
     {
         $domain = $this->getDomain();
-        $secret = Google2FA::generateSecretKey();
-        session()->flash('two-factor-secret', $secret);
+        $secret = null;
+
+        // generate secret if not in session
+        if (!session()->has('temp-mfa-secret')) {
+            // generate secret + store + flash
+            $secret = Google2FA::generateSecretKey();
+            session()->put('temp-mfa-secret', $secret);
+            session()->flash('two-factor-secret', $secret);
+        }
+        // re-use secret if in session
+        if (session()->has('temp-mfa-secret')) {
+            // get secret from session and flash
+            $secret = session()->get('temp-mfa-secret');
+            session()->flash('two-factor-secret', $secret);
+        }
+
+        // generate codes if not in session:
+        if (!session()->has('temp-mfa-codes')) {
+            // generate codes + store + flash:
+            $recovery      = app(Recovery::class);
+            $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
+            session()->put('temp-mfa-codes', $recoveryCodes);
+            session()->flash('two-factor-codes', $recoveryCodes);
+        }
+
+        // get codes from session if there already:
+        if (session()->has('temp-mfa-codes')) {
+            $recoveryCodes = session()->get('temp-mfa-codes');
+            session()->flash('two-factor-codes', $recoveryCodes);
+        }
+
+        $codes = implode("\r\n", $recoveryCodes);
 
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
-        return view('profile.code', compact('image', 'secret'));
+        return view('profile.code', compact('image', 'secret','codes'));
     }
 
     /**
@@ -166,20 +197,20 @@ class ProfileController extends Controller
         /** @var Collection $set */
         $set  = app('preferences')->findByName('email_change_confirm_token');
         $user = null;
-        Log::debug(sprintf('Found %d preferences', $set->count()));
+        //Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
         foreach ($set as $preference) {
             if ($preference->data === $token) {
-                Log::debug('Found user');
+                //Log::debug('Found user');
                 $user = $preference->user;
             }
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            Log::debug('Found no user');
+            //Log::debug('Found no user');
             throw new FireflyException('Invalid token.');
         }
-        Log::debug('Will unblock user.');
+        //Log::debug('Will unblock user.');
         $repository->unblockUser($user);
 
         // return to login.
@@ -200,7 +231,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('warning', trans('firefly.delete_local_info_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('warning', trans('firefly.delete_local_info_only', ['login_provider' => e($loginProvider)]));
             // @codeCoverageIgnoreEnd
         }
         $title        = auth()->user()->email;
@@ -217,8 +248,13 @@ class ProfileController extends Controller
      */
     public function deleteCode()
     {
-        app('preferences')->delete('twoFactorAuthEnabled');
-        app('preferences')->delete('twoFactorAuthSecret');
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        $repository->setMFACode($user, null);
         session()->flash('success', (string)trans('firefly.pref_two_factor_auth_disabled'));
         session()->flash('info', (string)trans('firefly.pref_two_factor_auth_remove_it'));
 
@@ -232,17 +268,18 @@ class ProfileController extends Controller
      */
     public function enable2FA()
     {
-        $hasSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
+        /** @var User $user */
+        $user       = auth()->user();
+        $enabledMFA = null !== $user->mfa_secret;
 
         // if we don't have a valid secret yet, redirect to the code page to get one.
-        if (!$hasSecret) {
+        if (!$enabledMFA) {
             return redirect(route('profile.code'));
         }
 
         // If FF3 already has a secret, just set the two factor auth enabled to 1,
         // and let the user continue with the existing secret.
-
-        app('preferences')->set('twoFactorAuthEnabled', 1);
+        session()->flash('info', (string)trans('firefly.2fa_already_enabled'));
 
         return redirect(route('profile.index'));
     }
@@ -254,11 +291,11 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        /** @var User $user */
+        $user          = auth()->user();
         $loginProvider = config('firefly.login_provider');
         // check if client token thing exists (default one)
-        $count = DB::table('oauth_clients')
-                   ->where('personal_access_client', 1)
-                   ->whereNull('user_id')->count();
+        $count = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
 
         $this->createOAuthKeys();
 
@@ -267,11 +304,10 @@ class ProfileController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
-        $subTitle   = auth()->user()->email;
-        $userId     = auth()->user()->id;
-        $enabled2FA = 1 === (int)app('preferences')->get('twoFactorAuthEnabled', 0)->data;
-        /** @var User $user */
-        $user = auth()->user();
+        $subTitle       = $user->email;
+        $userId         = $user->id;
+        $enabled2FA     = null !== $user->mfa_secret;
+        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
 
         // get access token or create one.
         $accessToken = app('preferences')->get('access_token', null);
@@ -280,7 +316,26 @@ class ProfileController extends Controller
             $accessToken = app('preferences')->set('access_token', $token);
         }
 
-        return view('profile.index', compact('subTitle', 'userId', 'accessToken', 'enabled2FA', 'loginProvider'));
+        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'loginProvider'));
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function newBackupCodes()
+    {
+        // generate recovery codes:
+        $recovery      = app(Recovery::class);
+        $recoveryCodes = $recovery->lowercase()
+                                  ->setCount(8)     // Generate 8 codes
+                                  ->setBlocks(2)    // Every code must have 7 blocks
+                                  ->setChars(6)    // Each block must have 16 chars
+                                  ->toArray();
+        $codes         = implode("\r\n", $recoveryCodes);
+
+        app('preferences')->set('mfa_recovery', $recoveryCodes);
+        app('preferences')->mark();
+        return view('profile.new-backup-codes', compact('codes'));
     }
 
     /**
@@ -296,7 +351,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -350,7 +405,7 @@ class ProfileController extends Controller
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => $loginProvider]));
+            $request->session()->flash('error', trans('firefly.login_provider_local_only', ['login_provider' => e($loginProvider)]));
 
             return redirect(route('profile.index'));
             // @codeCoverageIgnoreEnd
@@ -382,16 +437,34 @@ class ProfileController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function postCode(TokenFormRequest $request)
     {
-        app('preferences')->set('twoFactorAuthEnabled', 1);
-        app('preferences')->set('twoFactorAuthSecret', session()->get('two-factor-secret'));
+        /** @var User $user */
+        $user = auth()->user();
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        /** @var string $secret */
+        $secret = session()->get('two-factor-secret');
+        $repository->setMFACode($user, $secret);
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
+
+        // also save the code so replay attack is prevented.
+        $mfaCode = $request->get('code');
+        $this->addToMFAHistory($mfaCode);
+
+        // save backup codes in preferences:
+        app('preferences')->set('mfa_recovery', session()->get('temp-mfa-codes'));
+
+        // make sure MFA is logged out.
+        if ('testing' !== config('app.env')) {
+            Google2FA::logout();
+        }
+
+        // drop all info from session:
+        session()->forget(['temp-mfa-secret', 'two-factor-secret', 'temp-mfa-codes', 'two-factor-codes']);
 
         return redirect(route('profile.index'));
     }
@@ -448,8 +521,6 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {
@@ -498,5 +569,44 @@ class ProfileController extends Controller
         return redirect(route('login'));
     }
 
+    /**
+     * TODO duplicate code.
+     *
+     * @param string $mfaCode
+     */
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
 
+        app('preferences')->set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
+    }
+
+    /**
+     * Remove old entries from the preferences array.
+     */
+    private function filterMFAHistory(): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
+        $newHistory = [];
+        $now        = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($now - $time <= 300) {
+                $newHistory[] = [
+                    'time' => $time,
+                    'code' => $code,
+                ];
+            }
+        }
+        app('preferences')->set('mfa_history', $newHistory);
+    }
 }

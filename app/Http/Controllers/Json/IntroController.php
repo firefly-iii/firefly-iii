@@ -1,22 +1,22 @@
 <?php
 /**
  * IntroController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
@@ -47,7 +47,7 @@ class IntroController
         $specificPage  = $specificPage ?? '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
-        if (0 === \count($specificSteps)) {
+        if (0 === count($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
             return response()->json($steps);
@@ -55,7 +55,7 @@ class IntroController
         if ($this->hasOutroStep($route)) {
             // @codeCoverageIgnoreStart
             // save last step:
-            $lastStep = $steps[\count($steps) - 1];
+            $lastStep = $steps[count($steps) - 1];
             // remove last step:
             array_pop($steps);
             // merge arrays and add last step again
@@ -82,7 +82,7 @@ class IntroController
         $routeKey = str_replace('.', '_', $route);
         Log::debug(sprintf('Has outro step for route %s', $routeKey));
         $elements = config(sprintf('intro.%s', $routeKey));
-        if (!\is_array($elements)) {
+        if (!is_array($elements)) {
             return false;
         }
 
@@ -135,7 +135,7 @@ class IntroController
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, true);
 
-        return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
+        return response()->json(['result' => sprintf('Reported demo watched for route "%s" (%s): %s.', $route, $specialPage, $key)]);
     }
 
 }

@@ -1,22 +1,22 @@
 <?php
 /**
  * MonthReportGenerator.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection MultipleReturnStatementsInspection */
 /** @noinspection PhpUndefinedMethodInspection */
@@ -27,12 +27,7 @@ namespace FireflyIII\Generator\Report\Category;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -40,10 +35,11 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ * TODO include info about tags.
  *
  * @codeCoverageIgnore
  */
-class MonthReportGenerator extends Support implements ReportGeneratorInterface
+class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The included accounts */
     private $accounts;
@@ -51,9 +47,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     private $categories;
     /** @var Carbon The end date */
     private $end;
-    /** @var Collection The expenses */
+    /** @var array The expenses */
     private $expenses;
-    /** @var Collection The income in the report. */
+    /** @var array The income in the report. */
     private $income;
     /** @var Carbon The start date. */
     private $start;
@@ -74,33 +70,20 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $categoryIds     = implode(',', $this->categories->pluck('id')->toArray());
-        $reportType      = 'category';
-        $expenses        = $this->getExpenses();
-        $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
-        $categorySummary = $this->getObjectSummary($this->summarizeByCategory($expenses), $this->summarizeByCategory($income));
-        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
-        $averageIncome   = $this->getAverages($income, SORT_DESC);
-        $topExpenses     = $this->getTopExpenses();
-        $topIncome       = $this->getTopIncome();
+        $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
+        $categoryIds = implode(',', $this->categories->pluck('id')->toArray());
+        $reportType  = 'category';
 
         // render!
         try {
-            return view(
-                'reports.category.month', compact(
-                                            'accountIds', 'categoryIds', 'topIncome', 'reportType', 'accountSummary', 'categorySummary', 'averageExpenses',
-                                            'averageIncome', 'topExpenses'
-                                        )
-            )
+            return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType',))
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
                 ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;
@@ -201,27 +184,23 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     /**
      * Get the expenses for this report.
      *
-     * @return Collection
+     * @return array
      */
-    protected function getExpenses(): Collection
+    protected function getExpenses(): array
     {
-        if ($this->expenses->count() > 0) {
+        if (count($this->expenses) > 0) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
+                  ->setCategories($this->categories)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        $transactions   = $collector->getTransactions();
+        $transactions   = $collector->getExtractedJournals();
         $this->expenses = $transactions;
 
         return $transactions;
@@ -230,48 +209,24 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     /**
      * Get the income for this report.
      *
-     * @return Collection
+     * @return array
      */
-    protected function getIncome(): Collection
+    protected function getIncome(): array
     {
-        if ($this->income->count() > 0) {
+        if (count($this->income) > 0) {
             return $this->income;
         }
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withOpposingAccount();
+                  ->setCategories($this->categories)->withAccountInformation();
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-
-        $transactions = $collector->getTransactions();
+        $transactions = $collector->getExtractedJournals();
         $this->income = $transactions;
 
         return $transactions;
-    }
-
-    /**
-     * Summarize the category.
-     *
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    private function summarizeByCategory(Collection $collection): array
-    {
-        $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
-            $transCatId          = (int)$transaction->transaction_category_id;
-            $categoryId          = max($jrnlCatId, $transCatId);
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
-        }
-
-        return $result;
     }
 }

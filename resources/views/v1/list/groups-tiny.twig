@@ -1,0 +1,19 @@
+<div class="list-group">
+    {% for group in groups %}
+        <a class="list-group-item" href="{{ route('transactions.show', [group.id]) }}">
+            {% for transaction in group.transactions %}
+                {{ transaction.description }}
+                <span class="pull-right small">
+                    {{ journalArrayAmount(transaction) }}
+                </span>
+                <br/>
+            {% endfor %}
+            {% if group.count > 1 %}
+                &nbsp;
+                <span class="pull-right small">
+                {{ groupAmount(group) }}
+            </span>
+            {% endif %}
+        </a>
+    {% endfor %}
+</div>

@@ -1,39 +1,40 @@
 <?php
 /**
  * BoxController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -50,14 +51,19 @@ class BoxController extends Controller
     /**
      * How much money user has available.
      *
-     * @param BudgetRepositoryInterface $repository
-     *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function available(BudgetRepositoryInterface $repository): JsonResponse
+    public function available(): JsonResponse
     {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        /** @var OperationsRepositoryInterface $opsRepository */
+        $opsRepository = app(OperationsRepositoryInterface::class);
+
+        /** @var AvailableBudgetRepositoryInterface $abRepository */
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+
+
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -73,11 +79,11 @@ class BoxController extends Controller
         }
         // get available amount
         $currency  = app('amount')->getDefaultCurrency();
-        $available = $repository->getAvailableBudget($currency, $start, $end);
+        $available = $abRepository->getAvailableBudget($currency, $start, $end);
 
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();
-        $budgetInformation = $repository->collectBudgetInformation($budgets, $start, $end);
+        $budgetInformation = $opsRepository->collectBudgetInformation($budgets, $start, $end);
         $spent             = (string)array_sum(array_column($budgetInformation, 'spent'));
         $left              = bcadd($available, $spent);
         $days              = $today->diffInDays($end) + 1;
@@ -111,8 +117,6 @@ class BoxController extends Controller
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
@@ -132,37 +136,36 @@ class BoxController extends Controller
         $incomes  = [];
         $expenses = [];
         $sums     = [];
+        $currency = app('amount')->getDefaultCurrency();
 
         // collect income of user:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId           = (int)$transaction->transaction_currency_id;
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setTypes([TransactionType::DEPOSIT]);
+        $set = $collector->getExtractedJournals();
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId           = (int)$journal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($journal['amount']));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($journal['amount']));
         }
 
         // collect expenses
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId            = (int)$transaction->transaction_currency_id;
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setTypes([TransactionType::WITHDRAWAL]);
+        $set = $collector->getExtractedJournals();
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId            = (int)$journal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $journal['amount']);
         }
 
         // format amounts:
@@ -173,7 +176,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (0 === \count($sums)) {
+        if (0 === count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);
@@ -181,10 +184,11 @@ class BoxController extends Controller
         }
 
         $response = [
-            'incomes'  => $incomes,
-            'expenses' => $expenses,
-            'sums'     => $sums,
-            'size'     => \count($sums),
+            'incomes'   => $incomes,
+            'expenses'  => $expenses,
+            'sums'      => $sums,
+            'size'      => count($sums),
+            'preferred' => $currency->id,
         ];
 
 
@@ -238,8 +242,6 @@ class BoxController extends Controller
      * Total user net worth.
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function netWorth(): JsonResponse
     {

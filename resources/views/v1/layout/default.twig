@@ -104,9 +104,9 @@
         <section class="sidebar">
             <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input autocomplete="off" type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
+                    <input autocomplete="off" type="text" name="search" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
                 </div>
             </form>
@@ -140,7 +140,7 @@
         <div class="pull-right hidden-xs">
             <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
-        <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
+        <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong> <small class="text-muted">Developed by James Cole, the source code is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
     </footer>
 
     {% include('partials.control-bar') %}
@@ -193,8 +193,8 @@
 {% if not shownDemo %}
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
-        var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
-        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";
+        var routeStepsUri = "{{ route('json.intro', [current_route_name, objectType|default("")]) }}";
+        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default("")]) }}";
     </script>
     <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}"></script>
@@ -203,6 +203,8 @@
 
 {% if config('firefly.analytics_id') != '' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
+    <!-- Your own installation will NOT include it -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];

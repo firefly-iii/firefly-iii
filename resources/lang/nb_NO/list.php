@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => 'Nåværende saldo',
     'linked_to_rules'         => 'Relevante regler',
     'active'                  => 'Er aktiv?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Next due',
+    'transaction_type'        => 'Type',
     'lastActivity'            => 'Siste aktivitet',
     'balanceDiff'             => 'Saldodifferanse',
     'matchesOn'               => 'Traff på',
+    'other_meta_data'         => 'Other meta data',
     'account_type'            => 'Kontotype',
     'created_at'              => 'Opprettet',
     'account'                 => 'Konto',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => 'Antall vedlegg',
     'bills_count'             => 'Antall regninger',
     'categories_count'        => 'Antall kategorier',
-    'export_jobs_count'       => 'Antall eksportjobber',
     'import_jobs_count'       => 'Antall importjobber',
     'budget_count'            => 'Antall budsjetter',
     'rule_and_groups_count'   => 'Antall regler og regelgrupper',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => 'Konto (Spectre)',
     'account_on_ynab'         => 'Konto (YNAB)',
     'do_import'               => 'Importer fra denne kontoen',
-    'sepa-ct-id'              => 'SEPA ende-til-ende-identifikator',
-    'sepa-ct-op'              => 'SEPA Motkonto-identifikator',
-    'sepa-db'                 => 'SEPA Mandat-identifikator',
-    'sepa-country'            => 'SEPA-land',
-    'sepa-cc'                 => 'SEPA-klareringskode',
-    'sepa-ep'                 => 'SEPA Eksternt formål',
-    'sepa-ci'                 => 'SEPA kreditoridentifikator',
-    'sepa-batch-id'           => 'SEPA sats/parti ID',
+    'sepa_ct_id'              => 'SEPA ende-til-ende identifikator',
+    'sepa_ct_op'              => 'SEPA Motstående kontoidentifikator',
+    'sepa_db'                 => 'SEPA Mandat identifikator',
+    'sepa_country'            => 'SEPA land',
+    'sepa_cc'                 => 'SEPA klareringskode',
+    'sepa_ep'                 => 'SEPA Eksternt formål',
+    'sepa_ci'                 => 'SEPA kreditoridentifikator',
+    'sepa_batch_id'           => 'SEPA Batch ID',
     'external_id'             => 'Ekstern ID',
     'account_at_bunq'         => 'Konto med bunq',
     'file_name'               => 'Filnavn',

@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => 'Huidig saldo',
     'linked_to_rules'         => 'Relevante regels',
     'active'                  => 'Actief?',
+    'percentage'              => 'pct',
+    'next_due'                => 'Volgende',
+    'transaction_type'        => 'Type',
     'lastActivity'            => 'Laatste activiteit',
     'balanceDiff'             => 'Saldoverschil',
     'matchesOn'               => 'Wordt herkend',
+    'other_meta_data'         => 'Andere metadata',
     'account_type'            => 'Accounttype',
     'created_at'              => 'Gemaakt op',
     'account'                 => 'Rekening',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => 'Aantal bijlagen',
     'bills_count'             => 'Aantal contracten',
     'categories_count'        => 'Aantal categorieën',
-    'export_jobs_count'       => 'Aantal export-jobs',
     'import_jobs_count'       => 'Aantal import-jobs',
     'budget_count'            => 'Aantal budgetten',
     'rule_and_groups_count'   => 'Aantal regels en regelgroepen',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => 'Rekening (Spectre)',
     'account_on_ynab'         => 'Rekening (YNAB)',
     'do_import'               => 'Importeer van deze rekening',
-    'sepa-ct-id'              => 'SEPA end-to-end identificatie',
-    'sepa-ct-op'              => 'SEPA identificatie tegenpartij',
-    'sepa-db'                 => 'SEPA mandaatidentificatie',
-    'sepa-country'            => 'SEPA landcode',
-    'sepa-cc'                 => 'SEPA vrijwaringscode',
-    'sepa-ep'                 => 'SEPA transactiedoeleinde',
-    'sepa-ci'                 => 'SEPA crediteuridentificatie',
-    'sepa-batch-id'           => 'SEPA batchnummer',
+    'sepa_ct_id'              => 'SEPA end-to-end identificatie',
+    'sepa_ct_op'              => 'SEPA identificatie tegenpartij',
+    'sepa_db'                 => 'SEPA mandaatidentificatie',
+    'sepa_country'            => 'SEPA-land',
+    'sepa_cc'                 => 'SEPA vrijwaringscode',
+    'sepa_ep'                 => 'SEPA transactiedoeleinde',
+    'sepa_ci'                 => 'SEPA crediteuridentificatie',
+    'sepa_batch_id'           => 'SEPA-batchnummer',
     'external_id'             => 'Externe ID',
     'account_at_bunq'         => 'Bunq-account',
     'file_name'               => 'Bestandsnaam',

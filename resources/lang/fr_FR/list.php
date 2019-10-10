@@ -2,22 +2,22 @@
 
 /**
  * list.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
- * This file is part of Firefly III.
+ * This file is part of Firefly III (https://github.com/firefly-iii).
  *
- * Firefly III is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Firefly III is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -36,9 +36,13 @@ return [
     'currentBalance'          => 'Solde courant',
     'linked_to_rules'         => 'Règles applicables',
     'active'                  => 'Actif ?',
+    'percentage'              => 'pct.',
+    'next_due'                => 'Prochaine échéance',
+    'transaction_type'        => 'Type',
     'lastActivity'            => 'Activité récente',
     'balanceDiff'             => 'Différence d\'équilibre',
     'matchesOn'               => 'Correspond à',
+    'other_meta_data'         => 'Autres métadonnées',
     'account_type'            => 'Type de compte',
     'created_at'              => 'Créé le',
     'account'                 => 'Compte',
@@ -87,7 +91,6 @@ return [
     'attachments_count'       => 'Nombre de pièces jointes',
     'bills_count'             => 'Nombre de factures',
     'categories_count'        => 'Nombre de catégories',
-    'export_jobs_count'       => 'Nombre de travaux exportés',
     'import_jobs_count'       => 'Nombre de travaux importés',
     'budget_count'            => 'Nombre de budgets',
     'rule_and_groups_count'   => 'Nombre de règles et de groupes de règles',
@@ -106,14 +109,14 @@ return [
     'account_on_spectre'      => 'Compte (Spectre)',
     'account_on_ynab'         => 'Compte (YNAB)',
     'do_import'               => 'Importer depuis ce compte',
-    'sepa-ct-id'              => 'Identificateur de bout en bout SEPA',
-    'sepa-ct-op'              => 'Identifiant de compte SEPA opposable',
-    'sepa-db'                 => 'Identifiant de mandat SEPA',
-    'sepa-country'            => 'Pays SEPA',
-    'sepa-cc'                 => 'Code de compensation SEPA',
-    'sepa-ep'                 => 'Objectif externe SEPA',
-    'sepa-ci'                 => 'Identifiant Créancier SEPA',
-    'sepa-batch-id'           => 'ID de lot SEPA',
+    'sepa_ct_id'              => 'Identificateur de bout en bout SEPA',
+    'sepa_ct_op'              => 'Identifiant de compte SEPA opposable',
+    'sepa_db'                 => 'Identifiant de mandat SEPA',
+    'sepa_country'            => 'Pays SEPA',
+    'sepa_cc'                 => 'Code de rapprochement SEPA',
+    'sepa_ep'                 => 'Usage externe SEPA',
+    'sepa_ci'                 => 'Identifiant Créancier SEPA',
+    'sepa_batch_id'           => 'ID de lot SEPA',
     'external_id'             => 'ID externe',
     'account_at_bunq'         => 'Compte avec bunq',
     'file_name'               => 'Nom du fichier',
