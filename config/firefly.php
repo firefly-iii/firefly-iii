@@ -135,7 +135,6 @@ return [
     'demo_username'                => env('DEMO_USERNAME', ''),
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'is_sandstorm'                 => env('IS_SANDSTORM', 'unknown'),
-    'is_docker'                    => env('IS_DOCKER', 'unknown'),
     'bunq_use_sandbox'             => env('BUNQ_USE_SANDBOX', false),
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
