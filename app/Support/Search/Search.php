@@ -123,9 +123,12 @@ class Search implements SearchInterface
     {
         $filteredQuery       = app('steam')->cleanString($query);
         $this->originalQuery = $filteredQuery;
-        $pattern             = '/[[:alpha:]_]*:"?[\p{L}_-]*"?/ui';
+        $pattern             = '/[[:alpha:]_]*:"?[\P{C}_-]*"?/ui';
         $matches             = [];
         preg_match_all($pattern, $filteredQuery, $matches);
+
+        var_dump($matches[0]);
+        exit;
 
         foreach ($matches[0] as $match) {
             $this->extractModifier($match);
@@ -288,12 +291,12 @@ class Search implements SearchInterface
                     $after = new Carbon($modifier['value']);
                     $collector->setAfter($after);
                     break;
-                case 'created_at':
+                case 'created_on':
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $createdAt = new Carbon($modifier['value']);
                     $collector->setCreatedAt($createdAt);
                     break;
-                case 'updated_at':
+                case 'updated_on':
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $updatedAt = new Carbon($modifier['value']);
                     $collector->setUpdatedAt($updatedAt);
