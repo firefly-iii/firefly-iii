@@ -9,7 +9,6 @@ services:
       - FF_DB_NAME=firefly
       - FF_DB_USER=firefly
       - FF_DB_PASSWORD=firefly
-      - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
       - FF_APP_ENV=local
       - FF_DB_CONNECTION=pgsql
       - TZ=Europe/Amsterdam
