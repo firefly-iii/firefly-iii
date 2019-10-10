@@ -113,6 +113,7 @@ class IntroController
         }
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, false);
+        app('preferences')->mark();
 
         return response()->json(['message' => (string)trans('firefly.intro_boxes_after_refresh')]);
     }
