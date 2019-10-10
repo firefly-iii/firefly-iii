@@ -132,7 +132,8 @@ class EditController extends Controller
 
         session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
+        $redirect = redirect(route('rules.index'));
+
         if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.edit.fromUpdate', true);
