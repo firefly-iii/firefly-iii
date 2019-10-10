@@ -404,6 +404,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
+        Log::debug('Now in repetitionDescription()');
         /** @var Preference $pref */
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
@@ -514,6 +515,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
+        Log::debug('Now in getXOccurrencesSince()');
         $skipMod     = $repetition->repetition_skip + 1;
         $occurrences = [];
         if ('daily' === $repetition->repetition_type) {

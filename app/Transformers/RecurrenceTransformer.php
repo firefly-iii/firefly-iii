@@ -83,10 +83,12 @@ class RecurrenceTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($recurrence->user);
         $this->factory->setUser($recurrence->user);
         $this->budgetRepos->setUser($recurrence->user);
+        Log::debug('Set user.');
 
         $shortType = (string)config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
         $notes     = $this->repository->getNoteText($recurrence);
         $reps      = 0 === (int)$recurrence->repetitions ? null : (int)$recurrence->repetitions;
+        Log::debug('Get basic data.');
         // basic data.
         $return = [
             'id'                => (int)$recurrence->id,
@@ -124,6 +126,7 @@ class RecurrenceTransformer extends AbstractTransformer
      */
     private function getRepetitions(Recurrence $recurrence): array
     {
+        Log::debug('Now in getRepetitions().');
         $fromDate = $recurrence->latest_date ?? $recurrence->first_date;
         $return   = [];
 
@@ -163,6 +166,7 @@ class RecurrenceTransformer extends AbstractTransformer
      */
     private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $array['tags']            = [];
         $array['category_id']     = null;
         $array['category_name']   = null;
@@ -216,6 +220,7 @@ class RecurrenceTransformer extends AbstractTransformer
      */
     private function getTransactions(Recurrence $recurrence): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return = [];
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
