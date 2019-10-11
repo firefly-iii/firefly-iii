@@ -26,7 +26,7 @@ namespace FireflyIII\Support\Repositories\Recurring;
 
 
 use Carbon\Carbon;
-
+use Log;
 /**
  * Class CalculateXOccurrencesSince
  */
@@ -46,6 +46,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXDailyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return   = [];
         $mutator  = clone $date;
         $total    = 0;
@@ -77,6 +78,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXMonthlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;
@@ -116,6 +118,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXNDomOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return   = [];
         $total    = 0;
         $attempts = 0;
@@ -156,6 +159,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXWeeklyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return   = [];
         $total    = 0;
         $attempts = 0;
@@ -200,6 +204,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXYearlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;

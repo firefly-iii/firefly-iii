@@ -127,7 +127,6 @@ class DebugController extends Controller
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
         $isSandstorm    = var_export(config('firefly.is_sandstorm'), true);
-        $isDocker       = var_export(config('firefly.is_docker'), true);
         $toSandbox      = var_export(config('firefly.bunq_use_sandbox'), true);
         $trustedProxies = config('firefly.trusted_proxies');
         $displayErrors  = ini_get('display_errors');
@@ -178,7 +177,7 @@ class DebugController extends Controller
             'debug', compact(
                        'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers',
                        'currentDriver', 'loginProvider', 'storageDisks',
-                       'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm',
+                       'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isSandstorm',
                        'trustedProxies',
                        'toSandbox'
                    )
