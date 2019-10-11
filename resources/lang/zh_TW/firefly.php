@@ -136,7 +136,7 @@ return [
     'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
     'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
     'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
-    'chart_account_in_period'                    => '帳戶「:name」自 :start 至 :end 所有交易的圖表',
+    'chart_account_in_period'                    => '帳戶「:name」(:iban) 自 :start 至 :end 所有交易的圖表',
     'chart_category_in_period'                   => '分類「:name」自 :start 至 :end 的所有交易圖表',
     'chart_category_all'                         => '分類「:name」的所有交易圖表',
     'clone_withdrawal'                           => '複製此提款',

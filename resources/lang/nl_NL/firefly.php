@@ -136,7 +136,7 @@ return [
     'budget_in_period'                           => 'Alle transacties voor budget ":name" tussen :start en :end in :currency',
     'chart_budget_in_period'                     => 'Grafiek voor alle transacties voor budget ":name" tussen :start en :end in :currency',
     'chart_budget_in_period_only_currency'       => 'Het bedrag dat je het begroot is in :currency, dus deze grafiek laat alleen transacties in :currency zien.',
-    'chart_account_in_period'                    => 'Grafiek voor alle transacties voor rekening ":name" tussen :start en :end',
+    'chart_account_in_period'                    => 'Grafiek voor alle transacties voor rekening ":name" (:iban) tussen :start en :end',
     'chart_category_in_period'                   => 'Grafiek voor alle transacties voor categorie ":name" tussen :start en :end',
     'chart_category_all'                         => 'Grafiek voor alle transacties voor categorie ":name"',
     'clone_withdrawal'                           => 'Kopieer deze uitgave',

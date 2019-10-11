@@ -136,7 +136,7 @@ return [
     'budget_in_period'                           => 'Alle Buchungen für den Kostenrahmen „:name” zwischen :start und :end in :currency',
     'chart_budget_in_period'                     => 'Diagramm für alle Buchungen für den Kostenrahmen ":name" zwischen :start und :end in :currency',
     'chart_budget_in_period_only_currency'       => 'Der von Ihnen geplante Betrag war in :currency, so dass dieses Diagramm nur die Buchungen in :currency anzeigt.',
-    'chart_account_in_period'                    => 'Diagramm für alle Transaktionen des Kontos „:name” zwischen :start und :end',
+    'chart_account_in_period'                    => 'Diagramm für alle Transaktionen des Kontos „:name” (:iban) zwischen :start und :end',
     'chart_category_in_period'                   => 'Diagramm für alle Buchungen der Kategorie „:name” zwischen :start und :end',
     'chart_category_all'                         => 'Diagramm für alle Buchungen der Kategorie „:name”',
     'clone_withdrawal'                           => 'Diese Ausgabe duplizieren',

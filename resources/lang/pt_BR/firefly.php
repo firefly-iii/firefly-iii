@@ -136,7 +136,7 @@ return [
     'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end in :currency',
     'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end in :currency',
     'chart_budget_in_period_only_currency'       => 'The amount you budgeted was in :currency, so this chart will only show transactions in :currency.',
-    'chart_account_in_period'                    => 'Gráfico para todas as transações da conta ":name" entre :start e :end',
+    'chart_account_in_period'                    => 'Gráfico para todas as transações da conta ":name" (:iban) entre :start e :end',
     'chart_category_in_period'                   => 'Gráfico para todas as transações para a categoria ":name" entre :start e :end',
     'chart_category_all'                         => 'Gráfico para todas as transações para a categoria ":name"',
     'clone_withdrawal'                           => 'Clonar esta retirada',
