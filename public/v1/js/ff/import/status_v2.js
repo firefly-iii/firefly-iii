@@ -88,7 +88,6 @@ function reportJobJSONDone(data) {
         default:
             showProgressBox(data.status);
             recheckJobJSONStatus();
-
     }
 }
 
@@ -118,7 +117,6 @@ function showJobResults(data) {
 
     // show success box.
     $('.status_finished').show();
-
 }
 
 /**
@@ -228,8 +226,6 @@ function showProgressBox(status) {
     }
 
     $('#import-status-txt').text('Job status: ' + status);
-
-
 }
 
 /**
@@ -288,7 +284,5 @@ function reportJobPOSTDone(data) {
         $('.fatal_error').show();
         console.error(data.message);
         $('.fatal_error_txt').text('Job could not be started or crashed: ' + data.message);
-
-
     }
 }
