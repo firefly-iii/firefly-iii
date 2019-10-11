@@ -24,7 +24,7 @@ var timeOutId;
 var jobRunRoutineStarted = false;
 var jobStorageRoutineStarted = false;
 var checkInitialInterval = 1000;
-var checkNextInterval = 500;
+var checkNextInterval = 800;
 var maxLoops = 65536;
 var totalLoops = 0;
 var startCount = 0;
@@ -59,7 +59,6 @@ function checkJobJSONStatus() {
  */
 function reportJobJSONDone(data) {
     console.log('In reportJobJSONDone() with status "' + data.status + '"');
-    console.log(data);
     switch (data.status) {
         case "ready_to_run":
             if (startCount > 0) {
