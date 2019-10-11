@@ -86,7 +86,6 @@ function reportJobJSONDone(data) {
             showJobResults(data);
             break;
         default:
-            console.warn('No specific action for status ' + data.status);
             showProgressBox(data.status);
             recheckJobJSONStatus();
 
