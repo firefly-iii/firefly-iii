@@ -24,7 +24,7 @@ var timeOutId;
 var jobRunRoutineStarted = false;
 var jobStorageRoutineStarted = false;
 var checkInitialInterval = 1000;
-var checkNextInterval = 500;
+var checkNextInterval = 800;
 var maxLoops = 65536;
 var totalLoops = 0;
 var startCount = 0;
@@ -59,7 +59,6 @@ function checkJobJSONStatus() {
  */
 function reportJobJSONDone(data) {
     console.log('In reportJobJSONDone() with status "' + data.status + '"');
-    console.log(data);
     switch (data.status) {
         case "ready_to_run":
             if (startCount > 0) {
@@ -87,10 +86,8 @@ function reportJobJSONDone(data) {
             showJobResults(data);
             break;
         default:
-            console.warn('No specific action for status ' + data.status);
             showProgressBox(data.status);
             recheckJobJSONStatus();
-
     }
 }
 
@@ -120,7 +117,6 @@ function showJobResults(data) {
 
     // show success box.
     $('.status_finished').show();
-
 }
 
 /**
@@ -230,8 +226,6 @@ function showProgressBox(status) {
     }
 
     $('#import-status-txt').text('Job status: ' + status);
-
-
 }
 
 /**
@@ -290,7 +284,5 @@ function reportJobPOSTDone(data) {
         $('.fatal_error').show();
         console.error(data.message);
         $('.fatal_error_txt').text('Job could not be started or crashed: ' + data.message);
-
-
     }
 }
