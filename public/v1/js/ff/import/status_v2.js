@@ -24,7 +24,7 @@ var timeOutId;
 var jobRunRoutineStarted = false;
 var jobStorageRoutineStarted = false;
 var checkInitialInterval = 1000;
-var checkNextInterval = 800;
+var checkNextInterval = 500;
 var maxLoops = 65536;
 var totalLoops = 0;
 var startCount = 0;
@@ -43,7 +43,7 @@ $(function () {
  * Downloads some JSON and responds to its content to see what the status is of the current import job.
  */
 function checkJobJSONStatus() {
-    console.log('In checkJobJSONStatus()');
+    //console.log('In checkJobJSONStatus()');
     if (jobFailed === false) {
         $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
     }
@@ -58,7 +58,8 @@ function checkJobJSONStatus() {
  * @param data
  */
 function reportJobJSONDone(data) {
-    console.log('In reportJobJSONDone() with status "' + data.status + '"');
+    //console.log('In reportJobJSONDone() with status "' + data.status + '"');
+    //console.log(data);
     switch (data.status) {
         case "ready_to_run":
             if (startCount > 0) {
@@ -86,8 +87,10 @@ function reportJobJSONDone(data) {
             showJobResults(data);
             break;
         default:
+            //console.warn('No specific action for status ' + data.status);
             showProgressBox(data.status);
             recheckJobJSONStatus();
+
     }
 }
 
@@ -96,7 +99,7 @@ function reportJobJSONDone(data) {
  * @param data
  */
 function showJobResults(data) {
-    console.log('In showJobResults()');
+    //console.log('In showJobResults()');
     // hide all boxes.
     $('.statusbox').hide();
 
@@ -117,13 +120,14 @@ function showJobResults(data) {
 
     // show success box.
     $('.status_finished').show();
+
 }
 
 /**
  * Will refresh and get job status.
  */
 function recheckJobJSONStatus() {
-    console.log('In recheckJobJSONStatus()');
+    //console.log('In recheckJobJSONStatus()');
     if (maxLoops !== 0 && totalLoops < maxLoops && jobFailed === false) {
         timeOutId = setTimeout(checkJobJSONStatus, checkNextInterval);
     }
@@ -202,7 +206,7 @@ function reportJobJSONFailure(xhr, status, error) {
  *
  */
 function showProgressBox(status) {
-    console.log('In showProgressBox()');
+    //console.log('In showProgressBox()');
     // hide fatal error box:
     $('.fatal_error').hide();
 
@@ -226,6 +230,8 @@ function showProgressBox(status) {
     }
 
     $('#import-status-txt').text('Job status: ' + status);
+
+
 }
 
 /**
@@ -236,7 +242,7 @@ function showProgressBox(status) {
  * @param error
  */
 function reportJobPOSTFailure(xhr, status, error) {
-    console.log('In reportJobPOSTFailure()');
+    //console.log('In reportJobPOSTFailure()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
     if (reportedError === false) {
@@ -284,5 +290,7 @@ function reportJobPOSTDone(data) {
         $('.fatal_error').show();
         console.error(data.message);
         $('.fatal_error_txt').text('Job could not be started or crashed: ' + data.message);
+
+
     }
 }
