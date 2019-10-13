@@ -109,7 +109,7 @@
                 const url = document.getElementsByTagName('base')[0].href + 'api/v1/preferences/transaction_journal_optional_fields';
                 axios.get(url).then(response => {
                     this.fields = response.data.data.attributes.data;
-                }).catch(() => console.warn('Oh. Something went wrong'));
+                }).catch(() => console.warn('Oh. Something went wrong loading custom transaction fields.'));
             },
         }
     }
