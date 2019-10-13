@@ -294,14 +294,19 @@ class JournalUpdateService
             return $this->getOriginalDestinationAccount();
         }
 
-        $destId   = $this->data['destination_id'] ?? null;
-        $destName = $this->data['destination_name'] ?? null;
+        $destInfo = [
+            'id'     => (int)($this->data['destination_id'] ?? null),
+            'name'   => $this->data['destination_name'] ?? null,
+            'iban'   => $this->data['destination_iban'] ?? null,
+            'number' => $this->data['destination_number'] ?? null,
+            'bic'    => $this->data['destination_bic'] ?? null,
+        ];
 
         // make new account validator.
         $expectedType = $this->getExpectedType();
         Log::debug(sprintf('Expected type (new or unchanged) is %s', $expectedType));
         try {
-            $result = $this->getAccount($expectedType, 'destination', $destId, $destName);
+            $result = $this->getAccount($expectedType, 'destination', $destInfo);
         } catch (FireflyException $e) {
             Log::error(sprintf('getValidDestinationAccount() threw unexpected error: %s', $e->getMessage()));
             $result = $this->getOriginalDestinationAccount();
@@ -318,16 +323,22 @@ class JournalUpdateService
     private function getValidSourceAccount(): Account
     {
         Log::debug('Now in getValidSourceAccount().');
-        $sourceId   = $this->data['source_id'] ?? null;
-        $sourceName = $this->data['source_name'] ?? null;
 
         if (!$this->hasFields(['source_id', 'source_name'])) {
             return $this->getOriginalSourceAccount();
         }
 
+        $sourceInfo = [
+            'id'     => (int)($this->data['source_id'] ?? null),
+            'name'   => $this->data['source_name'] ?? null,
+            'iban'   => $this->data['source_iban'] ?? null,
+            'number' => $this->data['source_number'] ?? null,
+            'bic'    => $this->data['source_bic'] ?? null,
+        ];
+
         $expectedType = $this->getExpectedType();
         try {
-            $result = $this->getAccount($expectedType, 'source', $sourceId, $sourceName);
+            $result = $this->getAccount($expectedType, 'source', $sourceInfo);
         } catch (FireflyException $e) {
             Log::error(sprintf('Cant get the valid source account: %s', $e->getMessage()));
 

@@ -108,7 +108,7 @@ class AccountSearch implements GenericSearchInterface
                 break;
         }
 
-        return $query->get(['accounts.*']);
+        return $query->distinct()->get(['accounts.*']);
     }
 
     /**

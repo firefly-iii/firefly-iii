@@ -160,6 +160,10 @@ class BelongsUser implements Rule
      */
     private function validateAccountId(int $value): bool
     {
+        if (0 === $value) {
+            // its ok to submit 0. other checks will fail.
+            return true;
+        }
         $count = Account::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;
