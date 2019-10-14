@@ -161,20 +161,16 @@
                     <div class="modal-body">
                         <p>
                             <button id="copyButton" @click="copyToken" class="btn btn-default">Copy token</button>
-                        </p>
-                        <p id="copySuccess" style="display:none;" class="text-success">
+                            <span id="copySuccess" style="display:none;" class="text-success">
                             Copied to clipboard!
+                        </span>
                         </p>
-                        <p id="copyError" style="display:none;" class="text-danger">
-                            Could not copy to clipboard :(
-                        </p>
+
                         <p>
                             Here is your new personal access token. This is the only time it will be shown so don't lose it!
                             You may now use this token to make API requests.
                         </p>
-
-
-                        <pre><code>{{ accessToken }}</code></pre>
+                        <pre><textarea id="tokenHidden" style="width:100%;" rows="40" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
 
                     <!-- Modal Actions -->
@@ -224,88 +220,20 @@
         methods: {
 
             copyToken() {
-                this.copyToClipboard(this.accessToken);
-                return;
-                console.log('in token thing');
-                if (!navigator.clipboard) {
-                    console.log('in fallback');
-                    this.fallbackCopyTextToClipboard(this.accessToken);
-                    return;
-                }
-                navigator.clipboard.writeText(this.accessToken).then(function () {
-                    //console.log('Async: Copying to clipboard was successful!');
-                    $('#copySuccess').show();
-                }, function (err) {
-                    console.error('Async: Could not copy text: ', err);
-                    $('#copyError').show();
-                });
-            },
-            fallbackCopyTextToClipboard(text) {
-                let textArea = document.createElement("textarea");
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
+                /* Get the text field */
+                var copyText = document.getElementById("tokenHidden");
 
-                try {
-                    var successful = document.execCommand('copy');
-                    var msg = successful ? 'successful' : 'unsuccessful';
-                    successful ? $('#copySuccess').show() : $('#copyError').show();
-                    //console.log('Fallback: Copying text command was ' + msg);
-                } catch (err) {
-                    console.error('Fallback: Oops, unable to copy', err);
-                    $('#copyError').show();
-                }
+                /* Select the text field */
+                copyText.select();
+                copyText.setSelectionRange(0, 2048); /*For mobile devices*/
 
-                document.body.removeChild(textArea);
-            },
+                /* Copy the text inside the text field */
+                document.execCommand("copy");
 
-            copyToClipboard(string) {
-                let textarea;
-                let result;
-
-                try {
-                    textarea = document.createElement('textarea');
-                    textarea.setAttribute('readonly', true);
-                    textarea.setAttribute('contenteditable', true);
-                    textarea.style.position = 'fixed'; // prevent scroll from jumping to the bottom when focus is set.
-                    textarea.value = string;
-
-                    document.body.appendChild(textarea);
-
-                    textarea.focus();
-                    textarea.select();
-
-                    const range = document.createRange();
-                    range.selectNodeContents(textarea);
-
-                    const sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-
-                    textarea.setSelectionRange(0, textarea.value.length);
-                    result = document.execCommand('copy');
-                } catch (err) {
-                    console.error(err);
-                    result = null;
-                } finally {
-                    document.body.removeChild(textarea);
-                }
-
-                // manual copy fallback using prompt
-                if (!result) {
-                    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-                    const copyHotkey = isMac ? '⌘C' : 'CTRL+C';
-                    result = prompt(`Press ${copyHotkey}`, string); // eslint-disable-line no-alert
-                    if (!result) {
-                        $('#copyError').show();
-                        return false;
-                    }
-                }
+                /* Alert the copied text */
+                $('#copyButton').hide();
                 $('#copySuccess').show();
-                return true;
             },
-
             /**
              * Prepare the component.
              */
