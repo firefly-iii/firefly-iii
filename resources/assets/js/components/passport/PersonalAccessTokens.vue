@@ -160,9 +160,19 @@
 
                     <div class="modal-body">
                         <p>
+                            <button id="copyButton" @click="copyToken" class="btn btn-default">Copy token</button>
+                        </p>
+                        <p id="copySuccess" style="display:none;" class="text-success">
+                            Copied to clipboard!
+                        </p>
+                        <p id="copyError" style="display:none;" class="text-danger">
+                            Could not copy to clipboard :(
+                        </p>
+                        <p>
                             Here is your new personal access token. This is the only time it will be shown so don't lose it!
                             You may now use this token to make API requests.
                         </p>
+
 
                         <pre><code>{{ accessToken }}</code></pre>
                     </div>
@@ -212,6 +222,42 @@
         },
 
         methods: {
+
+            copyToken() {
+                console.log('in token thing');
+                if (!navigator.clipboard) {
+                    console.log('in fallback');
+                    this.fallbackCopyTextToClipboard(this.accessToken);
+                    return;
+                }
+                navigator.clipboard.writeText(this.accessToken).then(function () {
+                    //console.log('Async: Copying to clipboard was successful!');
+                    $('#copySuccess').show();
+                }, function (err) {
+                    console.error('Async: Could not copy text: ', err);
+                    $('#copyError').show();
+                });
+            },
+            fallbackCopyTextToClipboard(text) {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    var successful = document.execCommand('copy');
+                    var msg = successful ? 'successful' : 'unsuccessful';
+                    successful ? $('#copySuccess').show() : $('#copyError').show();
+                    //console.log('Fallback: Copying text command was ' + msg);
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                    $('#copyError').show();
+                }
+
+                document.body.removeChild(textArea);
+            },
+
             /**
              * Prepare the component.
              */
