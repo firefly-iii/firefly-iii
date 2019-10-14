@@ -289,8 +289,8 @@ class BudgetController extends Controller
 
         // loop again to get percentages.
         foreach ($report as $budgetId => $data) {
-            foreach ($data['currencies'] as $currencyId => $data) {
-                $sum   = $data['sum'] ?? '0';
+            foreach ($data['currencies'] as $currencyId => $dataX) {
+                $sum   = $dataX['sum'] ?? '0';
                 $total = $sums[$currencyId]['sum'] ?? '0';
                 $pct   = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
@@ -361,7 +361,8 @@ class BudgetController extends Controller
                     ];
 
                 // make sum information:
-                $report['sums'][$currency->id]              = $report['sums'][$currency->id] ?? [
+                $report['sums'][$currency->id]
+                    = $report['sums'][$currency->id] ?? [
                         'budgeted'                => '0',
                         'spent'                   => '0',
                         'left'                    => '0',
@@ -411,15 +412,13 @@ class BudgetController extends Controller
         // make percentages based on total amount.
         foreach ($report['budgets'] as $budgetId => $data) {
             foreach ($data['budget_limits'] as $limitId => $entry) {
-                $currencyId = $entry['currency_id'];
-
-                $spent      = $entry['spent'];
-                $totalSpent = $report['sums'][$currencyId]['spent'] ?? '0';
-                $spentPct   = '0';
-
+                $currencyId    = $entry['currency_id'];
+                $spent         = $entry['spent'];
+                $totalSpent    = $report['sums'][$currencyId]['spent'] ?? '0';
+                $spentPct      = '0';
                 $budgeted      = $entry['budgeted'];
-                $totalBudgeted = $report['sums'][$currencyId]['budgeted'] ?? '0';;
-                $budgetedPct = '0';
+                $totalBudgeted = $report['sums'][$currencyId]['budgeted'] ?? '0';
+                $budgetedPct   = '0';
 
                 if (0 !== bccomp($spent, '0') && 0 !== bccomp($totalSpent, '0')) {
                     $spentPct = round(bcmul(bcdiv($spent, $totalSpent), '100'));
@@ -427,28 +426,13 @@ class BudgetController extends Controller
                 if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
                     $budgetedPct = round(bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
                 }
+                $report['sums'][$currencyId]['budgeted']                                 = $report['sums'][$currencyId]['budgeted'] ?? '0';
                 $report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
                 $report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
         }
 
-        //        var_dump($noBudget);
-        //
-        //
-        //        echo '<pre>';
-        //        print_r($report);
-        //        exit;
-        //        try {
-        $result = view('reports.partials.budgets', compact('report'))->render();
-        // @codeCoverageIgnoreStart
-        //        } catch (Throwable $e) {
-        //            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
-        //            $result = 'Could not render view.';
-        //        }
-
-        // @codeCoverageIgnoreEnd
-
-        return $result;
+        return view('reports.partials.budgets', compact('report'))->render();
     }
 
     /**
