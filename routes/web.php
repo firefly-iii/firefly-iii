@@ -108,9 +108,19 @@ Route::group(
 );
 
 
+//// show inactive
+//
+
 /**
  * Account Controller
  */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'inactive-accounts', 'as' => 'accounts.'], static function () {
+    Route::get('{objectType}', ['uses' => 'Account\IndexController@inactive', 'as' => 'inactive.index'])->where(
+        'objectType', 'revenue|asset|expense|liabilities'
+    );
+}
+);
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], static function () {
 
