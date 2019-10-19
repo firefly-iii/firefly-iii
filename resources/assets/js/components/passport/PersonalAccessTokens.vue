@@ -18,7 +18,6 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!-- TODO REMOVE ME -->
 <style scoped>
     .action-link {
         cursor: pointer;
@@ -160,17 +159,10 @@
 
                     <div class="modal-body">
                         <p>
-                            <button id="copyButton" @click="copyToken" class="btn btn-default">Copy token</button>
-                            <span id="copySuccess" style="display:none;" class="text-success">
-                            Copied to clipboard!
-                        </span>
-                        </p>
-
-                        <p>
                             Here is your new personal access token. This is the only time it will be shown so don't lose it!
                             You may now use this token to make API requests.
                         </p>
-                        <pre><textarea id="tokenHidden" style="width:100%;" rows="40" class="form-control">{{ accessToken }}</textarea></pre>
+                        <pre><textarea id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
 
                     <!-- Modal Actions -->
@@ -218,22 +210,6 @@
         },
 
         methods: {
-
-            copyToken() {
-                /* Get the text field */
-                var copyText = document.getElementById("tokenHidden");
-
-                /* Select the text field */
-                copyText.select();
-                copyText.setSelectionRange(0, 2048); /*For mobile devices*/
-
-                /* Copy the text inside the text field */
-                document.execCommand("copy");
-
-                /* Alert the copied text */
-                $('#copyButton').hide();
-                $('#copySuccess').show();
-            },
             /**
              * Prepare the component.
              */
