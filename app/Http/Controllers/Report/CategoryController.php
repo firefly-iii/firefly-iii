@@ -714,7 +714,6 @@ class CategoryController extends Controller
         /** @var NoCategoryRepositoryInterface $noCatRepository */
         $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
-        $categories    = $repository->getCategories();
         $earnedWith    = $opsRepository->listIncome($start, $end, $accounts);
         $spentWith     = $opsRepository->listExpenses($start, $end, $accounts);
         $earnedWithout = $noCatRepository->listIncome($start, $end, $accounts);
@@ -745,7 +744,7 @@ class CategoryController extends Controller
                     $key                        = sprintf('%s-%s', $currencyId, $categoryId);
                     $report['categories'][$key] = $report['categories'][$key] ?? [
                             'id'                      => $categoryId,
-                            'title'                   => sprintf('%s (%s)', $categoryRow['name'], $currencyRow['currency_name']),
+                            'title'                   => $categoryRow['name'],
                             'currency_id'             => $currencyRow['currency_id'],
                             'currency_symbol'         => $currencyRow['currency_symbol'],
                             'currency_name'           => $currencyRow['currency_name'],
