@@ -515,6 +515,14 @@
                                     }).catch(error => {
                                     console.error('Could not upload');
                                     console.error(error);
+                                    // console.log('Uploaded attachment #' + key);
+                                    uploads++;
+                                    if (uploads === count) {
+                                        // finally we can redirect the user onwards.
+                                        // console.log('FINAL UPLOAD');
+                                        this.redirectUser(groupId);
+                                    }
+                                    // console.log('Upload complete!');
                                     return false;
                                 });
                             });

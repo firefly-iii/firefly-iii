@@ -736,7 +736,13 @@
                                         // console.log('Upload complete!');
                                         return true;
                                     }).catch(error => {
-                                    // console.error('Could not upload');
+                                        console.error('Could not upload file.');
+                                        console.error(error);
+                                        uploads++;
+                                        this.error_message = 'Could not upload attachment: ' + error;
+                                    if (uploads === count) {
+                                        this.redirectUser(groupId);
+                                    }
                                     // console.error(error);
                                     return false;
                                 });

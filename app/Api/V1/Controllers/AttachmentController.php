@@ -38,6 +38,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use Log;
 use function strlen;
 
 /**
@@ -99,8 +100,14 @@ class AttachmentController extends Controller
         if (false === $attachment->uploaded) {
             throw new FireflyException('No file has been uploaded for this attachment (yet).');
         }
+        if (0 === $attachment->size) {
+            throw new FireflyException('No file has been uploaded for this attachment (yet).');
+        }
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);
+            if ('' === $content) {
+                throw new FireflyException('No file has been uploaded for this attachment (yet).');
+            }
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
             /** @var LaravelResponse $response */
@@ -233,6 +240,11 @@ class AttachmentController extends Controller
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
         $body   = $request->getContent();
+        if ('' === $body) {
+            Log::error('Body of attachment is empty.');
+
+            return response()->json([], 422);
+        }
         $helper->saveAttachmentFromApi($attachment, $body);
 
         return response()->json([], 204);
