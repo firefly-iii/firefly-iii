@@ -212,16 +212,33 @@ class TransactionJournalFactory
         $carbon->setTimezone(config('app.timezone'));
 
         /** Get source + destination account */
-        Log::debug(sprintf('Source info: ID #%d, name "%s"', $row['source_id'], $row['source_name']));
-        Log::debug(sprintf('Destination info: ID #%d, name "%s"', $row['destination_id'], $row['destination_name']));
-
+        Log::debug(sprintf('Currency is #%d (%s)', $currency->id, $currency->code));
 
         try {
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
             /** create or get source and destination accounts  */
-            $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
-            $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+
+            $sourceInfo = [
+                'id'     => (int)$row['source_id'],
+                'name'   => $row['source_name'],
+                'iban'   => $row['source_iban'],
+                'number' => $row['source_number'],
+                'bic'    => $row['source_bic'],
+            ];
+
+            $destInfo = [
+                'id'     => (int)$row['destination_id'],
+                'name'   => $row['destination_name'],
+                'iban'   => $row['destination_iban'],
+                'number' => $row['destination_number'],
+                'bic'    => $row['destination_bic'],
+            ];
+            Log::debug('Source info:', $sourceInfo);
+            Log::debug('Destination info:', $destInfo);
+
+            $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
+            $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
             // @codeCoverageIgnoreStart
         } catch (FireflyException $e) {
             Log::error('Could not validate source or destination.');
@@ -372,8 +389,10 @@ class TransactionJournalFactory
             // return user's default:
             return app('amount')->getDefaultCurrencyByUser($this->user);
         }
+        $result = $preference ?? $currency;
+        Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
-        return $preference ?? $currency;
+        return $result;
     }
 
     /**

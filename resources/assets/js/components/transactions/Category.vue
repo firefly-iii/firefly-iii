@@ -27,14 +27,14 @@
                         :value="value"
                         @input="handleInput"
                         type="text"
-                        placeholder="Category"
+                        v-bind:placeholder="$t('firefly.category')"
                         autocomplete="off"
                         data-role="input"
                         v-on:keypress="handleEnter"
                         class="form-control"
                         v-on:submit.prevent
                         name="category[]"
-                        title="Category">
+                        v-bind:title="$t('firefly.category')">
                 <span class="input-group-btn">
             <button
                     v-on:click="clearCategory"

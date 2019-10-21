@@ -46,6 +46,7 @@ trait FiltersWeekends
      */
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         if ((int)$repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
             Log::debug('Repetition will not be filtered on weekend days.');
 

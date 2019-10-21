@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'html_language'           => 'no',
+    'html_language'           => 'nb',
     'locale'                  => 'no, nb, Norsk, nb_NO, nb_NO.utf8, nb_NO.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%e %B, %Y',

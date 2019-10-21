@@ -222,11 +222,11 @@ class AttachmentController extends Controller
                 "default-src 'none'",
                 "object-src 'none'",
                 "script-src 'none'",
-                "style-src 'none'",
+                "style-src 'self' 'unsafe-inline'",
                 "base-uri 'none'",
                 "font-src 'none'",
                 "connect-src 'none'",
-                "img-src 'none'",
+                "img-src 'self'",
                 "manifest-src 'none'",
             ];
 

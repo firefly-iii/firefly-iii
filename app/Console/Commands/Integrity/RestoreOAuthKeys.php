@@ -23,6 +23,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use Artisan;
 use Crypt;
+use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 
 /**
@@ -30,8 +31,6 @@ use Illuminate\Console\Command;
  */
 class RestoreOAuthKeys extends Command
 {
-    private const PRIVATE_KEY = 'oauth_private_key';
-    private const PUBLIC_KEY  = 'oauth_public_key';
     /**
      * The console command description.
      *
@@ -62,7 +61,7 @@ class RestoreOAuthKeys extends Command
      */
     private function generateKeys(): void
     {
-        Artisan::call('passport:keys');
+        OAuthKeys::generateKeys();
     }
 
     /**
@@ -70,7 +69,7 @@ class RestoreOAuthKeys extends Command
      */
     private function keysInDatabase(): bool
     {
-        return app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY);
+        return OAuthKeys::keysInDatabase();
     }
 
     /**
@@ -78,10 +77,7 @@ class RestoreOAuthKeys extends Command
      */
     private function keysOnDrive(): bool
     {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-
-        return file_exists($private) && file_exists($public);
+        return OAuthKeys::hasKeyFiles();
     }
 
     /**
@@ -89,12 +85,7 @@ class RestoreOAuthKeys extends Command
      */
     private function restoreKeysFromDB(): void
     {
-        $privateContent = Crypt::decrypt(app('fireflyconfig')->get(self::PRIVATE_KEY)->data);
-        $publicContent  = Crypt::decrypt(app('fireflyconfig')->get(self::PUBLIC_KEY)->data);
-        $private        = storage_path('oauth-private.key');
-        $public         = storage_path('oauth-public.key');
-        file_put_contents($private, $privateContent);
-        file_put_contents($public, $publicContent);
+        OAuthKeys::restoreKeysFromDB();
     }
 
     /**
@@ -129,9 +120,6 @@ class RestoreOAuthKeys extends Command
      */
     private function storeKeysInDB(): void
     {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
+        OAuthKeys::storeKeysInDB();
     }
 }

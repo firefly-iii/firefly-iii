@@ -424,6 +424,17 @@ Route::group(
     }
 );
 
+// special group for transaction journals
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction-journals',
+     'as'         => 'api.v1.journals.'],
+    static function () {
+
+        // Transaction API routes:
+        Route::get('{tj}', ['uses' => 'TransactionController@showByJournal', 'as' => 'showByJournal']);
+    }
+);
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings', \FireflyIII\Http\Middleware\IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',

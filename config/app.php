@@ -27,7 +27,7 @@ use FireflyIII\Providers\ImportServiceProvider;
 
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
-    'env'             => envNonEmpty('APP_ENV', 'production'),
+    'env'             => envNonEmpty('APP_ENV', 'local'),
     'debug'           => env('APP_DEBUG', false),
     'url'             => envNonEmpty('APP_URL', 'http://localhost'),
     'timezone'        => envNonEmpty('TZ', 'UTC'),

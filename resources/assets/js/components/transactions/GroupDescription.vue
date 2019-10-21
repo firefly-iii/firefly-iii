@@ -25,15 +25,14 @@
                     type="text"
                     class="form-control"
                     name="group_title"
-                    title="Description of the split transaction"
+                    v-bind:title="$t('firefly.split_transaction_title')"
                     ref="descr"
                     autocomplete="off"
-                    placeholder="Description of the split transaction"
+                    v-bind:placeholder="$t('firefly.split_transaction_title')"
                     :value="value" @input="handleInput"
             >
             <p class="help-block" v-if="error.length === 0">
-                If you create a split transaction, there must be a global description for all splits
-                of the transaction.
+                {{ $t('firefly.split_transaction_title_help') }}
             </p>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>

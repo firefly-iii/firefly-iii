@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Log;
 
@@ -71,6 +72,7 @@ class Installer
         if ($this->hasNoTables() || $this->oldDBVersion() || $this->oldVersion()) {
             return response()->redirectTo(route('installer.index'));
         }
+        OAuthKeys::verifyKeysRoutine();
         // update scheme version
         // update firefly version
 
@@ -182,4 +184,5 @@ class Installer
 
         return false;
     }
+
 }

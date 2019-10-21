@@ -93,7 +93,16 @@ trait AccountServiceTrait
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
             if (isset($data[$field]) && null !== $data[$field]) {
-                $factory->crud($account, $field, (string)($data[$field] ?? ''));
+
+                // convert boolean value:
+                if (is_bool($data[$field]) && false === $data[$field]) {
+                    $data[$field] = 0;
+                }
+                if (is_bool($data[$field]) && true === $data[$field]) {
+                    $data[$field] = 1;
+                }
+
+                $factory->crud($account, $field, (string)$data[$field]);
             }
         }
     }

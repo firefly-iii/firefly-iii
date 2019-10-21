@@ -30,7 +30,7 @@
                     :autocomplete-items="autocompleteItems"
                     :add-only-from-autocomplete="false"
                     @tags-changed="update"
-                    placeholder="Tags"
+                    v-bind:placeholder="$t('firefly.tags')"
             />
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -82,7 +82,7 @@
                         this.autocompleteItems = response.data.map(a => {
                             return {text: a.tag};
                         });
-                    }).catch(() => console.warn('Oh. Something went wrong'));
+                    }).catch(() => console.warn('Oh. Something went wrong loading tags.'));
                 }, 600);
             },
         },

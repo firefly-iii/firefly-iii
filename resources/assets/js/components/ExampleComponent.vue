@@ -18,7 +18,6 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!-- TODO REMOVE ME -->
 <template>
     <div class="container">
         <div class="row">

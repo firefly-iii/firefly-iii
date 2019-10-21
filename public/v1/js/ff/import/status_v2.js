@@ -43,7 +43,7 @@ $(function () {
  * Downloads some JSON and responds to its content to see what the status is of the current import job.
  */
 function checkJobJSONStatus() {
-    console.log('In checkJobJSONStatus()');
+    //console.log('In checkJobJSONStatus()');
     if (jobFailed === false) {
         $.getJSON(jobStatusUri).done(reportJobJSONDone).fail(reportJobJSONFailure);
     }
@@ -58,8 +58,8 @@ function checkJobJSONStatus() {
  * @param data
  */
 function reportJobJSONDone(data) {
-    console.log('In reportJobJSONDone() with status "' + data.status + '"');
-    console.log(data);
+    //console.log('In reportJobJSONDone() with status "' + data.status + '"');
+    //console.log(data);
     switch (data.status) {
         case "ready_to_run":
             if (startCount > 0) {
@@ -87,7 +87,7 @@ function reportJobJSONDone(data) {
             showJobResults(data);
             break;
         default:
-            console.warn('No specific action for status ' + data.status);
+            //console.warn('No specific action for status ' + data.status);
             showProgressBox(data.status);
             recheckJobJSONStatus();
 
@@ -99,7 +99,7 @@ function reportJobJSONDone(data) {
  * @param data
  */
 function showJobResults(data) {
-    console.log('In showJobResults()');
+    //console.log('In showJobResults()');
     // hide all boxes.
     $('.statusbox').hide();
 
@@ -127,7 +127,7 @@ function showJobResults(data) {
  * Will refresh and get job status.
  */
 function recheckJobJSONStatus() {
-    console.log('In recheckJobJSONStatus()');
+    //console.log('In recheckJobJSONStatus()');
     if (maxLoops !== 0 && totalLoops < maxLoops && jobFailed === false) {
         timeOutId = setTimeout(checkJobJSONStatus, checkNextInterval);
     }
@@ -206,7 +206,7 @@ function reportJobJSONFailure(xhr, status, error) {
  *
  */
 function showProgressBox(status) {
-    console.log('In showProgressBox()');
+    //console.log('In showProgressBox()');
     // hide fatal error box:
     $('.fatal_error').hide();
 
@@ -242,7 +242,7 @@ function showProgressBox(status) {
  * @param error
  */
 function reportJobPOSTFailure(xhr, status, error) {
-    console.log('In reportJobPOSTFailure()');
+    //console.log('In reportJobPOSTFailure()');
     // cancel checking again for job status:
     clearTimeout(timeOutId);
     if (reportedError === false) {

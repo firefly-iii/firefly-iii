@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "\u00bfQu\u00e9 est\u00e1 pasando?",
+        "flash_error": "\u00a1Error!",
+        "flash_success": "\u00a1Operaci\u00f3n correcta!",
+        "close": "Cerrar",
+        "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
+        "errors_submission": "Hubo algo malo con su env\u00edo. Por favor, revise los errores de abajo.",
+        "split": "Separar",
+        "transaction_journal_information": "Informaci\u00f3n de transacci\u00f3n",
+        "source_account": "Cuenta origen",
+        "destination_account": "Cuenta destino",
+        "add_another_split": "A\u00f1adir otra divisi\u00f3n",
+        "submission": "Env\u00edo",
+        "create_another": "Despu\u00e9s de guardar, vuelve aqu\u00ed para crear otro.",
+        "reset_after": "Restablecer formulario despu\u00e9s del env\u00edo",
+        "submit": "Enviar",
+        "amount": "Cantidad",
+        "date": "Fecha",
+        "tags": "Etiquetas",
+        "no_budget": "(sin presupuesto)",
+        "category": "Categoria",
+        "attachments": "Archivos adjuntos",
+        "notes": "Notas",
+        "update_transaction": "Actualizar transacci\u00f3n",
+        "after_update_create_another": "Despu\u00e9s de actualizar, vuelve aqu\u00ed para continuar editando.",
+        "store_as_new": "Almacenar como una nueva transacci\u00f3n en lugar de actualizar.",
+        "split_title_help": "Si crea una transacci\u00f3n dividida, debe haber una descripci\u00f3n global para todos los fragmentos de la transacci\u00f3n.",
+        "none_in_select_list": "(ninguno)",
+        "no_piggy_bank": "(sin alcanc\u00eda)",
+        "description": "Descripci\u00f3n"
+    },
+    "form": {
+        "interest_date": "Fecha de inter\u00e9s",
+        "book_date": "Fecha de registro",
+        "process_date": "Fecha de procesamiento",
+        "due_date": "Fecha de vencimiento",
+        "foreign_amount": "Cantidad extranjera",
+        "payment_date": "Fecha de pago",
+        "invoice_date": "Fecha de la factura",
+        "internal_reference": "Referencia interna"
+    },
+    "config": {
+        "html_language": "es"
+    }
+}

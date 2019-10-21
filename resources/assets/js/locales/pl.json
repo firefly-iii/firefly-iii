@@ -1,0 +1,46 @@
+{
+    "firefly": {
+        "welcome_back": "Co jest grane?",
+        "flash_error": "B\u0142\u0105d!",
+        "flash_success": "Sukces!",
+        "close": "Zamknij",
+        "split_transaction_title": "Opis podzielonej transakcji",
+        "errors_submission": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119 sprawd\u017a b\u0142\u0119dy poni\u017cej.",
+        "split": "Podziel",
+        "transaction_journal_information": "Informacje o transakcji",
+        "source_account": "Konto \u017ar\u00f3d\u0142owe",
+        "destination_account": "Konto docelowe",
+        "add_another_split": "Dodaj kolejny podzia\u0142",
+        "submission": "Zapisz",
+        "create_another": "Po zapisaniu wr\u00f3\u0107 tutaj, aby utworzy\u0107 kolejny.",
+        "reset_after": "Wyczy\u015b\u0107 formularz po zapisaniu",
+        "submit": "Prze\u015blij",
+        "amount": "Kwota",
+        "date": "Data",
+        "tags": "Tagi",
+        "no_budget": "(brak bud\u017cetu)",
+        "category": "Kategoria",
+        "attachments": "Za\u0142\u0105czniki",
+        "notes": "Notatki",
+        "update_transaction": "Zaktualizuj transakcj\u0119",
+        "after_update_create_another": "Po aktualizacji wr\u00f3\u0107 tutaj, aby kontynuowa\u0107 edycj\u0119.",
+        "store_as_new": "Zapisz jako now\u0105 zamiast aktualizowa\u0107.",
+        "split_title_help": "Podzielone transakcje musz\u0105 posiada\u0107 globalny opis.",
+        "none_in_select_list": "(\u017cadne)",
+        "no_piggy_bank": "(brak skarbonek)",
+        "description": "Opis"
+    },
+    "form": {
+        "interest_date": "Data odsetek",
+        "book_date": "Data ksi\u0119gowania",
+        "process_date": "Data przetworzenia",
+        "due_date": "Termin realizacji",
+        "foreign_amount": "Kwota zagraniczna",
+        "payment_date": "Data p\u0142atno\u015bci",
+        "invoice_date": "Data faktury",
+        "internal_reference": "Wewn\u0119trzny numer"
+    },
+    "config": {
+        "html_language": "pl"
+    }
+}

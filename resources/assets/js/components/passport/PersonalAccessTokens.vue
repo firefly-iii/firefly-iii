@@ -18,7 +18,6 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!-- TODO REMOVE ME -->
 <style scoped>
     .action-link {
         cursor: pointer;
@@ -163,8 +162,7 @@
                             Here is your new personal access token. This is the only time it will be shown so don't lose it!
                             You may now use this token to make API requests.
                         </p>
-
-                        <pre><code>{{ accessToken }}</code></pre>
+                        <pre><textarea id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
 
                     <!-- Modal Actions -->

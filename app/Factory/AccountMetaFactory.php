@@ -68,7 +68,6 @@ class AccountMetaFactory
     {
         /** @var AccountMeta $entry */
         $entry = $account->accountMeta()->where('name', $field)->first();
-
         // must not be an empty string:
         if ('' !== $value) {
 

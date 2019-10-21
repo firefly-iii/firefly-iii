@@ -83,7 +83,8 @@ class AccountController extends Controller
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
         $count     = $accounts->count();
-        $paginator = new LengthAwarePaginator($accounts, $count, $count, 1);
+        $perPage   = 0 === $count ? 1 : $count;
+        $paginator = new LengthAwarePaginator($accounts, $count, $perPage, 1);
 
         $resource = new FractalCollection($accounts, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));

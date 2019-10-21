@@ -1,0 +1,32 @@
+{
+    "firefly": {
+        "welcome_back": "Hvordan g\u00e5r det?",
+        "flash_error": "Feil!",
+        "flash_success": "Suksess!",
+        "close": "Lukk",
+        "split_transaction_title": "Description of the split transaction",
+        "split": "Del opp",
+        "transaction_journal_information": "Transaksjonsinformasjon",
+        "source_account": "Source account",
+        "destination_account": "Destination account",
+        "add_another_split": "Legg til en oppdeling til",
+        "submit": "Send inn",
+        "amount": "Bel\u00f8p",
+        "no_budget": "(ingen budsjett)",
+        "category": "Kategori",
+        "attachments": "Vedlegg",
+        "notes": "Notater"
+    },
+    "form": {
+        "interest_date": "Rentedato",
+        "book_date": "Bokf\u00f8ringsdato",
+        "process_date": "Prosesseringsdato",
+        "due_date": "Forfallsdato",
+        "payment_date": "Betalingsdato",
+        "invoice_date": "Fakturadato",
+        "internal_reference": "Intern referanse"
+    },
+    "config": {
+        "html_language": "no"
+    }
+}

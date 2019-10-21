@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'html_language'           => 'en',
+    'html_language'           => 'el',
     'locale'                  => 'en, English, en_US.utf8, en_US.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%B %e, %Y',

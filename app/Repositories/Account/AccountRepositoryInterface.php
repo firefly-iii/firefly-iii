@@ -143,6 +143,13 @@ interface AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getInactiveAccountsByType(array $types): Collection;
+
+    /**
      * @return Account
      */
     public function getCashAccount(): Account;

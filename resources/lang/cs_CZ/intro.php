@@ -33,18 +33,18 @@ return [
     'index_cash_account'                              => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_withdrawal_source'           => 'Vyberte svůj oblíbený účet aktiv nebo závazků z této rozbalovací nabídky.',
+    'transactions_create_withdrawal_destination'      => 'Zde vyberte výdajový účet. Nevyplňujte, pokud chcete vydat v hotovosti.',
+    'transactions_create_withdrawal_foreign_currency' => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
     'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_split_add'        => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
 
     // transactions (deposit)
     'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_deposit_destination'         => 'Zde vyberte účet aktiv nebo závazků.',
+    'transactions_create_deposit_foreign_currency'    => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
     'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_split_add'           => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
 
     // transactions (transfer)
     'transactions_create_transfer_source'             => 'Select the source asset account here.',

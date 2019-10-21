@@ -125,8 +125,8 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.1.4',
-    'api_version'                  => '0.10.3',
+    'version'                      => '4.8.1.5',
+    'api_version'                  => '0.10.4',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -135,7 +135,6 @@ return [
     'demo_username'                => env('DEMO_USERNAME', ''),
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'is_sandstorm'                 => env('IS_SANDSTORM', 'unknown'),
-    'is_docker'                    => env('IS_DOCKER', 'unknown'),
     'bunq_use_sandbox'             => env('BUNQ_USE_SANDBOX', false),
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
@@ -519,8 +518,8 @@ return [
     'default_currency'          => 'EUR',
     'default_language'          => 'en_US',
     'search_modifiers'          => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_at',
-                                    'updated_at'],
+                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
+                                    'updated_on'],
     // TODO notes has_attachments
 
     'cer_providers'             => [

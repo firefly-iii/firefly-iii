@@ -88,6 +88,13 @@ try {
             $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
         }
     );
+    Breadcrumbs::register( // inactive
+        'accounts.inactive.index',
+        static function (BreadcrumbsGenerator $breadcrumbs, string $what) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts_inactive'), route('accounts.inactive.index', [$what]));
+        }
+    );
 
     Breadcrumbs::register(
         'accounts.create',

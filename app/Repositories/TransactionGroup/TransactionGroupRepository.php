@@ -97,6 +97,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = Attachment::whereIn('attachable_id', $journals)
                               ->where('attachable_type', TransactionJournal::class)
+                              ->where('uploaded', 1)
                               ->whereNull('deleted_at')->get();
 
         $result = [];

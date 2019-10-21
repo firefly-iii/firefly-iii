@@ -35,7 +35,31 @@
                         {% include 'list.accounts' %}
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
+                        <p>
+                            <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><i
+                                        class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
+                        </p>
+                        {% if inactiveCount > 0 %}
+                            <p><small>
+                                    <em>
+                                        <a href="{{ route('accounts.inactive.index', objectType) }}" class="text-muted">
+                                            {{ trans('firefly.inactive_account_link', {count: inactiveCount}) }}
+                                        </a>
+                                    </em>
+                                </small>
+                            </p>
+                        {% endif %}
+                        {% if inactivePage %}
+                            <p><small class="text-muted">
+                                    <em>
+                                        {{ 'all_accounts_inactive'|_ }}
+                                        <a href="{{ route('accounts.index', objectType) }}">
+                                            {{ trans('firefly.active_account_link', {count: inactiveCount}) }}
+                                        </a>
+                                    </em>
+                                </small>
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -53,8 +53,6 @@ class Range
             // set more view variables:
             $this->configureList();
 
-            // flash a big fat warning when users use SQLite in Docker
-            $this->loseItAll($request);
         }
 
         return $next($request);
@@ -102,22 +100,6 @@ class Range
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);
         app('view')->share('dateTimeFormat', $dateTimeFormat);
         app('view')->share('defaultCurrency', $defaultCurrency);
-    }
-
-    /**
-     * Error when sqlite in docker.
-     *
-     * @param Request $request
-     */
-    private function loseItAll(Request $request): void
-    {
-        if ('sqlite' === config('database.default') && true === config('firefly.is_docker')) {
-            // @codeCoverageIgnoreStart
-            $request->session()->flash(
-                'error', 'You seem to be using SQLite in a Docker container. Don\'t do this. If the container restarts all your data will be gone.'
-            );
-            // @codeCoverageIgnoreEnd
-        }
     }
 
     /**

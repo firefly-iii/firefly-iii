@@ -162,6 +162,13 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
             // @codeCoverageIgnoreEnd
         }
+
+        if ('' === $content) {
+            Log::error('Cannot upload empty file.');
+
+            return false;
+        }
+
         $path = stream_get_meta_data($resource)['uri'];
         fwrite($resource, $content);
         $finfo       = finfo_open(FILEINFO_MIME_TYPE);
@@ -199,6 +206,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!($model instanceof Model)) {
             return false; // @codeCoverageIgnore
         }
+
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
             Log::debug('$files is an array.');
@@ -362,6 +370,11 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!$this->validMime($file)) {
             $result = false;
         }
+        if (0 === $file->getSize()) {
+            Log::error('Cannot upload empty file.');
+            $result = false;
+        }
+
         // @codeCoverageIgnoreStart
         // can't seem to reach this point.
         if (true === $result && !$this->validSize($file)) {

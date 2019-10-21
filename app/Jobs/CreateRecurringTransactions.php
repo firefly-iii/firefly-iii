@@ -134,6 +134,10 @@ class CreateRecurringTransactions implements ShouldQueue
             $this->repository->setUser($recurrence->user);
             $this->journalRepository->setUser($recurrence->user);
             $this->groupRepository->setUser($recurrence->user);
+
+            // clear cache for user
+            app('preferences')->setForUser($recurrence->user, 'lastActivity', microtime());
+
             Log::debug(sprintf('Now at recurrence #%d', $recurrence->id));
             $created = $this->handleRepetitions($recurrence);
             Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));

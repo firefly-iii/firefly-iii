@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Support;
 
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -82,18 +83,17 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param string      $transactionType
-     * @param string      $direction
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param string $transactionType
+     * @param string $direction
+     * @param array  $data
      *
      * @return Account
      * @codeCoverageIgnore
      */
-    protected function getAccount(string $transactionType, string $direction, ?int $accountId, ?string $accountName): Account
+    protected function getAccount(string $transactionType, string $direction, array $data): Account
     {
         // some debug logging:
-        Log::debug(sprintf('Now in getAccount(%s, %d, %s)', $direction, $accountId, $accountName));
+        Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
 
         // final result:
         $result = null;
@@ -109,8 +109,8 @@ trait JournalServiceTrait
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType])));
 
         // first attempt, find by ID.
-        if (null !== $accountId) {
-            $search = $this->accountRepository->findNull($accountId);
+        if (null !== $data['id']) {
+            $search = $this->accountRepository->findNull($data['id']);
             if (null !== $search && in_array($search->accountType->type, $expectedTypes[$transactionType], true)) {
                 Log::debug(
                     sprintf('Found "account_id" object  for %s: #%d, "%s" of type %s', $direction, $search->id, $search->name, $search->accountType->type)
@@ -120,12 +120,12 @@ trait JournalServiceTrait
         }
 
         // second attempt, find by name.
-        if (null === $result && null !== $accountName) {
+        if (null === $result && null !== $data['name']) {
             Log::debug('Found nothing by account ID.');
             // find by preferred type.
-            $source = $this->accountRepository->findByName($accountName, [$expectedTypes[$transactionType][0]]);
+            $source = $this->accountRepository->findByName($data['name'], [$expectedTypes[$transactionType][0]]);
             // or any expected type.
-            $source = $source ?? $this->accountRepository->findByName($accountName, $expectedTypes[$transactionType]);
+            $source = $source ?? $this->accountRepository->findByName($data['name'], $expectedTypes[$transactionType]);
 
             if (null !== $source) {
                 Log::debug(sprintf('Found "account_name" object for %s: #%d, %s', $direction, $source->id, $source->name));
@@ -134,30 +134,57 @@ trait JournalServiceTrait
             }
         }
 
+        // third attempt, find by IBAN
+        if (null === $result && null !== $data['iban']) {
+            Log::debug('Found nothing by account name.');
+            // find by preferred type.
+            $source = $this->accountRepository->findByIbanNull($data['iban'], [$expectedTypes[$transactionType][0]]);
+            // or any expected type.
+            $source = $source ?? $this->accountRepository->findByIbanNull($data['iban'], $expectedTypes[$transactionType]);
+
+            if (null !== $source) {
+                Log::debug(sprintf('Found "account_iban" object for %s: #%d, %s', $direction, $source->id, $source->name));
+
+                $result = $source;
+            }
+        }
+
         // return cash account.
-        if (null === $result && null === $accountName
+        if (null === $result && null === $data['name']
             && in_array(AccountType::CASH, $expectedTypes[$transactionType], true)) {
             $result = $this->accountRepository->getCashAccount();
         }
 
         // return new account.
         if (null === $result) {
-            $accountName = $accountName ?? '(no name)';
+            $data['name'] = $data['name'] ?? '(no name)';
             // final attempt, create it.
             $preferredType = $expectedTypes[$transactionType][0];
             if (AccountType::ASSET === $preferredType) {
-                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with ID #%d or name "%s".', $accountId, $accountName));
+                throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
             }
 
             $result = $this->accountRepository->store(
                 [
                     'account_type_id' => null,
-                    'account_type'     => $preferredType,
-                    'name'            => $accountName,
+                    'account_type'    => $preferredType,
+                    'name'            => $data['name'],
                     'active'          => true,
-                    'iban'            => null,
+                    'iban'            => $data['iban'],
                 ]
             );
+            // store BIC
+            if (null !== $data['bic']) {
+                /** @var AccountMetaFactory $metaFactory */
+                $metaFactory = app(AccountMetaFactory::class);
+                $metaFactory->create(['account_id' => $result->id, 'name' => 'BIC', 'data' => $data['bic']]);
+            }
+            // store account number
+            if (null !== $data['number']) {
+                /** @var AccountMetaFactory $metaFactory */
+                $metaFactory = app(AccountMetaFactory::class);
+                $metaFactory->create(['account_id' => $result->id, 'name' => 'account_number', 'data' => $data['bic']]);
+            }
         }
 
         return $result;
