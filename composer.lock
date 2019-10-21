@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f739750fe2fcd798a369d0547753daa",
+    "content-hash": "f8a520941da593af61a80a4d2374f6db",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -2749,16 +2749,16 @@
         },
         {
             "name": "pragmarx/google2fa",
-            "version": "v6.1.1",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/google2fa.git",
-                "reference": "ffdcb8231d0a19d0cda9b188e799dd6b8d9014db"
+                "reference": "0ea122e0d1ba197e867888a623059ae1a7fe43b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/ffdcb8231d0a19d0cda9b188e799dd6b8d9014db",
-                "reference": "ffdcb8231d0a19d0cda9b188e799dd6b8d9014db",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/0ea122e0d1ba197e867888a623059ae1a7fe43b6",
+                "reference": "0ea122e0d1ba197e867888a623059ae1a7fe43b6",
                 "shasum": ""
             },
             "require": {
@@ -2801,7 +2801,7 @@
                 "Two Factor Authentication",
                 "google2fa"
             ],
-            "time": "2019-10-21T14:17:09+00:00"
+            "time": "2019-09-23T18:30:35+00:00"
         },
         {
             "name": "pragmarx/google2fa-laravel",
