@@ -252,6 +252,19 @@ class TransactionController extends Controller
     }
 
     /**
+     * Show a single transaction, by transaction journal.
+     *
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function showByJournal(TransactionJournal $transactionJournal): JsonResponse
+    {
+        return $this->show($transactionJournal->transactionGroup);
+    }
+
+    /**
      * Store a new transaction.
      *
      * @param TransactionStoreRequest $request
