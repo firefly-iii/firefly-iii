@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square])](https://www.gnu.org/licenses/agpl-3.0.html) 
 [![Donate using Paypal](https://img.shields.io/badge/donate-PayPal-green?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 [![Donate using Patreon](https://img.shields.io/badge/donate-%40JC5-green?logo=patreon)](https://www.patreon.com/jc5)
+[![Donate using GitHub](https://img.shields.io/badge/donate-GitHub-green?logo=github&style=flat)](https://github.com/sponsors/JC5)
 
 
 * [Introduction](#introduction)
@@ -37,7 +38,7 @@ Personal financial management is pretty difficult, and everybody has their own a
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
-You can read more about this in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
+You can read more about this in the [official documentation](https://docs.firefly-iii.org/).
 
 ### Features
 Firefly III is pretty feature packed. Some important stuff first:
@@ -96,10 +97,10 @@ This application is for people who want to track their finances, keep an eye on 
 ## Get started
 There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](https://firefly-iii.readthedocs.io/en/latest/installation/server.html).
-3. You can [run it using Docker](https://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
+2. You can [install it on your server](https://docs.firefly-iii.org/installation/self_hosted).
+3. You can [run it using Docker](https://docs.firefly-iii.org/installation/docker).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master).
-    * Please read the [considerations when using Heroku](https://firefly-iii.readthedocs.io/en/latest/installation/hosted.html#considerations-when-using-heroku) first though.
+    * Please read the [considerations when using Heroku](https://docs.firefly-iii.org/installation/third_parties#considerations-when-using-heroku) first though.
 5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70).
     * Note that you must have a paid Sandstorm account for this to work, or you must self-host your Sandstorm server.
 6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
@@ -108,14 +109,14 @@ There are many ways to run Firefly III
 9. *Even more options are on the way!*
 
 ### Update your instance
-Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://firefly-iii.readthedocs.io/en/latest/installation/upgrading.html) can be found in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
+Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://docs.firefly-iii.org/advanced-installation/upgrade) can be found in the [official documentation](https://docs.firefly-iii.org/).
 
 ## Contribute
-Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III). It's not very active but it's a start!
+Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III).
 
 Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
 
-I can always use your help [squashing bugs](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#bugs), thinking about [new features](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#feature-requests) or [translating Firefly III](https://firefly-iii.readthedocs.io/en/latest/support/contribute.html#translations) into other languages.
+I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
 
 For all other contributions, see below.
 
@@ -125,7 +126,7 @@ Firefly III should give you **insight** into and **control** over your finances.
 But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having it, not having, paying bills with it, etc. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help. I know it helps me.
 
 ## Contact
-You can contact me at [thegrumpydictator@gmail.com](mailto:thegrumpydictator@gmail.com), you may open an issue or contact me through the various social media pages there are: [reddit](https://www.reddit.com/r/FireflyIII/), [Twitter](https://twitter.com/Firefly_III) and [Facebook](https://www.facebook.com/FireflyIII/).
+You can contact me at [thegrumpydictator@gmail.com](mailto:thegrumpydictator@gmail.com), you may open an issue or contact me through the various social media pages there are: [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III).
 
 Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors).
 
@@ -150,7 +151,9 @@ If you like Firefly III and if it helps you save lots of money, why not send me 
 
 OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) or [Patreon](https://www.patreon.com/jc5).
 
-Thank you for considering donating to Firefly III!  
+I am very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**. Use their program if you can; they'll double your donation!
+
+Thank you for considering donating to Firefly III!
 
 ### Alternatives
 If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted list](https://github.com/Kickball/awesome-selfhosted) which features not only Firefly III but also many other noteworthy alternatives.
