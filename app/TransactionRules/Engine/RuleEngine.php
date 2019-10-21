@@ -229,7 +229,7 @@ class RuleEngine
         $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode)
                         || ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);
 
-        return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true));
+        return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true)) && true === $rule->active;
     }
 
 }
