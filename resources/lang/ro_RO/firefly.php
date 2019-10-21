@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => 'regulă inactivă',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Contul #:id (":name") nu pot fi vizualizate direct.',
     'details_for_asset'                         => 'Detalii pentru contul de active ":name"',
     'details_for_expense'                       => 'Detalii pentru contul de cheltuieli ":name"',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => 'Creați un nou cont de venituri',
     'make_new_liabilities_account'              => 'Creați un nou provizion',
     'asset_accounts'                            => 'Conturile de active',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Conturi de cheltuieli',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => 'Conturi de venituri',
     'cash_accounts'                             => 'Conturi de numerar',
     'Cash account'                              => 'Cont de numerar',

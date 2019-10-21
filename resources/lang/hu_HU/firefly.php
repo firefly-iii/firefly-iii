@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => 'inaktív szabály',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => ':id (":name") számla nem tekinthető meg közvetlenül, de a Fireflyból hiányzik az átirányítási információ.',
     'details_for_asset'                         => '":name" eszközszámla részletei',
     'details_for_expense'                       => '":name" költségszámla részletei',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => 'Új jövedelemszámla létrehozása',
     'make_new_liabilities_account'              => 'Új kötelezettség létrehozása',
     'asset_accounts'                            => 'Eszközszámlák',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Költségszámlák',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => 'Jövedelemszámlák',
     'cash_accounts'                             => 'Készpénzszámlák',
     'Cash account'                              => 'Készpénzszámla',

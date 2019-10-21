@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => '未启用的规则',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => '帐户 #:id (":name") 无法直接被检视，但 Firefly 找不到重新转向资讯。',
     'details_for_asset'                         => '资产帐户 ":name" 的详细资讯',
     'details_for_expense'                       => '支出帐户 ":name" 的详细资讯',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => '建立新收入帐户',
     'make_new_liabilities_account'              => '建立新债务',
     'asset_accounts'                            => '资产帐户',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => '支出帐户',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => '收入帐户',
     'cash_accounts'                             => '现金帐户',
     'Cash account'                              => '现金帐户',

@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => 'inaktiv regel',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Konto #:id (":name") kan ikke bli vist direkte, Firefly mangler omdirigerings informasjon.',
     'details_for_asset'                         => 'Detaljer for brukskonto ":name"',
     'details_for_expense'                       => 'Detaljer for utgiftskonto ":name"',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => 'Opprett en ny inntektskonto',
     'make_new_liabilities_account'              => 'Opprett ny gjeld',
     'asset_accounts'                            => 'Aktivakontoer',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Utgiftskontoer',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => 'Inntektskontoer',
     'cash_accounts'                             => 'Kontantkontoer',
     'Cash account'                              => 'Kontantkonto',

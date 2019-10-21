@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => 'inactive rule',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
     'details_for_asset'                         => 'Details for asset account ":name"',
     'details_for_expense'                       => 'Details for expense account ":name"',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => 'Create a new revenue account',
     'make_new_liabilities_account'              => 'Create a new liability',
     'asset_accounts'                            => 'Asset accounts',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Expense accounts',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => 'Revenue accounts',
     'cash_accounts'                             => 'Cash accounts',
     'Cash account'                              => 'Cash account',

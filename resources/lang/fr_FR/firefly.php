@@ -759,6 +759,9 @@ return [
     'list_inactive_rule'                        => 'règle inactive',
 
     // accounts:
+    'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
+    'all_accounts_inactive'                     => 'These are your inactive accounts.',
+    'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Le compte #:id (":name") ne peut pas être consulter directement et Firefly III ne dispose d\'aucune information pour vous rediriger.',
     'details_for_asset'                         => 'Détails pour le compte d’actif ":name"',
     'details_for_expense'                       => 'Détails du compte de dépenses ":name"',
@@ -786,7 +789,9 @@ return [
     'make_new_revenue_account'                  => 'Créer un nouveau compte de recettes',
     'make_new_liabilities_account'              => 'Créer un nouveau passif',
     'asset_accounts'                            => 'Comptes d’actif',
+    'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Comptes de dépenses',
+    'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
     'revenue_accounts'                          => 'Comptes de recettes',
     'cash_accounts'                             => 'Comptes de trésorerie',
     'Cash account'                              => 'Compte de trésorerie',
