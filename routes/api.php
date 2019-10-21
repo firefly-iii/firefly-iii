@@ -426,7 +426,7 @@ Route::group(
 
 // special group for transaction journals
 Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'journals',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction-journals',
      'as'         => 'api.v1.journals.'],
     static function () {
 

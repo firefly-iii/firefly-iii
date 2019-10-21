@@ -2,6 +2,44 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1.5 (API 0.10.4)] - 2019-10-21
+
+### Added
+- #2694 Special page for archived accounts.
+
+### Changed
+- #2540 Partly translated transaction edit/create form.
+- #2655 Link to Firefly III's base Docker image.
+- #2724 Cleanup some JS output.
+- #2734 Put personal access token in textarea for easier copy/pasting.
+- #2728 Remove superfluous currency names.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- #2699 Internal cache wouldn't update.
+- #2713 Could not search for numerical values.
+- #2716 Could not reset intro popups.
+- #2701 Temporary fix for timeouts.
+- #2727 CSP headers too strict.
+- #2731 Too strict config vars.
+- #2754 Memcached config would error out.
+- #2746 Cache would not clear after firing recurring transactions.
+- #2755 Making a rule inactive would still fire it.
+
+### Security
+- Initial release.
+
+### API
+- #2698 Fix return value in API.
+- #2753 Was possible to upload and manage empty attachments.
+- New accounts submitted through the API may include account number, BIC and IBAN data.
+- New end point to support #2752.
+
 ## [4.8.1.4 (API 0.10.3)] - 2019-10-05
 
 Emergency fix because I borked the upgrade routine. I apologise for the inconvenience.
