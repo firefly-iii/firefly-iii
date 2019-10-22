@@ -27,6 +27,7 @@ namespace FireflyIII\Support\Repositories\Recurring;
 
 use Carbon\Carbon;
 use Log;
+
 /**
  * Class CalculateXOccurrencesSince
  */
@@ -204,7 +205,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXYearlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s(%s, %d, %d, %s)', __METHOD__, $date->format('Y-m-d'), $date->format('Y-m-d'), $count, $skipMod));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;
@@ -212,11 +213,17 @@ trait CalculateXOccurrencesSince
         $date       = new Carbon($moment);
         $date->year = $mutator->year;
         if ($mutator > $date) {
+            Log::debug(sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'),));
             $date->addYear();
+            Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
         }
         $obj = clone $date;
         while ($total < $count) {
-            if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
+            Log::debug(sprintf('total (%d) < count (%d) so go.', $total, $count));
+            Log::debug(sprintf('attempts (%d) %% skipmod (%d) === %d', $attempts, $skipMod, $attempts % $skipMod));
+            Log::debug(sprintf('Obj (%s) gte afterdate (%s)? %s', $obj->format('Y-m-d'), $afterDate->format('Y-m-d'), var_export($obj->gte($afterDate), true)));
+            if (0 === $attempts % $skipMod && $obj->gte($afterDate)) {
+                Log::debug('All conditions true, add obj.');
                 $return[] = clone $obj;
                 $total++;
             }
