@@ -89,7 +89,7 @@ class TransactionStoreRequest extends Request
 
             // amount
             'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.foreign_amount'        => 'numeric',
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
