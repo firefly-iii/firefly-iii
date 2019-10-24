@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
@@ -75,9 +74,11 @@ class CreateController extends Controller
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes = config('firefly.account_to_transaction');
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $previousUri = $this->rememberPreviousUri('transactions.create.uri');
+        $accountToTypes       = config('firefly.account_to_transaction');
+        $defaultCurrency      = app('amount')->getDefaultCurrency();
+        $previousUri          = $this->rememberPreviousUri('transactions.create.uri');
+        $parts                = parse_url($previousUri);
+        $previousUri          = sprintf('%s://%s/%s', $parts['scheme'], $parts['host'], $parts['path']);
 
         session()->put('preFilled', $preFilled);
 

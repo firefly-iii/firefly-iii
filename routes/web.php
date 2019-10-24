@@ -958,13 +958,13 @@ Route::group(
     Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
 
     // clone group:
-    Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
+    //Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
 
     //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
 
-    Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
-    Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
+    //Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
+    //Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
     // TODO end of improvement.
 
 

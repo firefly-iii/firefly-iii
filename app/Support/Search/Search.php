@@ -127,9 +127,6 @@ class Search implements SearchInterface
         $matches             = [];
         preg_match_all($pattern, $filteredQuery, $matches);
 
-        var_dump($matches[0]);
-        exit;
-
         foreach ($matches[0] as $match) {
             $this->extractModifier($match);
             $filteredQuery = str_replace($match, '', $filteredQuery);

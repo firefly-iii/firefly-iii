@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1.6 (API 0.10.4)] - 2019-10-25
+
+### Fixed
+- Redirecting to an URL with parameters works well now for editing and creating transactions.
+- [Issue 2756](https://github.com/firefly-iii/firefly-iii/issues/2756) Search was broken due to left-over debug statements.
+- [Issue 2757](https://github.com/firefly-iii/firefly-iii/issues/2757) 2FA was broken due to a changed library.
+- [Issue 2758](https://github.com/firefly-iii/firefly-iii/issues/2758) A debug command courtesy of Laravel wouldn't work due to invalid routes.
+- [Issue 2701](https://github.com/firefly-iii/firefly-iii/issues/2701) Fixed a never-ending loop.
+
 ## [4.8.1.5 (API 0.10.4)] - 2019-10-21
 
 ### Added
@@ -14,12 +23,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2734](https://github.com/firefly-iii/firefly-iii/issues/2734) Put personal access token in textarea for easier copy/pasting.
 - [Issue 2728](https://github.com/firefly-iii/firefly-iii/issues/2728) Remove superfluous currency names.
 
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - [Issue 2699](https://github.com/firefly-iii/firefly-iii/issues/2699) Internal cache wouldn't update.
 - [Issue 2713](https://github.com/firefly-iii/firefly-iii/issues/2713) Could not search for numerical values.
@@ -30,9 +33,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2754](https://github.com/firefly-iii/firefly-iii/issues/2754) Memcached config would error out.
 - [Issue 2746](https://github.com/firefly-iii/firefly-iii/issues/2746) Cache would not clear after firing recurring transactions.
 - [Issue 2755](https://github.com/firefly-iii/firefly-iii/issues/2755) Making a rule inactive would still fire it.
-
-### Security
-- Initial release.
 
 ### API
 - [Issue 2698](https://github.com/firefly-iii/firefly-iii/issues/2698) Fix return value in API.

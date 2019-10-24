@@ -162,7 +162,9 @@ trait TransactionValidation
         $transactions = $data['transactions'] ?? [];
         foreach ($transactions as $index => $transaction) {
             // if foreign amount is present, then the currency must be as well.
-            if (isset($transaction['foreign_amount']) && !(isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code']))) {
+            if (isset($transaction['foreign_amount']) && !(isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code']))
+                && 0 !== bccomp('0', $transaction['foreign_amount'])
+            ) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
                     (string)trans('validation.require_currency_info')
