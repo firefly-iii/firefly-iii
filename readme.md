@@ -9,22 +9,26 @@
 [![Donate using GitHub](https://img.shields.io/badge/donate-GitHub-green?logo=github&style=flat)](https://github.com/sponsors/JC5)
 
 
-* [Introduction](#introduction)
-	* [Purpose](#purpose)
-	* [Features](#features)
-	* [Who is it for?](#who-is-it-for)
-* [Get started](#get-started)
-	* [Update your instance](#update-your-instance)
-* [Contribute](#contribute)
-* [The goal](#the-goal)
-* [Contact](#contact)
-* [Other stuff](#other-stuff)
-    * [Tools](#tools)
-	* [Versioning](#versioning)
-	* [License](#license)
-	* [Donate](#donate)
-	* [Alternatives](#alternatives)
-	* [Badges](#badges)
+<!-- MarkdownTOC autolink="true" -->
+
+- [Introduction](#introduction)
+	- [Purpose](#purpose)
+	- [Features](#features)
+	- [Who is it for?](#who-is-it-for)
+- [Get started](#get-started)
+	- [Update your instance](#update-your-instance)
+- [Contribute](#contribute)
+- [The goal](#the-goal)
+- [Contact](#contact)
+- [Other stuff](#other-stuff)
+	- [Tools](#tools)
+	- [Versioning](#versioning)
+	- [License](#license)
+	- [Donate](#donate)
+	- [Alternatives](#alternatives)
+	- [Badges](#badges)
+
+<!-- /MarkdownTOC -->
 
 ## Introduction
 "Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. It can import data from external sources and it has many neat financial reports available. Here are some screenshots:
