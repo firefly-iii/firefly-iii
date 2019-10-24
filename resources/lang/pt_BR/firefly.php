@@ -929,7 +929,7 @@ return [
     'average_spending_per_source'               => 'Average expense per source account',
     'average_earning_per_source'                => 'Average earning per source account',
     'average_earning_per_destination'           => 'Average earning per destination account',
-    'account_per_tag'                           => 'Account per tag',
+    'account_per_tag'                           => 'Conta por tag',
     'tag_report_expenses_listed_once'           => 'Expenses and income are never listed twice. If a transaction has multiple tags, it may only show up under one of its tags. This list may appear to be missing data, but the amounts will be correct.',
     'double_report_expenses_charted_once'       => 'Expenses and income are never displayed twice. If a transaction has multiple tags, it may only show up under one of its tags. This chart may appear to be missing data, but the amounts will be correct.',
     'tag_report_chart_single_tag'               => 'This chart applies to a single tag. If a transaction has multiple tags, what you see here may be reflected in the charts of other tags as well.',

@@ -33,11 +33,11 @@ return [
     'index_cash_account'                              => 'To są dotychczas utworzone konta. Możesz użyć konta gotówkowego do śledzenia wydatków gotówkowych, ale oczywiście nie jest to obowiązkowe.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_source'           => 'Wybierz swoje ulubione konto aktywów lub zobowiązanie z tej listy rozwijalnej.',
+    'transactions_create_withdrawal_destination'      => 'Wybierz konto wydatków. Zostaw puste, jeśli chcesz zapisać wydatek gotówkowy.',
+    'transactions_create_withdrawal_foreign_currency' => 'Użyj tego pola aby ustawić obcą walutę i jej ilość.',
+    'transactions_create_withdrawal_more_meta'        => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
+    'transactions_create_withdrawal_split_add'        => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
 
     // transactions (deposit)
     'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',

@@ -6,10 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Redirecting to an URL with parameters works well now for editing and creating transactions.
-- #2756 Search was broken due to left-over debug statements.
-- #2757 2FA was broken due to a changed library.
-- #2758 A debug command courtesy of Laravel wouldn't work due to invalid routes.
-- #2701 Fixed a never-ending loop.
+- [Issue 2756](https://github.com/firefly-iii/firefly-iii/issues/2756) Search was broken due to left-over debug statements.
+- [Issue 2757](https://github.com/firefly-iii/firefly-iii/issues/2757) 2FA was broken due to a changed library.
+- [Issue 2758](https://github.com/firefly-iii/firefly-iii/issues/2758) A debug command courtesy of Laravel wouldn't work due to invalid routes.
+- [Issue 2701](https://github.com/firefly-iii/firefly-iii/issues/2701) Fixed a never-ending loop.
 
 ## [4.8.1.5 (API 0.10.4)] - 2019-10-21
 
