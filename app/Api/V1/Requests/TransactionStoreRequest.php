@@ -58,8 +58,9 @@ class TransactionStoreRequest extends Request
     public function getAll(): array
     {
         $data = [
-            'group_title'  => $this->string('group_title'),
-            'transactions' => $this->getTransactionData(),
+            'group_title'             => $this->string('group_title'),
+            'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
+            'transactions'            => $this->getTransactionData(),
         ];
 
         return $data;
@@ -75,6 +76,7 @@ class TransactionStoreRequest extends Request
         $rules = [
             // basic fields for group:
             'group_title'                          => 'between:1,1000|nullable',
+            'error_if_duplicate_hash'              => [new IsBoolean],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',

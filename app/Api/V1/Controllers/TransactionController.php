@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Requests\TransactionStoreRequest;
 use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -279,7 +280,20 @@ class TransactionController extends Controller
         Log::channel('audit')
            ->info('Store new transaction over API.', $data);
 
-        $transactionGroup = $this->groupRepository->store($data);
+        try {
+            $transactionGroup = $this->groupRepository->store($data);
+        } catch (DuplicateTransactionException $e) {
+            // return bad validation message.
+            // TODO use Laravel's internal validation thing to do this.
+            $response = [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.description' => [$e->getMessage()],
+                ],
+            ];
+
+            return response()->json($response, 422);
+        }
 
         event(new StoredTransactionGroup($transactionGroup));
 

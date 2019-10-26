@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 
@@ -52,10 +53,13 @@ class TransactionGroupFactory
      * @param array $data
      *
      * @return TransactionGroup
+     * @throws DuplicateTransactionException
      */
     public function create(array $data): TransactionGroup
     {
         $this->journalFactory->setUser($this->user);
+        $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash']);
+
         $collection = $this->journalFactory->create($data);
         $title      = $data['group_title'] ?? null;
         $title      = '' === $title ? null : $title;
