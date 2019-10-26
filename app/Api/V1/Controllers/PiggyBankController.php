@@ -192,7 +192,7 @@ class PiggyBankController extends Controller
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new piggy bank.');
+        throw new FireflyException(trans('api.error_store_new_piggybank'));
 
     }
 

@@ -313,10 +313,10 @@ class CurrencyController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
-            throw new FireflyException('No access to method, user is not owner.'); // @codeCoverageIgnore
+            throw new FireflyException(trans('api.error_no_access_ownership')); // @codeCoverageIgnore
         }
         if ($this->repository->currencyInUse($currency)) {
-            throw new FireflyException('No access to method, currency is in use.'); // @codeCoverageIgnore
+            throw new FireflyException(trans('api.error_no_access_currency_in_use')); // @codeCoverageIgnore
         }
         $this->repository->destroy($currency);
 
@@ -592,7 +592,7 @@ class CurrencyController extends Controller
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new currency.'); // @codeCoverageIgnore
+        throw new FireflyException(trans('api.error_store_new_currency')); // @codeCoverageIgnore
 
     }
 

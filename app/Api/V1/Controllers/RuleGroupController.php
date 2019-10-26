@@ -257,7 +257,7 @@ class RuleGroupController extends Controller
         /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
-            throw new FireflyException('No rules in this rule group.');
+            throw new FireflyException(trans('api.error_no_rules_in_rule_group'));
         }
         $parameters           = $request->getTestParameters();
         $matchingTransactions = [];

@@ -86,7 +86,7 @@ class LinkTypeController extends Controller
     public function delete(LinkType $linkType): JsonResponse
     {
         if (false === $linkType->editable) {
-            throw new FireflyException(sprintf('You cannot delete this link type (#%d, "%s")', $linkType->id, $linkType->name));
+            throw new FireflyException(trans('error_delete_link_type', [':id' => $linkType->id, ':name' => $linkType->name]));
         }
         $this->repository->destroy($linkType);
 
@@ -160,7 +160,7 @@ class LinkTypeController extends Controller
         $admin = auth()->user();
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('You need the "owner"-role to do this.');
+            throw new FireflyException(trans('api.error_owner_role_needed'));
         }
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:
@@ -247,14 +247,14 @@ class LinkTypeController extends Controller
     public function update(LinkTypeRequest $request, LinkType $linkType): JsonResponse
     {
         if (false === $linkType->editable) {
-            throw new FireflyException(sprintf('You cannot edit this link type (#%d, "%s")', $linkType->id, $linkType->name));
+            throw new FireflyException(trans('api.error_edit_link_type', [':id' => $linkType->id, ':name' => $linkType->name]));
         }
 
         /** @var User $admin */
         $admin = auth()->user();
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('You need the "owner"-role to do this.');
+            throw new FireflyException(trans('api.error_owner_role_needed'));
         }
 
         $data = $request->getAll();

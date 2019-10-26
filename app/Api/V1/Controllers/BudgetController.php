@@ -199,7 +199,7 @@ class BudgetController extends Controller
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException('Could not store new budget.'); // @codeCoverageIgnore
+        throw new FireflyException(trans('api.error_store_budget')); // @codeCoverageIgnore
     }
 
     /**
