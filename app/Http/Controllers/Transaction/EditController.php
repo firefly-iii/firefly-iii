@@ -83,7 +83,7 @@ class EditController extends Controller
         $cash                 = $repository->getCashAccount();
         $previousUri          = $this->rememberPreviousUri('transactions.edit.uri');
         $parts                = parse_url($previousUri);
-        $previousUri          = sprintf('%s://%s/%s', $parts['scheme'], $parts['host'], $parts['path']);
+        $previousUri          = sprintf('%s://%s/%s', $parts['scheme'], $parts['host'], $parts['path'] ?? '');
 
 
         return view('transactions.edit', compact('cash', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency', 'previousUri'));
