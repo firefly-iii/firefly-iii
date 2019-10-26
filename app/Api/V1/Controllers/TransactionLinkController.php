@@ -165,7 +165,7 @@ class TransactionLinkController extends Controller
         $inward  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $outward = $this->journalRepository->findNull($data['outward_id'] ?? 0);
         if (null === $inward || null === $outward) {
-            throw new FireflyException(trans('error_source_or_dest_null'));
+            throw new FireflyException(trans('api.error_source_or_dest_null'));
         }
         $data['direction'] = 'inward';
 

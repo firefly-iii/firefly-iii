@@ -163,7 +163,7 @@ class CategoryController extends Controller
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
-        throw new FireflyException(trans('error_store_new_category')); // @codeCoverageIgnore
+        throw new FireflyException(trans('api.error_store_new_category')); // @codeCoverageIgnore
     }
 
     /**

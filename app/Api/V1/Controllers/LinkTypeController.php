@@ -86,7 +86,7 @@ class LinkTypeController extends Controller
     public function delete(LinkType $linkType): JsonResponse
     {
         if (false === $linkType->editable) {
-            throw new FireflyException(trans('error_delete_link_type', [':id' => $linkType->id, ':name' => $linkType->name]));
+            throw new FireflyException(trans('api.error_delete_link_type', [':id' => $linkType->id, ':name' => $linkType->name]));
         }
         $this->repository->destroy($linkType);
 

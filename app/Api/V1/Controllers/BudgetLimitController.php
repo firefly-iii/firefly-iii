@@ -165,7 +165,7 @@ class BudgetLimitController extends Controller
         $data   = $request->getAll();
         $budget = $this->repository->findNull($data['budget_id']);
         if (null === $budget) {
-            throw new FireflyException(trans('error_unknown_budget'));
+            throw new FireflyException(trans('api.error_unknown_budget'));
         }
         $data['budget'] = $budget;
         $budgetLimit    = $this->blRepository->storeBudgetLimit($data);

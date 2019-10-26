@@ -57,7 +57,7 @@ class ConfigurationController extends Controller
                 $admin = auth()->user();
 
                 if (!$this->repository->hasRole($admin, 'owner')) {
-                    throw new FireflyException(trans('error_no_access')); // @codeCoverageIgnore
+                    throw new FireflyException(trans('api.error_no_access')); // @codeCoverageIgnore
                 }
 
                 return $next($request);
