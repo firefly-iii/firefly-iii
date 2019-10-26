@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.8.1.8 (API 0.10.5)] - 2019-10-26
+
+### Fixed
+- [Issue 2773](https://github.com/firefly-iii/firefly-iii/issues/2773) Error when importing transactions.
+
 ## [4.8.1.7 (API 0.10.5)] - 2019-10-26
 
 ### Fixed
