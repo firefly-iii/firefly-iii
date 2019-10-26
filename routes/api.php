@@ -342,6 +342,7 @@ Route::group(
         // Attachment API routes:
         Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
         Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
+        Route::get('transfers', ['uses' => 'TransferController@search', 'as' => 'transfers']);
     }
 );
 
