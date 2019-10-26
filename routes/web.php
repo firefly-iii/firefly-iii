@@ -1080,7 +1080,7 @@ Route::group(
 
     // check for updates?
     Route::get('update-check', ['uses' => 'UpdateController@index', 'as' => 'update-check']);
-    Route::post('update-check/manual', ['uses' => 'UpdateController@updateCheck', 'as' => 'update-check.manual']);
+    Route::any('update-check/manual', ['uses' => 'UpdateController@updateCheck', 'as' => 'update-check.manual']);
     Route::post('update-check', ['uses' => 'UpdateController@post', 'as' => 'update-check.post']);
 
     // user manager

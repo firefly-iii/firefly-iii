@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -78,8 +79,15 @@ class VersionCheckEventHandler
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
+        try {
+            $latestRelease = $this->getLatestRelease();
+        } catch (FireflyException $e) {
+            Log::error($e);
+            session()->flash('error', (string)trans('firefly.update_check_error'));
 
-        $latestRelease = $this->getLatestRelease();
+            // softfail.
+            return;
+        }
         $versionCheck  = $this->versionCheck($latestRelease);
         $resultString  = $this->parseResult($versionCheck, $latestRelease);
         if (0 !== $versionCheck && '' !== $resultString) {
