@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Er is op zijn minst één herhaling nodig.',
     'require_repeat_until'           => 'Je moet een aantal herhalingen opgeven, of een einddatum (repeat_until). Niet beide.',
     'require_currency_info'          => 'De inhoud van dit veld is ongeldig zonder valutagegevens.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'De inhoud van dit veld is ongeldig zonder bedrag in vreemde valuta.',
     'equal_description'              => 'Transactiebeschrijving mag niet gelijk zijn aan globale beschrijving.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',

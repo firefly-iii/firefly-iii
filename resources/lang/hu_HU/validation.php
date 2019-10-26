@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Legalább egy ismétlés szükséges.',
     'require_repeat_until'           => 'Legalább egy ismétlésszám vagy egy végdátum (repeat_until) kötelező. Csak az egyik.',
     'require_currency_info'          => 'Ennek a mezőnek a tartalma érvénytelen pénznem információ nélkül.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'A tranzakció leírása nem egyezhet meg a globális leírással.',
     'file_invalid_mime'              => '":name" fájl ":mime" típusú ami nem lehet új feltöltés.',

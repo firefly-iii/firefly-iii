@@ -1,6 +1,6 @@
 <?php
 /**
- * GenericSearchInterface.php
+ * DuplicateTransactionException.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,19 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Search;
-
-
-use Illuminate\Support\Collection;
+namespace FireflyIII\Exceptions;
+use Exception;
 
 /**
- * Interface GenericSearchInterface
+ * Class DuplicateTransactionException
  */
-interface GenericSearchInterface
+class DuplicateTransactionException extends Exception
 {
-    /**
-     * @return Collection
-     */
-    public function search(): Collection;
 
 }

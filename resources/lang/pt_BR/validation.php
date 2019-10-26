@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Precisa de ao menos uma repetição.',
     'require_repeat_until'           => 'É necessário ou um número de repetições ou uma data de término (repetir até). Não ambos.',
     'require_currency_info'          => 'O conteúdo deste campo é inválido sem informações de moeda.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'O conteúdo deste campo é inválido sem a informação de moeda estrangeira.',
     'equal_description'              => 'A descrição da transação não pode ser igual à descrição global.',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',

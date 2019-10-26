@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'En az bir tekrarı gerekir.',
     'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeat_until). Not both.',
     'require_currency_info'          => 'Bu alanın içeriği para birimi bilgileri geçersiz.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'İşlem açıklaması genel açıklama eşit değildir.',
     'file_invalid_mime'              => '":name" dosyası ":mime" türünde olup yeni bir yükleme olarak kabul edilemez.',

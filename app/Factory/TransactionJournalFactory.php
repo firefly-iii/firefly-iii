@@ -26,10 +26,12 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -72,6 +74,8 @@ class TransactionJournalFactory
     private $typeRepository;
     /** @var User The user */
     private $user;
+    /** @var bool */
+    private $errorOnHash;
 
     /**
      * Constructor.
@@ -81,7 +85,8 @@ class TransactionJournalFactory
      */
     public function __construct()
     {
-        $this->fields = [
+        $this->errorOnHash = false;
+        $this->fields      = [
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
             'sepa_db', 'sepa_country', 'sepa_ep',
@@ -119,6 +124,7 @@ class TransactionJournalFactory
      * @param array $data
      *
      * @return Collection
+     * @throws DuplicateTransactionException
      */
     public function create(array $data): Collection
     {
@@ -193,10 +199,14 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return TransactionJournal|null
+     * @throws Exception
+     * @throws DuplicateTransactionException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
         $row['import_hash_v2'] = $this->hashArray($row);
+
+        $this->errorIfDuplicate($row['import_hash_v2']);
 
         /** Some basic fields */
         $type            = $this->typeRepository->findTransactionType(null, $row['type']);
@@ -377,6 +387,30 @@ class TransactionJournalFactory
     }
 
     /**
+     * If this transaction already exists, throw an error.
+     *
+     * @param string $hash
+     *
+     * @throws DuplicateTransactionException
+     */
+    private function errorIfDuplicate(string $hash): void
+    {
+        if (false === $this->errorOnHash) {
+            return;
+        }
+        $result = null;
+        if ($this->errorOnHash) {
+            /** @var TransactionJournalMeta $result */
+            $result = TransactionJournalMeta::where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+                                            ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
+                                            ->first();
+        }
+        if (null !== $result) {
+            throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $result->transactionJournal->transaction_group_id));
+        }
+    }
+
+    /**
      * @param TransactionCurrency|null $currency
      * @param Account                  $account
      *
@@ -485,4 +519,14 @@ class TransactionJournalFactory
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore
         }
     }
+
+    /**
+     * @param bool $errorOnHash
+     */
+    public function setErrorOnHash(bool $errorOnHash): void
+    {
+        $this->errorOnHash = $errorOnHash;
+    }
+
+
 }

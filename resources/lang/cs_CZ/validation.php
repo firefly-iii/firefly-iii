@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Potřebujete alespoň jedno opakování.',
     'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeat_until). Not both.',
     'require_currency_info'          => 'Obsah tohoto pole je neplatný bez informace o měně.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Popis transakce nesmí být stejný jako globální popis.',
     'file_invalid_mime'              => 'Soubor ":name" je typu ":mime", který není schválen pro nahrání.',

@@ -1,6 +1,6 @@
 <?php
 /**
- * GenericSearchInterface.php
+ * TransferRequest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,19 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Search;
+namespace FireflyIII\Api\V1\Requests\Search;
 
 
-use Illuminate\Support\Collection;
+use FireflyIII\Api\V1\Requests\Request;
+use FireflyIII\Rules\IsTransferAccount;
 
 /**
- * Interface GenericSearchInterface
+ * Class TransferRequest
  */
-interface GenericSearchInterface
+class TransferRequest extends Request
 {
     /**
-     * @return Collection
+     * Authorize logged in users.
+     *
+     * @return bool
      */
-    public function search(): Collection;
+    public function authorize(): bool
+    {
+        // Only allow authenticated users
+        return auth()->check();
+    }
+
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'source'      => ['required', new IsTransferAccount],
+            'destination' => ['required', new IsTransferAccount],
+            'amount'      => 'required|numeric|more:0',
+            'description' => 'required|min:1',
+            'date'        => 'required|date',
+        ];
+    }
 
 }

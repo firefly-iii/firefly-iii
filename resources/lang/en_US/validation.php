@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Need at least one repetition.',
     'require_repeat_until'           => 'Require either a number of repetitions, or an end date (repeat_until). Not both.',
     'require_currency_info'          => 'The content of this field is invalid without currency information.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Transaction description should not equal global description.',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
