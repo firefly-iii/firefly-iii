@@ -38,6 +38,7 @@ return [
     'match'                       => 'Találatok',
     'strict'                      => 'Szigorú mód',
     'repeat_freq'                 => 'Ismétlődések',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Pénznem',
     'currency_id'                 => 'Pénznem',
     'transaction_currency_id'     => 'Pénznem',

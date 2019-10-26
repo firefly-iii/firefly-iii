@@ -228,6 +228,11 @@ return [
     'update_current_version_alert'               => 'Έχετε την έκδοση v:version, που είναι η τελευταία διαθέσιμη.',
     'update_newer_version_alert'                 => 'Έχετε την έκδοση v:your_version, που είναι νεότερη από την τελευταία έκδοση, v:new_version.',
     'update_check_error'                         => 'Ένα σφάλμα παρουσιάστηκε κατά τον έλεγχο ενημερώσεων. Παρακαλώ δείτε τα αρχεία καταγραφής.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Αναζήτηση',

@@ -38,6 +38,7 @@ return [
     'match'                       => 'Reagiert auf',
     'strict'                      => 'Strenger Modus',
     'repeat_freq'                 => 'Wiederholungen',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Währung',
     'currency_id'                 => 'Währung',
     'transaction_currency_id'     => 'Währung',

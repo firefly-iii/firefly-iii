@@ -41,4 +41,5 @@ return [
     'error_fire_cronjob'                 => 'Could not fire recurring cron job.',
     'error_no_rules_in_rule_group'       => 'No rules in this rule group.',
     'error_source_or_dest_null'          => 'Source or destination is NULL.'
+
 ];

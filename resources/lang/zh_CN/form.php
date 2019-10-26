@@ -38,6 +38,7 @@ return [
     'match'                       => '配对于',
     'strict'                      => '精确模式',
     'repeat_freq'                 => '重复',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => '货币',
     'currency_id'                 => '货币',
     'transaction_currency_id'     => '货币',

@@ -38,6 +38,7 @@ return [
     'match'                       => 'Dopasowanie',
     'strict'                      => 'Tryb ścisły',
     'repeat_freq'                 => 'Powtarza się',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Waluta',
     'currency_id'                 => 'Waluta',
     'transaction_currency_id'     => 'Waluta',

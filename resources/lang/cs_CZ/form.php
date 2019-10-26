@@ -38,6 +38,7 @@ return [
     'match'                       => 'Matches on',
     'strict'                      => 'Striktní režim',
     'repeat_freq'                 => 'Repeats',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Měna',
     'currency_id'                 => 'Měna',
     'transaction_currency_id'     => 'Měna',

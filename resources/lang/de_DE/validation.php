@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'Mindestens eine Wiederholung erforderlich.',
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
-    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
+    'not_transfer_account'           => 'Dieses Konto ist kein Konto, welches für Buchungen genutzt werden kann.',
     'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Fremdbetragsangaben ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',

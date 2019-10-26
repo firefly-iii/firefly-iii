@@ -228,6 +228,11 @@ return [
     'update_current_version_alert'               => 'A jelenlegi verzió v:version, ez egyben a legfrissebb elérhető verzió is.',
     'update_newer_version_alert'                 => 'A jelenlegi verzió v:your_version, amely újabb, mint a legfrissebb kiadott verzió, ami a v:new_version.',
     'update_check_error'                         => 'Hiba történt a frissítések ellenőrzése során. További információ a naplófájlokban található.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Keresés',

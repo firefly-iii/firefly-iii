@@ -228,6 +228,11 @@ return [
     'update_current_version_alert'               => 'Używasz wersji :version, która jest najnowszą dostępną wersją.',
     'update_newer_version_alert'                 => 'Używasz wersji :your_version, która jest nowsza niż najnowsza wersja, :new_version.',
     'update_check_error'                         => 'Wystąpił błąd podczas sprawdzania aktualizacji. Przejrzyj pliki dziennika.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Szukaj',

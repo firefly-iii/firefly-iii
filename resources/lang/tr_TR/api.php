@@ -39,6 +39,7 @@ return [
     'error_owner_role_needed'            => 'You need the "owner"-role to do this.',
     'error_store_new_piggybank'          => 'Could not store new piggy bank.',
     'error_fire_cronjob'                 => 'Could not fire recurring cron job.',
-    'error_no_rules_in_rule_group'       => 'No rules in this rule group.',
-    'error_source_or_dest_null'          => 'Source or destination is NULL.'
+    'error_no_rules_in_rule_group' => 'No rules in this rule group.',
+    'error_source_or_dest_null' => 'Source or destination is NULL.'
+
 ];

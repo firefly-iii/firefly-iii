@@ -228,6 +228,11 @@ return [
     'update_current_version_alert'               => '您现正运行 :version 版，系最新可用的版本。',
     'update_newer_version_alert'                 => '您目前运行 :your_version 版，比最新释出 :new_version 版还新。',
     'update_check_error'                         => '检查更新时发生一个错误，请检阅日志档。',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => '搜寻',
