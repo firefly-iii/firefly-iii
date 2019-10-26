@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.1.6 (API 0.10.5)] - 2019-10-26
+
+### Fixed
+- Error when creating transactions from the index of Firefly III.
+
+### API
+- Firefly III can filter duplicate transactions.
+- New endpoint that can search for specific transfers.
+
 ## [4.8.1.6 (API 0.10.4)] - 2019-10-25
 
 ### Fixed
