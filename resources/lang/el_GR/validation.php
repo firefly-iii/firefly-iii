@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Απαιτείται τουλάχιστον μία επανάληψη.',
     'require_repeat_until'           => 'Απαιτείται είτε ένας αριθμός επαναλήψεων, ή μία ημερομηνία λήξης (repeat_until). Όχι και τα δύο.',
     'require_currency_info'          => 'Το περιεχόμενο αυτού του πεδίου δεν είναι έγκυρη χωρίς νομισματικές πληροφορίες.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'Το περιεχόμενο αυτού του πεδίου δεν είναι έγκυρο χωρίς πληροφορίες ετερόχθονος ποσού.',
     'equal_description'              => 'Η περιγραφή της συναλλαγής δεν πρέπει να ισούται με καθολική περιγραφή.',
     'file_invalid_mime'              => 'Το αρχείο ":name" είναι τύπου ":mime" που δεν είναι αποδεκτός ως νέας μεταφόρτωσης.',

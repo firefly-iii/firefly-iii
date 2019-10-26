@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => '至少需要一次重复。',
     'require_repeat_until'           => '仅需重复次数或结束日期 (repeat_until) 即可，不需两者均备。',
     'require_currency_info'          => '无货币资讯，此栏位内容无效。',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => '交易描述不应等同全域描述。',
     'file_invalid_mime'              => '档案 ":name" 的类型为 ":mime"，系不被允许上载的类型。',

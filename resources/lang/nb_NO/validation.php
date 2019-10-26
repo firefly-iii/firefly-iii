@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Trenger minst en gjentagelse.',
     'require_repeat_until'           => 'Krever enten et antall repetisjoner eller en slutt dato (gjentas til). Ikke begge.',
     'require_currency_info'          => 'Innholdet i dette feltet er ugyldig uten valutainformasjon.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Transaksjonsbeskrivelsen bør ikke være lik global beskrivelse.',
     'file_invalid_mime'              => 'Kan ikke akseptere fil ":name" av typen ":mime" for opplasting.',

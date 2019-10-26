@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Minimal harus ada satu pengulangan.',
     'require_repeat_until'           => 'Dibutuhkan hanya sebuah angka pengulangan, atau tanggal akhir (repeat_until). Bukan keduanya.',
     'require_currency_info'          => 'Isi dalam bidang ini tidak valid jika tidak disertai informasi mata uang.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Deskripsi transaksi harus berbeda dari deskripsi umum.',
     'file_invalid_mime'              => 'File ":name" adalah tipe ":mime" yang tidak diterima sebagai upload baru.',

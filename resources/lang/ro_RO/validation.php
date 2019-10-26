@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => 'Aveți nevoie de cel puțin o repetare.',
     'require_repeat_until'           => 'Solicitați fie un număr de repetări, fie o dată de încheiere (repeat_until). Nu amândouă.',
     'require_currency_info'          => 'Conținutul acestui câmp este nevalid fără informații despre monedă.',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Descrierea tranzacției nu trebuie să fie egală cu descrierea globală.',
     'file_invalid_mime'              => 'Fișierul ":name" este de tip ":mime" și nu este acceptat ca o încărcare nouă.',

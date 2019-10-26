@@ -255,7 +255,7 @@ return [
 
     'withdrawal_destination_id' => 'Konto docelowe',
     'deposit_source_id'         => 'Konto źródłowe',
-    'expected_on'               => 'Expected on',
-    'paid'                      => 'Paid',
+    'expected_on'               => 'Oczekiwany',
+    'paid'                      => 'Zapłacone',
 
 ];

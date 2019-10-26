@@ -45,6 +45,7 @@ return [
     'at_least_one_repetition'        => '至少需要一次重複。',
     'require_repeat_until'           => '要嘛重複次數，要嘛結束日期 (repeat_until)，須二擇其一。',
     'require_currency_info'          => '此欄位內容須要貨幣資訊。',
+    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => '此欄位內容須要外幣資訊。',
     'equal_description'              => '交易描述不應等同全域描述。',
     'file_invalid_mime'              => '檔案 ":name" 類型為 ":mime"，不允許上載。',
