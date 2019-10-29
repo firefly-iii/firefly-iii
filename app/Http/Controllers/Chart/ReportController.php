@@ -174,9 +174,9 @@ class ReportController extends Controller
             $data[$currencyId]          = $data[$currencyId] ?? [
                     'currency_id'             => $currencyId,
                     'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
                     'currency_name'           => $journal['currency_name'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'currency_decimal_places' => (int)$journal['currency_decimal_places'],
                 ];
             $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
                     'period' => $period,
@@ -218,7 +218,6 @@ class ReportController extends Controller
             // loop all possible periods between $start and $end
             $currentStart = clone $start;
             while ($currentStart <= $end) {
-                $currentEnd                 = app('navigation')->endOfPeriod($currentStart, $preferredRange);
                 $key                        = $currentStart->format($format);
                 $title                      = $currentStart->formatLocalized($titleFormat);
                 $income['entries'][$title]  = round($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
