@@ -42,7 +42,7 @@ class UpdateRequest implements UpdateRequestInterface
      */
     public function getVersion(string $channel): array
     {
-        $uri = 'https://version.firefly-iii.org/index.json';
+        $uri = config('firefly.update_endpoint');
         Log::debug(sprintf('Going to call %s', $uri));
         try {
             $client = new Client();

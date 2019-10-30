@@ -116,6 +116,8 @@ class UpdateController extends Controller
         $latestRelease = '1.0';
         $resultString  = '';
         $versionCheck  = -2;
+        $channel       = app('fireflyconfig')->get('update_channel', 'stable')->data;
+
         try {
             $latestRelease = $this->getLatestRelease();
         } catch (FireflyException $e) {
@@ -143,6 +145,11 @@ class UpdateController extends Controller
         }
         app('fireflyconfig')->set('last_update_check', time());
 
-        return response()->json(['result' => $resultString]);
+        return response()->json(
+            [
+                'result'  => $resultString,
+                'channel' => $channel,
+            ]
+        );
     }
 }

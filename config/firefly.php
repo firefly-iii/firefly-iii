@@ -145,6 +145,7 @@ return [
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',

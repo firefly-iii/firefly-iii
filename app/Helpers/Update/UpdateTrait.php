@@ -53,8 +53,8 @@ trait UpdateTrait
     /**
      * Parses the version check result in a human readable sentence.
      *
-     * @param int    $versionCheck
-     * @param string $version
+     * @param int   $versionCheck
+     * @param array $information
      *
      * @return string
      */
@@ -76,6 +76,16 @@ trait UpdateTrait
                     'date'         => $carbon->formatLocalized($monthAndDayFormat),
                 ]
             );
+            // append warning if beta or alpha.
+            $isBeta = $information['is_beta'] ?? false;
+            if (true === $isBeta) {
+                $return = sprintf('%s %s', $return, trans('firefly.update_version_beta'));
+            }
+
+            $isAlpha = $information['is_alpha'] ?? false;
+            if (true === $isAlpha) {
+                $return = sprintf('%s %s', $return, trans('firefly.update_version_alpha'));
+            }
         }
 
         if (0 === $versionCheck) {
