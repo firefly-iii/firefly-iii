@@ -152,18 +152,15 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request): JsonResponse
     {
         $category = $this->repository->store($request->getAll());
-        if (null !== $category) {
-            $manager = $this->getManager();
+        $manager = $this->getManager();
 
-            /** @var CategoryTransformer $transformer */
-            $transformer = app(CategoryTransformer::class);
-            $transformer->setParameters($this->parameters);
+        /** @var CategoryTransformer $transformer */
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-            $resource = new Item($category, $transformer, 'categories');
+        $resource = new Item($category, $transformer, 'categories');
 
-            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-        }
-        throw new FireflyException(trans('api.error_store_new_category')); // @codeCoverageIgnore
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

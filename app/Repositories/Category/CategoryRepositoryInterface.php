@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -117,7 +118,7 @@ interface CategoryRepositoryInterface
 
     /**
      * @param array $data
-     *
+     * @throws FireflyException
      * @return Category
      */
     public function store(array $data): Category;

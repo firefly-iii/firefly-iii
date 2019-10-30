@@ -98,15 +98,15 @@ class AttachmentController extends Controller
     public function download(Attachment $attachment): LaravelResponse
     {
         if (false === $attachment->uploaded) {
-            throw new FireflyException(trans('api.error_no_upload'));
+            throw new FireflyException('200000: File has not been uploaded (yet).');
         }
         if (0 === $attachment->size) {
-            throw new FireflyException(trans('api.error_no_upload'));
+            throw new FireflyException('200000: File has not been uploaded (yet).');
         }
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);
             if ('' === $content) {
-                throw new FireflyException(trans('api.error_no_upload'));
+                throw new FireflyException('200002: File is empty (zero bytes).');
             }
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
@@ -125,7 +125,7 @@ class AttachmentController extends Controller
 
             return $response;
         }
-        throw new FireflyException(trans('api.error_file_lost'));
+        throw new FireflyException('200003: File does not exist.');
     }
 
     /**

@@ -187,19 +187,16 @@ class BudgetController extends Controller
      */
     public function store(BudgetRequest $request): JsonResponse
     {
-        $budget = $this->repository->store($request->getAll());
-        if (null !== $budget) {
-            $manager = $this->getManager();
+        $budget  = $this->repository->store($request->getAll());
+        $manager = $this->getManager();
 
-            /** @var BudgetTransformer $transformer */
-            $transformer = app(BudgetTransformer::class);
-            $transformer->setParameters($this->parameters);
+        /** @var BudgetTransformer $transformer */
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-            $resource = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budget, $transformer, 'budgets');
 
-            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-        }
-        throw new FireflyException(trans('api.error_store_budget')); // @codeCoverageIgnore
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

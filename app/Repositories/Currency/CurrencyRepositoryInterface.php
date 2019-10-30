@@ -234,9 +234,9 @@ interface CurrencyRepositoryInterface
     /**
      * @param array $data
      *
-     * @return TransactionCurrency|null
+     * @return TransactionCurrency
      */
-    public function store(array $data): ?TransactionCurrency;
+    public function store(array $data): TransactionCurrency;
 
     /**
      * @param TransactionCurrency $currency

@@ -313,10 +313,10 @@ class CurrencyController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
-            throw new FireflyException(trans('api.error_no_access_ownership')); // @codeCoverageIgnore
+            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
         }
         if ($this->repository->currencyInUse($currency)) {
-            throw new FireflyException(trans('api.error_no_access_currency_in_use')); // @codeCoverageIgnore
+            throw new FireflyException('200006: Currency in use.'); // @codeCoverageIgnore
         }
         $this->repository->destroy($currency);
 
@@ -574,26 +574,21 @@ class CurrencyController extends Controller
     public function store(CurrencyRequest $request): JsonResponse
     {
         $currency = $this->repository->store($request->getAll());
-
-        if (null !== $currency) {
-            if (true === $request->boolean('default')) {
-                app('preferences')->set('currencyPreference', $currency->code);
-                app('preferences')->mark();
-            }
-            $manager         = $this->getManager();
-            $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-            $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-            /** @var CurrencyTransformer $transformer */
-            $transformer = app(CurrencyTransformer::class);
-            $transformer->setParameters($this->parameters);
-
-            $resource = new Item($currency, $transformer, 'currencies');
-
-            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        if (true === $request->boolean('default')) {
+            app('preferences')->set('currencyPreference', $currency->code);
+            app('preferences')->mark();
         }
-        throw new FireflyException(trans('api.error_store_new_currency')); // @codeCoverageIgnore
+        $manager         = $this->getManager();
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
+        $this->parameters->set('defaultCurrency', $defaultCurrency);
 
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

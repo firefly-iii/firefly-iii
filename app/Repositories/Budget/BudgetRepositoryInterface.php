@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -132,6 +133,7 @@ interface BudgetRepositoryInterface
      * @param array $data
      *
      * @return Budget
+     * @throws FireflyException
      */
     public function store(array $data): Budget;
 

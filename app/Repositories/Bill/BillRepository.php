@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
@@ -662,9 +663,10 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Bill|null
+     * @return Bill
+     * @throws FireflyException
      */
-    public function store(array $data): ?Bill
+    public function store(array $data): Bill
     {
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
