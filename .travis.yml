@@ -14,13 +14,14 @@ jobs:
   include:
     - dist: xenial
       arch: amd64
-      env: ARCH_VERS=amd64 VERSION=4.8.1.8
+      env: ARCH=amd64 VERSION=4.8.1.8
     - dist: xenial
       arch: arm64
-      env: ARCH_VERS=arm64 VERSION=4.8.1.8
+      env: ARCH=arm64 VERSION=4.8.1.8
 
 script:
   # - .deploy/docker/travis.sh
   # enable experimental features.
   - echo $TRAVIS_DIST
   - echo $ARCH_VERS
+  - .deploy/docker/build-$ARCH.sh
