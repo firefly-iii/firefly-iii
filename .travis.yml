@@ -23,4 +23,4 @@ script:
   # - .deploy/docker/travis.sh
   # enable experimental features.
   - echo $TRAVIS_DIST
-  - echo $ARM_VERS
+  - echo $ARCH_VERS
