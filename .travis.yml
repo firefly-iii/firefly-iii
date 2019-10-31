@@ -1,13 +1,5 @@
 sudo: required
 language: bash
-env:
-  - VERSION=4.8.1.8
-
-dist: xenial
-
-arch:
-  - amd64
-  - arm64
 
 # safelist
 branches:
@@ -20,10 +12,12 @@ services:
 
 jobs:
   include:
-    - os: linux
-      env: ARCH_VERS=amd64
-    - os: linux
-      env: ARCH_VERS=arm64
+    - dist: xenial
+      arch: amd64
+      env: ARCH_VERS=amd64 VERSION=4.8.1.8
+    - dist: xenial
+      arch: arm64
+      env: ARCH_VERS=arm64 VERSION=4.8.1.8
 
 script:
   # - .deploy/docker/travis.sh
