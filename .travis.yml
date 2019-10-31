@@ -5,6 +5,10 @@ env:
 
 dist: xenial
 
+arch:
+  - amd64
+  - arm64
+
 # safelist
 branches:
   only:
@@ -16,6 +20,7 @@ services:
 
 script:
   # enable experimental features.
+  - echo $TRAVIS_DIST
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
   - mkdir $HOME/.docker
   - touch $HOME/.docker/config.json
