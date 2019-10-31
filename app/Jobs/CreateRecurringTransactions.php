@@ -218,6 +218,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $return       = [];
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
+
             $single   = [
                 'type'                  => strtolower($recurrence->transactionType->type),
                 'date'                  => $date,
@@ -242,8 +243,8 @@ class CreateRecurringTransactions implements ShouldQueue
                 'recurrence_id'         => (int)$recurrence->id,
                 'order'                 => $index,
                 'notes'                 => (string)trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
-                'tags'                  => $this->repository->getTags($recurrence),
-                'piggy_bank_id'         => null,
+                'tags'                  => $this->repository->getTags($transaction),
+                'piggy_bank_id'         => $this->repository->getPiggyBank($transaction),
                 'piggy_bank_name'       => null,
                 'bill_id'               => null,
                 'bill_name'             => null,
@@ -324,7 +325,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // link to piggy:
-        $this->linkGroupToPiggies($recurrence, $group);
+        //$this->linkGroupToPiggies($recurrence, $group);
 
         // trigger event:
         event(new StoredTransactionGroup($group, $recurrence->apply_rules));

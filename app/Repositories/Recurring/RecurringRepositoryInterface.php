@@ -120,19 +120,19 @@ interface RecurringRepositoryInterface
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Recurrence $recurrence
-     * @return PiggyBank|null
+     * @param RecurrenceTransaction $transaction
+     * @return int|null
      */
-    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank;
+    public function getPiggyBank(RecurrenceTransaction $transaction): ?int;
 
     /**
      * Get the tags from the recurring transaction.
      *
-     * @param Recurrence $recurrence
+     * @param RecurrenceTransaction $transaction
      *
      * @return array
      */
-    public function getTags(Recurrence $recurrence): array;
+    public function getTags(RecurrenceTransaction $transaction): array;
 
     /**
      * @param Recurrence $recurrence
