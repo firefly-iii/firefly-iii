@@ -19,6 +19,7 @@ services:
   - docker
 
 script:
+  - .deploy/docker/travis.sh
   # enable experimental features.
   - echo $TRAVIS_DIST
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
