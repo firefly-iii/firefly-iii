@@ -61,10 +61,10 @@ class UpdateRequest implements UpdateRequestInterface
             throw new FireflyException('Invalid JSON in server response.');
         }
 
-        if (!isset($json[$channel])) {
+        if (!isset($json['firefly_iii'][$channel])) {
             throw new FireflyException(sprintf('Unknown update channel "%s"', $channel));
         }
 
-        return $json[$channel];
+        return $json['firefly_iii'][$channel];
     }
 }
