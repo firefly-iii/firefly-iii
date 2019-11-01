@@ -30,9 +30,6 @@ curl -L -o qemu-arm-static.tar.gz https://github.com/multiarch/qemu-user-static/
 tar xzf qemu-arm-static.tar.gz && \
 popd
 
-# build image
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     echo "Build develop arm"
     docker build --tag jc5x/firefly-iii:develop-arm --file Dockerfile.arm .

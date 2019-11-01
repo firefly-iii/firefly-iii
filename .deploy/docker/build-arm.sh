@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# file is currently unused.
+
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 # get qemu-arm-static binary

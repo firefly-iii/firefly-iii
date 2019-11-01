@@ -20,9 +20,7 @@ jobs:
       env: ARCH=arm64 VERSION=4.8.1.8
 
 script:
-  # - .deploy/docker/travis.sh
+  - .deploy/docker/travis.sh
   # enable experimental features.
   - echo $TRAVIS_DIST
-  - echo $ARCH_VERS
-  - .deploy/docker/build-$ARCH.sh
-  - docker build -t jc5x/firefly-iii:develop-arm64 -f Dockerfile.arm64 .
+  - echo $ARCH

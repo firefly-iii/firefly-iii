@@ -10,6 +10,5 @@ docker version -f '{{.Server.Experimental}}'
 docker version
 
 # build everything
-.deploy/docker/build-amd64.sh
-.deploy/docker/build-arm.sh
+.deploy/docker/build-$ARCH.sh
 .deploy/docker/manifest.sh
