@@ -23,7 +23,6 @@ jobs:
       env: ARCH=arm64 VERSION=4.8.1.8
 
 script:
-  - .deploy/docker/travis.sh
-  # enable experimental features.
   - echo $TRAVIS_DIST
   - echo $ARCH
+  - .deploy/docker/travis.sh

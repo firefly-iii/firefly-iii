@@ -21,13 +21,13 @@ RUN a2enmod rewrite && a2enmod ssl && \
     sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
 
 # copy ca certs to correct location
-COPY ./cacert.pem /usr/local/ssl/cert.pem
+COPY ./.deploy/docker/local-build/cacert.pem /usr/local/ssl/cert.pem
 
 # copy Apache config to correct spot.
-COPY ./apache2.conf /etc/apache2/apache2.conf
+COPY ./.deploy/docker/local-build/apache2.conf /etc/apache2/apache2.conf
 
 # Enable default site (Firefly III)
-COPY ./apache-firefly-iii.conf /etc/apache2/sites-available/000-default.conf
+COPY ./.deploy/docker/local-build/apache-firefly-iii.conf /etc/apache2/sites-available/000-default.conf
 
 # See also: https://github.com/JC5/firefly-iii-base-image
 
