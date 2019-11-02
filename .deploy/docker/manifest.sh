@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+mkdir $HOME/.docker
+touch $HOME/.docker/config.json
+echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+sudo service docker restart
+docker version -f '{{.Server.Experimental}}'
+docker version
+
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
 
