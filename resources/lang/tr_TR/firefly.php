@@ -226,6 +226,8 @@ return [
     'admin_update_check_now_explain'             => 'Düğmeye basarsanız, Firefly III geçerli sürümünüzün en son olup olmadığını görür.',
     'check_for_updates_button'                   => 'Kontrol Et!',
     'update_new_version_alert'                   => 'Firefly III\'ün yeni bir sürümü mevcut. v:your_version  çalıştırıyorsunuz, en son sürüm v:new_version  :date. tarihinde yayınlandı.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Mevcut en yeni sürümü v:version, kullanıyorsunuz.',
     'update_newer_version_alert'                 => 'En son sürüm olan v:new_version\'dan daha yeni olan v:your_version kullanıyorsunuz.
 ',

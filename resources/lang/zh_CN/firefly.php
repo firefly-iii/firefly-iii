@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => '如果您按下此按钮，Firefly III 将会检查您现在的版本是否为最新版。',
     'check_for_updates_button'                   => '马上检查！',
     'update_new_version_alert'                   => '较新版本的 Firefly III 已可使用，您目前为 :your_version 版，最新版本为 :new_version 版，于 :date 释出。',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => '您现正运行 :version 版，系最新可用的版本。',
     'update_newer_version_alert'                 => '您目前运行 :your_version 版，比最新释出 :new_version 版还新。',
     'update_check_error'                         => '检查更新时发生一个错误，请检阅日志档。',

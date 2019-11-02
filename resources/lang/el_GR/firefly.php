@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Εάν πατήσετε αυτό του κουμπί, το Firefly III θα ελέγξει εάν έχετε την τελευταία έκδοση.',
     'check_for_updates_button'                   => 'Έλεγχος τώρα!',
     'update_new_version_alert'                   => 'Μία νέα έκδοση του Firefly III είναι διαθέσιμη. Έχετε την v:your_version, ενώ η τελευταία έκδοση είναι η v:new_version που κυκλοφόρησε στις :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Έχετε την έκδοση v:version, που είναι η τελευταία διαθέσιμη.',
     'update_newer_version_alert'                 => 'Έχετε την έκδοση v:your_version, που είναι νεότερη από την τελευταία έκδοση, v:new_version.',
     'update_check_error'                         => 'Ένα σφάλμα παρουσιάστηκε κατά τον έλεγχο ενημερώσεων. Παρακαλώ δείτε τα αρχεία καταγραφής.',

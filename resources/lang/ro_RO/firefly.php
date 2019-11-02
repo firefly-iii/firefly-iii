@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Dacă apăsați butonul, Firefly III va vedea dacă versiunea curentă este cea mai recentă.',
     'check_for_updates_button'                   => 'Verifică acum!',
     'update_new_version_alert'                   => 'O nouă versiune de Firefly III este disponibilă. Dvs. aveți v:your_version, ultima versiune este v:new_version lansată în data de :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Aveți versiunea v:version, care este ultima disponibilă.',
     'update_newer_version_alert'                 => 'Aveți versiunea v:your_version, care este mai nouă decât cea mai recentă versiune, v:new_version.',
     'update_check_error'                         => 'A apărut o eroare la verificarea actualizărilor. Consultați log-urile.',

@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Hvis du trykker på knappen, vil Firefly III se om din nåværende versjon er den nyeste.',
     'check_for_updates_button'                   => 'Sjekk nå!',
     'update_new_version_alert'                   => 'En ny versjon av Firefly III er tilgjengelig. Du kjører v:your_version, den nyeste versjonen er v:new_version som ble utgitt den :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Du kjører v:version, som er den nyeste tilgjengelige utgivelsen.',
     'update_newer_version_alert'                 => 'Du kjører v:your_version, som er nyere enn den nyeste versjonen, v:new_version.',
     'update_check_error'                         => 'Det oppsto en feil under sjekk av oppdateringer. Vennligst se loggfilene for mer informasjon.',

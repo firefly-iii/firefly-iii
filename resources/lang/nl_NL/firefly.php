@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Als je op de knop drukt, kijkt Firefly III of je huidige versie de nieuwste is.',
     'check_for_updates_button'                   => 'Controleer nu!',
     'update_new_version_alert'                   => 'Er is een nieuwe versie van Firefly III beschikbaar. Je gebruikt v:your_version, de nieuwste versie is v:new_version die werd uitgebracht op :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Je gebruikt v:version, de nieuwste beschikbare versie.',
     'update_newer_version_alert'                 => 'Je gebruikt v:your_version, wat nieuwer is dan de nieuwste versie, v:new_version.',
     'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates. Bekijk de logbestanden.',

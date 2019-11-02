@@ -38,7 +38,7 @@ return [
     'match'                       => 'Ключи для связи',
     'strict'                      => 'Строгий режим',
     'repeat_freq'                 => 'Повторы',
-    'update_channel'              => 'Update channel',
+    'update_channel'              => 'Канал обновлений',
     'journal_currency_id'         => 'Валюта',
     'currency_id'                 => 'Валюта',
     'transaction_currency_id'     => 'Валюта',

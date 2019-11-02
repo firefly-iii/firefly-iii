@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Ha megnyomja a gombot, a Firefly III ellenőrinzi fogja, hogy a legfrissebb változatot használja -e.',
     'check_for_updates_button'                   => 'Ellenőrzés most!',
     'update_new_version_alert'                   => 'A Firefly III új verziója elérhető. A jelenleg használt verzió v:your_version, a legújabb verzió pedig v:new_version, amely megjelent: :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'A jelenlegi verzió v:version, ez egyben a legfrissebb elérhető verzió is.',
     'update_newer_version_alert'                 => 'A jelenlegi verzió v:your_version, amely újabb, mint a legfrissebb kiadott verzió, ami a v:new_version.',
     'update_check_error'                         => 'Hiba történt a frissítések ellenőrzése során. További információ a naplófájlokban található.',

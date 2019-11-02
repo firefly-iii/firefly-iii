@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Stisknutím tohoto tlačítka Firefly III ověří, zda používáte nejnovější verzi.',
     'check_for_updates_button'                   => 'Zkontrolovat nyní!',
     'update_new_version_alert'                   => 'Je k dispozici nová verze Firefly III. Nyní provozujete verzi :your_version, nejnovější verze je :new_version, která byla vydaná :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Provozujete verzi :version, která je nejnovější dostupnou verzí.',
     'update_newer_version_alert'                 => 'Provozujete verzi :your_version, zatímco nejnovější vydání je verze :new_version.',
     'update_check_error'                         => 'Došlo k chybě při zjišťování případných aktualizací. Podívejte se do souborů se záznamem událostí.',

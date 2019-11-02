@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'Необходима как минимум одна транзакция.',
     'require_repeat_until'           => 'Требуется либо несколько повторений, либо конечная дата (repeat_until). Но не оба параметра разом.',
     'require_currency_info'          => 'Содержимое этого поля недействительно без информации о валюте.',
-    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
+    'not_transfer_account'           => 'Этот счёт нельзя использовать для перевода.',
     'require_currency_amount'        => 'Содержимое этого поля недействительно без информации о валюте.',
     'equal_description'              => 'Описание транзакции не должно совпадать с глобальным описанием.',
     'file_invalid_mime'              => 'Файл ":name" имеет тип ":mime". Загрузка файлов такого типа невозможна.',

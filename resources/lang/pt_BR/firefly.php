@@ -225,6 +225,8 @@ return [
     'admin_update_check_now_explain'             => 'Se você pressionar o botão, o Firefly III verá se sua versão atual é a mais recente.',
     'check_for_updates_button'                   => 'Verifique agora!',
     'update_new_version_alert'                   => 'Uma nova versão do Firefly III está disponível. Você está executando v:your_version, a versão mais recente é v:new_version que foi lançada em :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'Você está executando v:version, que é a última versão disponível.',
     'update_newer_version_alert'                 => 'Você está executando v:your_version, que é mais recente que a versão mais recente, v:new_version.',
     'update_check_error'                         => 'Ocorreu um erro durante a verificação de atualizações. Por favor veja os arquivos de log.',
