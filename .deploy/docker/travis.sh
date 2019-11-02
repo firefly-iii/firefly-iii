@@ -11,4 +11,3 @@ docker version
 
 # build everything
 .deploy/docker/build-$ARCH.sh
-.deploy/docker/manifest.sh
