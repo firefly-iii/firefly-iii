@@ -69,6 +69,11 @@ return [
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
+        'docker_out'    => [
+            'driver' => 'single',
+            'path'   => 'php://stdout',
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+        ],
         'daily'     => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
