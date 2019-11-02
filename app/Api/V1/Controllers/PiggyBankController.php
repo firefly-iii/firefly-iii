@@ -181,19 +181,15 @@ class PiggyBankController extends Controller
     public function store(PiggyBankRequest $request): JsonResponse
     {
         $piggyBank = $this->repository->store($request->getAll());
-        if (null !== $piggyBank) {
-            $manager = $this->getManager();
+        $manager = $this->getManager();
 
-            /** @var PiggyBankTransformer $transformer */
-            $transformer = app(PiggyBankTransformer::class);
-            $transformer->setParameters($this->parameters);
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-            $resource = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
 
-            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-        }
-        throw new FireflyException(trans('api.error_store_new_piggybank'));
-
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

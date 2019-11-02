@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -245,9 +246,10 @@ interface PiggyBankRepositoryInterface
      *
      * @param array $data
      *
-     * @return PiggyBank|null
+     * @return PiggyBank
+     * @throws FireflyException
      */
-    public function store(array $data): ?PiggyBank;
+    public function store(array $data): PiggyBank;
 
     /**
      * Update existing piggy bank.

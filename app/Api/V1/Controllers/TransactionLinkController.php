@@ -165,7 +165,7 @@ class TransactionLinkController extends Controller
         $inward  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $outward = $this->journalRepository->findNull($data['outward_id'] ?? 0);
         if (null === $inward || null === $outward) {
-            throw new FireflyException(trans('api.error_source_or_dest_null'));
+            throw new FireflyException('200024: Source or destination does not exist.');
         }
         $data['direction'] = 'inward';
 
@@ -196,7 +196,7 @@ class TransactionLinkController extends Controller
         $data['inward']  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $data['outward'] = $this->journalRepository->findNull($data['outward_id'] ?? 0);
         if (null === $data['inward'] || null === $data['outward']) {
-            throw new FireflyException(trans('api.error_source_or_dest_null'));
+            throw new FireflyException('200024: Source or destination does not exist.');
         }
         $data['direction'] = 'inward';
         $journalLink       = $this->repository->updateLink($journalLink, $data);

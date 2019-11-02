@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
@@ -33,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -556,13 +558,19 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @param array $data
      *
-     * @return PiggyBank|null
+     * @return PiggyBank
+     * @throws FireflyException
      */
-    public function store(array $data): ?PiggyBank
+    public function store(array $data): PiggyBank
     {
         $data['order'] = $this->getMaxOrder() + 1;
+        try {
         /** @var PiggyBank $piggyBank */
         $piggyBank = PiggyBank::create($data);
+        } catch(QueryException $e) {
+            Log::error(sprintf('Could not store piggy bank: %s',$e->getMessage()));
+            throw new FireflyException('400005: Could not store new piggy bank.');
+        }
 
         $this->updateNote($piggyBank, $data['notes']);
 
