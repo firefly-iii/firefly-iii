@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.2 (API 0.10.5)] - 2019-11-03
+
+### Changed
+- Firefly III now comes in three channels: stable, beta and alpha. You can 
+  find the latest version for each channel on [this website](https://version.firefly-iii.org/).
+- To make sure your Docker instance logs everything to `stdout`, make sure 
+  you set the environment variable `LOG_CHANNEL` to `docker_out`. This is 
+  now default behavior for new installations that use the `.env` file to 
+  launch Firefly III (using Docker compose), but if you use environment
+  variables you may have to set this yourself. This is not a mandatory
+  change but will make debugging easier.
+- The Docker image is now also available in AArch64.
+
+### Fixed
+- [Issue 2771](https://github.com/firefly-iii/firefly-iii/issues/2771) Recurring transactions would not hit their piggy bank.
+- [Issue 2774](https://github.com/firefly-iii/firefly-iii/issues/2774) Fixed redirect issues for exotic URL's.
+- [Issue 2780](https://github.com/firefly-iii/firefly-iii/issues/2780) Deleted bugs would still count in the budget overview.
+- [Issue 2783](https://github.com/firefly-iii/firefly-iii/issues/2783) Fixed issue with SQLite and integers.
+- [Issue 2786](https://github.com/firefly-iii/firefly-iii/issues/2786) Fix links to documentation.
 
 ## [4.8.1.8 (API 0.10.5)] - 2019-10-26
 

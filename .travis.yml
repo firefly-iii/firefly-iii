@@ -14,17 +14,17 @@ jobs:
   include:
     - dist: xenial
       arch: amd64
-      env: ARCH=amd64 VERSION=4.8.1.8
+      env: ARCH=amd64 VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: amd64
-      env: ARCH=arm VERSION=4.8.1.8
+      env: ARCH=arm VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: arm64
-      env: ARCH=arm64 VERSION=4.8.1.8
+      env: ARCH=arm64 VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
