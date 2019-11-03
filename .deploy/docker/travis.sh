@@ -11,10 +11,10 @@ sudo service docker restart
 # First build amd64 image:
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-if [$ARCH == "arm"]; then
+if [ $ARCH == "arm" ]; then
     echo "Because architecture is $ARCH running some extra commands."
     docker run --rm --privileged multiarch/qemu-user-static:register --reset
-    
+
     # get qemu-arm-static binary
     mkdir tmp
     pushd tmp && \
