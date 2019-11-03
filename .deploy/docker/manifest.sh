@@ -5,8 +5,6 @@ mkdir $HOME/.docker
 touch $HOME/.docker/config.json
 echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
 sudo service docker restart
-docker version -f '{{.Server.Experimental}}'
-docker version
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 

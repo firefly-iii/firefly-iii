@@ -10,29 +10,25 @@ branches:
 services:
   - docker
 
-env:
-  - VERSION=4.8.2
-  - CHANNEL=stable
-
-
 jobs:
   include:
     - dist: xenial
       arch: amd64
-      env: ARCH=amd64
+      env: ARCH=amd64 CHANNEL=stable VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: amd64
-      env: ARCH=arm
+      env: ARCH=arm CHANNEL=stable VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: arm64
-      env: ARCH=arm64
+      env: ARCH=arm64 CHANNEL=stable VERSION=4.8.2
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: amd64
+      env: CHANNEL=stable VERSION=4.8.2
       stage: manifest
       script: ./.deploy/docker/manifest.sh
