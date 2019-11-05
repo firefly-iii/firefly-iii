@@ -2,17 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.2 (API 0.10.5)] - 2019-11-03
+## [4.8.2-alpha.1 (API 0.10.5)] - 2019-11-03
+
+Normally I won't be detailling alpha versions in the changelog but this is a 
+special one. If your Firefly III installation warned you that this version has 
+been released, please take note that this is a **test** version and may **not** 
+be stable!
 
 ### Changed
 - Firefly III now comes in three channels: stable, beta and alpha. You can 
   find the latest version for each channel on [this website](https://version.firefly-iii.org/).
 - To make sure your Docker instance logs everything to `stdout`, make sure 
-  you set the environment variable `LOG_CHANNEL` to `docker_out`. This is 
-  now default behavior for new installations that use the `.env` file to 
-  launch Firefly III (using Docker compose), but if you use environment
-  variables you may have to set this yourself. This is not a mandatory
-  change but will make debugging easier.
+  you set the environment variable `LOG_CHANNEL` to `docker_out`. This is now 
+  default behavior for new installations that use the `.env` file to launch 
+  Firefly III (using Docker compose), but if you use environment variables 
+  you may have to set this yourself. This is not a mandatory change but will 
+  make debugging easier.
 - The Docker image is now also available in AArch64.
 
 ### Fixed
