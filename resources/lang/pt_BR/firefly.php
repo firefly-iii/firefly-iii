@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => 'O teste foi desencadeado. Verifique a sua caixa de entrada e os arquivos de log.',
 
     'split_transaction_title'               => 'Descrição da transação dividida',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Se você criar uma transação dividida, é necessário haver uma descrição global para todas as partes da transação.',
     'transaction_information'               => 'Informação de transação',
     'you_create_transfer'                   => 'Você está criando uma <strong>transferência</strong>.',

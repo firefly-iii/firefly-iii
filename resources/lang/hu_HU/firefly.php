@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Teszt elindítva. Ellenőrizd a bejövő üzeneteidet és a naplófájlokat.',
 
     'split_transaction_title'               => 'Felosztott tranzakció leírása',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
     'transaction_information'               => 'Tranzakció információ',
     'you_create_transfer'                   => 'Egy <strong>átvezetést</strong> hozol létre.',

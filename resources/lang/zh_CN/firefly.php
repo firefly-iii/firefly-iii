@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
 
     'split_transaction_title'               => '拆分交易的描述',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '如果您创建一个拆分交易，必须有一个全局的交易描述。',
     'transaction_information'               => '交易信息',
     'you_create_transfer'                   => '您正在创建一笔<strong>转账</strong>。',

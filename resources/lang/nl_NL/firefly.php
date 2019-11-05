@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'transaction_information'               => 'Transactieinformatie',
     'you_create_transfer'                   => 'Je maakt een <strong>overschrijving</strong>.',

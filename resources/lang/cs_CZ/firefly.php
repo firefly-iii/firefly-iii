@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Test was triggered. Check your inbox and the log files.',
 
     'split_transaction_title'               => 'Popis rozúčtování',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Pokud vytvoříte rozúčtování, je třeba, aby zde byl celkový popis pro všechna rozúčtování dané transakce.',
     'transaction_information'               => 'Informace o transakci',
     'you_create_transfer'                   => 'Vytváříte <strong>převod</strong>.',

@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Uji dipicu. Periksa kotak masuk dan file log Anda.',
 
     'split_transaction_title'               => 'Description of the split transaction',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
     'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',

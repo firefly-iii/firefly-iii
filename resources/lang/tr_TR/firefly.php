@@ -1286,6 +1286,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'send_test_triggered'              => 'Test tetiklendi. Gelen kutunuzu ve kayıt dosyalarınızı kontrol ediniz.',
 
     'split_transaction_title'               => 'Description of the split transaction',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
     'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',

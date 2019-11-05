@@ -1284,6 +1284,7 @@ return [
     'send_test_triggered'              => '測試已觸發，請檢視您的收件匣與日誌檔。',
 
     'split_transaction_title'               => '拆分交易的描述',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
     'transaction_information'               => '交易資訊',
     'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',
