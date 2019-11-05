@@ -38,6 +38,7 @@ return [
     'match'                       => 'Encuentros en',
     'strict'                      => 'Modo estricto',
     'repeat_freq'                 => 'Repetición',
+    'update_channel'              => 'Canal de actualizaciones',
     'journal_currency_id'         => 'Divisa',
     'currency_id'                 => 'Divisa',
     'transaction_currency_id'     => 'Moneda',

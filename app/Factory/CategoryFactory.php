@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\User;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -62,7 +64,7 @@ class CategoryFactory
      * @param null|string $categoryName
      *
      * @return Category|null
-     *
+     * @throws FireflyException
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
@@ -88,13 +90,17 @@ class CategoryFactory
             if (null !== $category) {
                 return $category;
             }
-
-            return Category::create(
-                [
-                    'user_id' => $this->user->id,
-                    'name'    => $categoryName,
-                ]
-            );
+            try {
+                return Category::create(
+                    [
+                        'user_id' => $this->user->id,
+                        'name'    => $categoryName,
+                    ]
+                );
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                throw new FireflyException('400003: Could not store new category.');
+            }
         }
 
         return null;

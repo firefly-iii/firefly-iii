@@ -10,6 +10,20 @@
 
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
+            <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'admin_update_channel_title'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'admin_update_channel_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.select('update_channel', channelOptions, channelSelected) }}
+                    </div>
+                </div>
+            </div>
+
             {# do update check. #}
             <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
                 <div class="box box-default">

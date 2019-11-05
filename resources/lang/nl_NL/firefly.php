@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Op updates controleren',
     'admin_update_check_now_explain'             => 'Als je op de knop drukt, kijkt Firefly III of je huidige versie de nieuwste is.',
     'check_for_updates_button'                   => 'Controleer nu!',
-    'update_new_version_alert'                   => 'Er is een nieuwe versie van Firefly III beschikbaar. Je gebruikt v:your_version, de nieuwste versie is v:new_version die werd uitgebracht op :date.',
-    'update_current_version_alert'               => 'Je gebruikt v:version, de nieuwste beschikbare versie.',
-    'update_newer_version_alert'                 => 'Je gebruikt v:your_version, wat nieuwer is dan de nieuwste versie, v:new_version.',
+    'update_new_version_alert'                   => 'Er is een nieuwe versie van Firefly III beschikbaar. Je gebruikt :your_version, de nieuwste versie is :new_version die werd uitgebracht op :date.',
+    'update_version_beta'                        => 'Dit is een BETA versie. Er kunnen bugs in zitten.',
+    'update_version_alpha'                       => 'Dit is een ALPHA versie. Er kunnen bugs in zitten.',
+    'update_current_version_alert'               => 'Je gebruikt :version, de nieuwste beschikbare versie.',
+    'update_newer_version_alert'                 => 'Je gebruikt :your_version, wat nieuwer is dan de nieuwste versie, :new_version.',
     'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates. Bekijk de logbestanden.',
+    'admin_update_channel_title'                 => 'Updatekanaal',
+    'admin_update_channel_explain'               => 'Firefly III heeft drie "kanalen" die bepalen of en hoever je voorloopt als het gaat om features, wijzigingen en bugs. Gebruik het "beta"-kanaal als je een avontuurlijke bui hebt en gebruik het "alpha" kanaal als je ook graag met krokodillen zwemt.',
+    'update_channel_stable'                      => 'Stabiel. Zou allemaal goed moeten gaan.',
+    'update_channel_beta'                        => 'Beta. Nieuwe dingen, maar die kunnen stuk zijn.',
+    'update_channel_alpha'                       => 'Alpha. We doen maar wat en jij mag testen.',
 
     // search
     'search'                                     => 'Zoeken',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'transaction_information'               => 'Transactieinformatie',
     'you_create_transfer'                   => 'Je maakt een <strong>overschrijving</strong>.',

@@ -554,6 +554,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $dbQuery = $this->user->accounts()
                               ->where('active', 1)
+                              ->orderBy('accounts.name', 'ASC')
                               ->with(['accountType']);
         if ('' !== $query) {
             $search = sprintf('%%%s%%', $query);

@@ -225,9 +225,16 @@ return [
     'admin_update_check_now_explain'             => 'Если вы нажмете кнопку, Firefly III посмотрит, является ли ваша текущая версия последней.',
     'check_for_updates_button'                   => 'Проверить сейчас!',
     'update_new_version_alert'                   => 'Доступна новая версия Firefly III. Вы используете версию v:your_version, самая свежая версия - v:new_version (выпущена :date).',
+    'update_version_beta'                        => 'Эта версия является БЕТА-версией. Вы можете столкнуться с проблемами.',
+    'update_version_alpha'                       => 'Эта версия является АЛЬФА-версией. Вы можете столкнуться с проблемами.',
     'update_current_version_alert'               => 'Вы используете v:version, которая является последним доступным релизом.',
     'update_newer_version_alert'                 => 'Вы используете версию v:your_version, которая новее последнего релиза (v:new_version).',
     'update_check_error'                         => 'При проверке обновлений произошла ошибка. Просмотрите файлы логов.',
+    'admin_update_channel_title'                 => 'Канал обновлений',
+    'admin_update_channel_explain'               => 'Firefly III может использовать три "канала" обновлений, которые различаются наборами новых функций и ошибок. Используйте "бета"-канал, если вы любите приключения и "альфа", если вам нравится жить с чувством постоянной опасности.',
+    'update_channel_stable'                      => 'Стабильный. Всё должно работать, как вы ожидаете.',
+    'update_channel_beta'                        => 'Бета. Есть новые возможности, но что-нибудь может быть сломано.',
+    'update_channel_alpha'                       => 'Альфа. Код таких версий может быть собран из соплей и палок.',
 
     // search
     'search'                                     => 'Поиск',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Тест был выполнен. Проверьте ваш почтовый ящик и log-файлы.',
 
     'split_transaction_title'               => 'Описание разделённой транзакции',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание дле всех её составляющих.',
     'transaction_information'               => 'Информация о транзакции',
     'you_create_transfer'                   => 'Вы создаёте <strong>перевод</strong>.',

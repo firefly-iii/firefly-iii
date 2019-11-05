@@ -38,6 +38,7 @@ return [
     'match'                       => 'Abbina con',
     'strict'                      => 'Modalità severa',
     'repeat_freq'                 => 'Si ripete',
+    'update_channel'              => 'Canale di aggiornamento',
     'journal_currency_id'         => 'Valuta',
     'currency_id'                 => 'Valuta',
     'transaction_currency_id'     => 'Valuta',

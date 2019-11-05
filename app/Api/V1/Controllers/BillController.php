@@ -211,20 +211,16 @@ class BillController extends Controller
      */
     public function store(BillRequest $request): JsonResponse
     {
-        $bill = $this->repository->store($request->getAll());
-        if (null !== $bill) {
-            $manager = $this->getManager();
+        $bill    = $this->repository->store($request->getAll());
+        $manager = $this->getManager();
 
-            /** @var BillTransformer $transformer */
-            $transformer = app(BillTransformer::class);
-            $transformer->setParameters($this->parameters);
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-            $resource = new Item($bill, $transformer, 'bills');
+        $resource = new Item($bill, $transformer, 'bills');
 
-            return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-        }
-        throw new FireflyException('Could not store new bill.'); // @codeCoverageIgnore
-
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

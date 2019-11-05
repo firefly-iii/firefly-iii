@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'Besoin d\'au moins une répétition.',
     'require_repeat_until'           => 'Besoin d’un certain nombre de répétitions ou d\'une date de fin (repeat_until). Pas les deux.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
-    'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
+    'not_transfer_account'           => 'Ce compte n\'est pas un compte qui peut être utilisé pour les transferts.',
     'require_currency_amount'        => 'Le contenu de ce champ est invalide sans informations sur le montant étranger.',
     'equal_description'              => 'La description de la transaction ne doit pas être identique à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',

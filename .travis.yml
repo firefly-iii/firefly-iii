@@ -1,9 +1,5 @@
 sudo: required
 language: bash
-env:
-  - VERSION=4.8.1.8
-
-dist: xenial
 
 # safelist
 branches:
@@ -14,16 +10,25 @@ branches:
 services:
   - docker
 
-script:
-  # enable experimental features.
-  - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-  - mkdir $HOME/.docker
-  - touch $HOME/.docker/config.json
-  - echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
-  - sudo service docker restart
-  - docker version -f '{{.Server.Experimental}}'
-  - docker version
-  # build everything
-  - .deploy/docker/build-amd64.sh
-  - .deploy/docker/build-arm.sh
-  - .deploy/docker/manifest.sh
+jobs:
+  include:
+    - dist: xenial
+      arch: amd64
+      env: ARCH=amd64 CHANNEL=alpha VERSION=4.8.2-alpha.1
+      stage: build
+      script: ./.deploy/docker/travis.sh
+    - dist: xenial
+      arch: amd64
+      env: ARCH=arm CHANNEL=alpha VERSION=4.8.2-alpha.1
+      stage: build
+      script: ./.deploy/docker/travis.sh
+    - dist: xenial
+      arch: arm64
+      env: ARCH=arm64 CHANNEL=alpha VERSION=4.8.2-alpha.1
+      stage: build
+      script: ./.deploy/docker/travis.sh
+    - dist: xenial
+      arch: amd64
+      env: CHANNEL=alpha VERSION=4.8.2-alpha.1
+      stage: manifest
+      script: ./.deploy/docker/manifest.sh

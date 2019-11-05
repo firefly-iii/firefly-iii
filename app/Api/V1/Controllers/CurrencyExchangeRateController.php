@@ -79,10 +79,10 @@ class CurrencyExchangeRateController extends Controller
         $toCurrency   = $this->repository->findByCodeNull($request->get('to') ?? 'USD');
 
         if (null === $fromCurrency) {
-            throw new FireflyException('Unknown source currency.');
+            throw new FireflyException('200007: Unknown source currency');
         }
         if (null === $toCurrency) {
-            throw new FireflyException('Unknown destination currency.');
+            throw new FireflyException('200007: Unknown destination currency');
         }
 
         /** @var Carbon $dateObj */

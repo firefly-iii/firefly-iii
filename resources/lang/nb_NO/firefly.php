@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Se etter oppdateringer nå',
     'admin_update_check_now_explain'             => 'Hvis du trykker på knappen, vil Firefly III se om din nåværende versjon er den nyeste.',
     'check_for_updates_button'                   => 'Sjekk nå!',
-    'update_new_version_alert'                   => 'En ny versjon av Firefly III er tilgjengelig. Du kjører v:your_version, den nyeste versjonen er v:new_version som ble utgitt den :date.',
-    'update_current_version_alert'               => 'Du kjører v:version, som er den nyeste tilgjengelige utgivelsen.',
-    'update_newer_version_alert'                 => 'Du kjører v:your_version, som er nyere enn den nyeste versjonen, v:new_version.',
+    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running :your_version, the latest version is :new_version which was released on :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
+    'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                         => 'Det oppsto en feil under sjekk av oppdateringer. Vennligst se loggfilene for mer informasjon.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Søk',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Test ble utløst. Sjekk innboksen din og loggfilene.',
 
     'split_transaction_title'               => 'Description of the split transaction',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
     'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',

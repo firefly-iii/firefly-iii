@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Class FixAccountTypes
@@ -66,6 +67,7 @@ class FixAccountTypes extends Command
     public function handle(): int
     {
         $this->stupidLaravel();
+        Log::debug('Now in fix-account-types');
         $start         = microtime(true);
         $this->factory = app(AccountFactory::class);
         // some combinations can be fixed by this script:
@@ -88,13 +90,16 @@ class FixAccountTypes extends Command
 
         $this->expected = config('firefly.source_dests');
         $journals       = TransactionJournal::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
+        Log::debug(sprintf('Found %d journals to fix.', $journals->count()));
         foreach ($journals as $journal) {
             $this->inspectJournal($journal);
         }
         if (0 === $this->count) {
+            Log::debug('No journals had to be fixed.');
             $this->info('All account types are OK!');
         }
         if (0 !== $this->count) {
+            Log::debug(sprintf('%d journals had to be fixed.', $this->count));
             $this->info(sprintf('Acted on %d transaction(s)!', $this->count));
         }
 
@@ -223,21 +228,36 @@ class FixAccountTypes extends Command
      */
     private function inspectJournal(TransactionJournal $journal): void
     {
+        Log::debug(sprintf('Now trying to fix journal #%d', $journal->id));
         $count = $journal->transactions()->count();
         if (2 !== $count) {
+            Log::debug(sprintf('Journal has %d transactions, so cant fix.', $count));
             $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $count));
 
             return;
         }
         $type              = $journal->transactionType->type;
         $sourceTransaction = $this->getSourceTransaction($journal);
+        $destTransaction   = $this->getDestinationTransaction($journal);
+        if (null === $sourceTransaction) {
+            Log::error('Source transaction is unexpectedly NULL. Wont fix this journal.');
+
+            return;
+        }
+        if (null === $destTransaction) {
+            Log::error('Destination transaction is unexpectedly NULL. Wont fix this journal.');
+
+            return;
+        }
+
         $sourceAccount     = $sourceTransaction->account;
         $sourceAccountType = $sourceAccount->accountType->type;
-        $destTransaction   = $this->getDestinationTransaction($journal);
         $destAccount       = $destTransaction->account;
         $destAccountType   = $destAccount->accountType->type;
+
         if (!isset($this->expected[$type])) {
             // @codeCoverageIgnoreStart
+            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;

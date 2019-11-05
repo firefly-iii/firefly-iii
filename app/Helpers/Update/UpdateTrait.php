@@ -25,8 +25,7 @@ namespace FireflyIII\Helpers\Update;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Services\Github\Object\Release;
-use FireflyIII\Services\Github\Request\UpdateRequest;
+use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use Log;
 
 /**
@@ -38,75 +37,54 @@ trait UpdateTrait
     /**
      * Get object for the latest release from GitHub.
      *
-     * @return Release|null
+     * @return array
+     * @throws FireflyException
      */
-    public function getLatestRelease(): ?Release
+    public function getLatestRelease(): array
     {
         Log::debug('Now in getLatestRelease()');
-        $return = null;
-        /** @var UpdateRequest $request */
-        $request = app(UpdateRequest::class);
-        try {
-            $request->call();
-        } catch (FireflyException $e) {
-            Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
+        /** @var UpdateRequestInterface $checker */
+        $checker = app(UpdateRequestInterface::class);
+        $channel = app('fireflyconfig')->get('update_channel', 'stable')->data;
 
-            return null;
-        }
-
-        // get releases from array.
-        $releases = $request->getReleases();
-
-        Log::debug(sprintf('Found %d releases', count($releases)));
-
-        if (count($releases) > 0) {
-            // first entry should be the latest entry:
-            /** @var Release $first */
-            $first  = reset($releases);
-            $return = $first;
-            Log::debug(sprintf('Number of releases found is larger than zero. Return %s ', $first->getTitle()));
-        }
-
-        return $return;
+        return $checker->getVersion($channel);
     }
 
     /**
      * Parses the version check result in a human readable sentence.
      *
-     * @param int          $versionCheck
-     * @param Release|null $release
+     * @param int   $versionCheck
+     * @param array $information
      *
      * @return string
      */
-    public function parseResult(int $versionCheck, Release $release = null): string
+    public function parseResult(int $versionCheck, array $information): string
     {
         Log::debug(sprintf('Now in parseResult(%d)', $versionCheck));
         $current   = (string)config('firefly.version');
         $return    = '';
         $triggered = false;
-        if ($versionCheck === -2) {
-            Log::debug('-2, so give error.');
-            $return    = (string)trans('firefly.update_check_error');
-            $triggered = true;
-        }
-        if ($versionCheck === -1 && null !== $release) {
-            $triggered = true;
-            Log::debug('New version!');
-            // there is a new FF version!
-            // has it been released for at least three days?
-            $today       = new Carbon;
-            $releaseDate = $release->getUpdated();
-            if ($today->diffInDays($releaseDate) > 3) {
-                Log::debug('New version is older than 3 days!');
-                $monthAndDayFormat = (string)trans('config.month_and_day');
-                $return            = (string)trans(
-                    'firefly.update_new_version_alert',
-                    [
-                        'your_version' => $current,
-                        'new_version'  => $release->getTitle(),
-                        'date'         => $release->getUpdated()->formatLocalized($monthAndDayFormat),
-                    ]
-                );
+        if (-1 === $versionCheck) {
+            $triggered         = true;
+            $monthAndDayFormat = (string)trans('config.month_and_day');
+            $carbon            = Carbon::createFromFormat('Y-m-d', $information['date']);
+            $return            = (string)trans(
+                'firefly.update_new_version_alert',
+                [
+                    'your_version' => $current,
+                    'new_version'  => $information['version'],
+                    'date'         => $carbon->formatLocalized($monthAndDayFormat),
+                ]
+            );
+            // append warning if beta or alpha.
+            $isBeta = $information['is_beta'] ?? false;
+            if (true === $isBeta) {
+                $return = sprintf('%s %s', $return, trans('firefly.update_version_beta'));
+            }
+
+            $isAlpha = $information['is_alpha'] ?? false;
+            if (true === $isAlpha) {
+                $return = sprintf('%s %s', $return, trans('firefly.update_version_alpha'));
             }
         }
 
@@ -116,19 +94,16 @@ trait UpdateTrait
             // you are running the current version!
             $return = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
         }
-        if (1 === $versionCheck && null !== $release) {
+        if (1 === $versionCheck) {
             $triggered = true;
             Log::debug('User is running NEWER version.');
             // you are running a newer version!
-            $return = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $release->getTitle()]);
+            $return = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $information['version']]);
         }
-
-        // @codeCoverageIgnoreStart
         if (false === $triggered) {
             Log::debug('No option was triggered.');
             $return = (string)trans('firefly.update_check_error');
         }
-        // @codeCoverageIgnoreEnd
 
         return $return;
     }
@@ -136,22 +111,16 @@ trait UpdateTrait
     /**
      * Compare version and store result.
      *
-     * @param Release|null $release
+     * @param array $information
      *
      * @return int
      */
-    public function versionCheck(Release $release = null): int
+    public function versionCheck(array $information): int
     {
         Log::debug('Now in versionCheck()');
-        if (null === $release) {
-            Log::debug('Release is null, return -2.');
-
-            return -2;
-        }
         $current = (string)config('firefly.version');
-        $latest  = $release->getTitle();
-        $check   = version_compare($current, $latest);
-        Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $latest, $check));
+        $check   = version_compare($current, $information['version']);
+        Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $information['version'], $check), $information);
 
         return $check;
     }

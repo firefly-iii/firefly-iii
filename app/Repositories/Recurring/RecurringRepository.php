@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Note;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
@@ -253,19 +252,17 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
-     * @param Recurrence $recurrence
+     * @param RecurrenceTransaction $transaction
      *
-     * @return PiggyBank|null
+     * @return int|null
      */
-    public function getPiggyBank(Recurrence $recurrence): ?PiggyBank
+    public function getPiggyBank(RecurrenceTransaction $transaction): ?int
     {
-        $meta = $recurrence->recurrenceMeta;
-        /** @var RecurrenceMeta $metaEntry */
+        $meta = $transaction->recurrenceTransactionMeta;
+        /** @var RecurrenceTransactionMeta $metaEntry */
         foreach ($meta as $metaEntry) {
             if ('piggy_bank_id' === $metaEntry->name) {
-                $piggyId = (int)$metaEntry->value;
-
-                return $this->user->piggyBanks()->where('piggy_banks.id', $piggyId)->first(['piggy_banks.*']);
+                return (int)$metaEntry->value;
             }
         }
 
@@ -275,15 +272,15 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Get the tags from the recurring transaction.
      *
-     * @param Recurrence $recurrence
+     * @param RecurrenceTransaction $transaction
      *
      * @return array
      */
-    public function getTags(Recurrence $recurrence): array
+    public function getTags(RecurrenceTransaction $transaction): array
     {
         $tags = [];
         /** @var RecurrenceMeta $meta */
-        foreach ($recurrence->recurrenceMeta as $meta) {
+        foreach ($transaction->recurrenceTransactionMeta as $meta) {
             if ('tags' === $meta->name && '' !== $meta->value) {
                 $tags = explode(',', $meta->value);
             }

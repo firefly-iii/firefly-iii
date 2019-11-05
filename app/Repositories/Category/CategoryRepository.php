@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\RecurrenceTransactionMeta;
@@ -239,6 +240,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param array $data
      *
      * @return Category
+     * @throws FireflyException
      */
     public function store(array $data): Category
     {
@@ -246,7 +248,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         $factory = app(CategoryFactory::class);
         $factory->setUser($this->user);
 
-        return $factory->findOrCreate(null, $data['name']);
+        $category = $factory->findOrCreate(null, $data['name']);
+
+        if (null === $category) {
+            throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));
+        }
+        return $category;
+
     }
 
     /**

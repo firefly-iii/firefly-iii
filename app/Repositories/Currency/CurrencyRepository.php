@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AvailableBudget;
@@ -489,14 +490,20 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param array $data
      *
-     * @return TransactionCurrency|null
+     * @return TransactionCurrency
+     * @throws FireflyException
      */
-    public function store(array $data): ?TransactionCurrency
+    public function store(array $data): TransactionCurrency
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
+        $result  = $factory->create($data);
 
-        return $factory->create($data);
+        if (null === $result) {
+            throw new FireflyException('400004: Could not store new currency.');
+        }
+
+        return $result;
     }
 
     /**

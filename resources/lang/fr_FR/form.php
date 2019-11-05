@@ -38,6 +38,7 @@ return [
     'match'                       => 'Correspondre à',
     'strict'                      => 'Mode strict',
     'repeat_freq'                 => 'Répétitions',
+    'update_channel'              => 'Canal de mise à jour',
     'journal_currency_id'         => 'Devise',
     'currency_id'                 => 'Devise',
     'transaction_currency_id'     => 'Devise',

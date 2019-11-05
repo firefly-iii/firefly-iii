@@ -38,6 +38,7 @@ return [
     'match'                       => 'Reageert op',
     'strict'                      => 'Strikte modus',
     'repeat_freq'                 => 'Herhaling',
+    'update_channel'              => 'Updatekanaal',
     'journal_currency_id'         => 'Valuta',
     'currency_id'                 => 'Valuta',
     'transaction_currency_id'     => 'Valuta',

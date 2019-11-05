@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => '立刻檢查更新',
     'admin_update_check_now_explain'             => '如果您按下此按鈕，Firefly III 將會檢查您現在的版本是否為最新版。',
     'check_for_updates_button'                   => '馬上檢查！',
-    'update_new_version_alert'                   => '較新版本的 Firefly III 已可使用，您目前為 :your_version 版，最新版本為 :new_version 版，於 :date 釋出。',
-    'update_current_version_alert'               => '您現正運行 :version 版，係最新可用的版本。',
-    'update_newer_version_alert'                 => '您目前運行 :your_version 版，比最新釋出 :new_version 版還新。',
+    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running :your_version, the latest version is :new_version which was released on :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
+    'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                         => '檢查更新時發生一個錯誤，請檢閱日誌檔。',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => '搜尋',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => '測試已觸發，請檢視您的收件匣與日誌檔。',
 
     'split_transaction_title'               => '拆分交易的描述',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
     'transaction_information'               => '交易資訊',
     'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',

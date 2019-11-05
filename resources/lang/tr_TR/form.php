@@ -38,6 +38,7 @@ return [
     'match'                       => 'Eşleşti',
     'strict'                      => 'Sıkı mod',
     'repeat_freq'                 => 'Tekrarlar',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Para birimi',
     'currency_id'                 => 'Para birimi',
     'transaction_currency_id'     => 'Para birimi',

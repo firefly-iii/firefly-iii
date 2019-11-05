@@ -83,7 +83,7 @@ class UserController extends Controller
 
             return response()->json([], 204);
         }
-        throw new FireflyException('No access to method.'); // @codeCoverageIgnore
+        throw new FireflyException('200025: No access to function.'); // @codeCoverageIgnore
     }
 
     /**

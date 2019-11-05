@@ -42,6 +42,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
+use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
+use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\IP\IpifyOrg;
 use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV3;
@@ -184,6 +186,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
+        $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+
         $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
         if ('' === $class) {
             throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');

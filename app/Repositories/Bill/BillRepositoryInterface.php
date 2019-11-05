@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -266,9 +267,10 @@ interface BillRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Bill|null
+     * @return Bill
+     * @throws FireflyException
      */
-    public function store(array $data): ?Bill;
+    public function store(array $data): Bill;
 
     /**
      * @param Bill  $bill

@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Auf Update überprüfen',
     'admin_update_check_now_explain'             => 'Wenn Sie den Knopf drücken, wird Firefly III überprüfen, ob Ihre Version die aktuellste ist.',
     'check_for_updates_button'                   => 'Jetzt prüfen!',
-    'update_new_version_alert'                   => 'Eine neue Version von Firefly III ist verfügbar. Sie verwenden v:your_version, die neueste Version ist v:new_version und wurde am :date veröffentlicht.',
-    'update_current_version_alert'               => 'Sie verwenden Version v:version. Dies ist die neueste verfügbare Version.',
-    'update_newer_version_alert'                 => 'Sie verwenden v:your_version. Ihre Version ist neuer als die neueste Version (v:new_version).',
+    'update_new_version_alert'                   => 'Eine neue Version von Firefly III ist verfügbar. Sie verwenden :your_version, die neueste Version ist :new_version, die am :date veröffentlicht wurde.',
+    'update_version_beta'                        => 'Seien Sie vorsichtig bei der Verwendung dieser BETA-Version. Sie könnte noch Fehler enthaltern.',
+    'update_version_alpha'                       => 'Seien Sie vorsichtig bei der Verwendung dieser APLPHA-Version. Sie kann Fehler enthaltern.',
+    'update_current_version_alert'               => 'Sie verwenden Version :version. Dies ist die neueste verfügbare Version.',
+    'update_newer_version_alert'                 => 'Sie verwenden :your_version. Ihre Version ist neuer als die neueste Version (:new_version).',
     'update_check_error'                         => 'Beim Suchen nach Updates ist ein Fehler aufgetreten. Bitte sehen Sie sich die Log-Dateien an.',
+    'admin_update_channel_title'                 => 'Aktualisierungskanal',
+    'admin_update_channel_explain'               => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
+    'update_channel_stable'                      => 'Stabil — Alles sollte wie erwartet funktionieren.',
+    'update_channel_beta'                        => 'Beta — Neue Funktionen, aber einige Funktionen könnten fehlerhaft sein.',
+    'update_channel_alpha'                       => 'Alpha — Wir experiementieren mit neuen Dingen und benutzen die noch Fallstricke enthalten.',
 
     // search
     'search'                                     => 'Suche',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
 
     'split_transaction_title'               => 'Beschreibung der Splittbuchung',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
     'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',

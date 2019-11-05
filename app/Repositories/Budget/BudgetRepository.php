@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RecurrenceTransactionMeta;
@@ -32,6 +33,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -269,16 +271,20 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param array $data
      *
      * @return Budget
+     * @throws FireflyException
      */
     public function store(array $data): Budget
     {
-        $newBudget = new Budget(
-            [
-                'user_id' => $this->user->id,
-                'name'    => $data['name'],
-            ]
-        );
-        $newBudget->save();
+        try {
+            $newBudget = Budget::create(
+                [
+                    'user_id' => $this->user->id,
+                    'name'    => $data['name'],
+                ]
+            );
+        } catch(QueryException $e) {
+            throw new FireflyException('400002: Could not store budget.');
+        }
 
         return $newBudget;
     }

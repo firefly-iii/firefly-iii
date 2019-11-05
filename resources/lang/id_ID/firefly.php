@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Check for updates now',
     'admin_update_check_now_explain'             => 'If you press the button, Firefly III will see if your current version is the latest.',
     'check_for_updates_button'                   => 'Check now!',
-    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running v:your_version, the latest version is v:new_version which was released on :date.',
-    'update_current_version_alert'               => 'You are running v:version, which is the latest available release.',
-    'update_newer_version_alert'                 => 'You are running v:your_version, which is newer than the latest release, v:new_version.',
+    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running :your_version, the latest version is :new_version which was released on :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
+    'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                         => 'An error occurred while checking for updates. Please view the log files.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Pencarian',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Uji dipicu. Periksa kotak masuk dan file log Anda.',
 
     'split_transaction_title'               => 'Description of the split transaction',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
     'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',

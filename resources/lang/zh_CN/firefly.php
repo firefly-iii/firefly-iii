@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => '立刻检查更新',
     'admin_update_check_now_explain'             => '如果您按下此按钮，Firefly III 将会检查您现在的版本是否为最新版。',
     'check_for_updates_button'                   => '马上检查！',
-    'update_new_version_alert'                   => '较新版本的 Firefly III 已可使用，您目前为 :your_version 版，最新版本为 :new_version 版，于 :date 释出。',
-    'update_current_version_alert'               => '您现正运行 :version 版，系最新可用的版本。',
-    'update_newer_version_alert'                 => '您目前运行 :your_version 版，比最新释出 :new_version 版还新。',
+    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running :your_version, the latest version is :new_version which was released on :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
+    'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                         => '检查更新时发生一个错误，请检阅日志档。',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => '搜寻',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
 
     'split_transaction_title'               => '拆分交易的描述',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '如果您创建一个拆分交易，必须有一个全局的交易描述。',
     'transaction_information'               => '交易信息',
     'you_create_transfer'                   => '您正在创建一笔<strong>转账</strong>。',

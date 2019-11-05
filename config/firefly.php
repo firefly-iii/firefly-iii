@@ -125,7 +125,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.1.8',
+    'version'                      => '4.8.2-alpha.1',
     'api_version'                  => '0.10.5',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,
@@ -145,6 +145,7 @@ return [
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',

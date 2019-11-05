@@ -78,7 +78,8 @@ class CreateController extends Controller
         $defaultCurrency      = app('amount')->getDefaultCurrency();
         $previousUri          = $this->rememberPreviousUri('transactions.create.uri');
         $parts                = parse_url($previousUri);
-        $previousUri          = sprintf('%s://%s/%s', $parts['scheme'], $parts['host'] ?? '', $parts['path'] ?? '');
+        $search               = sprintf('?%s', $parts['query'] ?? '');
+        $previousUri          = str_replace($search, '', $previousUri);
 
         session()->put('preFilled', $preFilled);
 

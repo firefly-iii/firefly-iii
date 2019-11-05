@@ -1,35 +1,154 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS_BRANCH" == "develop" ]; then
+echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+mkdir $HOME/.docker
+touch $HOME/.docker/config.json
+echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+sudo service docker restart
+
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+
+# if the github branch is develop, only push the 'develop' tag
+if [ $TRAVIS_BRANCH == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
-    ARM=jc5x/firefly-iii:develop-arm
-    AMD=jc5x/firefly-iii:develop-amd64
+    ARM32=jc5x/firefly-iii:develop-arm
+    ARM64=jc5x/firefly-iii:develop-arm64
+    AMD64=jc5x/firefly-iii:develop-amd64
 
-    docker manifest create $TARGET $AMD $ARM
-    docker manifest annotate $TARGET $ARM --arch arm   --os linux
-    docker manifest annotate $TARGET $AMD --arch amd64 --os linux
+    echo "GitHub branch is $TRAVIS_BRANCH."
+    echo "Push develop-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
     docker manifest push $TARGET
 fi
 
-echo "The version is $VERSION"
+# if branch = master AND channel = alpha, push 'alpha'
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "alpha" ]; then
+    TARGET=jc5x/firefly-iii:alpha
+    ARM32=jc5x/firefly-iii:alpha-arm
+    ARM64=jc5x/firefly-iii:alpha-arm64
+    AMD64=jc5x/firefly-iii:alpha-amd64
 
-if [ "$TRAVIS_BRANCH" == "master" ]; then
+    echo "GitHub branch is $TRAVIS_BRANCH."
+    echo "Channel is $CHANNEL."
+    echo "Push alpha-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+fi
+
+# if branch is master and channel is alpha, push 'alpha' and 'beta'.
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "beta" ]; then
+    TARGET=jc5x/firefly-iii:alpha
+    ARM32=jc5x/firefly-iii:beta-arm
+    ARM64=jc5x/firefly-iii:beta-arm64
+    AMD64=jc5x/firefly-iii:beta-amd64
+
+    echo "GitHub branch is $TRAVIS_BRANCH."
+    echo "Channel is $CHANNEL."
+    echo "Push beta-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+
+    TARGET=jc5x/firefly-iii:beta
+    ARM32=jc5x/firefly-iii:beta-arm
+    ARM64=jc5x/firefly-iii:beta-arm64
+    AMD64=jc5x/firefly-iii:beta-amd64
+
+    echo "Push beta-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+fi
+
+# if branch is master and channel is stable, push 'alpha' and 'beta' and 'stable'.
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "stable" ]; then
+    TARGET=jc5x/firefly-iii:alpha
+    ARM32=jc5x/firefly-iii:stable-arm
+    ARM64=jc5x/firefly-iii:stable-arm64
+    AMD64=jc5x/firefly-iii:stable-amd64
+
+    echo "GitHub branch is $TRAVIS_BRANCH."
+    echo "Channel is $CHANNEL."
+    echo "Push stable-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+
+    TARGET=jc5x/firefly-iii:beta
+    ARM32=jc5x/firefly-iii:stable-arm
+    ARM64=jc5x/firefly-iii:stable-arm64
+    AMD64=jc5x/firefly-iii:stable-amd64
+
+    echo "Push stable-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+
+    TARGET=jc5x/firefly-iii:stable
+    ARM32=jc5x/firefly-iii:stable-arm
+    ARM64=jc5x/firefly-iii:stable-arm64
+    AMD64=jc5x/firefly-iii:stable-amd64
+
+    echo "Push stable-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+
     TARGET=jc5x/firefly-iii:latest
-    ARM=jc5x/firefly-iii:latest-arm
-    AMD=jc5x/firefly-iii:latest-amd64
+    ARM32=jc5x/firefly-iii:stable-arm
+    ARM64=jc5x/firefly-iii:stable-arm64
+    AMD64=jc5x/firefly-iii:stable-amd64
 
-    docker manifest create $TARGET $AMD $ARM
-    docker manifest annotate $TARGET $ARM --arch arm   --os linux
-    docker manifest annotate $TARGET $AMD --arch amd64 --os linux
-    docker manifest push $TARGET
+    echo "Push stable-* builds to $TARGET"
 
-    # and another one for version specific:
-    TARGET=jc5x/firefly-iii:release-$VERSION
-    ARM=jc5x/firefly-iii:release-$VERSION-arm
-    AMD=jc5x/firefly-iii:release-$VERSION-amd64
-
-    docker manifest create $TARGET $AMD $ARM
-    docker manifest annotate $TARGET $ARM --arch arm   --os linux
-    docker manifest annotate $TARGET $AMD --arch amd64 --os linux
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
     docker manifest push $TARGET
 fi
+
+# push to channel 'version' if master
+if [ $TRAVIS_BRANCH == "master" ]; then
+    TARGET=jc5x/firefly-iii:release-$VERSION
+    ARM32=jc5x/firefly-iii:stable-arm
+    ARM64=jc5x/firefly-iii:stable-arm64
+    AMD64=jc5x/firefly-iii:stable-amd64
+
+    echo "GitHub branch is $TRAVIS_BRANCH."
+    echo "Channel is $CHANNEL."
+    echo "Push stable-* builds to $TARGET"
+
+    docker manifest create $TARGET $ARM32 $ARM64 $AMD64
+    docker manifest annotate $TARGET $ARM32 --arch arm   --os linux
+    docker manifest annotate $TARGET $ARM64 --arch arm64 --os linux
+    docker manifest annotate $TARGET $AMD64 --arch amd64 --os linux
+    docker manifest push $TARGET
+fi
+
+echo 'Done!'
+# done!

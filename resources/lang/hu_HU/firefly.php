@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Frissítések keresése most',
     'admin_update_check_now_explain'             => 'Ha megnyomja a gombot, a Firefly III ellenőrinzi fogja, hogy a legfrissebb változatot használja -e.',
     'check_for_updates_button'                   => 'Ellenőrzés most!',
-    'update_new_version_alert'                   => 'A Firefly III új verziója elérhető. A jelenleg használt verzió v:your_version, a legújabb verzió pedig v:new_version, amely megjelent: :date.',
-    'update_current_version_alert'               => 'A jelenlegi verzió v:version, ez egyben a legfrissebb elérhető verzió is.',
-    'update_newer_version_alert'                 => 'A jelenlegi verzió v:your_version, amely újabb, mint a legfrissebb kiadott verzió, ami a v:new_version.',
+    'update_new_version_alert'                   => 'A new version of Firefly III is available. You are running :your_version, the latest version is :new_version which was released on :date.',
+    'update_version_beta'                        => 'This version is a BETA version. You may run into issues.',
+    'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
+    'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
+    'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                         => 'Hiba történt a frissítések ellenőrzése során. További információ a naplófájlokban található.',
+    'admin_update_channel_title'                 => 'Update channel',
+    'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
+    'update_channel_stable'                      => 'Stable. Everything should work as expected.',
+    'update_channel_beta'                        => 'Beta. New features but things may be broken.',
+    'update_channel_alpha'                       => 'Alpha. We throw stuff in, and use whatever sticks.',
 
     // search
     'search'                                     => 'Keresés',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Teszt elindítva. Ellenőrizd a bejövő üzeneteidet és a naplófájlokat.',
 
     'split_transaction_title'               => 'Felosztott tranzakció leírása',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
     'transaction_information'               => 'Tranzakció információ',
     'you_create_transfer'                   => 'Egy <strong>átvezetést</strong> hozol létre.',

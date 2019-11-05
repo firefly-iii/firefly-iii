@@ -38,6 +38,7 @@ return [
     'match'                       => 'Corresponde em',
     'strict'                      => 'Modo estrito',
     'repeat_freq'                 => 'Repetições',
+    'update_channel'              => 'Update channel',
     'journal_currency_id'         => 'Moeda',
     'currency_id'                 => 'Moeda',
     'transaction_currency_id'     => 'Moeda',

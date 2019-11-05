@@ -42,16 +42,16 @@ return [
     // transactions (deposit)
     'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
     'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_foreign_currency'    => 'Użyj tego pola aby ustawić obcą walutę i jej kwotę.',
+    'transactions_create_deposit_more_meta'           => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
+    'transactions_create_deposit_split_add'           => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
 
     // transactions (transfer)
     'transactions_create_transfer_source'             => 'Select the source asset account here.',
     'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
     'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_more_meta'          => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
+    'transactions_create_transfer_split_add'          => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
 
     // create account:
     'accounts_create_iban'                            => 'Nadaj kontom ważny numer IBAN. Może to ułatwić import danych w przyszłości.',

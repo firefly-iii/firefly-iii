@@ -224,10 +224,17 @@ return [
     'admin_update_check_now_title'               => 'Controlla gli aggiornamenti ora',
     'admin_update_check_now_explain'             => 'Se si preme il pulsante, Firefly III controllerà se la versione corrente è la più recente.',
     'check_for_updates_button'                   => 'Controlla ora!',
-    'update_new_version_alert'                   => 'È disponibile una nuova versione di Firefly III. Stai eseguendo v:your_version, l\'ultima versione è v:new_version che è stata rilasciata il :date.',
-    'update_current_version_alert'               => 'Stai eseguendo v:version, che è l\'ultima versione disponibile.',
-    'update_newer_version_alert'                 => 'Stai eseguendo v:your_version, che è più recente rispetto all\'ultima versione, v:new_version.',
+    'update_new_version_alert'                   => 'È disponibile una nuova versione di Firefly III. Stai utilizzando :your_version, l\'ultima versione è :new_version che è stata rilasciata il :date.',
+    'update_version_beta'                        => 'Questa versione è una versione BETA. Puoi avere problemi.',
+    'update_version_alpha'                       => 'Questa versione è una versione ALPHA. Puoi avere problemi.',
+    'update_current_version_alert'               => 'Stai utilizzando :version, che è l\'ultima versione disponibile.',
+    'update_newer_version_alert'                 => 'Stai utilizzando :your_version, che è più recente dell\'ultima versione, :new_version.',
     'update_check_error'                         => 'Si è verificato un errore durante il controllo degli aggiornamenti. Si prega di visualizzare i file di log.',
+    'admin_update_channel_title'                 => 'Canale di aggiornamento',
+    'admin_update_channel_explain'               => 'Firefly III dispone di tre "canali" di aggiornamento che indicano quanto avanti ti trovi in termini di funzionalità, miglioramenti e bug. Usa il canale "beta" se sei avventuroso e quello "alpha" se vuoi vivere pericolosamente.',
+    'update_channel_stable'                      => 'Stabile. Tutto dovrebbe funzionare come previsto.',
+    'update_channel_beta'                        => 'Beta. Nuove funzionalità ma qualcosa potrebbe rompersi.',
+    'update_channel_alpha'                       => 'Alpha. Inseriamo qualsiasi cosa e vediamo cosa funziona.',
 
     // search
     'search'                                     => 'Cerca',
@@ -1277,6 +1284,7 @@ return [
     'send_test_triggered'              => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
 
     'split_transaction_title'               => 'Descrizione della transazione suddivisa',
+    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Se crei una transazione suddivisa è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'transaction_information'               => 'Informazioni transazione',
     'you_create_transfer'                   => 'Stai creando un <strong>trasferimento</strong>.',

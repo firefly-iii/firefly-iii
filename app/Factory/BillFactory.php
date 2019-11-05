@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -55,6 +57,7 @@ class BillFactory
      * @param array $data
      *
      * @return Bill|null
+     * @throws FireflyException
      */
     public function create(array $data): ?Bill
     {
@@ -64,28 +67,31 @@ class BillFactory
         $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
 
         if (null === $currency) {
-            // use default currency:
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
+        try {
+            /** @var Bill $bill */
+            $bill = Bill::create(
+                [
+                    'name'                    => $data['name'],
+                    'match'                   => 'MIGRATED_TO_RULES',
+                    'amount_min'              => $data['amount_min'],
+                    'user_id'                 => $this->user->id,
+                    'transaction_currency_id' => $currency->id,
+                    'amount_max'              => $data['amount_max'],
+                    'date'                    => $data['date'],
+                    'repeat_freq'             => $data['repeat_freq'],
+                    'skip'                    => $data['skip'],
+                    'automatch'               => true,
+                    'active'                  => $data['active'] ?? true,
+                ]
+            );
+        } catch(QueryException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException('400000: Could not store bill.');
+        }
 
-        /** @var Bill $bill */
-        $bill = Bill::create(
-            [
-                'name'                    => $data['name'],
-                'match'                   => 'MIGRATED_TO_RULES',
-                'amount_min'              => $data['amount_min'],
-                'user_id'                 => $this->user->id,
-                'transaction_currency_id' => $currency->id,
-                'amount_max'              => $data['amount_max'],
-                'date'                    => $data['date'],
-                'repeat_freq'             => $data['repeat_freq'],
-                'skip'                    => $data['skip'],
-                'automatch'               => true,
-                'active'                  => $data['active'] ?? true,
-            ]
-        );
-
-        // update note:
         if (isset($data['notes'])) {
             $this->updateNote($bill, $data['notes']);
         }

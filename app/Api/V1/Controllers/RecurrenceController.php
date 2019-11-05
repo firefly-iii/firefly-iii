@@ -236,7 +236,7 @@ class RecurrenceController extends Controller
             $result = $recurring->fire();
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
-            throw new FireflyException('Could not fire recurring cron job.');
+            throw new FireflyException('200022: Error in cron job.');
         }
         if (false === $result) {
             return response()->json([], 204);
