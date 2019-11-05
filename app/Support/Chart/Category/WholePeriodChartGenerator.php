@@ -174,7 +174,7 @@ class WholePeriodChartGenerator
                         'currency_name'           => $currencyRow['currency_name'],
                         'currency_symbol'         => $currencyRow['currency_symbol'],
                         'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
+                        'currency_decimal_places' => (int)$currencyRow['currency_decimal_places'],
                     ];
             }
         }
