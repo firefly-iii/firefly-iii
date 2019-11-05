@@ -77,7 +77,7 @@ if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "stable" ]; then
 fi
 
 # push to channel 'version' if master + alpha
-if [ $TRAVIS_BRANCH == "master" ] && [$CHANNEL == "alpha"]; then
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "alpha"]; then
     LABEL=jc5x/firefly-iii:version-$VERSION-$ARCH
     echo "GitHub branch is $TRAVIS_BRANCH and channel is $CHANNEL. Will also push alpha as $LABEL"
     docker tag jc5x/firefly-iii:alpha-$ARCH $LABEL
@@ -85,7 +85,7 @@ if [ $TRAVIS_BRANCH == "master" ] && [$CHANNEL == "alpha"]; then
 fi
 
 # push to channel 'version' if master + beta
-if [ $TRAVIS_BRANCH == "master" ] && [$CHANNEL == "beta"]; then
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "beta"]; then
     LABEL=jc5x/firefly-iii:version-$VERSION-$ARCH
     echo "GitHub branch is $TRAVIS_BRANCH and channel is $CHANNEL. Will also push beta as $LABEL"
     docker tag jc5x/firefly-iii:beta-$ARCH $LABEL
@@ -93,7 +93,7 @@ if [ $TRAVIS_BRANCH == "master" ] && [$CHANNEL == "beta"]; then
 fi
 
 # push to channel 'version' if master + stable
-if [ $TRAVIS_BRANCH == "master" ] && [$CHANNEL == "stable"]; then
+if [ $TRAVIS_BRANCH == "master" ] && [ $CHANNEL == "stable"]; then
     LABEL=jc5x/firefly-iii:version-$VERSION-$ARCH
     echo "GitHub branch is $TRAVIS_BRANCH and channel is $CHANNEL. Will also push beta as $LABEL"
     docker tag jc5x/firefly-iii:stable-$ARCH $LABEL
