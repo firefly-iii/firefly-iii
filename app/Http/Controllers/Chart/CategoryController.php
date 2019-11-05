@@ -163,18 +163,18 @@ class CategoryController extends Controller
         $noCategory = $noCatRepository->sumExpenses($start, $end);
 
         foreach ($noCategory as $currency) {
-            $currencyId              = $currency['currency_id'];
+            $currencyId              = (int)$currency['currency_id'];
             $currencies[$currencyId] = $currencies[$currencyId] ?? [
                     'currency_id'             => $currency['currency_id'],
                     'currency_name'           => $currency['currency_name'],
                     'currency_symbol'         => $currency['currency_symbol'],
                     'currency_code'           => $currency['currency_code'],
-                    'currency_decimal_places' => $currency['currency_decimal_places'],
+                    'currency_decimal_places' => (int)$currency['currency_decimal_places'],
                 ];
             $tempData[]              = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
+                'sum_float'   => round($currency['sum'], (int)$currency['currency_decimal_places']),
                 'currency_id' => $currency['currency_id'],
             ];
         }
