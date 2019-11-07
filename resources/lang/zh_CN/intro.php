@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => '欢迎来到 Firefly III 的首页。请花时间参观一下这个介绍，瞭解 Firefly III 是如何运作的。',
+    'index_intro'                                     => '欢迎来到 Firefly III 的首页。请花时间参观一下这个介绍，了解 Firefly III 是如何运作的。',
     'index_accounts-chart'                            => '此图表显示您的资产帐户的目前馀额，您可以在偏好设定中选择此处可见的帐户。',
     'index_box_out_holder'                            => '这个小盒子和这个旁边的盒子会提供您财务状况的快速概览。',
     'index_help'                                      => '如果您需要有关页面或表单的说明，请按此按钮。',

@@ -1284,7 +1284,7 @@ return [
     'send_test_triggered'              => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
 
     'split_transaction_title'               => 'Descrizione della transazione suddivisa',
-    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+    'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'split_title_help'                      => 'Se crei una transazione suddivisa è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'transaction_information'               => 'Informazioni transazione',
     'you_create_transfer'                   => 'Stai creando un <strong>trasferimento</strong>.',

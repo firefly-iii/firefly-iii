@@ -1284,7 +1284,7 @@ return [
     'send_test_triggered'              => 'Le test a été initié. Vérifiez votre boîte de réception (et les logs si nécessaire).',
 
     'split_transaction_title'               => 'Description de l\'opération ventilée',
-    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+    'split_transaction_title_help'          => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fraction de l\'opération.',
     'split_title_help'                      => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fractions de l\'opération.',
     'transaction_information'               => 'Informations sur l\'opération',
     'you_create_transfer'                   => 'Vous êtes en train de créer un <strong>transfert</strong>.',
