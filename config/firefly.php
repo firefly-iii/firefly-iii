@@ -684,13 +684,13 @@ return [
     'source_dests'              => [
         TransactionTypeModel::WITHDRAWAL      => [
             AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
-            AccountType::LOAN     => [AccountType::EXPENSE],
-            AccountType::DEBT     => [AccountType::EXPENSE],
-            AccountType::MORTGAGE => [AccountType::EXPENSE],
+            AccountType::LOAN     => [AccountType::EXPENSE, AccountType::CASH],
+            AccountType::DEBT     => [AccountType::EXPENSE, AccountType::CASH],
+            AccountType::MORTGAGE => [AccountType::EXPENSE, AccountType::CASH],
         ],
         TransactionTypeModel::DEPOSIT         => [
             AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            AccountType::CASH     => [AccountType::ASSET],
+            AccountType::CASH     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::LOAN     => [AccountType::ASSET],
             AccountType::DEBT     => [AccountType::ASSET],
             AccountType::MORTGAGE => [AccountType::ASSET],
