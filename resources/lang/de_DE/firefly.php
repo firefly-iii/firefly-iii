@@ -1284,7 +1284,7 @@ return [
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
 
     'split_transaction_title'               => 'Beschreibung der Splittbuchung',
-    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+    'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
     'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',

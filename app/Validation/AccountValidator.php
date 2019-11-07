@@ -106,7 +106,6 @@ class AccountValidator
 
             return false;
         }
-
         switch ($this->transactionType) {
             default:
                 $this->destError = sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType);
@@ -574,7 +573,7 @@ class AccountValidator
             $found = $this->accountRepository->findNull($accountId);
             if (null !== $found) {
                 $type = $found->accountType->type;
-                if (in_array($type, $validTypes)) {
+                if (in_array($type, $validTypes, true)) {
                     return true;
                 }
                 $this->destError = (string)trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
