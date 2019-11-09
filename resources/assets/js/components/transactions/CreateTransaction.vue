@@ -219,6 +219,7 @@
         },
         methods: {
             convertData: function () {
+                // console.log('Now in convertData()');
                 let data = {
                     'transactions': [],
                 };
@@ -254,6 +255,7 @@
                 return data;
             },
             convertDataRow(row, index, transactionType) {
+                // console.log('Now in convertDataRow()');
                 let tagList = [];
                 let foreignAmount = null;
                 let foreignCurrency = null;
@@ -371,6 +373,7 @@
             },
             // submit transaction
             submit(e) {
+                // console.log('Now in submit()');
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
 
@@ -378,9 +381,10 @@
                 button.prop("disabled", true);
 
                 axios.post(uri, data).then(response => {
-
+                    // console.log('Did a succesfull POST');
                     // this method will ultimately send the user on (or not).
                     if (0 === this.collectAttachmentData(response)) {
+                        // console.log('Will now go to redirectUser()');
                         this.redirectUser(response.data.data.id, button);
                     }
                 }).catch(error => {
@@ -398,10 +402,10 @@
                 }
             },
             redirectUser(groupId, button) {
-                //console.log('In redirectUser()');
+                // console.log('In redirectUser()');
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
-                    //console.log('Will create another.');
+                    // console.log('Will create another.');
 
                     // do message:
                     this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been stored.';
@@ -409,7 +413,9 @@
                     if (this.resetFormAfter) {
                         // also clear form.
                         this.resetTransactions();
-                        this.addTransactionToArray();
+                        // do a short time out?
+                        setTimeout(() => this.addTransactionToArray(), 50);
+                        //this.addTransactionToArray();
                     }
 
                     // clear errors:
@@ -619,9 +625,11 @@
                 }
             },
             resetTransactions: function () {
+                // console.log('Now in resetTransactions()');
                 this.transactions = [];
             },
             addTransactionToArray: function (e) {
+                // console.log('Now in addTransactionToArray()');
                 this.transactions.push({
                                            description: "",
                                            date: "",
@@ -693,9 +701,13 @@
                                            }
                                        });
                 if (this.transactions.length === 1) {
+                    // console.log('Length == 1, set date to today.');
                     // set first date.
                     let today = new Date();
                     this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+                    // call for extra clear thing:
+                    // this.clearSource(0);
+                    //this.clearDestination(0);
                 }
                 if (e) {
                     e.preventDefault();
@@ -735,6 +747,7 @@
             },
 
             selectedSourceAccount: function (index, model) {
+                // console.log('Now in selectedSourceAccount()');
                 if (typeof model === 'string') {
                     // cant change types, only name.
                     this.transactions[index].source_account.name = model;
@@ -756,6 +769,7 @@
                 }
             },
             selectedDestinationAccount: function (index, model) {
+                // console.log('Now in selectedDestinationAccount()');
                 if (typeof model === 'string') {
                     // cant change types, only name.
                     this.transactions[index].destination_account.name = model;

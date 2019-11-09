@@ -20,6 +20,7 @@
                     {{ ExpandedForm.text('name') }}
                     {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities' %}
                         {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+
                     {% endif %}
 
                     {% if objectType == 'liabilities' %}

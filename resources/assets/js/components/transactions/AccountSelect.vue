@@ -95,11 +95,13 @@
             }
         },
         ready() {
+            // console.log('ready(): this.name = this.accountName (' + this.accountName + ')');
             this.name = this.accountName;
         },
         mounted() {
             this.target = this.$refs.input;
             let types = this.allowedTypes.join(',');
+            // console.log('mounted(): this.name = this.accountName (' + this.accountName + ')');
             this.name = this.accountName;
             this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             this.triggerTransactionType();
@@ -115,6 +117,10 @@
                     types = this.defaultAccountTypeFilters.join(',');
                 }
                 this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
+            },
+            name() {
+                // console.log('Watch: name()');
+                // console.log(this.name);
             }
         },
         methods:
@@ -123,7 +129,16 @@
                     return this.error.length > 0;
                 },
                 triggerTransactionType: function () {
+                    // console.log('On triggerTransactionType(' + this.inputName + ')');
+                    if(null === this.name) {
+                        // console.log('this.name is NULL.');
+                    }
                     if (null === this.transactionType) {
+                        // console.log('Transaction type is NULL.');
+                        return;
+                    }
+                    if ('' === this.transactionType) {
+                        // console.log('Transaction type is "".');
                         return;
                     }
                     this.inputDisabled = false;
@@ -148,21 +163,24 @@
                     }
                 },
                 selectedItem: function (e) {
-                    //console.log('In SelectedItem()');
+                    // console.log('In SelectedItem()');
                     if (typeof this.name === 'undefined') {
-                        //console.log('Is undefined');
+                        // console.log('Is undefined');
                         return;
                     }
                     if(typeof this.name === 'string') {
-                        //console.log('Is a string.');
+                        // console.log('Is a string.');
                         //this.trType = null;
                         this.$emit('clear:value');
                     }
                     // emit the fact that the user selected a type of account
                     // (influencing the destination)
+                    // console.log('Is some object maybe:');
+                    // console.log(this.name);
                     this.$emit('select:account', this.name);
                 },
                 clearSource: function (e) {
+                    // console.log('clearSource()');
                     //props.value = '';
                     this.name = '';
                     // some event?

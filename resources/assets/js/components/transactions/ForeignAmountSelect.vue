@@ -56,7 +56,7 @@
 
         props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title',],
         mounted() {
-            console.log('loadCurrencies()');
+            //console.log('loadCurrencies()');
             this.liability = false;
             this.loadCurrencies();
         },
@@ -71,35 +71,35 @@
         },
         watch: {
             source: function () {
-                console.log('watch source in foreign currency');
+                // console.log('watch source in foreign currency');
                 this.changeData();
             },
             destination: function () {
-                console.log('watch destination in foreign currency');
+                // console.log('watch destination in foreign currency');
                 this.changeData();
             },
             transactionType: function () {
-                console.log('watch transaction type in foreign currency');
+                // console.log('watch transaction type in foreign currency');
                 this.changeData();
             }
         },
         methods: {
             hasError: function () {
-                console.log('Has error');
+                // console.log('Has error');
                 return this.error.length > 0;
             },
             handleInput(e) {
-                console.log('handleInput');
+                // console.log('handleInput');
                 let obj = {
                     amount: this.$refs.amount.value,
                     currency_id: this.$refs.currency_select.value,
                 };
-                console.log(obj);
+                // console.log(obj);
                 this.$emit('input', obj
                 );
             },
             changeData: function () {
-                console.log('Now in changeData()');
+                //console.log('Now in changeData()');
                 this.enabledCurrencies = [];
                 let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
                 let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
@@ -108,11 +108,11 @@
                 let sourceIsLiability = liabilities.indexOf(srcType) !== -1;
                 let destIsLiability = liabilities.indexOf(destType) !== -1;
 
-                console.log(srcType + ' (source) is a liability: ' + sourceIsLiability);
-                console.log(destType + ' (dest) is a liability: ' + destIsLiability);
+                // console.log(srcType + ' (source) is a liability: ' + sourceIsLiability);
+                // console.log(destType + ' (dest) is a liability: ' + destIsLiability);
 
                 if (tType === 'transfer' || destIsLiability || sourceIsLiability) {
-                    console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
+                    //console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
                     this.liability = true;
                     // lock dropdown list on on currencyID of destination.
                     for (const key in this.currencies) {
@@ -122,7 +122,7 @@
                             }
                         }
                     }
-                    console.log('Enabled currencies length is now ' + this.enabledCurrencies.length);
+                    //console.log('Enabled currencies length is now ' + this.enabledCurrencies.length);
                     return;
                 }
 
@@ -156,7 +156,7 @@
                 }
             },
             loadCurrencies: function () {
-                console.log('loadCurrencies');
+                // console.log('loadCurrencies');
                 let URI = document.getElementsByTagName('base')[0].href + "json/currencies";
                 axios.get(URI, {}).then((res) => {
                     this.currencies = [
