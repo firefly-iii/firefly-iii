@@ -29,7 +29,7 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.date('date', tag.date.format('Y-m-d')) }}
-                    {{ ExpandedForm.textarea('description') }}
+                    {{ ExpandedForm.textarea('description', tag.description) }}
                     {{ ExpandedForm.location('tag_position') }}
                 </div>
             </div>
