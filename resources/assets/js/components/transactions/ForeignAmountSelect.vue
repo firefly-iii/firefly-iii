@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="null == this.transactionType || null != this.transactionType && (this.enabledCurrencies.length > 2 && this.transactionType === 'Deposit') || this.transactionType.toLowerCase() === 'transfer'">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="
+    null == this.transactionType ||
+    null != this.transactionType && (this.enabledCurrencies.length > 2 && (this.transactionType.toLowerCase() === 'deposit' || this.transactionType.toLowerCase() === 'withdrawal')) ||
+    this.liability ||
+    (null != this.transactionType && this.transactionType.toLowerCase() === 'transfer')">
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]" @input="handleInput">
                 <option
@@ -49,43 +53,68 @@
 <script>
     export default {
         name: "ForeignAmountSelect",
-        props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title'],
+
+        props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title',],
         mounted() {
+            console.log('loadCurrencies()');
+            this.liability = false;
             this.loadCurrencies();
         },
         data() {
             return {
                 currencies: [],
                 enabledCurrencies: [],
-                exclude: null
+                exclude: null,
+                // liability overrules the drop down list if the source or dest is a liability
+                liability: false
             }
         },
         watch: {
             source: function () {
+                console.log('watch source in foreign currency');
                 this.changeData();
             },
             destination: function () {
+                console.log('watch destination in foreign currency');
                 this.changeData();
             },
             transactionType: function () {
+                console.log('watch transaction type in foreign currency');
                 this.changeData();
             }
         },
         methods: {
             hasError: function () {
+                console.log('Has error');
                 return this.error.length > 0;
             },
             handleInput(e) {
-                this.$emit('input', {
-                    amount: +this.$refs.amount.value,
+                console.log('handleInput');
+                let obj = {
+                    amount: this.$refs.amount.value,
                     currency_id: this.$refs.currency_select.value,
-                }
+                };
+                console.log(obj);
+                this.$emit('input', obj
                 );
             },
             changeData: function () {
+                console.log('Now in changeData()');
                 this.enabledCurrencies = [];
-                if (this.transactionType === 'Transfer') {
-                    // lock source on currencyID of destination
+                let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
+                let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
+                let tType =this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
+                let liabilities = ['loan','debt','mortgage'];
+                let sourceIsLiability = liabilities.indexOf(srcType) !== -1;
+                let destIsLiability = liabilities.indexOf(destType) !== -1;
+
+                console.log(srcType + ' (source) is a liability: ' + sourceIsLiability);
+                console.log(destType + ' (dest) is a liability: ' + destIsLiability);
+
+                if (tType === 'transfer' || destIsLiability || sourceIsLiability) {
+                    console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
+                    this.liability = true;
+                    // lock dropdown list on on currencyID of destination.
                     for (const key in this.currencies) {
                         if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             if (this.currencies[key].id === this.destination.currency_id) {
@@ -96,8 +125,9 @@
                     console.log('Enabled currencies length is now ' + this.enabledCurrencies.length);
                     return;
                 }
+
                 // if type is withdrawal, list all but skip the source account ID.
-                if (this.transactionType === 'Withdrawal' && this.source) {
+                if (tType === 'withdrawal' && this.source && false === sourceIsLiability) {
                     for (const key in this.currencies) {
                         if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             if (this.source.currency_id !== this.currencies[key].id) {
@@ -109,7 +139,7 @@
                 }
 
                 // if type is deposit, list all but skip the source account ID.
-                if (this.transactionType === 'Deposit' && this.destination) {
+                if (tType === 'deposit' && this.destination) {
                     for (const key in this.currencies) {
                         if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             if (this.destination.currency_id !== this.currencies[key].id) {
@@ -126,6 +156,7 @@
                 }
             },
             loadCurrencies: function () {
+                console.log('loadCurrencies');
                 let URI = document.getElementsByTagName('base')[0].href + "json/currencies";
                 axios.get(URI, {}).then((res) => {
                     this.currencies = [
