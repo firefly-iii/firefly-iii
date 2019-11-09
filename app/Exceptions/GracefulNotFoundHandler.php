@@ -101,6 +101,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 break;
             case 'tags.show.all':
             case 'tags.show':
+            case 'tags.edit':
                 $request->session()->reflash();
 
                 return redirect(route('tags.index'));
