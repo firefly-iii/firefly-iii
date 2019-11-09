@@ -1284,7 +1284,7 @@ return [
     'send_test_triggered'              => 'Тест был выполнен. Проверьте ваш почтовый ящик и log-файлы.',
 
     'split_transaction_title'               => 'Описание разделённой транзакции',
-    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+    'split_transaction_title_help'          => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание для всех её составляющих.',
     'split_title_help'                      => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание дле всех её составляющих.',
     'transaction_information'               => 'Информация о транзакции',
     'you_create_transfer'                   => 'Вы создаёте <strong>перевод</strong>.',
