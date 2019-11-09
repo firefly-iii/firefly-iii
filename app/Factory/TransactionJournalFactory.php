@@ -332,7 +332,7 @@ class TransactionJournalFactory
         $transactionFactory->setCurrency($sourceCurrency);
         $transactionFactory->setForeignCurrency($sourceForeignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
-        $transactionFactory->createNegative((string)$row['amount'], $row['foreign_amount']);
+        $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
 
         // and the destination one:
         /** @var TransactionFactory $transactionFactory */
@@ -343,7 +343,7 @@ class TransactionJournalFactory
         $transactionFactory->setCurrency($destCurrency);
         $transactionFactory->setForeignCurrency($destForeignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
-        $transactionFactory->createPositive((string)$row['amount'], $row['foreign_amount']);
+        $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         // TODO this can't be faked so it can't be tested.
