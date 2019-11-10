@@ -24,7 +24,7 @@
          v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Transfer'">
         <div class="col-sm-12">
             <select name="piggy_bank[]" ref="piggy" @input="handleInput" class="form-control" v-if="this.piggies.length > 0">
-                <option v-for="piggy in this.piggies" :label="piggy.name" :value="piggy.id">{{piggy.name}}</option>
+                <option v-for="piggy in this.piggies" :label="piggy.name_with_amount" :value="piggy.id">{{piggy.name_with_amount}}</option>
             </select>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -57,7 +57,7 @@
                 axios.get(URI, {}).then((res) => {
                     this.piggies = [
                         {
-                            name: this.no_piggy_bank,
+                            name_with_amount: this.no_piggy_bank,
                             id: 0,
                         }
                     ];

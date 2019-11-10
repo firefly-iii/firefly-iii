@@ -28,7 +28,8 @@
         "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "none_in_select_list": "(\u03c4\u03af\u03c0\u03bf\u03c4\u03b1)",
         "no_piggy_bank": "(no piggy bank)",
-        "description": "Description"
+        "description": "Description",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
     },
     "form": {
         "interest_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03bf\u03ba\u03b9\u03c3\u03bc\u03bf\u03cd",

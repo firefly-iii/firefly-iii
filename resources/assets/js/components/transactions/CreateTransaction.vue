@@ -45,7 +45,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            {{ $t('firefly.split_title_help')}}
+                            {{ $t('firefly.split_transaction_title')}}
                         </h3>
                     </div>
                     <div class="box-body">
@@ -385,7 +385,7 @@
                     // this method will ultimately send the user on (or not).
                     if (0 === this.collectAttachmentData(response)) {
                         // console.log('Will now go to redirectUser()');
-                        this.redirectUser(response.data.data.id, button);
+                        this.redirectUser(response.data.data.id, button, response.data.data);
                     }
                 }).catch(error => {
                     // give user errors things back.
@@ -401,14 +401,20 @@
                     e.preventDefault();
                 }
             },
-            redirectUser(groupId, button) {
+            escapeHTML(unsafeText) {
+                let div = document.createElement('div');
+                div.innerText = unsafeText;
+                return div.innerHTML;
+            },
+            redirectUser(groupId, button, transactionData) {
                 // console.log('In redirectUser()');
+                // console.log(transactionData);
+                let title = null === transactionData.attributes.group_title ? transactionData.attributes.transactions[0].description : transactionData.attributes.group_title;
+                // console.log('Title is "' + title + '"');
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
-                    // console.log('Will create another.');
-
                     // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been stored.';
+                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + ' ("' + this.escapeHTML(title) + '")</a> has been stored.';
                     this.error_message = '';
                     if (this.resetFormAfter) {
                         // also clear form.
@@ -478,7 +484,7 @@
                                         }
                                     );
                                     if (fileData.length === count) {
-                                        theParent.uploadFiles(fileData, groupId);
+                                        theParent.uploadFiles(fileData, groupId, response.data.data);
                                     }
                                 }
                             };
@@ -489,7 +495,7 @@
                 return count;
             },
 
-            uploadFiles(fileData, groupId) {
+            uploadFiles(fileData, groupId, transactionData) {
                 let count = fileData.length;
                 let uploads = 0;
                 for (const key in fileData) {
@@ -508,13 +514,13 @@
                                 // console.log('Uploading attachment #' + key);
                                 const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
                                 axios.post(uploadUri, fileData[key].content)
-                                    .then(response => {
+                                    .then(attachmentResponse => {
                                         // console.log('Uploaded attachment #' + key);
                                         uploads++;
                                         if (uploads === count) {
                                             // finally we can redirect the user onwards.
                                             // console.log('FINAL UPLOAD');
-                                            this.redirectUser(groupId);
+                                            this.redirectUser(groupId, null, transactionData);
                                         }
                                         // console.log('Upload complete!');
                                         return true;
@@ -526,7 +532,7 @@
                                     if (uploads === count) {
                                         // finally we can redirect the user onwards.
                                         // console.log('FINAL UPLOAD');
-                                        this.redirectUser(groupId);
+                                        this.redirectUser(groupId, null, transactionData);
                                     }
                                     // console.log('Upload complete!');
                                     return false;

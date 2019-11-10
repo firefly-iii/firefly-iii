@@ -28,7 +28,8 @@
         "split_title_help": "Pokud vytvo\u0159\u00edte roz\u00fa\u010dtov\u00e1n\u00ed, je t\u0159eba, aby zde byl celkov\u00fd popis pro v\u0161echna roz\u00fa\u010dtov\u00e1n\u00ed dan\u00e9 transakce.",
         "none_in_select_list": "(\u017e\u00e1dn\u00e9)",
         "no_piggy_bank": "(no piggy bank)",
-        "description": "Popis"
+        "description": "Popis",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
     },
     "form": {
         "interest_date": "\u00darokov\u00e9 datum",

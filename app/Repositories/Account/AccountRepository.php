@@ -557,8 +557,13 @@ class AccountRepository implements AccountRepositoryInterface
                               ->orderBy('accounts.name', 'ASC')
                               ->with(['accountType']);
         if ('' !== $query) {
-            $search = sprintf('%%%s%%', $query);
-            $dbQuery->where('name', 'LIKE', $search);
+            // split query on spaces just in case:
+            $parts = explode(' ', $query);
+            foreach($parts as $part) {
+                $search = sprintf('%%%s%%', $part);
+                $dbQuery->where('name', 'LIKE', $search);
+            }
+
         }
         if (count($types) > 0) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');

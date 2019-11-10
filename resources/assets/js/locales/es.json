@@ -28,7 +28,8 @@
         "split_title_help": "Si crea una transacci\u00f3n dividida, debe haber una descripci\u00f3n global para todos los fragmentos de la transacci\u00f3n.",
         "none_in_select_list": "(ninguno)",
         "no_piggy_bank": "(sin alcanc\u00eda)",
-        "description": "Descripci\u00f3n"
+        "description": "Descripci\u00f3n",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
     },
     "form": {
         "interest_date": "Fecha de inter\u00e9s",
