@@ -1001,7 +1001,7 @@ class GroupCollector implements GroupCollectorInterface
                 $groupArray                             = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => (int)$augumentedJournal->user_id,
-                    'title'            => (int)$augumentedJournal->transaction_group_title,
+                    'title'            => $augumentedJournal->transaction_group_title,
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
                     'sums'             => [],
