@@ -283,6 +283,39 @@ class AutoCompleteController extends Controller
         return response()->json($return);
     }
 
+
+    /**
+     * An auto-complete specifically for asset accounts and liabilities, used when mass updating and for rules mostly.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function assetAccounts(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
+
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
     /**
      * @return JsonResponse
      * @codeCoverageIgnore
