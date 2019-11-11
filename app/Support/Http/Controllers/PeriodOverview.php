@@ -575,8 +575,7 @@ trait PeriodOverview
             $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
             $return[$currencyId]['count']++;
 
-
-            if (null !== $foreignCurrencyId) {
+            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
                 if (!isset($return[$foreignCurrencyId])) {
                     $return[$foreignCurrencyId] = [
                         'amount'                  => '0',
