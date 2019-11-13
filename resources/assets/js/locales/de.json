@@ -28,7 +28,8 @@
         "split_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchhaltung geben.",
         "none_in_select_list": "(Keine)",
         "no_piggy_bank": "(kein Sparschwein)",
-        "description": "Beschreibung"
+        "description": "Beschreibung",
+        "split_transaction_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchung geben."
     },
     "form": {
         "interest_date": "Zinstermin",

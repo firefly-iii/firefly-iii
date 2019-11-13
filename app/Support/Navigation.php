@@ -83,6 +83,7 @@ class Navigation
         $date->$function($add);
 
         // if period is 1M and diff in month is 2 and new DOM > 1, sub a number of days:
+        // AND skip is 1
         // result is:
         // '2019-01-29', '2019-02-28'
         // '2019-01-30', '2019-02-28'
@@ -90,7 +91,7 @@ class Navigation
 
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
+        if (1 === $add && 2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
             $date->subDays($date->day);
         }
 

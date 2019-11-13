@@ -22,10 +22,9 @@
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" ref="amount" :value="value" @input="handleInput" step="any"
-                   class="form-control"
+            <input type="number" @input="handleInput" ref="amount" :value="value" step="any" class="form-control"
                    name="amount[]"
-                   title="amount" autocomplete="off" v-bind:placeholder="$t('firefly.amount')">
+                   title="$t('firefly.amount')" autocomplete="off" v-bind:placeholder="$t('firefly.amount')">
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>

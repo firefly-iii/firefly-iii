@@ -418,8 +418,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanks(): Collection
     {
-        return $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
+        return $this->user->piggyBanks()->with(['account'])->orderBy('order', 'ASC')->get();
     }
+
+
 
     /**
      * Also add amount in name.

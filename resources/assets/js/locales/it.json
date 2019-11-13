@@ -28,7 +28,8 @@
         "split_title_help": "Se crei una transazione suddivisa \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.",
         "none_in_select_list": "(nessuna)",
         "no_piggy_bank": "(nessun salvadanaio)",
-        "description": "Descrizione"
+        "description": "Descrizione",
+        "split_transaction_title_help": "Se crei una transazione suddivisa, \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione."
     },
     "form": {
         "interest_date": "Data interesse",

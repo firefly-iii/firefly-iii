@@ -28,7 +28,8 @@
         "split_title_help": "\u5982\u679c\u60a8\u521b\u5efa\u4e00\u4e2a\u62c6\u5206\u4ea4\u6613\uff0c\u5fc5\u987b\u6709\u4e00\u4e2a\u5168\u5c40\u7684\u4ea4\u6613\u63cf\u8ff0\u3002",
         "none_in_select_list": "\uff08\u7a7a\uff09",
         "no_piggy_bank": "(no piggy bank)",
-        "description": "\u63cf\u8ff0"
+        "description": "\u63cf\u8ff0",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
     },
     "form": {
         "interest_date": "\u5229\u7387\u65e5\u671f",

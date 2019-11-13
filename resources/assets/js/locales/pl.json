@@ -27,8 +27,9 @@
         "store_as_new": "Zapisz jako now\u0105 zamiast aktualizowa\u0107.",
         "split_title_help": "Podzielone transakcje musz\u0105 posiada\u0107 globalny opis.",
         "none_in_select_list": "(\u017cadne)",
-        "no_piggy_bank": "(brak skarbonek)",
-        "description": "Opis"
+        "no_piggy_bank": "(brak skarbonki)",
+        "description": "Opis",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
     },
     "form": {
         "interest_date": "Data odsetek",

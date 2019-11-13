@@ -715,7 +715,7 @@ return [
     'deleted_ab'                                => 'The available budget amount has been deleted',
     'deleted_bl'                                => 'The budgeted amount has been removed',
     'alt_currency_ab_create'                    => 'Set the available budget in another currency',
-    'bl_create_btn'                             => 'Set budget in another currency',
+    'bl_create_btn'                             => 'Ustaw budżet w innej walucie',
     'inactiveBudgets'                           => 'Nieaktywne budżety',
     'without_budget_between'                    => 'Transakcje bez budżetu między :start i :end',
     'delete_budget'                             => 'Usuń budżet ":name"',
@@ -1284,7 +1284,7 @@ return [
     'send_test_triggered'              => 'Test został uruchomiony. Sprawdź swoją skrzynkę odbiorczą i pliki dziennika.',
 
     'split_transaction_title'               => 'Opis podzielonej transakcji',
-    'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+    'split_transaction_title_help'          => 'Jeśli tworzysz podzieloną transakcję, musi ona posiadać globalny opis dla wszystkich podziałów w transakcji.',
     'split_title_help'                      => 'Podzielone transakcje muszą posiadać globalny opis.',
     'transaction_information'               => 'Informacje o transakcji',
     'you_create_transfer'                   => 'Tworzysz <strong>przelew</strong>.',

@@ -70,6 +70,8 @@ class GroupCollector implements GroupCollectorInterface
     private $total;
     /** @var User The user object. */
     private $user;
+    /** @var array */
+    private $integerFields;
 
     /**
      * Group collector constructor.
@@ -84,7 +86,23 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasBudgetInformation = false;
         $this->hasBillInformation   = false;
         $this->hasJoinedTagTables   = false;
-
+        $this->integerFields = [
+            'transaction_group_id',
+            'user_id',
+            'transaction_journal_id',
+            'transaction_type_id',
+            'order',
+            'source_transaction_id',
+            'source_account_id',
+            'currency_id',
+            'currency_decimal_places',
+            'foreign_currency_id',
+            'foreign_currency_decimal_places',
+            'destination_transaction_id',
+            'destination_account_id',
+            'category_id',
+            'budget_id'
+        ];
         $this->total  = 0;
         $this->fields = [
             # group
@@ -904,6 +922,22 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Convert a selected set of fields to arrays.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function convertToInteger(array $array): array
+    {
+        foreach ($this->integerFields as $field) {
+            $array[$field] = isset($array[$field]) ? (int)$array[$field] : null;
+        }
+
+        return $array;
+    }
+
+    /**
      * Join table to get tag information.
      */
     private function joinTagTables(): void
@@ -965,8 +999,8 @@ class GroupCollector implements GroupCollectorInterface
                 // make new array
                 $parsedGroup                            = $this->parseAugmentedGroup($augumentedJournal);
                 $groupArray                             = [
-                    'id'               => $augumentedJournal->transaction_group_id,
-                    'user_id'          => $augumentedJournal->user_id,
+                    'id'               => (int)$augumentedJournal->transaction_group_id,
+                    'user_id'          => (int)$augumentedJournal->user_id,
                     'title'            => $augumentedJournal->transaction_group_title,
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
@@ -1014,6 +1048,10 @@ class GroupCollector implements GroupCollectorInterface
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+
+        // convert values to integers:
+        $result = $this->convertToInteger($result);
+
         $result['reconciled'] = 1 === (int)$result['reconciled'];
         if (isset($augumentedJournal['tag_id'])) { // assume the other fields are present as well.
             $tagId   = (int)$augumentedJournal['tag_id'];
