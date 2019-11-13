@@ -76,13 +76,13 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <transaction-description
+                                    <transaction-description v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                             v-model="transaction.description"
                                             :index="index"
                                             :error="transaction.errors.description"
                                     >
                                     </transaction-description>
-                                    <account-select
+                                    <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                             inputName="source[]"
                                             v-bind:title="$t('firefly.source_account')"
                                             :accountName="transaction.source_account.name"
@@ -93,7 +93,7 @@
                                             v-on:select:account="selectedSourceAccount(index, $event)"
                                             :error="transaction.errors.source_account"
                                     ></account-select>
-                                    <account-select
+                                    <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                             inputName="destination[]"
                                             v-bind:title="$t('firefly.destination_account')"
                                             :accountName="transaction.destination_account.name"
@@ -104,7 +104,7 @@
                                             v-on:select:account="selectedDestinationAccount(index, $event)"
                                             :error="transaction.errors.destination_account"
                                     ></account-select>
-                                    <standard-date
+                                    <standard-date  v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                             v-model="transaction.date"
                                             :index="index"
                                             :error="transaction.errors.date"
@@ -162,7 +162,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-footer" v-if="transactions.length-1 === index">
+                        <div class="box-footer" v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'">
                             <button class="btn btn-primary" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
