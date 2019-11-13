@@ -104,7 +104,7 @@ class InstallController extends Controller
             'firefly-iii:fix-long-descriptions'        => [],
 
             // final command to set latest version in DB
-            'firefly-iii:set-last-version'        => ['--james-is-cool' => true],
+            'firefly-iii:set-latest-version'        => ['--james-is-cool' => true],
         ];
     }
 
