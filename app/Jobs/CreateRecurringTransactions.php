@@ -218,7 +218,6 @@ class CreateRecurringTransactions implements ShouldQueue
         $return       = [];
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
-
             $single   = [
                 'type'                  => strtolower($recurrence->transactionType->type),
                 'date'                  => $date,

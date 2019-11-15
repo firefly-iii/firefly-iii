@@ -56,7 +56,6 @@ class BudgetController extends Controller
     protected $repository;
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
-
     /** @var NoBudgetRepositoryInterface */
     private $nbRepository;
 
@@ -379,7 +378,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -390,23 +389,42 @@ class BudgetController extends Controller
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            // get relevant repetitions:
-            $limits   = $this->blRepository->getBudgetLimits($budget, $start, $end);
-            $expenses = $this->getExpensesForBudget($limits, $budget, $start, $end);
-
-            foreach ($expenses as $name => $row) {
-                $chartData[0]['entries'][$name] = $row['spent'];
-                $chartData[1]['entries'][$name] = $row['left'];
-                $chartData[2]['entries'][$name] = $row['overspent'];
+            $limits = $this->blRepository->getBudgetLimits($budget, $start, $end);
+            if (0 === $limits->count()) {
+                $spent = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget]), null);
+                /** @var array $entry */
+                foreach ($spent as $entry) {
+                    $title                           = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+                    $chartData[0]['entries'][$title] = bcmul($entry['sum'], '-1'); // spent
+                    $chartData[1]['entries'][$title] = 0; // left to spend
+                    $chartData[2]['entries'][$title] = 0; // overspent
+                }
             }
-        }
-        // for no budget:
-        $spent = $this->spentInPeriodWithout($start, $end);
-        $name  = (string)trans('firefly.no_budget');
-        if (0 !== bccomp($spent, '0')) {
-            $chartData[0]['entries'][$name] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$name] = '0';
-            $chartData[2]['entries'][$name] = '0';
+            if (0 !== $limits->count()) {
+                /** @var BudgetLimit $limit */
+                foreach ($limits as $limit) {
+                    $spent = $this->opsRepository->sumExpenses(
+                        $limit->start_date, $limit->end_date, null, new Collection([$budget]), $limit->transactionCurrency
+                    );
+                    /** @var array $entry */
+                    foreach ($spent as $entry) {
+                        $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+                        if ($limit->start_date->startOfDay()->ne($start->startOfDay()) || $limit->end_date->startOfDay()->ne($end->startOfDay())) {
+                            $title = sprintf(
+                                '%s (%s) (%s - %s)', $budget->name, $entry['currency_name'],
+                                $limit->start_date->formatLocalized($this->monthAndDayFormat),
+                                $limit->end_date->formatLocalized($this->monthAndDayFormat)
+                            );
+                        }
+
+                        $chartData[0]['entries'][$title] = bcmul($entry['sum'], '-1'); // spent
+                        $chartData[1]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ? bcadd($entry['sum'], $limit->amount)
+                            : '0';
+                        $chartData[2]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ?
+                            '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1');
+                    }
+                }
+            }
         }
 
         $data = $this->generator->multiSet($chartData);
