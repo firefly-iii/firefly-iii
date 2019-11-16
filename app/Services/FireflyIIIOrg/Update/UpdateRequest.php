@@ -48,7 +48,7 @@ class UpdateRequest implements UpdateRequestInterface
             $client  = new Client();
             $options = [
                 'headers' => [
-                    'User-Agent' => sprintf('FireflyIII/%s', config('firefly.version')),
+                    'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
                 ],
             ];
             $res     = $client->request('GET', $uri, $options);
