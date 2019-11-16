@@ -282,7 +282,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceMeta $meta */
         foreach ($transaction->recurrenceTransactionMeta as $meta) {
             if ('tags' === $meta->name && '' !== $meta->value) {
-                $tags = explode(',', $meta->value);
+                //$tags = explode(',', $meta->value);
+                $tags = json_decode($meta->value, true, 512, JSON_THROW_ON_ERROR);
             }
         }
 

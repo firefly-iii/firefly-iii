@@ -13,8 +13,6 @@ exemptLabels:
   - enhancement
   - feature
   - bug
-  - possible-bug
-  - "possible bug"
   - announcement
 
 # Set to true to ignore issues in a project (defaults to false)
