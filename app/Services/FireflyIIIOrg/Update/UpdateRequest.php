@@ -45,8 +45,13 @@ class UpdateRequest implements UpdateRequestInterface
         $uri = config('firefly.update_endpoint');
         Log::debug(sprintf('Going to call %s', $uri));
         try {
-            $client = new Client();
-            $res    = $client->request('GET', $uri);
+            $client  = new Client();
+            $options = [
+                'headers' => [
+                    'User-Agent' => sprintf('FireflyIII/%s', config('firefly.version')),
+                ],
+            ];
+            $res     = $client->request('GET', $uri, $options);
         } catch (GuzzleException|Exception $e) {
             throw new FireflyException(sprintf('Response error from update check: %s', $e->getMessage()));
         }
