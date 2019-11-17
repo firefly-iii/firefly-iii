@@ -50,16 +50,20 @@ class CreateDatabase extends Command
             return 1;
         }
         // with PDO, try to list DB's (
-        $stmt = $pdo->prepare('SHOW DATABASES WHERE `Database` = ?');
-        $stmt->execute([env('DB_DATABASE')]);
-        $result = $stmt->fetch();
-        if (false === $result) {
+        $stmt   = $pdo->query('SHOW DATABASES;');
+        $exists = false;
+        // slightly more complex but less error prone.
+        foreach ($stmt as $row) {
+            $name = $row['Database'] ?? false;
+            if ($name === env('DB_DATABASE')) {
+                $exists = true;
+            }
+        }
+        if (false === $exists) {
             $this->error(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
 
             // try to create it.
-            $stmt = $pdo->query(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
-            $stmt->execute();
-            $stmt->fetch();
+            $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
             $this->info(sprintf('Created database "%s"', env('DB_DATABASE')));
 
             return 0;

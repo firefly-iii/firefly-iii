@@ -54,8 +54,8 @@ if [[ ! -z "$DB_PORT" ]]; then
 fi
 #env $(grep -v "^\#" .env | xargs) 
 php artisan cache:clear
-php artisan migrate --seed
 php artisan firefly-iii:create-database
+php artisan migrate --seed
 php artisan firefly-iii:decrypt-all
 
 # there are 13 upgrade commands
