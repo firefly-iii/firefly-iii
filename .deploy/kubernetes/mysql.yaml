@@ -51,8 +51,8 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: firefly-iii-mysql-pass
-              key: password
+              name: firefly-iii-secrets
+              key: db_password
         ports:
         - containerPort: 3306
           name: mysql

@@ -2,7 +2,7 @@ resources:
   - mysql.yaml
   - firefly-iii.yaml
 secretGenerator:
-- name: firefly-iii-mysql-pass
+- name: firefly-iii-secrets
   literals:
-  - password=3kpx1m1VU0w4C2n3GrRN
+  - db_password=3kpx1m1VU0w4C2n3GrRN
   - app_key=l92KmYiXEqJauNjgmF04i6sTfivOuPRf

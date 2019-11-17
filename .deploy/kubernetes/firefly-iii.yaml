@@ -64,7 +64,10 @@ spec:
         - name: APP_ENV
           value: "local"
         - name: APP_KEY
-          value: "S0m3R@nd0mString0f32Ch@rsEx@ct1y"
+          valueFrom:
+            secretKeyRef:
+              name: firefly-iii-secrets
+              key: app_key
         - name: DB_HOST
           value: firefly-iii-mysql
         - name: DB_CONNECTION
@@ -76,8 +79,8 @@ spec:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: firefly-iii-mysql-pass
-              key: password
+              name: firefly-iii-secrets
+              key: db_password
         ports:
         - containerPort: 80
           name: firefly-iii
