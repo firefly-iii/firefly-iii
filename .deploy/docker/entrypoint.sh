@@ -93,6 +93,7 @@ php artisan firefly-iii:fix-long-descriptions
 php artisan firefly-iii:report-empty-objects
 php artisan firefly-iii:report-sum
 php artisan firefly-iii:restore-oauth-keys
+php artisan firefly-iii:set-latest-version --james-is-cool
 
 php artisan passport:install
 php artisan cache:clear
