@@ -480,8 +480,8 @@ return [
         'append_notes',
         'prepend_notes',
         'link_to_bill',
-        'convert_withdrawal',
-        'convert_deposit',
+        //'convert_withdrawal',
+        //'convert_deposit',
         'convert_transfer',
     ],
     'context-rule-triggers'        => [
