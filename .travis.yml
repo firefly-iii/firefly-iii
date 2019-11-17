@@ -14,21 +14,21 @@ jobs:
   include:
     - dist: xenial
       arch: amd64
-      env: ARCH=amd64 CHANNEL=alpha VERSION=4.8.2-alpha.4
+      env: ARCH=amd64 CHANNEL=beta VERSION=4.8.2-beta.1
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: amd64
-      env: ARCH=arm CHANNEL=alpha VERSION=4.8.2-alpha.4
+      env: ARCH=arm CHANNEL=beta VERSION=4.8.2-beta.1
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: arm64
-      env: ARCH=arm64 CHANNEL=alpha VERSION=4.8.2-alpha.4
+      env: ARCH=arm64 CHANNEL=beta VERSION=4.8.2-beta.1
       stage: build
       script: ./.deploy/docker/travis.sh
     - dist: xenial
       arch: amd64
-      env: CHANNEL=alpha VERSION=4.8.2-alpha.4
+      env: CHANNEL=beta VERSION=4.8.2-beta.1
       stage: manifest
       script: ./.deploy/docker/manifest.sh
