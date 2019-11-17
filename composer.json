@@ -87,7 +87,8 @@
     "pragmarx/google2fa": "6.1.3",
     "pragmarx/google2fa-laravel": "1.*",
     "pragmarx/recovery": "^0.1.0",
-    "rcrowe/twigbridge": "0.9.*"
+    "rcrowe/twigbridge": "0.9.*",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
