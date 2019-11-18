@@ -49,6 +49,7 @@ class BankDebitCredit implements ConverterInterface
             'DR', // https://old.reddit.com/r/FireflyIII/comments/bn2edf/generic_debitcredit_indicator/
             'Af', // ING (NL).
             'Debet', // Triodos (NL)
+            'S', // "Soll", German term for debit
         ];
         if (in_array(trim($value), $negative, true)) {
             return -1;
