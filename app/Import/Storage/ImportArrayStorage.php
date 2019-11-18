@@ -319,7 +319,7 @@ class ImportArrayStorage
     private function getHash(array $transaction): string
     {
         unset($transaction['import_hash_v2'], $transaction['original_source']);
-        $json = json_encode($transaction);
+        $json = json_encode($transaction, JSON_THROW_ON_ERROR);
         if (false === $json) {
             // @codeCoverageIgnoreStart
             /** @noinspection ForgottenDebugOutputInspection */
@@ -332,8 +332,9 @@ class ImportArrayStorage
             }
             // @codeCoverageIgnoreEnd
         }
+
         $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash));
+        Log::debug(sprintf('The hash is: %s', $hash), $transaction);
 
         return $hash;
     }
@@ -484,7 +485,7 @@ class ImportArrayStorage
             /** @noinspection DisconnectedForeachInstructionInspection */
             Log::debug('Comparing current transaction source+dest names', $transactionSourceNames);
             Log::debug('.. with current transfer source+dest names', $transferSource);
-            if ($transactionSourceNames === $transferSource) {
+            if ($transactionSourceNames === $transferSource && $transferSource !== ['', '']) {
                 // @codeCoverageIgnoreStart
                 ++$hits;
                 Log::debug(sprintf('Source names are the same! (%d)', $hits));
