@@ -442,7 +442,8 @@ class ImportArrayStorage
             Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
 
             // compare description:
-            $comparison = '(empty description)' === $transfer['description'] ? '' : $transfer['description'];
+            // $comparison = '(empty description)' === $transfer['description'] ? '' : $transfer['description'];
+            $comparison = $transfer['description'];
             Log::debug(sprintf('Comparing "%s" to "%s" (original: "%s")', $description, $transfer['description'], $comparison));
             if ($description !== $comparison) {
                 Log::debug('Description is not a match, continue with next transfer.');
