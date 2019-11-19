@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -274,12 +275,18 @@ class TransactionGroupTwig extends Twig_Extension
         $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $array['amount'] ?? '0';
         $colored = true;
+        // withdrawals are negative
         if ($type !== TransactionType::WITHDRAWAL) {
+            $amount = bcmul($amount, '-1');
+        }
+        $destinationType = $array['destination_account_type'] ?? 'invalid';
+        if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
             $amount = bcmul($amount, '-1');
         }
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
+
         $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
