@@ -85,8 +85,6 @@ class BudgetController extends Controller
     /**
      * Shows overview of a single budget.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Budget $budget
      *
      * @return JsonResponse
@@ -106,27 +104,47 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-        $step             = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
-        $budgetCollection = new Collection([$budget]);
-        $chartData        = [];
-        $current          = clone $start;
-        $current          = app('navigation')->startOfPeriod($current, $step);
-        while ($end >= $current) {
+        $step       = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
+        $collection = new Collection([$budget]);
+        $chartData  = [];
+        $loopStart  = clone $start;
+        $loopStart  = app('navigation')->startOfPeriod($loopStart, $step);
+        $currencies     = [];
+        $defaultEntries = [];
+        //        echo '<hr>';
+        while ($end >= $loopStart) {
             /** @var Carbon $currentEnd */
-            $currentEnd = app('navigation')->endOfPeriod($current, $step);
+            $loopEnd = app('navigation')->endOfPeriod($loopStart, $step);
             if ('1Y' === $step) {
-                $currentEnd->subDay(); // @codeCoverageIgnore
+                $loopEnd->subDay(); // @codeCoverageIgnore
             }
-            $spent             = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $current, $currentEnd);
-            $label             = app('navigation')->periodShow($current, $step);
-            $chartData[$label] = (float)bcmul($spent, '-1');
-            $current           = clone $currentEnd;
-            $current->addDay();
+            $spent = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection);
+            $label = trim(app('navigation')->periodShow($loopStart, $step));
+
+            foreach ($spent as $row) {
+                $currencyId              = $row['currency_id'];
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $row; // don't mind the field 'sum'
+                // also store this day's sum:
+                $currencies[$currencyId]['spent'][$label] = $row['sum'];
+            }
+            $defaultEntries[$label] = 0;
+            // set loop start to the next period:
+            $loopStart = clone $loopEnd;
+            $loopStart->addSecond();
         }
-
-        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
-
+        // loop all currencies:
+        foreach ($currencies as $currencyId => $currency) {
+            $chartData[$currencyId] = [
+                'label'         => count($currencies) > 1 ? sprintf('%s (%s)', $budget->name, $currency['currency_name']) : $budget->name,
+                'type'          => 'bar',
+                'currency_symbol' => $currency['currency_symbol'],
+                'entries'       => $defaultEntries,
+            ];
+            foreach ($currency['spent'] as $label => $spent) {
+                $chartData[$currencyId]['entries'][$label] = round(bcmul($spent, '-1'), $currency['currency_decimal_places']);
+            }
+        }
+        $data = $this->generator->multiSet(array_values($chartData));
         $cache->store($data);
 
         return response()->json($data);

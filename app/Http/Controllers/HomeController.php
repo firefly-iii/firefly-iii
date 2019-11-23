@@ -129,7 +129,9 @@ class HomeController extends Controller
         foreach ($accounts as $account) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
+            $collector->setAccounts(new Collection([$account]))
+                      ->withAccountInformation()
+                      ->setRange($start, $end)->setLimit(10)->setPage(1);
             $set            = $collector->getGroups();
             $transactions[] = [$set, $account];
         }
