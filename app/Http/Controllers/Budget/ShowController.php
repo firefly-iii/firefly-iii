@@ -154,7 +154,9 @@ class ShowController extends Controller
         // collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
+        $collector->setRange($start, $end)->setBudget($budget)
+                                          ->withAccountInformation()
+                                          ->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show', [$budget->id]));
 
