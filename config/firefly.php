@@ -125,7 +125,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.2-alpha.6',
+    'version'                      => '4.8.2-beta.2',
     'api_version'                  => '0.10.5',
     'db_version'                   => 11,
     'maxUploadSize'                => 15242880,

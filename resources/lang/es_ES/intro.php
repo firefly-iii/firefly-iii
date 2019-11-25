@@ -30,7 +30,7 @@ return [
     'index_help'                                      => 'Si alguna vez necesitas ayuda en una página o formulario, pulsa este botón.',
     'index_outro'                                     => 'La mayoría de las páginas de Firefly III comenzarán con una pequeña introducción como ésta. Por favor, ponte en contacto conmigo si tienes preguntas o comentarios. ¡Disfruta!',
     'index_sidebar-toggle'                            => 'Para crear nuevas transacciones, cuentas u otros elementos, utiliza el menú bajo este icono.',
-    'index_cash_account'                              => 'Estas son las cuentas creadas hasta ahora. Puedes usar la cuenta de efectivo para rastrear los gastos de efectivo pero no es obligatorio por supuesto.',
+    'index_cash_account'                              => 'Estas son las cuentas creadas hasta ahora. Puede usar la cuenta de efectivo para vigilar los gastos de efectivo pero, por supuesto, no es obligatorio.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Seleccione su cuenta de activos o pasivos favorita de este desplegable.',
@@ -61,26 +61,26 @@ return [
 
     // budgets index
     'budgets_index_intro'                             => 'Los presupuestos se utilizan para administrar sus finanzas y son una de las funciones básicas de Firefly III.',
-    'budgets_index_set_budget'                        => 'Coloque su presupuesto total para cada período y así Firefly III puede decirle si usted ha presupuestado todo el dinero disponible.',
+    'budgets_index_set_budget'                        => 'Configure su presupuesto total para cada período de manera que Firefly III pueda decirle si ha presupuestado todo el dinero disponible.',
     'budgets_index_see_expenses_bar'                  => 'Gastar dinero irá llenando poco a poco esta barra.',
     'budgets_index_navigate_periods'                  => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
     'budgets_index_new_budget'                        => 'Crea nuevos presupuestos como mejor te parezca.',
     'budgets_index_list_of_budgets'                   => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo lo está haciendo.',
-    'budgets_index_outro'                             => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en el tope de la esquina derecha.',
+    'budgets_index_outro'                             => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en la esquina superior derecha.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Utilice estos reportes para tener información detallada de sus finanzas.',
-    'reports_index_inputReportType'                   => 'Escoja un tipo de reporte. Revise las páginas de ayuda para ver lo que le muestra cada reporte.',
-    'reports_index_inputAccountsSelect'               => 'Usted puede excluir o incluir cuentas de activos como mejor le cuadre.',
-    'reports_index_inputDateRange'                    => 'El rango de fecha seleccionada depende completamente de usted: de un día a 10 años.',
+    'reports_index_intro'                             => 'Utilice estos informes para tener información detallada de sus finanzas.',
+    'reports_index_inputReportType'                   => 'Escoja un tipo de informe. Revise las páginas de ayuda para ver lo que le muestra cada informe.',
+    'reports_index_inputAccountsSelect'               => 'Puede incluir o excluir cuentas de activos como mejor le convenga.',
+    'reports_index_inputDateRange'                    => 'El rango de fecha seleccionada depende completamente de usted: desde un día hasta 10 años.',
     'reports_index_extra-options-box'                 => 'Dependiendo del informe que usted haya seleccionado, puede seleccionar filtros y opciones extras aquí. Mire este recuadro cuando cambie los tipos de informes.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Este informe le dará un rápido y comprensivo resumen de sus finanzas. Si usted desea ver algo mas, ¡por favor no dude en ponerse en contacto conmigo!',
-    'reports_report_audit_intro'                      => 'Este informe le dará información detallada en sus cuentas de activos.',
+    'reports_report_default_intro'                    => 'Este informe le dará un rápido y completo resumen de sus finanzas. Si desea ver algo mas, ¡por favor no dude en ponerse en contacto conmigo!',
+    'reports_report_audit_intro'                      => 'Este informe le dará información detallada de sus cuentas de activos.',
     'reports_report_audit_optionsBox'                 => 'Use estos recuadros de verificación para ver u ocultar las columnas que a usted le interesan.',
 
-    'reports_report_category_intro'                  => 'Este informe le dará una idea en una o múltiples categorías.',
+    'reports_report_category_intro'                  => 'Este informe le dará una idea de una o múltiples categorías.',
     'reports_report_category_pieCharts'              => 'Estos gráficos le darán una idea de sus gastos e ingresos por categoría o por cuenta.',
     'reports_report_category_incomeAndExpensesChart' => 'Estos gráficos muestran sus gastos e ingresos por categoría.',
 
@@ -90,15 +90,15 @@ return [
 
     'reports_report_budget_intro'                             => 'Este informe le dará una idea de uno o múltiples presupuestos.',
     'reports_report_budget_pieCharts'                         => 'Estos gráficos le darán a usted una idea de los gastos por presupuesto o por cuenta.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'Este gráfico le muestra sus gastos por presupuesto.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Este gráfico muestra sus gastos por presupuesto.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Utilice estos botones para cambiar rápidamente el tipo de transacción que usted desea guardar.',
+    'transactions_create_switch_box'                          => 'Utilice estos botones para cambiar rápidamente el tipo de transacción que desee guardar.',
     'transactions_create_ffInput_category'                    => 'Usted puede escribir libremente en este campo. Se le sugerirán categorías creadas previamente.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Vincula su retiro con un presupuesto para un mejor control financiero.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Vincule su reintegro con un presupuesto para un mejor control financiero.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Use esta lista desplegable cuando su retiro esté en otra moneda.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Use esta lista desplegable cuando su deposito esté en otra moneda.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Seleccione una alcancía y vincule esta transferencia con sus ahorros.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Seleccione una hucha y vincule esta transferencia con sus ahorros.',
 
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Este campo le muestra cuánto ha ahorrado usted en cada hucha.',
@@ -107,7 +107,7 @@ return [
 
     // create piggy
     'piggy-banks_create_name'                                 => '¿Cuál es tu meta? ¿Un nuevo sofá, una cámara, dinero para emergencias?',
-    'piggy-banks_create_date'                                 => 'Usted puede establecer una fecha objetivo o una fecha limite para su alcancía.',
+    'piggy-banks_create_date'                                 => 'Puede establecer una fecha objetivo o una fecha limite para su hucha.',
 
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'Este informe le mostrara la historia de esta alcancía.',
@@ -145,13 +145,13 @@ return [
     'rules_create_mandatory'                                  => 'Elija un título descriptivo, y establezca cuando la regla deba ser botada.',
     'rules_create_ruletriggerholder'                          => 'Añadir tantos desencadenantes como desee, pero recuerde que TODOS los desencadenantes deben coincidir antes de que cualquier acción sea eliminada.',
     'rules_create_test_rule_triggers'                         => 'Use este botón para ver cuáles transacciones coincidirán con su regla.',
-    'rules_create_actions'                                    => 'Establezca tantas acciones como usted lo desee.',
+    'rules_create_actions'                                    => 'Establezca tantas acciones como quiera.',
 
     // preferences
     'preferences_index_tabs'                                  => 'Mas opciones están disponibles detrás de estas pestañas.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III da soporte a múltiples monedas, que usted puede cambiar en esta página.',
+    'currencies_index_intro'                                  => 'Firefly III admite múltiples monedas, que usted puede cambiar en esta misma página.',
     'currencies_index_default'                                => 'Firefly III tiene una moneda por defecto.',
     'currencies_index_buttons'                                => 'Utilice estos botones para cambiar la moneda por defecto o habilitar otras monedas.',
 
