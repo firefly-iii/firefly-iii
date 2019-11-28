@@ -29,7 +29,7 @@
         "none_in_select_list": "(geen)",
         "no_piggy_bank": "(geen spaarpotje)",
         "description": "Omschrijving",
-        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
+        "split_transaction_title_help": "Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie."
     },
     "form": {
         "interest_date": "Rentedatum",

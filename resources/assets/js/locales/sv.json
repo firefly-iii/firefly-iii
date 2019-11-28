@@ -1,0 +1,47 @@
+{
+    "firefly": {
+        "welcome_back": "Vad h\u00e4nder?",
+        "flash_error": "Fel!",
+        "flash_success": "Slutf\u00f6rd!",
+        "close": "St\u00e4ng",
+        "split_transaction_title": "Description of the split transaction",
+        "errors_submission": "N\u00e5got fel uppstod med inskickningen. V\u00e4nligen kontrollera felen nedan.",
+        "split": "Dela",
+        "transaction_journal_information": "Transaktionsinformation",
+        "source_account": "Fr\u00e5n konto",
+        "destination_account": "Till konto",
+        "add_another_split": "L\u00e4gga till en annan delning",
+        "submission": "Inskickning",
+        "create_another": "Efter sparat, \u00e5terkom hit f\u00f6r att skapa ytterligare en.",
+        "reset_after": "\u00c5terst\u00e4ll formul\u00e4r efter inskickat",
+        "submit": "Skicka",
+        "amount": "Belopp",
+        "date": "Date",
+        "tags": "Etiketter",
+        "no_budget": "(ingen budget)",
+        "category": "Kategori",
+        "attachments": "Bilagor",
+        "notes": "Noteringar",
+        "update_transaction": "Uppdatera transaktion",
+        "after_update_create_another": "Efter uppdaterat, \u00e5terkom hit f\u00f6r att forts\u00e4tta redigera.",
+        "store_as_new": "Spara en ny transaktion ist\u00e4llet f\u00f6r att uppdatera.",
+        "split_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "none_in_select_list": "(Ingen)",
+        "no_piggy_bank": "(ingen spargris)",
+        "description": "Beskrivning",
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
+    },
+    "form": {
+        "interest_date": "R\u00e4ntedatum",
+        "book_date": "Bokf\u00f6ringsdatum",
+        "process_date": "Behandlingsdatum",
+        "due_date": "F\u00f6rfallodatum",
+        "foreign_amount": "Utl\u00e4ndskt belopp",
+        "payment_date": "Betalningsdatum",
+        "invoice_date": "Fakturadatum",
+        "internal_reference": "Intern referens"
+    },
+    "config": {
+        "html_language": "sv"
+    }
+}
