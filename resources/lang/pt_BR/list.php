@@ -42,7 +42,7 @@ return [
     'lastActivity'            => 'Última atividade',
     'balanceDiff'             => 'Diferença de saldo',
     'matchesOn'               => 'Correspondido em',
-    'other_meta_data'         => 'Other meta data',
+    'other_meta_data'         => 'Outros meta dados',
     'account_type'            => 'Tipo de conta',
     'created_at'              => 'Criado em',
     'account'                 => 'Conta',
