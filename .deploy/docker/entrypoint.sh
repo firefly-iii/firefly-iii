@@ -101,5 +101,9 @@ php artisan cache:clear
 
 php artisan firefly:instructions install
 
+# make sure we own everything
+echo "Run chown on ${FIREFLY_PATH}"
+chown -R www-data:www-data -R $FIREFLY_PATH
+
 echo "Go!"
 exec apache2-foreground

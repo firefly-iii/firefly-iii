@@ -28,5 +28,4 @@ Please describe your feature request:
 
 - Make a drawing
 - Donate money (just kidding ;)
-- Remember the human
 -->

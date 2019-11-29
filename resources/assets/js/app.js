@@ -108,6 +108,8 @@ const i18n = new VueI18n({
                                  'ru': require('./locales/ru.json'),
                                  'zh': require('./locales/zh.json'),
                                  'zh-tw': require('./locales/zh-tw.json'),
+                                 'zh-cn': require('./locales/zh-cn.json'),
+                                 'sv': require('./locales/sv.json'),
                              }
                          });
 
