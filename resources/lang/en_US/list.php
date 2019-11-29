@@ -51,6 +51,7 @@ return [
     'repeat_freq'             => 'Repeats',
     'description'             => 'Description',
     'amount'                  => 'Amount',
+    'balance'                 => 'Balance',
     'internal_reference'      => 'Internal reference',
     'date'                    => 'Date',
     'interest_date'           => 'Interest date',

@@ -51,6 +51,7 @@ return [
     'repeat_freq'             => 'Repetición:',
     'description'             => 'Descripción',
     'amount'                  => 'Monto',
+    'balance'                 => 'Saldar',
     'internal_reference'      => 'Referencia interna',
     'date'                    => 'Fecha',
     'interest_date'           => 'Tasa de interés',
