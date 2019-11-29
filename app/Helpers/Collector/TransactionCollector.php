@@ -324,9 +324,7 @@ class TransactionCollector implements TransactionCollectorInterface
         // add balance to Transactions, so, need to be sort by date
         $set->each(
             function (Transaction $transaction) use (&$initial_amount) {
-                // setting the balance
-                $initial_amount = bcadd($initial_amount, $transaction->transaction_amount);
-                $transaction->amount_balance = $initial_amount;
+                TransactionCollector::setTransactionBalance($transaction, $initial_amount);
             }
         );
 
@@ -338,6 +336,13 @@ class TransactionCollector implements TransactionCollectorInterface
         return $set;
     }
 
+    private static function setTransactionBalance(Transaction &$transaction, string &$initial_amount): void
+    {
+        // setting the balance
+        $initial_amount = bcadd($initial_amount, $transaction->transaction_amount);
+        $transaction->amount_balance = $initial_amount;
+    }
+
     /**
      * Get the amount balance of account skipping the calc of offset by $limit and $page
      */
@@ -347,7 +352,7 @@ class TransactionCollector implements TransactionCollectorInterface
 
         if ($page < 1) {
             $page = 1;
-        }else{
+        } else {
             $page++;
         }
 
@@ -358,17 +363,11 @@ class TransactionCollector implements TransactionCollectorInterface
         $set->sortBy('date')->each(
             function (Transaction $transaction) use (&$initial_amount) {
                 // setting the balance
-                $initial_amount = bcadd($initial_amount, $transaction->transaction_amount);
-                $transaction->amount_balance = $initial_amount;
+                TransactionCollector::setTransactionBalance($transaction, $initial_amount);
             }
         );
 
         return $initial_amount;
-    }
-
-    private function getAmountBalanceByTransaction(Collection $transactions)
-    {
-        # code...
     }
 
     /**
