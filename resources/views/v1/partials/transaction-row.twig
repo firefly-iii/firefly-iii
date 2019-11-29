@@ -48,6 +48,9 @@
         {{ transaction|transactionDestinationAccount }}
     </td>
 
+    {# amount's sum #}
+    <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmountBalance }}</span></td>
+
     {# budget, if opted to show. #}
     {% if showBudgets %}
         <td class="hidden-xs">

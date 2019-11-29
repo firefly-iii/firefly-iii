@@ -43,6 +43,7 @@ class Transaction extends Twig_Extension
             new Twig_SimpleFilter('transactionReconciled', [TransactionExtension::class, 'isReconciled'], ['is_safe' => ['html']]),
             new Twig_SimpleFilter('transactionHasAtt', [TransactionExtension::class, 'hasAttachments'], ['is_safe' => ['html']]),
             new Twig_SimpleFilter('transactionAmount', [TransactionExtension::class, 'amount'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionAmountBalance', [TransactionExtension::class, 'amountBalance'], ['is_safe' => ['html']]),
             new Twig_SimpleFilter('transactionArrayAmount', [TransactionExtension::class, 'amountArray'], ['is_safe' => ['html']]),
             new Twig_SimpleFilter('transactionBudgets', [TransactionExtension::class, 'budgets'], ['is_safe' => ['html']]),
             new Twig_SimpleFilter('transactionCategories', [TransactionExtension::class, 'categories'], ['is_safe' => ['html']]),
