@@ -128,6 +128,9 @@ class Transaction extends Model
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
+    /** @var string Balance of amount */
+    public $amount_balance = "0.0";
+
     /**
      * Check if a table is joined.
      *

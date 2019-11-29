@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TransactionCollector.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
@@ -37,6 +38,7 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -65,45 +67,45 @@ class TransactionCollector implements TransactionCollectorInterface
     private $count = 0;
     /** @var array */
     private $fields
-        = [
-            'transaction_journals.id as journal_id',
-            'transaction_journals.description',
-            'transaction_journals.date',
-            'transaction_journals.encrypted',
-            'transaction_journals.created_at',
-            'transaction_journals.updated_at',
-            'transaction_types.type as transaction_type_type',
-            'transaction_journals.bill_id',
-            'transaction_journals.updated_at',
-            'bills.name as bill_name',
-            'bills.name_encrypted as bill_name_encrypted',
+    = [
+        'transaction_journals.id as journal_id',
+        'transaction_journals.description',
+        'transaction_journals.date',
+        'transaction_journals.encrypted',
+        'transaction_journals.created_at',
+        'transaction_journals.updated_at',
+        'transaction_types.type as transaction_type_type',
+        'transaction_journals.bill_id',
+        'transaction_journals.updated_at',
+        'bills.name as bill_name',
+        'bills.name_encrypted as bill_name_encrypted',
 
-            'transactions.id as id',
-            'transactions.description as transaction_description',
-            'transactions.account_id',
-            'transactions.reconciled',
-            'transactions.identifier',
-            'transactions.transaction_journal_id',
-            'transactions.amount as transaction_amount',
-            'transactions.transaction_currency_id as transaction_currency_id',
+        'transactions.id as id',
+        'transactions.description as transaction_description',
+        'transactions.account_id',
+        'transactions.reconciled',
+        'transactions.identifier',
+        'transactions.transaction_journal_id',
+        'transactions.amount as transaction_amount',
+        'transactions.transaction_currency_id as transaction_currency_id',
 
-            'transaction_currencies.name as transaction_currency_name',
-            'transaction_currencies.code as transaction_currency_code',
-            'transaction_currencies.symbol as transaction_currency_symbol',
-            'transaction_currencies.decimal_places as transaction_currency_dp',
+        'transaction_currencies.name as transaction_currency_name',
+        'transaction_currencies.code as transaction_currency_code',
+        'transaction_currencies.symbol as transaction_currency_symbol',
+        'transaction_currencies.decimal_places as transaction_currency_dp',
 
-            'transactions.foreign_amount as transaction_foreign_amount',
-            'transactions.foreign_currency_id as foreign_currency_id',
+        'transactions.foreign_amount as transaction_foreign_amount',
+        'transactions.foreign_currency_id as foreign_currency_id',
 
-            'foreign_currencies.code as foreign_currency_code',
-            'foreign_currencies.symbol as foreign_currency_symbol',
-            'foreign_currencies.decimal_places as foreign_currency_dp',
+        'foreign_currencies.code as foreign_currency_code',
+        'foreign_currencies.symbol as foreign_currency_symbol',
+        'foreign_currencies.decimal_places as foreign_currency_dp',
 
-            'accounts.name as account_name',
-            'accounts.encrypted as account_encrypted',
-            'accounts.iban as account_iban',
-            'account_types.type as account_type',
-        ];
+        'accounts.name as account_name',
+        'accounts.encrypted as account_encrypted',
+        'accounts.iban as account_iban',
+        'account_types.type as account_type',
+    ];
     /** @var array */
     private $filters = [InternalTransferFilter::class];
     /** @var bool */
@@ -128,6 +130,8 @@ class TransactionCollector implements TransactionCollectorInterface
     private $run = false;
     /** @var User */
     private $user;
+    /** @var string */
+    private $amountBalance = '0.0';
 
     /**
      * Constructor.
@@ -188,12 +192,12 @@ class TransactionCollector implements TransactionCollectorInterface
                         $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $invertedAmount);
                     }
                 )
-                   ->orWhere(
-                       function (EloquentBuilder $q3) use ($amount) {
-                           // amount > 0 and .amount < $amount
-                           $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '<', $amount);
-                       }
-                   );
+                    ->orWhere(
+                        function (EloquentBuilder $q3) use ($amount) {
+                            // amount > 0 and .amount < $amount
+                            $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '<', $amount);
+                        }
+                    );
             }
         );
 
@@ -216,12 +220,12 @@ class TransactionCollector implements TransactionCollectorInterface
                         $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $invertedAmount);
                     }
                 )
-                   ->orWhere(
-                       function (EloquentBuilder $q3) use ($amount) {
-                           // amount > 0 and .amount > $amount
-                           $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '>', $amount);
-                       }
-                   );
+                    ->orWhere(
+                        function (EloquentBuilder $q3) use ($amount) {
+                            // amount > 0 and .amount > $amount
+                            $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '>', $amount);
+                        }
+                    );
             }
         );
 
@@ -248,7 +252,7 @@ class TransactionCollector implements TransactionCollectorInterface
         $countQuery->getQuery()->groups     = null;
         $countQuery->getQuery()->orders     = null;
         $countQuery->groupBy('accounts.user_id');
-        $this->count = (int)$countQuery->count();
+        $this->count = (int) $countQuery->count();
 
         return $this->count;
     }
@@ -290,7 +294,7 @@ class TransactionCollector implements TransactionCollectorInterface
         $cache = new CacheProperties;
         $cache->addProperty($key);
         foreach ($this->filters as $filter) {
-            $cache->addProperty((string)$filter);
+            $cache->addProperty((string) $filter);
         }
         if (false === $this->ignoreCache && $cache->has()) {
             Log::debug(sprintf('Return cache of query with ID "%s".', $key));
@@ -309,12 +313,65 @@ class TransactionCollector implements TransactionCollectorInterface
             function (Transaction $transaction) {
                 $transaction->date = new Carbon($transaction->date);
             }
-
         );
+
+        $set = $set->sortBy('date');
+
+        $initial_amount = $this->amountBalance;
+
+        // add balance to Transactions, so, need to be sort by date
+        $set->each(
+            function (Transaction $transaction) use (&$initial_amount) {
+                // setting the balance
+                $initial_amount = bcadd($initial_amount, $transaction->transaction_amount);
+                $transaction->amount_balance = $initial_amount;
+            }
+        );
+
+        $set = $set->reverse();
+
         Log::debug(sprintf('Cached query with ID "%s".', $key));
         $cache->store($set);
 
         return $set;
+    }
+
+    /**
+     * Get the amount balance of account skipping the calc of offset by $limit and $page
+     */
+    private function getAmountBalance($limit, $page): string
+    {
+        $initial_amount = '0.0';
+
+        if($page < 1){
+            $page = 1;
+        }
+
+        /** @var Collection $set */
+        $set = $this->query->get(array_values($this->fields))->slice($limit * $page);
+
+        // loop for date.
+        $set->each(
+            function (Transaction $transaction) {
+                $transaction->date = new Carbon($transaction->date);
+            }
+        );
+
+        // add balance to Transactions, so, need to be sort by date
+        $set->sortBy('date')->each(
+            function (Transaction $transaction) use (&$initial_amount) {
+                // setting the balance
+                $initial_amount = bcadd($initial_amount, $transaction->transaction_amount);
+                $transaction->amount_balance = $initial_amount;
+            }
+        );
+
+        return $initial_amount;
+    }
+
+    private function getAmountBalanceByTransaction(Collection $transactions)
+    {
+        # code...
     }
 
     /**
@@ -386,7 +443,8 @@ class TransactionCollector implements TransactionCollectorInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $accounts = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts = $repository->getAccountsByType([AccountType::ASSET, AccountType::
+        DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
@@ -624,6 +682,7 @@ class TransactionCollector implements TransactionCollectorInterface
 
         if (null !== $this->limit) {
             $offset       = ($this->limit * $page);
+            $this->amountBalance = $this->getAmountBalance($this->limit, $page);
             $this->offset = $offset;
             $this->query->skip($offset);
             Log::debug(sprintf('Changed offset to %d', $offset));
@@ -745,21 +804,21 @@ class TransactionCollector implements TransactionCollectorInterface
         Log::debug('TransactionCollector::startQuery');
         /** @var EloquentBuilder $query */
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transactions.transaction_currency_id')
-                            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', 'transactions.foreign_currency_id')
-                            ->whereNull('transactions.deleted_at')
-                            ->whereNull('transaction_journals.deleted_at')
-                            ->where('transaction_journals.user_id', $this->user->id)
-                            ->orderBy('transaction_journals.date', 'DESC')
-                            ->orderBy('transaction_journals.order', 'ASC')
-                            ->orderBy('transaction_journals.id', 'DESC')
-                            ->orderBy('transaction_journals.description', 'DESC')
-                            ->orderBy('transactions.identifier', 'ASC')
-                            ->orderBy('transactions.amount', 'DESC');
+            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transactions.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', 'transactions.foreign_currency_id')
+            ->whereNull('transactions.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.description', 'DESC')
+            ->orderBy('transactions.identifier', 'ASC')
+            ->orderBy('transactions.amount', 'DESC');
 
         $this->query = $query;
     }
@@ -927,8 +986,8 @@ class TransactionCollector implements TransactionCollectorInterface
                 'transactions as opposing',
                 function (JoinClause $join) {
                     $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
-                         ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
-                         ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
+                        ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
+                        ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
                 }
             );
             $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');
