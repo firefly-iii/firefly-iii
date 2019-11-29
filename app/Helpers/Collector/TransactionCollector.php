@@ -132,6 +132,8 @@ class TransactionCollector implements TransactionCollectorInterface
     private $user;
     /** @var string */
     private $amountBalance = '0.0';
+    /** @var Collection */
+    private $transactionsBalance;
 
     /**
      * Constructor.
@@ -343,19 +345,14 @@ class TransactionCollector implements TransactionCollectorInterface
     {
         $initial_amount = '0.0';
 
-        if($page < 1){
+        if ($page < 1) {
             $page = 1;
+        }else{
+            $page++;
         }
 
         /** @var Collection $set */
-        $set = $this->query->get(array_values($this->fields))->slice($limit * $page);
-
-        // loop for date.
-        $set->each(
-            function (Transaction $transaction) {
-                $transaction->date = new Carbon($transaction->date);
-            }
-        );
+        $set = $this->transactionsBalance->slice($limit * $page);
 
         // add balance to Transactions, so, need to be sort by date
         $set->sortBy('date')->each(
@@ -411,6 +408,7 @@ class TransactionCollector implements TransactionCollectorInterface
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
             Log::debug(sprintf('setAccounts: %s', implode(', ', $accountIds)));
+            $this->transactionsBalance = $this->query->get(array_values($this->fields));
             $this->accountIds = $accountIds;
         }
 
