@@ -144,11 +144,17 @@ class ShowController extends Controller
     public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $start */
-        $start      = session('first', Carbon::now()->startOfYear());
-        $end        = new Carbon;
+        $allStart      = session('first', Carbon::now()->startOfYear());
+        $allEnd        = new Carbon;
+
+        // use session range:
+        $start = session('start');
+        $end = session('start');
+
+
         $page       = (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
-        $limits     = $this->getLimits($budget, $start, $end);
+        $limits     = $this->getLimits($budget, $allStart, $allEnd);
         $repetition = null;
 
         // collector:
