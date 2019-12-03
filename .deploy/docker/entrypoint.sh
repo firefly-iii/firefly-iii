@@ -50,7 +50,7 @@ if [[ -z "$DB_PORT" ]]; then
   fi
 fi
 if [[ ! -z "$DB_PORT" ]]; then
-  $FIREFLY_PATH/.deploy/docker/wait-for-it.sh "${DB_HOST}:${DB_PORT}" -- echo "db is up. Time to execute artisan commands"
+  $FIREFLY_PATH/.deploy/docker/wait-for-it.sh "${DB_HOST}:${DB_PORT}" -t 60 -- echo "DB is up. Time to execute artisan commands"
 fi
 #env $(grep -v "^\#" .env | xargs) 
 php artisan cache:clear
