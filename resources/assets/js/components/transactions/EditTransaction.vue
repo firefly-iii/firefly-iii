@@ -121,6 +121,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
+                                    <!-- -->
                                     <amount
                                             :source="transaction.source_account"
                                             :destination="transaction.destination_account"
@@ -220,6 +221,10 @@
                     return amount * -1;
                 }
                 return amount;
+            },
+            roundNumber(amount, decimals) {
+                let multiplier = Math.pow(10, decimals);
+                return Math.round(amount * multiplier) / multiplier;
             },
             selectedSourceAccount(index, model) {
                 if (typeof model === 'string') {
@@ -367,20 +372,20 @@
                 }
 
                 this.transactions.push({
-                    transaction_journal_id: transaction.transaction_journal_id,
-                    description: transaction.description,
-                    date: transaction.date.substr(0, 10),
-                    amount: this.positiveAmount(transaction.amount),
-                    category: transaction.category_name,
-                    errors: {
-                        source_account: [],
-                        destination_account: [],
-                        description: [],
-                        amount: [],
-                        date: [],
-                        budget_id: [],
-                        foreign_amount: [],
-                        category: [],
+                                           transaction_journal_id: transaction.transaction_journal_id,
+                                           description: transaction.description,
+                                           date: transaction.date.substr(0, 10),
+                                           amount: this.roundNumber(this.positiveAmount(transaction.amount), transaction.currency_decimal_places),
+                                           category: transaction.category_name,
+                                           errors: {
+                                               source_account: [],
+                                               destination_account: [],
+                                               description: [],
+                                               amount: [],
+                                               date: [],
+                                               budget_id: [],
+                                               foreign_amount: [],
+                                               category: [],
                         piggy_bank: [],
                         tags: [],
                         // custom fields:
@@ -409,7 +414,7 @@
                         notes: transaction.notes
                     },
                     foreign_amount: {
-                        amount: this.positiveAmount(transaction.foreign_amount),
+                        amount: this.roundNumber(this.positiveAmount(transaction.foreign_amount), transaction.foreign_currency_decimal_places),
                         currency_id: transaction.foreign_currency_id
                     },
                     source_account: {
