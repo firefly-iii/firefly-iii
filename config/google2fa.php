@@ -91,4 +91,7 @@ return [
      */
     'throw_exceptions' => true,
 
+
+    'store_in_cookie' => true,
+
 ];
