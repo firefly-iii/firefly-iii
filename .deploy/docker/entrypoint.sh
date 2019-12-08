@@ -68,8 +68,11 @@ if [[ $DKR_RUN_MIGRATION != "false" ]]; then
 fi
 
 # there are 13 upgrade commands
+if [[ $DKR_RUN_UPGRADE == "false" ]]; then
+  echo 'Will NOT run upgrade commands.'
+fi
 
-if [[ $DKR_RUN_MIGRATION != "false" ]]; then
+if [[ $DKR_RUN_UPGRADE != "false" ]]; then
   php artisan firefly-iii:transaction-identifiers
   php artisan firefly-iii:migrate-to-groups
   php artisan firefly-iii:account-currencies
@@ -86,6 +89,10 @@ if [[ $DKR_RUN_MIGRATION != "false" ]]; then
 fi
 
 # there are 15 verify commands
+if [[ $DKR_RUN_VERIFY == "false" ]]; then
+  echo 'Will NOT run verify commands.'
+fi
+
 if [[ $DKR_RUN_VERIFY != "false" ]]; then
   php artisan firefly-iii:fix-piggies
   php artisan firefly-iii:create-link-types
@@ -105,6 +112,10 @@ if [[ $DKR_RUN_VERIFY != "false" ]]; then
 fi
 
 # report commands
+if [[ $DKR_RUN_REPORT == "false" ]]; then
+  echo 'Will NOT run report commands.'
+fi
+
 if [[ $DKR_RUN_REPORT != "false" ]]; then
   php artisan firefly-iii:report-empty-objects
   php artisan firefly-iii:report-sum
@@ -112,6 +123,11 @@ fi
 
 
 php artisan firefly-iii:restore-oauth-keys
+
+if [[ $DKR_RUN_REPORT == "false" ]]; then
+  echo 'Will NOT generate new OAuth keys.'
+fi
+
 if [[ $DKR_RUN_PASSPORT_INSTALL != "false" ]]; then
   php artisan passport:install
 fi
