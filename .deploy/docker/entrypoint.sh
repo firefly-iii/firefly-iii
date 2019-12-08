@@ -57,6 +57,10 @@ echo "Run various artisan commands..."
 
 php artisan cache:clear
 
+if [[ $DKR_RUN_MIGRATION == "false" ]]; then
+  echo "Will NOT run migration commands."
+fi
+
 if [[ $DKR_RUN_MIGRATION != "false" ]]; then
   php artisan firefly-iii:create-database
   php artisan migrate --seed
