@@ -125,5 +125,12 @@ chown -R www-data:www-data -R $FIREFLY_PATH
 
 php artisan firefly:instructions install
 
+echo "DKR_CHECK_SQLITE '$DKR_CHECK_SQLITE'"
+echo "DKR_RUN_MIGRATION '$DKR_RUN_MIGRATION'"
+echo "DKR_RUN_UPGRADE '$DKR_RUN_UPGRADE'"
+echo "DKR_RUN_VERIFY '$DKR_RUN_VERIFY'"
+echo "DKR_RUN_REPORT '$DKR_RUN_REPORT'"
+echo "DKR_RUN_PASSPORT_INSTALL '$DKR_RUN_PASSPORT_INSTALL'"
+
 echo "Go!"
 exec apache2-foreground
