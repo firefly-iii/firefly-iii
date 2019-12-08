@@ -19,9 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Illuminate\Support\Str;
 
-declare(strict_types=1);
 
 
 $databaseUrl = getenv('DATABASE_URL');
