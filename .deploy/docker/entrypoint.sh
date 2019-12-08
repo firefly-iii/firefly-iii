@@ -18,12 +18,11 @@ mkdir -p $FIREFLY_PATH/storage/framework/views/v2
 mkdir -p $FIREFLY_PATH/storage/logs
 mkdir -p $FIREFLY_PATH/storage/upload
 
-if [ $DKR_CHECK_SQLITE != "false" ]
+if [[ $DKR_CHECK_SQLITE != "false" ]]; then
   echo "Touch DB file (if SQLlite)..."
-  if [ $DB_CONNECTION == "sqlite" ]
-  then
-      touch $FIREFLY_PATH/storage/database/database.sqlite
-      echo "Touched!"
+  if [[ $DB_CONNECTION == "sqlite" ]]; then
+    touch $FIREFLY_PATH/storage/database/database.sqlite
+    echo "Touched!"
   fi
 fi
 
@@ -58,14 +57,15 @@ echo "Run various artisan commands..."
 
 php artisan cache:clear
 
-if [ $DKR_RUN_MIGRATION != "false" ]
+if [[ $DKR_RUN_MIGRATION != "false" ]]; then
   php artisan firefly-iii:create-database
   php artisan migrate --seed
   php artisan firefly-iii:decrypt-all
 fi
 
 # there are 13 upgrade commands
-if [ $DKR_RUN_MIGRATION != "false" ]
+
+if [[ $DKR_RUN_MIGRATION != "false" ]]; then
   php artisan firefly-iii:transaction-identifiers
   php artisan firefly-iii:migrate-to-groups
   php artisan firefly-iii:account-currencies
@@ -82,7 +82,7 @@ if [ $DKR_RUN_MIGRATION != "false" ]
 fi
 
 # there are 15 verify commands
-if [ $DKR_RUN_VERIFY != "false" ]
+if [[ $DKR_RUN_VERIFY != "false" ]]; then
   php artisan firefly-iii:fix-piggies
   php artisan firefly-iii:create-link-types
   php artisan firefly-iii:create-access-tokens
@@ -101,14 +101,14 @@ if [ $DKR_RUN_VERIFY != "false" ]
 fi
 
 # report commands
-if [ $DKR_RUN_REPORT != "false" ]
+if [[ $DKR_RUN_REPORT != "false" ]]; then
   php artisan firefly-iii:report-empty-objects
   php artisan firefly-iii:report-sum
 fi
 
 
 php artisan firefly-iii:restore-oauth-keys
-if [ $DKR_RUN_PASSPORT_INSTALL != "false" ]
+if [[ $DKR_RUN_PASSPORT_INSTALL != "false" ]]; then
   php artisan passport:install
 fi
 
