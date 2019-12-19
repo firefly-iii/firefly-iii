@@ -149,7 +149,7 @@ class ShowController extends Controller
 
         // use session range:
         $start = session('start');
-        $end = session('start');
+        $end = session('end');
 
 
         $page       = (int)$request->get('page');
