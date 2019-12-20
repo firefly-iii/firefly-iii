@@ -151,6 +151,21 @@ class Account extends Model
     }
 
     /**
+     * Get the account number.
+     *
+     * @return string
+     */
+    public function getAccountNumberAttribute(): ?string
+    {
+        /** @var AccountMeta $metaValue */
+        $metaValue = $this->accountMeta()
+                          ->where('name', 'account_number')
+                          ->first();
+
+        return $metaValue ? $metaValue->data : null;
+    }
+
+    /**
      * @return string
      * @codeCoverageIgnore
      */

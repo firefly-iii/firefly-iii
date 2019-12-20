@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountContains.php
+ * FromAccountNumberIs.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,9 +27,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
- * Class FromAccountContains.
+ * Class FromAccountNumberIs.
  */
-final class FromAccountContains extends AbstractTrigger implements TriggerInterface
+final class FromAccountNumberIs extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -63,7 +63,7 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
     }
 
     /**
-     * Returns true when from-account contains X
+     * Returns true when from-account is X.
      *
      * @param TransactionJournal $journal
      *
@@ -74,13 +74,13 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $source     = $repository->getSourceAccount($journal);
-        $strpos     = stripos($source->name, $this->triggerValue);
+        $search     = strtolower($this->triggerValue);
 
-        if (!(false === $strpos)) {
+        if (strtolower($source->iban) === $search || strtolower($source->account_number) === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.',
-                    $journal->id, $source->name, $this->triggerValue
+                    'RuleTrigger FromAccountIs for journal #%d: "%s" or "%s" is "%s", return true.', $journal->id,
+                    $source->iban, $source->account_number, $search
                 )
             );
 
@@ -89,10 +89,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id,
-                $source->name,
-                $this->triggerValue
+                'RuleTrigger FromAccountIs for journal #%d: "%s" and "%s" is NOT "%s", return false.', $journal->id, $source->iban, $source->account_number,
+                $search
             )
         );
 

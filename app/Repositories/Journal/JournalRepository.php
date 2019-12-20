@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -376,5 +377,27 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->store($entry->data);
 
         return $value;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSourceAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->with('account')->where('amount', '<', 0)->first();
+
+        return $transaction->account;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->with('account')->where('amount', '>', 0)->first();
+
+        return $transaction->account;
     }
 }

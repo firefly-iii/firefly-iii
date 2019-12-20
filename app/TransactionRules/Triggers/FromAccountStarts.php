@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -72,18 +71,11 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $name = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalSourceAccounts($journal, false) as $account) {
-            $name .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-        $part   = substr($name, 0, strlen($search));
+        $source     = $repository->getSourceAccount($journal);
+        $search     = strtolower($this->triggerValue);
+        $part       = substr($source->name, 0, strlen($search));
 
         if ($part === $search) {
             Log::debug(sprintf('RuleTrigger FromAccountStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $name, $search));

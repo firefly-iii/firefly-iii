@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -72,19 +71,13 @@ final class FromAccountEnds extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $name = '';
-
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalSourceAccounts($journal, false) as $account) {
-            $name .= strtolower($account->name);
-        }
-
-        $nameLength   = strlen($name);
-        $search       = strtolower($this->triggerValue);
+        $repository   = app(JournalRepositoryInterface::class);
+        $source       = $repository->getSourceAccount($journal);
+        $nameLength   = strlen($source->name);
+        $search       = $this->triggerValue;
         $searchLength = strlen($search);
+        $part         = substr($source->name, $searchLength * -1);
 
         // if the string to search for is longer than the account name,
         // it will never be in the account name.
@@ -94,9 +87,7 @@ final class FromAccountEnds extends AbstractTrigger implements TriggerInterface
             return false;
         }
 
-        $part = substr($name, $searchLength * -1);
-
-        if ($part === $search) {
+        if (strtolower($part) === strtolower($search)) {
             Log::debug(sprintf('RuleTrigger FromAccountEnds for journal #%d: "%s" ends with "%s", return true.', $journal->id, $name, $search));
 
             return true;

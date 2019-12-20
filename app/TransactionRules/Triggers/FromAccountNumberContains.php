@@ -29,7 +29,7 @@ use Log;
 /**
  * Class FromAccountContains.
  */
-final class FromAccountContains extends AbstractTrigger implements TriggerInterface
+final class FromAccountNumberContains extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -74,13 +74,14 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $source     = $repository->getSourceAccount($journal);
-        $strpos     = stripos($source->name, $this->triggerValue);
+        $strpos1    = stripos($source->iban, $this->triggerValue);
+        $strpos2    = stripos($source->account_number, $this->triggerValue);
 
-        if (!(false === $strpos)) {
+        if (!(false === $strpos1) || !(false === $strpos2)) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.',
-                    $journal->id, $source->name, $this->triggerValue
+                    'RuleTrigger FromAccountContains for journal #%d: "%s" or "%s" contains "%s", return true.',
+                    $journal->id, $source->iban, $source->account_number, $this->triggerValue
                 )
             );
 
@@ -89,9 +90,10 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
+                'RuleTrigger FromAccountContains for journal #%d: "%s" and "%s" does not contain "%s", return false.',
                 $journal->id,
-                $source->name,
+                $source->iban,
+                $source->account_number,
                 $this->triggerValue
             )
         );

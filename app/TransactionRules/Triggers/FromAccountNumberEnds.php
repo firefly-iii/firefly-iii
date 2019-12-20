@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountContains.php
+ * FromAccountEnds.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,9 +27,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
- * Class FromAccountContains.
+ * Class FromAccountNumberEnds.
  */
-final class FromAccountContains extends AbstractTrigger implements TriggerInterface
+final class FromAccountNumberEnds extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -63,7 +63,7 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
     }
 
     /**
-     * Returns true when from-account contains X
+     * Returns true when from account ends with X
      *
      * @param TransactionJournal $journal
      *
@@ -72,15 +72,20 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
     public function triggered(TransactionJournal $journal): bool
     {
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $source     = $repository->getSourceAccount($journal);
-        $strpos     = stripos($source->name, $this->triggerValue);
+        $repository   = app(JournalRepositoryInterface::class);
+        $source       = $repository->getSourceAccount($journal);
+        $search       = $this->triggerValue;
+        $searchLength = strlen($search);
 
-        if (!(false === $strpos)) {
+        $part1 = substr($source->iban, $searchLength * -1);
+        $part2 = substr($source->account_number, $searchLength * -1);
+
+        if (strtolower($part1) === strtolower($search)
+            || strtolower($part2) === strtolower($search)) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.',
-                    $journal->id, $source->name, $this->triggerValue
+                    'RuleTrigger FromAccountEnds for journal #%d: "%s" or "%s" ends with "%s", return true.',
+                    $journal->id, $part1, $part2, $search
                 )
             );
 
@@ -89,10 +94,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id,
-                $source->name,
-                $this->triggerValue
+                'RuleTrigger FromAccountEnds for journal #%d: "%s" and "%s" do not end with "%s", return false.',
+                $journal->id, $part1, $part2, $search
             )
         );
 
