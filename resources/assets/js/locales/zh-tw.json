@@ -29,7 +29,9 @@
         "none_in_select_list": "(\u7a7a)",
         "no_piggy_bank": "(no piggy bank)",
         "description": "\u63cf\u8ff0",
-        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction."
+        "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
+        "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
+        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
     },
     "form": {
         "interest_date": "\u5229\u7387\u65e5\u671f",

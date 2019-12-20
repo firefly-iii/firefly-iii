@@ -29,7 +29,9 @@
         "none_in_select_list": "(nessuna)",
         "no_piggy_bank": "(nessun salvadanaio)",
         "description": "Descrizione",
-        "split_transaction_title_help": "Se crei una transazione suddivisa, \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione."
+        "split_transaction_title_help": "Se crei una transazione suddivisa, \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.",
+        "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
+        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
     },
     "form": {
         "interest_date": "Data interesse",

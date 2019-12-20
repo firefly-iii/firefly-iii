@@ -29,7 +29,9 @@
         "none_in_select_list": "(Keine)",
         "no_piggy_bank": "(kein Sparschwein)",
         "description": "Beschreibung",
-        "split_transaction_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchung geben."
+        "split_transaction_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchung geben.",
+        "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
+        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
     },
     "form": {
         "interest_date": "Zinstermin",
