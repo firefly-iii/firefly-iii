@@ -93,6 +93,22 @@ function lineChart(URI, container) {
 }
 
 /**
+ * Function to draw a line chart that doesn't start at ZERO.
+ * @param URI
+ * @param container
+ */
+function lineNoStartZeroChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = $.extend(true, {}, defaultChartOptions);
+    var chartType = 'line';
+    options.scales.yAxes[0].ticks.beginAtZero = false;
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
  * Overrules the currency the line chart is drawn in.
  *
  * @param URI

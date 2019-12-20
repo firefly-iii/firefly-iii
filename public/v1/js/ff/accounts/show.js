@@ -33,7 +33,8 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    lineChart(chartUri, 'overview-chart');
+    //lineChart(chartUri, 'overview-chart');
+    lineNoStartZeroChart(chartUri, 'overview-chart');
     if (!showAll) {
         multiCurrencyPieChart(incomeCategoryUri, 'account-cat-in');
         multiCurrencyPieChart(expenseCategoryUri, 'account-cat-out');
