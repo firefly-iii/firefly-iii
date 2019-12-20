@@ -181,6 +181,7 @@ return [
     'deposit_source_bad_data'  => '搜索 ID":id"或名称":name"时找不到有效的来源帐户。',
     'deposit_dest_need_data'   => '需要一个有效的目标账户ID和/或目标账户名称才能继续。',
     'deposit_dest_bad_data'    => '搜索 ID":id"或名称":name"时找不到有效的目标帐户。',
+    'deposit_dest_wrong_type' => '提交的目标帐户不是正确的类型。',
 
     'transfer_source_need_data' => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
     'transfer_source_bad_data'  => '搜索 ID":id"或名称":name"时找不到有效的来源帐户。',

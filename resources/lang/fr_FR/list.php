@@ -40,7 +40,7 @@ return [
     'next_due'                => 'Prochaine échéance',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Activité récente',
-    'balanceDiff'             => 'Différence d\'équilibre',
+    'balanceDiff'             => 'Différence de solde',
     'matchesOn'               => 'Correspond à',
     'other_meta_data'         => 'Autres métadonnées',
     'account_type'            => 'Type de compte',
