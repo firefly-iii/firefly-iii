@@ -55,11 +55,25 @@ class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
-        $isDemoSite = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', ), )->data;
-        app('view')->share('IS_DEMO_SITE', $isDemoSite, );
+        $isDemoSite = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site',),)->data;
+        app('view')->share('IS_DEMO_SITE', $isDemoSite,);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
+
+        // share is alpha, is beta
+        $isAlpha = false;
+        if (false !== strpos(config('firefly.version'), 'alpha')) {
+            $isAlpha = true;
+        }
+
+        $isBeta = false;
+        if (false !== strpos(config('firefly.version'), 'beta')) {
+            $isBeta = true;
+        }
+
+        app('view')->share('FF_IS_ALPHA', $isAlpha);
+        app('view')->share('FF_IS_BETA', $isBeta);
 
         $this->middleware(
             function ($request, $next) {
