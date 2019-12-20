@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.8.3 (API 0.10.5)] - 20xx-xx-xx
+
+### 4.8.3-alpha.1
+- #2874
+- #2878
+- #2876
+- Firefly III now supports redis as cache backend.
+- Fine tune Docker container startup times using new environment variables.
+- #2895
+- #2881
+- Footer will warn you of alpha and beta versions.
+- #2901
+
+
 ## [4.8.2 (API 0.10.5)] - 2019-11-29
 
 After several alpha and beta versions (which were mainly released because I was

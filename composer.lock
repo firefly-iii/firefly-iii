@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aab8986d8f659600448665fe949d0c7c",
+    "content-hash": "1e3454ca8ca83a4e72686abb44c79d67",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -1395,16 +1395,16 @@
         },
         {
             "name": "jc5/google2fa-laravel",
-            "version": "2.0.1",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/google2fa-laravel.git",
-                "reference": "6839b1d50855fd9a4bbd5c3cbc2f939c33db3249"
+                "reference": "6d67f8cbe5f39d08c5b6522717764dcaf0ce6312"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/6839b1d50855fd9a4bbd5c3cbc2f939c33db3249",
-                "reference": "6839b1d50855fd9a4bbd5c3cbc2f939c33db3249",
+                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/6d67f8cbe5f39d08c5b6522717764dcaf0ce6312",
+                "reference": "6d67f8cbe5f39d08c5b6522717764dcaf0ce6312",
                 "shasum": ""
             },
             "require": {
@@ -1468,7 +1468,7 @@
                 "google2fa",
                 "laravel"
             ],
-            "time": "2019-12-15T11:50:53+00:00"
+            "time": "2019-12-20T05:07:12+00:00"
         },
         {
             "name": "laravel/framework",

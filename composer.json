@@ -75,7 +75,7 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
-    "jc5/google2fa-laravel": "2.*",
+    "jc5/google2fa-laravel": "2.0.3",
     "laravel/framework": "5.8.*",
     "laravel/passport": "7.*",
     "laravelcollective/html": "5.8.*",
