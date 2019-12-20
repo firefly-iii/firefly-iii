@@ -2,13 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.2 (API 0.10.5)] - 2019-11-28
+## [4.8.3 (API 0.10.5)] - 20xx-xx-xx
+
+### 4.8.3-alpha.1
+- #2874
+- #2878
+- #2876
+- Firefly III now supports redis as cache backend.
+- Fine tune Docker container startup times using new environment variables.
+- #2895
+- #2881
+- Footer will warn you of alpha and beta versions.
+- #2901
+
+
+## [4.8.2 (API 0.10.5)] - 2019-11-29
 
 After several alpha and beta versions (which were mainly released because I was
 farting around with the idea of doing these things) here's the final version
 of the latest release, 4.8.2. Several improvements and lots of bug fixes.
-
-## [3.4.2] - 2015-05-25
 
 ### Added
 - You can now cash out a liability.
@@ -21,12 +33,6 @@ of the latest release, 4.8.2. Several improvements and lots of bug fixes.
    find the latest version for each channel on [this website](https://version.firefly-iii.org/).
 - Firefly III will use version.firefly-iii.org to check what the latest version is.
 - Firefly III is now built for ARM, ARM64 and AMD64 in one Docker build.
- 
-### Deprecated
-- Initial release.
- 
-### Removed
-- Initial release.
  
 ### Fixed
 - [Issue 2783](https://github.com/firefly-iii/firefly-iii/issues/2783) Fixes issues with SQLite databases.
@@ -51,13 +57,8 @@ of the latest release, 4.8.2. Several improvements and lots of bug fixes.
 - [Issue 2852](https://github.com/firefly-iii/firefly-iii/issues/2852) Missing columns from budget overview
 - [Issue 2851](https://github.com/firefly-iii/firefly-iii/issues/2851) Missing chart data.
 
- ### Security
- - Initial release.
- 
- 
  ### API
  - Most API errors now have a number. See [this page](https://docs.firefly-iii.org/support/error_codes) for more details.
-
 
 ## [4.8.2-alpha.1 (API 0.10.5)] - 2019-11-03
 

@@ -18,12 +18,12 @@ mkdir -p $FIREFLY_PATH/storage/framework/views/v2
 mkdir -p $FIREFLY_PATH/storage/logs
 mkdir -p $FIREFLY_PATH/storage/upload
 
-
-echo "Touch DB file (if SQLlite)..."
-if [[ $DB_CONNECTION == "sqlite" ]]
-then
+if [[ $DKR_CHECK_SQLITE != "false" ]]; then
+  echo "Touch DB file (if SQLlite)..."
+  if [[ $DB_CONNECTION == "sqlite" ]]; then
     touch $FIREFLY_PATH/storage/database/database.sqlite
     echo "Touched!"
+  fi
 fi
 
 # make sure we own the volumes:
@@ -41,7 +41,7 @@ composer dump-autoload
 echo "Discover packages..."
 php artisan package:discover
 
-echo "Run various artisan commands..."
+echo "Wait for the database."
 if [[ -z "$DB_PORT" ]]; then
   if [[ $DB_CONNECTION == "pgsql" ]]; then
     DB_PORT=5432
@@ -50,60 +50,103 @@ if [[ -z "$DB_PORT" ]]; then
   fi
 fi
 if [[ ! -z "$DB_PORT" ]]; then
-  $FIREFLY_PATH/.deploy/docker/wait-for-it.sh "${DB_HOST}:${DB_PORT}" -- echo "db is up. Time to execute artisan commands"
+  $FIREFLY_PATH/.deploy/docker/wait-for-it.sh "${DB_HOST}:${DB_PORT}" -t 60 -- echo "DB is up. Time to execute artisan commands."
 fi
-#env $(grep -v "^\#" .env | xargs) 
+
+echo "Run various artisan commands..."
+
 php artisan cache:clear
-php artisan firefly-iii:create-database
-php artisan migrate --seed
-php artisan firefly-iii:decrypt-all
+
+if [[ $DKR_RUN_MIGRATION == "false" ]]; then
+  echo "Will NOT run migration commands."
+fi
+
+if [[ $DKR_RUN_MIGRATION != "false" ]]; then
+  php artisan firefly-iii:create-database
+  php artisan migrate --seed
+  php artisan firefly-iii:decrypt-all
+fi
 
 # there are 13 upgrade commands
-php artisan firefly-iii:transaction-identifiers
-php artisan firefly-iii:migrate-to-groups
-php artisan firefly-iii:account-currencies
-php artisan firefly-iii:transfer-currencies
-php artisan firefly-iii:other-currencies
-php artisan firefly-iii:migrate-notes
-php artisan firefly-iii:migrate-attachments
-php artisan firefly-iii:bills-to-rules
-php artisan firefly-iii:bl-currency
-php artisan firefly-iii:cc-liabilities
-php artisan firefly-iii:back-to-journals
-php artisan firefly-iii:rename-account-meta
-php artisan firefly-iii:migrate-recurrence-meta
+if [[ $DKR_RUN_UPGRADE == "false" ]]; then
+  echo 'Will NOT run upgrade commands.'
+fi
+
+if [[ $DKR_RUN_UPGRADE != "false" ]]; then
+  php artisan firefly-iii:transaction-identifiers
+  php artisan firefly-iii:migrate-to-groups
+  php artisan firefly-iii:account-currencies
+  php artisan firefly-iii:transfer-currencies
+  php artisan firefly-iii:other-currencies
+  php artisan firefly-iii:migrate-notes
+  php artisan firefly-iii:migrate-attachments
+  php artisan firefly-iii:bills-to-rules
+  php artisan firefly-iii:bl-currency
+  php artisan firefly-iii:cc-liabilities
+  php artisan firefly-iii:back-to-journals
+  php artisan firefly-iii:rename-account-meta
+  php artisan firefly-iii:migrate-recurrence-meta
+fi
 
 # there are 15 verify commands
-php artisan firefly-iii:fix-piggies
-php artisan firefly-iii:create-link-types
-php artisan firefly-iii:create-access-tokens
-php artisan firefly-iii:remove-bills
-php artisan firefly-iii:enable-currencies
-php artisan firefly-iii:fix-transfer-budgets
-php artisan firefly-iii:fix-uneven-amount
-php artisan firefly-iii:delete-zero-amount
-php artisan firefly-iii:delete-orphaned-transactions
-php artisan firefly-iii:delete-empty-journals
-php artisan firefly-iii:delete-empty-groups
-php artisan firefly-iii:fix-account-types
-php artisan firefly-iii:rename-meta-fields
-php artisan firefly-iii:fix-ob-currencies
-php artisan firefly-iii:fix-long-descriptions
+if [[ $DKR_RUN_VERIFY == "false" ]]; then
+  echo 'Will NOT run verify commands.'
+fi
+
+if [[ $DKR_RUN_VERIFY != "false" ]]; then
+  php artisan firefly-iii:fix-piggies
+  php artisan firefly-iii:create-link-types
+  php artisan firefly-iii:create-access-tokens
+  php artisan firefly-iii:remove-bills
+  php artisan firefly-iii:enable-currencies
+  php artisan firefly-iii:fix-transfer-budgets
+  php artisan firefly-iii:fix-uneven-amount
+  php artisan firefly-iii:delete-zero-amount
+  php artisan firefly-iii:delete-orphaned-transactions
+  php artisan firefly-iii:delete-empty-journals
+  php artisan firefly-iii:delete-empty-groups
+  php artisan firefly-iii:fix-account-types
+  php artisan firefly-iii:rename-meta-fields
+  php artisan firefly-iii:fix-ob-currencies
+  php artisan firefly-iii:fix-long-descriptions
+fi
 
 # report commands
-php artisan firefly-iii:report-empty-objects
-php artisan firefly-iii:report-sum
+if [[ $DKR_RUN_REPORT == "false" ]]; then
+  echo 'Will NOT run report commands.'
+fi
+
+if [[ $DKR_RUN_REPORT != "false" ]]; then
+  php artisan firefly-iii:report-empty-objects
+  php artisan firefly-iii:report-sum
+fi
+
+
 php artisan firefly-iii:restore-oauth-keys
+
+if [[ $DKR_RUN_REPORT == "false" ]]; then
+  echo 'Will NOT generate new OAuth keys.'
+fi
+
+if [[ $DKR_RUN_PASSPORT_INSTALL != "false" ]]; then
+  php artisan passport:install
+fi
+
 php artisan firefly-iii:set-latest-version --james-is-cool
-
-php artisan passport:install
 php artisan cache:clear
-
-php artisan firefly:instructions install
 
 # make sure we own everything
 echo "Run chown on ${FIREFLY_PATH}"
 chown -R www-data:www-data -R $FIREFLY_PATH
+
+php artisan firefly:instructions install
+
+echo "DKR_CHECK_SQLITE '$DKR_CHECK_SQLITE'"
+echo "DKR_RUN_MIGRATION '$DKR_RUN_MIGRATION'"
+echo "DKR_RUN_UPGRADE '$DKR_RUN_UPGRADE'"
+echo "DKR_RUN_VERIFY '$DKR_RUN_VERIFY'"
+echo "DKR_RUN_REPORT '$DKR_RUN_REPORT'"
+echo "DKR_RUN_PASSPORT_INSTALL '$DKR_RUN_PASSPORT_INSTALL'"
 
 echo "Go!"
 exec apache2-foreground

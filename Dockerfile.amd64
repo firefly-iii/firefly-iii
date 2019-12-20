@@ -3,7 +3,7 @@ FROM jc5x/firefly-iii-base-image:latest
 # See also: https://github.com/JC5/firefly-iii-base-image
 
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
-LABEL version="1.5" maintainer="thegrumpydictator@gmail.com"
+LABEL version="1.6" maintainer="thegrumpydictator@gmail.com"
 
 # Create volumes
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload

@@ -50,6 +50,7 @@ class BankDebitCredit implements ConverterInterface
             'Af', // ING (NL).
             'Debet', // Triodos (NL)
             'S', // "Soll", German term for debit
+            'Debit', // Community America (US)
         ];
         if (in_array(trim($value), $negative, true)) {
             return -1;

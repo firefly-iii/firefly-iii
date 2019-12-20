@@ -62,6 +62,7 @@ class BillTransformer extends AbstractTransformer
     {
         $paidData = $this->paidData($bill);
         $payDates = $this->payDates($bill);
+
         $currency = $bill->transactionCurrency;
         $notes    = $this->repository->getNoteText($bill);
         $notes    = '' === $notes ? null : $notes;
@@ -132,10 +133,18 @@ class BillTransformer extends AbstractTransformer
      */
     protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
+        Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
         $start = clone $bill->date;
+        Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
         while ($start < $date) {
+            Log::debug(
+                sprintf(
+                    '%s (bill start date) < %s (given date) so we jump ahead one period (with a skip maybe).', $start->format('Y-m-d'), $date->format('Y-m-d')
+                )
+            );
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
+        Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
 
         return $start;
     }
@@ -194,22 +203,48 @@ class BillTransformer extends AbstractTransformer
      */
     protected function payDates(Bill $bill): array
     {
+        $this->parameters->set('start', Carbon::create(2019, 11, 1));
+        $this->parameters->set('end', Carbon::create(2019, 11, 30));
+
+        Log::debug(sprintf('Now in payDates() for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
+            Log::debug('No start or end date, give empty array.');
+
             return [];
         }
+        Log::debug(
+            sprintf(
+                'Start date is %s, end is %s', $this->parameters->get('start')->format('Y-m-d'),
+                $this->parameters->get('end')->format('Y-m-d')
+            )
+        );
         $set          = new Collection;
         $currentStart = clone $this->parameters->get('start');
+        $loop         = 0;
         while ($currentStart <= $this->parameters->get('end')) {
+            Log::debug(
+                sprintf(
+                    'In loop #%d, where %s (start param) <= %s (end param).', $loop, $currentStart->format('Y-m-d'),
+                    $this->parameters->get('end')->format('Y-m-d')
+                )
+            );
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+            Log::debug(sprintf('Next expected match is %s', $nextExpectedMatch->format('Y-m-d')));
             // If nextExpectedMatch is after end, we continue:
             if ($nextExpectedMatch > $this->parameters->get('end')) {
+                Log::debug(
+                    sprintf('%s is > %s, so were not going to use it.', $nextExpectedMatch->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d'))
+                );
                 break;
             }
             // add to set
             $set->push(clone $nextExpectedMatch);
+            Log::debug(sprintf('Add next expected match to set because its in the current start/end range, which now contains %d item(s)', $set->count()));
             $nextExpectedMatch->addDay();
             $currentStart = clone $nextExpectedMatch;
+            $loop++;
         }
+        Log::debug(sprintf('Loop has ended after %d loops', $loop));
         $simple = $set->map(
             static function (Carbon $date) {
                 return $date->format('Y-m-d');
