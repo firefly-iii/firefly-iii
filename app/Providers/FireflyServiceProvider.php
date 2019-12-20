@@ -66,7 +66,7 @@ use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Twig;
-use Twig_Extension_Debug;
+use Twig\Extension\DebugExtension;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
@@ -90,14 +90,14 @@ class FireflyServiceProvider extends ServiceProvider
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
-        $config = app('config');
-        Twig::addExtension(new Functions($config));
+        //$config = app('config');
+        //Twig::addExtension(new Functions($config));
         Twig::addExtension(new General);
         Twig::addExtension(new TransactionGroupTwig);
         Twig::addExtension(new Translation);
         Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
-        Twig::addExtension(new Twig_Extension_Debug);
+        //Twig::addExtension(new DebugExtension);
     }
 
     /**
