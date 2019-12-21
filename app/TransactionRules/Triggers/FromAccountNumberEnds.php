@@ -74,18 +74,18 @@ final class FromAccountNumberEnds extends AbstractTrigger implements TriggerInte
         /** @var JournalRepositoryInterface $repository */
         $repository   = app(JournalRepositoryInterface::class);
         $source       = $repository->getSourceAccount($journal);
-        $search       = $this->triggerValue;
+        $search       = strtolower($this->triggerValue);
         $searchLength = strlen($search);
 
         $part1 = substr($source->iban, $searchLength * -1);
         $part2 = substr($source->account_number, $searchLength * -1);
 
-        if (strtolower($part1) === strtolower($search)
-            || strtolower($part2) === strtolower($search)) {
+        if (strtolower($part1) === $search
+            || strtolower($part2) === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountEnds for journal #%d: "%s" or "%s" ends with "%s", return true.',
-                    $journal->id, $part1, $part2, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" ends with "%s", return true.',
+                    get_class($this), $journal->id, $part1, $part2, $search
                 )
             );
 
@@ -94,8 +94,8 @@ final class FromAccountNumberEnds extends AbstractTrigger implements TriggerInte
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountEnds for journal #%d: "%s" and "%s" do not end with "%s", return false.',
-                $journal->id, $part1, $part2, $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" do not end with "%s", return false.',
+                get_class($this), $journal->id, $part1, $part2, $search
             )
         );
 

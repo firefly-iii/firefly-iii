@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountStarts.php
+ * ToAccountNumberContains.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,9 +27,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
- * Class FromAccountStarts.
+ * Class ToAccountNumberContains.
  */
-final class FromAccountStarts extends AbstractTrigger implements TriggerInterface
+final class ToAccountNumberContains extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -63,7 +63,7 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     }
 
     /**
-     * Returns true when from-account starts with X.
+     * Returns true when from-account contains X
      *
      * @param TransactionJournal $journal
      *
@@ -73,15 +73,15 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $source     = $repository->getSourceAccount($journal);
-        $search     = strtolower($this->triggerValue);
-        $part       = substr($source->name, 0, strlen($search));
+        $dest     = $repository->getDestinationAccount($journal);
+        $strpos1    = stripos($dest->iban, $this->triggerValue);
+        $strpos2    = stripos($dest->account_number, $this->triggerValue);
 
-        if ($part === $search) {
+        if (!(false === $strpos1) || !(false === $strpos2)) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger %s for journal #%d: "%s" starts with "%s", return true.',
-                    get_class($this), $journal->id, $source->name, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" contains "%s", return true.',
+                    get_class($this), $journal->id, $dest->iban, $dest->account_number, $this->triggerValue
                 )
             );
 
@@ -90,8 +90,8 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
 
         Log::debug(
             sprintf(
-                'RuleTrigger %s for journal #%d: "%s" does not start with "%s", return false.',
-                get_class($this), $journal->id, $source->name, $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" does not contain "%s", return false.',
+                get_class($this), $journal->id, $dest->iban, $dest->account_number, $this->triggerValue
             )
         );
 

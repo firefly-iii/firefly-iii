@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -72,37 +71,44 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = '';
-
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalDestinationAccounts($journal, false) as $account) {
-            $toAccountName .= strtolower($account->name);
-        }
-
-        $toAccountNameLength = strlen($toAccountName);
-        $search              = strtolower($this->triggerValue);
-        $searchLength        = strlen($search);
+        $repository   = app(JournalRepositoryInterface::class);
+        $dest       = $repository->getDestinationAccount($journal);
+        $nameLength   = strlen($dest->name);
+        $search       = $this->triggerValue;
+        $searchLength = strlen($search);
+        $part         = substr($dest->name, $searchLength * -1);
 
         // if the string to search for is longer than the account name,
-        // return false
-        if ($searchLength > $toAccountNameLength) {
-            Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $toAccountName, $search));
+        // it will never be in the account name.
+        if ($searchLength > $nameLength) {
+            Log::debug(
+                sprintf(
+                    'RuleTrigger %s for journal #%d: "%s" does not end with "%s", return false.',
+                    get_class($this), $journal->id, $dest->name, $search
+                )
+            );
 
             return false;
         }
 
-        $part = substr($toAccountName, $searchLength * -1);
-
-        if ($part === $search) {
-            Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" ends with "%s", return true.', $journal->id, $toAccountName, $search));
+        if (strtolower($part) === strtolower($search)) {
+            Log::debug(
+                sprintf(
+                    'RuleTrigger %s for journal #%d: "%s" ends with "%s", return true.',
+                    get_class($this), $journal->id, $dest->name, $search
+                )
+            );
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $toAccountName, $search));
+        Log::debug(
+            sprintf(
+                'RuleTrigger %s for journal #%d: "%s" does not end with "%s", return false.',
+                get_class($this), $journal->id, $dest->name, $search
+            )
+        );
 
         return false;
     }

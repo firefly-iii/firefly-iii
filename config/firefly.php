@@ -112,6 +112,10 @@ use FireflyIII\TransactionRules\Triggers\TagIs;
 use FireflyIII\TransactionRules\Triggers\ToAccountContains;
 use FireflyIII\TransactionRules\Triggers\ToAccountEnds;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberContains;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberEnds;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberIs;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberStarts;
 use FireflyIII\TransactionRules\Triggers\ToAccountStarts;
 use FireflyIII\TransactionRules\Triggers\TransactionType;
 use FireflyIII\TransactionRules\Triggers\UserAction;
@@ -421,10 +425,10 @@ return [
         'to_account_ends'          => ToAccountEnds::class,
         'to_account_is'            => ToAccountIs::class,
         'to_account_contains'      => ToAccountContains::class,
-        //'to_account_nr_starts'     => ToAccountNumberStarts::class,
-        //'to_account_nr_ends'       => ToAccountNumberEnds::class,
-        //'to_account_nr_is'         => ToAccountNumberIs::class,
-        //'to_account_nr_contains'   => ToAccountNumberContains::class,
+        'to_account_nr_starts'     => ToAccountNumberStarts::class,
+        'to_account_nr_ends'       => ToAccountNumberEnds::class,
+        'to_account_nr_is'         => ToAccountNumberIs::class,
+        'to_account_nr_contains'   => ToAccountNumberContains::class,
         'amount_less'              => AmountLess::class,
         'amount_exactly'           => AmountExactly::class,
         'amount_more'              => AmountMore::class,

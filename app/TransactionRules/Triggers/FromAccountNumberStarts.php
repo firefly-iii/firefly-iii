@@ -81,8 +81,8 @@ final class FromAccountNumberStarts extends AbstractTrigger implements TriggerIn
         if ($part1 === $search || $part2 === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountStarts for journal #%d: "%s" or "%s" starts with "%s", return true.', $journal->id,
-                    $part1, $part2, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" starts with "%s", return true.',
+                    get_class($this), $journal->id, $part1, $part2, $search
                 )
             );
 
@@ -91,8 +91,8 @@ final class FromAccountNumberStarts extends AbstractTrigger implements TriggerIn
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountStarts for journal #%d: "%s" and "%s" do not start with "%s", return false.',
-                $journal->id, $part1, $part2, $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" do not start with "%s", return false.',
+                get_class($this), $journal->id, $part1, $part2, $search
             )
         );
 

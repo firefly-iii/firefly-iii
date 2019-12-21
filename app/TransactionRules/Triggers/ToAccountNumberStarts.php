@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountStarts.php
+ * ToAccountNumberStarts.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,9 +27,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
- * Class FromAccountStarts.
+ * Class FromAccountNumberStarts.
  */
-final class FromAccountStarts extends AbstractTrigger implements TriggerInterface
+final class ToAccountNumberStarts extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -73,15 +73,16 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $source     = $repository->getSourceAccount($journal);
+        $dest     = $repository->getDestinationAccount($journal);
         $search     = strtolower($this->triggerValue);
-        $part       = substr($source->name, 0, strlen($search));
+        $part1      = strtolower(substr($dest->iban, 0, strlen($search)));
+        $part2      = strtolower(substr($dest->account_number, 0, strlen($search)));
 
-        if ($part === $search) {
+        if ($part1 === $search || $part2 === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger %s for journal #%d: "%s" starts with "%s", return true.',
-                    get_class($this), $journal->id, $source->name, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" starts with "%s", return true.',
+                    get_class($this), $journal->id, $part1, $part2, $search
                 )
             );
 
@@ -90,8 +91,8 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
 
         Log::debug(
             sprintf(
-                'RuleTrigger %s for journal #%d: "%s" does not start with "%s", return false.',
-                get_class($this), $journal->id, $source->name, $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" do not start with "%s", return false.',
+                get_class($this), $journal->id, $part1, $part2, $search
             )
         );
 

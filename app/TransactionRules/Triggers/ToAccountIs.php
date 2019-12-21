@@ -72,25 +72,20 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
+        $dest     = $repository->getDestinationAccount($journal);
+        $search     = strtolower($this->triggerValue);
 
-        /** @var Account $account */
-        foreach ($repository->getJournalDestinationAccounts($journal, false) as $account) {
-            $toAccountName .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-
-        if ($toAccountName === $search) {
-            Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is "%s", return true.', $journal->id, $toAccountName, $search));
+        if (strtolower($dest->name) === $search) {
+            Log::debug(sprintf('RuleTrigger %s for journal #%d: "%s" is "%s", return true.',
+                               get_class($this), $journal->id, $dest->name, $search));
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $toAccountName, $search));
+        Log::debug(sprintf('RuleTrigger %s for journal #%d: "%s" is NOT "%s", return false.',
+                           get_class($this), $journal->id, $dest->name, $search));
 
         return false;
     }

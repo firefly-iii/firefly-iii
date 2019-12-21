@@ -80,8 +80,8 @@ final class FromAccountNumberContains extends AbstractTrigger implements Trigger
         if (!(false === $strpos1) || !(false === $strpos2)) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountContains for journal #%d: "%s" or "%s" contains "%s", return true.',
-                    $journal->id, $source->iban, $source->account_number, $this->triggerValue
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" contains "%s", return true.',
+                    get_class($this), $journal->id, $source->iban, $source->account_number, $this->triggerValue
                 )
             );
 
@@ -90,11 +90,8 @@ final class FromAccountNumberContains extends AbstractTrigger implements Trigger
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountContains for journal #%d: "%s" and "%s" does not contain "%s", return false.',
-                $journal->id,
-                $source->iban,
-                $source->account_number,
-                $this->triggerValue
+                'RuleTrigger %s for journal #%d: "%s" and "%s" does not contain "%s", return false.',
+                get_class($this), $journal->id, $source->iban, $source->account_number, $this->triggerValue
             )
         );
 

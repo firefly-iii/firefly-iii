@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountStarts.php
+ * ToAccountNumberEnds.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,9 +27,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
- * Class FromAccountStarts.
+ * Class ToAccountNumberEnds.
  */
-final class FromAccountStarts extends AbstractTrigger implements TriggerInterface
+final class ToAccountNumberEnds extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -63,7 +63,7 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     }
 
     /**
-     * Returns true when from-account starts with X.
+     * Returns true when from account ends with X
      *
      * @param TransactionJournal $journal
      *
@@ -72,16 +72,20 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     public function triggered(TransactionJournal $journal): bool
     {
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $source     = $repository->getSourceAccount($journal);
-        $search     = strtolower($this->triggerValue);
-        $part       = substr($source->name, 0, strlen($search));
+        $repository   = app(JournalRepositoryInterface::class);
+        $dest       = $repository->getDestinationAccount($journal);
+        $search       = strtolower($this->triggerValue);
+        $searchLength = strlen($search);
 
-        if ($part === $search) {
+        $part1 = substr($dest->iban, $searchLength * -1);
+        $part2 = substr($dest->account_number, $searchLength * -1);
+
+        if (strtolower($part1) === $search
+            || strtolower($part2) === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger %s for journal #%d: "%s" starts with "%s", return true.',
-                    get_class($this), $journal->id, $source->name, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" ends with "%s", return true.',
+                    get_class($this), $journal->id, $part1, $part2, $search
                 )
             );
 
@@ -90,8 +94,8 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
 
         Log::debug(
             sprintf(
-                'RuleTrigger %s for journal #%d: "%s" does not start with "%s", return false.',
-                get_class($this), $journal->id, $source->name, $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" do not end with "%s", return false.',
+                get_class($this), $journal->id, $part1, $part2, $search
             )
         );
 

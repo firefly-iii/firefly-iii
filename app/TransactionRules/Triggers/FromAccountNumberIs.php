@@ -79,8 +79,8 @@ final class FromAccountNumberIs extends AbstractTrigger implements TriggerInterf
         if (strtolower($source->iban) === $search || strtolower($source->account_number) === $search) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger FromAccountIs for journal #%d: "%s" or "%s" is "%s", return true.', $journal->id,
-                    $source->iban, $source->account_number, $search
+                    'RuleTrigger %s for journal #%d: "%s" or "%s" is "%s", return true.', $journal->id,
+                    get_class($this), $source->iban, $source->account_number, $search
                 )
             );
 
@@ -89,8 +89,8 @@ final class FromAccountNumberIs extends AbstractTrigger implements TriggerInterf
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountIs for journal #%d: "%s" and "%s" is NOT "%s", return false.', $journal->id, $source->iban, $source->account_number,
-                $search
+                'RuleTrigger %s for journal #%d: "%s" and "%s" are NOT "%s", return false.',
+                get_class($this), $journal->id, $source->iban, $source->account_number, $search
             )
         );
 
