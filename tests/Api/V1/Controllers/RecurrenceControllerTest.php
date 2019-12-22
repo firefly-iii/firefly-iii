@@ -1055,7 +1055,6 @@ class RecurrenceControllerTest extends TestCase
                 'errors'  => [
                     'transactions.0.source_id'   => [
                         null,
-                        'This value is invalid for this field.',
                     ],
                     'transactions.0.source_name' => [
                         null,
@@ -1196,7 +1195,6 @@ class RecurrenceControllerTest extends TestCase
                 'errors'  => [
                     'transactions.0.source_id'   => [
                         null,
-                        'This value is invalid for this field.',
                     ],
                     'transactions.0.source_name' => [
                         null,

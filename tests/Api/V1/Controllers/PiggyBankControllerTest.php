@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -95,14 +96,14 @@ class PiggyBankControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\PiggyBankController
      * @throws Exception
      */
-    public function testStoreNull(): void
+    public function testStoreThrowError(): void
     {
         // mock stuff:
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
-        $repository->shouldReceive('store')->once()->andReturn(null)->once();
+        $repository->shouldReceive('store')->once()->andThrow(new FireflyException('400005'));
 
 
         $data = [
@@ -116,7 +117,7 @@ class PiggyBankControllerTest extends TestCase
         $response = $this->post(route('api.v1.piggy_banks.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertHeader('Content-Type', 'application/json');
-        $response->assertSee('Could not store new piggy bank.');
+        $response->assertSee('400005');
 
     }
 
