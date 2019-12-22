@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.3 (API 0.10.5)] - 20xx-xx-xx
+## [5.0.0 (API 1.0.0)] - 20xx-xx-xx
+
+Firefly III no longer supports the SFTP storage backend, nor does it support
+the ability to use both SFTP and local files as storage backends, because the packages
+required are no longer maintained and will not work with Laravel 6.0.
 
 ### 4.8.3-alpha.1
 - #2874
