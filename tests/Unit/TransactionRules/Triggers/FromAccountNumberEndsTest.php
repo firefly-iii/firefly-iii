@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountNumberContainsTest.php
+ * FromAccountNumberEndsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,137 +25,134 @@ namespace Tests\Unit\TransactionRules\Triggers;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\TransactionRules\Triggers\FromAccountNumberContains;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds;
 use Tests\TestCase;
 
 /**
- * Class FromAccountNumberContainsTest
+ * Class FromAccountNumberEndsTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class FromAccountNumberContainsTest extends TestCase
+class FromAccountNumberEndsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testTriggeredBoth(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account = $this->user()->accounts()->inRandomOrder()->first();
 
         $account->iban = 'FR7620041010053537027625181';
         $account->save();
-        $meta = new AccountMeta;
+        $meta             = new AccountMeta;
         $meta->account_id = $account->id;
-        $meta->name = 'account_number';
-        $meta->data= '7027625181';
+        $meta->name       = 'account_number';
+        $meta->data       = '7027625181';
         $meta->save();
 
         $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
-        $trigger = FromAccountNumberContains::makeFromStrings('7027', false);
+        $trigger = FromAccountNumberEnds::makeFromStrings('5181', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-
-        $meta->forceDelete();
-
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testTriggeredIban(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-
         /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $journal       = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account       = $this->user()->accounts()->inRandomOrder()->first();
         $account->iban = 'FR7620041010053537027625181';
         $account->save();
         $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
-        $trigger = FromAccountNumberContains::makeFromStrings('7027', false);
+        $trigger = FromAccountNumberEnds::makeFromStrings('5181', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testTriggeredNot(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
 
         /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $journal       = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account       = $this->user()->accounts()->inRandomOrder()->first();
+        $account->iban = 'FR7620041010053537027625181';
+        $account->save();
+
         $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
-        $trigger = FromAccountNumberContains::makeFromStrings('some name' . random_int(1, 234), false);
+        $trigger = FromAccountNumberEnds::makeFromStrings('1234', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testTriggeredNumber(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account = $this->user()->accounts()->inRandomOrder()->first();
-        $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
-        $meta = new AccountMeta;
+
+        $meta             = new AccountMeta;
         $meta->account_id = $account->id;
-        $meta->name = 'account_number';
-        $meta->data= '7027625181';
+        $meta->name       = 'account_number';
+        $meta->data       = '7027625181';
         $meta->save();
 
-        $trigger = FromAccountNumberContains::makeFromStrings('276251', false);
+        $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
+
+        $trigger = FromAccountNumberEnds::makeFromStrings('5181', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-        $meta->forceDelete();
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
         $value      = '';
-        $result     = FromAccountNumberContains::willMatchEverything($value);
+        $result     = FromAccountNumberEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
         $value      = 'x';
-        $result     = FromAccountNumberContains::willMatchEverything($value);
+        $result     = FromAccountNumberEnds::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberContains
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds
      */
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
         $value      = null;
-        $result     = FromAccountNumberContains::willMatchEverything($value);
+        $result     = FromAccountNumberEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }
