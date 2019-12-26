@@ -75,7 +75,7 @@ final class ToAccountNumberStarts extends AbstractTrigger implements TriggerInte
         $repository = app(JournalRepositoryInterface::class);
         $dest     = $repository->getDestinationAccount($journal);
         $search     = strtolower($this->triggerValue);
-        $part1      = strtolower(substr($dest->iban, 0, strlen($search)));
+        $part1      = strtolower(substr((string)$dest->iban, 0, strlen($search)));
         $part2      = strtolower(substr($dest->account_number, 0, strlen($search)));
 
         if ($part1 === $search || $part2 === $search) {

@@ -77,7 +77,7 @@ final class FromAccountNumberEnds extends AbstractTrigger implements TriggerInte
         $search       = strtolower($this->triggerValue);
         $searchLength = strlen($search);
 
-        $part1 = substr($source->iban, $searchLength * -1);
+        $part1 = substr((string)$source->iban, $searchLength * -1);
         $part2 = substr($source->account_number, $searchLength * -1);
 
         if (strtolower($part1) === $search

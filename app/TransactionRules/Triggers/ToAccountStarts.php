@@ -76,7 +76,7 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
         $repository = app(JournalRepositoryInterface::class);
         $dest     = $repository->getDestinationAccount($journal);
         $search     = strtolower($this->triggerValue);
-        $part       = substr($dest->name, 0, strlen($search));
+        $part       = strtolower(substr($dest->name, 0, strlen($search)));
 
         if ($part === $search) {
             Log::debug(

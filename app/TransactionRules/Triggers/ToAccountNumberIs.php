@@ -76,11 +76,11 @@ final class ToAccountNumberIs extends AbstractTrigger implements TriggerInterfac
         $dest     = $repository->getDestinationAccount($journal);
         $search     = strtolower($this->triggerValue);
 
-        if (strtolower($dest->iban) === $search || strtolower($dest->account_number) === $search) {
+        if (strtolower((string)$dest->iban) === $search || strtolower($dest->account_number) === $search) {
             Log::debug(
                 sprintf(
                     'RuleTrigger %s for journal #%d: "%s" or "%s" is "%s", return true.', $journal->id,
-                    get_class($this), $dest->iban, $dest->account_number, $search
+                    get_class($this), (string)$dest->iban, $dest->account_number, $search
                 )
             );
 
@@ -90,7 +90,7 @@ final class ToAccountNumberIs extends AbstractTrigger implements TriggerInterfac
         Log::debug(
             sprintf(
                 'RuleTrigger %s for journal #%d: "%s" and "%s" are NOT "%s", return false.',
-                get_class($this), $journal->id, $dest->iban, $dest->account_number, $search
+                get_class($this), $journal->id, (string)$dest->iban, $dest->account_number, $search
             )
         );
 

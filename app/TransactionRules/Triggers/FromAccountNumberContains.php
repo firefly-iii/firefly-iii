@@ -74,14 +74,14 @@ final class FromAccountNumberContains extends AbstractTrigger implements Trigger
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $source     = $repository->getSourceAccount($journal);
-        $strpos1    = stripos($source->iban, $this->triggerValue);
+        $strpos1    = stripos((string)$source->iban, $this->triggerValue);
         $strpos2    = stripos($source->account_number, $this->triggerValue);
 
         if (!(false === $strpos1) || !(false === $strpos2)) {
             Log::debug(
                 sprintf(
                     'RuleTrigger %s for journal #%d: "%s" or "%s" contains "%s", return true.',
-                    get_class($this), $journal->id, $source->iban, $source->account_number, $this->triggerValue
+                    get_class($this), $journal->id, (string)$source->iban, $source->account_number, $this->triggerValue
                 )
             );
 
@@ -91,7 +91,7 @@ final class FromAccountNumberContains extends AbstractTrigger implements Trigger
         Log::debug(
             sprintf(
                 'RuleTrigger %s for journal #%d: "%s" and "%s" does not contain "%s", return false.',
-                get_class($this), $journal->id, $source->iban, $source->account_number, $this->triggerValue
+                get_class($this), $journal->id, (string)$source->iban, $source->account_number, $this->triggerValue
             )
         );
 

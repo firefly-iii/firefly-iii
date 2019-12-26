@@ -46,8 +46,7 @@ class ToAccountContainsTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account    = $this->user()->accounts()->inRandomOrder()->first();
-        $collection = new Collection([$account]);
-        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
+        $repository->shouldReceive('getDestinationAccount')->once()->andReturn($account);
 
 
         $trigger = ToAccountContains::makeFromStrings($account->name, false);
@@ -65,8 +64,7 @@ class ToAccountContainsTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account    = $this->user()->accounts()->inRandomOrder()->first();
-        $collection = new Collection([$account]);
-        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
+        $repository->shouldReceive('getDestinationAccount')->once()->andReturn($account);
 
 
         $trigger = ToAccountContains::makeFromStrings('some name' . random_int(1, 234), false);

@@ -1,6 +1,6 @@
 <?php
 /**
- * FromAccountContainsTest.php
+ * FromAccountNumberContainsTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,35 +22,67 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\TransactionRules\Triggers\FromAccountContains;
-use Illuminate\Support\Collection;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberContains;
 use Tests\TestCase;
 
 /**
- * Class FromAccountContainsTest
+ * Class FromAccountNumberContainsTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class FromAccountContainsTest extends TestCase
+class FromAccountNumberContainsTest extends TestCase
 {
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountContains
      */
-    public function testTriggered(): void
+    public function testTriggeredBoth(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
 
         /** @var TransactionJournal $journal */
-        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account = $this->user()->accounts()->inRandomOrder()->first();
+
+        $account->iban = 'FR7620041010053537027625181';
+        $account->save();
+        $meta = new AccountMeta;
+        $meta->account_id = $account->id;
+        $meta->name = 'account_number';
+        $meta->data= '7027625181';
+        $meta->save();
+
         $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
-        $trigger = FromAccountContains::makeFromStrings($account->name, false);
+        $trigger = FromAccountNumberContains::makeFromStrings('7027', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
+
+        $meta->forceDelete();
+
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountContains
+     */
+    public function testTriggeredIban(): void
+    {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $account->iban = 'FR7620041010053537027625181';
+        $account->save();
+        $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
+
+        $trigger = FromAccountNumberContains::makeFromStrings('7027', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertTrue($result);
+
     }
 
     /**
@@ -61,13 +93,37 @@ class FromAccountContainsTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
 
         /** @var TransactionJournal $journal */
-        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account = $this->user()->accounts()->inRandomOrder()->first();
         $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
 
         $trigger = FromAccountContains::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountContains
+     */
+    public function testTriggeredNumber(): void
+    {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $repository->shouldReceive('getSourceAccount')->once()->andReturn($account);
+
+        $meta = new AccountMeta;
+        $meta->account_id = $account->id;
+        $meta->name = 'account_number';
+        $meta->data= '7027625181';
+        $meta->save();
+
+        $trigger = FromAccountNumberContains::makeFromStrings('276251', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertTrue($result);
+        $meta->forceDelete();
     }
 
     /**

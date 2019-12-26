@@ -74,14 +74,14 @@ final class ToAccountNumberContains extends AbstractTrigger implements TriggerIn
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $dest     = $repository->getDestinationAccount($journal);
-        $strpos1    = stripos($dest->iban, $this->triggerValue);
+        $strpos1    = stripos((string)$dest->iban, $this->triggerValue);
         $strpos2    = stripos($dest->account_number, $this->triggerValue);
 
         if (!(false === $strpos1) || !(false === $strpos2)) {
             Log::debug(
                 sprintf(
                     'RuleTrigger %s for journal #%d: "%s" or "%s" contains "%s", return true.',
-                    get_class($this), $journal->id, $dest->iban, $dest->account_number, $this->triggerValue
+                    get_class($this), $journal->id, (string)$dest->iban, $dest->account_number, $this->triggerValue
                 )
             );
 
@@ -91,7 +91,7 @@ final class ToAccountNumberContains extends AbstractTrigger implements TriggerIn
         Log::debug(
             sprintf(
                 'RuleTrigger %s for journal #%d: "%s" and "%s" does not contain "%s", return false.',
-                get_class($this), $journal->id, $dest->iban, $dest->account_number, $this->triggerValue
+                get_class($this), $journal->id, (string)$dest->iban, $dest->account_number, $this->triggerValue
             )
         );
 

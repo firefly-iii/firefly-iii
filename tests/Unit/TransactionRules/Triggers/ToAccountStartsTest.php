@@ -46,8 +46,7 @@ class ToAccountStartsTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account    = $this->user()->accounts()->inRandomOrder()->first();
-        $collection = new Collection([$account]);
-        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
+        $repository->shouldReceive('getDestinationAccount')->once()->andReturn($account);
 
 
         $trigger = ToAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
@@ -65,8 +64,7 @@ class ToAccountStartsTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account    = $this->user()->accounts()->inRandomOrder()->first();
-        $collection = new Collection([$account]);
-        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
+        $repository->shouldReceive('getDestinationAccount')->once()->andReturn($account);
 
         $trigger = ToAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
@@ -83,8 +81,7 @@ class ToAccountStartsTest extends TestCase
         /** @var TransactionJournal $journal */
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
         $account    = $this->user()->accounts()->inRandomOrder()->first();
-        $collection = new Collection([$account]);
-        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
+        $repository->shouldReceive('getDestinationAccount')->once()->andReturn($account);
 
         $trigger = ToAccountStarts::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);

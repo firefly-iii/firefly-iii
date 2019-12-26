@@ -75,7 +75,7 @@ final class FromAccountNumberStarts extends AbstractTrigger implements TriggerIn
         $repository = app(JournalRepositoryInterface::class);
         $source     = $repository->getSourceAccount($journal);
         $search     = strtolower($this->triggerValue);
-        $part1      = strtolower(substr($source->iban, 0, strlen($search)));
+        $part1      = strtolower(substr((string)$source->iban, 0, strlen($search)));
         $part2      = strtolower(substr($source->account_number, 0, strlen($search)));
 
         if ($part1 === $search || $part2 === $search) {
