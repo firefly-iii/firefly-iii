@@ -1,7 +1,6 @@
 <?php
-
 /**
- * console.php
+ * ExportData.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,5 +19,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Console\Commands;
 
+use Illuminate\Console\Command;
+
+/**
+ * Class ExportData
+ */
+class ExportData extends Command
+{
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'I export data.';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:export-data';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        //
+    }
+}

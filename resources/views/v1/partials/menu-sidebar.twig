@@ -58,12 +58,35 @@
             <span>{{ 'reports'|_ }}</span>
         </a>
     </li>
-
-    <li class="{{ activeRoutePartial('import') }}">
-        <a href="{{ route('import.index') }}">
-            <i class="fa fa-archive fa-fw"></i>
-            <span>{{ 'import_transactions'|_ }}</span>
+    <li class="{{ activeRoutePartial('import') }} {{ activeRoutePartial('export') }} treeview" id="transaction-menu">
+        <a href="#">
+            <i class="fa fa-hdd-o fa-fw"></i>
+            {% if config('firefly.feature_flags.export') %}
+                <span>{{ 'import_and_export_menu'|_ }}</span>
+            {% else %}
+                <span>{{ 'import_transactions'|_ }}</span>
+            {% endif %}
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
+        <ul class="treeview-menu">
+            <li class="{{ activeRoutePartial('import') }}">
+                <a href="{{ route('import.index') }}">
+                    <i class="fa fa-archive fa-fw"></i>
+                    <span>{{ 'import_transactions'|_ }}</span>
+                </a>
+            </li>
+            {% if config('firefly.feature_flags.export') %}
+            <li class="{{ activeRoutePartial('export') }}">
+                <a href="{{ route('export.index') }}">
+                    <i class="fa fa-life-bouy fa-fw"></i>
+                    <span>{{ 'export_data_menu'|_ }}</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+
     </li>
 
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">

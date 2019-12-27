@@ -488,7 +488,17 @@ Route::group(
 
     }
 );
+/**
+ * Export controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'], static function () {
 
+    // index
+    Route::get('', ['uses' => 'Export\IndexController@index', 'as' => 'index']);
+    Route::get('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
+
+});
 /**
  * Import Controller
  */
