@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -65,39 +64,32 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
 
     /**
      * Returns true when to-account contains X
-     * TODO
-     *
      * @param TransactionJournal $journal
      *
      * @return bool
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalDestinationAccounts($journal, false) as $account) {
-            $toAccountName .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-        $strpos = strpos($toAccountName, $search);
+        $dest       = $repository->getDestinationAccount($journal);
+        $strpos     = stripos($dest->name, $this->triggerValue);
 
         if (!(false === $strpos)) {
-            Log::debug(sprintf('RuleTrigger ToAccountContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $toAccountName, $search));
+            Log::debug(
+                sprintf(
+                    'RuleTrigger %s for journal #%d: "%s" contains "%s", return true.',
+                    get_class($this), $journal->id, $dest->name, $this->triggerValue
+                )
+            );
 
             return true;
         }
 
         Log::debug(
             sprintf(
-                'RuleTrigger ToAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id,
-                $toAccountName,
-                $search
+                'RuleTrigger %s for journal #%d: "%s" does not contain "%s", return false.',
+                get_class($this), $journal->id, $dest->name, $this->triggerValue
             )
         );
 

@@ -301,9 +301,11 @@ class TagRepository implements TagRepositoryInterface
         $journals = $collector->getExtractedJournals();
 
         $sums = [
-            TransactionType::WITHDRAWAL => '0',
-            TransactionType::DEPOSIT    => '0',
-            TransactionType::TRANSFER   => '0',
+            TransactionType::WITHDRAWAL      => '0',
+            TransactionType::DEPOSIT         => '0',
+            TransactionType::TRANSFER        => '0',
+            TransactionType::RECONCILIATION  => '0',
+            TransactionType::OPENING_BALANCE => '0',
         ];
 
         /** @var array $journal */

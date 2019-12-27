@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
@@ -108,6 +109,22 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getJournalSourceAccounts(TransactionJournal $journal): Collection;
+
+    /**
+     * Returns the source account of the journal.
+     *
+     * @param TransactionJournal $journal
+     * @return Account
+     */
+    public function getSourceAccount(TransactionJournal $journal): Account;
+
+    /**
+     * Returns the destination account of the journal.
+     *
+     * @param TransactionJournal $journal
+     * @return Account
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account;
 
     /**
      * Return total amount of journal. Is always positive.

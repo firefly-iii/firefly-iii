@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "\u5403\u9971\u6ca1\uff1f",
+        "welcome_back": "What's playing?",
         "flash_error": "\u9519\u8bef\uff01",
         "flash_success": "\u6210\u529f\uff01",
         "close": "\u5173\u95ed",
@@ -14,7 +14,7 @@
         "submission": "\u63d0\u4ea4",
         "create_another": "\u4fdd\u5b58\u540e\uff0c\u8fd4\u56de\u6b64\u9875\u9762\u521b\u5efa\u53e6\u4e00\u7b14\u8bb0\u5f55\u3002",
         "reset_after": "\u63d0\u4ea4\u540e\u91cd\u7f6e\u8868\u5355",
-        "submit": "\u9001\u51fa",
+        "submit": "\u63d0\u4ea4",
         "amount": "\u91d1\u989d",
         "date": "\u65e5\u671f",
         "tags": "\u6807\u7b7e",
@@ -29,7 +29,9 @@
         "none_in_select_list": "\uff08\u7a7a\uff09",
         "no_piggy_bank": "\uff08\u65e0\u5b58\u94b1\u7f50\uff09",
         "description": "\u63cf\u8ff0",
-        "split_transaction_title_help": "\u5982\u679c\u60a8\u521b\u5efa\u4e86\u4e00\u4e2a\u5206\u5272\u4ea4\u6613\uff0c\u4ea4\u6613\u7684\u6240\u6709\u5206\u5272\u9879\u90fd\u5fc5\u987b\u6709\u5168\u5c40\u63cf\u8ff0\u3002"
+        "split_transaction_title_help": "\u5982\u679c\u60a8\u521b\u5efa\u4e86\u4e00\u4e2a\u5206\u5272\u4ea4\u6613\uff0c\u4ea4\u6613\u7684\u6240\u6709\u5206\u5272\u9879\u90fd\u5fc5\u987b\u6709\u5168\u5c40\u63cf\u8ff0\u3002",
+        "destination_account_reconciliation": "\u60a8\u4e0d\u80fd\u7f16\u8f91\u5bf9\u8d26\u4ea4\u6613\u7684\u76ee\u6807\u8d26\u6237",
+        "source_account_reconciliation": "\u60a8\u4e0d\u80fd\u7f16\u8f91\u5bf9\u8d26\u4ea4\u6613\u7684\u6e90\u8d26\u6237"
     },
     "form": {
         "interest_date": "\u5229\u7387\u65e5\u671f",

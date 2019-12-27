@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -72,31 +71,26 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $fromAccountName = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalSourceAccounts($journal, false) as $account) {
-            $fromAccountName .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-        $strpos = strpos($fromAccountName, $search);
+        $source     = $repository->getSourceAccount($journal);
+        $strpos     = stripos($source->name, $this->triggerValue);
 
         if (!(false === $strpos)) {
-            Log::debug(sprintf('RuleTrigger FromAccountContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $fromAccountName, $search));
+            Log::debug(
+                sprintf(
+                    'RuleTrigger %s for journal #%d: "%s" contains "%s", return true.',
+                    get_class($this), $journal->id, $source->name, $this->triggerValue
+                )
+            );
 
             return true;
         }
 
         Log::debug(
             sprintf(
-                'RuleTrigger FromAccountContains for journal #%d: "%s" does not contain "%s", return false.',
-                $journal->id,
-                $fromAccountName,
-                $search
+                'RuleTrigger %s for journal #%d: "%s" does not contain "%s", return false.',
+                get_class($this), $journal->id, $source->name, $this->triggerValue
             )
         );
 

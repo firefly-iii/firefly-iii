@@ -52,7 +52,6 @@ class DeleteEmptyGroupsTest extends TestCase
     {
         // assume there are no empty groups..
         $this->artisan('firefly-iii:delete-empty-groups')
-             ->expectsOutput('No empty transaction groups.')
              ->assertExitCode(0);
     }
 

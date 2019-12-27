@@ -100,6 +100,14 @@ trait TransactionValidation
             $transactionType = $transaction['type'] ?? $originalType;
             $accountValidator->setTransactionType($transactionType);
 
+            // if no account types are given, just skip the check.
+            if (!isset($transaction['source_id'])
+                && !isset($transaction['source_name'])
+                && !isset($transaction['destination_id'])
+                && !isset($transaction['destination_name'])) {
+                continue;
+            }
+
             // validate source account.
             $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
             $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];

@@ -162,6 +162,7 @@ class AccountValidator
                 $result = $this->validateOBSource($accountId, $accountName);
                 break;
             case TransactionType::RECONCILIATION:
+                Log::debug('Calling validateReconciliationSource');
                 $result = $this->validateReconciliationSource($accountId);
                 break;
         }
@@ -437,19 +438,41 @@ class AccountValidator
      */
     private function validateReconciliationDestination(?int $accountId): bool
     {
+        Log::debug('Now in validateReconciliationDestination');
         if (null === $accountId) {
+            Log::debug('Return FALSE');
+
             return false;
         }
         $result = $this->accountRepository->findNull($accountId);
-        $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
         if (null === $result) {
+            $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
+            Log::debug('Return FALSE');
+
             return false;
         }
+        // $types depends on type of source:
+        $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        // if source is reconciliation, destination can't be.
+        if (null !== $this->source && AccountType::RECONCILIATION === $this->source->accountType->type) {
+            $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        }
+        // if source is not reconciliation, destination MUST be.
+        if (null !== $this->source
+            && in_array(
+                $this->source->accountType->type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true
+            )) {
+            $types = [AccountType::RECONCILIATION];
+        }
+
         if (in_array($result->accountType->type, $types, true)) {
             $this->destination = $result;
+            Log::debug('Return TRUE');
 
             return true;
         }
+        $this->destError = (string)trans('validation.deposit_dest_wrong_type');
+        Log::debug('Return FALSE');
 
         return false;
     }
@@ -461,20 +484,23 @@ class AccountValidator
      */
     private function validateReconciliationSource(?int $accountId): bool
     {
+        Log::debug('In validateReconciliationSource');
         if (null === $accountId) {
+            Log::debug('Return FALSE');
             return false;
         }
         $result = $this->accountRepository->findNull($accountId);
         $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
         if (null === $result) {
+            Log::debug('Return FALSE');
             return false;
         }
         if (in_array($result->accountType->type, $types, true)) {
             $this->source = $result;
-
+            Log::debug('Return TRUE');
             return true;
         }
-
+        Log::debug('Return FALSE');
         return false;
     }
 

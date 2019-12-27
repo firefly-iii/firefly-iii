@@ -72,25 +72,29 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $toAccountName = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-
-        /** @var Account $account */
-        foreach ($repository->getJournalDestinationAccounts($journal, false) as $account) {
-            $toAccountName .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-        $part   = substr($toAccountName, 0, strlen($search));
+        $dest     = $repository->getDestinationAccount($journal);
+        $search     = strtolower($this->triggerValue);
+        $part       = strtolower(substr($dest->name, 0, strlen($search)));
 
         if ($part === $search) {
-            Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" starts with "%s", return true.', $journal->id, $toAccountName, $search));
+            Log::debug(
+                sprintf(
+                    'RuleTrigger %s for journal #%d: "%s" starts with "%s", return true.',
+                    get_class($this), $journal->id, $dest->name, $search
+                )
+            );
 
             return true;
         }
-        Log::debug(sprintf('RuleTrigger ToAccountStarts for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $toAccountName, $search));
+
+        Log::debug(
+            sprintf(
+                'RuleTrigger %s for journal #%d: "%s" does not start with "%s", return false.',
+                get_class($this), $journal->id, $dest->name, $search
+            )
+        );
 
         return false;
     }

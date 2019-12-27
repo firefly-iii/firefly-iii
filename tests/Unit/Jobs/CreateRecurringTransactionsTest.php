@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Event;
 use Log;
 use Preferences;
 use Tests\TestCase;
+use Mockery;
 
 /**
  * Class CreateRecurringTransactionsTest
@@ -65,6 +66,8 @@ class CreateRecurringTransactionsTest extends TestCase
     {
         Event::fake();
         $date = new Carbon();
+
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
 
         // overrule some fields in the recurrence to make it seem it hasnt fired yet.
         $carbon = new Carbon;
@@ -138,6 +141,8 @@ class CreateRecurringTransactionsTest extends TestCase
         $date = new Carbon();
         $this->expectsEvents([StoredTransactionGroup::class]);
 
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
+
         // overrule some fields in the recurrence.
         $carbon = new Carbon;
         $carbon->subDays(4);
@@ -201,6 +206,9 @@ class CreateRecurringTransactionsTest extends TestCase
     {
         Event::fake();
         Log::info(sprintf('Now in test %s.', __METHOD__));
+
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
+
         // mock classes
         $date = new Carbon;
         $date->subDays(4);
@@ -256,7 +264,6 @@ class CreateRecurringTransactionsTest extends TestCase
         $recurringRepos->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection([$recurrence]));
         $recurringRepos->shouldReceive('getJournalCount')->atLeast()->once()->andReturn(0);
         Preferences::shouldReceive('mark')->atLeast()->once();
-
 
         $date = new Carbon();
         $job  = new CreateRecurringTransactions($date);
@@ -380,6 +387,7 @@ class CreateRecurringTransactionsTest extends TestCase
         $recurringRepos->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection([$recurrence]));
         $recurringRepos->shouldReceive('getJournalCount')->atLeast()->once()->andReturn(0);
         Preferences::shouldReceive('mark')->atLeast()->once();
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
 
         $job = new CreateRecurringTransactions($date);
         $job->handle();
@@ -508,6 +516,7 @@ class CreateRecurringTransactionsTest extends TestCase
         $recurringRepos->shouldReceive('getJournalCount')->atLeast()->once()->andReturn(0);
         $recurringRepos->shouldReceive('getPiggyBank')->atLeast()->once()->andReturnNull();
         Preferences::shouldReceive('mark')->atLeast()->once();
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
 
         // return data:
         $recurringRepos->shouldReceive('getBudget')->atLeast()->once()->andReturnNull();
@@ -564,9 +573,10 @@ class CreateRecurringTransactionsTest extends TestCase
         $recurringRepos->shouldReceive('getOccurrencesInRange')->atLeast()->once()->andReturn([$date]);
         $recurringRepos->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection([$recurrence]));
         $recurringRepos->shouldReceive('getJournalCount')->atLeast()->once()->andReturn(0);
-        $recurringRepos->shouldReceive('getPiggyBank')->atLeast()->once()->andReturn($piggy);
-        $piggyEventFactory->shouldReceive('create')->once();
+        $recurringRepos->shouldReceive('getPiggyBank')->atLeast()->once()->andReturn($piggy->id);
+        //$piggyEventFactory->shouldReceive('create')->once();
         Preferences::shouldReceive('mark')->atLeast()->once();
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'lastActivity', Mockery::any()])->atLeast()->once();
 
         // return data:
         $recurringRepos->shouldReceive('getBudget')->atLeast()->once()->andReturnNull();

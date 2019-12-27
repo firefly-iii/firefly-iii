@@ -21,10 +21,19 @@
 
 namespace FireflyIII\Support\Search;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class TransactionSearch
  */
 class TransactionSearch implements GenericSearchInterface
 {
 
+    /**
+     * @inheritDoc
+     */
+    public function search(): Collection
+    {
+        // TODO: Implement search() method.
+    }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
@@ -72,25 +71,20 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $name = '';
-
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
+        $source     = $repository->getSourceAccount($journal);
+        $search     = strtolower($this->triggerValue);
 
-        /** @var Account $account */
-        foreach ($repository->getJournalSourceAccounts($journal, false) as $account) {
-            $name .= strtolower($account->name);
-        }
-
-        $search = strtolower($this->triggerValue);
-
-        if ($name === $search) {
-            Log::debug(sprintf('RuleTrigger FromAccountIs for journal #%d: "%s" is "%s", return true.', $journal->id, $name, $search));
+        if (strtolower($source->name) === $search) {
+            Log::debug(sprintf('RuleTrigger %s for journal #%d: "%s" is "%s", return true.',
+                               get_class($this), $journal->id, $source->name, $search));
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger FromAccountIs for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $name, $search));
+        Log::debug(sprintf('RuleTrigger %s for journal #%d: "%s" is NOT "%s", return false.',
+                           get_class($this), $journal->id, $source->name, $search));
 
         return false;
     }

@@ -260,7 +260,7 @@ class TransactionLinkControllerTest extends TestCase
         Log::warning('The following error is part of a test.');
         $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
-        $response->assertSee('Source or destination is NULL.'); // the creation moment.
+        $response->assertSee('200024'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -384,7 +384,7 @@ class TransactionLinkControllerTest extends TestCase
         Log::warning('The following error is part of a test.');
         $response = $this->put(route('api.v1.transaction_links.update', $journalLink->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
-        $response->assertSee('Source or destination is NULL.'); // the creation moment.
+        $response->assertSee('200024'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
     }
 

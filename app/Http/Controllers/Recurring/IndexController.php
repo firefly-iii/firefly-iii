@@ -82,9 +82,6 @@ class IndexController extends Controller
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
-        $today      = new Carbon;
-        $year       = new Carbon;
-        $year->addYear();
 
         // split collection
         $total = $collection->count();
@@ -98,6 +95,14 @@ class IndexController extends Controller
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
+            $today      = new Carbon;
+            $year       = new Carbon;
+            $year->addYear();
+            if($recurrence->first_date > $today) {
+                $today =clone $recurrence->first_date;
+                $year = clone $today;
+                $year->addYear();
+            }
             $array                 = $transformer->transform($recurrence);
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);

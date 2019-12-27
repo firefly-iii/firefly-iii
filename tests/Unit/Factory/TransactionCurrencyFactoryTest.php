@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\TransactionCurrency;
 use Log;
@@ -64,6 +65,7 @@ class TransactionCurrencyFactoryTest extends TestCase
      */
     public function testCreateEmpty(): void
     {
+        $this->expectException(FireflyException::class);
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         Log::warning('The following error is part of a test.');

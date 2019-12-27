@@ -58,12 +58,12 @@
                 //console.log('Dest   "' + this.destination.name + '"');
                 if (!transactionType && !this.source.name && !this.destination.name) {
                     $(this.$refs.cur).text('');
+
                     return;
                 }
                 if(null === transactionType) {
                     transactionType = '';
                 }
-
                 if ('' === transactionType && '' !== this.source.currency_name) {
                     $(this.$refs.cur).text(this.source.currency_name);
                     return;
@@ -72,7 +72,9 @@
                     $(this.$refs.cur).text(this.destination.currency_name);
                     return;
                 }
-                if (transactionType === 'Withdrawal' || transactionType === 'Transfer') {
+                if (transactionType.toLowerCase() === 'withdrawal' ||
+                    transactionType.toLowerCase() === 'reconciliation' ||
+                    transactionType.toLowerCase() === 'transfer') {
                     $(this.$refs.cur).text(this.source.currency_name);
                     return;
                 }

@@ -29,7 +29,9 @@
         "none_in_select_list": "(geen)",
         "no_piggy_bank": "(geen spaarpotje)",
         "description": "Omschrijving",
-        "split_transaction_title_help": "Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie."
+        "split_transaction_title_help": "Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.",
+        "destination_account_reconciliation": "Je kan de doelrekening van een afstemming niet wijzigen.",
+        "source_account_reconciliation": "Je kan de bronrekening van een afstemming niet wijzigen."
     },
     "form": {
         "interest_date": "Rentedatum",

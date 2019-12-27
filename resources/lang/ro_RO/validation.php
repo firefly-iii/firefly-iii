@@ -181,6 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
     'deposit_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
     'deposit_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
 
     'transfer_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'transfer_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',

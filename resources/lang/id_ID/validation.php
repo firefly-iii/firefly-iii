@@ -181,6 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
 
     'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

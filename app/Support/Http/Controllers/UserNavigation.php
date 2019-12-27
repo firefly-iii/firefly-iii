@@ -177,7 +177,7 @@ trait UserNavigation
         $return = app('url')->previous();
         /** @var ViewErrorBag $errors */
         $errors    = session()->get('errors');
-        $forbidden = ['json'];
+        $forbidden = ['json', 'debug'];
         if ((null === $errors || (null !== $errors && 0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
             session()->put($identifier, $return);

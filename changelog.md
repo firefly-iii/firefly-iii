@@ -2,18 +2,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.8.3 (API 0.10.5)] - 20xx-xx-xx
+## [5.0.0 (API 1.0.0)] - 20xx-xx-xx
 
-### 4.8.3-alpha.1
-- #2874
-- #2878
-- #2876
+*This version has not yet been released.* The latest available version is **5.0.0-alpha.1**.
+
+This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
+
+### Added
+- [Issue 2580](https://github.com/firefly-iii/firefly-iii/issues/2580) Users can now edit reconciliations.
+- [Issue 2723](https://github.com/firefly-iii/firefly-iii/issues/2723) You can now use rules that trigger on account numbers (and IBAN)
+- [Issue 2895](https://github.com/firefly-iii/firefly-iii/issues/2895) Another indicator for negative amounts.
 - Firefly III now supports redis as cache backend.
-- Fine tune Docker container startup times using new environment variables.
-- #2895
-- #2881
 - Footer will warn you of alpha and beta versions.
-- #2901
+- [Issue 2901](https://github.com/firefly-iii/firefly-iii/issues/2901) Can select liability accounts when running rules.
+
+### Changed
+- [Issue 2776](https://github.com/firefly-iii/firefly-iii/issues/2776) Some charts now do relative scaling. Useful for large amounts.
+- [Issue 2702](https://github.com/firefly-iii/firefly-iii/issues/2702) More details on tags overview
+- Fine tune the Docker container startup times using new environment variables.
+
+### Deprecated
+- Firefly III no longer supports the SFTP storage backend, nor does it support the ability to use both SFTP and local files as storage backends, because the
+ packages required are no longer maintained and will not work with Laravel 6.0. 
+
+### Removed
+- Nothing yet.
+
+### Fixed
+- [Issue 2907](https://github.com/firefly-iii/firefly-iii/issues/2907) Bad date display in recurring transactions.
+- [Issue 2912](https://github.com/firefly-iii/firefly-iii/issues/2912) Redirect fix for bills.
+- [Issue 2874](https://github.com/firefly-iii/firefly-iii/issues/2874) More redirect issues fixed.
+- [Issue 2878](https://github.com/firefly-iii/firefly-iii/issues/2878) Typo in code of budget overview.
+- [Issue 2876](https://github.com/firefly-iii/firefly-iii/issues/2876) Trailing zeroes and other issues.
+- [Issue 2881](https://github.com/firefly-iii/firefly-iii/issues/2881) An error when only the title of a split transaction was bad.
+
+### Security
+- Nothing yet.
+
+### API
+- Nothing yet.
 
 
 ## [4.8.2 (API 0.10.5)] - 2019-11-29

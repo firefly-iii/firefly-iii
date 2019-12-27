@@ -103,7 +103,7 @@ return [
     'convert_Transfer'            => 'Convertir le transfert',
 
     'amount'                      => 'Montant',
-    'foreign_amount'              => 'Montant externe',
+    'foreign_amount'              => 'Montant en devise étrangère',
     'existing_attachments'        => 'Pièces jointes existantes',
     'date'                        => 'Date',
     'interest_date'               => 'Date de l’intérêt',

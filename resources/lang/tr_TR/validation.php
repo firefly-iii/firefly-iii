@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Bu geçerli bir IBAN değil.',
-    'zero_or_more'                   => 'The value cannot be negative.',
-    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
+    'zero_or_more'                   => 'Değer negatif olamaz.',
+    'date_or_time'                   => 'Değer geçerli tarih veya zaman formatı olmalıdır (ISO 8601).',
     'source_equals_destination'      => 'Kaynak hesabın hedef hesap eşittir.',
     'unique_account_number_for_user' => 'Bu hesap numarası zaten kullanılmaktadır.',
     'unique_iban_for_user'           => 'Bu IBAN numarası zaten kullanılmaktadır.',
@@ -33,7 +33,7 @@ return [
     'rule_trigger_value'             => 'Bu eylem, seçili işlem için geçersizdir.',
     'rule_action_value'              => 'Bu eylem seçili işlem için geçersizdir.',
     'file_already_attached'          => 'Yüklenen dosya ":name" zaten bu nesneye bağlı.',
-    'file_attached'                  => 'Successfully uploaded file ":name".',
+    'file_attached'                  => '":name" dosyası başarıyla yüklendi.',
     'must_exist'                     => 'ID alanı :attribute veritabanın içinde yok.',
     'all_accounts_equal'             => 'Bu alandaki tüm hesapları eşit olmalıdır.',
     'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',
@@ -181,6 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
 
     'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

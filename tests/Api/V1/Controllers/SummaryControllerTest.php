@@ -136,29 +136,33 @@ class SummaryControllerTest extends TestCase
         // budget repos
         $abRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123', 2 => '456']);
         $budgetRepos->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
-            [
-                [
-                    'currency_id'             => 3,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => 'x',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => 321.21,
-                ],
-                [
-                    'currency_id'             => 1,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => 'x',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => 321.21,
-                ],
 
-            ]
-        );
+        // new stuff
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn([]);
+
+
+        //$opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
+//            [
+//                [
+//                    'currency_id'             => 3,
+//                    'currency_code'           => 'EUR',
+//                    'currency_symbol'         => 'x',
+//                    'currency_decimal_places' => 2,
+//                    'amount'                  => 321.21,
+//                ],
+//                [
+//                    'currency_id'             => 1,
+//                    'currency_code'           => 'EUR',
+//                    'currency_symbol'         => 'x',
+//                    'currency_decimal_places' => 2,
+//                    'amount'                  => 321.21,
+//                ],
+//
+//            ]
+//        );
 
         // account repos:
-        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()
-                     ->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
         $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true);
 
         // net worth calculator
@@ -169,9 +173,10 @@ class SummaryControllerTest extends TestCase
             'end'   => $date->addWeek()->format('Y-m-d'),
         ];
 
+        // TODO AFTER 4.8,0: check if JSON is correct
         $response = $this->get(route('api.v1.summary.basic') . '?' . http_build_query($parameters));
         $response->assertStatus(200);
-        // TODO AFTER 4.8,0: check if JSON is correct
+        //$response->assertSee('hi there');
     }
 
     /**
@@ -237,21 +242,24 @@ class SummaryControllerTest extends TestCase
         // budget repos
         $abRepos->shouldReceive('getAvailableBudgetWithCurrency')->atLeast()->once()->andReturn([1 => '123']);
         $budgetRepos->shouldReceive('getActiveBudgets')->atLeast()->once()->andReturn(new Collection([$budget]));
-        $opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
-            [
-                [
-                    'currency_id'             => 1,
-                    'currency_code'           => 'EUR',
-                    'currency_symbol'         => 'x',
-                    'currency_decimal_places' => 2,
-                    'amount'                  => 321.21,
-                ],
-            ]
-        );
+
+        // new stuff
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn([]);
+
+//        $opsRepos->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn(
+//            [
+//                [
+//                    'currency_id'             => 1,
+//                    'currency_code'           => 'EUR',
+//                    'currency_symbol'         => 'x',
+//                    'currency_decimal_places' => 2,
+//                    'amount'                  => 321.21,
+//                ],
+//            ]
+//        );
 
         // account repos:
-        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()
-                     ->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->atLeast()->once()->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])->andReturn(new Collection([$account]));
         $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true);
 
         // net worth calculator

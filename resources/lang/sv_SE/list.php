@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Summa uttag',
     'sum_deposits'            => 'Summa uttag',
     'sum_transfers'           => 'Summa överföringar',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Avstämning',
     'account_on_spectre'      => 'Konto (Spectre)',
     'account_on_ynab'         => 'Konto (YNAB)',

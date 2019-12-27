@@ -60,10 +60,18 @@
                             <td>{{ trans('list.sum_deposits') }}</td>
                             <td> {{ sums.Deposit|formatAmount }}</td>
                         </tr>
-                        <tr>
-                            <td>{{ trans('list.sum_transfers') }}</td>
-                            <td> {{ sums.Transfer|formatAmount }}</td>
-                        </tr>
+                        {% if sums.Transfer != 0 %}
+                            <tr>
+                                <td>{{ trans('list.sum_transfers') }}</td>
+                                <td> {{ sums.Transfer|formatAmount }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if sums.Reconciliation != 0 %}
+                            <tr>
+                                <td>{{ trans('list.sum_reconciliations') }}</td>
+                                <td> {{ sums.Reconciliation|formatAmount }}</td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
                 <div class="box-footer">
@@ -81,8 +89,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'location'|_ }}</h3>
-
-
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -132,7 +138,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% include 'list/groups' %}
+                    {% include 'list.groups' with {showBudget:true, showCategory: true} %}
 
                     {% if periods|length > 0 %}
                         <p>

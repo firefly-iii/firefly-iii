@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Σύνολο αναλήψεων',
     'sum_deposits'            => 'Σύνολο καταθέσεων',
     'sum_transfers'           => 'Σύνολο μεταφορών',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Συμβιβασμός',
     'account_on_spectre'      => 'Λογαριασμός (Spectre)',
     'account_on_ynab'         => 'Λογαριασμός (YNAB)',

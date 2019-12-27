@@ -29,14 +29,16 @@
         "none_in_select_list": "(aucun)",
         "no_piggy_bank": "(aucune tirelire)",
         "description": "Description",
-        "split_transaction_title_help": "Si vous cr\u00e9ez une op\u00e9ration ventil\u00e9e, il doit y avoir une description globale pour chaque fraction de l'op\u00e9ration."
+        "split_transaction_title_help": "Si vous cr\u00e9ez une op\u00e9ration ventil\u00e9e, il doit y avoir une description globale pour chaque fraction de l'op\u00e9ration.",
+        "destination_account_reconciliation": "Vous ne pouvez pas modifier le compte de destination d'une op\u00e9ration de rapprochement.",
+        "source_account_reconciliation": "Vous ne pouvez pas modifier le compte source d'une op\u00e9ration de rapprochement."
     },
     "form": {
         "interest_date": "Date de l\u2019int\u00e9r\u00eat",
         "book_date": "Date de r\u00e9servation",
         "process_date": "Date de traitement",
         "due_date": "\u00c9ch\u00e9ance",
-        "foreign_amount": "Montant externe",
+        "foreign_amount": "Montant en devise \u00e9trang\u00e8re",
         "payment_date": "Date de paiement",
         "invoice_date": "Date de facturation",
         "internal_reference": "R\u00e9f\u00e9rence interne"

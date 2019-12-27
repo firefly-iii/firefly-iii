@@ -121,7 +121,7 @@ class LinkTypeControllerTest extends TestCase
         Log::warning('The following error is part of a test.');
         $response = $this->post(route('api.v1.link_types.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
-        $response->assertSee('You need the \"owner\"-role to do this.');
+        $response->assertSee('200005');
     }
 
     /**
@@ -211,7 +211,7 @@ class LinkTypeControllerTest extends TestCase
         Log::warning('The following error is part of a test.');
         $response = $this->put(route('api.v1.link_types.update', [$linkType->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
-        $response->assertSee('You cannot edit this link type ');
+        $response->assertSee('200020');
     }
 
     /**
@@ -253,7 +253,7 @@ class LinkTypeControllerTest extends TestCase
         Log::warning('The following error is part of a test.');
         $response = $this->put(route('api.v1.link_types.update', [$linkType->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
-        $response->assertSee('You need the \"owner\"-role to do this.');
+        $response->assertSee('200005');
     }
 
 

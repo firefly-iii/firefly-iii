@@ -27,6 +27,7 @@ use Exception;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Class DeleteEmptyGroups
@@ -54,6 +55,7 @@ class DeleteEmptyGroups extends Command
      */
     public function handle(): int
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $start  = microtime(true);
         $groupIds  =
             TransactionGroup
@@ -61,6 +63,7 @@ class DeleteEmptyGroups extends Command
             ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
 
         $total = count($groupIds);
+        Log::debug(sprintf('Count is %d', $total));
         if ($total > 0) {
             $this->info(sprintf('Deleted %d empty transaction group(s).', $total));
 
