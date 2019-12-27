@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Jumlah penarikan',
     'sum_deposits'            => 'Jumlah simpanan',
     'sum_transfers'           => 'Jumlah transfer',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Menyesuaikan',
     'account_on_spectre'      => 'Rekening (Spectre)',
     'account_on_ynab'         => 'Rekening (YNAB)',

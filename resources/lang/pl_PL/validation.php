@@ -181,7 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'deposit_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'deposit_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
-    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
+    'deposit_dest_wrong_type' => 'Konto docelowe nie jest poprawnego typu.',
 
     'transfer_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'transfer_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',

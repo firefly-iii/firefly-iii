@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Suma wypłat',
     'sum_deposits'            => 'Suma wpłat',
     'sum_transfers'           => 'Suma transferów',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Uzgodnij',
     'account_on_spectre'      => 'Konto (Spectre)',
     'account_on_ynab'         => 'Konto (YNAB)',

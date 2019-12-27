@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Součet výběrů',
     'sum_deposits'            => 'Součet vkladů',
     'sum_transfers'           => 'Součet převodů',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Reconcile',
     'account_on_spectre'      => 'Účet (Spectre)',
     'account_on_ynab'         => 'Účet (YNAB)',

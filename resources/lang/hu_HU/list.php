@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Költségek összege',
     'sum_deposits'            => 'Bevételek összege',
     'sum_transfers'           => 'Átvezetések összege',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Egyeztetés',
     'account_on_spectre'      => 'Fiók (Spectre)',
     'account_on_ynab'         => 'Számla (YNAB)',

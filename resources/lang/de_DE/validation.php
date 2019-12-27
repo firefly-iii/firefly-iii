@@ -181,7 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
     'deposit_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
-    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
+    'deposit_dest_wrong_type' => 'Das übermittelte Zielkonto entspricht nicht dem geforderten Typ.',
 
     'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',

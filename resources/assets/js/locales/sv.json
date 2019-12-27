@@ -16,7 +16,7 @@
         "reset_after": "\u00c5terst\u00e4ll formul\u00e4r efter inskickat",
         "submit": "Skicka",
         "amount": "Belopp",
-        "date": "Date",
+        "date": "Datum",
         "tags": "Etiketter",
         "no_budget": "(ingen budget)",
         "category": "Kategori",
@@ -30,8 +30,8 @@
         "no_piggy_bank": "(ingen spargris)",
         "description": "Beskrivning",
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
-        "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
-        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
+        "destination_account_reconciliation": "Du kan inte redigera destinationskontot f\u00f6r en avst\u00e4mningstransaktion.",
+        "source_account_reconciliation": "Du kan inte redigera k\u00e4llkontot f\u00f6r en avst\u00e4mningstransaktion."
     },
     "form": {
         "interest_date": "R\u00e4ntedatum",

@@ -181,7 +181,7 @@ return [
     'deposit_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
     'deposit_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
     'deposit_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
-    'deposit_dest_wrong_type' => 'The submitted destination account is not of the right type.',
+    'deposit_dest_wrong_type' => 'De ingevoerde doelrekening is niet van het juiste type.',
 
     'transfer_source_need_data' => 'Om door te gaan moet een geldig bronaccount ID en/of geldige bronaccountnaam worden gevonden.',
     'transfer_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',

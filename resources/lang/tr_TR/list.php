@@ -106,6 +106,7 @@ return [
     'sum_withdrawals'         => 'Para çekme toplamı',
     'sum_deposits'            => 'Toplam para yatırma',
     'sum_transfers'           => 'Transferlerin toplamı',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Onaylanmış',
     'account_on_spectre'      => '(Spectre) Hesabı',
     'account_on_ynab'         => 'Hesap (YNAB)',

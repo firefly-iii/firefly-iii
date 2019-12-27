@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => '提款總和',
     'sum_deposits'            => '存款總和',
     'sum_transfers'           => '轉帳總和',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => '對帳',
     'account_on_spectre'      => '帳戶 (Spectre)',
     'account_on_ynab'         => '帳戶 (YNAB)',

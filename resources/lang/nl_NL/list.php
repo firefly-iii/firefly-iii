@@ -105,6 +105,7 @@ return [
     'sum_withdrawals'         => 'Som van uitgaven',
     'sum_deposits'            => 'Som van inkomsten',
     'sum_transfers'           => 'Som van overschrijvingen',
+    'sum_reconciliations'     => 'Sum of reconciliations',
     'reconcile'               => 'Afstemmen',
     'account_on_spectre'      => 'Rekening (Spectre)',
     'account_on_ynab'         => 'Rekening (YNAB)',
