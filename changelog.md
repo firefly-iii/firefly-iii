@@ -8,6 +8,18 @@ Firefly III no longer supports the SFTP storage backend, nor does it support
 the ability to use both SFTP and local files as storage backends, because the packages
 required are no longer maintained and will not work with Laravel 6.0.
 
+### 5.0.0-alpha.1
+
+A fresh start in the versioning. 
+
+- #2580
+- #2907
+- #2776
+- #2702
+- #2723
+- #2912
+
+
 ### 4.8.3-alpha.1
 - #2874
 - #2878
