@@ -133,7 +133,7 @@ return [
         'is_demo_site'     => false,
     ],
     'feature_flags'          => [
-        'export' => false,
+        'export' => true,
     ],
     'encryption'             => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
     'version'                => '5.0.0-alpha.1',
