@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->call(
-            function () {
+            static function () {
                 Log::error(
                     'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://firefly-iii.readthedocs.io/en/latest/'
                 );
@@ -70,6 +70,6 @@ class Kernel extends ConsoleKernel
                 echo '------------';
                 echo "\n";
             }
-        )->everyMinute();
+        )->daily();
     }
 }
