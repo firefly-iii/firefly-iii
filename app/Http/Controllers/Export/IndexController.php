@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Export;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Export\ExportFileGenerator;
+use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
 
 /**
@@ -63,8 +63,11 @@ class IndexController extends Controller
      */
     public function export()
     {
-        /** @var ExportFileGenerator $generator */
-        $generator = app(ExportFileGenerator::class);
+        /** @var ExportDataGenerator $generator */
+        $generator = app(ExportDataGenerator::class);
+        $generator->setUser(auth()->user());
+
+        $generator->setExportTransactions(true);
 
         // get first transaction in DB:
         $firstDate = new Carbon;
