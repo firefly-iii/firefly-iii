@@ -9,16 +9,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
 
 ### Added
-- #2580 Users can now edit reconciliations.
-- #2723 You can now use rules that trigger on account numbers (and IBAN)
-- #2895 Another indicator for negative amounts.
+- [Issue 2580](https://github.com/firefly-iii/firefly-iii/issues/2580) Users can now edit reconciliations.
+- [Issue 2723](https://github.com/firefly-iii/firefly-iii/issues/2723) You can now use rules that trigger on account numbers (and IBAN)
+- [Issue 2895](https://github.com/firefly-iii/firefly-iii/issues/2895) Another indicator for negative amounts.
 - Firefly III now supports redis as cache backend.
 - Footer will warn you of alpha and beta versions.
-- #2901 Can select liability accounts when running rules.
+- [Issue 2901](https://github.com/firefly-iii/firefly-iii/issues/2901) Can select liability accounts when running rules.
 
 ### Changed
-- #2776 Some charts now do relative scaling. Useful for large amounts.
-- #2702 More details on tags overview
+- [Issue 2776](https://github.com/firefly-iii/firefly-iii/issues/2776) Some charts now do relative scaling. Useful for large amounts.
+- [Issue 2702](https://github.com/firefly-iii/firefly-iii/issues/2702) More details on tags overview
 - Fine tune the Docker container startup times using new environment variables.
 
 ### Deprecated
@@ -29,12 +29,12 @@ This version represents, if anything, a fresh start in the version numbering sys
 - Nothing yet.
 
 ### Fixed
-- #2907 Bad date display in recurring transactions.
-- #2912 Redirect fix for bills.
-- #2874 More redirect issues fixed.
-- #2878 Typo in code of budget overview.
-- #2876 Trailing zeroes and other issues.
-- #2881 An error when only the title of a split transaction was bad.
+- [Issue 2907](https://github.com/firefly-iii/firefly-iii/issues/2907) Bad date display in recurring transactions.
+- [Issue 2912](https://github.com/firefly-iii/firefly-iii/issues/2912) Redirect fix for bills.
+- [Issue 2874](https://github.com/firefly-iii/firefly-iii/issues/2874) More redirect issues fixed.
+- [Issue 2878](https://github.com/firefly-iii/firefly-iii/issues/2878) Typo in code of budget overview.
+- [Issue 2876](https://github.com/firefly-iii/firefly-iii/issues/2876) Trailing zeroes and other issues.
+- [Issue 2881](https://github.com/firefly-iii/firefly-iii/issues/2881) An error when only the title of a split transaction was bad.
 
 ### Security
 - Nothing yet.
