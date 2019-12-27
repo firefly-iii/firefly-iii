@@ -135,6 +135,11 @@ class ExportData extends Command
 
         $data = $exporter->export();
 
+        if(0===count($data)) {
+            $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
+            return 1;
+        }
+
         try {
             $this->exportData($options, $data);
         } catch (FireflyException $e) {
