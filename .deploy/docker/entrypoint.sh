@@ -139,6 +139,7 @@ fi
 
 php artisan firefly-iii:set-latest-version --james-is-cool
 php artisan cache:clear
+php artisan config:cache
 
 # make sure we own everything
 echo "Run chown on ${FIREFLY_PATH}"
