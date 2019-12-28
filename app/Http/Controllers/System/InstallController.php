@@ -86,7 +86,7 @@ class InstallController extends Controller
             'firefly-iii:rename-account-meta'          => [],
             'firefly-iii:migrate-recurrence-meta'      => [],
 
-            // there are 15 verify commands.
+            // there are 16 verify commands.
             'firefly-iii:fix-piggies'                  => [],
             'firefly-iii:create-link-types'            => [],
             'firefly-iii:create-access-tokens'         => [],
@@ -102,9 +102,10 @@ class InstallController extends Controller
             'firefly-iii:rename-meta-fields'           => [],
             'firefly-iii:fix-ob-currencies'            => [],
             'firefly-iii:fix-long-descriptions'        => [],
+            'firefly-iii:fix-recurring-transactions'   => [],
 
             // final command to set latest version in DB
-            'firefly-iii:set-latest-version'        => ['--james-is-cool' => true],
+            'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
         ];
     }
 

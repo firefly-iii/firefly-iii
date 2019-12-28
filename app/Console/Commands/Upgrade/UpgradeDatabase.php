@@ -74,7 +74,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:rename-account-meta',
             'firefly-iii:migrate-recurrence-meta',
 
-            // there are 15 verify commands.
+            // there are 16 verify commands.
             'firefly-iii:fix-piggies',
             'firefly-iii:create-link-types',
             'firefly-iii:create-access-tokens',
@@ -90,6 +90,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:rename-meta-fields',
             'firefly-iii:fix-ob-currencies',
             'firefly-iii:fix-long-descriptions',
+            'firefly-iii:fix-recurring-transactions',
 
             // two report commands
             'firefly-iii:report-empty-objects',

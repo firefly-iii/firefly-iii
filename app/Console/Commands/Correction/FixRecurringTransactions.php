@@ -80,7 +80,7 @@ class FixRecurringTransactions extends Command
     }
 
     /**
-     * 
+     *
      */
     private function correctTransactions(): void
     {

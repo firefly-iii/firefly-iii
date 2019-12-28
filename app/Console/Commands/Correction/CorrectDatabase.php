@@ -72,6 +72,7 @@ class CorrectDatabase extends Command
             'firefly-iii:rename-meta-fields',
             'firefly-iii:fix-ob-currencies',
             'firefly-iii:fix-long-descriptions',
+            'firefly-iii:fix-recurring-transactions',
             'firefly-iii:restore-oauth-keys'
         ];
         foreach ($commands as $command) {

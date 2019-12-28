@@ -112,6 +112,7 @@ if [[ $DKR_RUN_VERIFY != "false" ]]; then
   php artisan firefly-iii:rename-meta-fields
   php artisan firefly-iii:fix-ob-currencies
   php artisan firefly-iii:fix-long-descriptions
+  php artisan firefly-iii:fix-recurring-transactions
 fi
 
 # report commands
