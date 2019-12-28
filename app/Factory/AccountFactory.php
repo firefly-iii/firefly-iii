@@ -27,6 +27,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
@@ -131,6 +132,17 @@ class AccountFactory
                 }
             }
             $this->updateNote($return, $data['notes'] ?? '');
+
+            // store location
+            if (true === ($data['has_location'] ?? true) && null !== $return) {
+                $location             = new Location;
+                $location->latitude   = $data['latitude'] ?? 52.3167;
+                $location->longitude  = $data['longitude'] ?? 5.55;
+                $location->zoom_level = $data['zoom_level'] ?? 6;
+                $location->locatable()->associate($return);
+                $location->save();
+            }
+
         }
 
         return $return;

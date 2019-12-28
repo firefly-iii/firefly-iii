@@ -99,7 +99,7 @@ class ShowController extends Controller
         if ($end < $start) {
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
-
+        $location         = $account->locations()->first();
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $today            = new Carbon;
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
@@ -128,7 +128,7 @@ class ShowController extends Controller
             'accounts.show',
             compact(
                 'account', 'showAll', 'objectType', 'currency', 'today', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end',
-                'chartUri'
+                'chartUri', 'location'
             )
         );
     }
