@@ -937,6 +937,7 @@ Route::group(
     Route::post('store', ['uses' => 'TagController@store', 'as' => 'store']);
     Route::post('update/{tag}', ['uses' => 'TagController@update', 'as' => 'update']);
     Route::post('destroy/{tag}', ['uses' => 'TagController@destroy', 'as' => 'destroy']);
+    Route::post('mass-destroy', ['uses' => 'TagController@massDestroy', 'as' => 'mass-destroy']);
 }
 );
 

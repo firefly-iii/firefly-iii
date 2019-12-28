@@ -63,6 +63,31 @@ class TagController extends Controller
     }
 
     /**
+     *
+     */
+    public function massDestroy(Request $request)
+    {
+        $tags = $request->get('tags');
+        if (null === $tags || !is_array($tags)) {
+            session()->flash('info', (string)trans('firefly.select_tags_to_delete'));
+
+            return redirect(route('tags.index'));
+        }
+        $count = 0;
+        foreach ($tags as $tagId) {
+            $tagId = (int)$tagId;
+            $tag   = $this->repository->findNull($tagId);
+            if (null !== $tag) {
+                $this->repository->destroy($tag);
+                $count++;
+            }
+        }
+        session()->flash('success', (string)trans('firefly.deleted_x_tags', ['count' => $count]));
+
+        return redirect(route('tags.index'));
+    }
+
+    /**
      * Create a new tag.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
