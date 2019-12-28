@@ -25,15 +25,14 @@ namespace FireflyIII\Support\Twig;
 use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Log;
-use Twig_Extension;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
+use Twig\TwigFilter;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Contains all amount formatting routines.
  */
-class AmountFormat extends Twig_Extension
+class AmountFormat extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -59,13 +58,13 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFilter
+     * @return TwigFilter
      */
-    protected function formatAmount(): Twig_SimpleFilter
+    protected function formatAmount(): TwigFilter
     {
-        return new Twig_SimpleFilter(
+        return new TwigFilter(
             'formatAmount',
-            function (string $string): string {
+            static function (string $string): string {
                 $currency = app('amount')->getDefaultCurrency();
 
                 return app('amount')->formatAnything($currency, $string, true);
@@ -77,11 +76,11 @@ class AmountFormat extends Twig_Extension
     /**
      * Will format the amount by the currency related to the given account.
      *
-     * @return Twig_SimpleFunction
+     * @return TwigFunction;
      */
-    protected function formatAmountByAccount(): Twig_SimpleFunction
+    protected function formatAmountByAccount(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'formatAmountByAccount',
             static function (AccountModel $account, string $amount, bool $coloured = null): string {
                 $coloured = $coloured ?? true;
@@ -98,13 +97,13 @@ class AmountFormat extends Twig_Extension
     /**
      * Will format the amount by the currency related to the given account.
      *
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    protected function formatAmountByCurrency(): Twig_SimpleFunction
+    protected function formatAmountByCurrency(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'formatAmountByCurrency',
-            function (TransactionCurrency $currency, string $amount, bool $coloured = null): string {
+            static function (TransactionCurrency $currency, string $amount, bool $coloured = null): string {
                 $coloured = $coloured ?? true;
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
@@ -116,11 +115,11 @@ class AmountFormat extends Twig_Extension
     /**
      * Will format the amount by the currency related to the given account.
      *
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    protected function formatAmountBySymbol(): Twig_SimpleFunction
+    protected function formatAmountBySymbol(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'formatAmountBySymbol',
 
             static function (string $amount, string $symbol, int $decimalPlaces = null, bool $coloured = null): string {
@@ -137,11 +136,11 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFilter
+     * @return TwigFilter
      */
-    protected function formatAmountPlain(): Twig_SimpleFilter
+    protected function formatAmountPlain(): TwigFilter
     {
-        return new Twig_SimpleFilter(
+        return new TwigFilter(
             'formatAmountPlain',
             static function (string $string): string {
                 $currency = app('amount')->getDefaultCurrency();

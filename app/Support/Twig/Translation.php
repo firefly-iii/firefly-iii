@@ -22,31 +22,29 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Twig_Extension;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Class Budget.
  */
-class Translation extends Twig_Extension
+class Translation extends AbstractExtension
 {
     /**
      * @return array
      */
     public function getFilters(): array
     {
-        $filters = [];
-
-        $filters[] = new Twig_SimpleFilter(
-            '_',
-            function ($name) {
-                return (string)trans(sprintf('firefly.%s', $name));
-            },
-            ['is_safe' => ['html']]
-        );
-
-        return $filters;
+        return [
+            new TwigFilter(
+                '_',
+                static function ($name) {
+                    return (string)trans(sprintf('firefly.%s', $name));
+                },
+                ['is_safe' => ['html']]
+            ),
+        ];
     }
 
     /**
@@ -60,13 +58,13 @@ class Translation extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalLinkTranslation(): Twig_SimpleFunction
+    public function journalLinkTranslation(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalLinkTranslation',
-            function (string $direction, string $original) {
+            static function (string $direction, string $original) {
                 $key         = sprintf('firefly.%s_%s', $original, $direction);
                 $translation = trans($key);
                 if ($key === $translation) {

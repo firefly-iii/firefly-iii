@@ -30,13 +30,13 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Log;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class TransactionGroupTwig
  */
-class TransactionGroupTwig extends Twig_Extension
+class TransactionGroupTwig extends AbstractExtension
 {
     /** @noinspection PhpMissingParentCallCommonInspection */
     /**
@@ -56,11 +56,11 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function groupAmount(): Twig_SimpleFunction
+    public function groupAmount(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'groupAmount',
             static function (array $array): string {
                 $sums    = $array['sums'];
@@ -92,11 +92,11 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalGetMetaDate(): Twig_SimpleFunction
+    public function journalGetMetaDate(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
                 if ('testing' === config('app.env')) {
@@ -117,11 +117,11 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalGetMetaField(): Twig_SimpleFunction
+    public function journalGetMetaField(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
                 if ('testing' === config('app.env')) {
@@ -142,11 +142,11 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalHasMeta(): Twig_SimpleFunction
+    public function journalHasMeta(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
                 $count = DB::table('journal_meta')
@@ -163,11 +163,11 @@ class TransactionGroupTwig extends Twig_Extension
     /**
      * Shows the amount for a single journal array.
      *
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalArrayAmount(): Twig_SimpleFunction
+    public function journalArrayAmount(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalArrayAmount',
             function (array $array): string {
                 // if is not a withdrawal, amount positive.
@@ -187,11 +187,11 @@ class TransactionGroupTwig extends Twig_Extension
     /**
      * Shows the amount for a single journal object.
      *
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function journalObjectAmount(): Twig_SimpleFunction
+    public function journalObjectAmount(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'journalObjectAmount',
             function (TransactionJournal $journal): string {
                 // if is not a withdrawal, amount positive.
@@ -283,6 +283,7 @@ class TransactionGroupTwig extends Twig_Extension
         if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
             $amount = bcmul($amount, '-1');
         }
+
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }

@@ -58,16 +58,8 @@ use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\Twig\AmountFormat;
-use FireflyIII\Support\Twig\General;
-use FireflyIII\Support\Twig\Rule;
-use FireflyIII\Support\Twig\TransactionGroupTwig;
-use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
-use Twig;
-use Twig\Extension\DebugExtension;
-use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
@@ -85,19 +77,10 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Validator::resolver(
-
-            function ($translator, $data, $rules, $messages) {
+            static function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
-        //$config = app('config');
-        //Twig::addExtension(new Functions($config));
-        Twig::addExtension(new General);
-        Twig::addExtension(new TransactionGroupTwig);
-        Twig::addExtension(new Translation);
-        Twig::addExtension(new Rule);
-        Twig::addExtension(new AmountFormat);
-        //Twig::addExtension(new DebugExtension);
     }
 
     /**
