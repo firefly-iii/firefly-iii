@@ -165,4 +165,7 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.3](https://img.shields.io/badge/php-7.3-red.svg?style=flat-square)](https://secure.php.net/downloads.php)
+[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/)
+[![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii)
+[![Requires PHP7.3](https://img.shields.io/badge/php-7.3-red.svg?style=flat-square)](https://secure.php.net/downloads.php)
