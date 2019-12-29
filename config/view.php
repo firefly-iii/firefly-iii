@@ -36,7 +36,7 @@ return [
     */
 
     'paths' => [
-        realpath(base_path(sprintf('resources/views/%s', env('FFIII_LAYOUT', 'v1')))),
+        realpath(base_path('resources/views/v1')),
     ],
 
     /*
@@ -50,6 +50,6 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path(sprintf('framework/views/%s', env('FFIII_LAYOUT', 'v1')))),
+    'compiled' => realpath(storage_path('framework/views/v1')),
 
 ];
