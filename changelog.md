@@ -32,7 +32,8 @@ This version represents, if anything, a fresh start in the version numbering sys
 
 ### Removed
 - Firefly III will no longer be built for Sandstorm.
-- The Docker image is built from a separate repository.
+- The Docker image is built from [a separate repository](http://github.com/firefly-iii/docker).
+- The Kubernetes files are stored in [a separate repository](https://github.com/firefly-iii/kubernetes).
 
 ### Fixed
 - [Issue 2907](https://github.com/firefly-iii/firefly-iii/issues/2907) Bad date display in recurring transactions.
