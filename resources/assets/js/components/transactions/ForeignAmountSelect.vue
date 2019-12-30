@@ -24,6 +24,9 @@
     null != this.transactionType && (this.enabledCurrencies.length > 2 && (this.transactionType.toLowerCase() === 'deposit' || this.transactionType.toLowerCase() === 'withdrawal')) ||
     this.liability ||
     (null != this.transactionType && this.transactionType.toLowerCase() === 'transfer')">
+        <div class="col-sm-8 col-sm-offset-4 text-sm">
+            {{ $t('form.foreign_amount') }}
+        </div>
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]" @input="handleInput">
                 <option

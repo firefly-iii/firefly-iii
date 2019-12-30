@@ -19,6 +19,9 @@
   -->
 <template>
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <div class="col-sm-12 text-sm">
+            {{ title }}
+        </div>
         <div class="col-sm-12">
             <div class="input-group">
                 <input

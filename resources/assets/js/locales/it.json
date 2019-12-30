@@ -31,7 +31,8 @@
         "description": "Descrizione",
         "split_transaction_title_help": "Se crei una transazione suddivisa, \u00e8 necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.",
         "destination_account_reconciliation": "Non \u00e8 possibile modificare il conto di destinazione di una transazione di riconciliazione.",
-        "source_account_reconciliation": "Non puoi modificare il conto di origine di una transazione di riconciliazione."
+        "source_account_reconciliation": "Non puoi modificare il conto di origine di una transazione di riconciliazione.",
+        "budget": "Budget"
     },
     "form": {
         "interest_date": "Data interesse",

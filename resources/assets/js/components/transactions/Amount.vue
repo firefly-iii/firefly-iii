@@ -20,6 +20,9 @@
 
 <template>
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <div class="col-sm-8 col-sm-offset-4 text-sm">
+            {{ $t('firefly.amount') }}
+        </div>
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
             <input type="number" @input="handleInput" ref="amount" :value="value" step="any" class="form-control"

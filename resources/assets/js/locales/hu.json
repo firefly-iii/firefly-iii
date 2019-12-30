@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "Mi a helyzet?",
+        "welcome_back": "What's playing?",
         "flash_error": "Hiba!",
         "flash_success": "Siker!",
         "close": "Bez\u00e1r\u00e1s",
@@ -31,7 +31,8 @@
         "description": "Le\u00edr\u00e1s",
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
-        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
+        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
+        "budget": "K\u00f6lts\u00e9gkeret"
     },
     "form": {
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",

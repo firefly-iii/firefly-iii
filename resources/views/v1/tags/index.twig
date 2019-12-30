@@ -33,7 +33,12 @@
                                             <input type="checkbox" name="tags[]" value="{{ tagInfo.id }}">
                                             <a style="font-size:{{ tagInfo.size }}px;" class="label label-success"
                                                title="{{ tagInfo.created_at.formatLocalized(monthAndDayFormat) }}"
-                                               href="{{ route('tags.show',tagInfo.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag }}</a>
+                                               href="{{ route('tags.show',tagInfo.id) }}">
+                                                {% if tagInfo.location %}
+                                                    <i class="fa fa-fw fa-map-marker"></i>
+                                                {% endif %}
+                                                <i class="fa fa-fw fa-tag"></i>
+                                                {{ tagInfo.tag }}</a>
                                         {% endfor %}
                                     </p>
                                 </div>

@@ -20,6 +20,9 @@
 
 <template>
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <div class="col-sm-12 text-sm">
+            {{ $t('firefly.split_transaction_title') }}
+        </div>
         <div class="col-sm-12">
             <input
                     type="text"

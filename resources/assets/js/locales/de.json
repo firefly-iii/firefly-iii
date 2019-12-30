@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "Was ist gerade los?",
+        "welcome_back": "What's playing?",
         "flash_error": "Fehler!",
         "flash_success": "Geschafft!",
         "close": "Schlie\u00dfen",
@@ -31,7 +31,8 @@
         "description": "Beschreibung",
         "split_transaction_title_help": "Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung f\u00fcr alle Aufteilungen der Buchung geben.",
         "destination_account_reconciliation": "Sie k\u00f6nnen das Zielkonto einer Kontenausgleichsbuchung nicht bearbeiten.",
-        "source_account_reconciliation": "Sie k\u00f6nnen das Quellkonto einer Kontenausgleichsbuchung nicht bearbeiten."
+        "source_account_reconciliation": "Sie k\u00f6nnen das Quellkonto einer Kontenausgleichsbuchung nicht bearbeiten.",
+        "budget": "Budget"
     },
     "form": {
         "interest_date": "Zinstermin",
