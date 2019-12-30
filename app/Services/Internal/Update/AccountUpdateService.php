@@ -106,12 +106,12 @@ class AccountUpdateService
         // location must be updated?
         if (true === $updateLocation) {
             // if all set to NULL, delete
-            if(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
+            if (null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
                 $account->locations()->delete();
             }
 
             // otherwise, update or create.
-            if(!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
+            if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location = $this->accountRepository->getLocation($account);
                 if (null === $location) {
                     $location = new Location;

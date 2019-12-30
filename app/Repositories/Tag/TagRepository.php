@@ -405,20 +405,28 @@ class TagRepository implements TagRepositoryInterface
         $tag->save();
 
         // update, delete or create location:
-        $hasLocation = $data['has_location'] ?? false;
-        if (false === $hasLocation) {
-            $tag->locations()->delete();
-        }
-        if (true === $hasLocation) {
-            $location = $this->getLocation($tag);
-            if (null === $location) {
-                $location = new Location;
-                $location->locatable()->associate($tag);
+        $updateLocation = $data['has_location'] ?? false;
+
+        // location must be updated?
+        if (true === $updateLocation) {
+            // if all set to NULL, delete
+            if (null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
+                $tag->locations()->delete();
             }
-            $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
-            $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
-            $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
-            $location->save();
+
+            // otherwise, update or create.
+            if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
+                $location = $this->getLocation($tag);
+                if (null === $location) {
+                    $location = new Location;
+                    $location->locatable()->associate($tag);
+                }
+
+                $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
+                $location->save();
+            }
         }
 
         return $tag;

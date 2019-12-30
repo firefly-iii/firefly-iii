@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Tag;
-
 /**
  * Class TagStoreRequest
  *
@@ -52,13 +50,19 @@ class TagStoreRequest extends Request
      */
     public function getAll(): array
     {
+        $hasLocation = false;
+        if ($this->has('longitude') && $this->has('latitude') && $this->has('zoom_level')) {
+            $hasLocation = true;
+        }
+
         return [
-            'tag'         => $this->string('tag'),
-            'date'        => $this->date('date'),
-            'description' => $this->string('description'),
-            'latitude'    => '' === $this->string('latitude') ? null : $this->string('latitude'),
-            'longitude'   => '' === $this->string('longitude') ? null : $this->string('longitude'),
-            'zoom_level'  => $this->integer('zoom_level'),
+            'tag'          => $this->string('tag'),
+            'date'         => $this->date('date'),
+            'description'  => $this->string('description'),
+            'has_location' => $hasLocation,
+            'longitude'    => $this->string('longitude'),
+            'latitude'     => $this->string('latitude'),
+            'zoom_level'   => $this->integer('zoom_level'),
         ];
     }
 

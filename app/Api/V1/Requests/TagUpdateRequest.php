@@ -51,13 +51,19 @@ class TagUpdateRequest extends Request
      */
     public function getAll(): array
     {
+        $updateLocation = false;
+        if ($this->has('longitude') && $this->has('latitude') && $this->has('zoom_level')) {
+            $updateLocation = true;
+        }
+
         return [
-            'tag'         => $this->string('tag'),
-            'date'        => $this->date('date'),
-            'description' => $this->string('description'),
-            'latitude'    => '' === $this->string('latitude') ? null : $this->string('latitude'),
-            'longitude'   => '' === $this->string('longitude') ? null : $this->string('longitude'),
-            'zoom_level'  => $this->integer('zoom_level'),
+            'tag'          => $this->string('tag'),
+            'date'         => $this->date('date'),
+            'description'  => $this->string('description'),
+            'has_location' => $updateLocation,
+            'longitude'    => '' === $this->string('longitude') ? null : $this->string('longitude'),
+            'latitude'     => '' === $this->string('latitude') ? null : $this->string('latitude'),
+            'zoom_level'   => '' === $this->string('zoom_level') ? null : $this->integer('zoom_level'),
         ];
     }
 

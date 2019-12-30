@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use Log;
 
@@ -56,6 +57,16 @@ class TagTransformer extends AbstractTransformer
     public function transform(Tag $tag): array
     {
         $date = null === $tag->date ? null : $tag->date->format('Y-m-d');
+        /** @var Location $location */
+        $location  = $tag->locations()->first();
+        $latitude  = null;
+        $longitude = null;
+        $zoomLevel = null;
+        if (null !== $location) {
+            $latitude  = $location->latitude;
+            $longitude = $location->longitude;
+            $zoomLevel = $location->zoom_level;
+        }
         $data = [
             'id'          => (int)$tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
@@ -63,9 +74,9 @@ class TagTransformer extends AbstractTransformer
             'tag'         => $tag->tag,
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,
-            'latitude'    => null === $tag->latitude ? null : (float)$tag->latitude,
-            'longitude'   => null === $tag->longitude ? null : (float)$tag->longitude,
-            'zoom_level'  => null === $tag->zoomLevel ? null : (int)$tag->zoomLevel,
+            'longitude'   => $longitude,
+            'latitude'    => $latitude,
+            'zoom_level'  => $zoomLevel,
             'links'       => [
                 [
                     'rel' => 'self',
