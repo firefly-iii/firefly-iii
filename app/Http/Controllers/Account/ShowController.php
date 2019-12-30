@@ -123,12 +123,13 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll = false;
+        $balance  = app('steam')->balance($account, $end);
 
         return view(
             'accounts.show',
             compact(
                 'account', 'showAll', 'objectType', 'currency', 'today', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end',
-                'chartUri', 'location'
+                'chartUri', 'location','balance'
             )
         );
     }
@@ -146,6 +147,7 @@ class ShowController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
+
 
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);
@@ -166,12 +168,13 @@ class ShowController extends Controller
         $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll  = true;
+        $balance  = app('steam')->balance($account, $end);
 
         return view(
             'accounts.show',
             compact(
                 'account', 'showAll', 'location', 'objectType', 'isLiability', 'currency', 'today',
-                'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end'
+                'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end', 'balance'
             )
         );
     }
