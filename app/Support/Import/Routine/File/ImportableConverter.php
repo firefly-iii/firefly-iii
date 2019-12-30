@@ -142,7 +142,7 @@ class ImportableConverter
             try {
                 // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
                 $dateFormat = $this->config['date-format'] ?? 'Ymd';
-                if ('!' !== $dateFormat{0}) {
+                if ('!' !== $dateFormat[0]) {
                     $dateFormat = '!' . $dateFormat;
                 }
                 $object = Carbon::createFromFormat($dateFormat, $date);
