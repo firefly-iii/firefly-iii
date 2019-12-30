@@ -41,13 +41,16 @@ class Request extends FireflyIIIRequest
     {
         $active          = true;
         $includeNetWorth = true;
+        $hasLocation     = false;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }
         if (null !== $this->get('include_net_worth')) {
             $includeNetWorth = $this->boolean('include_net_worth');
         }
-
+        if ($this->has('longitude') && $this->has('latitude') && $this->has('zoom_level')) {
+            $hasLocation = true;
+        }
         $data = [
             'name'                    => $this->string('name'),
             'active'                  => $active,
@@ -68,6 +71,10 @@ class Request extends FireflyIIIRequest
             'notes'                   => $this->nlString('notes'),
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
+            'has_location'            => $hasLocation,
+            'longitude'               => $this->string('longitude'),
+            'latitude'                => $this->string('latitude'),
+            'zoom_level'              => $this->integer('zoom_level'),
         ];
 
         if ('liability' === $data['account_type']) {

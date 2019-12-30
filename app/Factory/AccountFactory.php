@@ -134,7 +134,7 @@ class AccountFactory
             $this->updateNote($return, $data['notes'] ?? '');
 
             // store location
-            if (true === ($data['has_location'] ?? true) && null !== $return) {
+            if (true === ($data['has_location'] ?? false) && null !== $return) {
                 $location             = new Location;
                 $location->latitude   = $data['latitude'] ?? 52.3167;
                 $location->longitude  = $data['longitude'] ?? 5.55;

@@ -77,6 +77,9 @@ class AccountStoreRequest extends Request
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
+            'latitude'             => 'numeric|min:-90|max:90|nullable|required_with:longitude',
+            'longitude'            => 'numeric|min:-180|max:180|nullable|required_with:latitude',
+            'zoom_level'           => 'numeric|min:0|max:80|nullable|required_with:latitude',
         ];
 
         return $rules;

@@ -1,7 +1,6 @@
 <?php
-
 /**
- * TagRequest.php
+ * TagStoreRequest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,13 +26,12 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Tag;
 
 /**
- * Class TagRequest
+ * Class TagStoreRequest
  *
  * @codeCoverageIgnore
  *
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class TagRequest extends Request
+class TagStoreRequest extends Request
 {
 
     /**
@@ -54,7 +52,7 @@ class TagRequest extends Request
      */
     public function getAll(): array
     {
-        $data = [
+        return [
             'tag'         => $this->string('tag'),
             'date'        => $this->date('date'),
             'description' => $this->string('description'),
@@ -62,8 +60,6 @@ class TagRequest extends Request
             'longitude'   => '' === $this->string('longitude') ? null : $this->string('longitude'),
             'zoom_level'  => $this->integer('zoom_level'),
         ];
-
-        return $data;
     }
 
     /**
@@ -73,7 +69,7 @@ class TagRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag',
             'description' => 'min:1|nullable',
             'date'        => 'date|nullable',
@@ -81,17 +77,5 @@ class TagRequest extends Request
             'longitude'   => 'numeric|min:-180|max:180|nullable|required_with:latitude',
             'zoom_level'  => 'numeric|min:0|max:80|nullable',
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var Tag $tag */
-                $tag          = $this->route()->parameter('tagOrId');
-                $rules['tag'] = 'required|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
-                break;
-        }
-
-        return $rules;
     }
 }

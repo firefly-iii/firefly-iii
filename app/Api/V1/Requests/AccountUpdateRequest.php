@@ -58,6 +58,11 @@ class AccountUpdateRequest extends Request
         if (null !== $this->get('include_net_worth')) {
             $includeNetWorth = $this->boolean('include_net_worth');
         }
+        $updateLocation = false;
+
+        if ($this->has('longitude') && $this->has('latitude') && $this->has('zoom_level')) {
+            $updateLocation = true;
+        }
 
         $data = [
             'name'                    => $this->nullableString('name'),
@@ -79,6 +84,10 @@ class AccountUpdateRequest extends Request
             'notes'                   => $this->nullableNlString('notes'),
             'interest'                => $this->nullableString('interest'),
             'interest_period'         => $this->nullableString('interest_period'),
+            'has_location'            => $updateLocation,
+            'longitude'               => '' === $this->string('longitude') ? null : $this->string('longitude'),
+            'latitude'                => '' === $this->string('latitude') ? null : $this->string('latitude'),
+            'zoom_level'              => '' === $this->string('zoom_level') ? null : $this->integer('zoom_level'),
         ];
 
         if ('liability' === $data['account_type']) {
@@ -102,6 +111,7 @@ class AccountUpdateRequest extends Request
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
+
         $rules          = [
             'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
@@ -124,6 +134,9 @@ class AccountUpdateRequest extends Request
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
+            'latitude'             => 'numeric|min:-90|max:90|nullable|required_with:longitude',
+            'longitude'            => 'numeric|min:-180|max:180|nullable|required_with:latitude',
+            'zoom_level'           => 'numeric|min:0|max:80|nullable|required_with:latitude',
         ];
 
         return $rules;
