@@ -79,6 +79,15 @@ class CreateController extends Controller
         $subTitle        = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
         $roles           = $this->getRoles();
         $liabilityTypes  = $this->getLiabilityTypes();
+        $hasOldInput     = null !== $request->old('_token');
+        $locations       = [
+            'location' => [
+                'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
+                'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
+                'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
+                'has_location' => $hasOldInput ? 'true' === old('location_has_location') : false,
+            ],
+        ];
 
         // interest calculation periods:
         $interestPeriods = [
@@ -88,7 +97,6 @@ class CreateController extends Controller
         ];
 
         // pre fill some data
-        $hasOldInput = null !== $request->old('_token');
         $request->session()->flash(
             'preFilled', [
                            'currency_id'       => $defaultCurrency->id,
@@ -103,7 +111,7 @@ class CreateController extends Controller
         $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Creating new account.');
 
-        return view('accounts.create', compact('subTitleIcon', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
+        return view('accounts.create', compact('subTitleIcon', 'locations', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
 
     /**
@@ -115,7 +123,6 @@ class CreateController extends Controller
      */
     public function store(AccountFormRequest $request)
     {
-
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));

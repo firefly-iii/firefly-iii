@@ -156,13 +156,6 @@
 {% block scripts %}
     <script type="text/javascript">
 
-        var showAll = true;
-        currencySymbol = "{{ currency.symbol }}";
-        var accountID = {{ account.id }};
-        var chartUri = '{{ chartUri }}';
-        {% if not showAll %}
-        showAll = false;
-
         // location stuff
         {% if location %}
         var latitude = {{ location.latitude|default("52.3167") }};
@@ -172,6 +165,15 @@
         // token for Mapbox:
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
         {% endif %}
+
+        var showAll = true;
+        currencySymbol = "{{ currency.symbol }}";
+        var accountID = {{ account.id }};
+        var chartUri = '{{ chartUri }}';
+        {% if not showAll %}
+        showAll = false;
+
+
 
         // uri's for charts:
 

@@ -1,43 +1,45 @@
+<!--
+<pre>
+    Some debug
+    name: {{ name }}
+    lat: {{ name~'_latitude' }}
+    long: {{ name~'_longitude' }}
+    zoom:{{ name~'_zoom_level' }}
+    old lat: {{ old(name~'_latitude') }}
+    old long: {{ old(name~'_longitude') }}
+    old zoom: {{ old(name~'_zoom_level') }}
+    default lat: {{ 'location.'~name~'.latitude' }}: {{ options.locations[name].latitude|default(config('firefly.default_location.latitude')) }} (with default)
+    default long: {{ 'location.'~name~'.longitude' }}: {{ options.locations[name].longitude|default(config('firefly.default_location.longitude')) }} (with default)
+    default zoom: {{ 'location.'~name~'.zoom_level' }}: {{ options.locations[name].zoom_level|default(config('firefly.default_location.zoom_level')) }} (with default)
+</pre>
+
+-->
 <div class="{{ classes }}" id="{{ name }}_holder">
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
     <div class="col-sm-8">
         {% if config('firefly.mapbox_api_key') == '' %}
-        <p class="text-danger">
-            {{ trans('firefly.mapbox_api_key')|raw }}
-        </p>
+            <p class="text-danger">
+                {{ trans('firefly.mapbox_api_key')|raw }}
+            </p>
         {% else %}
-        <div id="{{ name }}_map" style="width:100%;height:300px;"></div>
-        <div id="map-canvas"></div>
-        <p class="help-block">
-            {{ 'press_tag_location'|_ }}
-            <a href="#" id="{{ name }}_clear_location">{{ 'clear_location'|_ }}</a>
-        </p>
-        {# latitude #}
-        {% if old(name~'_latitude') %}
-            <input type="hidden" name="{{ name }}_latitude" value="{{ old('tag_position_latitude') }}"/>
-        {% else %}
-            <input type="hidden" name="{{ name }}_latitude" value="{{ tag.latitude }}"/>
-        {% endif %}
+            <div id="{{ name }}_map" style="width:100%;height:300px;"></div>
+            <div id="{{ name }}_map_canvas"></div>
+            <p class="help-block">
+                {{ 'press_object_location'|_ }}
+                <button class="btn btn-default btn-xs" type="button" id="{{ name }}_clear_location">{{ 'clear_location'|_ }}</button>
+            </p>
+            {# latitude #}
+            <input type="hidden" name="{{ name }}_latitude" value="{{ options.locations[name].latitude|default('52.3167') }}"/>
 
-        {# longitude #}
-        {% if old('tag_position_longitude') %}
-            <input type="hidden" name="{{ name }}_longitude" value="{{ old('tag_position_longitude') }}"/>
-        {% else %}
-            <input type="hidden" name="{{ name }}_longitude" value="{{ tag.longitude }}"/>
-        {% endif %}
+            {# longitude #}
+            <input type="hidden" name="{{ name }}_longitude" value="{{ options.locations[name].longitude|default('5.5500') }}"/>
 
-        {# zoomlevel #}
-        {% if old('tag_position_zoomlevel') %}
-            <input type="hidden" name="{{ name }}_zoomlevel" value="{{ old('tag_position_zoomlevel') }}"/>
-        {% else %}
-            <input type="hidden" name="{{ name }}_zoomlevel" value="{{ tag.zoomLevel }}"/>
-        {% endif %}
-        {% if tag.zoomLevel and tag.longitude and tag.latitude %}
-            <input type="hidden" name="{{ name }}_has_tag" value="true"/>
-        {% else %}
-            <input type="hidden" name="{{ name }}_has_tag" value="false"/>
-        {% endif %}
-        {% include 'form/feedback' %}
+            {# zoomlevel #}
+            <input type="hidden" name="{{ name }}_zoom_level" value="{{ options.locations[name].zoom_level|default('6') }}"/>
+
+            {# has location set? #}
+            <input type="hidden" name="{{ name }}_has_location" value="{{ options.locations[name].has_location|default('false') }}"/>
+            {% include 'form/feedback' %}
         {% endif %}
     </div>
 </div>
@@ -45,62 +47,57 @@
 {% if config('firefly.mapbox_api_key') != '' %}
     {% set latitudevar = name~'_latitude' %}
     {% set longitudevar = name~'_longitude' %}
-    {% set zoomlevelvar = name~'_zoomlevel' %}
-    {% set hastagvar = name~'_has_tag' %}
-    {% set settagvar = name~'_set_tag' %}
+    {% set zoomlevelvar = name~'_zoom_level' %}
+    {% set haslocationvar = name~'_has_location' %}
     {% set clearvar = name~'_clear_location' %}
 
     <script type="text/javascript">
         var mymap;
         var marker;
-        if (typeof {{ latitudevar }} === "undefined") {
-            var {{ latitudevar }} =
-            "52.3167";
+        if (typeof locations.{{ name }}.latitude === 'undefined') {
+            locations.{{ name }}.latitude = '52.3167';
         }
-        if (typeof {{ longitudevar }} === "undefined") {
-            var {{ longitudevar }} =
-            "5.5500";
+        if (typeof locations.{{ name }}.longitude === 'undefined') {
+            locations.{{ name }}.longitude = '5.5500';
         }
-        if (typeof {{ zoomlevelvar }} === "undefined") {
-            var {{ zoomlevelvar }} =
-            "6";
+        if (typeof locations.{{ name }}.zoom_level === 'undefined') {
+            locations.{{ name }}.zoom_level = '6';
         }
 
         if (typeof mapboxToken === 'undefined') {
             var mapboxToken = 'invalid';
         }
-        //
-        document.getElementById('{{ clearvar }}').addEventListener('click', function () {
-            if (typeof marker !== 'undefined') {
-                marker.remove();
-                $('input[name="{{ hastagvar }}"]').val('false');
-            }
-            return false;
-        });
+        window.onload = function () {
+            document.getElementById('{{ clearvar }}').addEventListener('click', function () {
+                if (typeof marker !== 'undefined') {
+                    marker.remove();
+                    $('input[name="{{ haslocationvar }}"]').val('false');
+                }
+            });
+        };
 
         // set location thing:
-        function setTagLocation(e) {
+        function setObjectLocation(e) {
+            console.log('Set object location: lat(' + e.latlng.lat + '), long(' + e.latlng.lng + '), zoom (' + mymap.getZoom() + ')');
             $('input[name="{{ latitudevar }}"]').val(e.latlng.lat);
             $('input[name="{{ longitudevar }}"]').val(e.latlng.lng);
             $('input[name="{{ zoomlevelvar }}"]').val(mymap.getZoom());
-            $('input[name="{{ hastagvar }}"]').val('true');
+            $('input[name="{{ haslocationvar }}"]').val('true');
 
             // remove existing marker:
             if (typeof marker !== 'undefined') {
                 marker.remove();
             }
             // new marker
-            marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
+            marker = L.marker({lat: e.latlng.lat, lng: e.latlng.lng}).addTo(mymap);
         }
 
-
-        console.log({{ longitudevar }});
 
         document.addEventListener("DOMContentLoaded", function () {
             "use strict";
 
             // make map:
-            mymap = L.map('{{ name }}_map').setView([{{ latitudevar }}, {{ longitudevar }}], {{ zoomlevelvar }});
+            mymap = L.map('{{ name }}_map').setView({lat: locations.{{ name }}.latitude, lng: locations.{{ name }}.longitude}, locations.{{ name }}.zoom_level);
 
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -109,13 +106,12 @@
                 accessToken: mapboxToken
             }).addTo(mymap);
 
-            mymap.on('contextmenu', setTagLocation);
+            mymap.on('contextmenu', setObjectLocation);
 
             // add marker
-            if (typeof {{ settagvar }} !== 'undefined' && {{ settagvar }} === true) {
-                marker = L.marker([{{ latitudevar }}, {{ longitudevar }}]).addTo(mymap);
+            if (typeof locations.{{ name }}.has_location !== 'undefined' && locations.{{ name }}.has_location === true) {
+                marker = L.marker({lat: locations.{{ name }}.latitude, lng: locations.{{ name }}.longitude}).addTo(mymap);
             }
-
         });
     </script>
 {% endif %}

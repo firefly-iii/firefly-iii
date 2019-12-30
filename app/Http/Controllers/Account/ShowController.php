@@ -99,7 +99,7 @@ class ShowController extends Controller
         if ($end < $start) {
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
-        $location         = $account->locations()->first();
+        $location         = $this->repository->getLocation($account);
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $today            = new Carbon;
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
@@ -147,6 +147,7 @@ class ShowController extends Controller
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
 
+        $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = new Carbon;
@@ -168,8 +169,10 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'objectType', 'isLiability', 'currency', 'today',
-                    'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end')
+            compact(
+                'account', 'showAll', 'location', 'objectType', 'isLiability', 'currency', 'today',
+                'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end'
+            )
         );
     }
 

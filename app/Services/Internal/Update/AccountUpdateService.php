@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
@@ -98,6 +99,23 @@ class AccountUpdateService
 
         // update all meta data:
         $this->updateMetaData($account, $data);
+
+        // update, delete or create location:
+        $hasLocation = $data['has_location'] ?? false;
+        if (false === $hasLocation) {
+            $account->locations()->delete();
+        }
+        if (true === $hasLocation) {
+            $location = $this->accountRepository->getLocation($account);
+            if (null === $location) {
+                $location = new Location;
+                $location->locatable()->associate($account);
+            }
+            $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+            $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
+            $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
+            $location->save();
+        }
 
         // has valid initial balance (IB) data?
         $type = $account->accountType;

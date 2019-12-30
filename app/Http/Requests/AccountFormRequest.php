@@ -70,8 +70,8 @@ class AccountFormRequest extends Request
             // new: location
             'longitude'               => $this->float('location_longitude'),
             'latitude'                => $this->float('location_latitude'),
-            'zoom_level'              => $this->integer('location_zoomlevel'),
-            'has_location'            => $this->boolean('location_has_tag'),
+            'zoom_level'              => $this->integer('location_zoom_level'),
+            'has_location'            => $this->boolean('location_has_location'),
         ];
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';

@@ -28,6 +28,7 @@ use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -633,5 +634,13 @@ class AccountRepository implements AccountRepositoryInterface
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Account $account): ?Location
+    {
+        return $account->locations()->first();
     }
 }
