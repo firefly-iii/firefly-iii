@@ -150,6 +150,7 @@
       "@php artisan firefly-iii:back-to-journals",
       "@php artisan firefly-iii:rename-account-meta",
       "@php artisan firefly-iii:migrate-recurrence-meta",
+      "@php artisan firefly-iii:migrate-tag-locations",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",

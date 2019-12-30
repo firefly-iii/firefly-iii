@@ -71,7 +71,7 @@ class InstallController extends Controller
             'firefly-iii:restore-oauth-keys'           => [],
             'generate-keys'                            => [], // an exception :(
 
-            // there are 13 upgrade commands.
+            // there are 14 upgrade commands.
             'firefly-iii:transaction-identifiers'      => [],
             'firefly-iii:migrate-to-groups'            => [],
             'firefly-iii:account-currencies'           => [],
@@ -85,6 +85,7 @@ class InstallController extends Controller
             'firefly-iii:back-to-journals'             => [],
             'firefly-iii:rename-account-meta'          => [],
             'firefly-iii:migrate-recurrence-meta'      => [],
+            'firefly-iii:migrate-tag-locations'        => [],
 
             // there are 16 verify commands.
             'firefly-iii:fix-piggies'                  => [],
