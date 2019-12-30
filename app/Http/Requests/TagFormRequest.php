@@ -47,26 +47,26 @@ class TagFormRequest extends Request
      */
     public function collectTagData(): array
     {
-        $latitude  = null;
-        $longitude = null;
-        $zoomLevel = null;
-
-        if ('true' === $this->get('tag_position_has_tag')) {
-            $latitude  = $this->string('tag_position_latitude');
-            $longitude = $this->string('tag_position_longitude');
-            $zoomLevel = $this->integer('tag_position_zoomlevel');
+        $latitude    = null;
+        $longitude   = null;
+        $zoomLevel   = null;
+        $hasLocation = false;
+        if (true === $this->boolean('location_has_location')) {
+            $latitude    = $this->string('location_latitude');
+            $longitude   = $this->string('location_longitude');
+            $zoomLevel   = $this->integer('location_zoom_level');
+            $hasLocation = true;
         }
 
-        $data = [
-            'tag'         => $this->string('tag'),
-            'date'        => $this->date('date'),
-            'description' => $this->string('description'),
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoom_level'  => $zoomLevel,
+        return [
+            'tag'          => $this->string('tag'),
+            'date'         => $this->date('date'),
+            'description'  => $this->string('description'),
+            'latitude'     => $latitude,
+            'longitude'    => $longitude,
+            'zoom_level'   => $zoomLevel,
+            'has_location' => $hasLocation,
         ];
-
-        return $data;
     }
 
     /**

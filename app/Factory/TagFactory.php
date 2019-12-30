@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -66,11 +67,22 @@ class TagFactory
             'tagMode'     => 'nothing',
             'date'        => $data['date'],
             'description' => $data['description'],
-            'latitude'    => $latitude,
-            'longitude'   => $longitude,
-            'zoomLevel'   => $zoomLevel,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
         ];
-        return Tag::create($array);
+        $tag       = Tag::create($array);
+        if (null !== $tag && null !== $latitude && null !== $longitude) {
+            // create location object.
+            $location             = new Location;
+            $location->latitude   = $latitude;
+            $location->longitude  = $longitude;
+            $location->zoom_level = $zoomLevel;
+            $location->locatable()->associate($tag);
+            $location->save();
+        }
+
+        return $tag;
     }
 
     /**

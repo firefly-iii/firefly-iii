@@ -67,9 +67,10 @@ class AccountFormRequest extends Request
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
+
             // new: location
-            'longitude'               => $this->float('location_longitude'),
-            'latitude'                => $this->float('location_latitude'),
+            'longitude'               => $this->string('location_longitude'),
+            'latitude'                => $this->string('location_latitude'),
             'zoom_level'              => $this->integer('location_zoom_level'),
             'has_location'            => $this->boolean('location_has_location'),
         ];
@@ -113,6 +114,9 @@ class AccountFormRequest extends Request
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
             'what'                               => 'in:' . $types,
             'interest_period'                    => 'in:daily,monthly,yearly',
+            'latitude'                           => 'numeric|min:-90|max:90|nullable|required_with:longitude',
+            'longitude'                          => 'numeric|min:-180|max:180|nullable|required_with:latitude',
+            'zoom_level'                         => 'numeric|min:0|max:80|nullable',
         ];
 
         if ('liabilities' === $this->get('objectType')) {

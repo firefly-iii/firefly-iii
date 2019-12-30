@@ -404,6 +404,23 @@ class TagRepository implements TagRepositoryInterface
         $tag->zoomLevel   = $data['zoom_level'];
         $tag->save();
 
+        // update, delete or create location:
+        $hasLocation = $data['has_location'] ?? false;
+        if (false === $hasLocation) {
+            $tag->locations()->delete();
+        }
+        if (true === $hasLocation) {
+            $location = $this->getLocation($tag);
+            if (null === $location) {
+                $location = new Location;
+                $location->locatable()->associate($tag);
+            }
+            $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
+            $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
+            $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
+            $location->save();
+        }
+
         return $tag;
     }
 
