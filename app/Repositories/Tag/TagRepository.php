@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -363,6 +364,7 @@ class TagRepository implements TagRepositoryInterface
                 'tag'        => $tag->tag,
                 'id'         => $tag->id,
                 'created_at' => $tag->created_at,
+                'location' => $this->getLocation($tag),
             ];
         }
 
@@ -500,5 +502,13 @@ class TagRepository implements TagRepositoryInterface
             DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
             $tag->delete();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Tag $tag): ?Location
+    {
+        return $tag->locations()->first();
     }
 }

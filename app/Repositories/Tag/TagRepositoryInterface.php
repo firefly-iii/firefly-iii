@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -32,6 +33,16 @@ use Illuminate\Support\Collection;
  */
 interface TagRepositoryInterface
 {
+
+    /**
+     * Return location, or NULL.
+     *
+     * @param Tag $tag
+     *
+     * @return Location|null
+     */
+    public function getLocation(Tag $tag): ?Location;
+
     /**
      * Destroy all tags.
      */
