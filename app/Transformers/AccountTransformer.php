@@ -84,11 +84,18 @@ class AccountTransformer extends AbstractTransformer
             $liabilityAmount = $openingBalance;
             $liabilityStart  = $openingBalanceDate;
         }
-
-
         $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
+        $longitude       = null;
+        $latitude        = null;
+        $zoomLevel       = null;
+        $location        = $this->repository->getLocation($account);
+        if (null !== $location) {
+            $longitude = $location->longitude;
+            $latitude  = $location->latitude;
+            $zoomLevel = $location->zoom_level;
+        }
 
-        $data = [
+        return [
             'id'                      => (int)$account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
@@ -117,6 +124,9 @@ class AccountTransformer extends AbstractTransformer
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
             'include_net_worth'       => $includeNetWorth,
+            'longitude'               => $longitude,
+            'latitude'                => $latitude,
+            'zoom_level'              => $zoomLevel,
             'links'                   => [
                 [
                     'rel' => 'self',
@@ -124,8 +134,6 @@ class AccountTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
     /**
