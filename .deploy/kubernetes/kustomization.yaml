@@ -1,8 +1,0 @@
-resources:
-  - mysql.yaml
-  - firefly-iii.yaml
-secretGenerator:
-- name: firefly-iii-secrets
-  literals:
-  - db_password=CHANGEMECHANGEME
-  - app_key=CHANGEMECHANGEMECHANGEMECHANGEME
