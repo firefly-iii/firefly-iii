@@ -12,19 +12,19 @@ This version represents, if anything, a fresh start in the version numbering sys
 - [Issue 2580](https://github.com/firefly-iii/firefly-iii/issues/2580) Users can now edit reconciliations.
 - [Issue 2723](https://github.com/firefly-iii/firefly-iii/issues/2723) You can now use rules that trigger on account numbers (and IBAN)
 - [Issue 2895](https://github.com/firefly-iii/firefly-iii/issues/2895) Another indicator for negative amounts.
-- Firefly III now supports redis as cache backend.
-- Footer will warn you of alpha and beta versions.
 - [Issue 2901](https://github.com/firefly-iii/firefly-iii/issues/2901) Can select liability accounts when running rules.
 - [Issue 2893](https://github.com/firefly-iii/firefly-iii/issues/2893) Add config cache clear command to Docker build.
 - [Issue 2667](https://github.com/firefly-iii/firefly-iii/issues/2667) Option to export data from Firefly III
 - [Issue 2064](https://github.com/firefly-iii/firefly-iii/issues/2064) Ability to mass-delete tags.
-- Can now give accounts a location tag. TODO: API, migrate tags, edit-screen.
+- Can now give accounts a location tag.
+- Firefly III now supports redis as cache backend.
+- Footer will warn you of alpha and beta versions.
 
 ### Changed
 - [Issue 2776](https://github.com/firefly-iii/firefly-iii/issues/2776) Some charts now do relative scaling. Useful for large amounts.
 - [Issue 2702](https://github.com/firefly-iii/firefly-iii/issues/2702) More details on tags overview
-- Fine tune the Docker container startup times using new environment variables.
 - [Issue 2919](https://github.com/firefly-iii/firefly-iii/issues/2919) Didn't support user's choice not to check for updates.
+- Fine tune the Docker container startup times using new environment variables.
 
 ### Deprecated
 - Firefly III no longer supports the SFTP storage backend, nor does it support the ability to use both SFTP and local files as storage backends, because the

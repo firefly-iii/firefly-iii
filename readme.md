@@ -84,7 +84,7 @@ And the things you would hope for but not expect:
 
 * 2 factor authentication for extra security 🔒
 * Supports [any currency you want](https://docs.firefly-iii.org/concepts/currencies), including crypto currencies such as ₿itcoin and Ξthereum
-* There is a [Docker image](https://docs.firefly-iii.org/installation/docker), a [Sandstorm.io grain](https://docs.firefly-iii.org/installation/third_parties) and an [Heroku script](https://docs.firefly-iii.org/installation/third_parties).
+* There is a [Docker image](https://docs.firefly-iii.org/installation/docker) and an [Heroku script](https://docs.firefly-iii.org/installation/third_parties).
 * Lots of help text in case you don't get it.
 
 And to organise everything:
