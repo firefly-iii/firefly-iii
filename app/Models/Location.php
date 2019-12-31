@@ -70,4 +70,20 @@ class Location extends Model
         return $this->morphTo();
     }
 
+    /**
+     * Add rules for locations.
+     *
+     * @param array $rules
+     *
+     * @return array
+     */
+    public static function requestRules(array $rules): array
+    {
+        $rules['latitude']   = 'numeric|min:-90|max:90|nullable|required_with:longitude';
+        $rules['longitude']  = 'numeric|min:-180|max:180|nullable|required_with:latitude';
+        $rules['zoom_level'] = 'numeric|min:0|max:80|nullable|required_with:latitude';
+
+        return $rules;
+    }
+
 }

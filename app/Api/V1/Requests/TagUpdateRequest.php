@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Models\Location;
+
 /**
  * Class TagUpdateRequest
  *
@@ -76,13 +78,12 @@ class TagUpdateRequest extends Request
     {
         $tag = $this->route()->parameter('tagOrId');
 
-        return [
+        $rules = [
             'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag,' . $tag->id,
             'description' => 'min:1|nullable',
             'date'        => 'date|nullable',
-            'latitude'    => 'numeric|min:-90|max:90|nullable|required_with:longitude',
-            'longitude'   => 'numeric|min:-180|max:180|nullable|required_with:latitude',
-            'zoom_level'  => 'numeric|min:0|max:80|nullable',
         ];
+
+        return Location::requestRules($rules);
     }
 }

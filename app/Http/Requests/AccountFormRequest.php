@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
 
 /**
@@ -114,10 +115,8 @@ class AccountFormRequest extends Request
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
             'what'                               => 'in:' . $types,
             'interest_period'                    => 'in:daily,monthly,yearly',
-            'latitude'                           => 'numeric|min:-90|max:90|nullable|required_with:longitude',
-            'longitude'                          => 'numeric|min:-180|max:180|nullable|required_with:latitude',
-            'zoom_level'                         => 'numeric|min:0|max:80|nullable',
         ];
+        $rules = Location::requestRules($rules);
 
         if ('liabilities' === $this->get('objectType')) {
             $rules['opening_balance']      = ['numeric', 'required','max:1000000000'];

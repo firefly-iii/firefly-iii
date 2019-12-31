@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
 
 /**
@@ -134,10 +135,8 @@ class AccountUpdateRequest extends Request
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
-            'latitude'             => 'numeric|min:-90|max:90|nullable|required_with:longitude',
-            'longitude'            => 'numeric|min:-180|max:180|nullable|required_with:latitude',
-            'zoom_level'           => 'numeric|min:0|max:80|nullable|required_with:latitude',
         ];
+        $rules = Location::requestRules($rules);
 
         return $rules;
     }
