@@ -622,9 +622,9 @@ return [
     'export_data_menu'              => 'Export data',
     'export_data_bc'                => 'Export data from Firefly III',
     'export_data_main_title'        => 'Export data from Firefly III',
-    'export_data_expl'              => 'This link allows you to export all transactions from Firefly III, with all the relevant meta-data. Please refer to the help (top right (?)-icon) for more information about the process.',
+    'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
     'export_data_all_transactions'  => 'Export all transactions',
-    'export_data_advanced_expl' => 'If you want to have more advanced options, consult the command line options. More information is available in the help (top right (?)-icon) or consult the console command: <code>php artisan help firefly-iii:export-data</code>',
+    'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
 
     // attachments
     'nr_of_attachments'             => 'One attachment|:count attachments',
