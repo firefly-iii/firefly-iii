@@ -36,6 +36,9 @@ return [
     // index page:
     'general_index_intro'                 => '歡迎使用 Firefly III 的匯入流程。資料匯入 Firefly III 有幾種途徑，各以按鈕表示。',
 
+    // notices about the CSV importer:
+    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+
     // import provider strings (index):
     'button_fake'                         => '模擬匯入',
     'button_file'                         => '匯入檔案',

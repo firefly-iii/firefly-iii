@@ -23,6 +23,6 @@
 declare(strict_types=1);
 
 return [
-    'failed'   => 'Dessa autentiseringsuppgifter matchar inte våra register.',
+    'failed'   => 'Inloggningssuppgifterna kunde inte hittas.',
     'throttle' => 'För många inloggningsförsök. Vänligen försök igen om :seconds sekunder.',
 ];
