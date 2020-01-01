@@ -24,14 +24,14 @@ $(function () {
     "use strict";
     if (budgetLimitID > 0) {
         otherCurrencyLineChart(budgetChartUri, 'budgetOverview', currencySymbol);
-        pieChart(expenseCategoryUri, 'budget-cat-out');
-        pieChart(expenseAssetUri, 'budget-asset-out');
-        pieChart(expenseExpenseUri, 'budget-expense-out');
+        multiCurrencyPieChart(expenseCategoryUri, 'budget-cat-out');
+        multiCurrencyPieChart(expenseAssetUri, 'budget-asset-out');
+        multiCurrencyPieChart(expenseExpenseUri, 'budget-expense-out');
     }
     if (budgetLimitID === 0) {
         columnChart(budgetChartUri, 'budgetOverview');
-        pieChart(expenseCategoryUri, 'budget-cat-out');
-        pieChart(expenseAssetUri, 'budget-asset-out');
-        pieChart(expenseExpenseUri, 'budget-expense-out');
+        multiCurrencyPieChart(expenseCategoryUri, 'budget-cat-out');
+        multiCurrencyPieChart(expenseAssetUri, 'budget-asset-out');
+        multiCurrencyPieChart(expenseExpenseUri, 'budget-expense-out');
     }
 });

@@ -238,18 +238,22 @@ class BudgetController extends Controller
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $assetId                    = (int)$journal['source_account_id'];
-            $result[$assetId]           = $result[$assetId] ?? [
+            $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
+            $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_name'   => $journal['currency_name'],
                 ];
-            $result[$assetId]['amount'] = bcadd($journal['amount'], $result[$assetId]['amount']);
+            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
         }
 
         $names = $this->getAccountNames(array_keys($result));
-        foreach ($result as $assetId => $info) {
-            $chartData[$names[$assetId]]
-                = [
+        foreach ($result as $combinedId => $info) {
+            $parts   = explode('-', $combinedId);
+            $assetId = (int)$parts[0];
+            $title   = sprintf('%s (%s)', $names[$assetId], $info['currency_name']);
+            $chartData[$title]
+                     = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
             ];
@@ -298,17 +302,21 @@ class BudgetController extends Controller
         $result    = [];
         $chartData = [];
         foreach ($journals as $journal) {
-            $categoryId                    = (int)$journal['category_id'];
-            $result[$categoryId]           = $result[$categoryId] ?? [
+            $key                    = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_name'   => $journal['currency_name'],
                 ];
-            $result[$categoryId]['amount'] = bcadd($journal['amount'], $result[$categoryId]['amount']);
+            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
-        foreach ($result as $categoryId => $info) {
-            $chartData[$names[$categoryId]] = [
+        foreach ($result as $combinedId => $info) {
+            $parts             = explode('-', $combinedId);
+            $categoryId        = (int)$parts[0];
+            $title             = sprintf('%s (%s)', $names[$categoryId], $info['currency_name']);
+            $chartData[$title] = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
             ];
@@ -359,18 +367,22 @@ class BudgetController extends Controller
         $chartData = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $opposingId                    = (int)$journal['destination_account_id'];
-            $result[$opposingId]           = $result[$opposingId] ?? [
+            $key                    = sprintf('%d-%d', $journal['destination_account_id'], $journal['currency_id']);
+            $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_name'   => $journal['currency_name'],
                 ];
-            $result[$opposingId]['amount'] = bcadd($journal['amount'], $result[$opposingId]['amount']);
+            $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
         }
 
         $names = $this->getAccountNames(array_keys($result));
-        foreach ($result as $opposingId => $info) {
-            $name             = $names[$opposingId] ?? 'no name';
-            $chartData[$name] = [
+        foreach ($result as $combinedId => $info) {
+            $parts             = explode('-', $combinedId);
+            $opposingId        = (int)$parts[0];
+            $name              = $names[$opposingId] ?? 'no name';
+            $title             = sprintf('%s (%s)', $name, $info['currency_name']);
+            $chartData[$title] = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
             ];
