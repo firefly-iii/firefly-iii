@@ -1,7 +1,7 @@
 <?php
 /**
  * LoginController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,8 +25,10 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Adldap;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Log;
 
 /**
@@ -47,10 +49,12 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -58,12 +62,14 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
     /**
-     * Log in a user.
+     * Handle a login request to the application.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
@@ -80,6 +86,7 @@ class LoginController extends Controller
             /** @var Adldap\Connections\Provider $provider */
             Adldap::getProvider('default')->setSchema(new $schema);
         }
+
         $this->validateLogin($request);
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
@@ -114,9 +121,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function showLoginForm(Request $request)
     {
@@ -146,4 +151,26 @@ class LoginController extends Controller
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $exception             = ValidationException::withMessages(
+            [
+                $this->username() => [trans('auth.failed')],
+            ]
+        );
+        $exception->redirectTo = route('login');
+
+        throw $exception;
+    }
+
 }

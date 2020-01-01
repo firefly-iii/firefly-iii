@@ -102,8 +102,8 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% if tag.latitude and tag.longitude and tag.zoomLevel %}
-                        <div id="tag_location_map" style="width:100%;height:300px;"></div>
+                    {% if(location) %}
+                        <div id="location_map" style="width:100%;height:300px;"></div>
                     {% else %}
                         <p>{{ 'no_location_set'|_ }}</p>
                     {% endif %}
@@ -178,19 +178,15 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var latitude = {{ tag.latitude|default("52.3167") }};
-        var longitude = {{ tag.longitude|default("5.5500") }};
-        var zoomLevel = {{ tag.zoomLevel|default("6") }};
-
-        {% if tag.latitude and tag.longitude and tag.zoomLevel %}
-        var doPlaceMarker = true;
-        {% else %}
-        var doPlaceMarker = false;
+        // location stuff
+        {% if location %}
+            var latitude = {{ location.latitude|default("52.3167") }};
+            var longitude = {{ location.longitude|default("5.5500") }};
+            var zoomLevel = {{ location.zoom_level|default("6") }};
+            var doPlaceMarker = true;
+            // token for Mapbox:
+            var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
         {% endif %}
-
-        // token for Mapbox:
-        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
-
     </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script src="v1/js/ff/tags/show.js?v={{ FF_VERSION }}"></script>

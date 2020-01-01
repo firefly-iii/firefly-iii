@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "Ce se red\u0103?",
+        "welcome_back": "What's playing?",
         "flash_error": "Eroare!",
         "flash_success": "Succes!",
         "close": "\u00cenchide",
@@ -31,7 +31,8 @@
         "description": "Descriere",
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
-        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction."
+        "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
+        "budget": "Buget"
     },
     "form": {
         "interest_date": "Data de interes",

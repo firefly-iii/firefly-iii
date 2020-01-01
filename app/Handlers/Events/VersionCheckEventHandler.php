@@ -57,6 +57,15 @@ class VersionCheckEventHandler
             return;
         }
 
+        // should not check for updates:
+        $permission = app('fireflyconfig')->get('permission_update_check', -1);
+        $value      = (int)$permission->data;
+        if (1 !== $value) {
+            Log::info('Update check is not enabled.');
+
+            return;
+        }
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         /** @var User $user */

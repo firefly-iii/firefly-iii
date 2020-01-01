@@ -11,7 +11,9 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                        {{ trans('firefly.chart_account_in_period', {
+                            balance: formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true),
+                            name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) })|raw }}
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -85,9 +87,22 @@
             </div>
         </div>
     {% endif %}
-    {% if account.notes.count == 1 %}
-        <div class="row">
-            <div class="col-lg-12">
+
+    <div class="row">
+        {% if(location) %}
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'location'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="location_map" style="width:100%;height:300px;"></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if account.notes.count == 1 %}
+            <div class="col-lg-6">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'notes'|_ }}</h3>
@@ -97,14 +112,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                    <h3 class="box-title">{{ 'transactions'|_ }} ({{ formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true)|raw }})</h3>
                 </div>
                 <div class="box-body">
                     {% if account.accountType.type == 'Asset account' %}
@@ -143,12 +158,25 @@
 {% block scripts %}
     <script type="text/javascript">
 
+        // location stuff
+        {% if location %}
+            var latitude = {{ location.latitude|default("52.3167") }};
+            var longitude = {{ location.longitude|default("5.5500") }};
+            var zoomLevel = {{ location.zoom_level|default("6") }};
+            var doPlaceMarker = true;
+            // token for Mapbox:
+            var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+        {% endif %}
+
         var showAll = true;
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
         var chartUri = '{{ chartUri }}';
         {% if not showAll %}
         showAll = false;
+
+
+
         // uri's for charts:
 
         var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
@@ -162,6 +190,9 @@
         {% endif %}
 
     </script>
+    {% if location %}
+        <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
+    {% endif %}
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
@@ -172,4 +203,10 @@
     <script src="v1/js/ff/accounts/show.js?v={{ FF_VERSION }}" type="text/javascript"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
+
+{% block styles %}
+    {% if location %}
+        <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
+    {% endif %}
 {% endblock %}

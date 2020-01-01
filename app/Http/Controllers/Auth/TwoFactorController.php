@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\User;
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;

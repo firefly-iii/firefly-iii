@@ -63,14 +63,50 @@ class TagController extends Controller
     }
 
     /**
+     *
+     */
+    public function massDestroy(Request $request)
+    {
+        $tags = $request->get('tags');
+        if (null === $tags || !is_array($tags)) {
+            session()->flash('info', (string)trans('firefly.select_tags_to_delete'));
+
+            return redirect(route('tags.index'));
+        }
+        $count = 0;
+        foreach ($tags as $tagId) {
+            $tagId = (int)$tagId;
+            $tag   = $this->repository->findNull($tagId);
+            if (null !== $tag) {
+                $this->repository->destroy($tag);
+                $count++;
+            }
+        }
+        session()->flash('success', (string)trans('firefly.deleted_x_tags', ['count' => $count]));
+
+        return redirect(route('tags.index'));
+    }
+
+    /**
      * Create a new tag.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $subTitle     = (string)trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
+
+        // location info:
+        $hasOldInput = null !== $request->old('_token');
+        $locations   = [
+            'location' => [
+                'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
+                'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
+                'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
+                'has_location' => $hasOldInput ? 'true' === old('location_has_location') : false,
+            ],
+        ];
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('tags.create.fromStore')) {
@@ -78,7 +114,7 @@ class TagController extends Controller
         }
         session()->forget('tags.create.fromStore');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon'));
+        return view('tags.create', compact('subTitle', 'subTitleIcon', 'locations'));
     }
 
     /**
@@ -128,13 +164,27 @@ class TagController extends Controller
         $subTitle     = (string)trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
+        $location       = $this->repository->getLocation($tag);
+        $latitude       = $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude      = $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel      = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $hasLocation    = null !== $location;
+        $locations      = [
+            'location' => [
+                'latitude'     => old('location_latitude') ?? $latitude,
+                'longitude'    => old('location_longitude') ?? $longitude,
+                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
+                'has_location' => $hasLocation || 'true' === old('location_has_location'),
+            ],
+        ];
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('tags.edit.fromUpdate')) {
             $this->rememberPreviousUri('tags.edit.uri');
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon','locations'));
     }
 
     /**
@@ -184,6 +234,7 @@ class TagController extends Controller
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $start        = $start ?? session('start');
         $end          = $end ?? session('end');
+        $location     = $this->repository->getLocation($tag);
         $subTitle     = trans(
             'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                    'end' => $end->formatLocalized($this->monthAndDayFormat),]
@@ -204,7 +255,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
@@ -227,6 +278,7 @@ class TagController extends Controller
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
         $end          = new Carbon;
         $path         = route('tags.show', [$tag->id, 'all']);
+        $location     = $this->repository->getLocation($tag);
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
@@ -235,7 +287,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**

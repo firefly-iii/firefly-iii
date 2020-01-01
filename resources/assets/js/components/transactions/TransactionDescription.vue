@@ -20,12 +20,15 @@
 
 <template>
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <div class="col-sm-12 text-sm">
+            {{ $t('firefly.description') }}
+        </div>
         <div class="col-sm-12">
             <input
                     type="text"
                     class="form-control"
                     name="description[]"
-                    title="Description"
+                    :title="$t('firefly.description')"
                     v-on:keypress="handleEnter"
                     v-on:submit.prevent
                     ref="descr"

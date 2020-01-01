@@ -3,6 +3,11 @@
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
 {% endblock %}
 {% block content %}
+    <!-- set location data high up -->
+    <script type="text/javascript">
+        var locations = {{ locations|json_encode|raw }};
+        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+    </script>
 
     <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -53,7 +58,7 @@
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
-
+                        {{ ExpandedForm.location('location', null, {locations: locations}) }}
                     </div>
                 </div>
 
@@ -77,6 +82,7 @@
     </form>
 {% endblock %}
 {% block scripts %}
+    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/accounts/create.js?v={{ FF_VERSION }}"></script>
@@ -85,4 +91,5 @@
 {% block styles %}
     <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
     <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
 {% endblock %}

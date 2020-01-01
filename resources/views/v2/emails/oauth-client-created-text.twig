@@ -1,9 +1,0 @@
-{% include 'emails.header-text' %}
-Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It's labeled "{{ client.name }}" and has callback URL:
-
-{{ client.redirect }}
-
-With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.
-
-If this wasn't you, please revoke this client as soon as possible at {{ route('profile.index') }}.
-{% include 'emails.footer-text' %}

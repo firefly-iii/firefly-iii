@@ -36,6 +36,9 @@ return [
     // index page:
     'general_index_intro'                 => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
 
+    // notices about the CSV importer:
+    'deprecate_csv_import' => 'De manier waarop Firefly III je data laat importeren gaat veranderen. Je kan lezen in <a href="https://www.patreon.com/posts/future-updates-30012174">deze Patreon-post</a> dat de CSV import-tool gaat verhuizen naar een zelfstandige repository en tool. Je kan deze alvast beta-testen als je <a href="https://github.com/firefly-iii/csv-importer">deze GitHub repository</a> bezoekt. Als je dat zou willen doen, heel graag, en laat me weten of het lukt.',
+
     // import provider strings (index):
     'button_fake'                         => 'Nepdata importeren',
     'button_file'                         => 'Importeer een bestand',

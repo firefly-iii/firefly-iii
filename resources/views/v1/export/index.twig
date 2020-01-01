@@ -1,0 +1,35 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'export_data_main_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'export_data_expl'|_ }}
+                    </p>
+                    <ul>
+                        <li><i class="fa fa-fw fa-download"></i> <a href="{{ route('export.export') }}" title="{{ 'export_data_all_transactions'|_ }}">{{ 'export_data_all_transactions'|_ }}</a></li>
+                    </ul>
+                    <p>
+                        {{ 'export_data_advanced_expl'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

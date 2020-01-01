@@ -34,49 +34,4 @@ use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
  */
 class Request extends FireflyIIIRequest
 {
-    /**
-     * @return array
-     */
-    public function getAllAccountData(): array
-    {
-        $active          = true;
-        $includeNetWorth = true;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-        if (null !== $this->get('include_net_worth')) {
-            $includeNetWorth = $this->boolean('include_net_worth');
-        }
-
-        $data = [
-            'name'                    => $this->string('name'),
-            'active'                  => $active,
-            'include_net_worth'       => $includeNetWorth,
-            'account_type'            => $this->string('type'),
-            'account_type_id'         => null,
-            'currency_id'             => $this->integer('currency_id'),
-            'currency_code'           => $this->string('currency_code'),
-            'virtual_balance'         => $this->string('virtual_balance'),
-            'iban'                    => $this->string('iban'),
-            'BIC'                     => $this->string('bic'),
-            'account_number'          => $this->string('account_number'),
-            'account_role'            => $this->string('account_role'),
-            'opening_balance'         => $this->string('opening_balance'),
-            'opening_balance_date'    => $this->date('opening_balance_date'),
-            'cc_type'                 => $this->string('credit_card_type'),
-            'cc_Monthly_payment_date' => $this->string('monthly_payment_date'),
-            'notes'                   => $this->nlString('notes'),
-            'interest'                => $this->string('interest'),
-            'interest_period'         => $this->string('interest_period'),
-        ];
-
-        if ('liability' === $data['account_type']) {
-            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
-            $data['opening_balance_date'] = $this->date('liability_start_date');
-            $data['account_type']         = $this->string('liability_type');
-            $data['account_type_id']      = null;
-        }
-
-        return $data;
-    }
 }

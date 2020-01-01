@@ -25,7 +25,8 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\TagRequest;
+use FireflyIII\Api\V1\Requests\TagUpdateRequest;
+use FireflyIII\Api\V1\Requests\TagStoreRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -161,11 +162,11 @@ class TagController extends Controller
     /**
      * Store new object.
      *
-     * @param TagRequest $request
+     * @param TagStoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(TagRequest $request): JsonResponse
+    public function store(TagStoreRequest $request): JsonResponse
     {
         $rule    = $this->repository->store($request->getAll());
         $manager = $this->getManager();
@@ -234,12 +235,12 @@ class TagController extends Controller
     /**
      * Update a rule.
      *
-     * @param TagRequest $request
+     * @param TagUpdateRequest $request
      * @param Tag        $tag
      *
      * @return JsonResponse
      */
-    public function update(TagRequest $request, Tag $tag): JsonResponse
+    public function update(TagUpdateRequest $request, Tag $tag): JsonResponse
     {
         $rule    = $this->repository->update($tag, $request->getAll());
         $manager = $this->getManager();

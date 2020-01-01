@@ -376,19 +376,22 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
-
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
         if (isset($this->data['what'])) {
+
             return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
         }
         if (isset($this->data['type'])) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
         }
-
         if (isset($this->data['account_type_id'])) {
             return $this->validateByAccountTypeId($value, $parameters);
+        }
+        $parameterId = $parameters[0] ?? null;
+        if (null !== $parameterId) {
+            return $this->validateByParameterId((int)$parameterId, $value);
         }
         if (isset($this->data['id'])) {
             return $this->validateByAccountId($value);
@@ -545,16 +548,33 @@ class FireflyValidator extends Validator
         $ignore = $existingAccount->id;
 
         /** @var Collection $set */
-        $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
-        // TODO no longer need to loop like this
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-            if ($entry->name === $value) {
-                return false;
-            }
-        }
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+                       ->where('name', $value)
+                       ->first();
 
-        return true;
+        return null === $entry;
+    }
+
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    private function validateByParameterId(int $accountId, $value): bool
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($accountId);
+
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
+
+        /** @var Collection $set */
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+                       ->where('name', $value)
+                       ->first();
+
+        return null === $entry;
     }
 
     /**

@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -45,6 +46,15 @@ interface AccountRepositoryInterface
      * @return int
      */
     public function count(array $types): int;
+
+    /**
+     * Get account location, if any.
+     *
+     * @param Account $account
+     *
+     * @return Location|null
+     */
+    public function getLocation(Account $account): ?Location;
 
     /**
      * Moved here from account CRUD.

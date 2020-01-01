@@ -74,7 +74,7 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
-    "jc5/google2fa-laravel": "2.0.3",
+    "jc5/google2fa-laravel": "2.0.4",
     "laravel/framework": "^6.0",
     "laravel/passport": "8.*",
     "laravelcollective/html": "6.*",
@@ -91,6 +91,7 @@
     "rcrowe/twigbridge": "^0.11.2"
   },
   "require-dev": {
+    "barryvdh/laravel-debugbar": "^3.2",
     "barryvdh/laravel-ide-helper": "2.*",
     "filp/whoops": "2.*",
     "fzaninotto/faker": "1.*",
@@ -101,6 +102,9 @@
   },
   "suggest": {
   },
+  "repositories": [
+
+  ],
   "autoload": {
     "classmap": [
       "database/seeds",
@@ -150,6 +154,7 @@
       "@php artisan firefly-iii:back-to-journals",
       "@php artisan firefly-iii:rename-account-meta",
       "@php artisan firefly-iii:migrate-recurrence-meta",
+      "@php artisan firefly-iii:migrate-tag-locations",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",
@@ -166,6 +171,7 @@
       "@php artisan firefly-iii:rename-meta-fields",
       "@php artisan firefly-iii:fix-ob-currencies",
       "@php artisan firefly-iii:fix-long-descriptions",
+      "@php artisan firefly-iii:fix-recurring-transactions",
 
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",

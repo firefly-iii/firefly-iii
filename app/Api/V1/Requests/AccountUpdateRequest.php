@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
 
 /**
@@ -58,7 +59,6 @@ class AccountUpdateRequest extends Request
         if (null !== $this->get('include_net_worth')) {
             $includeNetWorth = $this->boolean('include_net_worth');
         }
-
         $data = [
             'name'                    => $this->nullableString('name'),
             'active'                  => $active,
@@ -81,6 +81,8 @@ class AccountUpdateRequest extends Request
             'interest_period'         => $this->nullableString('interest_period'),
         ];
 
+        $data = $this->appendLocationData($data);
+
         if ('liability' === $data['account_type']) {
             $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');
             $data['opening_balance_date'] = $this->date('liability_start_date');
@@ -102,6 +104,7 @@ class AccountUpdateRequest extends Request
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
+
         $rules          = [
             'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
@@ -125,6 +128,7 @@ class AccountUpdateRequest extends Request
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
+        $rules = Location::requestRules($rules);
 
         return $rules;
     }

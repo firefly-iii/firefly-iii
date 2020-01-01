@@ -27,6 +27,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -91,7 +92,18 @@ class Tag extends Model
             'longitude'  => 'float',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'tag', 'date', 'description', 'latitude', 'longitude', 'zoomLevel', 'tagMode'];
+    protected $fillable = ['user_id', 'tag', 'date', 'description','tagMode'];
+
+    protected $hidden = ['zoomLevel', 'latitude', 'longitude'];
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function locations(): MorphMany
+    {
+        return $this->morphMany(Location::class, 'locatable');
+    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

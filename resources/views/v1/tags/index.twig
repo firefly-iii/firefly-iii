@@ -15,37 +15,49 @@
                 </p>
             </div>
         </div>
-        {% for period,entries in clouds %}
-            {% if entries|length > 0 %}
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
-                                    {% if period == 'no-date' %}{{ 'without_date'|_ }}{% else %}{{ period }}{% endif %}
-                                </h3>
-                            </div>
-                            <div class="box-body">
-                                <p class="tagcloud">
-                                    {% for tagInfo in entries %}
-                                        <a style="font-size:{{ tagInfo.size }}px;" class="label label-success"
-                                           title="{{ tagInfo.created_at.formatLocalized(monthAndDayFormat) }}"
-                                           href="{{ route('tags.show',tagInfo.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag }}</a>
-                                    {% endfor %}
-                                </p>
+        <form action="{{ route('tags.mass-destroy') }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            {% for period,entries in clouds %}
+                {% if entries|length > 0 %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        {% if period == 'no-date' %}{{ 'without_date'|_ }}{% else %}{{ period }}{% endif %}
+                                    </h3>
+                                </div>
+                                <div class="box-body">
+                                    <p class="tagcloud">
+                                        {% for tagInfo in entries %}
+                                            <input type="checkbox" name="tags[]" value="{{ tagInfo.id }}">
+                                            <a style="font-size:{{ tagInfo.size }}px;" class="label label-success"
+                                               title="{{ tagInfo.created_at.formatLocalized(monthAndDayFormat) }}"
+                                               href="{{ route('tags.show',tagInfo.id) }}">
+                                                {% if tagInfo.location %}
+                                                    <i class="fa fa-fw fa-map-marker"></i>
+                                                {% endif %}
+                                                <i class="fa fa-fw fa-tag"></i>
+                                                {{ tagInfo.tag }}</a>
+                                        {% endfor %}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                {% endif %}
+            {% endfor %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <p>
+                        <a class="btn btn-success" href="{{ route('tags.create') }}"><i class="fa fa-plus fa-fw"></i> {{ ('no_tags_create_default')|_ }}</a>
+                    <button type="submit" class="btn pull-right btn-danger" onclick="return confirm('{{ 'are_you_sure'|_|escape('js') }}');">
+                        <i class="fa fa-fw fa-trash"></i> {{ 'delete_all_selected_tags'|_ }}
+                    </button>
+                    </p>
                 </div>
-            {% endif %}
-        {% endfor %}
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <p>
-                    <a class="btn btn-success" href="{{ route('tags.create') }}"><i class="fa fa-plus fa-fw"></i> {{ ('no_tags_create_default')|_ }}</a>
-                </p>
             </div>
-        </div>
+        </form>
     {% endif %}
 
 {% endblock %}

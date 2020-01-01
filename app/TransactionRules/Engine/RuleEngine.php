@@ -48,6 +48,8 @@ class RuleEngine
     public const TRIGGER_STORE = 1;
     /** @var int */
     public const TRIGGER_UPDATE = 2;
+    /** @var int */
+    public const TRIGGER_BOTH = 3;
     /** @var bool */
     private $allRules;
     /** @var RuleGroupRepository */
@@ -227,7 +229,8 @@ class RuleEngine
         }
 
         $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode)
-                        || ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);
+                        || ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode)
+            || $this->triggerMode === self::TRIGGER_BOTH;
 
         return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true)) && true === $rule->active;
     }

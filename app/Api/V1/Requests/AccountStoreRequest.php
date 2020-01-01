@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
 
 /**
@@ -43,6 +44,53 @@ class AccountStoreRequest extends Request
     {
         // Only allow authenticated users
         return auth()->check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllAccountData(): array
+    {
+        $active          = true;
+        $includeNetWorth = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('include_net_worth')) {
+            $includeNetWorth = $this->boolean('include_net_worth');
+        }
+        $data = [
+            'name'                    => $this->string('name'),
+            'active'                  => $active,
+            'include_net_worth'       => $includeNetWorth,
+            'account_type'            => $this->string('type'),
+            'account_type_id'         => null,
+            'currency_id'             => $this->integer('currency_id'),
+            'currency_code'           => $this->string('currency_code'),
+            'virtual_balance'         => $this->string('virtual_balance'),
+            'iban'                    => $this->string('iban'),
+            'BIC'                     => $this->string('bic'),
+            'account_number'          => $this->string('account_number'),
+            'account_role'            => $this->string('account_role'),
+            'opening_balance'         => $this->string('opening_balance'),
+            'opening_balance_date'    => $this->date('opening_balance_date'),
+            'cc_type'                 => $this->string('credit_card_type'),
+            'cc_Monthly_payment_date' => $this->string('monthly_payment_date'),
+            'notes'                   => $this->nlString('notes'),
+            'interest'                => $this->string('interest'),
+            'interest_period'         => $this->string('interest_period'),
+        ];
+        // append Location information.
+        $data = $this->appendLocationData($data);
+
+        if ('liability' === $data['account_type']) {
+            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
+            $data['opening_balance_date'] = $this->date('liability_start_date');
+            $data['account_type']         = $this->string('liability_type');
+            $data['account_type_id']      = null;
+        }
+
+        return $data;
     }
 
     /**
@@ -78,6 +126,7 @@ class AccountStoreRequest extends Request
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
+        $rules = Location::requestRules($rules);
 
         return $rules;
     }

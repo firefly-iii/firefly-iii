@@ -31,7 +31,7 @@ $(function () {
          */
 
         // make map:
-        var mymap = L.map('tag_location_map', {
+        var mymap = L.map('location_map', {
             zoomControl: false,
             touchZoom: false,
             doubleClickZoom: false,
@@ -46,9 +46,7 @@ $(function () {
             id: 'mapbox.streets',
             accessToken: mapboxToken
         }).addTo(mymap);
-
-        if (doPlaceMarker) {
-            L.marker([latitude, longitude]).addTo(mymap);
-        }
+        L.marker([latitude, longitude]).addTo(mymap);
     }
+
 });

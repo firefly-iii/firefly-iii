@@ -27,8 +27,10 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
+use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\User;
 use Log;
 
@@ -39,7 +41,7 @@ use Log;
  */
 class AccountFactory
 {
-    use AccountServiceTrait;
+    use AccountServiceTrait, LocationServiceTrait;
 
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
@@ -131,6 +133,9 @@ class AccountFactory
                 }
             }
             $this->updateNote($return, $data['notes'] ?? '');
+
+            // store location
+            $this->storeNewLocation($return, $data);
         }
 
         return $return;

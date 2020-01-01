@@ -36,6 +36,9 @@ return [
     // index page:
     'general_index_intro'                 => 'Bine ați venit la rutina de import Firefly III. Există câteva moduri de a importa date în Firefly III, afișate aici ca butoane.',
 
+    // notices about the CSV importer:
+    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+
     // import provider strings (index):
     'button_fake'                         => 'Simulează un import',
     'button_file'                         => 'Importă un fișier',

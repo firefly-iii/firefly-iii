@@ -23,6 +23,9 @@
     <div class="form-group"
          v-bind:class="{ 'has-error': hasError()}"
          v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
+        <div class="col-sm-12 text-sm">
+            {{ $t('firefly.budget') }}
+        </div>
         <div class="col-sm-12">
             <select name="budget[]" ref="budget" v-model="value" @input="handleInput" class="form-control"
                     v-if="this.budgets.length > 0">

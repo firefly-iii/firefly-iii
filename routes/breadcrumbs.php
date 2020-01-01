@@ -563,7 +563,7 @@ try {
         'export.index',
         function (BreadcrumbsGenerator $breadcrumbs) {
             $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('firefly.export_data'), route('export.index'));
+            $breadcrumbs->push(trans('firefly.export_data_bc'), route('export.index'));
         }
     );
 

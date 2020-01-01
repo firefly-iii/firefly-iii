@@ -87,6 +87,19 @@ class EditController extends Controller
         $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $roles          = $this->getRoles();
         $liabilityTypes = $this->getLiabilityTypes();
+        $location       = $repository->getLocation($account);
+        $latitude       = $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude      = $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel      = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $hasLocation    = null !== $location;
+        $locations      = [
+            'location' => [
+                'latitude'     => old('location_latitude') ?? $latitude,
+                'longitude'    => old('location_longitude') ?? $longitude,
+                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
+                'has_location' => $hasLocation || 'true' === old('location_has_location'),
+            ],
+        ];
 
         // interest calculation periods:
         $interestPeriods = [
@@ -132,7 +145,9 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         return view(
-            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
+            'accounts.edit', compact(
+            'account', 'currency', 'subTitle', 'subTitleIcon', 'locations', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'
+        )
         );
     }
 

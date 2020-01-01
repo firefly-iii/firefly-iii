@@ -95,7 +95,7 @@ class SelectController extends Controller
         $ruleEngine = app(RuleEngine::class);
         $ruleEngine->setUser(auth()->user());
         $ruleEngine->setRulesToApply($rules);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_BOTH);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -127,7 +127,7 @@ class SelectController extends Controller
     public function selectTransactions(Rule $rule)
     {
         // does the user have shared accounts?
-        $first    = session('first')->format('Y-m-d');
+        $first    = session('first', Carbon::now()->subYear())->format('Y-m-d');
         $today    = Carbon::now()->format('Y-m-d');
         $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 

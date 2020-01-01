@@ -42,8 +42,8 @@ Route::group(
     ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], static function () {
 
     // Authentication Routes...
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
+    Route::get('login',['uses' =>'Auth\LoginController@showLoginForm', 'as' => 'login']);
+    Route::post('login',['uses' => 'Auth\LoginController@login','as' => 'login.post']);
 
 
     // Registration Routes...
@@ -488,7 +488,17 @@ Route::group(
 
     }
 );
+/**
+ * Export controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'], static function () {
 
+    // index
+    Route::get('', ['uses' => 'Export\IndexController@index', 'as' => 'index']);
+    Route::get('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
+
+});
 /**
  * Import Controller
  */
@@ -927,6 +937,7 @@ Route::group(
     Route::post('store', ['uses' => 'TagController@store', 'as' => 'store']);
     Route::post('update/{tag}', ['uses' => 'TagController@update', 'as' => 'update']);
     Route::post('destroy/{tag}', ['uses' => 'TagController@destroy', 'as' => 'destroy']);
+    Route::post('mass-destroy', ['uses' => 'TagController@massDestroy', 'as' => 'mass-destroy']);
 }
 );
 

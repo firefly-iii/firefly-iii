@@ -31,6 +31,7 @@ use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Handlers\Events\SendEmailVerificationNotification;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -66,7 +67,6 @@ class EventServiceProvider extends ServiceProvider
             Login::class                       => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
-
             ],
             RequestedVersionCheckStatus::class => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',

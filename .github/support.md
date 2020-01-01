@@ -8,4 +8,5 @@ First of all: thank you for reporting a bug instead of ditching the tool altoget
 
 ## Installation problems
 
-Please take the time to read the [installation guide FAQ](https://firefly-iii.org/installation-guide-faq/) and make sure you search through closed issues for the problems other people have had. Your problem may be among them! If not, open an issue and I will help where I can.
+Please take the time to read the [documentation](https://docs.firefly-iii.org/) and make sure you search through closed issues for the problems other people
+ have had. Your problem may be among them! If not, open an issue and I will help where I can.

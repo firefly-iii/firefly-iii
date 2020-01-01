@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
 
 /**
@@ -67,6 +68,12 @@ class AccountFormRequest extends Request
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
+
+            // new: location
+            'longitude'               => $this->string('location_longitude'),
+            'latitude'                => $this->string('location_latitude'),
+            'zoom_level'              => $this->integer('location_zoom_level'),
+            'has_location'            => $this->boolean('location_has_location'),
         ];
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';
@@ -109,6 +116,7 @@ class AccountFormRequest extends Request
             'what'                               => 'in:' . $types,
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
+        $rules = Location::requestRules($rules);
 
         if ('liabilities' === $this->get('objectType')) {
             $rules['opening_balance']      = ['numeric', 'required','max:1000000000'];

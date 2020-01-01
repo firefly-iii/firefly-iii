@@ -84,7 +84,7 @@ And the things you would hope for but not expect:
 
 * 2 factor authentication for extra security 🔒
 * Supports [any currency you want](https://docs.firefly-iii.org/concepts/currencies), including crypto currencies such as ₿itcoin and Ξthereum
-* There is a [Docker image](https://docs.firefly-iii.org/installation/docker), a [Sandstorm.io grain](https://docs.firefly-iii.org/installation/third_parties) and an [Heroku script](https://docs.firefly-iii.org/installation/third_parties).
+* There is a [Docker image](https://docs.firefly-iii.org/installation/docker) and an [Heroku script](https://docs.firefly-iii.org/installation/third_parties).
 * Lots of help text in case you don't get it.
 
 And to organise everything:
@@ -165,4 +165,7 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.3](https://img.shields.io/badge/php-7.3-red.svg?style=flat-square)](https://secure.php.net/downloads.php)
+[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/)
+[![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii)
+[![Requires PHP7.3](https://img.shields.io/badge/php-7.3-red.svg?style=flat-square)](https://secure.php.net/downloads.php)

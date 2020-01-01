@@ -23,20 +23,20 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Twig;
 
 use Config;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class Rule.
  */
-class Rule extends Twig_Extension
+class Rule extends AbstractExtension
 {
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function allActionTriggers(): Twig_SimpleFunction
+    public function allActionTriggers(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'allRuleActions',
             static function () {
                 // array of valid values for actions
@@ -54,11 +54,11 @@ class Rule extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function allJournalTriggers(): Twig_SimpleFunction
+    public function allJournalTriggers(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'allJournalTriggers',
             static function () {
                 return [
@@ -70,11 +70,11 @@ class Rule extends Twig_Extension
     }
 
     /**
-     * @return Twig_SimpleFunction
+     * @return TwigFunction
      */
-    public function allRuleTriggers(): Twig_SimpleFunction
+    public function allRuleTriggers(): TwigFunction
     {
-        return new Twig_SimpleFunction(
+        return new TwigFunction(
             'allRuleTriggers',
             static function () {
                 $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));

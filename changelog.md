@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0 (API 1.0.0)] - 20xx-xx-xx
 
-*This version has not yet been released.* The latest available version is **5.0.0-alpha.1**.
+*This version has not yet been released.* The latest available version is **5.0.0-alpha.2**.
 
 This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
 
@@ -12,13 +12,18 @@ This version represents, if anything, a fresh start in the version numbering sys
 - [Issue 2580](https://github.com/firefly-iii/firefly-iii/issues/2580) Users can now edit reconciliations.
 - [Issue 2723](https://github.com/firefly-iii/firefly-iii/issues/2723) You can now use rules that trigger on account numbers (and IBAN)
 - [Issue 2895](https://github.com/firefly-iii/firefly-iii/issues/2895) Another indicator for negative amounts.
+- [Issue 2901](https://github.com/firefly-iii/firefly-iii/issues/2901) Can select liability accounts when running rules.
+- [Issue 2893](https://github.com/firefly-iii/firefly-iii/issues/2893) Add config cache clear command to Docker build.
+- [Issue 2667](https://github.com/firefly-iii/firefly-iii/issues/2667) Option to export data from Firefly III
+- [Issue 2064](https://github.com/firefly-iii/firefly-iii/issues/2064) Ability to mass-delete tags.
+- Can now give accounts a location tag.
 - Firefly III now supports redis as cache backend.
 - Footer will warn you of alpha and beta versions.
-- [Issue 2901](https://github.com/firefly-iii/firefly-iii/issues/2901) Can select liability accounts when running rules.
 
 ### Changed
 - [Issue 2776](https://github.com/firefly-iii/firefly-iii/issues/2776) Some charts now do relative scaling. Useful for large amounts.
 - [Issue 2702](https://github.com/firefly-iii/firefly-iii/issues/2702) More details on tags overview
+- [Issue 2919](https://github.com/firefly-iii/firefly-iii/issues/2919) Didn't support user's choice not to check for updates.
 - Fine tune the Docker container startup times using new environment variables.
 
 ### Deprecated
@@ -26,7 +31,9 @@ This version represents, if anything, a fresh start in the version numbering sys
  packages required are no longer maintained and will not work with Laravel 6.0. 
 
 ### Removed
-- Nothing yet.
+- Firefly III will no longer be built for Sandstorm.
+- The Docker image is built from [a separate repository](http://github.com/firefly-iii/docker).
+- The Kubernetes files are stored in [a separate repository](https://github.com/firefly-iii/kubernetes).
 
 ### Fixed
 - [Issue 2907](https://github.com/firefly-iii/firefly-iii/issues/2907) Bad date display in recurring transactions.
@@ -35,6 +42,8 @@ This version represents, if anything, a fresh start in the version numbering sys
 - [Issue 2878](https://github.com/firefly-iii/firefly-iii/issues/2878) Typo in code of budget overview.
 - [Issue 2876](https://github.com/firefly-iii/firefly-iii/issues/2876) Trailing zeroes and other issues.
 - [Issue 2881](https://github.com/firefly-iii/firefly-iii/issues/2881) An error when only the title of a split transaction was bad.
+- [Issue 2924](https://github.com/firefly-iii/firefly-iii/issues/2924) Could not trigger rules when set to "update".
+- [Issue 2691](https://github.com/firefly-iii/firefly-iii/issues/2691) Fix to update recurring transactions with bad types.
 
 ### Security
 - Nothing yet.

@@ -130,7 +130,6 @@ class DebugController extends Controller
         $toSandbox      = var_export(config('firefly.bunq_use_sandbox'), true);
         $trustedProxies = config('firefly.trusted_proxies');
         $displayErrors  = ini_get('display_errors');
-        $storageDisks   = implode(', ', config('filesystems.disks.upload.disks'));
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = config('app.env');
         $appDebug       = var_export(config('app.debug'), true);
@@ -175,12 +174,9 @@ class DebugController extends Controller
 
         return view(
             'debug', compact(
-                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers',
-                       'currentDriver', 'loginProvider', 'storageDisks',
-                       'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isSandstorm',
-                       'trustedProxies',
-                       'toSandbox'
-                   )
+            'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers', 'currentDriver', 'loginProvider',
+            'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isSandstorm', 'trustedProxies', 'toSandbox'
+        )
         );
     }
 

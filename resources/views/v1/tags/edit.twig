@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+    <!-- set location data high up -->
+    <script type="text/javascript">
+        var locations = {{ locations|json_encode|raw }};
+        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+    </script>
+
     {{ Form.model(tag, {'class' : 'form-horizontal','id' : 'update','url' : route('tags.update',tag.id)}) }}
 
     <input type="hidden" name="id" value="{{ tag.id }}"/>
@@ -30,7 +36,7 @@
                 <div class="box-body">
                     {{ ExpandedForm.date('date', tag.date.format('Y-m-d')) }}
                     {{ ExpandedForm.textarea('description', tag.description) }}
-                    {{ ExpandedForm.location('tag_position') }}
+                    {{ ExpandedForm.location('location', null, {locations: locations}) }}
                 </div>
             </div>
 
@@ -56,39 +62,6 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
-        // pre-set latitude:
-        {% if old('tag_position_latitude') %}
-        var tag_position_latitude = "{{ old('tag_position_latitude') }}";
-        {% else %}
-        var tag_position_latitude = {{ tag.latitude|default("52.3167") }};
-        {% endif %}
-
-        // pre-set longitude
-        {% if old('tag_position_longitude') %}
-        var tag_position_longitude = "{{ old('tag_position_longitude') }}";
-        {% else %}
-        var tag_position_longitude = {{ tag.longitude|default("5.5500") }};
-        {% endif %}
-
-        // pre-set zoom level
-        {% if old('tag_position_zoomlevel') %}
-        var tag_position_zoomlevel = "{{ old('tag_position_zoomlevel') }}";
-        {% else %}
-        var tag_position_zoomlevel = {{ tag.zoomLevel|default("6") }};
-        {% endif %}
-
-        {% if tag.zoomLevel and tag.longitude and tag.latitude %}
-        var tag_position_set_tag = true;
-        {% else %}
-        var tag_position_set_tag = false;
-        {% endif %}
-
-
-        // token for Mapbox:
-        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
-
-    </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
