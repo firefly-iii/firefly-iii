@@ -186,10 +186,19 @@ class ReportController extends Controller
             // in our outgoing?
             $key    = 'spent';
             $amount = app('steam')->positive($journal['amount']);
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type'] || ((TransactionType::TRANSFER === $journal['transaction_type_type']
-                                                                                    || TransactionType::OPENING_BALANCE === $journal['transaction_type_type'])
-                                                                                   && in_array($journal['destination_account_id'], $ids, true)
-                )) {
+
+            if (
+                TransactionType::DEPOSIT === $journal['transaction_type_type']
+                || // deposit = incoming
+                // transfer or opening balance, and these accounts are the destination.
+                (
+                    (
+                        TransactionType::TRANSFER === $journal['transaction_type_type']
+                        || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                    )
+                    && in_array($journal['destination_account_id'], $ids, true)
+                )
+            ) {
                 $key = 'earned';
             }
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
