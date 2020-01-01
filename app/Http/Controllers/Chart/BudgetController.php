@@ -210,34 +210,35 @@ class BudgetController extends Controller
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
+        $collector->setRange(session()->get('start'), session()->get('end'));
+        $start = session()->get('start');
+        $end   = session()->get('end');
+        if (null !== $budgetLimit) {
+            $start = $budgetLimit->start_date;
+            $end   = $budgetLimit->end_date;
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+        }
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
         $collector->setBudget($budget);
-        if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                      ->setCurrency($budgetLimit->transactionCurrency);
-        }
-        if (null === $budgetLimit) {
-            $collector->setRange(session()->get('start'), session()->get('end'));
-        }
-
-
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $assetId                    = (int)$journal['destination_account_id'];
+            $assetId                    = (int)$journal['source_account_id'];
             $result[$assetId]           = $result[$assetId] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -271,26 +272,28 @@ class BudgetController extends Controller
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
+        $collector->setRange(session()->get('start'), session()->get('end'));
+        $start = session()->get('start');
+        $end   = session()->get('end');
+        if (null !== $budgetLimit) {
+            $start = $budgetLimit->start_date;
+            $end   = $budgetLimit->end_date;
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+        }
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
         $collector->setBudget($budget)->withCategoryInformation();
-        if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                      ->setCurrency($budgetLimit->transactionCurrency);
-        }
-        if (null === $budgetLimit) {
-            $collector->setRange(session()->get('start'), session()->get('end'));
-        }
-
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
@@ -328,27 +331,29 @@ class BudgetController extends Controller
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
+        $collector->setRange(session()->get('start'), session()->get('end'));
+        $start = session()->get('start');
+        $end   = session()->get('end');
+        if (null !== $budgetLimit) {
+            $start = $budgetLimit->start_date;
+            $end   = $budgetLimit->end_date;
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+        }
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
-        if (null !== $budgetLimit) {
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                      ->setCurrency($budgetLimit->transactionCurrency);
-        }
-
-        if (null === $budgetLimit) {
-            $collector->setRange(session()->get('start'), session()->get('end'));
-        }
-
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
