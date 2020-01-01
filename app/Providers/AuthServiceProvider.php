@@ -38,16 +38,21 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies
         = [
-            'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
+            // 'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
         ];
 
     /**
      * Register any authentication / authorization services.
+     *
+     * @return void
      */
     public function boot(): void
     {
         $this->registerPolicies();
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(14));
+
+
+        //
     }
 }

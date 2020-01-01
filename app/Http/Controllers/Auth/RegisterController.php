@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -30,6 +31,7 @@ use FireflyIII\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class RegisterController
@@ -88,10 +90,10 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->validator($request->all())->validate();
-
-        event(new Registered($user = $this->createUser($request->all())));
+        $user = $this->createUser($request->all());
+        Log::info(sprintf('Registered new user %s', $user->email));
+        event(new RegisteredUser($user, $request->ip()));
 
         $this->guard()->login($user);
 

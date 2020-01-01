@@ -42,8 +42,8 @@ Route::group(
     ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], static function () {
 
     // Authentication Routes...
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
+    Route::get('login',['uses' =>'Auth\LoginController@showLoginForm', 'as' => 'login']);
+    Route::post('login',['uses' => 'Auth\LoginController@login','as' => 'login.post']);
 
 
     // Registration Routes...
