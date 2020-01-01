@@ -974,9 +974,6 @@ class GroupCollector implements GroupCollectorInterface
                 'name'        => $newArray['tag_name'],
                 'date'        => $tagDate,
                 'description' => $newArray['tag_description'],
-                'latitude'    => $newArray['tag_latitude'],
-                'longitude'   => $newArray['tag_longitude'],
-                'zoom_level'  => $newArray['tag_zoom_level'],
             ];
         }
 
@@ -1067,9 +1064,6 @@ class GroupCollector implements GroupCollectorInterface
                 'name'        => $result['tag_name'],
                 'date'        => $tagDate,
                 'description' => $result['tag_description'],
-                'latitude'    => $result['tag_latitude'],
-                'longitude'   => $result['tag_longitude'],
-                'zoom_level'  => $result['tag_zoom_level'],
             ];
         }
 
