@@ -135,7 +135,7 @@ return [
     'feature_flags'          => [
         'export' => true,
     ],
-    'encryption'             => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
+    'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
     'version'                => '5.0.0-alpha.2',
     'api_version'            => '1.0.0',
     'db_version'             => 12,
