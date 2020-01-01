@@ -120,7 +120,9 @@ trait AugumentData
         $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::CASH]);
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
-        foreach ($accountIds as $accountId) {
+        foreach ($accountIds as $combinedId) {
+            $parts     = explode('-', $combinedId);
+            $accountId = (int)$parts[0];
             if (isset($grouped[$accountId])) {
                 $return[$accountId] = $grouped[$accountId][0]['name'];
             }
@@ -168,7 +170,9 @@ trait AugumentData
         $categories = $repository->getCategories();
         $grouped    = $categories->groupBy('id')->toArray();
         $return     = [];
-        foreach ($categoryIds as $categoryId) {
+        foreach ($categoryIds as $combinedId) {
+            $parts      = explode('-', $combinedId);
+            $categoryId = (int)$parts[0];
             if (isset($grouped[$categoryId])) {
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
