@@ -74,7 +74,7 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
-    "jc5/google2fa-laravel": "2.0.3",
+    "jc5/google2fa-laravel": "2.0.4",
     "laravel/framework": "^6.0",
     "laravel/passport": "8.*",
     "laravelcollective/html": "6.*",
@@ -102,6 +102,9 @@
   },
   "suggest": {
   },
+  "repositories": [
+
+  ],
   "autoload": {
     "classmap": [
       "database/seeds",
