@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
+use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\User;
 use Log;
 
@@ -40,7 +41,7 @@ use Log;
  */
 class AccountFactory
 {
-    use AccountServiceTrait;
+    use AccountServiceTrait, LocationServiceTrait;
 
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
@@ -134,15 +135,7 @@ class AccountFactory
             $this->updateNote($return, $data['notes'] ?? '');
 
             // store location
-            if (true === ($data['has_location'] ?? false) && null !== $return) {
-                $location             = new Location;
-                $location->latitude   = $data['latitude'] ?? 52.3167;
-                $location->longitude  = $data['longitude'] ?? 5.55;
-                $location->zoom_level = $data['zoom_level'] ?? 6;
-                $location->locatable()->associate($return);
-                $location->save();
-            }
-
+            $this->storeNewLocation($return, $data);
         }
 
         return $return;
