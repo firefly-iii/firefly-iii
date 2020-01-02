@@ -86,10 +86,21 @@ class Note extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
-    public function setTextAttribute($value): void
+    public function setTextAttribute(string $value): void
     {
         $this->attributes['text'] = e($value);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    public function getTextAttribute(string $value): string
+    {
+        return htmlspecialchars_decode($value, ENT_QUOTES);
     }
 }
