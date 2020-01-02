@@ -215,19 +215,18 @@ class AccountController extends Controller
         $budgetIds = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyName = $journal['currency_name'];
-            $budgetId     = (int)$journal['budget_id'];
-            $combi        = $budgetId . $currencyName;
-            $budgetIds[]  = $budgetId;
-            if (!isset($result[$combi])) {
-                $result[$combi] = [
+            $budgetId    = (int)$journal['budget_id'];
+            $key         = sprintf('%d-%d', $budgetId, $journal['currency_id']);
+            $budgetIds[] = $budgetId;
+            if (!isset($result[$key])) {
+                $result[$key] = [
                     'total'           => '0',
                     'budget_id'       => $budgetId,
-                    'currency'        => $currencyName,
+                    'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
+            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
 
         $names = $this->getBudgetNames($budgetIds);
@@ -235,7 +234,7 @@ class AccountController extends Controller
         foreach ($result as $row) {
             $budgetId          = $row['budget_id'];
             $name              = $names[$budgetId];
-            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
         }
 
@@ -278,7 +277,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -287,31 +286,26 @@ class AccountController extends Controller
         $journals    = $collector->getExtractedJournals();
         $result      = [];
         $chartData   = [];
-        $categoryIds = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyName  = $journal['currency_name'];
-            $categoryId    = $journal['category_id'];
-            $combi         = $categoryId . $currencyName;
-            $categoryIds[] = $categoryId;
-            if (!isset($result[$combi])) {
-                $result[$combi] = [
+            $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            if (!isset($result[$key])) {
+                $result[$key] = [
                     'total'           => '0',
-                    'category_id'     => $categoryId,
-                    'currency'        => $currencyName,
+                    'category_id'     => (int)$journal['category_id'],
+                    'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
+            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
-
-        $names = $this->getCategoryNames($categoryIds);
+        $names = $this->getCategoryNames(array_keys($result));
 
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
-            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
         }
 
@@ -391,29 +385,25 @@ class AccountController extends Controller
         $journals    = $collector->getExtractedJournals();
         $result      = [];
         $chartData   = [];
-        $categoryIds = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $categoryId    = $journal['category_id'];
-            $currencyName  = $journal['currency_name'];
-            $combi         = $categoryId . $currencyName;
-            $categoryIds[] = $categoryId;
-            if (!isset($result[$combi])) {
-                $result[$combi] = [
+            $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            if (!isset($result[$key])) {
+                $result[$key] = [
                     'total'           => '0',
-                    'category_id'     => $categoryId,
-                    'currency'        => $currencyName,
+                    'category_id'     => $journal['category_id'],
+                    'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             }
-            $result[$combi]['total'] = bcadd($journal['amount'], $result[$combi]['total']);
+            $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
         }
 
-        $names = $this->getCategoryNames($categoryIds);
+        $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
-            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
             $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
         }
         $data = $this->generator->multiCurrencyPieChart($chartData);
