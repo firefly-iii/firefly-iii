@@ -81,7 +81,7 @@ class AccountUpdateRequest extends Request
             'interest_period'         => $this->nullableString('interest_period'),
         ];
 
-        $data = $this->appendLocationData($data);
+        $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type']) {
             $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');

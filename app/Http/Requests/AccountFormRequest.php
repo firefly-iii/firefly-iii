@@ -68,13 +68,9 @@ class AccountFormRequest extends Request
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
-
-            // new: location
-            'longitude'               => $this->string('location_longitude'),
-            'latitude'                => $this->string('location_latitude'),
-            'zoom_level'              => $this->integer('location_zoom_level'),
-            'has_location'            => $this->boolean('location_has_location'),
         ];
+
+        $data = $this->appendLocationData($data, 'location');
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';
         }

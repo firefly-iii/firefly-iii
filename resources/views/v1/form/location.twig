@@ -72,6 +72,9 @@
                 if (typeof marker !== 'undefined') {
                     marker.remove();
                     $('input[name="{{ haslocationvar }}"]').val('false');
+                    $('input[name="{{ latitudevar }}"]').val('');
+                    $('input[name="{{ longitudevar }}"]').val('');
+                    $('input[name="{{ zoomlevelvar }}"]').val('');
                 }
             });
         };

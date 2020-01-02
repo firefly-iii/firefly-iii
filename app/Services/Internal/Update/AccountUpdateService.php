@@ -101,7 +101,7 @@ class AccountUpdateService
         $this->updateMetaData($account, $data);
 
         // update, delete or create location:
-        $updateLocation = $data['has_location'] ?? false;
+        $updateLocation = $data['update_location'] ?? false;
 
         // location must be updated?
         if (true === $updateLocation) {
