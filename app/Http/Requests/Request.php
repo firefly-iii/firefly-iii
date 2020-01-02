@@ -355,12 +355,13 @@ class Request extends FormRequest
      */
     protected function appendLocationData(array $data, ?string $prefix): array
     {
-        Log::debug(sprintf('Now in appendLocationData(%s)', $prefix), $data);
+        Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
         $data['store_location']  = false;
         $data['update_location'] = false;
         $data['longitude']       = null;
         $data['latitude']        = null;
         $data['zoom_level']      = null;
+
 
         $longitudeKey = null === $prefix ? 'longitude' : sprintf('%s_longitude', $prefix);
         $latitudeKey  = null === $prefix ? 'latitude' : sprintf('%s_latitude', $prefix);
@@ -368,7 +369,7 @@ class Request extends FormRequest
 
         // for a POST (store, all fields must be present and accounted for:
         if (
-            ('POST' === $this->method() && ($this->routeIs('accounts.store') || $this->routeIs('api.v1.accounts.store')))
+            ('POST' === $this->method() && $this->routeIs('*.store'))
             && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
         ) {
             Log::debug('Method is POST and all fields present.');
@@ -380,8 +381,8 @@ class Request extends FormRequest
         if (
             ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
             && (
-                ('PUT' === $this->method() && $this->routeIs('api.v1.accounts.update'))
-                || ('POST' === $this->method() && $this->routeIs('accounts.update'))
+                ('PUT' === $this->method() && $this->routeIs('*.update'))
+                || ('POST' === $this->method() && $this->routeIs('*.update'))
             )
         ) {
             Log::debug('Method is PUT and all fields present.');
