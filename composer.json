@@ -52,7 +52,7 @@
     "forum": "https://reddit.com/r/FireflyIII",
     "wiki": "https://github.com/firefly-iii/help/wiki",
     "source": "https://github.com/firefly-iii/firefly-iii",
-    "docs": "https://firefly-iii.readthedocs.io/en/latest/"
+    "docs": "https://docs.firefly-iii.org/"
   },
   "require": {
     "php": ">=7.3.0",
