@@ -170,6 +170,7 @@
                                             :error="transaction.errors.category"
                                     ></category>
                                     <tags
+                                            :transactionType="transactionType"
                                             :tags="transaction.tags"
                                             v-model="transaction.tags"
                                             :error="transaction.errors.tags"
@@ -203,7 +204,7 @@
                                 {{ $t('firefly.after_update_create_another') }}
                             </label>
                         </div>
-                        <div class="checkbox" v-if="transactionType.toLowerCase() !== 'reconciliation'">
+                        <div class="checkbox" v-if="null !== transactionType && transactionType.toLowerCase() !== 'reconciliation'">
                             <label>
                                 <input v-model="storeAsNew" name="store_as_new" type="checkbox">
                                 {{ $t('firefly.store_as_new') }}
@@ -301,7 +302,9 @@
                 }
             },
             setTransactionType(type) {
-                this.transactionType = type;
+                if(null !== type) {
+                    this.transactionType = type;
+                }
             },
             deleteTransaction(index, event) {
                 event.preventDefault();

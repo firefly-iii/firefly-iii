@@ -31,4 +31,5 @@ let mix = require('laravel-mix');
  |
  */
 
+//mix.sourceMaps().js('resources/assets/js/app.js', 'public/v1/js');
 mix.js('resources/assets/js/app.js', 'public/v1/js');
