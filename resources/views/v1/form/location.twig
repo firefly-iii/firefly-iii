@@ -51,7 +51,7 @@
     {% set haslocationvar = name~'_has_location' %}
     {% set clearvar = name~'_clear_location' %}
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var mymap;
         var marker;
         if (typeof locations.{{ name }}.latitude === 'undefined') {

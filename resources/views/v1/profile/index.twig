@@ -132,33 +132,4 @@
     <div id="passport_clients"></div>
 {% endblock %}
 {% block scripts %}
-    {% if SANDSTORM %}
-        <script>
-            function requestIframeURL() {
-                var template = "You can use the $API_TOKEN key to reach Firefly III at $API_HOST.";
-                window.parent.postMessage({
-                                              renderTemplate: {
-                                                  rpcId: "0",
-                                                  template: template,
-                                                  clipboardButton: 'left'
-                                              }
-                                          }, "*");
-            }
-
-            document.addEventListener("DOMContentLoaded", requestIframeURL);
-
-            var copyIframeURLToElement = function (event) {
-                if (event.data.rpcId === "0") {
-                    if (event.data.error) {
-                        console.log("ERROR: " + event.data.error);
-                    } else {
-                        var el = document.getElementById("offer-iframe");
-                        el.setAttribute("src", event.data.uri);
-                    }
-                }
-            };
-
-            window.addEventListener("message", copyIframeURLToElement);
-        </script>
-    {% endif %}
 {% endblock %}

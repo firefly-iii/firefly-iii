@@ -35,8 +35,8 @@
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
-    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
-    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <![endif]-->
 
     {# favicons #}
@@ -55,14 +55,14 @@
         Developed by James Cole, the source code is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.
     </small>
 </div>
-<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script type="text/javascript" src="v1/js/ff/guest.js?v={{ FF_VERSION }}"></script>
+<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/ff/guest.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% if config('firefly.analytics_id')  != '' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
-    <script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}" nonce="{{ JS_NONCE }}"></script>
+    <script nonce="{{ JS_NONCE }}">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());

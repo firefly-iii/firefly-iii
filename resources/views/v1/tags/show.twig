@@ -177,7 +177,7 @@
     <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         // location stuff
         {% if location %}
             var latitude = {{ location.latitude|default("52.3167") }};
@@ -188,7 +188,7 @@
             var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
         {% endif %}
     </script>
-    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
-    <script src="v1/js/ff/tags/show.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/ff/tags/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

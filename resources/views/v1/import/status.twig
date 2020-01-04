@@ -171,7 +171,7 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var jobStatusUri = '{{ route('import.job.status.json', [importJob.key]) }}';
         var jobStartUri = '{{ route('import.job.start', [importJob.key]) }}';
         var jobConfigurationUri = '{{ route('import.job.configuration.index', [importJob.key]) }}';
@@ -190,7 +190,7 @@
         var token = '{{ csrf_token() }}';
         var job = {{ job|json_encode|raw }};
     </script>
-    <script type="text/javascript" src="v1/js/ff/import/status_v2.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/import/status_v2.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

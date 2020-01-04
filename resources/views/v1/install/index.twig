@@ -13,12 +13,12 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var token = '{{ csrf_token() }}';
         var index = 0;
         var runCommandUri = '{{ route('installer.runCommand') }}';
         var homeUri = '{{ route('flush') }}';
     </script>
-    <script type="text/javascript" src="v1/js/ff/install/index.js"></script>
+    <script type="text/javascript" src="v1/js/ff/install/index.js" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 

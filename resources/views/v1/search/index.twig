@@ -115,7 +115,7 @@
     {% endif %}
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
         var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
         var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
@@ -125,7 +125,7 @@
         var searchPage = {{ page }};
     </script>
     {# required for groups.twig #}
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 
 {% endblock %}

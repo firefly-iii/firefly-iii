@@ -407,12 +407,12 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURI = '{{ route('json.autocomplete.all-journals-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
     </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 

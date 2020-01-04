@@ -176,7 +176,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var minDate = "{{ start.format('Y-m-d') }}";
         var picker;
         var selectAllText = "{{ trans('firefly.multi_select_select_all')|escape('js') }}";
@@ -185,7 +185,7 @@
         var allSelectedText = "{{ trans('firefly.multi_select_all_selected')|escape('js')   }}";
         var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder')|escape('js') }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/reports/index.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/reports/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

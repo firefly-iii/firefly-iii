@@ -8,7 +8,7 @@
     <div id="edit_transaction"></div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
         var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
