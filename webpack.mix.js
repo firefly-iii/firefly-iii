@@ -31,5 +31,26 @@ let mix = require('laravel-mix');
  |
  */
 
+// development:
+// mix.webpackConfig({
+//                       resolve: {
+//                           alias: {
+//                               'vue$': 'vue/dist/vue.runtime.js'
+//                           }
+//                       }
+//                   });
+
+// production
+mix.webpackConfig({
+                      resolve: {
+                          alias: {
+                              'vue$': 'vue/dist/vue.runtime.common.js'
+                          }
+                      }
+                  });
+
 //mix.sourceMaps().js('resources/assets/js/app.js', 'public/v1/js');
 mix.js('resources/assets/js/app.js', 'public/v1/js');
+mix.js('resources/assets/js/create_transaction.js', 'public/v1/js');
+mix.js('resources/assets/js/edit_transaction.js', 'public/v1/js');
+mix.js('resources/assets/js/profile.js', 'public/v1/js');

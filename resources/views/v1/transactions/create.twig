@@ -1,11 +1,11 @@
+{% set VUE_SCRIPT_NAME = 'create_transaction' %}
 {% extends "./layout/default" %}
-
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
 {% endblock %}
 
 {% block content %}
-    <create-transaction></create-transaction>
+    <div id="create_transaction"></div>
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">

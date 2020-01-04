@@ -42,6 +42,7 @@ import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
 import Budget from "./components/transactions/Budget";
+import ProfileOptions from "./components/profile/ProfileOptions";
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -50,3 +51,18 @@ import Budget from "./components/transactions/Budget";
  */
 
 require('./bootstrap');
+
+window.Vue = Vue;
+Vue.component('passport-clients', Clients);
+Vue.component('passport-authorized-clients',AuthorizedClients);
+Vue.component('passport-personal-access-tokens', PersonalAccessTokens);
+
+Vue.component('profile-options', ProfileOptions);
+
+let props = {};
+new Vue({
+            el: "#passport_clients",
+            render: (createElement) => {
+                return createElement(ProfileOptions, { props: props })
+            },
+        });

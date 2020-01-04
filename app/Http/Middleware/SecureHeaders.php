@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  *
@@ -46,6 +47,7 @@ class SecureHeaders
         $google      = '';
         $googleImg   = '';
         $analyticsId = config('firefly.analytics_id');
+        $token       = Str::random(16);
         if ('' !== $analyticsId) {
             $google    = 'www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
             $googleImg = 'https://www.google-analytics.com/';
@@ -53,7 +55,7 @@ class SecureHeaders
         $csp = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
+            sprintf("script-src 'self' 'unsafe-inline' %s", $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",

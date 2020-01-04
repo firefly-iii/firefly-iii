@@ -183,7 +183,7 @@
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
 
 {# big fat JS thing courtesy of Vue#}
-<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/js/{{ VUE_SCRIPT_NAME|default('app') }}.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 
 {# date range picker, current template, etc.#}
 <script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
