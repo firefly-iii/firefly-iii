@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0 (API 1.0.0)] - 20xx-xx-xx
 
-*This version has not yet been released.* The latest available version is **5.0.0-alpha.2**.
+*This version has not yet been released.* The latest available version is **5.0.0-beta.1**.
 
 This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
 
@@ -44,12 +44,12 @@ This version represents, if anything, a fresh start in the version numbering sys
 - [Issue 2881](https://github.com/firefly-iii/firefly-iii/issues/2881) An error when only the title of a split transaction was bad.
 - [Issue 2924](https://github.com/firefly-iii/firefly-iii/issues/2924) Could not trigger rules when set to "update".
 - [Issue 2691](https://github.com/firefly-iii/firefly-iii/issues/2691) Fix to update recurring transactions with bad types.
-
-### Security
-- Nothing yet.
+- [Issue 2941](https://github.com/firefly-iii/firefly-iii/issues/2941) Not all notes were decoded correctly.
+- [Issue 2945](https://github.com/firefly-iii/firefly-iii/issues/2945) Budget field would be empty when editing transaction.
+- [Issue 2950](https://github.com/firefly-iii/firefly-iii/issues/2950) Error in chart (null pointer)
 
 ### API
-- Nothing yet.
+- Various endpoints are better documented.
 
 
 ## [4.8.2 (API 0.10.5)] - 2019-11-29
