@@ -19,7 +19,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "@johmun/vue-tags-input": "^2.0.1",
+        "@johmun/vue-tags-input": "^2.1.0",
         "font-awesome": "^4.7.0",
         "jquery": "^3.1.1",
         "uiv": "^0.31.5",

@@ -91,7 +91,6 @@
     "rcrowe/twigbridge": "^0.11.2"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.2",
     "barryvdh/laravel-ide-helper": "2.*",
     "filp/whoops": "2.*",
     "fzaninotto/faker": "1.*",
