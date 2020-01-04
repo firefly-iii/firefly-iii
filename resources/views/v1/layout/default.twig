@@ -208,8 +208,8 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}" nonce="{{ JS_NONCE }}"></script>
-    <script nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
