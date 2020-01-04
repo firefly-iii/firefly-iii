@@ -6,7 +6,7 @@
 
 {% block content %}
     <!-- set location data high up -->
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var locations = {{ locations|json_encode|raw }};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>

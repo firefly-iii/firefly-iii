@@ -177,7 +177,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var billCurrencySymbol = "{{ object.data.currency.symbol }}";
         var billUri = '{{ route('chart.bill.single', [object.data.id]) }}';
     </script>
