@@ -93,6 +93,11 @@ class ReconcileController extends Controller
         $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $amount          = '0';
         $clearedAmount   = '0';
+
+        if ($end->lt($start)) {
+            [$start, $end] = [$end, $start];
+        }
+
         $route           = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
         $selectedIds     = $request->get('journals') ?? [];
         $clearedJournals = [];
@@ -171,6 +176,9 @@ class ReconcileController extends Controller
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
+        if ($end->lt($start)) {
+            [$end, $start] = [$start, $end];
+        }
         $startDate = clone $start;
         $startDate->subDay();
 
