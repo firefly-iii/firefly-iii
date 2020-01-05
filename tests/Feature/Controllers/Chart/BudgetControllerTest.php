@@ -84,8 +84,11 @@ class BudgetControllerTest extends TestCase
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $repository->shouldReceive('firstUseDate')->andReturn($date)->atLeast()->once();
-        $opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
-        $generator->shouldReceive('singleSet')->andReturn([])->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->andReturn([])->atLeast()->once();
+
+
+        // multiSet
+        $generator->shouldReceive('multiSet')->andReturn([])->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -169,9 +172,10 @@ class BudgetControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$destination]))->atLeast()->once();
         $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setCurrency')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
 
-        $generator->shouldReceive('pieChart')->atLeast()->once()->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->atLeast()->once()->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -206,10 +210,11 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+        $collector->shouldReceive('setCurrency')->andReturnSelf()->atLeast()->once();
 
         $catRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->atLeast()->once();
 
-        $generator->shouldReceive('pieChart')->andReturn([])->atLeast()->once();
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([])->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -245,11 +250,12 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setBudget')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setCurrency')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$destination]))->atLeast()->once();
 
-        $generator->shouldReceive('pieChart')->once()->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->once()->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -282,12 +288,13 @@ class BudgetControllerTest extends TestCase
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
         $blRepos->shouldReceive('getBudgetLimits')->atLeast()->once()->andReturn(new Collection([$budgetLimit]));
-        $opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
+        //$opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
 
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
-        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
+        //$collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        //$collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        //$collector->shouldReceive('withoutBudget')->andReturnSelf()->atLeast()->once();
+        //$collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
 
         $generator->shouldReceive('multiSet')->andReturn([])->atLeast()->once();
 
@@ -323,12 +330,13 @@ class BudgetControllerTest extends TestCase
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->once();
         $blRepos->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$limit1, $limit2]));
-        $opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
+        //$opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
 
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
-        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
+//        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
+//        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+//        $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
+//        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
@@ -362,13 +370,7 @@ class BudgetControllerTest extends TestCase
 
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
         $blRepos->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection);
-        $opsRepos->shouldReceive('spentInPeriod')->andReturn('-100')->atLeast()->once();
-
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('withoutBudget')->andReturnSelf()->once();
-        $collector->shouldReceive('getSum')->andReturn('-100')->atLeast()->once();
-
+        $opsRepos->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($this->budgetSumExpenses());
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());

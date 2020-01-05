@@ -26,7 +26,6 @@ namespace Tests\Unit\Handlers\Events;
 
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Handlers\Events\VersionCheckEventHandler;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -66,8 +65,11 @@ class VersionCheckEventHandlerTest extends TestCase
         $checkConfig        = new Configuration;
         $checkConfig->data  = time() - 604810;
 
-        $channelConfig        = new Configuration;
-        $channelConfig->data  = 'stable';
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
+
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
 
         $event   = new RequestedVersionCheckStatus($this->user());
@@ -79,6 +81,7 @@ class VersionCheckEventHandlerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->once()->andReturn($channelConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         // request thing:
         //$request->shouldReceive('call')->once()->andThrow(new FireflyException('Errrr'));
@@ -96,13 +99,14 @@ class VersionCheckEventHandlerTest extends TestCase
      */
     public function testCheckForUpdatesNewer(): void
     {
-        $updateConfig       = new Configuration;
-        $updateConfig->data = 1;
-        $checkConfig        = new Configuration;
-        $checkConfig->data  = time() - 604800;
-        $channelConfig        = new Configuration;
-        $channelConfig->data  = 'stable';
-
+        $updateConfig           = new Configuration;
+        $updateConfig->data     = 1;
+        $checkConfig            = new Configuration;
+        $checkConfig->data      = time() - 604800;
+        $channelConfig          = new Configuration;
+        $channelConfig->data    = 'stable';
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
         $event   = new RequestedVersionCheckStatus($this->user());
         $request = $this->mock(UpdateRequest::class);
@@ -116,6 +120,7 @@ class VersionCheckEventHandlerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->once()->andReturn($channelConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         // request thing:
         //$request->shouldReceive('call')->once();
@@ -133,12 +138,14 @@ class VersionCheckEventHandlerTest extends TestCase
      */
     public function testCheckForUpdatesSameVersion(): void
     {
-        $updateConfig       = new Configuration;
-        $updateConfig->data = 1;
-        $checkConfig        = new Configuration;
-        $checkConfig->data  = time() - 604800;
-        $channelConfig        = new Configuration;
-        $channelConfig->data  = 'stable';
+        $updateConfig           = new Configuration;
+        $updateConfig->data     = 1;
+        $checkConfig            = new Configuration;
+        $checkConfig->data      = time() - 604800;
+        $channelConfig          = new Configuration;
+        $channelConfig->data    = 'stable';
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
 
         $event   = new RequestedVersionCheckStatus($this->user());
@@ -153,6 +160,7 @@ class VersionCheckEventHandlerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->once()->andReturn($channelConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         // request thing:
         //$request->shouldReceive('call')->once();
@@ -169,15 +177,18 @@ class VersionCheckEventHandlerTest extends TestCase
      */
     public function testCheckForUpdatesNoAdmin(): void
     {
-        $updateConfig       = new Configuration;
-        $updateConfig->data = 1;
-        $checkConfig        = new Configuration;
-        $checkConfig->data  = time() - 604800;
+        $updateConfig           = new Configuration;
+        $updateConfig->data     = 1;
+        $checkConfig            = new Configuration;
+        $checkConfig->data      = time() - 604800;
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
 
         $event = new RequestedVersionCheckStatus($this->user());
         $repos = $this->mock(UserRepositoryInterface::class);
         $repos->shouldReceive('hasRole')->andReturn(false)->once();
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         $handler = new VersionCheckEventHandler;
         $handler->checkForUpdates($event);
@@ -190,16 +201,19 @@ class VersionCheckEventHandlerTest extends TestCase
      */
     public function testCheckForUpdatesNoPermission(): void
     {
-        $updateConfig       = new Configuration;
-        $updateConfig->data = -1;
-        $checkConfig        = new Configuration;
-        $checkConfig->data  = time() - 604800;
-        $channelConfig        = new Configuration;
-        $channelConfig->data  = 'stable';
+        $updateConfig           = new Configuration;
+        $updateConfig->data     = -1;
+        $checkConfig            = new Configuration;
+        $checkConfig->data      = time() - 604800;
+        $channelConfig          = new Configuration;
+        $channelConfig->data    = 'stable';
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
         $event = new RequestedVersionCheckStatus($this->user());
         $repos = $this->mock(UserRepositoryInterface::class);
         $repos->shouldReceive('hasRole')->andReturn(true)->once();
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
@@ -215,28 +229,14 @@ class VersionCheckEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\VersionCheckEventHandler
      * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
-    public function testCheckForUpdatesSandstorm(): void
-    {
-        putenv('SANDSTORM=1');
-
-        $event   = new RequestedVersionCheckStatus($this->user());
-        $handler = new VersionCheckEventHandler;
-        $handler->checkForUpdates($event);
-        putenv('SANDSTORM=0');
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @covers \FireflyIII\Events\RequestedVersionCheckStatus
-     * @covers \FireflyIII\Handlers\Events\VersionCheckEventHandler
-     * @covers \FireflyIII\Helpers\Update\UpdateTrait
-     */
     public function testCheckForUpdatesTooRecent(): void
     {
         $updateConfig       = new Configuration;
         $updateConfig->data = 1;
         $checkConfig        = new Configuration;
         $checkConfig->data  = time() - 800;
+        $permissionConfig       = new Configuration;
+        $permissionConfig->data = 1;
 
 
         $event = new RequestedVersionCheckStatus($this->user());
@@ -245,6 +245,7 @@ class VersionCheckEventHandlerTest extends TestCase
 
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($permissionConfig);
 
         $handler = new VersionCheckEventHandler;
         $handler->checkForUpdates($event);

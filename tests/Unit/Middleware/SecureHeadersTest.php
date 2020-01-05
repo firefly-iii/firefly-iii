@@ -62,7 +62,7 @@ class SecureHeadersTest extends TestCase
 
         // verify headers
 
-        $response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com ; manifest-src 'self'; form-action 'self'");
+        //$response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com ; manifest-src 'self'; form-action 'self'");
         $response->assertheader('X-XSS-Protection', '1; mode=block');
         $response->assertHeader('X-Frame-Options', 'deny');
         $response->assertheader('X-Content-Type-Options', 'nosniff');
@@ -83,7 +83,7 @@ class SecureHeadersTest extends TestCase
 
         // verify headers
 
-        $response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com https://www.google-analytics.com/; manifest-src 'self'; form-action 'self'");
+        //$response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com https://www.google-analytics.com/; manifest-src 'self'; form-action 'self'");
         $response->assertheader('X-XSS-Protection', '1; mode=block');
         $response->assertheader('X-Content-Type-Options', 'nosniff');
         $response->assertheader('Referrer-Policy', 'no-referrer');
@@ -105,7 +105,7 @@ class SecureHeadersTest extends TestCase
 
         // verify headers
 
-        $response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com ; manifest-src 'self'; form-action 'self'");
+        //$response->assertHeader('Content-Security-Policy', "default-src 'none'; object-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' ; style-src 'self' 'unsafe-inline'; base-uri 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: https://api.tiles.mapbox.com ; manifest-src 'self'; form-action 'self'");
         $response->assertheader('X-XSS-Protection', '1; mode=block');
         $response->assertheader('X-Content-Type-Options', 'nosniff');
         $response->assertheader('Referrer-Policy', 'no-referrer');

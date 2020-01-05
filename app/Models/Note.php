@@ -95,12 +95,12 @@ class Note extends Model
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      *
-     * @return string
+     * @return string|null
      */
-    public function getTextAttribute(string $value): string
+    public function getTextAttribute(?string $value): ?string
     {
-        return htmlspecialchars_decode($value, ENT_QUOTES);
+        return null === $value ? null : htmlspecialchars_decode($value, ENT_QUOTES);
     }
 }

@@ -359,7 +359,14 @@ class CurrencyController extends Controller
         }
 
         $data['enabled'] = true;
-        $currency        = $this->repository->store($data);
+        try {
+            $currency = $this->repository->store($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::channel('audit')->info('Could not store (POST) currency without admin rights.', $data);
+            $request->session()->flash('error', (string)trans('firefly.could_not_store_currency'));
+            $currency = null;
+        }
         $redirect        = redirect($this->getPreviousUri('currencies.create.uri'));
 
         if (null !== $currency) {
@@ -372,10 +379,6 @@ class CurrencyController extends Controller
                 $redirect = redirect(route('currencies.create'))->withInput();
                 // @codeCoverageIgnoreEnd
             }
-        }
-        if (null === $currency) {
-            Log::channel('audit')->info('Could not store (POST) currency without admin rights.', $data);
-            $request->session()->flash('error', (string)trans('firefly.could_not_store_currency'));
         }
 
         return $redirect;

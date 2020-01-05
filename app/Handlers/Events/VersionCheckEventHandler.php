@@ -49,13 +49,6 @@ class VersionCheckEventHandler
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
         Log::debug('Now in checkForUpdates()');
-        // in Sandstorm, cannot check for updates:
-        $sandstorm = 1 === (int)getenv('SANDSTORM');
-        if (true === $sandstorm) {
-            Log::debug('This is Sandstorm instance, done.');
-
-            return;
-        }
 
         // should not check for updates:
         $permission = app('fireflyconfig')->get('permission_update_check', -1);

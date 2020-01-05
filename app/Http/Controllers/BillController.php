@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
@@ -40,6 +41,7 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  * Class BillController.
@@ -366,8 +368,10 @@ class BillController extends Controller
     {
         $billData           = $request->getBillData();
         $billData['active'] = true;
-        $bill               = $this->billRepository->store($billData);
-        if (null === $bill) {
+        try {
+            $bill = $this->billRepository->store($billData);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();

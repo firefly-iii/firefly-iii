@@ -26,6 +26,7 @@ namespace Tests\Unit\Transformers;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Transformers\BudgetTransformer;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -57,14 +58,16 @@ class BudgetTransformerTest extends TestCase
     public function testBasic(): void
     {
         // mocks and prep:
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+
         $parameters  = new ParameterBag;
         $budget      = Budget::first();
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($parameters);
 
         // mocks
-        $repository->shouldReceive('setUser')->once();
+        $opsRepository->shouldReceive('setUser')->once();
 
         // action
         $result = $transformer->transform($budget);
@@ -84,7 +87,9 @@ class BudgetTransformerTest extends TestCase
     public function testSpentArray(): void
     {
         // mocks and prep:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $opsRepository = $this->mock(OperationsRepositoryInterface::class);
+
         $parameters = new ParameterBag;
 
         // set parameters
@@ -107,8 +112,8 @@ class BudgetTransformerTest extends TestCase
         ];
 
         // mocks
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn($spent);
+        $opsRepository->shouldReceive('sumExpenses')->atLeast()->once()->andReturn($spent);
+        $opsRepository->shouldReceive('setUser')->once();
 
         // action
         $result = $transformer->transform($budget);

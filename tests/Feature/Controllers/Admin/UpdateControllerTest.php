@@ -27,8 +27,8 @@ use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\Github\Object\Release;
-use FireflyIII\Services\Github\Request\UpdateRequest;
 use Log;
 use Mockery;
 use Tests\TestCase;
@@ -64,10 +64,13 @@ class UpdateControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock update calls.
-        $config       = new Configuration;
-        $config->data = -1;
-        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($config);
+        $config              = new Configuration;
+        $config->data        = -1;
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
 
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($config);
+        FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->once()->andReturn($channelConfig);
         // call service
         $this->be($this->user());
         $response = $this->get(route('admin.update-check'));
@@ -91,6 +94,8 @@ class UpdateControllerTest extends TestCase
         // mock update calls
         FireflyConfig::shouldReceive('set')->withArgs(['permission_update_check', 1])->once()->andReturn(new Configuration);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
+        FireflyConfig::shouldReceive('set')->withArgs(['update_channel','stable'])->once()->andReturn(new Configuration);
+        //FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->once()->andReturn($channelConfig);
 
         // call service
         $this->be($this->user());
@@ -115,23 +120,26 @@ class UpdateControllerTest extends TestCase
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
         $this->mockDefaultSession();
 
-        // set some data
-        $version = config('firefly.version');
-        $date    = new Carbon;
-        $date->subDays(5);
-        $releases = [
-            new Release(['id' => 'x', 'title' => $version . '.1', 'content' => '', 'updated' => $date]),
+        $return = [
+            'version' => '2.0.0',
+            'date' => '2020-01-01'
         ];
+
+        // set some data
         $updater  = $this->mock(UpdateRequest::class);
-        $updater->shouldReceive('call')->andReturnNull();
-        $updater->shouldReceive('getReleases')->andReturn($releases);
+        $updater->shouldReceive('getVersion')->withArgs(['stable'])->atLeast()->once()
+            ->andReturn($return);
+
+
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
+        FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->atleast()->once()->andReturn($channelConfig);
 
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
-        $response->assertSee($version);
-        $response->assertSee('which was released on');
-        $response->assertSee($version . '.1');
+        $response->assertSee(config('firefly.version'));
+        $response->assertSee('which is newer than the latest release');
     }
 
 
@@ -149,21 +157,24 @@ class UpdateControllerTest extends TestCase
         $this->mockDefaultSession();
 
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
+        FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->atleast()->once()->andReturn($channelConfig);
 
-        $date = new Carbon;
-        $date->subDays(5);
-        $version  = config('firefly.version');
-        $releases = [
-            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => $date]),
+        $return = [
+            'version' => config('firefly.version'),
+            'date' => '2020-01-01'
         ];
+
+        // set some data
         $updater  = $this->mock(UpdateRequest::class);
-        $updater->shouldReceive('call')->andReturnNull();
-        $updater->shouldReceive('getReleases')->andReturn($releases);
+        $updater->shouldReceive('getVersion')->withArgs(['stable'])->atLeast()->once()
+                ->andReturn($return);
 
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
-        $response->assertSee($version);
+        $response->assertSee(config('firefly.version'));
         $response->assertSee('the latest available release');
     }
 
@@ -180,11 +191,15 @@ class UpdateControllerTest extends TestCase
         $this->mockDefaultSession();
 
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
+        FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->atleast()->once()->andReturn($channelConfig);
 
-        $releases = [];
         $updater  = $this->mock(UpdateRequest::class);
-        $updater->shouldReceive('call')->andThrow(FireflyException::class, 'Something broke.');
-        $updater->shouldReceive('getReleases')->andReturn($releases);
+        $updater->shouldReceive('getVersion')->withArgs(['stable'])->atLeast()->once()
+                ->andThrow(new FireflyException('Something broke.'));
+
+
 
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
@@ -206,19 +221,24 @@ class UpdateControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
-        $version  = config('firefly.version') . '-alpha';
-        $releases = [
-            new Release(['id' => 'x', 'title' => $version, 'content' => '', 'updated' => new Carbon]),
+        $channelConfig       = new Configuration;
+        $channelConfig->data = 'stable';
+        FireflyConfig::shouldReceive('get')->withArgs(['update_channel', 'stable'])->atleast()->once()->andReturn($channelConfig);
+
+        $return = [
+            'version' => '100',
+            'date' => '2020-01-01'
         ];
+
+        // set some data
         $updater  = $this->mock(UpdateRequest::class);
-        $updater->shouldReceive('call')->andReturnNull();
-        $updater->shouldReceive('getReleases')->andReturn($releases);
+        $updater->shouldReceive('getVersion')->withArgs(['stable'])->atLeast()->once()
+                ->andReturn($return);
 
         // expect a new release (because of .1)
         $this->be($this->user());
         $response = $this->post(route('admin.update-check.manual'));
         $response->assertStatus(200);
-        $response->assertSee($version);
-        $response->assertSee('which is newer than the');
+        $response->assertSee('A new version of Firefly III is available');
     }
 }
