@@ -76,7 +76,7 @@ class PiggyBankFormRequest extends Request
         $rules = [
             'name'         => $nameRule,
             'account_id'   => 'required|belongsToUser:accounts',
-            'targetamount' => 'required|numeric|more:0|max:1000000000',
+            'targetamount' => 'required|numeric|gte:0.01|max:1000000000',
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',
