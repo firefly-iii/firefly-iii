@@ -59,7 +59,7 @@ class SecureHeaders
         $csp = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'nonce-%s' %s", $nonce, $google),
+            sprintf("script-src 'nonce-%s' unsafe-inline %s", $nonce, $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",
