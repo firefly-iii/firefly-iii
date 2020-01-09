@@ -168,28 +168,37 @@ class BillTransformer extends AbstractTransformer
             ];
         }
         Log::debug(sprintf('Parameters are start:%s end:%s', $this->parameters->get('start')->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
+
+        /*
+         *  Get from database when bill was paid.
+         */
         $set = $this->repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
         Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
-        // calculate next expected match:
-        Log::debug(
-            sprintf('Grab last paid date from getPaidDatesInRange(), return %s if it comes up with nothing.', $this->parameters->get('start')->format('Y-m-d'))
-        );
+        /*
+         * Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
+         */
+        Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $this->parameters->get('start')->format('Y-m-d')));
         $lastPaidDate = $this->lastPaidDate($set, $this->parameters->get('start'));
         Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
+
+        /*
+         * The next expected match (nextMatch) is, initially, the bill's date.
+         */
         $nextMatch = clone $bill->date;
         Log::debug(sprintf('Next match is %s (bill->date)', $nextMatch->format('Y-m-d')));
         while ($nextMatch < $lastPaidDate) {
+            /*
+             * As long as this date is smaller than the last time the bill was paid, keep jumping ahead.
+             * For example: 1 jan, 1 feb, etc.
+             */
             Log::debug(sprintf('next match %s < last paid date %s, so add one period.', $nextMatch->format('Y-m-d'), $lastPaidDate->format('Y-m-d')));
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
             Log::debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
         }
-        $end = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
-        Log::debug(sprintf('$end is another period added: %s', $end->format('Y-m-d')));
-        if ($set->count() > 0) {
-            $nextMatch = clone $end;
-            Log::debug(sprintf('Next match (%s) is now a clone of end, because the set has > 0 entries. .', $nextMatch->format('Y-m-d')));
-        }
+        /*
+         * At this point the "next match" is exactly after the last time the bill was paid.
+         */
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
