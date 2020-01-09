@@ -203,9 +203,6 @@ class BillTransformer extends AbstractTransformer
      */
     protected function payDates(Bill $bill): array
     {
-        $this->parameters->set('start', Carbon::create(2019, 11, 1));
-        $this->parameters->set('end', Carbon::create(2019, 11, 30));
-
         Log::debug(sprintf('Now in payDates() for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
             Log::debug('No start or end date, give empty array.');
