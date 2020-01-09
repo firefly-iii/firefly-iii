@@ -241,13 +241,14 @@ class BillTransformer extends AbstractTransformer
             $currentStart = clone $nextExpectedMatch;
             $loop++;
         }
-        Log::debug(sprintf('Loop has ended after %d loops', $loop));
         $simple = $set->map(
             static function (Carbon $date) {
                 return $date->format('Y-m-d');
             }
         );
+        $array = $simple->toArray();
+        Log::debug(sprintf('Loop has ended after %d loops', $loop), $array);
 
-        return $simple->toArray();
+        return $array;
     }
 }
