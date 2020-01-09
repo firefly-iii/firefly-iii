@@ -196,6 +196,13 @@ class BillTransformer extends AbstractTransformer
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
             Log::debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
         }
+        if($nextMatch->isSameDay($lastPaidDate)) {
+            /*
+             * Add another period because its the same day as the last paid date.
+             */
+            Log::debug('Because the last paid date was on the same day as our next expected match, add another day.');
+            $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+        }
         /*
          * At this point the "next match" is exactly after the last time the bill was paid.
          */
