@@ -53,13 +53,13 @@ class SecureHeaders
         $analyticsId = config('firefly.analytics_id');
 
         if ('' !== $analyticsId) {
-            $google    = 'www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
+            $google    = 'https://www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
             $googleImg = 'https://www.google-analytics.com/';
         }
         $csp = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'nonce-%s' 'unsafe-inline' %s", $nonce, $google),
+            sprintf("script-src 'unsafe-inline' %s 'nonce-%s'", $nonce, $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",
