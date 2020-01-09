@@ -167,19 +167,28 @@ class BillTransformer extends AbstractTransformer
                 'next_expected_match' => null,
             ];
         }
-
+        Log::debug(sprintf('Parameters are start:%s end:%s', $this->parameters->get('start')->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
         $set = $this->repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
         Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         // calculate next expected match:
+        Log::debug(
+            sprintf('Grab last paid date from getPaidDatesInRange(), return %s if it comes up with nothing.', $this->parameters->get('start')->format('Y-m-d'))
+        );
         $lastPaidDate = $this->lastPaidDate($set, $this->parameters->get('start'));
-        $nextMatch    = clone $bill->date;
+        Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
+        $nextMatch = clone $bill->date;
+        Log::debug(sprintf('Next match is %s (bill->date)', $nextMatch->format('Y-m-d')));
         while ($nextMatch < $lastPaidDate) {
+            Log::debug(sprintf('next match %s < last paid date %s, so add one period.', $nextMatch->format('Y-m-d'), $lastPaidDate->format('Y-m-d')));
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+            Log::debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
         }
-        $end          = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+        $end = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+        Log::debug(sprintf('$end is another period added: %s', $end->format('Y-m-d')));
         if ($set->count() > 0) {
             $nextMatch = clone $end;
+            Log::debug(sprintf('Next match (%s) is now a clone of end, because the set has > 0 entries. .', $nextMatch->format('Y-m-d')));
         }
         $result = [];
         foreach ($set as $entry) {
@@ -189,11 +198,13 @@ class BillTransformer extends AbstractTransformer
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }
-
-        return [
+        $result = [
             'paid_dates'          => $result,
             'next_expected_match' => $nextMatch->format('Y-m-d'),
         ];
+        Log::debug('Result', $result);
+
+        return $result;
     }
 
     /**
