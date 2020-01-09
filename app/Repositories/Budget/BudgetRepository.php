@@ -243,7 +243,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('' !== $query) {
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
-        $search->orderBy('order', 'DESC')
+        $search->orderBy('order', 'ASC')
         ->orderBy('name', 'ASC')->where('active', 1);
 
         return $search->get();
