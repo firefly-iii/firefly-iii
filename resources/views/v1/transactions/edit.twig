@@ -1,14 +1,14 @@
+{% set VUE_SCRIPT_NAME = 'edit_transaction' %}
 {% extends "./layout/default" %}
-
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
-    <edit-transaction></edit-transaction>
 {% endblock %}
 
 {% block content %}
+    <div id="edit_transaction"></div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
         var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};

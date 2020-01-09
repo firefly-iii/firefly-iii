@@ -408,8 +408,8 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-    <script type="text/javascript">
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
         var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
@@ -424,6 +424,6 @@
         var periodStart = "{{ start.format('Y-m-d') }}";
         var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/budgets/index.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/budgets/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

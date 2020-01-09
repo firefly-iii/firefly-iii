@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use Amount;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
@@ -216,6 +217,7 @@ class BillControllerTest extends TestCase
 
 
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection([$rule]));
+        $repository->shouldReceive('unlinkAll')->atLeast()->once();
 
         //calls for transaction matcher:
         $matcher = $this->mock(TransactionMatcher::class);
@@ -394,7 +396,7 @@ class BillControllerTest extends TestCase
         $repository = $this->mock(BillRepositoryInterface::class);
 
         $this->mock(AttachmentHelperInterface::class);
-        $repository->shouldReceive('store')->andReturn(null);
+        $repository->shouldReceive('store')->andThrow(new FireflyException('Could not store.'));
 
         $data = [
             'name'                    => 'New Bill ' . $this->randomInt(),
@@ -425,8 +427,8 @@ class BillControllerTest extends TestCase
         // mock stuff
         $attachHelper = $this->mock(AttachmentHelperInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-
-        $repository->shouldReceive('store')->andReturn(new Bill);
+        $bill = $this->getRandomBill();
+        $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
         Preferences::shouldReceive('mark')->atLeast()->once();

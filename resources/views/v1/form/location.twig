@@ -51,7 +51,7 @@
     {% set haslocationvar = name~'_has_location' %}
     {% set clearvar = name~'_clear_location' %}
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var mymap;
         var marker;
         if (typeof locations.{{ name }}.latitude === 'undefined') {
@@ -72,24 +72,35 @@
                 if (typeof marker !== 'undefined') {
                     marker.remove();
                     $('input[name="{{ haslocationvar }}"]').val('false');
+                    $('input[name="{{ latitudevar }}"]').val('');
+                    $('input[name="{{ longitudevar }}"]').val('');
+                    $('input[name="{{ zoomlevelvar }}"]').val('');
                 }
             });
         };
 
+
         // set location thing:
         function setObjectLocation(e) {
-            console.log('Set object location: lat(' + e.latlng.lat + '), long(' + e.latlng.lng + '), zoom (' + mymap.getZoom() + ')');
-            $('input[name="{{ latitudevar }}"]').val(e.latlng.lat);
-            $('input[name="{{ longitudevar }}"]').val(e.latlng.lng);
+            if (typeof e.latlng !== 'undefined') {
+                console.log('Set object location: lat(' + e.latlng.lat + '), long(' + e.latlng.lng + '), zoom (' + mymap.getZoom() + ')');
+                $('input[name="{{ latitudevar }}"]').val(e.latlng.lat);
+                $('input[name="{{ longitudevar }}"]').val(e.latlng.lng);
+            }
+            if (typeof e.latlng === 'undefined') {
+                console.log('Set object zoom level to ' + mymap.getZoom());
+            }
             $('input[name="{{ zoomlevelvar }}"]').val(mymap.getZoom());
-            $('input[name="{{ haslocationvar }}"]').val('true');
+
 
             // remove existing marker:
-            if (typeof marker !== 'undefined') {
+            if (typeof marker !== 'undefined' && typeof e.latlng !== 'undefined') {
                 marker.remove();
             }
-            // new marker
-            marker = L.marker({lat: e.latlng.lat, lng: e.latlng.lng}).addTo(mymap);
+            if (typeof e.latlng !== 'undefined') {
+                // new marker
+                marker = L.marker({lat: e.latlng.lat, lng: e.latlng.lng}).addTo(mymap);
+            }
         }
 
 
@@ -107,6 +118,7 @@
             }).addTo(mymap);
 
             mymap.on('contextmenu', setObjectLocation);
+            mymap.on('zoomend', setObjectLocation);
 
             // add marker
             if (typeof locations.{{ name }}.has_location !== 'undefined' && locations.{{ name }}.has_location === true) {

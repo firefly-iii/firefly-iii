@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -84,6 +85,7 @@ class CurrencyControllerTest extends TestCase
         $euro       = $this->getEuro();
 
         $repository->shouldReceive('currencyInUse')->andReturn(true);
+        $repository->shouldReceive('currencyInUseAt')->andReturn('something');
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         $this->be($this->user());
@@ -450,7 +452,7 @@ class CurrencyControllerTest extends TestCase
         $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
-        $repository->shouldReceive('store')->andReturnNull();
+        $repository->shouldReceive('store')->andThrow(new FireflyException('Could not store'));
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         $this->session(['currencies.create.uri' => 'http://localhost']);

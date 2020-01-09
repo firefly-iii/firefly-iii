@@ -87,6 +87,7 @@ class ShowControllerTest extends TestCase
 
         $repository->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // list size
         $pref       = new Preference;
@@ -143,11 +144,14 @@ class ShowControllerTest extends TestCase
         $repository->shouldReceive('isLiability')->andReturn(false)->atLeast()->once();
         $repository->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // list size
         $pref       = new Preference;
         $pref->data = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();

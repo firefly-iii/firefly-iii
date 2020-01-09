@@ -87,6 +87,8 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly')->atLeast()->once();
 
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
+
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Loan'])->andReturn(AccountType::find(9))->once();
@@ -130,6 +132,8 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
+
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -175,6 +179,8 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
+
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // mock default session stuff
         $this->mockDefaultSession();

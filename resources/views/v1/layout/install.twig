@@ -18,8 +18,8 @@
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
-    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
-    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <![endif]-->
 
     {# favicons #}
@@ -34,7 +34,7 @@
     </div>
     {% block content %}{% endblock %}
 </div>
-<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

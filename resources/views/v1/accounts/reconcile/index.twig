@@ -126,7 +126,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
         var startBalance = {{ startBalance }};
@@ -135,5 +135,5 @@
         var overviewUri = '{{ overviewUri }}';
         var indexUri = '{{ indexUri }}';
     </script>
-    <script src="v1/js/ff/accounts/reconcile.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+    <script src="v1/js/ff/accounts/reconcile.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

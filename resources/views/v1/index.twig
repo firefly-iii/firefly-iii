@@ -154,7 +154,7 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var billCount = {{ billCount }};
         var accountFrontpageUri = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUri = '{{ route('chart.account.revenue') }}';
@@ -167,11 +167,11 @@
         {% endif %}
     </script>
 
-    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/index.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

@@ -77,12 +77,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
-        // TODO we can use getAccountCurrency() instead
-        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
-        $currency   = $this->currencyRepos->findNull($currencyId);
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
-        }
+        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
 
         // note
         $notes = $this->piggyRepos->getNoteText($piggyBank);
@@ -99,6 +94,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // target and percentage:
         $targetAmount = round($piggyBank->targetamount, $currency->decimal_places);
+        $targetAmount = 1 === bccomp('0.01', (string)$targetAmount) ? '0.01' : $targetAmount;
         $percentage   = (int)(0 !== bccomp('0', $currentAmountStr) ? $currentAmount / $targetAmount * 100 : 0);
         $data         = [
             'id'                      => (int)$piggyBank->id,

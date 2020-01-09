@@ -106,13 +106,13 @@
     <link href="v1/css/bootstrap-multiselect.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var selectAllText = "{{ trans('firefly.multi_select_select_all')|escape('js') }}";
         var nonSelectedText = "{{ trans('firefly.multi_select_no_selection')|escape('js') }}";
         var nSelectedText = "{{ trans('firefly.multi_select_n_selected')|escape('js') }}";
         var allSelectedText = "{{ trans('firefly.multi_select_all_selected')|escape('js') }}";
         var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder')|escape('js') }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/import/file/configure-upload.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/import/file/configure-upload.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

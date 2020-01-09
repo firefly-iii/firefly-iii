@@ -196,6 +196,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
 
         $blRepos->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]))->atLeast()->once();
         $opsRepos->shouldReceive('spentInPeriod')->andReturn('-1')->atLeast()->once();

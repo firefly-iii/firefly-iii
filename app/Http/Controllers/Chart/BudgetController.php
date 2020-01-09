@@ -251,7 +251,7 @@ class BudgetController extends Controller
         foreach ($result as $combinedId => $info) {
             $parts   = explode('-', $combinedId);
             $assetId = (int)$parts[0];
-            $title   = sprintf('%s (%s)', $names[$assetId], $info['currency_name']);
+            $title   = sprintf('%s (%s)', $names[$assetId] ?? '(empty)', $info['currency_name']);
             $chartData[$title]
                      = [
                 'amount'          => $info['amount'],
@@ -315,7 +315,7 @@ class BudgetController extends Controller
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
             $categoryId        = (int)$parts[0];
-            $title             = sprintf('%s (%s)', $names[$categoryId], $info['currency_name']);
+            $title             = sprintf('%s (%s)', $names[$categoryId] ?? '(empty)', $info['currency_name']);
             $chartData[$title] = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],

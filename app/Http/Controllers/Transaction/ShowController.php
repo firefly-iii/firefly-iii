@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -82,6 +83,13 @@ class ShowController extends Controller
         // do some amount calculations:
         $amounts = $this->getAmounts($groupArray);
 
+        // make sure notes are escaped but not double escaped.
+        foreach ($groupArray['transactions'] as $index => $transaction) {
+            $search = ['&amp;', '&gt;', '&lt;'];
+            if (!Str::contains($transaction['notes'], $search)) {
+                $groupArray['transactions'][$index]['notes'] = e($transaction['notes']);
+            }
+        }
 
         $events      = $this->repository->getPiggyEvents($transactionGroup);
         $attachments = $this->repository->getAttachments($transactionGroup);

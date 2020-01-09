@@ -90,6 +90,7 @@ class ReconcileController extends Controller
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
 
+
         if (AccountType::ASSET !== $account->accountType->type) {
             // @codeCoverageIgnoreStart
             session()->flash('error', (string)trans('firefly.must_be_asset_account'));
@@ -117,6 +118,9 @@ class ReconcileController extends Controller
             $end = app('navigation')->endOfPeriod($start, $range);
         }
         // @codeCoverageIgnoreEnd
+        if ($end->lt($start)) {
+            [$start, $end] = [$end, $start];
+        }
 
         $startDate = clone $start;
         $startDate->subDay();
@@ -163,6 +167,11 @@ class ReconcileController extends Controller
         }
         Log::debug('Reconciled all transactions.');
 
+        // switch dates if necessary
+        if ($end->lt($start)) {
+            [$start, $end] = [$end, $start];
+        }
+
         // create reconciliation transaction (if necessary):
         $result = '';
         if ('create' === $data['reconcile']) {
@@ -182,9 +191,16 @@ class ReconcileController extends Controller
 
     /**
      * Creates a reconciliation group.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param string  $difference
+     *
      * @return string
+     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
      */
-    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
+    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
@@ -197,6 +213,10 @@ class ReconcileController extends Controller
         if (1 === bccomp($difference, '0')) {
             $source      = $account;
             $destination = $reconciliation;
+        }
+
+        if ($end->lt($start)) {
+            [$start, $end] = [$end, $start];
         }
 
         // title:

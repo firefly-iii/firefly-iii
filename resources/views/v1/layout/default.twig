@@ -41,13 +41,13 @@
     {# Any local custom CSS.  #}
     {% block styles %}{% endblock %}
     <!--[if lt IE 9]>
-    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
-    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <![endif]-->
 
     {# this entry is in the header so it's loaded early #}
     {# SHA256: C45493A8175B10AC47EEDFC7C20AC31FAE5C804FB6C4F75468DB0F95112664BF #}
-    <script type="text/javascript">var forceDemoOff = false;</script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">var forceDemoOff = false;</script>
 
     {# favicons #}
     {% include('partials.favicons') %}
@@ -176,31 +176,31 @@
 {# Java libraries and stuff: #}
 
 {# Moment JS #}
-<script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script src="v1/js/ff/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="v1/js/ff/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# All kinds of variables. #}
-<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
+<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# big fat JS thing courtesy of Vue#}
-<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/js/{{ VUE_SCRIPT_NAME|default('app') }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# date range picker, current template, etc.#}
-<script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
+<script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 
 {# Firefly III code#}
-<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}"></script>
-<script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% if not shownDemo %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, objectType|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default("")]) }}";
     </script>
-    <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endif %}
 {% block scripts %}{% endblock %}
 
@@ -208,8 +208,8 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
-    <script>
+    <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());

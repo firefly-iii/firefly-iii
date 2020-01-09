@@ -12,3 +12,4 @@ yarn-error.log
 public/google*.html
 report.html
 composer.phar
+app.js.map

@@ -25,7 +25,7 @@ namespace FireflyIII\Services\Github\Request;
 
 /**
  * Interface GithubRequest
- *
+ * @deprecated
  */
 interface GithubRequest
 {

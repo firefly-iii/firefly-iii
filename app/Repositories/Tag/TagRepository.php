@@ -399,13 +399,13 @@ class TagRepository implements TagRepositoryInterface
         $tag->tag         = $data['tag'];
         $tag->date        = $data['date'];
         $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoom_level'];
+        $tag->latitude    = null;
+        $tag->longitude   = null;
+        $tag->zoomLevel   = null;
         $tag->save();
 
         // update, delete or create location:
-        $updateLocation = $data['has_location'] ?? false;
+        $updateLocation = $data['update_location'] ?? false;
 
         // location must be updated?
         if (true === $updateLocation) {

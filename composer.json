@@ -52,7 +52,7 @@
     "forum": "https://reddit.com/r/FireflyIII",
     "wiki": "https://github.com/firefly-iii/help/wiki",
     "source": "https://github.com/firefly-iii/firefly-iii",
-    "docs": "https://firefly-iii.readthedocs.io/en/latest/"
+    "docs": "https://docs.firefly-iii.org/"
   },
   "require": {
     "php": ">=7.3.0",
@@ -91,7 +91,6 @@
     "rcrowe/twigbridge": "^0.11.2"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.2",
     "barryvdh/laravel-ide-helper": "2.*",
     "filp/whoops": "2.*",
     "fzaninotto/faker": "1.*",

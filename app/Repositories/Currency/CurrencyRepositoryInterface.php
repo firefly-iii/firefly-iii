@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
@@ -233,7 +234,7 @@ interface CurrencyRepositoryInterface
 
     /**
      * @param array $data
-     *
+     * @throws FireflyException
      * @return TransactionCurrency
      */
     public function store(array $data): TransactionCurrency;

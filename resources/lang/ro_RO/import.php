@@ -37,7 +37,7 @@ return [
     'general_index_intro'                 => 'Bine ați venit la rutina de import Firefly III. Există câteva moduri de a importa date în Firefly III, afișate aici ca butoane.',
 
     // notices about the CSV importer:
-    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'deprecate_csv_import' => 'După cum s-a subliniat în <a href="https://www.patreon.com/posts/future-updates-30012174"> această postare Patreon </a>, modul în care Firefly III gestionează importul de date se va schimba. Aceasta înseamnă că importatorul CSV va fi mutat într-un instrument nou, separat. Puteți deja testa acest instrument dacă accesați <a href="https://github.com/firefly-iii/csv-importer"> acest repository de pe GitHub </a>. Aș aprecia dacă ați testa noul importator și ați anunța ce credeți.',
 
     // import provider strings (index):
     'button_fake'                         => 'Simulează un import',
@@ -213,8 +213,8 @@ Creați descrieri mai bune în exporturile ING',
     'specific_pres_descr'             => 'Remediază posibile probleme cu fișierele PC',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Remediază posibile probleme cu fișierele Belfius',
-    'specific_ingbelgium_name'        => 'ING BE',
-    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_ingbelgium_name'        => 'ING Belgia',
+    'specific_ingbelgium_descr'       => 'Remediază posibile probleme cu fișierele ING Belgia',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Configurarea importului (3/4) - Definiți rolul fiecărei coloane',
     'job_config_roles_text'           => 'Fiecare coloană din fișierul dvs. CSV conține anumite date. Vă rugăm să indicați ce fel de date ar trebui să aștepte importatorul. Opțiunea de a "mapa" datele înseamnă că veți conecta fiecare intrare găsită în coloană cu o valoare din baza dvs. de date. O coloană desenată de multe ori este coloana care conține IBAN-ul contului opus. Acest lucru poate fi ușor comparat cu prezența IBAN în baza dvs. de date.',
@@ -315,6 +315,6 @@ Creați descrieri mai bune în exporturile ING',
     'column_internal-reference'       => 'Referință internă',
 
     // error message
-    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
+    'duplicate_row'                   => 'Rândul #:row (":description") nu a putut fi importat. Există deja.',
 
 ];

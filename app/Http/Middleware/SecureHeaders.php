@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  *
@@ -33,19 +34,24 @@ use Illuminate\Http\Request;
 class SecureHeaders
 {
     /**
-     * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
+     * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     * @param \Closure                 $next
      *
      * @return mixed
+     * @throws \Exception
      */
     public function handle(Request $request, Closure $next)
     {
+        $nonce = base64_encode(random_bytes(16));
+        app('view')->share('JS_NONCE', $nonce);
+
         $response    = $next($request);
         $google      = '';
         $googleImg   = '';
         $analyticsId = config('firefly.analytics_id');
+
         if ('' !== $analyticsId) {
             $google    = 'www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
             $googleImg = 'https://www.google-analytics.com/';
@@ -53,7 +59,7 @@ class SecureHeaders
         $csp = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
+            sprintf("script-src 'nonce-%s' %s", $nonce, $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",

@@ -74,6 +74,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all kinds of meta values:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
@@ -142,6 +143,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all kinds of meta values:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
@@ -210,6 +212,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all kinds of meta values:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('ccAsset')->atLeast()->once();
@@ -285,6 +288,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getAccountType')->andReturn('Mortgage')->atLeast()->once();
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all kinds of meta values:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('')->atLeast()->once();
@@ -359,6 +363,7 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getAccountType')->andReturn('Expense account')->atLeast()->once();
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+        $accountRepos->shouldReceive('getLocation')->atLeast()->once()->andReturnNull();
 
         // get all kinds of meta values:
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();

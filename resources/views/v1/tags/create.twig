@@ -6,7 +6,7 @@
 
 {% block content %}
     <!-- set location data high up -->
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var locations = {{ locations|json_encode|raw }};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
@@ -57,10 +57,10 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
-    <script src="v1/js/ff/tags/create-edit.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/ff/tags/create-edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>

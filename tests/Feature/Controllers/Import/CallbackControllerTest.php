@@ -54,7 +54,7 @@ class CallbackControllerTest extends TestCase
     public function testYnabBasic(): void
     {
         $repository = $this->mock(ImportJobRepositoryInterface::class);
-
+        $importJob = $this->getRandomImportJob();
         // config for job:
         $config    = [];
         $newConfig = ['auth_code' => 'abc'];
@@ -62,7 +62,7 @@ class CallbackControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock calls.
-        $repository->shouldReceive('findByKey')->andReturn(new ImportJob)->once();
+        $repository->shouldReceive('findByKey')->andReturn($importJob)->once();
         $repository->shouldReceive('getConfiguration')->andReturn($config)->once();
         $repository->shouldReceive('setConfiguration')->once()->withArgs([Mockery::any(), $newConfig]);
 

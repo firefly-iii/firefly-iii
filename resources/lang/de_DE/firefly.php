@@ -682,7 +682,7 @@ return [
     'source_or_dest_invalid'                    => 'Die korrekten Buchungsdetails konnten nicht gefunden werden. Eine Konvertierung ist nicht möglich.',
     'convert_to_withdrawal'                     => 'In eine Ausgabe umwandeln',
     'convert_to_deposit'                        => 'In eine Einzahlung umwandeln',
-    'convert_to_transfer'                       => 'In eine Umbuchungen umwandeln',
+    'convert_to_transfer'                       => 'In eine Umbuchung umwandeln',
 
     // create new stuff:
     'create_new_withdrawal'                     => 'Erstelle eine neue Ausgabe',
@@ -850,7 +850,7 @@ return [
     'end_balance'                               => 'Endguthaben',
     'update_balance_dates_instruction'          => 'Ordnen Sie die oben genannten Beträge und Daten Ihrem Kontoauszug zu und klicken Sie auf „Jetzt ausgleichen”',
     'select_transactions_instruction'           => 'Wählen Sie die Buchungen aus, die auf Ihrem Kontoauszug angezeigt werden.',
-    'select_range_and_balance'                  => 'Überprüfen Sie zunächst den Datumsbereich und das Guthaben. Anschließend drücken Sie auf „Jetzt ausgleichen”',
+    'select_range_and_balance'                  => 'Überprüfen Sie zunächst den Datumsbereich und das Guthaben. Anschließend drücken Sie auf „Jetzt abgleichen”',
     'date_change_instruction'                   => 'Wenn Sie den Datumsbereich jetzt ändern, geht der gesamte Verlauf verloren.',
     'update_selection'                          => 'Auswahl aktualisieren',
     'store_reconcile'                           => 'Kontenabgleich speichern',

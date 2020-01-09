@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="0; url={{ data['token-url'] }}">
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         window.location.href = "{{ data['token-url'] }}";
     </script>
     <title>Page Redirection</title>

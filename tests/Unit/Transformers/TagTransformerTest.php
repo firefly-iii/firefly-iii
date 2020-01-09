@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Transformers\TagTransformer;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -51,11 +52,15 @@ class TagTransformerTest extends TestCase
                 'tagMode'     => 'nothing',
                 'date'        => '2018-01-01',
                 'description' => 'Some tag',
-                'latitude'    => 5.5,
-                'longitude'   => '6.6',
-                'zoomLevel'   => 3,
             ]
         );
+        $location = new Location;
+        $location->latitude = 5.5;
+        $location->longitude = 6.6;
+        $location->zoom_level = 3;
+        $location->locatable()->associate($tag);
+        $location->save();
+
         $transformer = app(TagTransformer::class);
         $transformer->setParameters(new ParameterBag);
         $result = $transformer->transform($tag);

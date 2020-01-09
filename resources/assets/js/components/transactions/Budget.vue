@@ -29,9 +29,7 @@
         <div class="col-sm-12">
             <select name="budget[]" ref="budget" v-model="value" @input="handleInput" class="form-control"
                     v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets"  :label="cBudget.name" :value="cBudget.id"
-
-                >{{cBudget.name}}</option>
+                <option v-for="cBudget in this.budgets" :label="cBudget.name" :value="cBudget.id">{{cBudget.name}}</option>
             </select>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -46,8 +44,7 @@
         props: ['transactionType', 'value', 'error','no_budget'],
         mounted() {
             this.loadBudgets();
-            // console.log('budget value');
-            // console.log(this.value);
+            //this.value = null === this.value ? 0 : this.value;
         },
         data() {
             return {
@@ -68,6 +65,10 @@
                         {
                             name: this.no_budget,
                             id: 0,
+                        },
+                        {
+                            name: this.no_budget,
+                            id: null,
                         }
                     ];
                     for (const key in res.data) {

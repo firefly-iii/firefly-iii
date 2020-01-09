@@ -83,7 +83,8 @@ class RecurrenceTransformerTest extends TestCase
         // default calls:
         $recurrenceRepos->shouldReceive('getNoteText')->once()->andReturn('Hi there');
         $recurrenceRepos->shouldReceive('repetitionDescription')->once()->andReturn('Rep descr');
-        $recurrenceRepos->shouldReceive('getXOccurrences')->andReturn($ranges)->atLeast()->once();
+        //$recurrenceRepos->shouldReceive('getXOccurrences')->andReturn($ranges)->atLeast()->once();
+        $recurrenceRepos->shouldReceive('getXOccurrencesSince')->andReturn($ranges)->atLeast()->once();
         $factory->shouldReceive('findOrCreate')->atLeast()->once()->withArgs([null, Mockery::any()])->andReturn($category);
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($budget);
         $piggyRepos->shouldReceive('findNull')->andReturn($piggy);

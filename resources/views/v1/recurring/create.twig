@@ -197,19 +197,19 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var transactionType = "{{ preFilled.transaction_type }}";
         var suggestUri = "{{ route('recurring.suggest') }}";
         var eventsUri = "{{ route('recurring.events') }}";
         var oldRepetitionType= "{{ oldRepetitionType }}";
     </script>
-    <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}

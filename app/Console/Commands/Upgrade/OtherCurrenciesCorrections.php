@@ -125,19 +125,17 @@ class OtherCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
-        // TODO we can use getAccountCurrency() instead
-        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
-        $result     = $this->currencyRepos->findNull($currencyId);
-        if (null === $result) {
+        $currency = $this->accountRepos->getAccountCurrency($account);
+        if (null === $currency) {
             // @codeCoverageIgnoreStart
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
             // @codeCoverageIgnoreEnd
         }
-        $this->accountCurrencies[$accountId] = $result;
+        $this->accountCurrencies[$accountId] = $currency;
 
-        return $result;
+        return $currency;
 
 
     }

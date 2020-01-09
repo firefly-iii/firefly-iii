@@ -34,7 +34,9 @@ use SimpleXMLElement;
 
 /**
  * Class UpdateRequest
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class UpdateRequest implements GithubRequest
 {

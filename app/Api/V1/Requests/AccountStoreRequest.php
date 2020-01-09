@@ -81,7 +81,7 @@ class AccountStoreRequest extends Request
             'interest_period'         => $this->string('interest_period'),
         ];
         // append Location information.
-        $data = $this->appendLocationData($data);
+        $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type']) {
             $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');

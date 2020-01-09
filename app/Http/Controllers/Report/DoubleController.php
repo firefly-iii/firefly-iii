@@ -776,18 +776,18 @@ class DoubleController extends Controller
      * @param Collection $accounts
      * @param int        $id
      * @param string     $name
-     * @param string     $iban
+     * @param string|null     $iban
      *
      * @return string
      */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, string $iban): string
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name && $account->id !== $id) {
                 return $account->name;
             }
-            if ($account->iban === $iban && $account->id !== $id) {
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
                 return $account->iban;
             }
         }

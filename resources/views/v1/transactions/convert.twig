@@ -274,6 +274,6 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/convert.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/convert.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

@@ -57,9 +57,9 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="v1//bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
 {% endblock %}
