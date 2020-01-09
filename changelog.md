@@ -930,10 +930,15 @@ This version was superseeded by v4.7.5.3 because of a critical bug in the proxy-
 - [Issue 1442](https://github.com/firefly-iii/firefly-iii/issues/1442), issues with editing a split deposit.
 - [Issue 1452](https://github.com/firefly-iii/firefly-iii/issues/1452), date range problems with tags.
 - [Issue 1458](https://github.com/firefly-iii/firefly-iii/issues/1458), same for transactions.
+- [Issue 2956](https://github.com/firefly-iii/firefly-iii/issues/2956) Switch start and end date automagically when end is before start.
+- [Issue 2975](https://github.com/firefly-iii/firefly-iii/issues/2975) Division by zero.
+- [Issue 2966](https://github.com/firefly-iii/firefly-iii/issues/2966) Could not render description auto-complete.
+- [Issue 2976](https://github.com/firefly-iii/firefly-iii/issues/2976) Make budget dropdown in the same order as the budget list.
 
 
 ### Security
 - [Issue 1415](https://github.com/firefly-iii/firefly-iii/issues/1415), will email you when OAuth2 keys are generated.
+- [Issue 2920](https://github.com/firefly-iii/firefly-iii/issues/2920) Firefly III now generates a nonce used by all inline scripts.
 
 
 ## [4.7.3.2] - 2018-05-16
