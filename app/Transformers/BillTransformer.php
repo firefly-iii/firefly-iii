@@ -236,7 +236,7 @@ class BillTransformer extends AbstractTransformer
             }
             // add to set
             $set->push(clone $nextExpectedMatch);
-            Log::debug(sprintf('Add next expected match to set because its in the current start/end range, which now contains %d item(s)', $set->count()));
+            Log::debug(sprintf('Add next expected match (%s) to set because its in the current start/end range, which now contains %d item(s)', $nextExpectedMatch->format('Y-m-d'), $set->count()));
             $nextExpectedMatch->addDay();
             $currentStart = clone $nextExpectedMatch;
             $loop++;
