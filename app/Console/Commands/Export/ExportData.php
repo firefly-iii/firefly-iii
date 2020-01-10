@@ -41,14 +41,6 @@ class ExportData extends Command
 {
     use VerifiesAccessToken;
 
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
-
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-
-    /** @var User */
-    private $user;
     /**
      * The console command description.
      *
@@ -77,7 +69,12 @@ class ExportData extends Command
     {--export-bills : Create a file with all your bills and some meta data.}
     {--export-piggies : Create a file with all your piggy banks and some meta data.}
     {--force : Force overwriting of previous exports if found.}';
-
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
+    /** @var JournalRepositoryInterface */
+    private $journalRepository;
+    /** @var User */
+    private $user;
 
     /**
      * Create a new command instance.
@@ -99,7 +96,7 @@ class ExportData extends Command
     {
         // verify access token
         if (!$this->verifyAccessToken()) {
-            $this->error('Invalid access token.');
+            $this->error('Invalid access token. Check /profile.');
 
             return 1;
         }
@@ -138,7 +135,7 @@ class ExportData extends Command
         if (0 === count($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
 
-            return 1; 
+            return 1;
         }
 
         try {
@@ -212,29 +209,32 @@ class ExportData extends Command
      */
     private function getDateParameter(string $field): Carbon
     {
-        $date = null;
+        $date = Carbon::now()->subYear();
         if (null !== $this->option($field)) {
             try {
                 $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
                 Log::error($e->getMessage());
-                throw new FireflyException(sprintf('%s date "%s" must be formatted YYYY-MM-DD', $field, $this->option('start')));
+                $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
             }
+
+            return $date;
         }
-        if (null === $date && 'start' === $field) {
+        if ('start' === $field) {
             $journal = $this->journalRepository->firstNull();
-            $date    = null === $journal ? Carbon::now()->subYear() : $date;
-        }
-        if (null === $date && 'end' === $field) {
-            $date = new Carbon;
-        }
-        if ('start' === $date) {
+            $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
             $date->startOfDay();
+
+            return $date;
         }
-        if ('end' === $date) {
+        if ('end' === $field) {
+            $date = new Carbon;
             $date->endOfDay();
+
+            return $date;
         }
 
+        // fallback
         return $date;
     }
 
