@@ -53,7 +53,7 @@ class SecureHeaders
         $csp             = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'unsafe-inline' %s 'nonce-%s'", $googleScriptSrc, $nonce),
+            sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $googleScriptSrc),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",
@@ -105,7 +105,7 @@ class SecureHeaders
     private function getGoogleImgSource(): string
     {
         if ('' !== config('firefly.analytics_id')) {
-            return 'https://www.google-analytics.com/';
+            return 'https://www.google-analytics.com';
         }
 
         return '';
@@ -119,7 +119,7 @@ class SecureHeaders
     private function getGoogleScriptSource(): string
     {
         if ('' !== config('firefly.analytics_id')) {
-            return 'https://www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js';
+            return 'https://www.googletagmanager.com https://www.google-analytics.com';
         }
 
         return '';
