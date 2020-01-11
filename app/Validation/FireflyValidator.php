@@ -375,13 +375,14 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
+
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
-        if (isset($this->data['what'])) {
+        if (isset($this->data['objectType'])) {
 
-            return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
+            return $this->validateByAccountTypeString($value, $parameters, $this->data['objectType']);
         }
         if (isset($this->data['type'])) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
