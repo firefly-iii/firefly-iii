@@ -154,6 +154,7 @@ return [
     'send_report_journals'   => envNonEmpty('SEND_REPORT_JOURNALS', true),
     'analytics_id'           => env('ANALYTICS_ID', ''),
     'disable_frame_header'   => env('DISABLE_FRAME_HEADER', false),
+    'disable_csp_header'     => env('DISABLE_CSP_HEADER', false),
     'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'        => 'https://version.firefly-iii.org/index.json',

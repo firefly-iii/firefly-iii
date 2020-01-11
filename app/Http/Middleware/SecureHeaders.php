@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 /**
  *
@@ -44,27 +43,22 @@ class SecureHeaders
      */
     public function handle(Request $request, Closure $next)
     {
+        // generate and share nonce.
         $nonce = base64_encode(random_bytes(16));
         app('view')->share('JS_NONCE', $nonce);
 
-        $response    = $next($request);
-        $google      = '';
-        $googleImg   = '';
-        $analyticsId = config('firefly.analytics_id');
-
-        if ('' !== $analyticsId) {
-            $google    = 'https://www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
-            $googleImg = 'https://www.google-analytics.com/';
-        }
-        $csp = [
+        $response        = $next($request);
+        $googleScriptSrc = $this->getGoogleScriptSource();
+        $googleImgSrc    = $this->getGoogleImgSource();
+        $csp             = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'unsafe-inline' %s 'nonce-%s'", $nonce, $google),
+            sprintf("script-src 'unsafe-inline' %s 'nonce-%s'", $googleScriptSrc, $nonce),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",
             "connect-src 'self'",
-            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $googleImg),
+            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $googleImgSrc),
             "manifest-src 'self'",
         ];
 
@@ -90,12 +84,11 @@ class SecureHeaders
         ];
 
         $disableFrameHeader = config('firefly.disable_frame_header');
-        if (false === $disableFrameHeader || null === $disableFrameHeader) {
+        $disableCSP         = config('firefly.disable_csp_header');
+        if (false === $disableFrameHeader) {
             $response->header('X-Frame-Options', 'deny');
         }
-
-        // content security policy may be set elsewhere.
-        if (!$response->headers->has('Content-Security-Policy')) {
+        if (false === $disableCSP && !$response->headers->has('Content-Security-Policy')) {
             $response->header('Content-Security-Policy', implode('; ', $csp));
         }
         $response->header('X-XSS-Protection', '1; mode=block');
@@ -104,5 +97,31 @@ class SecureHeaders
         $response->header('Feature-Policy', implode('; ', $featurePolicies));
 
         return $response;
+    }
+
+    /**
+     * @return string
+     */
+    private function getGoogleImgSource(): string
+    {
+        if ('' !== config('firefly.analytics_id')) {
+            return 'https://www.google-analytics.com/';
+        }
+
+        return '';
+    }
+
+    /**
+     * Return part of a CSP header allowing scripts from Google.
+     *
+     * @return string
+     */
+    private function getGoogleScriptSource(): string
+    {
+        if ('' !== config('firefly.analytics_id')) {
+            return 'https://www.googletagmanager.com/gtag/js https://www.google-analytics.com/analytics.js';
+        }
+
+        return '';
     }
 }
