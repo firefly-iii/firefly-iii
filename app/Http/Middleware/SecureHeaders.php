@@ -45,6 +45,7 @@ class SecureHeaders
     {
         // generate and share nonce.
         $nonce = base64_encode(random_bytes(16));
+        $nonce = 'hithere';
         app('view')->share('JS_NONCE', $nonce);
 
         $response        = $next($request);
