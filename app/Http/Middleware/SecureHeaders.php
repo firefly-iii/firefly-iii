@@ -105,7 +105,7 @@ class SecureHeaders
     private function getGoogleImgSource(): string
     {
         if ('' !== config('firefly.analytics_id')) {
-            return 'https://www.google-analytics.com';
+            return 'www.google-analytics.com';
         }
 
         return '';
@@ -119,7 +119,7 @@ class SecureHeaders
     private function getGoogleScriptSource(): string
     {
         if ('' !== config('firefly.analytics_id')) {
-            return 'https://www.googletagmanager.com https://www.google-analytics.com';
+            return 'www.googletagmanager.com www.google-analytics.com';
         }
 
         return '';
