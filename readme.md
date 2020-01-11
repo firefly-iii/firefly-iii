@@ -95,6 +95,14 @@ And to organise everything:
 * Lots of charts because we all love them
 * If you feel you’re missing something you [can just ask me](https://docs.firefly-iii.org/contact/contact) and I’ll add it!
 
+But there are also things it can't do or won't do:
+
+* Not counting the import features enabled through Salt Edge, Firefly III won't be able to import from `<YOUR BANK HERE>`. I just don't have the resources to
+ build connectors for `<YOUR BANK HERE>`. The API allows you to build your own connector though.
+* Firefly III is multi-user, but you won't be able to share an administration with multiple users.
+* You won't be able to track stocks or trading portfolio's with Firefly III.
+* Firefly III won't give you predictions or projections regarding your financial future. 
+
 ### Who is it for?
 This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
 
@@ -105,12 +113,9 @@ There are many ways to run Firefly III
 3. You can [run it using Docker](https://docs.firefly-iii.org/installation/docker).
 4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master).
     * Please read the [considerations when using Heroku](https://docs.firefly-iii.org/installation/third_parties#considerations-when-using-heroku) first though.
-5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70).
-    * Note that you must have a paid Sandstorm account for this to work, or you must self-host your Sandstorm server.
-6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
-7. You can [install it using AMPPS](https://www.ampps.com/)
-8. You can [install it with YunoHost](https://install-app.yunohost.org/?app=firefly-iii).
-9. *Even more options are on the way!*
+5. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous
+/apps/others/Firefly_III)!
+6. You can [install it using AMPPS](https://www.ampps.com/).
 
 ### Update your instance
 Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://docs.firefly-iii.org/advanced-installation/upgrade) can be found in the [official documentation](https://docs.firefly-iii.org/).
