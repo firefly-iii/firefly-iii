@@ -2,9 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.0.0 (API 1.0.0)] - 2020-01-xx
-
-*This version has not yet been released.* The latest available version is **5.0.0-beta.1**.
+## [5.0.0 (API 1.0.0)] - 2020-01-18
 
 This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
 
