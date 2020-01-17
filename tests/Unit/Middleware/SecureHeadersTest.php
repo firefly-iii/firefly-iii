@@ -71,6 +71,8 @@ class SecureHeadersTest extends TestCase
     }
 
     /**
+     * TODO this test tests nothing.
+     *
      * @covers \FireflyIII\Http\Middleware\SecureHeaders
      */
     public function testMiddlewareGoogleAnalytics(): void

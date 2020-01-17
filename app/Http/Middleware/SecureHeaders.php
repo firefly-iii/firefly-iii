@@ -47,18 +47,17 @@ class SecureHeaders
         $nonce = base64_encode(random_bytes(16));
         app('view')->share('JS_NONCE', $nonce);
 
-        $response        = $next($request);
-        $googleScriptSrc = $this->getGoogleScriptSource();
-        $googleImgSrc    = $this->getGoogleImgSource();
-        $csp             = [
+        $response          = $next($request);
+        $trackingScriptSrc = $this->getTrackingScriptSource();
+        $csp               = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $googleScriptSrc),
+            sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "font-src 'self' data:",
             "connect-src 'self'",
-            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $googleImgSrc),
+            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $trackingScriptSrc),
             "manifest-src 'self'",
         ];
 
@@ -100,26 +99,14 @@ class SecureHeaders
     }
 
     /**
-     * @return string
-     */
-    private function getGoogleImgSource(): string
-    {
-        if ('' !== config('firefly.analytics_id')) {
-            return 'www.google-analytics.com';
-        }
-
-        return '';
-    }
-
-    /**
      * Return part of a CSP header allowing scripts from Google.
      *
      * @return string
      */
-    private function getGoogleScriptSource(): string
+    private function getTrackingScriptSource(): string
     {
-        if ('' !== config('firefly.analytics_id')) {
-            return 'www.googletagmanager.com www.google-analytics.com';
+        if ('' !== (string)config('firefly.tracker_site_id') && '' !== (string)config('firefly.tracker_url')) {
+            return (string)config('firefly.tracker_url');
         }
 
         return '';
