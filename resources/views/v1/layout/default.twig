@@ -204,18 +204,22 @@
 {% endif %}
 {% block scripts %}{% endblock %}
 
-{% if config('firefly.analytics_id') != '' %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <!-- This tag is only here because this instance of Firefly III was purposefully configured to include it -->
-    <!-- Your own installation will NOT include it -->
-    <script type="text/javascript" async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}" nonce="{{ JS_NONCE }}"></script>
+{% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
+    <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
+    <!-- Your own installation will NOT include it, unless you explicitely configure it to have it. -->
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', '{{ config('firefly.analytics_id')  }}');
+        var _paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//{{ config('firefly.tracker_url') }}/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '{{ config('firefly.tracker_site_id') }}']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
     </script>
+    <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 {% endif %}
 
 </body>

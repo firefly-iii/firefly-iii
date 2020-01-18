@@ -37,7 +37,7 @@ return [
     'general_index_intro'                 => 'Καλωσορίσατε στην ρουτίνα εισαγωγής του Firefly III. Υπάρχουν διάφοροι τρόποι εισαγωγής δεδομένων στο Firefly III, που απεικονίζονται εδώ ως κουμπιά.',
 
     // notices about the CSV importer:
-    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'deprecate_csv_import' => 'Όπως αποτυπώνεται σε <a href="https://www.patreon.com/posts/future-updates-30012174"> αυτό το Patreon post</a>, ο τρόπος που το Firefly III διαχειρίζεται την εισαγωγή δεδομένων πρόκειται να αλλάξει. Αυτό σημαίνει ότι η εισαγωγή CSV θα μετακινηθεί σε ένα νέο, ξεχωριστό εργαλείο. Μπορείτε να δοκιμάσετε ήδη αυτό το beta εργαλείο εάν επισκεφτείτε <a href="https://github.com/firefly-iii/csv-importer"> αυτό το Github repository</a>. Θα το εκτιμούσα εάν δοκιμάζατε τη νέα εισαγωγή και μου κοινοποιούσατε τις απόψεις σας.',
 
     // import provider strings (index):
     'button_fake'                         => 'Προσποιηθήτε μία εισαγωγή',
