@@ -108,7 +108,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var GroupCollectorInterface $collector */
