@@ -164,6 +164,7 @@ class ReportController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
         $journals = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
