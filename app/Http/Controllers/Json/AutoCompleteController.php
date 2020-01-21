@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -212,6 +213,22 @@ class AutoCompleteController extends Controller
         }
 
         return response()->json($return);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function bills(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $result     = $repository->searchBill($query);
+
+        return response()->json($result->toArray());
     }
 
     /**
