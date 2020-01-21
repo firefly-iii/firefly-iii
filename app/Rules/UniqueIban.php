@@ -141,7 +141,7 @@ class UniqueIban implements Rule
             // may appear once in revenue accounts
             $maxCounts[AccountType::REVENUE] = 1;
         }
-        if ('revenue' === $this->expectedType || AccountType::EXPENSE === $this->expectedType) {
+        if ('revenue' === $this->expectedType || AccountType::REVENUE === $this->expectedType) {
             // IBAN should be unique amongst revenue and asset accounts.
             // may appear once in expense accounts
             $maxCounts[AccountType::EXPENSE] = 1;
