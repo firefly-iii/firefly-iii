@@ -116,6 +116,7 @@ There are many ways to run Firefly III
 5. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous
 /apps/others/Firefly_III)!
 6. You can [install it using AMPPS](https://www.ampps.com/).
+7. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
 
 ### Update your instance
 Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://docs.firefly-iii.org/advanced-installation/upgrade) can be found in the [official documentation](https://docs.firefly-iii.org/).
