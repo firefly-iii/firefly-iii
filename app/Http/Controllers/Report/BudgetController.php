@@ -324,7 +324,7 @@ class BudgetController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrency();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budgetId                     = $budget->id;
+            $budgetId                     = (int)$budget->id;
             $report['budgets'][$budgetId] = $report['budgets'][$budgetId] ?? [
                     'budget_id'     => $budgetId,
                     'budget_name'   => $budget->name,
@@ -336,12 +336,13 @@ class BudgetController extends Controller
             $limits = $this->blRepository->getBudgetLimits($budget, $start, $end);
             /** @var BudgetLimit $limit */
             foreach ($limits as $limit) {
-                $limitId   = $limit->id;
-                $currency  = $limit->transactionCurrency ?? $defaultCurrency;
-                $expenses  = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $accounts, new Collection([$budget]));
-                $spent     = $expenses[$currency->id]['sum'] ?? '0';
-                $left      = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
-                $overspent = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
+                $limitId    = (int)$limit->id;
+                $currency   = $limit->transactionCurrency ?? $defaultCurrency;
+                $currencyId = (int)$currency->id;
+                $expenses   = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $accounts, new Collection([$budget]));
+                $spent      = $expenses[$currencyId]['sum'] ?? '0';
+                $left       = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
+                $overspent  = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
 
                 $report['budgets'][$budgetId]['budget_limits'][$limitId] = $report['budgets'][$budgetId]['budget_limits'][$limitId] ?? [
                         'budget_limit_id'         => $limitId,
@@ -353,7 +354,7 @@ class BudgetController extends Controller
                         'spent_pct'               => '0',
                         'left'                    => $left,
                         'overspent'               => $overspent,
-                        'currency_id'             => $currency->id,
+                        'currency_id'             => $currencyId,
                         'currency_code'           => $currency->code,
                         'currency_name'           => $currency->name,
                         'currency_symbol'         => $currency->symbol,
@@ -361,22 +362,22 @@ class BudgetController extends Controller
                     ];
 
                 // make sum information:
-                $report['sums'][$currency->id]
-                    = $report['sums'][$currency->id] ?? [
+                $report['sums'][$currencyId]
+                                                          = $report['sums'][$currencyId] ?? [
                         'budgeted'                => '0',
                         'spent'                   => '0',
                         'left'                    => '0',
                         'overspent'               => '0',
-                        'currency_id'             => $currency->id,
+                        'currency_id'             => $currencyId,
                         'currency_code'           => $currency->code,
                         'currency_name'           => $currency->name,
                         'currency_symbol'         => $currency->symbol,
                         'currency_decimal_places' => $currency->decimal_places,
                     ];
-                $report['sums'][$currency->id]['budgeted']  = bcadd($report['sums'][$currency->id]['budgeted'], $limit->amount);
-                $report['sums'][$currency->id]['spent']     = bcadd($report['sums'][$currency->id]['spent'], $spent);
-                $report['sums'][$currency->id]['left']      = bcadd($report['sums'][$currency->id]['left'], bcadd($limit->amount, $spent));
-                $report['sums'][$currency->id]['overspent'] = bcadd($report['sums'][$currency->id]['overspent'], $overspent);
+                $report['sums'][$currencyId]['budgeted']  = bcadd($report['sums'][$currencyId]['budgeted'], $limit->amount);
+                $report['sums'][$currencyId]['spent']     = bcadd($report['sums'][$currencyId]['spent'], $spent);
+                $report['sums'][$currencyId]['left']      = bcadd($report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
+                $report['sums'][$currencyId]['overspent'] = bcadd($report['sums'][$currencyId]['overspent'], $overspent);
             }
         }
 
@@ -399,11 +400,11 @@ class BudgetController extends Controller
                 'spent_pct'               => '0',
                 'left'                    => '0',
                 'overspent'               => '0',
-                'currency_id'             => $noBudgetEntry['currency_id'],
-                'currency_code'           => $noBudgetEntry['currency_code'],
-                'currency_name'           => $noBudgetEntry['currency_name'],
-                'currency_symbol'         => $noBudgetEntry['currency_symbol'],
-                'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'],
+                'currency_id'             => (int)($noBudgetEntry['currency_id'] ?? $defaultCurrency->id),
+                'currency_code'           => $noBudgetEntry['currency_code'] ?? $defaultCurrency->code,
+                'currency_name'           => $noBudgetEntry['currency_name'] ?? $defaultCurrency->name,
+                'currency_symbol'         => $noBudgetEntry['currency_symbol'] ?? $defaultCurrency->symbol,
+                'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'] ?? $defaultCurrency->decimal_places,
             ];
             $report['sums'][$noBudgetEntry['currency_id']]['spent']
                                                      = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'] ?? '0', $noBudgetEntry['sum']);
@@ -412,7 +413,9 @@ class BudgetController extends Controller
         // make percentages based on total amount.
         foreach ($report['budgets'] as $budgetId => $data) {
             foreach ($data['budget_limits'] as $limitId => $entry) {
-                $currencyId    = $entry['currency_id'];
+                $budgetId      = (int)$budgetId;
+                $limitId       = (int)$limitId;
+                $currencyId    = (int)$entry['currency_id'];
                 $spent         = $entry['spent'];
                 $totalSpent    = $report['sums'][$currencyId]['spent'] ?? '0';
                 $spentPct      = '0';
