@@ -56,6 +56,10 @@ But you get the idea: this is your money. These are your expenses. Stop them fro
 
 ### Purpose
 
+<p align="center">
+  <img src="https://www.firefly-iii.org/static/screenshots/ipad-complete.png" alt="Firefly III on iPad" width="600">
+</p>
+
 Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards,  others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
@@ -95,9 +99,11 @@ And to organise everything:
 
 Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/features).
 
-### Who's it for?
+### <img src="https://www.firefly-iii.org/static/screenshots/iphone-complete.png" align="left" width="250"> Who's it for?
 
-This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
+ This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
+ 
+ <br clear="left"/>
 
 ### The Firefly III eco-system
 
@@ -116,6 +122,7 @@ There are many ways to run Firefly III
 3. You can [run it using Docker](https://docs.firefly-iii.org/installation/docker).
 4. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 5. You can [install it using AMPPS](https://www.ampps.com/).
+6. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
 
 ## Contributing
 
