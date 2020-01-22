@@ -9,7 +9,7 @@
   <a href="https://firefly-iii.org/">
     <img src="https://www.firefly-iii.org/static/img/logo-small-new.png" alt="Logo" width="96" height="96">
   </a>
-
+</p>
   <h1 align="center">Firefly III</h1>
 
   <p align="center">
@@ -24,7 +24,6 @@
     ·
     <a href="https://github.com/firefly-iii/firefly-iii/issues">Request Feature</a>
   </p>
-</p>
 
 <!-- MarkdownTOC autolink="true" -->
 
