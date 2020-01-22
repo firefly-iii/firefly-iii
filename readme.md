@@ -51,7 +51,7 @@
 
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
 
-But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having it, not having, paying bills with it, etc. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help. I know it helps me.
+But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having money, not having money, paying bills with money, you get the idea. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help you. I know it helps me.
 
 ### Purpose
 
@@ -133,11 +133,11 @@ I can always use your help [squashing bugs](https://docs.firefly-iii.org/support
 
 ### Support the development of Firefly III
 
-If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
+If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! :tada:
 
 OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) or [Patreon](https://www.patreon.com/jc5).
 
-I am very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**. Use their program if you can; they'll double your donation!
+I'm also very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**. Use their program if you can; they'll double your donation!
 
 Thank you for considering donating to Firefly III!
 
