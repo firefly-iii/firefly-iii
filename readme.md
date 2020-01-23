@@ -151,8 +151,6 @@ You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you
 
 ## Acknowledgements
 
-<!-- secret message -->
-
 Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors).
 
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
