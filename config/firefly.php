@@ -701,7 +701,7 @@ return [
         ],
     ],
 
-    // allowed source / destination accounts.
+    // allowed source -> destination accounts.
     'source_dests'              => [
         TransactionTypeModel::WITHDRAWAL      => [
             AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],

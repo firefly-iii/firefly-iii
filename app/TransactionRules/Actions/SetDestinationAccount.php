@@ -25,8 +25,8 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
@@ -71,54 +71,78 @@ class SetDestinationAccount implements ActionInterface
         $this->repository->setUser($journal->user);
         // journal type:
         $type = $journal->transactionType->type;
+        // source and destination:
+        /** @var Transaction $source */
+        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
-        // if this is a deposit or a transfer, the destination account must be an asset account or a default account, and it MUST exist:
-        if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && !$this->findAssetAccount()) {
+        // sanity check:
+        if (null === $source || null === $destination) {
+            Log::error(sprintf('Cannot run rule on journal #%d because no source or dest.', $journal->id));
+
+            return false;
+        }
+
+        // it depends on the type what kind of destination account is expected.
+        $expectedDestinationTypes = config(sprintf('firefly.source_dests.%s.%s', $type, $source->account->accountType->type));
+
+        if (null === $expectedDestinationTypes) {
             Log::error(
                 sprintf(
-                    'Cannot change destination account of journal #%d because no asset account with name "%s" exists.',
-                    $journal->id,
-                    $this->action->action_value
+                    'Configuration line "%s" is unexpectedly empty. Stopped.', sprintf('firefly.source_dests.%s.%s', $type, $source->account->accountType->type)
                 )
             );
 
             return false;
         }
 
-        // if this is a withdrawal, the new destination account must be a expense account and may be created:
-        if (TransactionType::WITHDRAWAL === $type) {
+        // try to find an account with the destination name and these types:
+        $newDestination = $this->findAccount($expectedDestinationTypes);
+        if (true === $newDestination) {
+            // update account.
+            $destination->account_id = $this->newDestinationAccount->id;
+            $destination->save();
+            $journal->touch();
+            Log::debug(sprintf('Updated transaction #%d and gave it new account ID.', $destination->id));
+
+            return true;
+        }
+
+        Log::info(sprintf('Expected destination account "%s" not found.', $this->action->action_value));
+        if (AccountType::EXPENSE === $expectedDestinationTypes[0]) {
+            Log::debug('Expected type is expense, lets create it.');
             $this->findExpenseAccount();
+            // update account.
+            $destination->account_id = $this->newDestinationAccount->id;
+            $destination->save();
+            $journal->touch();
+            Log::debug(sprintf('Updated transaction #%d and gave it new account ID.', $destination->id));
         }
-
-        Log::debug(sprintf('New destination account is #%d ("%s").', $this->newDestinationAccount->id, $this->newDestinationAccount->name));
-
-        // update destination transaction with new destination account:
-        // get destination transaction:
-        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $transaction) {
-            return true; // @codeCoverageIgnore
-        }
-        $transaction->account_id = $this->newDestinationAccount->id;
-        $transaction->save();
-        $journal->touch();
-        Log::debug(sprintf('Updated transaction #%d and gave it new account ID.', $transaction->id));
 
         return true;
     }
 
     /**
+     * @param array $types
+     *
      * @return bool
      */
-    private function findAssetAccount(): bool
+    private function findAccount(array $types): bool
     {
-        $account = $this->repository->findByName($this->action->action_value, [AccountType::DEFAULT, AccountType::ASSET]);
+        $account = $this->repository->findByName($this->action->action_value, $types);
 
         if (null === $account) {
-            Log::debug(sprintf('There is NO asset account called "%s".', $this->action->action_value));
+            Log::debug(sprintf('There is NO account called "%s" of type', $this->action->action_value), $types);
 
             return false;
         }
-        Log::debug(sprintf('There exists an asset account called "%s". ID is #%d', $this->action->action_value, $account->id));
+        Log::debug(
+            sprintf(
+                'There exists an account called "%s". ID is #%d. Type is "%s"',
+                $this->action->action_value, $account->id, $account->accountType->type
+            )
+        );
         $this->newDestinationAccount = $account;
 
         return true;
