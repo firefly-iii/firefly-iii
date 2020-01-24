@@ -115,10 +115,15 @@ class BillController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $journals  = $collector->setBill($bill)->getExtractedJournals();
 
+        // sort the other way around:
+        usort($journals, static function (array $left, array $right) {
+            return $left['date']->gte($right['date'])? 1 : 0;
+        });
+
         $chartData = [
-            ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'line', 'label' => (string)trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'line', 'label' => (string)trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
         ];
 
         foreach ($journals as $journal) {

@@ -57,25 +57,6 @@ class Request extends FormRequest
     }
 
     /**
-     * Return a boolean value.
-     *
-     * @param string $field
-     *
-     * @return bool
-     */
-    public function boolean(string $field): bool
-    {
-        if ('true' === (string)$this->input($field)) {
-            return true;
-        }
-        if ('false' === (string)$this->input($field)) {
-            return false;
-        }
-
-        return 1 === (int)$this->input($field);
-    }
-
-    /**
      * @param string $value
      *
      * @return bool

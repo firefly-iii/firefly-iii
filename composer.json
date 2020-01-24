@@ -41,13 +41,13 @@
   "authors": [
     {
       "name": "James Cole",
-      "email": "thegrumpydictator@gmail.com",
+      "email": "james@firefly-iii.org",
       "homepage": "https://github.com/firefly-iii",
       "role": "Developer"
     }
   ],
   "support": {
-    "email": "thegrumpydictator@gmail.com",
+    "email": "james@firefly-iii.org",
     "issues": "https://github.com/firefly-iii/firefly-iii/issues",
     "forum": "https://reddit.com/r/FireflyIII",
     "wiki": "https://github.com/firefly-iii/help/wiki",

@@ -1,6 +1,6 @@
 <?php /**
  * BudgetReportController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -16,7 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */ /** @noinspection MoreThanThreeArgumentsInspection */
+ */
+
+ /** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;

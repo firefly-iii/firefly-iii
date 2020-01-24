@@ -32,7 +32,7 @@ return [
     'month_and_day_no_year'   => '%e %B',
     'date_time'               => '%e %B %Y o %T',
     'specific_day'            => '%e %B %Y',
-    'week_in_year'            => 'Tydzień %W, %Y',
+    'week_in_year'            => 'Week %V, %G',
     'year'                    => '%Y',
     'half_year'               => '%B %Y',
     'month_js'                => 'MMMM YYYY',

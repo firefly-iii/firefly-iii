@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.1 (API 1.0.0)] - 2020-01-25
+
+This release fixes several bugs found in 5.0.0 and earlier releases.
+
+### Changed
+- Rewrote the readme file.
+- Add Cloudron to readme.
+- Add a new import tool to the readme and the documentation.
+- Changed my email address to james@firefly-iii.org.
+
+### Fixed
+- [Issue 2998](https://github.com/firefly-iii/firefly-iii/issues/2998) Could not edit account with double IBAN
+- [Issue 3016](https://github.com/firefly-iii/firefly-iii/issues/3016) Swap min/max on chart and reverse direction
+- [Issue 3021](https://github.com/firefly-iii/firefly-iii/issues/3021) Fixed an issue with a broken button when uploading transactions
+- [Issue 3026](https://github.com/firefly-iii/firefly-iii/issues/3026) Fix issue with ISO dates
+- [Issue 3027](https://github.com/firefly-iii/firefly-iii/issues/3027) Opening Balance date and charts
+- [Issue 3019](https://github.com/firefly-iii/firefly-iii/issues/3019) Fix issue with bill name auto-complete in rules
+- [Issue 3047](https://github.com/firefly-iii/firefly-iii/issues/3047) Fix issue where new users would get big fat error.
+- Fixed an issue with the budget overview in default financial reports.
+
 ## [5.0.0 (API 1.0.0)] - 2020-01-18
 
 This version represents, if anything, a fresh start in the version numbering system so Firefly III will finally follow SemVer, for real this time.
