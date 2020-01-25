@@ -117,13 +117,12 @@ class Navigation
          * Start looping per month for 1 year + the rest of the year:
          */
         $perMonthEnd   = clone $end;
-        $perMonthStart = clone $end;
+        $perMonthStart = clone $start;
         $perMonthStart->startOfYear()->subYear();
         $perMonthStart = $start->lt($perMonthStart) ? $perMonthStart : $start;
-
         // loop first set:
         while ($perMonthEnd >= $perMonthStart) {
-            $perMonthEnd = $this->startOfPeriod($perMonthEnd, $range);
+            $perMonthEnd = $this->startOfPeriod($perMonthStart, $range);
             $currentEnd  = $this->endOfPeriod($perMonthEnd, $range);
             if ($currentEnd->gt($start)) {
                 $periods[] = [
@@ -134,7 +133,6 @@ class Navigation
             }
             $perMonthEnd = $this->subtractPeriod($perMonthEnd, $range, 1);
         }
-
         // do not continue if date is already less
         if ($perMonthEnd->lt($start)) {
             return $periods;
@@ -317,12 +315,13 @@ class Navigation
             $entries[$formatted] = $displayed;
             $begin->$increment();
         }
+
         return $entries;
     }
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param  string        $repeatFrequency
+     * @param string         $repeatFrequency
      *
      * @return string
      */
@@ -590,6 +589,7 @@ class Navigation
             //Log::debug(sprintf('repeatFreq is %s, start is %s and end is %s (session data).', $repeatFreq, $tStart->format('Y-m-d'), $tEnd->format('Y-m-d')));
             //Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $date->subDays($diffInDays * $subtract);
+
             //Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
 
             return $date;
