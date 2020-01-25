@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -309,6 +309,7 @@ return [
     'make_new_rule'                              => 'Make a new rule in rule group ":title"',
     'make_new_rule_no_group'                     => 'Make a new rule',
     'instructions_rule_from_bill'                => 'In order to match transactions to your new bill ":name", Firefly III can create a rule that will automatically be checked against any transactions you store. Please verify the details below and store the rule to have Firefly III automatically match transactions to your new bill.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'strict rule',
     'rule_is_not_strict'                         => 'non-strict rule',
     'rule_help_stop_processing'                  => 'When you check this box, later rules in this group will not be executed.',
@@ -492,6 +493,9 @@ return [
     'create_rule_for_bill_txt'        => 'You have just created a new bill called ":name", congratulations! Firefly III can automagically match new withdrawals to this bill. For example, whenever you pay your rent, the bill "rent" will be linked to the expense. This way, Firefly III can accurately show you which bills are due and which ones aren\'t. In order to do so, a new rule must be created. Firefly III has filled in some sensible defaults for you. Please make sure these are correct. If these values are correct, Firefly III will automatically link the correct withdrawal to the correct bill. Please check out the triggers to see if they are correct, and add some if they\'re wrong.',
     'new_rule_for_bill_title'         => 'Rule for bill ":name"',
     'new_rule_for_bill_description'   => 'This rule marks transactions for bill ":name".',
+
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
 
     // tags
     'store_new_tag'                   => 'Store new tag',
