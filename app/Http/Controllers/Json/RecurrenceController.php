@@ -31,6 +31,7 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class RecurrenceController
@@ -42,6 +43,7 @@ class RecurrenceController extends Controller
 
     /**
      * RecurrenceController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -146,12 +148,17 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string = $request->get('date') ?? date('Y-m-d');
+        $string      = $request->get('date') ?? date('Y-m-d');
         $today       = new Carbon;
         $date        = Carbon::createFromFormat('Y-m-d', $string);
         $preSelected = (string)$request->get('pre_select');
+
+        Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true) ));
+        Log::debug(sprintf('past = true? %s', var_export('true' === (string)$request->get('past'), true)));
+
         $result      = [];
         if ($date > $today || 'true' === (string)$request->get('past')) {
+            Log::debug('Will fill dropdown.');
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);
             $dayOfWeek  = (string)trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
@@ -169,6 +176,7 @@ class RecurrenceController extends Controller
                 $yearly  => ['label' => (string)trans('firefly.recurring_yearly', ['date' => $yearlyDate]), 'selected' => 0 === strpos($preSelected, 'yearly')],
             ];
         }
+        Log::debug('Dropdown is', $result);
 
 
         return response()->json($result);
