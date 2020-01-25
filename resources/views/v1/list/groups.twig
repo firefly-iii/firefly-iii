@@ -34,7 +34,7 @@ TODO: hide and show columns
     <tbody>
     {% for group in groups %}
         {% if group.count > 1 %}
-            <tr>
+            <tr style="border-top:1px #aaa solid;">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>
                             <a href="{{ route('transactions.show', [group.id]) }}" title="{{ group.title }}">{{ group.title }}</a>
@@ -171,19 +171,27 @@ TODO: hide and show columns
                         {% endif %}
                     </td>
                 {% endif %}
-                <td style=" {{ style|raw }};" class="pull-right">
-                    {% if group.count == 1 %}
+
+                {% if group.count == 1 %}
+                    <td style=" {{ style|raw }};">
                         <div class="btn-group btn-group-xs">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                                {#<li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>#}
+                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><i
+                                                class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}</a></li>
                             </ul>
                         </div>
-                    {% endif %}
-                </td>
+                    </td>
+
+                {% endif %}
+                {% if group.count != 1 %}
+                    <td style=" {{ style|raw }};">
+                        &nbsp;
+                    </td>
+                {% endif %}
                 <td style="{{ style|raw }}">
                     <div class="pull-right">
                         <input id="list_{{ transaction.transaction_journal_id }}" value="{{ transaction.transaction_journal_id }}"
