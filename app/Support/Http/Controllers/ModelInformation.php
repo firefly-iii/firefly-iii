@@ -23,14 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 use Throwable;
 
@@ -69,6 +67,43 @@ trait ModelInformation
         // @codeCoverageIgnoreEnd
 
         return [$result];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    protected function getLiabilityTypes(): array
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        // types of liability:
+        $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
+        $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
+        /** @noinspection NullPointerExceptionInspection */
+        $liabilityTypes = [
+            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+        ];
+        asort($liabilityTypes);
+
+        return $liabilityTypes;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    protected function getRoles(): array
+    {
+        $roles = [];
+        foreach (config('firefly.accountRoles') as $role) {
+            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+        }
+
+        return $roles;
     }
 
     /**
@@ -116,39 +151,109 @@ trait ModelInformation
     }
 
     /**
-     * @codeCoverageIgnore
+     * @param TransactionJournal $journal
+     *
      * @return array
      */
-    protected function getRoles(): array
+    private function getTriggersForJournal(TransactionJournal $journal): array
     {
-        $roles = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+        $result   = [];
+        $triggers = [];
+        $values   = [];
+        $index    = 0;
+        // amount, description, category, budget, tags, source, destination, notes, currency type
+        //,type
+        /** @var Transaction $source */
+        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $destination || null === $source) {
+            return $result;
+        }
+        // type
+        $triggers[$index] = 'transaction_type';
+        $values[$index]   = $journal->transactionType->type;
+        $index++;
+
+        // currency
+        $triggers[$index] = 'currency_is';
+        $values[$index]   = sprintf('%s (%s)', $journal->transactionCurrency->name, $journal->transactionCurrency->code);
+        $index++;
+
+        // amount_exactly:
+        $triggers[$index] = 'amount_exactly';
+        $values[$index]   = $destination->amount;
+        $index++;
+
+        // description_is:
+        $triggers[$index] = 'description_is';
+        $values[$index]   = $journal->description;
+        $index++;
+
+        // from_account_is
+        $triggers[$index] = 'from_account_is';
+        $values[$index]   = $source->account->name;
+        $index++;
+
+        // to_account_is
+        $triggers[$index] = 'to_account_is';
+        $values[$index]   = $destination->account->name;
+        $index++;
+
+        // category (if)
+        $category = $journal->categories()->first();
+        if (null !== $category) {
+            $triggers[$index] = 'category_is';
+            $values[$index]   = $category->name;
+            $index++;
+        }
+        // budget (if)
+        $budget = $journal->budgets()->first();
+        if (null !== $budget) {
+            $triggers[$index] = 'budget_is';
+            $values[$index]   = $budget->name;
+            $index++;
+        }
+        // tags (if)
+        $tags = $journal->tags()->get();
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $triggers[$index] = 'tag_is';
+            $values[$index]   = $tag->tag;
+            $index++;
+        }
+        // notes (if)
+        $notes = $journal->notes()->first();
+        if (null !== $notes) {
+            $triggers[$index] = 'notes_are';
+            $values[$index]   = $notes->text;
+            $index++;
         }
 
-        return $roles;
-    }
+        foreach ($triggers as $index => $trigger) {
+            try {
+                $string = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => $trigger,
+                        'oldValue'   => $values[$index],
+                        'oldChecked' => false,
+                        'count'      => $index + 1,
+                    ]
+                )->render();
+                // @codeCoverageIgnoreStart
+            } catch (Throwable $e) {
 
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    protected function getLiabilityTypes(): array
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        // types of liability:
-        $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
-        $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
-        /** @noinspection NullPointerExceptionInspection */
-        $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
-        ];
-        asort($liabilityTypes);
+                Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
+                Log::debug($e->getTraceAsString());
+                $string = '';
+                // @codeCoverageIgnoreEnd
+            }
+            if ('' !== $string) {
+                $result[] = $string;
+            }
+        }
 
-        return $liabilityTypes;
+        return $result;
     }
 }

@@ -887,6 +887,15 @@ try {
             $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
         }
     );
+
+    Breadcrumbs::register(
+        'rules.create-from-journal',
+        function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('rules.index');
+            $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
+        }
+    );
+
     Breadcrumbs::register(
         'rules.edit',
         function (BreadcrumbsGenerator $breadcrumbs, Rule $rule) {

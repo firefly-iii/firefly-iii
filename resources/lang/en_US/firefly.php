@@ -512,6 +512,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Home screen accounts',

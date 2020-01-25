@@ -276,6 +276,10 @@
                                 <i class="fa fa-fw fa-link"></i>
                                 {{ 'link_transaction'|_ }}
                             </a>
+                            <a href="{{ route('rules.create-from-journal', [journal.transaction_journal_id]) }}" class="btn btn-default">
+                                <i class="fa fa-fw fa-random"></i>
+                                {{ 'create_rule_from_transaction'|_ }}
+                            </a>
                         </div>
                     </div>
                 </div>
