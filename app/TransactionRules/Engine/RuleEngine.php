@@ -85,11 +85,11 @@ class RuleEngine
         Log::debug(sprintf('Will process transaction journal #%d ("%s")', $journalId, $journal['description']));
         /** @var RuleGroup $group */
         foreach ($this->ruleGroups as $group) {
-            Log::debug(sprintf('Now at rule group #%d', $group->id));
+            Log::debug(sprintf('Now at rule group #%d ("%s")', $group->id, $group->title));
             $groupTriggered = false;
             /** @var Rule $rule */
             foreach ($group->rules as $rule) {
-                Log::debug(sprintf('Now at rule #%d from rule group #%d', $rule->id, $group->id));
+                Log::debug(sprintf('Now at rule #%d ("%s") from rule group #%d ("%s").', $rule->id, $rule->title, $group->id, $group->title));
                 $ruleTriggered = false;
                 // if in rule selection, or group in selection or all rules, it's included.
                 if ($this->includeRule($rule)) {
@@ -115,7 +115,7 @@ class RuleEngine
 
                 // if the rule is triggered and stop processing is true, cancel the entire group.
                 if ($ruleTriggered && $rule->stop_processing) {
-                    Log::info(sprintf('Break out group #%d because rule #%d was triggered.', $group->id, $rule->id));
+                    Log::info(sprintf('Break out group #%d ("%s") because rule #%d ("%s") was triggered.', $group->id, $group->title, $rule->id, $rule->title));
                     break;
                 }
             }
