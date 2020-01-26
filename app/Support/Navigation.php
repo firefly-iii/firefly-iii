@@ -113,54 +113,49 @@ class Navigation
             [$start, $end] = [$end, $start];
         }
         $periods = [];
-        /*
-         * Start looping per month for 1 year + the rest of the year:
-         */
-        $perMonthEnd   = clone $end;
-        $perMonthStart = clone $start;
-        $perMonthStart->startOfYear()->subYear();
-        $perMonthStart = $start->lt($perMonthStart) ? $perMonthStart : $start;
-        // loop first set:
-        while ($perMonthEnd >= $perMonthStart) {
-            $perMonthEnd = $this->startOfPeriod($perMonthStart, $range);
-            $currentEnd  = $this->endOfPeriod($perMonthEnd, $range);
-            if ($currentEnd->gt($start)) {
+        // first, 13 periods of [range]
+        $loopCount = 0;
+        $loopDate  = clone $end;
+        $workStart = clone $loopDate;
+        $workEnd   = clone $loopDate;
+        while ($loopCount < 13) {
+            // make range:
+            $workStart = \Navigation::startOfPeriod($workStart, $range);
+            $workEnd   = \Navigation::endOfPeriod($workStart, $range);
+
+            // make sure we don't go overboard
+            if ($workEnd->gt($start)) {
                 $periods[] = [
-                    'start'  => $perMonthEnd,
-                    'end'    => $currentEnd,
+                    'start'  => clone $workStart,
+                    'end'    => clone $workEnd,
                     'period' => $range,
                 ];
             }
-            $perMonthEnd = $this->subtractPeriod($perMonthEnd, $range, 1);
+            // skip to the next period:
+            $workStart->subDay()->startOfDay();
+            $loopCount++;
         }
-        // do not continue if date is already less
-        if ($perMonthEnd->lt($start)) {
-            return $periods;
-        }
+        // if $workEnd is still before $start, continue on a yearly basis:
+        $loopCount = 0;
+        if ($workEnd->gt($start)) {
+            while ($workEnd->gt($start) && $loopCount < 20) {
+                // make range:
+                $workStart = app('navigation')->startOfPeriod($workStart, '1Y');
+                $workEnd   = app('navigation')->endOfPeriod($workStart, '1Y');
 
-        // per year variables:
-        $perYearEnd   = clone $perMonthStart;
-        $perYearStart = clone $perMonthStart;
-        unset($perMonthEnd, $currentEnd, $perMonthStart);
-        $perYearEnd->subYear();
-        $perYearStart->subYears(50);
-        $perYearStart = $start->lt($perYearStart) ? $perYearStart : $start;
-        $perYearStart->startOfYear();
-
-        // per year
-        while ($perYearEnd >= $perYearStart) {
-            $perYearEnd = $this->startOfPeriod($perYearEnd, '1Y');
-            $currentEnd = $this->endOfPeriod($perYearEnd, '1Y')->endOfDay();
-            if ($currentEnd->gt($start)) {
-                $periods[] = [
-                    'start'  => $perYearEnd,
-                    'end'    => $currentEnd,
-                    'period' => '1Y',
-                ];
+                // make sure we don't go overboard
+                if ($workEnd->gt($start)) {
+                    $periods[] = [
+                        'start'  => clone $workStart,
+                        'end'    => clone $workEnd,
+                        'period' => '1Y',
+                    ];
+                }
+                // skip to the next period:
+                $workStart->subDay()->startOfDay();
+                $loopCount++;
             }
-            $perYearEnd = $this->subtractPeriod($perYearEnd, '1Y', 1);
         }
-
         return $periods;
     }
 
