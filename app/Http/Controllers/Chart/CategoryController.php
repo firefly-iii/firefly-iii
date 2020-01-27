@@ -134,7 +134,7 @@ class CategoryController extends Controller
         $currencies = [];
         $tempData   = [];
         $categories = $repository->getCategories();
-        $accounts   = $accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts   = $accountRepository->getAccountsByType([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]);
 
         /** @var Category $category */
         foreach ($categories as $category) {
