@@ -331,7 +331,7 @@ return [
         'sv_SE'  => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
 
         // currently disabled languages:
-        //        'bg_BG' => ['name_locale' => 'Bulgarian', 'name_english' => 'Bulgarian'],
+        //        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
         //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
         //        'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
         //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
