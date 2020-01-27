@@ -149,8 +149,8 @@ class RecurrenceController extends Controller
     public function suggest(Request $request): JsonResponse
     {
         $string      = $request->get('date') ?? date('Y-m-d');
-        $today       = new Carbon;
-        $date        = Carbon::createFromFormat('Y-m-d', $string);
+        $today       = Carbon::now()->startOfDay();
+        $date        = Carbon::createFromFormat('Y-m-d', $string)->startOfDay();;
         $preSelected = (string)$request->get('pre_select');
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true) ));
