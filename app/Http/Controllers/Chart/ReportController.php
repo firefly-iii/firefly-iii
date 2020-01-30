@@ -159,7 +159,9 @@ class ReportController extends Controller
 
         // get journals for entire period:
         $data      = [];
-        $chartData = [];
+        $chartData = [
+
+        ];
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
