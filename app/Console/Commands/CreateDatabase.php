@@ -54,7 +54,8 @@ class CreateDatabase extends Command
     public function handle()
     {
         if ('mysql' !== env('DB_CONNECTION')) {
-            $this->info('This command currently applies to MySQL connections only.');
+            $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
+            return 0;
         }
         // try to set up a raw connection:
         $dsn     = sprintf('mysql:host=%s;charset=utf8mb4', env('DB_HOST'));
