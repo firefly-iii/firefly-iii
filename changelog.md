@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.3 (API 1.0.0)] - 2020-01-30
+
+This release fixes several bugs found in 5.0.0 and earlier releases.
+
+### Fixed
+
+- A script tries to connect over MySQL, despite Firefly III being configured to connect over another DB type.
+
 ## [5.0.1 (API 1.0.0)] - 2020-01-25
 
 This release fixes several bugs found in 5.0.0 and earlier releases.
