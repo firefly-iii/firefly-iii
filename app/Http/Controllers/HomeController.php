@@ -43,6 +43,7 @@ class HomeController extends Controller
 {
     /**
      * HomeController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -57,6 +58,7 @@ class HomeController extends Controller
      * Change index date range.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws Exception
      */
@@ -98,6 +100,7 @@ class HomeController extends Controller
      * Show index.
      *
      * @param AccountRepositoryInterface $repository
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      * @throws Exception
      */
