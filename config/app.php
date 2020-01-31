@@ -31,7 +31,7 @@ return [
     'debug'           => env('APP_DEBUG', false),
     'url'             => envNonEmpty('APP_URL', 'http://localhost'),
     'timezone'        => envNonEmpty('TZ', 'UTC'),
-    'locale'          => 'en_US',
+    'locale'          => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
@@ -147,7 +147,7 @@ return [
         'PiggyBankForm' => \FireflyIII\Support\Facades\PiggyBankForm::class,
         'RuleForm'      => \FireflyIII\Support\Facades\RuleForm::class,
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
-        'Twig' => TwigBridge\Facade\Twig::class,
+        'Twig'          => TwigBridge\Facade\Twig::class,
 
     ],
 
