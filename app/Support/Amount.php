@@ -33,6 +33,7 @@ use Preferences as Prefs;
 
 /**
  * Class Amount.
+ *
  * @codeCoverageIgnore
  */
 class Amount
@@ -125,15 +126,11 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        $coloured = $coloured ?? true;
-        $locale   = explode(',', (string)trans('config.locale'));
-        $locale   = array_map('trim', $locale);
-        setlocale(LC_MONETARY, $locale);
+        $coloured  = $coloured ?? true;
         $float     = round($amount, 12);
-        $info      = localeconv();
+        $info      = $this->getLocaleInfo();
         $formatted = number_format($float, (int)$format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
-        // some complicated switches to format the amount correctly:
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = true === $separated ? ' ' : '';
@@ -168,15 +165,18 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
-        $coloured = $coloured ?? true;
-        $locale   = explode(',', (string)trans('config.locale'));
-        $locale   = array_map('trim', $locale);
-        setlocale(LC_MONETARY, $locale);
+        $coloured  = $coloured ?? true;
         $float     = round($amount, 12);
-        $info      = localeconv();
+        $info      = $this->getLocaleInfo();
         $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
         // some complicated switches to format the amount correctly:
+        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
+                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
+
+        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
+                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
+
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = true === $separated ? ' ' : '';
@@ -204,6 +204,7 @@ class Amount
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
         }
+
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
@@ -215,6 +216,7 @@ class Amount
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
         }
+
         return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
@@ -326,14 +328,43 @@ class Amount
      */
     public function getJsConfig(array $config): array
     {
-        $negative = self::getAmountJsConfig(1 === $config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], 1 === $config['n_cs_precedes']);
-        $positive = self::getAmountJsConfig(1 === $config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], 1 === $config['p_cs_precedes']);
+        $negative = self::getAmountJsConfig($config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes']);
+        $positive = self::getAmountJsConfig($config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes']);
 
         return [
             'pos'  => $positive,
             'neg'  => $negative,
             'zero' => $positive,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocaleInfo(): array
+    {
+        $locale = explode(',', (string)trans('config.locale'));
+        $locale = array_map('trim', $locale);
+        setlocale(LC_MONETARY, $locale);
+        $info = localeconv();
+        // correct variables
+        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
+                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
+
+        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
+                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
+
+        $info['n_sep_by_space'] = (is_bool($info['n_sep_by_space']) && true === $info['n_sep_by_space'])
+                                  || (is_int($info['n_sep_by_space']) && 1 === $info['n_sep_by_space']);
+
+        $info['p_sep_by_space'] = (is_bool($info['p_sep_by_space']) && true === $info['p_sep_by_space'])
+                                  || (is_int($info['p_sep_by_space']) && 1 === $info['p_sep_by_space']);
+
+        // n_sep_by_space
+        // p_sep_by_space
+
+        return $info;
+
     }
 
     /**
