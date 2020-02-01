@@ -73,12 +73,23 @@ function getNetWorthBox() {
 function getAvailableBox() {
     // box-left-to-spend
     // box-left-per-day
+    //     * 0) If the user has available amount this period and has overspent: overspent box.
+    //      * 1) If the user has available amount this period and has NOT overspent: left to spend box.
+    //      * 2) if the user has no available amount set this period: spent per day
     $.getJSON('json/box/available').done(function (data) {
-        $('#box-left-to-spend').html(data.left);
-        $('#box-left-per-day').html(data.perDay);
-        $('#box-left-to-spend-text').text(data.text);
-        if(data.overspent === true) {
+        $('#box-left-to-spend-text').text(data.title);
+        if (0 === data.display) {
             $('#box-left-to-spend-box').removeClass('bg-green-gradient').addClass('bg-red-gradient');
+            $('#box-left-to-spend').html(data.left_to_spend);
+            $('#box-left-per-day').html(data.left_per_day);
+        }
+        if(1=== data.display) {
+            $('#box-left-to-spend').html(data.left_to_spend);
+            $('#box-left-per-day').html(data.left_per_day);
+        }
+        if(2=== data.display) {
+            $('#box-left-to-spend').html(data.spent_total);
+            $('#box-left-per-day').html(data.spent_per_day);
         }
     });
 }
