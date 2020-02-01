@@ -17,6 +17,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #3042 Rule engine behavior was inconsistent when importing data.
 - #3064 Weird bug in reports.
 
+## [5.0.4 (API 1.0.0)] - 2020-02-01
+
+This release fixes several bugs found in 5.0.0 and earlier releases.
+
+### Fixed
+
+- If unset, `DB_CONNECTION` defaults to "mysql". This is now "pgsql", which is consistent with the documentation and the example configuration
+  file (`.env.example`). 
+
 ## [5.0.3 (API 1.0.0)] - 2020-01-30
 
 This release fixes several bugs found in 5.0.0 and earlier releases.

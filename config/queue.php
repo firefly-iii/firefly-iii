@@ -100,7 +100,7 @@ return [
     */
 
     'failed' => [
-        'database' => envNonEmpty('DB_CONNECTION', 'mysql'),
+        'database' => envNonEmpty('DB_CONNECTION', 'pgsql'),
         'table'    => 'failed_jobs',
     ],
 
