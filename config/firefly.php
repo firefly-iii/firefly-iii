@@ -136,7 +136,7 @@ return [
         'export' => true,
     ],
     'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                => '5.0.3',
+    'version'                => '5.0.4',
     'api_version'            => '1.0.0',
     'db_version'             => 12,
     'maxUploadSize'          => 15242880,
