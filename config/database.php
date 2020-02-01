@@ -44,7 +44,7 @@ if (!(false === $databaseUrl)) {
 
 return [
 
-    'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
+    'default'     => envNonEmpty('DB_CONNECTION', 'pgsql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
