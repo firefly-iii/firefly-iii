@@ -76,17 +76,25 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
-                    'transaction_journals'    => [],
+                    'categories'              => [],
                     'currency_id'             => $currencyId,
                     'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
+            // info about the non-existent category:
+            $array[$currencyId]['categories'][0] = $array[$currencyId]['categories'][0] ?? [
+                    'id'                   => 0,
+                    'name'                 => (string)trans('firefly.noCategory'),
+                    'transaction_journals' => [],
+                ];
+
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                              = (int)$journal['transaction_journal_id'];
-            $array[$currencyId]['transaction_journals'][$journalId] = [
+            $journalId = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
+                       = [
                 'amount' => app('steam')->negative($journal['amount']),
                 'date'   => $journal['date'],
             ];
@@ -121,17 +129,27 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
-                    'transaction_journals'    => [],
+                    'categories'              => [],
                     'currency_id'             => $currencyId,
                     'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
+
+            // info about the non-existent category:
+            $array[$currencyId]['categories'][0] = $array[$currencyId]['categories'][0] ?? [
+                    'id'                   => 0,
+                    'name'                 => (string)trans('firefly.noCategory'),
+                    'transaction_journals' => [],
+                ];
+
+
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                              = (int)$journal['transaction_journal_id'];
-            $array[$currencyId]['transaction_journals'][$journalId] = [
+            $journalId = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
+                       = [
                 'amount' => app('steam')->positive($journal['amount']),
                 'date'   => $journal['date'],
             ];

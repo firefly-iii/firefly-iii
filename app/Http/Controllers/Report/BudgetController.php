@@ -300,7 +300,6 @@ class BudgetController extends Controller
                 $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }
         }
-
         return view('reports.budget.partials.budgets', compact('sums', 'report'));
     }
 
@@ -381,6 +380,7 @@ class BudgetController extends Controller
             }
         }
 
+
         // add no budget info.
         $report['budgets'][0] = $report['budgets'][0] ?? [
                 'budget_id'     => null,
@@ -408,8 +408,19 @@ class BudgetController extends Controller
             ];
             $report['sums'][$noBudgetEntry['currency_id']]['spent']
                                                      = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'] ?? '0', $noBudgetEntry['sum']);
-        }
+            // append currency info because it may be missing:
+            $report['sums'][$noBudgetEntry['currency_id']]['currency_id'] = (int)($noBudgetEntry['currency_id'] ?? $defaultCurrency->id);
+            $report['sums'][$noBudgetEntry['currency_id']]['currency_code'] = $noBudgetEntry['currency_code'] ?? $defaultCurrency->code;
+            $report['sums'][$noBudgetEntry['currency_id']]['currency_name'] = $noBudgetEntry['currency_name'] ?? $defaultCurrency->name;
+            $report['sums'][$noBudgetEntry['currency_id']]['currency_symbol'] = $noBudgetEntry['currency_symbol'] ?? $defaultCurrency->symbol;
+            $report['sums'][$noBudgetEntry['currency_id']]['currency_decimal_places'] = $noBudgetEntry['currency_decimal_places'] ?? $defaultCurrency->decimal_places;
 
+            // append other sums because they might be missing:
+            $report['sums'][$noBudgetEntry['currency_id']]['overspent'] = $report['sums'][$noBudgetEntry['currency_id']]['overspent'] ?? '0';
+            $report['sums'][$noBudgetEntry['currency_id']]['left'] = $report['sums'][$noBudgetEntry['currency_id']]['left'] ?? '0';
+            $report['sums'][$noBudgetEntry['currency_id']]['budgeted'] = $report['sums'][$noBudgetEntry['currency_id']]['budgeted'] ?? '0';
+
+        }
         // make percentages based on total amount.
         foreach ($report['budgets'] as $budgetId => $data) {
             foreach ($data['budget_limits'] as $limitId => $entry) {
@@ -434,6 +445,7 @@ class BudgetController extends Controller
                 $report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
         }
+        //var_dump($report);exit;
 
         return view('reports.partials.budgets', compact('report'))->render();
     }

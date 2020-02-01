@@ -517,8 +517,8 @@ class CategoryController extends Controller
         $data    = [];
         $with    = $opsRepository->listExpenses($start, $end, $accounts);
         $without = $noCatRepos->listExpenses($start, $end, $accounts);
-
-        foreach ($with as $currencyId => $currencyRow) {
+        foreach([$with, $without] as $set) {
+        foreach ($set as $currencyId => $currencyRow) {
             foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
                 $key        = sprintf('%d-%d', $currencyId, $categoryId);
                 $data[$key] = $data[$key] ?? [
@@ -541,26 +541,8 @@ class CategoryController extends Controller
                 }
             }
         }
-        foreach ($without as $currencyId => $currencyRow) {
-            $key        = sprintf('0-%d', $currencyId);
-            $data[$key] = $data[$key] ?? [
-                    'id'                      => 0,
-                    'title'                   => sprintf('%s (%s)', trans('firefly.noCategory'), $currencyRow['currency_name']),
-                    'currency_id'             => $currencyRow['currency_id'],
-                    'currency_symbol'         => $currencyRow['currency_symbol'],
-                    'currency_name'           => $currencyRow['currency_name'],
-                    'currency_code'           => $currencyRow['currency_code'],
-                    'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                    'sum'                     => '0',
-                    'entries'                 => [],
-                ];
-            foreach ($currencyRow['transaction_journals'] as $journalId => $journal) {
-                $date                         = $journal['date']->format($format);
-                $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
-                $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
-                $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
-            }
         }
+
         $cache->store($data);
 
         $report = $data;
@@ -621,48 +603,29 @@ class CategoryController extends Controller
         $data    = [];
         $with    = $opsRepository->listIncome($start, $end, $accounts);
         $without = $noCatRepos->listIncome($start, $end, $accounts);
+        foreach([$with, $without] as $set) {
+            foreach ($set as $currencyId => $currencyRow) {
+                foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
+                    $key        = sprintf('%d-%d', $currencyId, $categoryId);
+                    $data[$key] = $data[$key] ?? [
+                            'id'                      => $categoryRow['id'],
+                            'title'                   => sprintf('%s (%s)', $categoryRow['name'], $currencyRow['currency_name']),
+                            'currency_id'             => $currencyRow['currency_id'],
+                            'currency_symbol'         => $currencyRow['currency_symbol'],
+                            'currency_name'           => $currencyRow['currency_name'],
+                            'currency_code'           => $currencyRow['currency_code'],
+                            'currency_decimal_places' => $currencyRow['currency_decimal_places'],
+                            'sum'                     => '0',
+                            'entries'                 => [],
 
-        foreach ($with as $currencyId => $currencyRow) {
-            foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
-                $key        = sprintf('%d-%d', $currencyId, $categoryId);
-                $data[$key] = $data[$key] ?? [
-                        'id'                      => $categoryRow['id'],
-                        'title'                   => sprintf('%s (%s)', $categoryRow['name'], $currencyRow['currency_name']),
-                        'currency_id'             => $currencyRow['currency_id'],
-                        'currency_symbol'         => $currencyRow['currency_symbol'],
-                        'currency_name'           => $currencyRow['currency_name'],
-                        'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                        'sum'                     => '0',
-                        'entries'                 => [],
-
-                    ];
-                foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
-                    $date                         = $journal['date']->format($format);
-                    $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
-                    $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
-                    $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
+                        ];
+                    foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
+                        $date                         = $journal['date']->format($format);
+                        $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
+                        $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
+                        $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
+                    }
                 }
-            }
-        }
-        foreach ($without as $currencyId => $currencyRow) {
-            $key        = sprintf('0-%d', $currencyId);
-            $data[$key] = $data[$key] ?? [
-                    'id'                      => 0,
-                    'title'                   => sprintf('%s (%s)', trans('firefly.noCategory'), $currencyRow['currency_name']),
-                    'currency_id'             => $currencyRow['currency_id'],
-                    'currency_symbol'         => $currencyRow['currency_symbol'],
-                    'currency_name'           => $currencyRow['currency_name'],
-                    'currency_code'           => $currencyRow['currency_code'],
-                    'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                    'sum'                     => '0',
-                    'entries'                 => [],
-                ];
-            foreach ($currencyRow['transaction_journals'] as $journalId => $journal) {
-                $date                         = $journal['date']->format($format);
-                $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
-                $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
-                $data[$key]['sum']            = bcadd($data[$key]['sum'], $journal['amount']);
             }
         }
         $cache->store($data);
@@ -725,8 +688,7 @@ class CategoryController extends Controller
         ];
 
         // needs four for-each loops.
-        // TODO improve this.
-        foreach ([$earnedWith, $spentWith] as $data) {
+        foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout] as $data) {
             foreach ($data as $currencyId => $currencyRow) {
                 $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
                         'spent'                   => '0',
@@ -778,58 +740,6 @@ class CategoryController extends Controller
                             $report['categories'][$key]['earned'], $journal['amount']
                         ) : $report['categories'][$key]['earned'];
                     }
-                }
-            }
-        }
-        foreach ([$earnedWithout, $spentWithout] as $data) {
-            foreach ($data as $currencyId => $currencyRow) {
-                $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
-                        'spent'                   => '0',
-                        'earned'                  => '0',
-                        'sum'                     => '0',
-                        'currency_id'             => $currencyRow['currency_id'],
-                        'currency_symbol'         => $currencyRow['currency_symbol'],
-                        'currency_name'           => $currencyRow['currency_name'],
-                        'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                    ];
-                $key                         = sprintf('%s-0', $currencyId);
-                $report['categories'][$key]  = $report['categories'][$key] ?? [
-                        'id'                      => 0,
-                        'title'                   => sprintf('%s (%s)', trans('firefly.noCategory'), $currencyRow['currency_name']),
-                        'currency_id'             => $currencyRow['currency_id'],
-                        'currency_symbol'         => $currencyRow['currency_symbol'],
-                        'currency_name'           => $currencyRow['currency_name'],
-                        'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                        'spent'                   => '0',
-                        'earned'                  => '0',
-                        'sum'                     => '0',
-                    ];
-                // loop journals:
-                foreach ($currencyRow['transaction_journals'] as $journal) {
-                    // sum of all
-                    $report['sums'][$currencyId]['sum'] = bcadd($report['sums'][$currencyId]['sum'], $journal['amount']);
-
-                    // sum of spent:
-                    $report['sums'][$currencyId]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                        $report['sums'][$currencyId]['spent'], $journal['amount']
-                    ) : $report['sums'][$currencyId]['spent'];
-                    // sum of earned
-                    $report['sums'][$currencyId]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                        $report['sums'][$currencyId]['earned'], $journal['amount']
-                    ) : $report['sums'][$currencyId]['earned'];
-
-                    // sum of category
-                    $report['categories'][$key]['sum'] = bcadd($report['categories'][$key]['sum'], $journal['amount']);
-                    // total spent in no category
-                    $report['categories'][$key]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                        $report['categories'][$key]['spent'], $journal['amount']
-                    ) : $report['categories'][$key]['spent'];
-                    // total earned in no category
-                    $report['categories'][$key]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                        $report['categories'][$key]['earned'], $journal['amount']
-                    ) : $report['categories'][$key]['earned'];
                 }
             }
         }
