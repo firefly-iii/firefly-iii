@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0 (API 1.0.0)] - 2020-02-xx
+
+### Added
+- #2575 Create a transaction from a rule.
+- Firefly III will generate a unique installation ID for itself.
+
+### Changed
+- #3050 Date blocks were rendered badly
+- #3066 New tag overview. Not yet sure what works best.
+
+### Fixed
+- #3045 Linking bills to liability accounts through rules was broken.
+- #3042 Rule engine behavior was inconsistent when importing data.
+- #3064 Weird bug in reports.
+
 ## [5.0.3 (API 1.0.0)] - 2020-01-30
 
 This release fixes several bugs found in 5.0.0 and earlier releases.
