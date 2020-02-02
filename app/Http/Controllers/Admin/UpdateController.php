@@ -23,14 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Log;
 
 /**
  * Class HomeController.
@@ -110,46 +108,12 @@ class UpdateController extends Controller
     /**
      * Does a manual update check.
      */
-    public function updateCheck(): JsonResponse
+    public function updateCheck(): RedirectResponse
     {
-        $success       = true;
-        $latestRelease = '1.0';
-        $resultString  = '';
-        $versionCheck  = -2;
-        $channel       = app('fireflyconfig')->get('update_channel', 'stable')->data;
+        $release      = $this->getLatestRelease();
 
-        try {
-            $latestRelease = $this->getLatestRelease();
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            $success = false;
-        }
+        session()->flash($release['level'], $release['message']);
 
-        // if error, tell the user.
-        if (false === $success) {
-            $resultString = (string)trans('firefly.update_check_error');
-            session()->flash('error', $resultString);
-        }
-
-        // if not, compare and tell the user.
-        if (true === $success) {
-            $versionCheck = $this->versionCheck($latestRelease);
-            $resultString = $this->parseResult($versionCheck, $latestRelease);
-        }
-
-        Log::debug(sprintf('Result string is: "%s"', $resultString));
-
-        if (0 !== $versionCheck && '' !== $resultString) {
-            // flash info
-            session()->flash('info', $resultString);
-        }
-        app('fireflyconfig')->set('last_update_check', time());
-
-        return response()->json(
-            [
-                'result'  => $resultString,
-                'channel' => $channel,
-            ]
-        );
+        return redirect(route('admin.update-check'));
     }
 }

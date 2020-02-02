@@ -160,6 +160,7 @@ return [
     'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'        => 'https://version.firefly-iii.org/index.json',
+    'update_minimum_age'     => 6,
     'default_location'       => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
