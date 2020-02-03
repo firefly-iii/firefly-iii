@@ -83,7 +83,7 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject('Caught an error in Firely III');
+                            $message->to($email, $email)->subject('Caught an error in Firefly III');
                         }
                     }
                 );
