@@ -180,7 +180,7 @@ TODO: hide and show columns
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><i
+                                <li><a href="{{ route('transactions.create-from-journal', [group.id]) }}"><i
                                                 class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}</a></li>
                             </ul>
                         </div>
