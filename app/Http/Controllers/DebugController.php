@@ -51,7 +51,7 @@ class DebugController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(IsDemoUser::class);
+        $this->middleware(IsDemoUser::class)->except(['displayError']);
     }
 
     /**
