@@ -47,6 +47,14 @@ trait TransactionValidation
         $transactionType = $data['type'] ?? 'invalid';
         $transactions    = $data['transactions'] ?? [];
 
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
 
@@ -90,6 +98,14 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
 
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
@@ -142,8 +158,15 @@ trait TransactionValidation
      */
     public function validateDescriptions(Validator $validator): void
     {
-        $data              = $validator->getData();
-        $transactions      = $data['transactions'] ?? [];
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
         $validDescriptions = 0;
         foreach ($transactions as $index => $transaction) {
             if ('' !== (string)($transaction['description'] ?? null)) {
@@ -168,6 +191,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         foreach ($transactions as $index => $transaction) {
             // if foreign amount is present, then the currency must be as well.
             if (isset($transaction['foreign_amount']) && !(isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code']))
@@ -195,7 +227,16 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
-        $groupTitle   = $data['group_title'] ?? '';
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
+        $groupTitle = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
             $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
         }
@@ -210,6 +251,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         // need at least one transaction
         if (0 === count($transactions)) {
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
@@ -225,6 +275,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? null;
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         if (null === $transactions) {
             return;
         }
@@ -263,7 +322,16 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
-        $types        = [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
+        $types = [];
         foreach ($transactions as $index => $transaction) {
             $types[] = $transaction['type'] ?? 'invalid';
         }
@@ -289,7 +357,16 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
-        $types        = [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
+        $types = [];
         foreach ($transactions as $index => $transaction) {
             $originalType = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
             // if type is not set, fall back to the type of the journal, if one is given.
@@ -373,6 +450,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         // needs to be split
         if (count($transactions) < 2) {
             return;
@@ -414,6 +500,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         // needs to be split
         if (count($transactions) < 2) {
             return;
@@ -497,6 +592,15 @@ trait TransactionValidation
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
+
+        if (!is_countable($data['transactions'])) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+
+            return;
+        }
+
         if (count($transactions) < 2) {
             return;
         }
