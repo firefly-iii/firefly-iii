@@ -32,7 +32,7 @@ class SetLatestVersion extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Set latest version in DB.';
     /**
      * The name and signature of the console command.
      *

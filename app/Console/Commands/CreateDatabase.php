@@ -59,8 +59,7 @@ class CreateDatabase extends Command
             return 0;
         }
         // try to set up a raw connection:
-        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST'), env('DB_PORT'));
-        $this->line(sprintf('DSN is: "%s"', $dsn));
+        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
