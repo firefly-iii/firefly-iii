@@ -12,7 +12,7 @@
     <tbody>
     {% for key, info in report %}
         <tr>
-            <td>
+            <td data-value="{{ info.name }}">
                 {% if info.id != 0 %}
                     <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [info.id]) }}"><i class="fa fa-external-link"></i></a>
                 {% else %}
