@@ -963,6 +963,9 @@ Route::group(
     Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
+    // clone group
+    Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CreateController@cloneGroup', 'as' => 'clone']);
+
     // edit group
     Route::get('edit/{transactionGroup}', ['uses' => 'Transaction\EditController@edit', 'as' => 'edit']);
     Route::post('update', ['uses' => 'Transaction\EditController@update', 'as' => 'update']);
@@ -970,17 +973,6 @@ Route::group(
     // delete group
     Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
     Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
-
-    // clone group:
-    //Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
-
-    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-
-    //Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
-    //Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
-    // TODO end of improvement.
-
 
     Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
 }

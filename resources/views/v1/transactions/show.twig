@@ -61,9 +61,8 @@
 
 
                         {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
-                            <!--CLONE-->
-                            <a href="#" class="btn btn-default" style="white-space: nowrap;" onclick="return false;" data-toggle="tooltip" data-placement="top" title="{{ 'clone_instructions' |_|escape}}">Clone</a>
-                            {#<a href="{{ route('transactions.clone', [transactionGroup.id]) }}" class="btn btn-default"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a>#}
+                            <!-- since 5.1.0 -->
+                            <a href="{{ route('transactions.clone', [transactionGroup.id]) }}" id="clone_button" class="btn btn-default"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a>
                         {% endif %}
                         {#
                     <a href="{{ route('transactions.delete', [transactionGroup.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> {{ 'delete'|_ }}</a>
@@ -415,6 +414,7 @@
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURI = '{{ route('json.autocomplete.all-journals-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
+        var newCloneInstructions = '{{ 'new_clone_instructions'|_|escape('js') }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
