@@ -77,8 +77,14 @@ class Range
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
-        $locale = explode(',', (string)trans('config.locale'));
-        $locale = array_map('trim', $locale);
+
+        // On Windows, setlocale(LC_ALL, '') sets the locale names from the system's regional/language settings
+        if (PHP_OS_FAMILY === 'Windows') {
+            $locale = '';
+        } else {
+            $locale = explode(',', (string)trans('config.locale'));
+            $locale = array_map('trim', $locale);
+        }
 
         setlocale(LC_TIME, $locale);
         $moneyResult = setlocale(LC_MONETARY, $locale);
