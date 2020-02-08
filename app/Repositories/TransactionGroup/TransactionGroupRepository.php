@@ -75,6 +75,21 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function expandGroup(TransactionGroup $group): array
+    {
+        $result                         = $group->toArray();
+        $result['transaction_journals'] = [];
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            $result['transaction_journals'][] = $this->expandJournal($journal);
+        }
+
+        return $result;
+    }
+
+    /**
      * Find a transaction group by its ID.
      *
      * @param int $groupId
@@ -340,6 +355,88 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $service = app(GroupUpdateService::class);
 
         return $service->update($transactionGroup, $data);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    private function expandJournal(TransactionJournal $journal): array
+    {
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = [];
+        $array['tags']              = [];
+        $array['categories']        = [];
+        $array['budgets']           = [];
+        $array['notes']             = [];
+        $array['locations']         = [];
+        $array['attachments']       = [];
+        $array['links']             = [];
+        $array['piggy_bank_events'] = [];
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $this->expandTransaction($transaction);
+        }
+        foreach ($journal->transactionJournalMeta as $meta) {
+            $array['meta'][] = $meta->toArray();
+        }
+
+        foreach ($journal->tags as $tag) {
+            $array['tags'][] = $tag->toArray();
+        }
+        foreach ($journal->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($journal->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+        foreach ($journal->notes as $note) {
+            $array['notes'][] = $note->toArray();
+        }
+
+        foreach ($journal->attachments as $attachment) {
+            $array['attachments'][] = $attachment->toArray();
+        }
+        // TODO apparantly this doesnt work.
+        foreach ($journal->sourceJournalLinks as $link) {
+            $array['links'][] = $link->toArray();
+        }
+        foreach ($journal->destJournalLinks as $link) {
+            $array['links'][] = $link->toArray();
+        }
+
+        foreach ($journal->piggyBankEvents as $event) {
+            $array['piggy_bank_events'][] = $event->toArray();
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function expandTransaction(Transaction $transaction): array
+    {
+        $array = $transaction->toArray();
+        $array['account'] = $transaction->account->toArray();
+        $array['budgets'] = [];
+        $array['categories'] = [];
+
+        foreach ($transaction->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($transaction->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+
+        return $array;
     }
 
     /**

@@ -975,27 +975,10 @@ Route::group(
     Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
 
     Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
+    Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
 }
 );
 
-/**
- * Transaction Single Controller
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'],
-    function () {
-        // TODO improve these routes
-
-        //Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
-        //
-        //Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
-        //Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
-        //
-        //Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
-        //Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
-        // TODO end of improvement.
-    }
-);
 
 /**
  * Transaction Mass Controller

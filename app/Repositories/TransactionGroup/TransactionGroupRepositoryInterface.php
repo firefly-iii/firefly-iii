@@ -33,11 +33,19 @@ use FireflyIII\User;
  */
 interface TransactionGroupRepositoryInterface
 {
-
     /**
      * @param TransactionGroup $group
      */
     public function destroy(TransactionGroup $group): void;
+
+    /**
+     * Return a group and expand all meta data etc.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function expandGroup(TransactionGroup $group): array;
 
     /**
      * Find a transaction group by its ID.

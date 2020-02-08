@@ -64,6 +64,16 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function debugShow(TransactionGroup $transactionGroup)
+    {
+        return response()->json($this->repository->expandGroup($transactionGroup));
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
@@ -105,6 +115,7 @@ class ShowController extends Controller
 
     /**
      * @param array $group
+     *
      * @return array
      */
     private function getAmounts(array $group): array
