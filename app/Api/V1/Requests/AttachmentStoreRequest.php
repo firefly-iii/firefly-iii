@@ -57,8 +57,8 @@ class AttachmentStoreRequest extends Request
             'filename' => $this->string('filename'),
             'title'    => $this->string('title'),
             'notes'    => $this->nlString('notes'),
-            'model'    => $this->string('model'),
-            'model_id' => $this->integer('model_id'),
+            'model'    => $this->string('attachable_type'),
+            'model_id' => $this->integer('attachable_id'),
         ];
     }
 
@@ -77,14 +77,14 @@ class AttachmentStoreRequest extends Request
                 str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
             ]
         );
-        $model  = $this->string('model');
+        $model  = $this->string('attachable_type');
 
         return [
-            'filename' => 'required|between:1,255',
-            'title'    => 'between:1,255',
-            'notes'    => 'between:1,65000',
-            'model'    => sprintf('required|in:%s', $models),
-            'model_id' => ['required', 'numeric', new IsValidAttachmentModel($model)],
+            'filename'        => 'required|between:1,255',
+            'title'           => 'between:1,255',
+            'notes'           => 'between:1,65000',
+            'attachable_type' => sprintf('required|in:%s', $models),
+            'attachable_id'   => ['required', 'numeric', new IsValidAttachmentModel($model)],
         ];
     }
 }
