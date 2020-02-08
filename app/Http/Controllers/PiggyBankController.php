@@ -240,7 +240,7 @@ class PiggyBankController extends Controller
         foreach ($collection as $piggy) {
             $array     = $transformer->transform($piggy);
             $account   = $accountTransformer->transform($piggy->account);
-            $accountId = $account['id'];
+            $accountId = (int)$account['id'];
             if (!isset($accounts[$accountId])) {
                 // create new:
                 $accounts[$accountId] = $account;
