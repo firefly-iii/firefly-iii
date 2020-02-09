@@ -168,7 +168,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index">
-                            <button class="split_add_btn btn btn-primary" type="button" @click="addTransactionToArray">{{ $t('firefly.add_another_split') }}</button>
+                            <button class="split_add_btn btn btn-default" type="button" @click="addTransactionToArray">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
                 </div>
