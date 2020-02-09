@@ -5,14 +5,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.1.0 (API 1.0.0)] - 2020-02-xx
 
 ### Added
-- #2575 Create a transaction from a rule.
+- #2575 You can now create a transaction from a rule.
+- #3052 The old way of cloning transactions is back.
 - Firefly III will generate a unique installation ID for itself.
 
 ### Changed
-- #3050 Date blocks were rendered badly
-- #3066 New tag overview. Not yet sure what works best.
+- #3066 #3067 New tag overview. Not yet sure what works best.
+- #3071 Top box with expense information (left to spend) is now more clear.
+- #2999 NOT YET DONE
+- #3075 Embarrassing typo in welcome email.
+- You can set the default language for Firefly III which will also apply to the login page.
+- Add Lando to readme.
+- Add support for Finnish! 🇫🇮
+- In the configuration `pgsql` is now the default database connection. This may break your non-`pgsql` installation if you haven't set it specifically to your database type.
+- A new debug view for transactions. Change the word "show" in `/transactions/show/123` to "debug" to get a nice JSON thing.
+- Foreign currencies should show up less often in edit/create transaction screens. 
 
 ### Fixed
+- #3050 Date blocks were rendered badly.
+- #3070 The currency symbol would not precede the amount in some locales.
+- #3083 Fix category sort in report.
 - #3045 Linking bills to liability accounts through rules was broken.
 - #3042 Rule engine behavior was inconsistent when importing data.
 - #3064 Weird bug in reports.
