@@ -505,8 +505,8 @@
                         const uri = './api/v1/attachments';
                         const data = {
                             filename: fileData[key].name,
-                            model: 'TransactionJournal',
-                            model_id: fileData[key].journal,
+                            attachable_type: 'TransactionJournal',
+                            attachable_id: fileData[key].journal,
                         };
                         axios.post(uri, data)
                             .then(response => {
