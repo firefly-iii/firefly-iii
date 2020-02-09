@@ -398,7 +398,8 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * TODO this chart is not multi-currency aware.
+     * TODO there are cases when this chart hides expenses: when budget has limits
+     * and limits are found and used, but the expense is in another currency.
      *
      * @return JsonResponse
      *
@@ -413,7 +414,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
