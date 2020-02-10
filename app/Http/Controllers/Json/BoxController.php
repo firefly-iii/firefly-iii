@@ -168,10 +168,11 @@ class BoxController extends Controller
         /** @var array $journal */
         foreach ($set as $journal) {
             $currencyId           = (int)$journal['currency_id'];
+            $amount               = $journal['amount'] ?? '0';
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($journal['amount']));
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($journal['amount']));
+            $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($amount));
         }
 
         // collect expenses
