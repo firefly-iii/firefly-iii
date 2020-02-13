@@ -621,7 +621,7 @@
                 }
                 const data = this.convertData();
 
-                let button = $(e.currentTarget);
+                let button = $('#submitButton');
                 button.prop("disabled", true);
 
                 //axios.put(uri, data)
@@ -642,7 +642,7 @@
                 if (e) {
                     e.preventDefault();
                 }
-                button.prop("disabled", false);
+                button.removeAttr('disabled');
             },
 
             redirectUser(groupId) {

@@ -377,7 +377,7 @@
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
 
-                let button = $(e.currentTarget);
+                let button = $('#submitButton');
                 button.prop("disabled", true);
 
                 axios.post(uri, data).then(response => {
@@ -385,7 +385,7 @@
                     // this method will ultimately send the user on (or not).
                     if (0 === this.collectAttachmentData(response)) {
                         // console.log('Will now go to redirectUser()');
-                        this.redirectUser(response.data.data.id, button, response.data.data);
+                        this.redirectUser(response.data.data.id, response.data.data);
                     }
                 }).catch(error => {
                     // give user errors things back.
@@ -393,8 +393,10 @@
                     console.error('Error in transaction submission.');
                     console.error(error);
                     this.parseErrors(error.response.data);
+
                     // something.
-                    button.prop("disabled", false);
+                    console.log('enable button again.')
+                    button.removeAttr('disabled');
                 });
 
                 if (e) {
@@ -406,7 +408,7 @@
                 div.innerText = unsafeText;
                 return div.innerHTML;
             },
-            redirectUser(groupId, button, transactionData) {
+            redirectUser(groupId, transactionData) {
                 // console.log('In redirectUser()');
                 // console.log(transactionData);
                 let title = null === transactionData.attributes.group_title ? transactionData.attributes.transactions[0].description : transactionData.attributes.group_title;
@@ -427,9 +429,9 @@
                     // clear errors:
                     this.setDefaultErrors();
 
-                    if (button) {
-                        button.prop("disabled", false);
-                    }
+                    console.log('enable button again.')
+                    let button = $('#submitButton');
+                    button.removeAttr('disabled');
                 } else {
                     // console.log('Will redirect to previous URL. (' + previousUri + ')');
                     window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
@@ -520,7 +522,7 @@
                                         if (uploads === count) {
                                             // finally we can redirect the user onwards.
                                             // console.log('FINAL UPLOAD');
-                                            this.redirectUser(groupId, null, transactionData);
+                                            this.redirectUser(groupId, transactionData);
                                         }
                                         // console.log('Upload complete!');
                                         return true;
@@ -532,7 +534,7 @@
                                     if (uploads === count) {
                                         // finally we can redirect the user onwards.
                                         // console.log('FINAL UPLOAD');
-                                        this.redirectUser(groupId, null, transactionData);
+                                        this.redirectUser(groupId, transactionData);
                                     }
                                     // console.log('Upload complete!');
                                     return false;
