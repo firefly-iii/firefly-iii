@@ -708,6 +708,7 @@ return [
     'update_currency'                           => 'Update currency',
     'new_default_currency'                      => ':name is now the default currency.',
     'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',
