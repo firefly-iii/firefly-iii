@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'default' => envNonEmpty('LOG_CHANNEL', 'daily'),
+    'default' => envNonEmpty('LOG_CHANNEL', 'stack'),
 
     /*
     |--------------------------------------------------------------------------
@@ -58,7 +58,6 @@ return [
             'driver'   => 'stack',
             'channels' => ['daily', 'stdout'],
         ],
-
         'single'    => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
