@@ -183,6 +183,14 @@ class CurrencyController extends Controller
 
             return redirect(route('currencies.index'));
         }
+
+        if ($this->repository->isFallbackCurrency($currency)) {
+            $request->session()->flash('error', (string)trans('firefly.cannot_delete_fallback_currency', ['name' => e($currency->name)]));
+            Log::channel('audit')->info(sprintf('Tried to delete currency %s but is FALLBACK.', $currency->code));
+
+            return redirect(route('currencies.index'));
+        }
+
         Log::channel('audit')->info(sprintf('Deleted currency %s.', $currency->code));
         $this->repository->destroy($currency);
 

@@ -318,6 +318,10 @@ class CurrencyController extends Controller
         if ($this->repository->currencyInUse($currency)) {
             throw new FireflyException('200006: Currency in use.'); // @codeCoverageIgnore
         }
+        if ($this->repository->isFallbackCurrency($currency)) {
+            throw new FireflyException('200026: Currency is fallback.'); // @codeCoverageIgnore
+        }
+
         $this->repository->destroy($currency);
 
         return response()->json([], 204);

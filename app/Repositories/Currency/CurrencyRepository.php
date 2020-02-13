@@ -537,4 +537,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         return $service->update($currency, $data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function isFallbackCurrency(TransactionCurrency $currency): bool
+    {
+        return $currency->code === config('firefly.default_currency', 'EUR');
+    }
 }

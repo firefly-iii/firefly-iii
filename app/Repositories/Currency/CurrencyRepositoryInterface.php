@@ -35,6 +35,14 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function isFallbackCurrency(TransactionCurrency $currency): bool;
+
     /**
      * @param TransactionCurrency $currency
      *
