@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'default' => envNonEmpty('LOG_CHANNEL', 'daily'),
+    'default' => envNonEmpty('LOG_CHANNEL', 'stack'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     'channels' => [
         'stack' => [
             'driver'   => 'stack',
-            'channels' => ['daily', 'slack'],
+            'channels' => ['daily', 'stdout'],
         ],
 
         'single'    => [
