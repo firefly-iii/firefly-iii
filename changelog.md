@@ -29,6 +29,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #3042 Rule engine behavior was inconsistent when importing data.
 - #3064 Weird bug in reports.
 
+## [5.0.5 (API 1.0.0)] - 2020-02-13
+
+This release fixes an issue with logging that could, in rare cases, error out terribly.
+
+### Fixed
+
+- Inconsistent log configuration.
+
 ## [5.0.4 (API 1.0.0)] - 2020-02-01
 
 This release fixes several bugs found in 5.0.0 and earlier releases.
