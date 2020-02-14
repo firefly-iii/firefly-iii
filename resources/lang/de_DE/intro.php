@@ -2,7 +2,7 @@
 
 /**
  * intro.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -76,7 +76,7 @@ return [
     'reports_index_extra-options-box'                 => 'Abhängig von dem ausgewählten Bericht können Sie hier zusätzliche Filter und Optionen auswählen. Sehen Sie sich dieses Feld an, wenn Sie Berichtstypen ändern.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Dieser Bericht gibt Ihnen einen schnellen und umfassenden Überblick über Ihre Finanzen. Wenn Sie etwas anderes sehen möchten, kontaktieren Sie mich bitte nicht!',
+    'reports_report_default_intro'                    => 'Dieser Bericht gibt Ihnen einen schnellen und umfassenden Überblick über Ihre Finanzen. Kontaktieren Sie mich bitte, wenn Sie Ideen für Ergänzungen haben!',
     'reports_report_audit_intro'                      => 'In diesem Bericht erhalten Sie detaillierte Einblicke in Ihre Bestandskonten.',
     'reports_report_audit_optionsBox'                 => 'Verwenden Sie diese Kontrollkästchen, um die Spalten anzuzeigen oder auszublenden, an denen Sie interessiert sind.',
 

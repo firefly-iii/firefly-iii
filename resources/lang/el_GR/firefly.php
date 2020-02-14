@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Αυτός ο λογαριασμός δεν έχει σχετιζόμενους κανόνες.',
     'go_to_asset_accounts'                       => 'Δείτε τους αποταμιευτικούς λογαριασμούς σας',
     'go_to_budgets'                              => 'Πηγαίνετε στους προϋπολογισμούς σας',
-    'clone_instructions'                         => 'Για την κλωνοποίηση μιας συναλλαγής, αναζητήστε το πλαίσιο "αποθήκευση ως νέας" στην οθόνη τροποποίησης',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Πηγαίνεται στης κατηγορίες σας',
     'go_to_bills'                                => 'Πηγαίνετε στους λογαριασμούς σας',
     'go_to_expense_accounts'                     => 'Δείτε τους λογαριασμούς εξόδων σας',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Έλεγχος ενημερώσεων',
     'admin_update_check_title'                   => 'Αυτόματος έλεγχος ενημερώσεων',
-    'admin_update_check_explain'                 => 'Το Firefly III μπορεί να ελέγξει αυτόματα για ενημερώσεις. Όταν ενεργοποιήσετε αυτή τη ρύθμιση, θα επικοινωνήσει με το Github για να δει εάν υπάρχει διαθέσιμη νέα έκδοση του Firefly III. Όταν υπάρχει, θα λάβετε μία ειδοποίηση. Μπορείτε να δοκιμάστετε αυτή την ειδοποίηση χρησιμοποιώντας το κουμπί δεξιά. Παρακαλώ υποδείξτε παρακάτω εάν θέλετε το Firefly III να ελέγχει για ενημερώσεις.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Το Firefly III μπορεί να ελέγχει για ενημερώσεις, αλλά χρειάζεται την άδειά σας για αυτό. Παρακαλώ πηγαίνετε στη <a href=":link">διαχείριση</a> για να υποδείξετε εάν θέλετε να ενεργοποιηθεί αυτό το χαρακτηριστικό.',
     'updates_ask_me_later'                       => 'Να ερωτηθώ αργότερα',
     'updates_do_not_check'                       => 'Να μη γίνεται έλεγχος για ενημερώσεις',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Αυτή είναι μια ALPHA δοκιμαστική έκδοση. Μπορεί να συναντήσετε προβλήματα.',
     'update_current_version_alert'               => 'Έχετε την έκδοση v:version, που είναι η τελευταία διαθέσιμη.',
     'update_newer_version_alert'                 => 'Έχετε την έκδοση v:your_version, που είναι νεότερη από την τελευταία έκδοση, v:new_version.',
-    'update_check_error'                         => 'Ένα σφάλμα παρουσιάστηκε κατά τον έλεγχο ενημερώσεων. Παρακαλώ δείτε τα αρχεία καταγραφής.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Κανάλι ενημερώσεων',
     'admin_update_channel_explain'               => 'Το Firefly III έχει τρία "κανάλια" ενημερώσεων που καθορίζουν πόσο μπροστά είστε σε θέματα χαρακτηριστικών, βελτιστοποιήσεων και σφαλμάτων. Χρησιμοποιήστε το "beta" κανάλι εάν είστε τολμηροί και το "alpha" εάν είστε ριψοκίνδυνοι.',
     'update_channel_stable'                      => 'Σταθερή. Όλα λειτουργούν όπως προβλέπονται.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Δημιουργία νέου κανόνα στην ομάδα κανόνων ":title"',
     'make_new_rule_no_group'                     => 'Δημιουργία νέου κανόνα',
     'instructions_rule_from_bill'                => 'Για να είστε σε θέση να αντιστοιχήσετε συναλλαγές στο νέο λογαριασμό σας ":name", το Firefly III μπορεί να δημιουργήσει έναν κανόνα που θα ελέγχει κάθε συναλλαγή που αποθηκεύετε. Παρακαλώ επιβεβαιώστε τις λεπτομέρειες παρακάτω και αποθηκεύστε τον κανόνα ώστε το Firefly III να αντιστοιχεί αυτόματα τις συναλλαγές στο νέο σας λογαριασμό εφεξής.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'αυστηρός κανόνας',
     'rule_is_not_strict'                         => 'μη-αυστηρός κανόνας',
     'rule_help_stop_processing'                  => 'Όταν τσεκάρετε αυτό το πλαίσιο, οι μετέπειτα κανόνες σε αυτή την ομάδα δεν θα εκτελεστούν.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Κανόνας για το λογαριασμό ":name"',
     'new_rule_for_bill_description'   => 'Αυτός ο κανόνας μαρκάρει συναλλαγές για το λογαριασμό ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Αποθήκευση νέας ετικέτας',
     'update_tag'                      => 'Ενημέρωση ετικέτας',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Διαγραφή όλων των επιλεγμένων ετικετών',
     'select_tags_to_delete'           => 'Μην ξεχάσετε να επιλέξετε ορισμένες ετικέτες.',
     'deleted_x_tags'                  => 'Διαγραφή :count ετικέτας(ων).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Λογαριασμοί αρχικής οθόνης',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Update currency',
     'new_default_currency'                      => ':name is now the default currency.',
     'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',

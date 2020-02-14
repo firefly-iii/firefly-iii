@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Letzte sieben Tage',
     'last_thirty_days'                           => 'Letzte 30 Tage',
     'welcomeBack'                                => 'Was ist gerade los?',
-    'welcome_back'                               => 'Was ist gerade los?',
+    'welcome_back'                               => 'Überblick',
     'everything'                                 => 'Alle',
     'today'                                      => 'Heute',
     'customRange'                                => 'Individueller Bereich',
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Diese Rechnung enthält keine mit ihr verbundenen Regeln.',
     'go_to_asset_accounts'                       => 'Bestandskonten anzeigen',
     'go_to_budgets'                              => 'Budgets anzeigen',
-    'clone_instructions'                         => 'Um eine Buchung zu duplizieren, setzen Sie im Bearbeitungsbildschirm ein Häkchen bei „Als neu speichern”.',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Kategorien anzeigen',
     'go_to_bills'                                => 'Rechnungen anzeigen',
     'go_to_expense_accounts'                     => 'Kreditoren (Ausgabenkonten) anzeigen',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Nach Updates suchen',
     'admin_update_check_title'                   => 'Automatisch nach Updates suchen',
-    'admin_update_check_explain'                 => 'Firefly III kann automatisch nach Updates suchen. Wenn Sie diese Einstellung aktivieren, wird Github aufgerufen, um festzustellen, ob eine neue Version von Firefly III verfügbar ist. Falls dies der Fall ist, erhalten Sie eine Benachrichtigung. Sie können diese Benachrichtigung mit der Schaltfläche auf der rechten Seite testen. Bitte geben Sie unten an, ob Sie möchten, dass Firefly III nach Updates sucht.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III kann nach Updates suchen, benötigt jedoch Ihre Erlaubnis dazu. Bitte gehen Sie zur <a href=":link">Administration</a>, um anzugeben, ob diese Funktion aktiviert werden soll.',
     'updates_ask_me_later'                       => 'Später fragen',
     'updates_do_not_check'                       => 'Nicht nach Updates suchen',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Seien Sie vorsichtig bei der Verwendung dieser APLPHA-Version. Sie kann Fehler enthaltern.',
     'update_current_version_alert'               => 'Sie verwenden Version :version. Dies ist die neueste verfügbare Version.',
     'update_newer_version_alert'                 => 'Sie verwenden :your_version. Ihre Version ist neuer als die neueste Version (:new_version).',
-    'update_check_error'                         => 'Beim Suchen nach Updates ist ein Fehler aufgetreten. Bitte sehen Sie sich die Log-Dateien an.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Aktualisierungskanal',
     'admin_update_channel_explain'               => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
     'update_channel_stable'                      => 'Stabil — Alles sollte wie erwartet funktionieren.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Neue Regel in der Regelgruppe „:title” erstellen',
     'make_new_rule_no_group'                     => 'Neue Regel erstellen',
     'instructions_rule_from_bill'                => 'Um Buchungen an Ihre neue Rechnung „:name” anzupassen, kann Firefly III eine Regel erstellen, die automatisch gegen alle von Ihnen gespeicherten Buchungen geprüft wird. Bitte überprüfen Sie die folgenden Angaben und speichern Sie die Regel, damit Firefly III die Buchungen automatisch mit Ihrer neuen Rechnung abgleicht.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'strikte Regel',
     'rule_is_not_strict'                         => 'nicht-strenge Regel',
     'rule_help_stop_processing'                  => 'Wenn Sie dieses Kontrollkästchen aktivieren, werden spätere Regeln in dieser Gruppe nicht ausgeführt.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel für Rechnung „:name”',
     'new_rule_for_bill_description'   => 'Diese Regel kennzeichnet Buchungen für die Rechnung „:name”.',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Neues Schlagwort speichern',
     'update_tag'                      => 'Schlüsselwort aktualisieren',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Alle markierten Stichwörter löschen',
     'select_tags_to_delete'           => 'Nicht vergessen, einige Schlagwörter auszuwählen.',
     'deleted_x_tags'                  => ':count Schlagwort/-wörter gelöscht.',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Konten auf dem Startbildschirm',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Währung aktualisieren',
     'new_default_currency'                      => '„:name” wird nun als Standardwährung verwendet.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen noch verwendet wird.',
     'cannot_disable_currency_last_left'         => '„:name” kann nicht deaktiviert werden, da es sich um die einzige aktivierte Währung handelt.',
     'cannot_disable_currency_account_meta'      => ':name konnte nicht deaktiviert werden, da dieser noch in Bestandskonten verwendet wird.',
@@ -1091,7 +1100,7 @@ return [
     'errors'                                    => 'Fehler',
     'debt_start_date'                           => 'Startdatum der Verschuldung',
     'debt_start_amount'                         => 'Startbetrag der Verschuldung',
-    'debt_start_amount_help'                    => 'Wenn Sie einen Betrag zu zahlen haben, ist es am besten, einen negativen Betrag einzugeben, da er Ihr Eigenkapital beeinflusst. Wenn Ihnen ein Betrag geschuldet wird, gilt das Gleiche. Auf den Hilfeseiten findest du weitere Informationen.',
+    'debt_start_amount_help'                    => 'Für einen zu zahlenden Betrag geben Sie am besten einen negativen Wert ein, da dieser mit dem Eigenkapital verrechnet wird. Wenn Ihnen ein Betrag geschuldet wird, gilt das Gleiche. Weitere Informationen finden Sie in der Hilfe.',
     'store_new_liabilities_account'             => 'Neue Verbindlichkeit speichern',
     'edit_liabilities_account'                  => 'Verbindlichkeit „:name” bearbeiten',
 
@@ -1125,8 +1134,8 @@ return [
     'inactive'                                  => 'Inaktiv',
     'active'                                    => 'Aktiv',
     'difference'                                => 'Unterschied',
-    'money_flowing_in'                          => 'Rein',
-    'money_flowing_out'                         => 'Raus',
+    'money_flowing_in'                          => 'Eingehend',
+    'money_flowing_out'                         => 'Ausgehend',
     'topX'                                      => 'Topnummer :number',
     'show_full_list'                            => 'Zeige die gesamte Liste',
     'show_only_top'                             => 'Nur die Top :number anzeigen',
@@ -1518,7 +1527,7 @@ return [
     'updated_recurrence'                 => 'Dauerauftrag ":title" aktualisiert',
     'recurrence_is_inactive'             => 'Dieser Dauerauftrag ist nicht aktiv und erzeugt keine neuen Buchungen.',
     'delete_recurring'                   => 'Dauerauftrag „:title” löschen',
-    'new_recurring_transaction'          => 'Neue Dauerauftrag',
+    'new_recurring_transaction'          => 'Neuer Dauerauftrag',
     'help_weekend'                       => 'Was sollte Firefly III tun, wenn der Dauerauftrag auf einen Samstag oder Sonntag fällt?',
     'do_nothing'                         => 'Einfach die Buchung anlegen',
     'skip_transaction'                   => 'Ereignis überspringen',

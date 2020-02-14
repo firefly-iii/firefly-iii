@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => '该账单没有与之相关的规则。',
     'go_to_asset_accounts'                       => '检视您的资产帐户',
     'go_to_budgets'                              => '前往您的预算',
-    'clone_instructions'                         => '若要复制交易，请在编辑画面中勾取 "另存新档" 选项',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => '前往您的分类',
     'go_to_bills'                                => '前往您的帐单',
     'go_to_expense_accounts'                     => '查看您的支出帐户',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => '检查更新',
     'admin_update_check_title'                   => '自动检查更新',
-    'admin_update_check_explain'                 => 'Firefly III 可以自动检查更新。当启用此设定时，将会自动连接 Github 并查看是否有新版本可用，若有，您会收到一则通知。您可使用右侧的按钮测试通知功能，并于下方表示您想要 Firefly III 检查更新与否。',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III 可自动检查更新，但此功能需要您的许可。请转至 <a href=":link">后台管理</a> 表明您是否需要启用此功能。',
     'updates_ask_me_later'                       => '稍后再问我',
     'updates_do_not_check'                       => '不检查更新',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => '此版本是 ALPHA 版本。您可能会遇到问题。',
     'update_current_version_alert'               => '您正在运行 :version, 这是最新的可用版本。',
     'update_newer_version_alert'                 => '您正在运行 :your_version，它比最新发布的 :new_version更新。',
-    'update_check_error'                         => '检查更新时发生一个错误，请检阅日志档。',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => '更新通道',
     'admin_update_channel_explain'               => 'Firefly III具有三个更新“通道”，这些通道确定您在功能，增强功能和错误方面都处于最新。 如果您喜欢冒险，请使用“ beta”频道；如果您不惧危险，请使用“ alpha”频道。',
     'update_channel_stable'                      => '稳定版。一切应该都如预期的那样运行。',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => '在规则群组 ":title" 中建立新规则',
     'make_new_rule_no_group'                     => '建立新规则',
     'instructions_rule_from_bill'                => '为了媒合交易至您的新帐单 ":name"，Firefly III 可以建立一个针对您储存的每一笔交易且自动启动的规则。请验证下方的资讯并储存规则，让 Firefly III 自动媒合交易至您的新帐单。',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => '严谨规则',
     'rule_is_not_strict'                         => '非严谨规则',
     'rule_help_stop_processing'                  => '勾选此核选方块时，将不会执行此群组中的后续规则。',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => '供帐单 ":name" 的规则',
     'new_rule_for_bill_description'   => '此规则标记给帐单 ":name" 的交易。',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => '储存新标签',
     'update_tag'                      => '更新标签',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => '主画面帐户',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => '更新货币',
     'new_default_currency'                      => ':name 现已为预设货币',
     'cannot_delete_currency'                    => '因为仍在使用中，无法删除 :name 。',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => '无法禁用 :name，因为仍有交易在使用。',
     'cannot_disable_currency_last_left'         => '无法禁用 :name，因为它是目前唯一启用的货币。',
     'cannot_disable_currency_account_meta'      => '无法禁用 :name，因为它用于资产帐户。',

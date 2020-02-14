@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Ten rachunek nie ma przypisanych reguł.',
     'go_to_asset_accounts'                       => 'Zobacz swoje konta aktywów',
     'go_to_budgets'                              => 'Przejdź do swoich budżetów',
-    'clone_instructions'                         => 'Aby sklonować transakcję, poszukaj pola wyboru "Zapisz jako nową" na ekranie edycji',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Przejdź do swoich kategorii',
     'go_to_bills'                                => 'Przejdź do swoich rachunków',
     'go_to_expense_accounts'                     => 'Zobacz swoje konta wydatków',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Sprawdź aktualizacje',
     'admin_update_check_title'                   => 'Automatycznie sprawdzaj dostępność aktualizacji',
-    'admin_update_check_explain'                 => 'Firefly III może automatycznie sprawdzać dostępność aktualizacji. Po włączeniu tej opcji będzie kontaktować się z Githubem w celu sprawdzenia czy dostępna jest nowa wersja Firefly III. Jeżeli będzie, otrzymasz powiadomienie. Możesz przetestować to powiadomienie używając przycisku po prawej stronie. Wskaż proszę czy chcesz, aby Firefly III sprawdzało dostępność aktualizacji.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III może sprawdzić dostępność aktualizacji, ale potrzebuje Twojej zgody, aby to robić. Przejdź do <a href=":link">administracji</a>, aby określić, czy ta funkcja ma być włączona.',
     'updates_ask_me_later'                       => 'Zapytaj mnie później',
     'updates_do_not_check'                       => 'Nie sprawdzaj dostępności aktualizacji',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Ta wersja jest wersją ALPHA. Możesz napotkać błędy.',
     'update_current_version_alert'               => 'Używasz wersji :version, która jest najnowszą dostępną wersją.',
     'update_newer_version_alert'                 => 'Używasz wersji :your_version, która jest nowsza niż najnowsza wersja, :new_version.',
-    'update_check_error'                         => 'Wystąpił błąd podczas sprawdzania aktualizacji. Przejrzyj pliki dziennika.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Kanał aktualizacji',
     'admin_update_channel_explain'               => 'Firefly III posiada trzy "kanały", które decydują jak wczesnej pod względem funkcji, ulepszeń i błędów wersji używasz. Użyj kanału "beta", jeśli lubisz przygody i "alfa", gdy lubisz żyć niebezpiecznie.',
     'update_channel_stable'                      => 'Stabilne. Wszystko powinno działać zgodnie z oczekiwaniami.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Utwórz nową regułę w grupie reguł ":title"',
     'make_new_rule_no_group'                     => 'Stwórz nową regułę',
     'instructions_rule_from_bill'                => 'Aby dopasować transakcje do nowego rachunku ":name", Firefly III może utworzyć regułę, która będzie automatycznie sprawdzana względem wszelkich transakcji, które zapisujesz. Sprawdź poniższe szczegóły i zapisz regułę, aby Firefly III automatycznie dopasowywało transakcje do Twojego nowego rachunku.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'ścisła reguła',
     'rule_is_not_strict'                         => 'swobodna reguła',
     'rule_help_stop_processing'                  => 'Gdy zaznaczysz to pole, kolejne reguły w tej grupie nie będą wykonywane.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Reguła dla rachunku ":name"',
     'new_rule_for_bill_description'   => 'Ta reguła oznacza transakcje jako powiązane z rachunkiem ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Zachowaj nowy tag',
     'update_tag'                      => 'Zmodyfikuj tag',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Usuń wszystkie zaznaczone tagi',
     'select_tags_to_delete'           => 'Nie zapomnij wybrać tagów.',
     'deleted_x_tags'                  => 'Usunięto :count tag(ów).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Konta na stronie domowej',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Modyfikuj walutę',
     'new_default_currency'                      => ':name jest teraz domyślną walutą.',
     'cannot_delete_currency'                    => 'Nie można usunąć waluty :name, ponieważ jest ona nadal używana.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Nie można wyłączyć :name ponieważ istnieją powiązane transakcje.',
     'cannot_disable_currency_last_left'         => 'Nie można wyłączyć :name, ponieważ jest to ostatnia włączona waluta.',
     'cannot_disable_currency_account_meta'      => 'Nie można wyłączyć :name ponieważ jest użyte na kontach aktywów.',

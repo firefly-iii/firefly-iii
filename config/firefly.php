@@ -331,13 +331,14 @@ return [
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
         'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
+        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
+
 
         // currently disabled languages:
         //        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
         //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
         //        'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
         //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
-        //        'fi_FI' => ['name_locale' => 'Finnish', 'name_english' => 'Finnish'],
         //        'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
         //        'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         //        'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],

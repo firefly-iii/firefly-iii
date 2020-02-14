@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => 'Eszközszámlák megtekintése',
     'go_to_budgets'                              => 'Ugrás a költségkeretekhez',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Ugrás a kategóriákhoz',
     'go_to_bills'                                => 'Ugrás a számlákhoz',
     'go_to_expense_accounts'                     => 'Költségszámlák megtekintése',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Frissítések ellenőrzése',
     'admin_update_check_title'                   => 'Frissítés automatikus ellenőrzése',
-    'admin_update_check_explain'                 => 'A Firefly III képes automatikusan ellenőrizni a frissítéseket. Ha engedélyezi ezt a beállítást, akkor a Github-bal kommunikálva ellenőrzésre kerül, hogy rendelkezésre áll-e a Firefly III új verziója. Ha igen, értesítést kap. Ezt az értesítést a jobb oldalon található gombra kattintva tesztelheti. Kérjük jelezze alább, ha szeretné, hogy a Firefly III ellenőrizze a frissítéseket.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'A Firefly III automatikusan ellenőrizheti a frissítéseket, ha Ön ezt engedélyezi. Kérjük, keresse meg a <a href=":link">adminisztráció</a> menüpontot, ha engedélyezni szeretné ezt a funkciót.',
     'updates_ask_me_later'                       => 'Kérdezze később',
     'updates_do_not_check'                       => 'Ne ellenőrizze a frissítéseket',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
-    'update_check_error'                         => 'Hiba történt a frissítések ellenőrzése során. További információ a naplófájlokban található.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Új szabály létrehozása a ":title" szabálycsoportban',
     'make_new_rule_no_group'                     => 'Szabály létrehozás',
     'instructions_rule_from_bill'                => 'Annak érdekében, hogy a tranzakciók egyeztetve legyenek az új ":name" számlával, a Firefly III létrehoz egy szabályt, ami automatikusan ellenőrzi az összes letárolt tranzakciót. Ellenőrizd a lent található részleteket, és tárold el a szabályt, hogy a Firefly III automatikusan egyeztesse a tranzakciókat az új számlával.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'szigorú szabály',
     'rule_is_not_strict'                         => 'nem szigorú szabály',
     'rule_help_stop_processing'                  => 'Ha bejelölt, a csoport későbbi szabályai nem lesznek végrehajtva.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Szabály a számlához: ":name"',
     'new_rule_for_bill_description'   => 'Ez a szabály megjelöli a tranzakciókat ":name" számla számára.',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Új címke tárolása',
     'update_tag'                      => 'Címke frissítése',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Kezdőoldali számlák',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Pénznem frissítése',
     'new_default_currency'                      => ':name lett az alapértelmezett pénznem.',
     'cannot_delete_currency'                    => ':name nem törölhető mert még használatban van.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',

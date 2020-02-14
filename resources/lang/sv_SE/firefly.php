@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Notan saknar associerade regler.',
     'go_to_asset_accounts'                       => 'Visa dina tillgångskonton',
     'go_to_budgets'                              => 'Gå till dina budgetar',
-    'clone_instructions'                         => 'För att klona en transaktion, sök efter kryssrutan "lagra som ny" på redigeringsskärmen',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Gå till dina kategorier',
     'go_to_bills'                                => 'Gå till dina notor',
     'go_to_expense_accounts'                     => 'Se dina utgiftskonton',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Sök uppdateringar',
     'admin_update_check_title'                   => 'Sök automatiskt efter uppdateringar',
-    'admin_update_check_explain'                 => 'Firefly III kan söka efter uppdateringara automatiskt. När du aktiverar denna inställning, kommer den kolla på Github om nya versioner av Firefly III är tillgängliga. När det är så, får du en notifiering. Du kan testa detta via knappen till höger. Välj nedan om du vill att Firefly III ska automatiskt söka efter uppdateringar.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III kan söka efter uppdateringara, men den behöver din tillåtelse att göra så. Vänligen gå till <a href=":link">inställningar</a> för att ställa in om denna funktion ska aktiveras.',
     'updates_ask_me_later'                       => 'Fråga mig senare',
     'updates_do_not_check'                       => 'Sök inte efter uppdateringar',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Denna version är en ALPHA version. Det kan förekomma problem.',
     'update_current_version_alert'               => 'Du har :version, vilken är den senaste tillgängliga utgåva.',
     'update_newer_version_alert'                 => 'Du har :your_version, vilken är nyare än senaste utgåva, :new_version.',
-    'update_check_error'                         => 'Ett fel uppstod vid kontroll av uppdatering. Vänligen se logg filerna.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Uppdatera kanal',
     'admin_update_channel_explain'               => 'Firefly III har tre uppdaterings "kanaler" som bestämmer hur frammåt i kurvan du är i form av funktioner, förbättringar och buggar. Använd "beta" kanalen om du är äventyrslysten och "alpha" om du tycket om att leva farligt.',
     'update_channel_stable'                      => 'Stabil. Allting fungerar som förväntat.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Skapa en ny regel i regelgrupp ":title"',
     'make_new_rule_no_group'                     => 'Skapa en ny regel',
     'instructions_rule_from_bill'                => 'För att matcha transaktioner till din nya nota ":name", så kan Firefly III skapa en regel för att automatiskt kontrollera mot alla transaktioner du sparar. Vänligen verifiera detaljerna nedan och spara regeln för att Firefly III automatisk ska matcha transaktioner till din nya nota.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'strikt regel',
     'rule_is_not_strict'                         => 'icke-strikt regel',
     'rule_help_stop_processing'                  => 'Med denna ruta ikryssad körs inte efterkommande regler i denna grupp.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel för nota ":name"',
     'new_rule_for_bill_description'   => 'Denna regel markerar transaktion för nota ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Spara ny etikett',
     'update_tag'                      => 'Uppdatera etikett',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Startskäm konton',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Uppdatera valuta',
     'new_default_currency'                      => ':name är nu standard valuta.',
     'cannot_delete_currency'                    => 'Kan ej ta bort :name då den fortfarande används.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Kan inte inaktivera :name då transaktioner fortfarande använder den.',
     'cannot_disable_currency_last_left'         => 'Kan inte inaktivera :name efter det är den sista aktiverade valutan.',
     'cannot_disable_currency_account_meta'      => 'Kan inte inaktivera :name, används i tillgångskonton.',

@@ -2,7 +2,7 @@
 
 /**
  * form.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -38,7 +38,7 @@ return [
     'match'                     => 'Dopasowanie',
     'strict'                    => 'Tryb ścisły',
     'repeat_freq'               => 'Powtarza się',
-    'location'                  => 'Location',
+    'location'                  => 'Lokalizacja',
     'update_channel'            => 'Kanał aktualizacji',
     'journal_currency_id'       => 'Waluta',
     'currency_id'               => 'Waluta',

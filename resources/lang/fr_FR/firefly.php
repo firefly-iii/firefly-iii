@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Cette facture n\'a aucune règle associée.',
     'go_to_asset_accounts'                       => 'Afficher vos comptes d\'actifs',
     'go_to_budgets'                              => 'Gérer vos budgets',
-    'clone_instructions'                         => 'Pour cloner une opération, recherchez la case "Enregistrer comme nouvelle" dans l\'écran d\'édition',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Gérer vos catégories',
     'go_to_bills'                                => 'Gérer vos factures',
     'go_to_expense_accounts'                     => 'Voir vos comptes de dépenses',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Vérifier les mises à jour',
     'admin_update_check_title'                   => 'Rechercher automatiquement les mises à jour',
-    'admin_update_check_explain'                 => 'Firefly III peut vérifier les mises à jour automatiquement. Lorsque vous activez ce paramètre, il contacte Github pour voir si une nouvelle version de Firefly III est disponible. Quand c\'est le cas, vous recevrez une notification. Vous pouvez tester cette notification en utilisant le bouton sur la droite. Veuillez indiquer ci-dessous si vous voulez que Firefly III vérifie les mises à jour.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III peut vérifier les mises à jour, mais il a besoin de votre permission pour le faire. Veuillez vous rendre à l\'adresse <a href=":link">administration</a> pour indiquer si vous souhaitez que cette fonctionnalité soit activée.',
     'updates_ask_me_later'                       => 'Me demander plus tard',
     'updates_do_not_check'                       => 'Ne pas vérifier les mises à jour',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Cette version est une version ALPHA. Vous pourriez rencontrer des problèmes.',
     'update_current_version_alert'               => 'Vous utilisez v:version, qui est la dernière version disponible.',
     'update_newer_version_alert'                 => 'Vous utilisez v:your_version, qui est plus récente que la dernière version, v:new_version.',
-    'update_check_error'                         => 'Une erreur s\'est produite lors de la recherche des mises à jour. S\'il vous plaît allez voir les fichiers journaux.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Canal de mise à jour',
     'admin_update_channel_explain'               => 'Firefly III dispose de trois canaux de mise à jour qui déterminent ce que vous êtes prêt à accepter en termes de fonctionnalités, d\'améliorations et de bogues. Utilisez le canal « bêta » si vous êtes aventurier et le « alpha » lorsque vous aimez vivre dangereusement.',
     'update_channel_stable'                      => 'Stable. Tout devrait fonctionner comme prévu.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Créer une nouvelle règle dans le groupe de règles ":title"',
     'make_new_rule_no_group'                     => 'Créer une nouvelle règle',
     'instructions_rule_from_bill'                => 'Afin d’associer des transactions à votre nouvelle facture « :name », Firefly III peut créer une règle qui sera automatiquement appliquée sur toutes les transactions déjà enregistrées. Veuillez vérifier les détails ci-après et enregistrer la règle pour que Firefly III associe automatiquement des transactions à votre nouvelle facture.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'règle stricte',
     'rule_is_not_strict'                         => 'règle non stricte',
     'rule_help_stop_processing'                  => 'Lorsque vous cochez cette case, les règles suivantes de ce groupe ne seront pas exécutées.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Règle pour la facture ":name"',
     'new_rule_for_bill_description'   => 'Cette règle marque les transactions pour la facture ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Créer un nouveau tag',
     'update_tag'                      => 'Mettre à jour le tag',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Supprimer tous les tags sélectionnés',
     'select_tags_to_delete'           => 'N\'oubliez pas de sélectionner des tags.',
     'deleted_x_tags'                  => '{count} tag(s) supprimé(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Comptes de l’écran d’accueil',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Mise à jour de la devise',
     'new_default_currency'                      => ':name est maintenant la devise par défaut.',
     'cannot_delete_currency'                    => 'Impossible de supprimer :name car il est encore utilisé.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Impossible de désactiver la devise :name car les transactions l\'utilisent toujours.',
     'cannot_disable_currency_last_left'         => 'Impossible de désactiver la devise :name car c\'est la dernière activée.',
     'cannot_disable_currency_account_meta'      => 'Impossible de désactiver la devise :name car elle est utilisée dans les comptes d\'actifs.',
@@ -743,7 +752,7 @@ return [
     'spent_between'                             => 'Déjà dépensé entre le :start et le :end',
     'set_available_amount'                      => 'Définir le montant disponible',
     'update_available_amount'                   => 'Mettre à jour le montant disponible',
-    'ab_basic_modal_explain'                    => 'Utilisez ce formulaire pour indiquer combien vous attendez à pouvoir budgéter (au total, en :currency) dans la période indiquée.',
+    'ab_basic_modal_explain'                    => 'Utilisez ce formulaire pour indiquer combien vous vous attendez à pouvoir budgéter (au total, en :currency) dans la période indiquée.',
     'createBudget'                              => 'Nouveau budget',
     'invalid_currency'                          => 'Ceci est une devise invalide',
     'set_ab'                                    => 'Le montant du budget disponible a été fixé',

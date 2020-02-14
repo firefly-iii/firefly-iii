@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -59,7 +59,8 @@ return [
     'go_to_asset_accounts'                       => 'Varlık hesaplarınızı görüntüleyin
 ',
     'go_to_budgets'                              => 'Bütçelerine git',
-    'clone_instructions'                         => 'İşlemi çoğaltmak için düzenleme ekranında "yeni olarak sakla" seçim kutusunu arayınız',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Kategorilerinize gidin',
     'go_to_bills'                                => 'Faturalarına git',
     'go_to_expense_accounts'                     => 'Gider hesaplarınızı görün',
@@ -219,7 +220,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Güncellemeleri kontrol et',
     'admin_update_check_title'                   => 'Güncellemeleri otomatik olarak kontrol et',
-    'admin_update_check_explain'                 => 'Firefly III güncellemeleri otomatik olarak kontrol edebilir. Bu ayarı etkinleştirdiğinizde, Firefly III\'ün yeni bir sürümünün mevcut olup olmadığını görmek için Github ile iletişime geçecektir. Bu olduğunda, bir bildirim alacaksınız. Bu bildirimi sağdaki düğmeyi kullanarak test edebilirsiniz. Firefly III\'ün güncellemeleri kontrol etmesini istiyorsanız lütfen aşağıya belirtin.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III güncellemeleri kontrol edebilir, ancak bunu yapmak için izniniz gerekir. Bu özelliğin etkinleştirilmesini isteyip istemediğinizi belirtmek için lütfen <a href=":link"> yönetim </a> bölümüne gidin.',
     'updates_ask_me_later'                       => 'Daha sonra sor',
     'updates_do_not_check'                       => 'Güncelleştirmeleri kontrol ETME',
@@ -232,7 +233,9 @@ return [
     'update_version_alpha'                       => 'Bu bir ALPHA versiyonudur. Bazı hatalar ile karşılaşabilirsiniz.',
     'update_current_version_alert'               => 'En son mevcut olan :version versiyonunu kullanıyorsunuz.',
     'update_newer_version_alert'                 => 'Son mevcut olan :new_version versiyonundan daha yeni olan :your_version versiyonu kullanıyorsunuz.',
-    'update_check_error'                         => 'Güncelleştirmeleri denetlerken bir hata oluştu. Lütfen günlük dosyalarını inceleyin.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Güncelleme kanalı',
     'admin_update_channel_explain'               => 'Firefly III 3 adet güncelleme kanalına sahiptir. Bu kanallar sizin özellikler, geliştirmeler ve hatalar ile ilgili ne kadar önde olduğunuzu belirler. Maceracası iseniz "beta", tehlikeli yaşamayı seviyorsanız "alpha" versiyonunu kullanın.',
     'update_channel_stable'                      => 'Stabil. Herşey olması gerektiği gibi.',
@@ -310,6 +313,7 @@ return [
     'make_new_rule'                              => '":title" kural grubunda yeni kural oluşturun',
     'make_new_rule_no_group'                     => 'Yeni bir kural ekleyin',
     'instructions_rule_from_bill'                => 'Hesap hareketlerini ":name" ile eşleştirebilmeniz için Firefly III depolayacağınız tüm hesap hareketlerine karşı otomatik olarak kontrol edebilen bir kural oluşturabilir. Lütfen aşağıdaki detayları doğrulayın ve Firefly III\'ün hesap hareketlerini yeni faturanızla otomatik olarak eşleştirebilmesi için bu kuralı depolayın.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'sıkı kural',
     'rule_is_not_strict'                         => 'sıkı olmayan kural',
     'rule_help_stop_processing'                  => 'Bu kutuyu işaretlediğinizde, bu grupta sonraki kurallar yürütülemez.',
@@ -495,6 +499,9 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'new_rule_for_bill_title'         => 'Rule for bill ":name"',
     'new_rule_for_bill_description'   => 'This rule marks transactions for bill ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Yeni etiket kaydet',
     'update_tag'                      => 'Etiketi Güncelle',
@@ -510,6 +517,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Ana ekran hesapları',
@@ -702,6 +710,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'update_currency'                           => 'Para birimini güncelle',
     'new_default_currency'                      => ':name artık varsayılan para birimi.',
     'cannot_delete_currency'                    => ':name hala kullanıldığı için silinemiyor.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',

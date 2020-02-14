@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                       => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                              => 'Ga naar je budgetten',
-    'clone_instructions'                         => 'Om een transactie te kopiëren, zet het vinkje bij "opslaan als nieuw" als je de transactie wijzigt',
+    'new_clone_instructions'                     => 'Deze knop zal de transactie automatisch klonen en de datum instellen op vandaag. Doen?',
+    'clones_journal_x'                           => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                           => 'Ga naar je categorieën',
     'go_to_bills'                                => 'Ga naar je contracten',
     'go_to_expense_accounts'                     => 'Bekijk je crediteuren',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
     'admin_update_check_title'                   => 'Controleer automatisch op updates',
-    'admin_update_check_explain'                 => 'Firefly III kan automatisch op updates controleren. Wanneer je deze instelling inschakelt, neemt Firefly III contact op met Github om te kijken of er een nieuwe versie van Firefly III beschikbaar is. Wanneer dit het geval is, ontvang je een melding. Je kan deze melding testen met de knop aan de rechterkant. Geef hieronder aan of je Firefly III wilt laten controleren op updates.',
+    'admin_update_check_explain'                 => 'Firefly III kan automatisch op updates controleren. Wanneer je deze instelling inschakelt, neemt Firefly III contact op met de update-server om te kijken of er een nieuwe versie van Firefly III beschikbaar is. Wanneer dit het geval is, ontvang je een melding. Je kan deze melding testen met de knop aan de rechterkant. Geef hieronder aan of je Firefly III wilt laten controleren op updates.',
     'check_for_updates_permission'               => 'Firefly III kan controleren op updates, maar heeft hiervoor je toestemming nodig. Ga naar <a href=":link">de admin</a> om aan te geven of deze functie moet worden ingeschakeld.',
     'updates_ask_me_later'                       => 'Later vragen',
     'updates_do_not_check'                       => 'Niet controleren op nieuwe versies',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Dit is een ALPHA versie. Er kunnen bugs in zitten.',
     'update_current_version_alert'               => 'Je gebruikt :version, de nieuwste beschikbare versie.',
     'update_newer_version_alert'                 => 'Je gebruikt :your_version, wat nieuwer is dan de nieuwste versie, :new_version.',
-    'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates. Bekijk de logbestanden.',
+    'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates: :error',
+    'unknown_error'                              => 'Onbekende fout. Sorry.',
+    'just_new_release'                           => 'Er is een nieuwe versie beschikbaar! Versie :version werd uitgebracht :date. Deze is pas net uit. Wacht een paar dagen om er zeker van te zijn dat de versie stabiel is.',
     'admin_update_channel_title'                 => 'Updatekanaal',
     'admin_update_channel_explain'               => 'Firefly III heeft drie "kanalen" die bepalen of en hoever je voorloopt als het gaat om features, wijzigingen en bugs. Gebruik het "beta"-kanaal als je een avontuurlijke bui hebt en gebruik het "alpha" kanaal als je ook graag met krokodillen zwemt.',
     'update_channel_stable'                      => 'Stabiel. Zou allemaal goed moeten gaan.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Maak een nieuwe regel in regelgroep ":title"',
     'make_new_rule_no_group'                     => 'Maak een nieuwe regel',
     'instructions_rule_from_bill'                => 'Om transacties te kunnen koppelen aan je nieuwe contract ":name" moet Firefly III een nieuwe regel maken die automatisch checkt of nieuwe transacties horen bij dit nieuwe contract. Check de details hieronder en sla de nieuwe regel op, zodat Firefly III dit klusje voor je kan klaren.',
+    'instructions_rule_from_journal'             => 'Maak een regel op basis van één van je transacties. Vul dit formulier aan.',
     'rule_is_strict'                             => 'strikte regel',
     'rule_is_not_strict'                         => 'niet-strikte regel',
     'rule_help_stop_processing'                  => 'Zet hier een vinkje om latere regels in deze groep te negeren.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel voor contract ":name"',
     'new_rule_for_bill_description'   => 'Deze regel markeert uitgaven voor contract ":name".',
 
+    'new_rule_for_journal_title'         => 'Regel gebaseerd op transactie ":description"',
+    'new_rule_for_journal_description'   => 'Deze regel is gebaseerd op transactie ":description". Hij matcht met transacties die precies hetzelfde zijn.',
+
     // tags
     'store_new_tag'                   => 'Sla tag op',
     'update_tag'                      => 'Sla wijzigingen op',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Alle geselecteerde tags verwijderen',
     'select_tags_to_delete'           => 'Vergeet niet om tags te selecteren.',
     'deleted_x_tags'                  => ':count tag(s) verwijderd.',
+    'create_rule_from_transaction'    => 'Regel aanmaken op basis van een transactie',
 
     // preferences
     'pref_home_screen_accounts'       => 'Voorpaginarekeningen',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Wijzig valuta',
     'new_default_currency'                      => ':name is nu de standaard valuta.',
     'cannot_delete_currency'                    => 'Kan ":name" niet verwijderen, want deze is in gebruik.',
+    'cannot_delete_fallback_currency'           => ':naam is de systeemvaluta en kan niet verwijderd worden.',
     'cannot_disable_currency_journals'          => 'Je kan :name niet uitschakelen, er zijn nog transacties die deze valuta gebruiken.',
     'cannot_disable_currency_last_left'         => 'Je kan :name niet uitschakelen, het is de laatste beschikbare valuta.',
     'cannot_disable_currency_account_meta'      => 'Je kan :name niet uitschakelen, er zijn nog betaalrekeningen die deze valuta gebruiken.',

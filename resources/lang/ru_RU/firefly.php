@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'С этим счётом не связано ни одно правило.',
     'go_to_asset_accounts'                       => 'Просмотр ваших основных счетов',
     'go_to_budgets'                              => 'Перейти к вашим бюджетам',
-    'clone_instructions'                         => 'Чтобы клонировать транзакцию, найдите на экране редактирования флажок "сохранить как новую"',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Перейти к вашим категориям',
     'go_to_bills'                                => 'Перейти к вашим счетам на оплату',
     'go_to_expense_accounts'                     => 'Перейти к вашим счетам расходов',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Проверить обновления',
     'admin_update_check_title'                   => 'Автоматически проверять наличие обновлений',
-    'admin_update_check_explain'                 => 'Firefly III может автоматически проверять наличие обновлений. После включения опции, он свяжется с Github, чтобы узнать, доступна ли новая версия Firefly III. Когда это произойдет, вы получите уведомление. Вы можете проверить это уведомление, нажав кнопку справа. Пожалуйста, укажите ниже, если вы хотите, чтобы Firefly III проверял наличие обновлений.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III может проверять наличие обновлений, но для этого требуется ваше разрешение. Перейдите в <a href=":link">администрирование</a>, чтобы указать, хотите ли вы включить эту функцию.',
     'updates_ask_me_later'                       => 'Спросить меня позже',
     'updates_do_not_check'                       => 'Не проверять наличие обновлений',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Эта версия является АЛЬФА-версией. Вы можете столкнуться с проблемами.',
     'update_current_version_alert'               => 'Вы используете v:version, которая является последним доступным релизом.',
     'update_newer_version_alert'                 => 'Вы используете версию v:your_version, которая новее последнего релиза (v:new_version).',
-    'update_check_error'                         => 'При проверке обновлений произошла ошибка. Просмотрите файлы логов.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Канал обновлений',
     'admin_update_channel_explain'               => 'Firefly III может использовать три "канала" обновлений, которые различаются наборами новых функций и ошибок. Используйте "бета"-канал, если вы любите приключения и "альфа", если вам нравится жить с чувством постоянной опасности.',
     'update_channel_stable'                      => 'Стабильный. Всё должно работать, как вы ожидаете.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Создать новое правило в группе правил ":title"',
     'make_new_rule_no_group'                     => 'Создать новое правило',
     'instructions_rule_from_bill'                => 'Для того чтобы сравнить транзакции с вашим новым счётом на оплату ":name", Firefly III может создать правило, которое автоматически будет проверять любые ваши транзакции. Пожалуйста, проверьте данные ниже и сохраните правило, для того чтобы Firefly III автоматически привязывал транзакции к вашему новому счёту на оплату.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'строгое правило',
     'rule_is_not_strict'                         => 'нестрогое правило',
     'rule_help_stop_processing'                  => 'Когда вы установите этот флажок, более поздние правила в этой группе не будут выполняться.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Правило для счёта на оплату ":name"',
     'new_rule_for_bill_description'   => 'Это правило помечает транзакции для счёта на оплату ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Сохранить новую метку',
     'update_tag'                      => 'Обновить метку',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Счета, отображаемые в сводке',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Обновить валюту',
     'new_default_currency'                      => ':name теперь является вашей основной валютой.',
     'cannot_delete_currency'                    => 'Невозможно удалить валюту :name, поскольку она используется.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Не удается отключить валюту :name, потому что она была использована в транзакциях.',
     'cannot_disable_currency_last_left'         => 'Не удается отключить валюту :name, потому что это последняя активная валюта.',
     'cannot_disable_currency_account_meta'      => 'Невозможно отключить валюту :name, поскольку она используется для одного из счетов.',
