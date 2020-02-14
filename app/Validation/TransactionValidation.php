@@ -386,7 +386,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
-        if (!is_countable($data['transactions'])) {
+        if (!is_countable($transactions)) {
             $validator->errors()->add(
                 'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
             );
@@ -436,7 +436,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
-        if (!is_countable($data['transactions'])) {
+        if (!is_countable($transactions)) {
             $validator->errors()->add(
                 'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
             );
@@ -528,7 +528,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
-        if (!is_countable($data['transactions'])) {
+        if (!is_countable($transactions)) {
             $validator->errors()->add(
                 'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
             );
