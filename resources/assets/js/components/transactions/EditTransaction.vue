@@ -183,7 +183,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'">
-                            <button class="btn btn-primary" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
+                            <button class="btn btn-default" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
                 </div>
