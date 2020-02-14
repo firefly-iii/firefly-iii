@@ -95,6 +95,7 @@ const i18n = new VueI18n({
                                  'nl': require('./locales/nl.json'),
                                  'no': require('./locales/no.json'),
                                  'pl': require('./locales/pl.json'),
+                                 'fi': require('./locales/fi.json'),
                                  'pt-br': require('./locales/pt-br.json'),
                                  'ro': require('./locales/ro.json'),
                                  'ru': require('./locales/ru.json'),

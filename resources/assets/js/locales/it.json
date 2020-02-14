@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Non \u00e8 possibile modificare il conto di destinazione di una transazione di riconciliazione.",
         "source_account_reconciliation": "Non puoi modificare il conto di origine di una transazione di riconciliazione.",
         "budget": "Budget",
-        "you_create_withdrawal": "You're creating a withdrawal.",
-        "you_create_transfer": "You're creating a transfer.",
-        "you_create_deposit": "You're creating a deposit."
+        "you_create_withdrawal": "Stai creando un prelievo.",
+        "you_create_transfer": "Stai creando un trasferimento.",
+        "you_create_deposit": "Stai creando un deposito."
     },
     "form": {
         "interest_date": "Data interesse",

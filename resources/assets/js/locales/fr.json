@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Vous ne pouvez pas modifier le compte de destination d'une op\u00e9ration de rapprochement.",
         "source_account_reconciliation": "Vous ne pouvez pas modifier le compte source d'une op\u00e9ration de rapprochement.",
         "budget": "Budget",
-        "you_create_withdrawal": "You're creating a withdrawal.",
-        "you_create_transfer": "You're creating a transfer.",
-        "you_create_deposit": "You're creating a deposit."
+        "you_create_withdrawal": "Vous saisissez une d\u00e9pense.",
+        "you_create_transfer": "Vous saisissez un transfert.",
+        "you_create_deposit": "Vous saisissez un d\u00e9p\u00f4t."
     },
     "form": {
         "interest_date": "Date de l\u2019int\u00e9r\u00eat",

@@ -498,7 +498,7 @@ return [
     'new_rule_for_bill_description'   => 'Questa regola contrassegna le transazioni per la bolletta ":name".',
 
     'new_rule_for_journal_title'         => 'Regola basata sulla transazione ":description"',
-    'new_rule_for_journal_description'   => 'Questa regola è basata sulla transazione ":description". Combacerà con altre transazioni uguali.',
+    'new_rule_for_journal_description'   => 'Questa regola è basata sulla transazione ":description". Verrà applicata a transazioni uguali.',
 
     // tags
     'store_new_tag'                   => 'Salva la nuova etichetta',
@@ -515,7 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Elimina tutte le etichette selezionate',
     'select_tags_to_delete'           => 'Non dimenticare di selezionare qualche etichetta.',
     'deleted_x_tags'                  => ':count etichette eliminate.',
-    'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'create_rule_from_transaction'    => 'Crea una regola basata sulla transazione',
 
     // preferences
     'pref_home_screen_accounts'       => 'Conti nella pagina iniziale',
@@ -708,7 +708,7 @@ return [
     'update_currency'                           => 'Aggiorna valuta',
     'new_default_currency'                      => ':name ora è la valuta predefinita.',
     'cannot_delete_currency'                    => 'Impossibile eliminare :name perché è ancora in uso.',
-    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
+    'cannot_delete_fallback_currency'           => ':name è la valuta di default del sistema e non può essere eliminata.',
     'cannot_disable_currency_journals'          => 'Non è possibile disabilitare :name perché ci sono ancora transazioni che la utilizzano.',
     'cannot_disable_currency_last_left'         => 'Non è possibile disabilitare :name perché è l\'ultima valuta abilitata.',
     'cannot_disable_currency_account_meta'      => 'Non è possibile disabilitare :name perché è utilizzata in conti attività.',
@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'split_title_help'                      => 'Se crei una transazione suddivisa è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'transaction_information'               => 'Informazioni transazione',
-    'you_create_transfer'                   => 'You\'re creating a transfer.',
-    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
-    'you_create_deposit'                    => 'You\'re creating a deposit.',
+    'you_create_transfer'                   => 'Stai creando un trasferimento.',
+    'you_create_withdrawal'                 => 'Stai creando un prelievo.',
+    'you_create_deposit'                    => 'Stai creando un deposito.',
 
 
     // links
