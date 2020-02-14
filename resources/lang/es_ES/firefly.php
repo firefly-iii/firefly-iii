@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Si crea una transacción dividida, debe existir una descripción global para todas las divisiones de la transacción.',
     'split_title_help'                      => 'Si crea una transacción dividida, debe haber una descripción global para todos los fragmentos de la transacción.',
     'transaction_information'               => 'Información de la transacción',
-    'you_create_transfer'                   => 'Estás creando una <strong>transferencia</strong>.',
-    'you_create_withdrawal'                 => 'Estás creando un <strong>retiro</strong>.',
-    'you_create_deposit'                    => 'Estás creando un <strong>depósito</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

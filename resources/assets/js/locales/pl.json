@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Nie mo\u017cesz edytowa\u0107 konta docelowego transakcji uzgadniania.",
         "source_account_reconciliation": "Nie mo\u017cesz edytowa\u0107 konta \u017ar\u00f3d\u0142owego transakcji uzgadniania.",
         "budget": "Bud\u017cet",
-        "you_create_withdrawal": "Tworzysz <strong>wydatek<\/strong>.",
-        "you_create_transfer": "Tworzysz <strong>przelew<\/strong>.",
-        "you_create_deposit": "Tworzysz <strong>wp\u0142at\u0119<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Data odsetek",

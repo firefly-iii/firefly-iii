@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "No puede editar la cuenta de destino de una transacci\u00f3n de reconciliaci\u00f3n.",
         "source_account_reconciliation": "No puede editar la cuenta de origen de una transacci\u00f3n de reconciliaci\u00f3n.",
         "budget": "Presupuesto",
-        "you_create_withdrawal": "Est\u00e1s creando un <strong>retiro<\/strong>.",
-        "you_create_transfer": "Est\u00e1s creando una <strong>transferencia<\/strong>.",
-        "you_create_deposit": "Est\u00e1s creando un <strong>dep\u00f3sito<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Fecha de inter\u00e9s",

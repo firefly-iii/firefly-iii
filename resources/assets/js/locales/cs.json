@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
         "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
         "budget": "Rozpo\u010det",
-        "you_create_withdrawal": "Vytv\u00e1\u0159\u00edte <strong>v\u00fdb\u011br<\/strong>.",
-        "you_create_transfer": "Vytv\u00e1\u0159\u00edte <strong>p\u0159evod<\/strong>.",
-        "you_create_deposit": "Vytv\u00e1\u0159\u00edte <strong>vklad<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "\u00darokov\u00e9 datum",

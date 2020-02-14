@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Nu pute\u021bi edita contul de destina\u021bie al unei tranzac\u021bii de reconciliere.",
         "source_account_reconciliation": "Nu pute\u021bi edita contul surs\u0103 al unei tranzac\u021bii de reconciliere.",
         "budget": "Buget",
-        "you_create_withdrawal": "Crea\u021bi o <strong> retragere<\/strong>.",
-        "you_create_transfer": "Crea\u021bi un <strong> transfer <\/strong>.",
-        "you_create_deposit": "Crea\u021bi un <strong> depozit<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Data de interes",

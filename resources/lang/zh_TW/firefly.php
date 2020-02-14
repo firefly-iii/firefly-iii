@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
     'transaction_information'               => '交易資訊',
-    'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',
-    'you_create_withdrawal'                 => '您正在建立一筆 <strong>提款</strong>。',
-    'you_create_deposit'                    => '您正在建立一筆 <strong>存款</strong>。',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

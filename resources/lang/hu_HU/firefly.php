@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
     'transaction_information'               => 'Tranzakció információ',
-    'you_create_transfer'                   => 'Egy <strong>átvezetést</strong> hozol létre.',
-    'you_create_withdrawal'                 => 'Egy <strong>költséget</strong> hozol létre.',
-    'you_create_deposit'                    => 'Egy <strong>bevételt</strong> hozol létre.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

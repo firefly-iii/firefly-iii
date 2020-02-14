@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Jeśli tworzysz podzieloną transakcję, musi ona posiadać globalny opis dla wszystkich podziałów w transakcji.',
     'split_title_help'                      => 'Podzielone transakcje muszą posiadać globalny opis.',
     'transaction_information'               => 'Informacje o transakcji',
-    'you_create_transfer'                   => 'Tworzysz <strong>przelew</strong>.',
-    'you_create_withdrawal'                 => 'Tworzysz <strong>wydatek</strong>.',
-    'you_create_deposit'                    => 'Tworzysz <strong>wpłatę</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

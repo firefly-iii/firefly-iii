@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => '如果您创建了一个分割交易，交易的所有分割项都必须有全局描述。',
     'split_title_help'                      => '如果您创建一个拆分交易，必须有一个全局的交易描述。',
     'transaction_information'               => '交易信息',
-    'you_create_transfer'                   => '您正在创建一笔<strong>转账</strong>。',
-    'you_create_withdrawal'                 => '您正在创建一笔<strong>提款</strong>。',
-    'you_create_deposit'                    => '您正在创建一笔<strong>存款</strong>。',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

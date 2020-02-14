@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'split_title_help'                      => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'transaction_information'               => 'Transactieinformatie',
-    'you_create_transfer'                   => 'Je maakt een <strong>overschrijving</strong>.',
-    'you_create_withdrawal'                 => 'Je maakt een <strong>uitgave</strong>.',
-    'you_create_deposit'                    => 'Je maakt een <strong>inkomsten</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

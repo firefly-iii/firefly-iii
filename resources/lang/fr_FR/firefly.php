@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fraction de l\'opération.',
     'split_title_help'                      => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fractions de l\'opération.',
     'transaction_information'               => 'Informations sur l\'opération',
-    'you_create_transfer'                   => 'Vous êtes en train de créer un <strong>transfert</strong>.',
-    'you_create_withdrawal'                 => 'Vous êtes en train de créer un <strong>retrait</strong>.',
-    'you_create_deposit'                    => 'Vous êtes en train de créer un <strong>dépôt</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

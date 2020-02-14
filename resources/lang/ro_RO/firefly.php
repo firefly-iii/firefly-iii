@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'split_title_help'                      => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'transaction_information'               => 'Informații despre tranzacții',
-    'you_create_transfer'                   => 'Creați un <strong> transfer </strong>.',
-    'you_create_withdrawal'                 => 'Creați o <strong> retragere</strong>.',
-    'you_create_deposit'                    => 'Creați un <strong> depozit</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

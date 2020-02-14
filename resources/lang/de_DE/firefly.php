@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
-    'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',
-    'you_create_withdrawal'                 => 'Sie erstellen gerade eine <strong>Ausgabe</strong>.',
-    'you_create_deposit'                    => 'Sie erstellen gerade eine <strong>Einzahlung</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
         "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
         "budget": "K\u00f6lts\u00e9gkeret",
-        "you_create_withdrawal": "Egy <strong>k\u00f6lts\u00e9get<\/strong> hozol l\u00e9tre.",
-        "you_create_transfer": "Egy <strong>\u00e1tvezet\u00e9st<\/strong> hozol l\u00e9tre.",
-        "you_create_deposit": "Egy <strong>bev\u00e9telt<\/strong> hozol l\u00e9tre."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",

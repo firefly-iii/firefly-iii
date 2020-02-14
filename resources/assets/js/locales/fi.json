@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman kohdetili\u00e4.",
         "source_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman l\u00e4hdetili\u00e4.",
         "budget": "Budjetti",
-        "you_create_withdrawal": "Olet luomassa <strong>nostoa<\/strong>.",
-        "you_create_transfer": "Olet luomassa <strong>siirtoa<\/strong>.",
-        "you_create_deposit": "Olet luomassa <strong>talletusta<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Korkop\u00e4iv\u00e4",

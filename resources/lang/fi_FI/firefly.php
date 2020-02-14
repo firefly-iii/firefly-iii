@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.',
     'split_title_help'                      => 'Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.',
     'transaction_information'               => 'Tapahtumatiedot',
-    'you_create_transfer'                   => 'Olet luomassa <strong>siirtoa</strong>.',
-    'you_create_withdrawal'                 => 'Olet luomassa <strong>nostoa</strong>.',
-    'you_create_deposit'                    => 'Olet luomassa <strong>talletusta</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

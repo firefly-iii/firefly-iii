@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Du kan inte redigera destinationskontot f\u00f6r en avst\u00e4mningstransaktion.",
         "source_account_reconciliation": "Du kan inte redigera k\u00e4llkontot f\u00f6r en avst\u00e4mningstransaktion.",
         "budget": "Budget",
-        "you_create_withdrawal": "Du skapar ett <strong>uttag<\/strong>.",
-        "you_create_transfer": "Du skapar en <strong>\u00f6verf\u00f6ring<\/strong>.",
-        "you_create_deposit": "Du skapar en <strong>ins\u00e4ttning<\/strong>."
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "R\u00e4ntedatum",

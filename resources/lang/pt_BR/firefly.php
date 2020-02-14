@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Se você criar uma transação dividida, é necessário haver uma descrição global para todas as partes da transação.',
     'transaction_information'               => 'Informação de transação',
-    'you_create_transfer'                   => 'Você está criando uma <strong>transferência</strong>.',
-    'you_create_withdrawal'                 => 'Você está criando uma <strong>retirada</strong>.',
-    'you_create_deposit'                    => 'Você está criando um <strong>depósito</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

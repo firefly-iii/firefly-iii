@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaktionsinformation',
-    'you_create_transfer'                   => 'Du skapar en <strong>överföring</strong>.',
-    'you_create_withdrawal'                 => 'Du skapar ett <strong>uttag</strong>.',
-    'you_create_deposit'                    => 'Du skapar en <strong>insättning</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

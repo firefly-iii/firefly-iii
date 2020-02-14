@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Pokud vytvoříte rozúčtování, je třeba, aby zde byl celkový popis pro všechna rozúčtování dané transakce.',
     'transaction_information'               => 'Informace o transakci',
-    'you_create_transfer'                   => 'Vytváříte <strong>převod</strong>.',
-    'you_create_withdrawal'                 => 'Vytváříte <strong>výběr</strong>.',
-    'you_create_deposit'                    => 'Vytváříte <strong>vklad</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

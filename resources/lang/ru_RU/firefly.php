@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание для всех её составляющих.',
     'split_title_help'                      => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание дле всех её составляющих.',
     'transaction_information'               => 'Информация о транзакции',
-    'you_create_transfer'                   => 'Вы создаёте <strong>перевод</strong>.',
-    'you_create_withdrawal'                 => 'Вы создаете <strong>расход</strong>.',
-    'you_create_deposit'                    => 'Вы создаёте <strong>вклад</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links
