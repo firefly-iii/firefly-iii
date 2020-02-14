@@ -61,16 +61,12 @@
             loadBudgets: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/budgets";
                 axios.get(URI, {}).then((res) => {
-                    this.budgets = [
-                        {
-                            name: this.no_budget,
-                            id: 0,
-                        },
-                        {
-                            name: this.no_budget,
-                            id: null,
-                        }
-                    ];
+                        this.budgets = [
+                            {
+                                name: this.no_budget,
+                                id: 0,
+                            }
+                        ];
                     for (const key in res.data) {
                         if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             this.budgets.push(res.data[key]);
