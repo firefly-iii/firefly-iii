@@ -1,0 +1,53 @@
+{
+    "firefly": {
+        "welcome_back": "Mit\u00e4 kuuluu?",
+        "flash_error": "Virhe!",
+        "flash_success": "Valmista tuli!",
+        "close": "Sulje",
+        "split_transaction_title": "Jaetun tapahtuman kuvaus",
+        "errors_submission": "Lomakkeen tiedoissa oli puutteita - alta l\u00f6yd\u00e4t listan puutteista.",
+        "split": "Jaa",
+        "transaction_journal_information": "Tapahtumatiedot",
+        "source_account": "L\u00e4hdetili",
+        "destination_account": "Kohdetili",
+        "add_another_split": "Lis\u00e4\u00e4 uusi jako",
+        "submission": "Vahvistus",
+        "create_another": "Tallennuksen j\u00e4lkeen, palaa takaisin luomaan uusi tapahtuma.",
+        "reset_after": "Tyhjenn\u00e4 lomake l\u00e4hetyksen j\u00e4lkeen",
+        "submit": "Vahvista",
+        "amount": "Summa",
+        "date": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
+        "tags": "T\u00e4git",
+        "no_budget": "(ei budjettia)",
+        "category": "Kategoria",
+        "attachments": "Liitteet",
+        "notes": "Muistiinpanot",
+        "update_transaction": "P\u00e4ivit\u00e4 tapahtuma",
+        "after_update_create_another": "P\u00e4ivityksen j\u00e4lkeen, palaa takaisin jatkamaan muokkausta.",
+        "store_as_new": "Tallenna uutena tapahtumana p\u00e4ivityksen sijaan.",
+        "split_title_help": "Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.",
+        "none_in_select_list": "(ei mit\u00e4\u00e4n)",
+        "no_piggy_bank": "(ei s\u00e4\u00e4st\u00f6possu)",
+        "description": "Kuvaus",
+        "split_transaction_title_help": "Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.",
+        "destination_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman kohdetili\u00e4.",
+        "source_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman l\u00e4hdetili\u00e4.",
+        "budget": "Budjetti",
+        "you_create_withdrawal": "Olet luomassa <strong>nostoa<\/strong>.",
+        "you_create_transfer": "Olet luomassa <strong>siirtoa<\/strong>.",
+        "you_create_deposit": "Olet luomassa <strong>talletusta<\/strong>."
+    },
+    "form": {
+        "interest_date": "Korkop\u00e4iv\u00e4",
+        "book_date": "Kirjausp\u00e4iv\u00e4",
+        "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
+        "due_date": "Er\u00e4p\u00e4iv\u00e4",
+        "foreign_amount": "Ulkomaan summa",
+        "payment_date": "Maksup\u00e4iv\u00e4",
+        "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
+        "internal_reference": "Sis\u00e4inen viite"
+    },
+    "config": {
+        "html_language": "fi"
+    }
+}

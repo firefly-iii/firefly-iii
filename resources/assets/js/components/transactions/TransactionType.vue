@@ -52,7 +52,7 @@
                     }
                     if ('' !== transactionType) {
                         this.transactionType = transactionType;
-                        this.sentence = 'You\'re creating a ' + this.transactionType;
+                        this.sentence = this.$t('firefly.you_create_' + transactionType.toLowerCase());
 
                         // Must also emit a change to set ALL sources and destinations to this particular type.
                         this.$emit('act:limitSourceType', this.source);

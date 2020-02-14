@@ -32,7 +32,10 @@
         "split_transaction_title_help": "Si vous cr\u00e9ez une op\u00e9ration ventil\u00e9e, il doit y avoir une description globale pour chaque fraction de l'op\u00e9ration.",
         "destination_account_reconciliation": "Vous ne pouvez pas modifier le compte de destination d'une op\u00e9ration de rapprochement.",
         "source_account_reconciliation": "Vous ne pouvez pas modifier le compte source d'une op\u00e9ration de rapprochement.",
-        "budget": "Budget"
+        "budget": "Budget",
+        "you_create_withdrawal": "Vous \u00eates en train de cr\u00e9er un <strong>retrait<\/strong>.",
+        "you_create_transfer": "Vous \u00eates en train de cr\u00e9er un <strong>transfert<\/strong>.",
+        "you_create_deposit": "Vous \u00eates en train de cr\u00e9er un <strong>d\u00e9p\u00f4t<\/strong>."
     },
     "form": {
         "interest_date": "Date de l\u2019int\u00e9r\u00eat",

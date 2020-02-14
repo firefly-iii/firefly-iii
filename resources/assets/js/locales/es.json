@@ -32,7 +32,10 @@
         "split_transaction_title_help": "Si crea una transacci\u00f3n dividida, debe existir una descripci\u00f3n global para todas las divisiones de la transacci\u00f3n.",
         "destination_account_reconciliation": "No puede editar la cuenta de destino de una transacci\u00f3n de reconciliaci\u00f3n.",
         "source_account_reconciliation": "No puede editar la cuenta de origen de una transacci\u00f3n de reconciliaci\u00f3n.",
-        "budget": "Presupuesto"
+        "budget": "Presupuesto",
+        "you_create_withdrawal": "Est\u00e1s creando un <strong>retiro<\/strong>.",
+        "you_create_transfer": "Est\u00e1s creando una <strong>transferencia<\/strong>.",
+        "you_create_deposit": "Est\u00e1s creando un <strong>dep\u00f3sito<\/strong>."
     },
     "form": {
         "interest_date": "Fecha de inter\u00e9s",

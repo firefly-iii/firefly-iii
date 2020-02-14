@@ -32,7 +32,10 @@
         "split_transaction_title_help": "Je\u015bli tworzysz podzielon\u0105 transakcj\u0119, musi ona posiada\u0107 globalny opis dla wszystkich podzia\u0142\u00f3w w transakcji.",
         "destination_account_reconciliation": "Nie mo\u017cesz edytowa\u0107 konta docelowego transakcji uzgadniania.",
         "source_account_reconciliation": "Nie mo\u017cesz edytowa\u0107 konta \u017ar\u00f3d\u0142owego transakcji uzgadniania.",
-        "budget": "Bud\u017cet"
+        "budget": "Bud\u017cet",
+        "you_create_withdrawal": "Tworzysz <strong>wydatek<\/strong>.",
+        "you_create_transfer": "Tworzysz <strong>przelew<\/strong>.",
+        "you_create_deposit": "Tworzysz <strong>wp\u0142at\u0119<\/strong>."
     },
     "form": {
         "interest_date": "Data odsetek",

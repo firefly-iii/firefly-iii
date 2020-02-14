@@ -32,7 +32,10 @@
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
         "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
-        "budget": "Or\u00e7amento"
+        "budget": "Or\u00e7amento",
+        "you_create_withdrawal": "Voc\u00ea est\u00e1 criando uma <strong>retirada<\/strong>.",
+        "you_create_transfer": "Voc\u00ea est\u00e1 criando uma <strong>transfer\u00eancia<\/strong>.",
+        "you_create_deposit": "Voc\u00ea est\u00e1 criando um <strong>dep\u00f3sito<\/strong>."
     },
     "form": {
         "interest_date": "Data de interesse",
