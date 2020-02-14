@@ -99,7 +99,7 @@ class FixUnevenAmount extends Command
                 )
             );
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal-> ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->description ?? 0)->forceDelete();
 
             return;
         }
@@ -119,7 +119,7 @@ class FixUnevenAmount extends Command
             );
 
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal-> ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->description ?? 0)->forceDelete();
 
             return;
         }
