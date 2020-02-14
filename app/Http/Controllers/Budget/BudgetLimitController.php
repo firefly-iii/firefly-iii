@@ -179,7 +179,7 @@ class BudgetLimitController extends Controller
             return response()->json($array);
         }
 
-        return redirect(route('budgets.index'));
+        return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
     }
 
     /**
