@@ -148,11 +148,11 @@ TODO: hide and show columns
                     {{ transaction.date.formatLocalized(monthAndDayFormat) }}
                 </td>
                 <td style=" {{ style|raw }}">
-                    <a href="{{ route('accounts.show', [transaction.source_account_id]) }}"
+                    <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
                        title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
                 </td>
                 <td style=" {{ style|raw }}">
-                    <a href="{{ route('accounts.show', [transaction.destination_account_id]) }}"
+                    <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
                        title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
                 </td>
                 {% if showCategory %}
