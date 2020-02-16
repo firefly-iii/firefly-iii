@@ -1,7 +1,7 @@
 <?php
 /**
  * APIEventHandlerTest.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -70,7 +70,7 @@ class APIEventHandlerTest extends TestCase
         // assert a message was sent.
         Mail::assertSent(
             AccessTokenCreatedMail::class, function ($mail) {
-            return $mail->hasTo('thegrumpydictator@gmail.com') && '127.0.0.1' === $mail->ipAddress;
+            return $mail->hasTo('james@firefly-iii.org') && '127.0.0.1' === $mail->ipAddress;
         }
         );
 

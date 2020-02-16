@@ -1,7 +1,7 @@
 <?php
 /**
  * CreateCSVImportTest.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -110,7 +110,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->assertExitCode(0);
 
@@ -184,7 +184,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->expectsOutput('No transactions have been imported :(.')
              ->assertExitCode(0);
@@ -258,7 +258,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->expectsOutput('- I am an error')
              ->assertExitCode(0);
@@ -321,7 +321,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->expectsOutput('The import routine crashed: I am storage error.')
              ->assertExitCode(1);
@@ -378,7 +378,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->expectsOutput('The import routine crashed: I am big bad exception.')
              ->assertExitCode(1);
@@ -429,7 +429,7 @@ class CreateCSVImportTest extends TestCase
         $this->artisan('firefly-iii:csv-import ' . implode(' ', $parameters))
              ->expectsOutput(sprintf('Import file        : %s', $file))
              ->expectsOutput(sprintf('Configuration file : %s', $config))
-             ->expectsOutput('User               : #1 (thegrumpydictator@gmail.com)')
+             ->expectsOutput('User               : #1 (james@firefly-iii.org)')
              ->expectsOutput(sprintf('Job                : %s', $importJob->key))
              ->expectsOutput('Some file error.')
              ->assertExitCode(1);
