@@ -4,7 +4,7 @@
 
 ## Feature requests
 
-I am always interested in expanding Firefly III's many features. Just open a ticket or [drop me a line](mailto:thegrumpydictator@gmail.com).
+I am always interested in expanding Firefly III's many features. Just open a ticket or [drop me a line](mailto:james@firefly-iii.org).
 
 ## Pull requests
 

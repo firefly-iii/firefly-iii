@@ -1,7 +1,7 @@
 <?php
 /**
  * server.php
- * Copyright (c) 2020 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *

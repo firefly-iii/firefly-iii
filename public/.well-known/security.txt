@@ -1,7 +1,7 @@
 # Please report security issues related to Firefly III
 # to me ASAP via the email address below.
 
-Contact: mailto:james@firefly-iii.org
+Contact: mailto:thegrumpydictator@gmail.com
 Encryption: https://keybase.io/jc5/pgp_keys.asc?fingerprint=90f546f13b81b67a1baa5dddc16961e655e74b5e
 Acknowledgements: https://github.com/firefly-iii/firefly-iii
 Signature: https://firefly-iii.org/.well-known/security.txt.sig
