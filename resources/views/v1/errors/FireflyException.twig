@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <p>
-                Unfortunately, this error was not recoverable. Firefly III broke. The error is:
+                Unfortunately, this error was not recoverable :(. Firefly III broke. The error is:
             </p>
             <p class="text-danger">
                 {{ exception.getMessage |default('General unknown errror') }}
@@ -52,13 +52,22 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <p>
-                    More information about this error may be available in the log files. Search for the error above and a stack trace
-                    will appear. This stack trace may help you track down what's going wrong.
+                    <strong>More information</strong><br />
+                    Please collect more information in the <code>storage/logs</code> directory where you will find
+                    log files. If you're running Docker, use <code>docker logs -f [container]</code>.
+                    You can read more about collecting error information in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.
                 </p>
                 <p>
-                    If you cannot find the cause of this error or when you need some help, please open a ticket on
-                    <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.
+                    <strong>Get help on GitHub</strong><br />
+                    You're more than welcome to open a new issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.
                 </p>
+                <ol>
+                    <li>Use the search!</li>
+                    <li>Include the information <a href="{{ route('debug') }}">from this debug page</a>.</li>
+                    <li>Tell us more than "it says Whoops!"</li>
+                    <li>Include error logs (see above).</li>
+                    <li>Tell us what you were doing.</li>
+                </ol>
             </div>
         </div>
     {% endif %}

@@ -1,7 +1,7 @@
 <?php
 /**
  * ReportController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -159,7 +159,9 @@ class ReportController extends Controller
 
         // get journals for entire period:
         $data      = [];
-        $chartData = [];
+        $chartData = [
+
+        ];
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();

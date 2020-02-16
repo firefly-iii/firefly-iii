@@ -348,6 +348,15 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function destJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return BelongsToMany
      */
     public function tags(): BelongsToMany

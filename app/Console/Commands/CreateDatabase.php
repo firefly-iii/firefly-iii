@@ -55,10 +55,11 @@ class CreateDatabase extends Command
     {
         if ('mysql' !== env('DB_CONNECTION')) {
             $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
+
             return 0;
         }
         // try to set up a raw connection:
-        $dsn     = sprintf('mysql:host=%s;charset=utf8mb4', env('DB_HOST'));
+        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

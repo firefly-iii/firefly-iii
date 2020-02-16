@@ -1,7 +1,7 @@
 <?php
 /**
  * PiggyBankController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -240,7 +240,7 @@ class PiggyBankController extends Controller
         foreach ($collection as $piggy) {
             $array     = $transformer->transform($piggy);
             $account   = $accountTransformer->transform($piggy->account);
-            $accountId = $account['id'];
+            $accountId = (int)$account['id'];
             if (!isset($accounts[$accountId])) {
                 // create new:
                 $accounts[$accountId] = $account;

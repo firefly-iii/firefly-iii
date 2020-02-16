@@ -1,7 +1,7 @@
 <?php
 /**
  * CreateController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
@@ -45,6 +46,7 @@ class CreateController extends Controller
 
     /**
      * RuleController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -156,6 +158,48 @@ class CreateController extends Controller
         return view(
             'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
         );
+    }
+
+    /**
+     * @param Request            $request
+     * @param TransactionJournal $journal
+     */
+    public function createFromJournal(Request $request, TransactionJournal $journal)
+    {
+        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_journal', ['name' => e($journal->name)]));
+
+        $subTitleIcon = 'fa-clone';
+        $subTitle     = (string)trans('firefly.make_new_rule_no_group');
+
+        // get triggers and actions for journal.
+        $oldTriggers = $this->getTriggersForJournal($journal);
+        $oldActions  = [];
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
+
+        $this->createDefaultRuleGroup();
+        $this->createDefaultRule();
+
+        // collect pre-filled information:
+        $preFilled = [
+            'strict'      => true,
+            'title'       => (string)trans('firefly.new_rule_for_journal_title', ['description' => $journal->description]),
+            'description' => (string)trans('firefly.new_rule_for_journal_description', ['description' => $journal->description]),
+        ];
+
+        // flash old data
+        $request->session()->flash('preFilled', $preFilled);
+
+        // put previous url in session if not redirect from store (not "create another").
+        if (true !== session('rules.create.fromStore')) {
+            $this->rememberPreviousUri('rules.create.uri');
+        }
+        session()->forget('rules.create.fromStore');
+
+        return view(
+            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
+        );
+
     }
 
     /**

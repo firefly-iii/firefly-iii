@@ -863,6 +863,7 @@ Route::group(
     // create controller
     Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
     Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
+    Route::get('create-from-journal/{tj}', ['uses' => 'Rule\CreateController@createFromJournal', 'as' => 'create-from-journal']);
     Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
 
     // delete controller
@@ -962,6 +963,9 @@ Route::group(
     Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
+    // clone group
+    Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CreateController@cloneGroup', 'as' => 'clone']);
+
     // edit group
     Route::get('edit/{transactionGroup}', ['uses' => 'Transaction\EditController@edit', 'as' => 'edit']);
     Route::post('update', ['uses' => 'Transaction\EditController@update', 'as' => 'update']);
@@ -970,39 +974,11 @@ Route::group(
     Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
     Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
 
-    // clone group:
-    //Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
-
-    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-
-    //Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
-    //Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
-    // TODO end of improvement.
-
-
     Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
+    Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
 }
 );
 
-/**
- * Transaction Single Controller
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'],
-    function () {
-        // TODO improve these routes
-
-        //Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
-        //
-        //Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
-        //Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
-        //
-        //Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
-        //Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
-        // TODO end of improvement.
-    }
-);
 
 /**
  * Transaction Mass Controller

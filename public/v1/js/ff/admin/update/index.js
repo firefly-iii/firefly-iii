@@ -25,18 +25,4 @@ $(function () {
 
     // Enable update button.
 
-    $('#update').click(checkUpdate);
 });
-
-function checkUpdate() {
-
-    // do post update check:
-    $.post(updateCheckUri).done(function (data) {
-        alert(data.result);
-    }).fail(function () {
-        alert('Error while checking.');
-    });
-
-
-    return false;
-}

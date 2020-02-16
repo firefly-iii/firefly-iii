@@ -32,8 +32,7 @@ interface UpdateRequestInterface
      * @param string $channel
      *
      * @return array
-     * @throws FireflyException
      */
-    public function getVersion(string $channel): array;
+    public function getUpdateInformation(string $channel): array;
 
 }

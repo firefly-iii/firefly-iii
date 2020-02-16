@@ -116,7 +116,7 @@ class GroupUpdateService
         }
 
         app('preferences')->mark();
-
+        $transactionGroup->refresh();
         return $transactionGroup;
     }
 

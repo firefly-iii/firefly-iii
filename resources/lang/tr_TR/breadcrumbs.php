@@ -2,7 +2,7 @@
 
 /**
  * breadcrumbs.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'home'                   => 'Anasayfa',
+    'home'                   => 'Ana Sayfa',
     'edit_currency'          => '":name" para birimini düzenle',
     'delete_currency'        => '":name" para birimini sil',
     'newPiggyBank'           => 'Yeni bir kumbara oluştur',
@@ -35,7 +35,7 @@ return [
     'bills'                  => 'Fatura',
     'newBill'                => 'Yeni Fatura',
     'edit_bill'              => 'Faturayı düzenle ":name"',
-    'delete_bill'            => 'Faturayı ":name"',
+    'delete_bill'            => '":name" faturasını sil',
     'reports'                => 'Raporlar',
     'search_result'          => '":query" için arama sonuçları',
     'withdrawal_list'        => 'Giderler',
@@ -49,7 +49,7 @@ return [
     'create_transfer'        => 'Yeni transfer oluştur',
     'create_new_transaction' => 'Yeni bir işlem oluştur',
     'edit_journal'           => '":description" işlemini düzenle',
-    'edit_reconciliation'    => 'Düzenle ":description"',
+    'edit_reconciliation'    => '":description" açıklamasını düzenle',
     'delete_journal'         => '":description" işlemini sil',
     'tags'                   => 'Etiketler',
     'createTag'              => 'Yeni etiket oluştur',

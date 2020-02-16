@@ -60,5 +60,8 @@ class BudgetDestroyService
 
         // also delete all relations between categories and transactions:
         DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
+
+        // also delete all budget limits
+        $budget->budgetlimits()->delete();
     }
 }

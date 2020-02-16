@@ -128,16 +128,17 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration'          => [
+    'configuration' => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags'          => [
+    'feature_flags' => [
         'export' => true,
     ],
+
     'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                => '5.0.5',
-    'api_version'            => '1.0.0',
+    'version'                => '5.1.0-alpha.1',
+    'api_version'            => '1.0.1',
     'db_version'             => 12,
     'maxUploadSize'          => 15242880,
     'send_error_message'     => env('SEND_ERROR_MESSAGE', true),
@@ -159,6 +160,7 @@ return [
     'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'        => 'https://version.firefly-iii.org/index.json',
+    'update_minimum_age'     => 6,
     'default_location'       => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
@@ -308,7 +310,11 @@ return [
         'Debt'        => 'debt',
         'Mortgage'    => 'mortgage',
     ],
+    /**
+     * Languages configuration
+     */
     'languages'                    => [
+        // currently enabled languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
@@ -325,19 +331,24 @@ return [
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
         'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
-        //'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'], // dropped to 65%
-
-        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
-        //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
-        //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 0%
-        //'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'], // 0%
-        //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2%
-        //
-        //'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'], // 0%
-        //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 10%
-        //'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'], // 4%
+        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
 
 
+        // currently disabled languages:
+        //        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
+        //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
+        //        'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
+        //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
+        //        'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
+        //        'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
+        //        'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
+        //        'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
+        //        'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
+        //        'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
+        //        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
+        //        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
+        //        'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
+        //        'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
     ],
     'transactionTypesByWhat'       => [
         'expenses'   => ['Withdrawal'],
@@ -373,51 +384,51 @@ return [
     ],
     'bindables'                    => [
         // models
-        'account'           => Account::class,
-        'attachment'        => Attachment::class,
-        'availableBudget'   => AvailableBudget::class,
-        'bill'              => Bill::class,
-        'budget'            => Budget::class,
-        'budgetLimit'       => BudgetLimit::class,
-        'category'          => Category::class,
-        'linkType'          => LinkType::class,
-        'transactionType'   => TransactionTypeModel::class,
-        'journalLink'       => TransactionJournalLink::class,
-        'currency'          => TransactionCurrency::class,
-        'piggyBank'         => PiggyBank::class,
-        'preference'        => Preference::class,
-        'tj'                => TransactionJournal::class,
-        'tag'               => Tag::class,
-        'recurrence'        => Recurrence::class,
-        'rule'              => Rule::class,
-        'ruleGroup'         => RuleGroup::class,
-        'importJob'         => ImportJob::class,
-        'transactionGroup'  => TransactionGroup::class,
-        'user'              => User::class,
+        'account'          => Account::class,
+        'attachment'       => Attachment::class,
+        'availableBudget'  => AvailableBudget::class,
+        'bill'             => Bill::class,
+        'budget'           => Budget::class,
+        'budgetLimit'      => BudgetLimit::class,
+        'category'         => Category::class,
+        'linkType'         => LinkType::class,
+        'transactionType'  => TransactionTypeModel::class,
+        'journalLink'      => TransactionJournalLink::class,
+        'currency'         => TransactionCurrency::class,
+        'piggyBank'        => PiggyBank::class,
+        'preference'       => Preference::class,
+        'tj'               => TransactionJournal::class,
+        'tag'              => Tag::class,
+        'recurrence'       => Recurrence::class,
+        'rule'             => Rule::class,
+        'ruleGroup'        => RuleGroup::class,
+        'importJob'        => ImportJob::class,
+        'transactionGroup' => TransactionGroup::class,
+        'user'             => User::class,
 
         // strings
-        'import_provider'   => ImportProvider::class,
-        'currency_code'     => CurrencyCode::class,
+        'import_provider'  => ImportProvider::class,
+        'currency_code'    => CurrencyCode::class,
 
         // dates
-        'start_date'        => Date::class,
-        'end_date'          => Date::class,
-        'date'              => Date::class,
+        'start_date'       => Date::class,
+        'end_date'         => Date::class,
+        'date'             => Date::class,
 
         // lists
-        'accountList'       => AccountList::class,
+        'accountList'      => AccountList::class,
         'doubleList'       => AccountList::class,
-        'budgetList'        => BudgetList::class,
-        'journalList'       => JournalList::class,
-        'categoryList'      => CategoryList::class,
-        'tagList'           => TagList::class,
+        'budgetList'       => BudgetList::class,
+        'journalList'      => JournalList::class,
+        'categoryList'     => CategoryList::class,
+        'tagList'          => TagList::class,
 
         // others
-        'fromCurrencyCode'  => CurrencyCode::class,
-        'toCurrencyCode'    => CurrencyCode::class,
-        'cliToken'          => CLIToken::class,
-        'tagOrId'           => TagOrId::class,
-        'configName'        => ConfigurationName::class,
+        'fromCurrencyCode' => CurrencyCode::class,
+        'toCurrencyCode'   => CurrencyCode::class,
+        'cliToken'         => CLIToken::class,
+        'tagOrId'          => TagOrId::class,
+        'configName'       => ConfigurationName::class,
 
 
     ],
@@ -533,15 +544,15 @@ return [
     ],
 
 
-    'test-triggers'             => [
+    'test-triggers'    => [
         'limit' => 10,
         'range' => 200,
     ],
-    'default_currency'          => 'EUR',
-    'default_language'          => 'en_US',
-    'search_modifiers'          => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                                    'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
-                                    'updated_on'],
+    'default_currency' => 'EUR',
+    'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
+                           'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
+                           'updated_on'],
     // TODO notes has_attachments
 
     'cer_providers'             => [
@@ -701,7 +712,7 @@ return [
         ],
     ],
 
-    // allowed source / destination accounts.
+    // allowed source -> destination accounts.
     'source_dests'              => [
         TransactionTypeModel::WITHDRAWAL      => [
             AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],

@@ -1,7 +1,7 @@
 <?php
 /**
  * BudgetLimitController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -179,7 +179,7 @@ class BudgetLimitController extends Controller
             return response()->json($array);
         }
 
-        return redirect(route('budgets.index'));
+        return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
     }
 
     /**

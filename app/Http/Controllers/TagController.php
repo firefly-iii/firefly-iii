@@ -1,7 +1,7 @@
 <?php
 /**
  * TagController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -201,18 +201,17 @@ class TagController extends Controller
         $newestTagDate = null === $repository->newestTag() ? new Carbon : $repository->newestTag()->date;
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
-        $clouds            = [];
-        $clouds['no-date'] = $repository->tagCloud(null);
+        $tags            = [];
+        $tags['no-date'] = $repository->getTagsInYear(null);
 
         while ($newestTagDate > $oldestTagDate) {
             $year          = $newestTagDate->year;
-            $clouds[$year] = $repository->tagCloud($year);
-
+            $tags[$year] = $repository->getTagsInYear($year);
             $newestTagDate->subYear();
         }
         $count = $repository->count();
 
-        return view('tags.index', compact('clouds', 'count'));
+        return view('tags.index', compact('tags', 'count'));
     }
 
     /**

@@ -1,6 +1,6 @@
 <!--
   - ForeignAmountSelect.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -19,11 +19,13 @@
   -->
 
 <template>
+    <!--
+    Show if:
+    - more than one currency enabled in system.
+
+    -->
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="
-    null == this.transactionType ||
-    null != this.transactionType && (this.enabledCurrencies.length > 2 && (this.transactionType.toLowerCase() === 'deposit' || this.transactionType.toLowerCase() === 'withdrawal')) ||
-    this.liability ||
-    (null != this.transactionType && this.transactionType.toLowerCase() === 'transfer')">
+    this.enabledCurrencies.length > 1">
         <div class="col-sm-8 col-sm-offset-4 text-sm">
             {{ $t('form.foreign_amount') }}
         </div>

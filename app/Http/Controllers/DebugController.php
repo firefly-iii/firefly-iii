@@ -1,7 +1,7 @@
 <?php
 /**
  * DebugController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -51,7 +51,7 @@ class DebugController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(IsDemoUser::class);
+        $this->middleware(IsDemoUser::class)->except(['displayError']);
     }
 
     /**

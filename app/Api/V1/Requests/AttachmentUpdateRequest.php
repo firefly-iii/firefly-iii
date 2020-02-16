@@ -52,8 +52,8 @@ class AttachmentUpdateRequest extends Request
             'filename' => $this->string('filename'),
             'title'    => $this->string('title'),
             'notes'    => $this->nlString('notes'),
-            'model'    => $this->string('model'),
-            'model_id' => $this->integer('model_id'),
+            'model'    => $this->string('attachable_type'),
+            'model_id' => $this->integer('attachable_id'),
         ];
     }
 

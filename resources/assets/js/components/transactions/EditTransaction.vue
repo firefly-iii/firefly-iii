@@ -1,6 +1,6 @@
 <!--
   - EditTransaction.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'">
-                            <button class="btn btn-primary" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
+                            <button class="btn btn-default" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
                 </div>
@@ -621,7 +621,7 @@
                 }
                 const data = this.convertData();
 
-                let button = $(e.currentTarget);
+                let button = $('#submitButton');
                 button.prop("disabled", true);
 
                 //axios.put(uri, data)
@@ -642,7 +642,7 @@
                 if (e) {
                     e.preventDefault();
                 }
-                button.prop("disabled", false);
+                button.removeAttr('disabled');
             },
 
             redirectUser(groupId) {
@@ -737,8 +737,8 @@
                         const uri = './api/v1/attachments';
                         const data = {
                             filename: fileData[key].name,
-                            model: 'TransactionJournal',
-                            model_id: fileData[key].journal,
+                            attachable_type: 'TransactionJournal',
+                            attachable_id: fileData[key].journal,
                         };
                         axios.post(uri, data)
                             .then(response => {

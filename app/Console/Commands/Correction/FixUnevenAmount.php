@@ -90,11 +90,40 @@ class FixUnevenAmount extends Command
         }
         /** @var Transaction $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
+
+        if (null === $source) {
+            $this->error(
+                sprintf(
+                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    $journal->description ?? ''
+                )
+            );
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->description ?? 0)->forceDelete();
+
+            return;
+        }
+
         $amount = bcmul('-1', (string)$source->amount);
 
         // fix amount of destination:
         /** @var Transaction $destination */
-        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+
+        if (null === $destination) {
+            $this->error(
+                sprintf(
+                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    $journal->description ?? ''
+                )
+            );
+
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->description ?? 0)->forceDelete();
+
+            return;
+        }
+
         $destination->amount = $amount;
         $destination->save();
 

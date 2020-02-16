@@ -2,7 +2,7 @@
 
 /**
  * import.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -47,7 +47,7 @@ return [
     'button_plaid'                        => 'Palid kullanarak içe aktar',
     'button_yodlee'                       => 'Yodlee kullanarak içe aktarma',
     'button_quovo'                        => 'Quovo kullanarak içe aktarma',
-    'button_ynab'                         => 'Import from You Need A Budget',
+    'button_ynab'                         => 'You Need A Budget servisinden içeri aktar',
     'button_fints'                        => 'FinTS kullanarak içe aktar',
 
 

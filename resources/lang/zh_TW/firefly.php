@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => '此帳單未設定相關的規則。',
     'go_to_asset_accounts'                       => '檢視您的資產帳戶',
     'go_to_budgets'                              => '前往您的預算',
-    'clone_instructions'                         => '若要複製交易，請在編輯畫面中勾取 "另存新檔" 核選方塊',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => '前往您的分類',
     'go_to_bills'                                => '前往您的帳單',
     'go_to_expense_accounts'                     => '查看您的支出帳戶',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => '檢查更新',
     'admin_update_check_title'                   => '自動檢查更新',
-    'admin_update_check_explain'                 => 'Firefly III 可以自動檢查更新。啟用此設定時，將會自動連接 Github 查看是否有新版本可用，並在可用時顯示一則通知。您可使用右方按鈕測試通知功能，並於下方表示您是否希望 Firefly III 檢查更新。',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III 可以自動檢查更新，但需要您先許可。請前往 <a href=":link">系統管理</a> 表示您是否想啟用此功能。',
     'updates_ask_me_later'                       => '稍後再詢問',
     'updates_do_not_check'                       => '不檢查更新',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
-    'update_check_error'                         => '檢查更新時發生一個錯誤，請檢閱日誌檔。',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => '在規則群組 ":title" 中建立新規則',
     'make_new_rule_no_group'                     => '建立新規則',
     'instructions_rule_from_bill'                => '為了媒合交易至您的新帳單 ":name"，Firefly III 可以建立一個針對您儲存的每一筆交易且自動啟動的規則。請驗證下方的資訊並儲存規則，讓 Firefly III 自動媒合交易至您的新帳單。',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => '嚴謹規則',
     'rule_is_not_strict'                         => '非嚴謹規則',
     'rule_help_stop_processing'                  => '勾選此核選方塊時，將不會執行此群組中的後續規則。',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => '供帳單 ":name" 的規則',
     'new_rule_for_bill_description'   => '此規則標記給帳單 ":name" 的交易。',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => '儲存新標籤',
     'update_tag'                      => '更新標籤',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => '主畫面帳戶',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => '更新貨幣',
     'new_default_currency'                      => ':name 現已為預設貨幣',
     'cannot_delete_currency'                    => '因為仍在使用中，無法刪除 :name 。',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',
@@ -1323,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
     'transaction_information'               => '交易資訊',
-    'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',
-    'you_create_withdrawal'                 => '您正在建立一筆 <strong>提款</strong>。',
-    'you_create_deposit'                    => '您正在建立一筆 <strong>存款</strong>。',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

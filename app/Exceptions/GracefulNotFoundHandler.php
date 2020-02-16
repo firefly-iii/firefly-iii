@@ -1,7 +1,7 @@
 <?php
 /**
  * GracefulNotFoundHandler.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -85,6 +85,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return redirect(route('currencies.index'));
                 break;
             case 'budgets.show':
+            case 'budgets.edit':
                 $request->session()->reflash();
 
                 return redirect(route('budgets.index'));

@@ -1,7 +1,7 @@
 <?php
 /**
  * MailError.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -83,7 +83,7 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject('Caught an error in Firely III');
+                            $message->to($email, $email)->subject('Caught an error in Firefly III');
                         }
                     }
                 );

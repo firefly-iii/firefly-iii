@@ -32,7 +32,10 @@
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
         "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
-        "budget": "Anggaran"
+        "budget": "Anggaran",
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Tanggal bunga",

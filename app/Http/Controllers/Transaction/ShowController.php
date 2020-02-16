@@ -1,7 +1,7 @@
 <?php
 /**
  * ShowController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -64,13 +65,29 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function debugShow(TransactionGroup $transactionGroup)
+    {
+        return response()->json($this->repository->expandGroup($transactionGroup));
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws FireflyException
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
         $first    = $transactionGroup->transactionJournals->first();
         $splits   = $transactionGroup->transactionJournals->count();
+
+        if(null === $first) {
+            throw new FireflyException('This transaction is broken :(.');
+        }
+
         $type     = $first->transactionType->type;
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
@@ -105,6 +122,7 @@ class ShowController extends Controller
 
     /**
      * @param array $group
+     *
      * @return array
      */
     private function getAmounts(array $group): array

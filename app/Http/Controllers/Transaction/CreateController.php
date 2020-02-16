@@ -1,7 +1,7 @@
 <?php
 /**
  * CreateController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +25,9 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Update\GroupCloneService;
 
 /**
  * Class CreateController
@@ -34,6 +36,7 @@ class CreateController extends Controller
 {
     /**
      * CreateController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -53,6 +56,21 @@ class CreateController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param TransactionGroup $group
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function cloneGroup(TransactionGroup $group)
+    {
+
+        /** @var GroupCloneService $service */
+        $service  = app(GroupCloneService::class);
+        $newGroup = $service->cloneGroup($group);
+
+        return redirect(route('transactions.show', [$newGroup->id]));
     }
 
     /**

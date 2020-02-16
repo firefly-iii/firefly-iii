@@ -8,7 +8,7 @@
             font-family: 'Lato';
             font-style: normal;
             font-weight: 100;
-            src: local('Lato Hairline'), local('Lato-Hairline'), url('fonts/lato-100.woff2') format('woff2'), url('fonts/lato-100.woff') format('woff');
+            src: local('Lato Hairline'), local('Lato-Hairline'), url('v1/fonts/lato-100.woff2') format('woff2'), url('v1/fonts/lato-100.woff') format('woff');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
         }
 
@@ -49,7 +49,11 @@
 <div class="container">
     <div class="content">
         <div class="title">Whoops</div>
-        <div class="text">There was a fatal error. Please check the log files.</div>
+        <code class="text">There was a fatal error. Please check the log files in "storage/logs" or use "docker logs -f [container]"
+        to see what's going on.
+        </code>
+
+    </div>
     </div>
 </div>
 

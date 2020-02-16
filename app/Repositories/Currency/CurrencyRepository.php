@@ -32,6 +32,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
@@ -66,7 +67,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function countJournals(TransactionCurrency $currency): int
     {
-        return $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+        // also count foreign:
+        $count += Transaction::where('foreign_currency_id', $currency->id)->count();
+
+        return $count;
 
     }
 
@@ -165,14 +170,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             return 'current_default';
         }
 
-//        // is the default currency for the system
-//        $defaultSystemCode = config('firefly.default_currency', 'EUR');
-//        $result            = $currency->code === $defaultSystemCode;
-//        if (true === $result) {
-//            Log::info('Is the default currency of the SYSTEM, return true.');
-//
-//            return 'system_fallback';
-//        }
+        //        // is the default currency for the system
+        //        $defaultSystemCode = config('firefly.default_currency', 'EUR');
+        //        $result            = $currency->code === $defaultSystemCode;
+        //        if (true === $result) {
+        //            Log::info('Is the default currency of the SYSTEM, return true.');
+        //
+        //            return 'system_fallback';
+        //        }
         Log::debug('Currency is not used, return false.');
 
         return null;
@@ -312,7 +317,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param int|null $currencyId
+     * @param int|null    $currencyId
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
@@ -342,7 +347,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      *
-     * @param int|null $currencyId
+     * @param int|null    $currencyId
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
@@ -393,16 +398,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
-
-    /**
-     * @return Collection
-     */
-    public function getEnabled(): Collection
-    {
-        return TransactionCurrency::where('enabled',true)->orderBy('code', 'ASC')->get();
-    }
-
-
     /**
      * @param array $ids
      *
@@ -429,11 +424,19 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getEnabled(): Collection
+    {
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+    }
+
+    /**
      * Get currency exchange rate.
      *
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
-     * @param Carbon $date
+     * @param Carbon              $date
      *
      * @return CurrencyExchangeRate|null
      */
@@ -480,6 +483,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param string $search
+     *
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection
+    {
+        $query = TransactionCurrency::where('enabled', 1);
+        if ('' !== $search) {
+            $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
+        }
+
+        return $query->get();
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -508,7 +526,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param array $data
+     * @param array               $data
      *
      * @return TransactionCurrency
      */
@@ -521,16 +539,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param string $search
-     * @return Collection
+     * @inheritDoc
      */
-    public function searchCurrency(string $search): Collection
+    public function isFallbackCurrency(TransactionCurrency $currency): bool
     {
-        $query = TransactionCurrency::where('enabled', 1);
-        if ('' !== $search) {
-            $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
-        }
-
-        return $query->get();
+        return $currency->code === config('firefly.default_currency', 'EUR');
     }
 }

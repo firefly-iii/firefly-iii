@@ -2,7 +2,7 @@
 
 /**
  * list.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -94,8 +94,8 @@ return [
     'import_jobs_count'       => 'Anzahl importierter Jobs',
     'budget_count'            => 'Anzahl Kostenpläne',
     'rule_and_groups_count'   => 'Anzahl Regeln und Regelgruppen',
-    'tags_count'              => 'Anzahl Schlagwörter',
-    'tags'                    => 'Schlagwörter',
+    'tags_count'              => 'Anzahl Tags',
+    'tags'                    => 'Tags',
     'inward'                  => 'Beschreibung der Eingänge',
     'outward'                 => 'Beschreibung der Ausgänge',
     'number_of_transactions'  => 'Anzahl der Zahlungsvorgänge',

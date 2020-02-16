@@ -1,7 +1,7 @@
 <?php
 /**
  * ChartJsGenerator.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -32,6 +32,7 @@ class ChartJsGenerator implements GeneratorInterface
 {
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -118,7 +119,10 @@ class ChartJsGenerator implements GeneratorInterface
     public function multiSet(array $data): array
     {
         reset($data);
-        $first  = current($data);
+        $first = current($data);
+        if (!is_array($first)) {
+            return [];
+        }
         $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
@@ -186,7 +190,7 @@ class ChartJsGenerator implements GeneratorInterface
             $chartData['datasets'][0]['data'][]            = (float)app('steam')->positive((string)$value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
 
-            $chartData['labels'][]                         = $key;
+            $chartData['labels'][] = $key;
             ++$index;
         }
 

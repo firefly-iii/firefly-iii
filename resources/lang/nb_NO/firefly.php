@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => 'Se aktivakontoene dine',
     'go_to_budgets'                              => 'Gå til budsjettene dine',
-    'clone_instructions'                         => 'To clone a transaction, search for the "store as new" checkbox in the edit screen',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Gå til kategoriene dine',
     'go_to_bills'                                => 'Gå til regningene dine',
     'go_to_expense_accounts'                     => 'Se utgiftskontoene dine',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Se etter oppdateringer',
     'admin_update_check_title'                   => 'Se etter oppdateringer automatisk',
-    'admin_update_check_explain'                 => 'Firefly III kan sjekke om oppdateringer automatisk. Når du aktiverer denne innstillingen, vil systemet kontakte Github for å se om en ny versjon av Firefly III er tilgjengelig. Når det er kommet en ny oppdatering, vil du bli varslet. Du kan teste dette varselet ved hjelp av knappen til høyre. Vennligst marker nedenfor hvis du vil at Firefly III skal se etter oppdateringer.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III kan se etter oppdateringer, men det trenger din tillatelse til å gjøre det. Gå til <a href=":link">-administrasjonen</a> for å velge om denne funksjonen skal aktiveres.',
     'updates_ask_me_later'                       => 'Spør meg senere',
     'updates_do_not_check'                       => 'Ikke se etter oppdateringer',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
-    'update_check_error'                         => 'Det oppsto en feil under sjekk av oppdateringer. Vennligst se loggfilene for mer informasjon.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Opprett ny regel i regelgruppen ":title"',
     'make_new_rule_no_group'                     => 'Lag en ny regel',
     'instructions_rule_from_bill'                => 'For å matche transaksjoner til din nye regning ":name", kan Firefly III lage en regel som automatisk vil bli sjekket mot eksisterende transaksjoner. Vennligst verifiser detaljene nedenfor og lagre regelen for å få Firefly III til å automatisk matche transaksjoner til din nye regning.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'strikt regel',
     'rule_is_not_strict'                         => 'ikke-strikt regel',
     'rule_help_stop_processing'                  => 'Hvis du markerer denne boksen, vil ikke senere regler i denne gruppen bli utløst.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel for regning ":name"',
     'new_rule_for_bill_description'   => 'Denne regelen markerer transaksjoner for regning ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Lagre ny tagg',
     'update_tag'                      => 'Oppdater tagg',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Startskjermkontoer',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Oppdater valuta',
     'new_default_currency'                      => ':name er nå standardvaluta.',
     'cannot_delete_currency'                    => 'Kan ikke slette :name fordi det er fortsatt i bruk.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',
@@ -1323,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

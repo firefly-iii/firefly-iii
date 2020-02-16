@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Acestă factură nu are asociate reguli.',
     'go_to_asset_accounts'                       => 'Vizualizați conturile de active',
     'go_to_budgets'                              => 'Mergi la bugete',
-    'clone_instructions'                         => 'Pentru a clona o tranzacție, căutați caseta de selectare „Stocare ca nou” în ecranul de editare',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Mergi la categorii',
     'go_to_bills'                                => 'Mergi la facturi',
     'go_to_expense_accounts'                     => 'Vezi cheltuielile contabile',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Verifică actualizări',
     'admin_update_check_title'                   => 'Verificați automat actualizarea',
-    'admin_update_check_explain'                 => 'Firefly III poate verifica automat actualizările. Când activați această setare, va contacta Github pentru a vedea dacă este disponibilă o nouă versiune de Firefly III. Când este, veți primi o notificare. Puteți testa această notificare utilizând butonul din dreapta. Indicați mai jos dacă doriți ca Firefly III să verifice actualizările.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III poate verifica actualizările, dar are nevoie de permisiunea dvs. pentru a face acest lucru. Accesați <a href=":link"> link-ul </a> pentru a indica dacă doriți ca această funcție să fie activată.',
     'updates_ask_me_later'                       => 'Intreabă-mă mai târziu',
     'updates_do_not_check'                       => 'Nu verificați actualizările',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Această versiune este o versiune ALFA. Este posibil să aveți probleme.',
     'update_current_version_alert'               => 'Aveți versiunea :version, care este ultima disponibilă.',
     'update_newer_version_alert'                 => 'Aveți versiunea :your_version, care este mai nouă decât cea mai recentă versiune, :new_version.',
-    'update_check_error'                         => 'A apărut o eroare la verificarea actualizărilor. Consultați log-urile.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Actualizare canal',
     'admin_update_channel_explain'               => 'Firefly III are trei "canale" de actualizare, care determină cât de avansați sunteți în termeni de caracteristici, îmbunătățiri și bug-uri. Folosiți canalul „beta” dacă sunteți aventuroși și „alfa” atunci când vă place să trăiți periculos viața.',
     'update_channel_stable'                      => 'Stabil. Totul ar trebui să funcționeze așa cum este de așteptat.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Creați o nouă regulă în grupul de reguli ":title"',
     'make_new_rule_no_group'                     => 'Creați o nouă regulă',
     'instructions_rule_from_bill'                => 'Pentru a potrivi tranzacția cu noua factură ":name", Firefly III poate crea o regulă care va fi verificată automat împotriva tranzacțiilor pe care le stocați. Verificați detaliile de mai jos și păstrați regula pentru ca Firefly III să potrivească automat tranzacțiile cu factura nouă.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'regulă strictă',
     'rule_is_not_strict'                         => 'regulă nestrictă',
     'rule_help_stop_processing'                  => 'Când bifați această casetă, regulile ulterioare din acest grup nu vor fi executate.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regula privind factura ":name"',
     'new_rule_for_bill_description'   => 'Această regulă marchează tranzacțiile pentru factura ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Salvați o nouă etichetă',
     'update_tag'                      => 'Actualizați eticheta',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Şterge toate etichetele selectate',
     'select_tags_to_delete'           => 'Nu uitați să selectați unele etichete.',
     'deleted_x_tags'                  => ':count etichete șterse.',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
     'pref_home_screen_accounts'       => 'Ecranul de start al conturilor',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Actualizați monedă',
     'new_default_currency'                      => ':name este acum moneda implicită.',
     'cannot_delete_currency'                    => 'Nu se poate șterge :nume deoarece este încă în uz.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Nu se poate dezactiva :name, deoarece tranzacțiile încă îl utilizează.',
     'cannot_disable_currency_last_left'         => 'Nu se poate dezactiva :name, deoarece este ultima monedă activată.',
     'cannot_disable_currency_account_meta'      => 'Nu se poate dezactiva :name deoarece este utilizat în conturile de active.',
@@ -1323,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'split_title_help'                      => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'transaction_information'               => 'Informații despre tranzacții',
-    'you_create_transfer'                   => 'Creați un <strong> transfer </strong>.',
-    'you_create_withdrawal'                 => 'Creați o <strong> retragere</strong>.',
-    'you_create_deposit'                    => 'Creați un <strong> depozit</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links

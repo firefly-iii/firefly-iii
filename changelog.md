@@ -2,6 +2,46 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0 (API 1.0.0)] - 2020-02-xx
+
+Before this release came out, several alpha and beta versions had been released already:
+
+- 5.1.0-alpha.1 on 2020-02-16
+
+### Added
+- [Issue 2575](https://github.com/firefly-iii/firefly-iii/issues/2575) You can now create a transaction from a rule.
+- [Issue 3052](https://github.com/firefly-iii/firefly-iii/issues/3052) The old way of cloning transactions is back.
+- Firefly III will generate a unique installation ID for itself.
+
+### Changed
+- [Issue 3066](https://github.com/firefly-iii/firefly-iii/issues/3066) [issue 3067](https://github.com/firefly-iii/firefly-iii/issues/3067) New tag overview. Not yet sure what works best.
+- [Issue 3071](https://github.com/firefly-iii/firefly-iii/issues/3071) Top box with expense information (left to spend) is now more clear.
+- [Issue 3075](https://github.com/firefly-iii/firefly-iii/issues/3075) Embarrassing typo in welcome email.
+- You can set the default language for Firefly III which will also apply to the login page.
+- Add Lando to readme.
+- Add support for Finnish! 🇫🇮
+- In the configuration `pgsql` is now the default database connection. This may break your non-`pgsql` installation if you haven't set it specifically to your database type.
+- A new debug view for transactions. Change the word "show" in `/transactions/show/123` to "debug" to get a nice JSON thing.
+- Foreign currencies should show up less often in edit/create transaction screens. 
+
+### Fixed
+- [Issue 3050](https://github.com/firefly-iii/firefly-iii/issues/3050) Date blocks were rendered badly.
+- [Issue 3070](https://github.com/firefly-iii/firefly-iii/issues/3070) The currency symbol would not precede the amount in some locales.
+- [Issue 3083](https://github.com/firefly-iii/firefly-iii/issues/3083) Fix category sort in report.
+- [Issue 3045](https://github.com/firefly-iii/firefly-iii/issues/3045) Linking bills to liability accounts through rules was broken.
+- [Issue 3042](https://github.com/firefly-iii/firefly-iii/issues/3042) Rule engine behavior was inconsistent when importing data.
+- [Issue 3064](https://github.com/firefly-iii/firefly-iii/issues/3064) Weird bug in reports.
+- [Issue 3099](https://github.com/firefly-iii/firefly-iii/issues/3099) Can't make piggy banks on accounts with no currency.
+- [Issue 3119](https://github.com/firefly-iii/firefly-iii/issues/3119) Command would break if transaction was incomplete.
+- [Issue 3073](https://github.com/firefly-iii/firefly-iii/issues/3073) Rules would not be applied to all splits if a split was newly created.
+- [Issue 3111](https://github.com/firefly-iii/firefly-iii/issues/3111) Budget amount edit redirect.
+- [Issue 3114](https://github.com/firefly-iii/firefly-iii/issues/3114) Removed double entry from budget list.
+
+### API
+- [Issue 3097](https://github.com/firefly-iii/firefly-iii/issues/3097) Unifying API models
+- [Issue 3098](https://github.com/firefly-iii/firefly-iii/issues/3098) Add field to link types.
+
+
 ## [5.0.5 (API 1.0.0)] - 2020-02-13
 
 This release fixes an issue with logging that could, in rare cases, error out terribly.

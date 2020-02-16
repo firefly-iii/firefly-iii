@@ -1,7 +1,7 @@
 <?php
 /**
  * UpdateTrait.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Update;
 
-use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use Log;
 
@@ -35,10 +33,11 @@ use Log;
 trait UpdateTrait
 {
     /**
-     * Get object for the latest release from GitHub.
+     * Returns an array with info on the next release, if any.
+     * 'message' => 'A new version is available.
+     * 'level' => 'info' / 'success' / 'error'
      *
      * @return array
-     * @throws FireflyException
      */
     public function getLatestRelease(): array
     {
@@ -47,81 +46,6 @@ trait UpdateTrait
         $checker = app(UpdateRequestInterface::class);
         $channel = app('fireflyconfig')->get('update_channel', 'stable')->data;
 
-        return $checker->getVersion($channel);
-    }
-
-    /**
-     * Parses the version check result in a human readable sentence.
-     *
-     * @param int   $versionCheck
-     * @param array $information
-     *
-     * @return string
-     */
-    public function parseResult(int $versionCheck, array $information): string
-    {
-        Log::debug(sprintf('Now in parseResult(%d)', $versionCheck));
-        $current   = (string)config('firefly.version');
-        $return    = '';
-        $triggered = false;
-        if (-1 === $versionCheck) {
-            $triggered         = true;
-            $monthAndDayFormat = (string)trans('config.month_and_day');
-            $carbon            = Carbon::createFromFormat('Y-m-d', $information['date']);
-            $return            = (string)trans(
-                'firefly.update_new_version_alert',
-                [
-                    'your_version' => $current,
-                    'new_version'  => $information['version'],
-                    'date'         => $carbon->formatLocalized($monthAndDayFormat),
-                ]
-            );
-            // append warning if beta or alpha.
-            $isBeta = $information['is_beta'] ?? false;
-            if (true === $isBeta) {
-                $return = sprintf('%s %s', $return, trans('firefly.update_version_beta'));
-            }
-
-            $isAlpha = $information['is_alpha'] ?? false;
-            if (true === $isAlpha) {
-                $return = sprintf('%s %s', $return, trans('firefly.update_version_alpha'));
-            }
-        }
-
-        if (0 === $versionCheck) {
-            $triggered = true;
-            Log::debug('User is running current version.');
-            // you are running the current version!
-            $return = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
-        }
-        if (1 === $versionCheck) {
-            $triggered = true;
-            Log::debug('User is running NEWER version.');
-            // you are running a newer version!
-            $return = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $information['version']]);
-        }
-        if (false === $triggered) {
-            Log::debug('No option was triggered.');
-            $return = (string)trans('firefly.update_check_error');
-        }
-
-        return $return;
-    }
-
-    /**
-     * Compare version and store result.
-     *
-     * @param array $information
-     *
-     * @return int
-     */
-    public function versionCheck(array $information): int
-    {
-        Log::debug('Now in versionCheck()');
-        $current = (string)config('firefly.version');
-        $check   = version_compare($current, $information['version']);
-        Log::debug(sprintf('Comparing %s with %s, result is %s', $current, $information['version'], $check), $information);
-
-        return $check;
+        return $checker->getUpdateInformation($channel);
     }
 }

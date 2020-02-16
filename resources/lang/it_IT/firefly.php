@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Questa bolletta non ha regole ad essa associate.',
     'go_to_asset_accounts'                       => 'Visualizza i tuoi conti attività',
     'go_to_budgets'                              => 'Vai ai tuoi budget',
-    'clone_instructions'                         => 'Per clonare una transazione, cerca la casella di controllo "salva come nuova" nella schermata di modifica',
+    'new_clone_instructions'                     => 'Questo pulsante clonerà automaticamente la transazione e imposterà la data di oggi. Sei sicuro?',
+    'clones_journal_x'                           => 'Questa transazione è un clone di ":description" (#:id)',
     'go_to_categories'                           => 'Vai alle tue categorie',
     'go_to_bills'                                => 'Vai alle tue bollette',
     'go_to_expense_accounts'                     => 'Vedi i tuoi conti spese',
@@ -218,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Controlla aggiornamenti',
     'admin_update_check_title'                   => 'Controlla automaticamente aggiornamento',
-    'admin_update_check_explain'                 => 'Firefly III può verificare automaticamente gli aggiornamenti. Quando attivi questa impostazione, contatterà Github per verificare se è disponibile una nuova versione di Firefly III. Quando lo sarà, riceverai una notifica. Puoi testare questa notifica usando il pulsante a destra. Indicare di seguito se si desidera che Firefly III controlli gli aggiornamenti.',
+    'admin_update_check_explain'                 => 'Firefly III può verificare automaticamente gli aggiornamenti. Quando attivi questa impostazione, contatterà il server di aggiornamento per verificare se è disponibile una nuova versione di Firefly III. Quando questo è il caso, riceverai una notifica. Puoi testare questa notifica utilizzando il pulsante a destra. Indicare di seguito se si desidera che Firefly III controlli gli aggiornamenti.',
     'check_for_updates_permission'               => 'Firefly III può controllare gli aggiornamenti, ma è necessario il tuo permesso per farlo. Vai nell\'<a href=":link">amministrazione</a> per indicare se desideri che questa funzione sia abilitata.',
     'updates_ask_me_later'                       => 'Chiedimelo più tardi',
     'updates_do_not_check'                       => 'Non controllare gli aggiornamenti',
@@ -231,7 +232,9 @@ return [
     'update_version_alpha'                       => 'Questa versione è una versione ALPHA. Puoi avere problemi.',
     'update_current_version_alert'               => 'Stai utilizzando :version, che è l\'ultima versione disponibile.',
     'update_newer_version_alert'                 => 'Stai utilizzando :your_version, che è più recente dell\'ultima versione, :new_version.',
-    'update_check_error'                         => 'Si è verificato un errore durante il controllo degli aggiornamenti. Si prega di visualizzare i file di log.',
+    'update_check_error'                         => 'Si è verificato un errore durante il controllo degli aggiornamenti: :error',
+    'unknown_error'                              => 'Errore sconosciuto. Siamo spiacenti.',
+    'just_new_release'                           => 'Una nuova versione è disponibile! La versione :version è stata rilasciata :date. Questa versione è molto recente. Attendi qualche giorno affinché la nuova versione venga considerata stabile.',
     'admin_update_channel_title'                 => 'Canale di aggiornamento',
     'admin_update_channel_explain'               => 'Firefly III dispone di tre "canali" di aggiornamento che indicano quanto avanti ti trovi in termini di funzionalità, miglioramenti e bug. Usa il canale "beta" se sei avventuroso e quello "alpha" se vuoi vivere pericolosamente.',
     'update_channel_stable'                      => 'Stabile. Tutto dovrebbe funzionare come previsto.',
@@ -309,6 +312,7 @@ return [
     'make_new_rule'                              => 'Crea una nuova regola nel gruppo di regole ":title"',
     'make_new_rule_no_group'                     => 'Crea una nuova regola',
     'instructions_rule_from_bill'                => 'Per abbinare le transazioni alla tua nuova bolletta ":name" Firefly III può creare una regola verrà automaticamente controllata per ogni transazione che memorizzi. Verifica i dettagli sottostanti e salva la regola perché Firefly III abbini le transazioni alla tua nuova bolletta.',
+    'instructions_rule_from_journal'             => 'Crea una regola basata su una delle tue transazioni. Completa o conferma il modulo sottostante.',
     'rule_is_strict'                             => 'regola severa',
     'rule_is_not_strict'                         => 'regola non severa',
     'rule_help_stop_processing'                  => 'Quando selezioni questa casella, le regole successive in questo gruppo non verranno eseguite.',
@@ -493,6 +497,9 @@ return [
     'new_rule_for_bill_title'         => 'Regola per la bolletta ":name"',
     'new_rule_for_bill_description'   => 'Questa regola contrassegna le transazioni per la bolletta ":name".',
 
+    'new_rule_for_journal_title'         => 'Regola basata sulla transazione ":description"',
+    'new_rule_for_journal_description'   => 'Questa regola è basata sulla transazione ":description". Verrà applicata a transazioni uguali.',
+
     // tags
     'store_new_tag'                   => 'Salva la nuova etichetta',
     'update_tag'                      => 'Aggiorna etichetta',
@@ -508,6 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Elimina tutte le etichette selezionate',
     'select_tags_to_delete'           => 'Non dimenticare di selezionare qualche etichetta.',
     'deleted_x_tags'                  => ':count etichette eliminate.',
+    'create_rule_from_transaction'    => 'Crea una regola basata sulla transazione',
 
     // preferences
     'pref_home_screen_accounts'       => 'Conti nella pagina iniziale',
@@ -700,6 +708,7 @@ return [
     'update_currency'                           => 'Aggiorna valuta',
     'new_default_currency'                      => ':name ora è la valuta predefinita.',
     'cannot_delete_currency'                    => 'Impossibile eliminare :name perché è ancora in uso.',
+    'cannot_delete_fallback_currency'           => ':name è la valuta di default del sistema e non può essere eliminata.',
     'cannot_disable_currency_journals'          => 'Non è possibile disabilitare :name perché ci sono ancora transazioni che la utilizzano.',
     'cannot_disable_currency_last_left'         => 'Non è possibile disabilitare :name perché è l\'ultima valuta abilitata.',
     'cannot_disable_currency_account_meta'      => 'Non è possibile disabilitare :name perché è utilizzata in conti attività.',
@@ -1323,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'split_title_help'                      => 'Se crei una transazione suddivisa è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
     'transaction_information'               => 'Informazioni transazione',
-    'you_create_transfer'                   => 'Stai creando un <strong>trasferimento</strong>.',
-    'you_create_withdrawal'                 => 'Stai creando un <strong>prelievo</strong>.',
-    'you_create_deposit'                    => 'Stai creando una <strong>entrata</strong>.',
+    'you_create_transfer'                   => 'Stai creando un trasferimento.',
+    'you_create_withdrawal'                 => 'Stai creando un prelievo.',
+    'you_create_deposit'                    => 'Stai creando un deposito.',
 
 
     // links

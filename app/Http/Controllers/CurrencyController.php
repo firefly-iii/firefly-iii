@@ -1,7 +1,7 @@
 <?php
 /**
  * CurrencyController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -183,6 +183,14 @@ class CurrencyController extends Controller
 
             return redirect(route('currencies.index'));
         }
+
+        if ($this->repository->isFallbackCurrency($currency)) {
+            $request->session()->flash('error', (string)trans('firefly.cannot_delete_fallback_currency', ['name' => e($currency->name)]));
+            Log::channel('audit')->info(sprintf('Tried to delete currency %s but is FALLBACK.', $currency->code));
+
+            return redirect(route('currencies.index'));
+        }
+
         Log::channel('audit')->info(sprintf('Deleted currency %s.', $currency->code));
         $this->repository->destroy($currency);
 

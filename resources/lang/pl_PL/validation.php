@@ -2,7 +2,7 @@
 
 /**
  * validation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -128,7 +128,7 @@ return [
     'in_array'                       => 'Pole :attribute nie istnieje w :other.',
     'present'                        => 'Pole :attribute musi być obecne.',
     'amount_zero'                    => 'Całkowita kwota nie może wynosić zero.',
-    'current_target_amount'          => 'The current amount must be less than the target amount.',
+    'current_target_amount'          => 'Bieżąca kwota musi być mniejsza niż kwota docelowa.',
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
@@ -193,8 +193,8 @@ return [
     'ob_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'ob_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 
-    'generic_invalid_source'      => 'You can\'t use this account as the source account.',
-    'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
+    'generic_invalid_source'      => 'Nie możesz użyć tego konta jako konta źródłowego.',
+    'generic_invalid_destination' => 'Nie możesz użyć tego konta jako konta docelowego.',
 
     'gte.numeric' => ':attribute musi być większy lub równy :value.',
     'gte.file'    => ':attribute musi mieć rozmiar większy niż lub równy :value kilobajtów.',

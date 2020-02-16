@@ -1,7 +1,7 @@
 <?php
 /**
  * JavascriptController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -119,9 +119,8 @@ class JavascriptController extends Controller
             $currency = app('amount')->getDefaultCurrency();
         }
 
-        $localeconv                = localeconv();
+        $localeconv                = app('amount')->getLocaleInfo();
         $accounting                = app('amount')->getJsConfig($localeconv);
-        $localeconv                = localeconv();
         $localeconv['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */

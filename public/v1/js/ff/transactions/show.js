@@ -27,7 +27,13 @@ $(function () {
         makeAutoComplete();
     })
     $('[data-toggle="tooltip"]').tooltip();
+
+    $('#clone_button').click(cloneNewFunction);
 });
+
+function cloneNewFunction() {
+    return confirm(newCloneInstructions);
+}
 
 function getLinkModal(e) {
     var button = $(e.currentTarget);

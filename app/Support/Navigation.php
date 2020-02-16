@@ -113,56 +113,49 @@ class Navigation
             [$start, $end] = [$end, $start];
         }
         $periods = [];
-        /*
-         * Start looping per month for 1 year + the rest of the year:
-         */
-        $perMonthEnd   = clone $end;
-        $perMonthStart = clone $end;
-        $perMonthStart->startOfYear()->subYear();
-        $perMonthStart = $start->lt($perMonthStart) ? $perMonthStart : $start;
+        // first, 13 periods of [range]
+        $loopCount = 0;
+        $loopDate  = clone $end;
+        $workStart = clone $loopDate;
+        $workEnd   = clone $loopDate;
+        while ($loopCount < 13) {
+            // make range:
+            $workStart = \Navigation::startOfPeriod($workStart, $range);
+            $workEnd   = \Navigation::endOfPeriod($workStart, $range);
 
-        // loop first set:
-        while ($perMonthEnd >= $perMonthStart) {
-            $perMonthEnd = $this->startOfPeriod($perMonthEnd, $range);
-            $currentEnd  = $this->endOfPeriod($perMonthEnd, $range);
-            if ($currentEnd->gt($start)) {
+            // make sure we don't go overboard
+            if ($workEnd->gt($start)) {
                 $periods[] = [
-                    'start'  => $perMonthEnd,
-                    'end'    => $currentEnd,
+                    'start'  => clone $workStart,
+                    'end'    => clone $workEnd,
                     'period' => $range,
                 ];
             }
-            $perMonthEnd = $this->subtractPeriod($perMonthEnd, $range, 1);
+            // skip to the next period:
+            $workStart->subDay()->startOfDay();
+            $loopCount++;
         }
+        // if $workEnd is still before $start, continue on a yearly basis:
+        $loopCount = 0;
+        if ($workEnd->gt($start)) {
+            while ($workEnd->gt($start) && $loopCount < 20) {
+                // make range:
+                $workStart = app('navigation')->startOfPeriod($workStart, '1Y');
+                $workEnd   = app('navigation')->endOfPeriod($workStart, '1Y');
 
-        // do not continue if date is already less
-        if ($perMonthEnd->lt($start)) {
-            return $periods;
-        }
-
-        // per year variables:
-        $perYearEnd   = clone $perMonthStart;
-        $perYearStart = clone $perMonthStart;
-        unset($perMonthEnd, $currentEnd, $perMonthStart);
-        $perYearEnd->subYear();
-        $perYearStart->subYears(50);
-        $perYearStart = $start->lt($perYearStart) ? $perYearStart : $start;
-        $perYearStart->startOfYear();
-
-        // per year
-        while ($perYearEnd >= $perYearStart) {
-            $perYearEnd = $this->startOfPeriod($perYearEnd, '1Y');
-            $currentEnd = $this->endOfPeriod($perYearEnd, '1Y')->endOfDay();
-            if ($currentEnd->gt($start)) {
-                $periods[] = [
-                    'start'  => $perYearEnd,
-                    'end'    => $currentEnd,
-                    'period' => '1Y',
-                ];
+                // make sure we don't go overboard
+                if ($workEnd->gt($start)) {
+                    $periods[] = [
+                        'start'  => clone $workStart,
+                        'end'    => clone $workEnd,
+                        'period' => '1Y',
+                    ];
+                }
+                // skip to the next period:
+                $workStart->subDay()->startOfDay();
+                $loopCount++;
             }
-            $perYearEnd = $this->subtractPeriod($perYearEnd, '1Y', 1);
         }
-
         return $periods;
     }
 
@@ -317,12 +310,13 @@ class Navigation
             $entries[$formatted] = $displayed;
             $begin->$increment();
         }
+
         return $entries;
     }
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param  string        $repeatFrequency
+     * @param string         $repeatFrequency
      *
      * @return string
      */
@@ -590,6 +584,7 @@ class Navigation
             //Log::debug(sprintf('repeatFreq is %s, start is %s and end is %s (session data).', $repeatFreq, $tStart->format('Y-m-d'), $tEnd->format('Y-m-d')));
             //Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $date->subDays($diffInDays * $subtract);
+
             //Log::debug(sprintf('subtractPeriod: resulting date is %s', $date->format('Y-m-d')));
 
             return $date;
