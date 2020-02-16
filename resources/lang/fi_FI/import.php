@@ -223,7 +223,7 @@ return [
     'job_config_roles_column_role'    => 'Sarakkeen arvojen tarkoitus',
     'job_config_roles_do_map_value'   => 'Kartoita nämä arvot',
     'job_config_roles_no_example'     => 'Esimerkkitietoja ei ole saatavilla',
-    'job_config_roles_fa_warning'     => 'Jos merkitset sarakkeen sisältävän summan vieraana valuuttana, sinun on myös asetettava sarake, joka sisältää valuutan.',
+    'job_config_roles_fa_warning'     => 'Jos merkitset sarakkeen sisältävän summan toisena valuuttana, sinun on myös asetettava sarake, joka sisältää valuutan.',
     'job_config_roles_rwarning'       => 'Merkitse vähintään yksi sarake summasarakkeeksi. On myös suositeltavaa valita sarake kuvaukselle, päivämäärälle ja vastatilille.',
     'job_config_roles_colum_count'    => 'Sarake',
     // job config for the file provider (stage: mapping):

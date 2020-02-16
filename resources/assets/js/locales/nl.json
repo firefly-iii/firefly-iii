@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Je kan de doelrekening van een afstemming niet wijzigen.",
         "source_account_reconciliation": "Je kan de bronrekening van een afstemming niet wijzigen.",
         "budget": "Budget",
-        "you_create_withdrawal": "You're creating a withdrawal.",
-        "you_create_transfer": "You're creating a transfer.",
-        "you_create_deposit": "You're creating a deposit."
+        "you_create_withdrawal": "Je maakt een uitgave.",
+        "you_create_transfer": "Je maakt een overschrijving.",
+        "you_create_deposit": "Je maakt inkomsten."
     },
     "form": {
         "interest_date": "Rentedatum",

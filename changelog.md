@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.1.0 (API 1.0.0)] - 2020-02-xx
 
+Before this release came out, several alpha and beta versions had been released already:
+
+- 5.1.0-alpha.1 on 2020-02-16
+
 ### Added
 - [Issue 2575](https://github.com/firefly-iii/firefly-iii/issues/2575) You can now create a transaction from a rule.
 - [Issue 3052](https://github.com/firefly-iii/firefly-iii/issues/3052) The old way of cloning transactions is back.

@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Sie k\u00f6nnen das Zielkonto einer Kontenausgleichsbuchung nicht bearbeiten.",
         "source_account_reconciliation": "Sie k\u00f6nnen das Quellkonto einer Kontenausgleichsbuchung nicht bearbeiten.",
         "budget": "Budget",
-        "you_create_withdrawal": "You're creating a withdrawal.",
-        "you_create_transfer": "You're creating a transfer.",
-        "you_create_deposit": "You're creating a deposit."
+        "you_create_withdrawal": "Sie haben eine Auszahlung erstellt.",
+        "you_create_transfer": "Sie haben eine Buchung erstellt.",
+        "you_create_deposit": "Sie haben eine Einzahlung erstellt."
     },
     "form": {
         "interest_date": "Zinstermin",

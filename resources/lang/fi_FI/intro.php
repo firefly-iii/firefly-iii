@@ -30,17 +30,17 @@ return [
     'index_help'                                      => 'Jos koskaan tarvitset apua sivun tai lomakkeen kanssa, paina tätä painiketta.',
     'index_outro'                                     => 'Useimmat Firefly III -sivut alkavat tällaisella pienellä opastuksella. Ota minuun yhteyttä, kun sinulla on kysyttävää tai kommentteja. Nauti!',
     'index_sidebar-toggle'                            => 'Luo uusia tapahtumia, tilejä tai muita juttuja käyttämällä tämän kuvakkeen alla olevaa valikkoa.',
-    'index_cash_account'                              => 'Nämä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
+    'index_cash_account'                              => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Valitse suosikkiomaisuustilisi tai -vastuusi tästä alasvetovalikosta.',
     'transactions_create_withdrawal_destination'      => 'Valitse tästä kulutustili. Jätä se tyhjäksi, jos haluat tehdä käteismaksun.',
     'transactions_create_withdrawal_foreign_currency' => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
     'transactions_create_withdrawal_more_meta'        => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_withdrawal_split_add'        => 'Jos haluat jakaa tapahtuman, lisää useampia jakoja tällä painikkeella',
+    'transactions_create_withdrawal_split_add'        => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Valitse tai kirjoita maksunsaaja tässä automaattitäydennys-pudotusvalikko-tekstikentässä. Jätä se tyhjäksi, jos haluat tehdä käteistalletuksen.',
+    'transactions_create_deposit_source'              => 'Valitse tai kirjoita maksunsaaja tässä automaattitäydennys-pudotusvalikko-tekstikentässä. Jätä kenttä tyhjäksi jos haluat tehdä käteistalletuksen.',
     'transactions_create_deposit_destination'         => 'Valitse omaisuus- tai vastuutili täältä.',
     'transactions_create_deposit_foreign_currency'    => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
     'transactions_create_deposit_more_meta'           => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
@@ -54,7 +54,7 @@ return [
     'transactions_create_transfer_split_add'          => 'Jos haluat jakaa tapahtuman, lisää useampia jakoja tällä painikkeella',
 
     // create account:
-    'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä saattaa tehdä tietojen tuonnin tulevaisuudessa erittäin helpoksi.',
+    'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',
     'accounts_create_asset_opening_balance'           => 'Omaisuustilillä voi olla "alkusaldo", joka ilmaisee tilin historian alkamisen Firefly III:ssa.',
     'accounts_create_asset_currency'                  => 'Firefly III tukee useita valuuttoja. Omaisuustilillä on yksi päävaluutta, joka täytyy asettaa tässä.',
     'accounts_create_asset_virtual'                   => 'Joskus voi olla hyödyllistä antaa tilille virtuaalinen saldo: lisäsumma joka aina lisätään tai vähennetään todellisesta saldosta.',

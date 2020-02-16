@@ -58,8 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Diese Rechnung enthält keine mit ihr verbundenen Regeln.',
     'go_to_asset_accounts'                       => 'Bestandskonten anzeigen',
     'go_to_budgets'                              => 'Budgets anzeigen',
-    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
-    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
+    'new_clone_instructions'                     => 'Mit dieser Schaltfläche wird die Buchung automatisch dupliziert und das Datum auf heute festgelegt. Möchten Sie fortfahren?',
+    'clones_journal_x'                           => 'Diese Buchung ist ein Duplikat von „:description” (#:id)',
     'go_to_categories'                           => 'Kategorien anzeigen',
     'go_to_bills'                                => 'Rechnungen anzeigen',
     'go_to_expense_accounts'                     => 'Kreditoren (Ausgabenkonten) anzeigen',
@@ -219,7 +219,7 @@ return [
     // check for updates:
     'update_check_title'                         => 'Nach Updates suchen',
     'admin_update_check_title'                   => 'Automatisch nach Updates suchen',
-    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
+    'admin_update_check_explain'                 => 'Firefly III kann automatisch nach Aktualisierungen suchen. Wenn Sie diese Einstellung aktivieren, wird der Firefly III Aktualisierungsserver kontaktiert, um zu prüfen, ob eine neue Version von Firefly III verfügbar ist. Wenn dies der Fall ist, erhalten Sie eine Benachrichtigung. Sie können diese Benachrichtigung mit der Schaltfläche auf der rechten Seite testen. Bitte geben Sie unten an, ob Firefly III nach Aktualisierungen suchen soll.',
     'check_for_updates_permission'               => 'Firefly III kann nach Updates suchen, benötigt jedoch Ihre Erlaubnis dazu. Bitte gehen Sie zur <a href=":link">Administration</a>, um anzugeben, ob diese Funktion aktiviert werden soll.',
     'updates_ask_me_later'                       => 'Später fragen',
     'updates_do_not_check'                       => 'Nicht nach Updates suchen',
@@ -232,9 +232,9 @@ return [
     'update_version_alpha'                       => 'Seien Sie vorsichtig bei der Verwendung dieser APLPHA-Version. Sie kann Fehler enthaltern.',
     'update_current_version_alert'               => 'Sie verwenden Version :version. Dies ist die neueste verfügbare Version.',
     'update_newer_version_alert'                 => 'Sie verwenden :your_version. Ihre Version ist neuer als die neueste Version (:new_version).',
-    'update_check_error'                         => 'An error occurred while checking for updates: :error',
-    'unknown_error'                              => 'Unknown error. Sorry about that.',
-    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
+    'update_check_error'                         => 'Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten: :error',
+    'unknown_error'                              => 'Leider ist ein unbekannter Fehler aufgetreten.',
+    'just_new_release'                           => 'Eine neue Version ist verfügbar! Version :version wurde veröffentlicht :date. Diese Version ist sehr jung. Warten Sie ein paar Tage, bis sich die neue Version etabliert hat.',
     'admin_update_channel_title'                 => 'Aktualisierungskanal',
     'admin_update_channel_explain'               => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
     'update_channel_stable'                      => 'Stabil — Alles sollte wie erwartet funktionieren.',
@@ -312,7 +312,7 @@ return [
     'make_new_rule'                              => 'Neue Regel in der Regelgruppe „:title” erstellen',
     'make_new_rule_no_group'                     => 'Neue Regel erstellen',
     'instructions_rule_from_bill'                => 'Um Buchungen an Ihre neue Rechnung „:name” anzupassen, kann Firefly III eine Regel erstellen, die automatisch gegen alle von Ihnen gespeicherten Buchungen geprüft wird. Bitte überprüfen Sie die folgenden Angaben und speichern Sie die Regel, damit Firefly III die Buchungen automatisch mit Ihrer neuen Rechnung abgleicht.',
-    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
+    'instructions_rule_from_journal'             => 'Erstellen Sie eine Regel auf der Grundlage einer Ihrer Buchungen. Ergänzen oder übermitteln Sie das nachfolgende Formular.',
     'rule_is_strict'                             => 'strikte Regel',
     'rule_is_not_strict'                         => 'nicht-strenge Regel',
     'rule_help_stop_processing'                  => 'Wenn Sie dieses Kontrollkästchen aktivieren, werden spätere Regeln in dieser Gruppe nicht ausgeführt.',
@@ -497,8 +497,8 @@ return [
     'new_rule_for_bill_title'         => 'Regel für Rechnung „:name”',
     'new_rule_for_bill_description'   => 'Diese Regel kennzeichnet Buchungen für die Rechnung „:name”.',
 
-    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
-    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+    'new_rule_for_journal_title'         => 'Regel basierend auf der Buchung „:description”',
+    'new_rule_for_journal_description'   => 'Diese Regel basiert auf der Buchung „:description”. Sie stimmt mit Buchungen überein, die identisch sind.',
 
     // tags
     'store_new_tag'                   => 'Neues Schlagwort speichern',
@@ -515,7 +515,7 @@ return [
     'delete_all_selected_tags'        => 'Alle markierten Stichwörter löschen',
     'select_tags_to_delete'           => 'Nicht vergessen, einige Schlagwörter auszuwählen.',
     'deleted_x_tags'                  => ':count Schlagwort/-wörter gelöscht.',
-    'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'create_rule_from_transaction'    => 'Regel auf Basis der Buchung erstellen',
 
     // preferences
     'pref_home_screen_accounts'       => 'Konten auf dem Startbildschirm',
@@ -708,7 +708,7 @@ return [
     'update_currency'                           => 'Währung aktualisieren',
     'new_default_currency'                      => '„:name” wird nun als Standardwährung verwendet.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
-    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
+    'cannot_delete_fallback_currency'           => ':name ist die Standardwährung des Systems und kann daher nicht gelöscht werden.',
     'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen noch verwendet wird.',
     'cannot_disable_currency_last_left'         => '„:name” kann nicht deaktiviert werden, da es sich um die einzige aktivierte Währung handelt.',
     'cannot_disable_currency_account_meta'      => ':name konnte nicht deaktiviert werden, da dieser noch in Bestandskonten verwendet wird.',
@@ -1332,9 +1332,9 @@ return [
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
-    'you_create_transfer'                   => 'You\'re creating a transfer.',
-    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
-    'you_create_deposit'                    => 'You\'re creating a deposit.',
+    'you_create_transfer'                   => 'Sie haben eine Buchung erstellt.',
+    'you_create_withdrawal'                 => 'Sie haben eine Auszahlung erstellt.',
+    'you_create_deposit'                    => 'Sie haben eine Einzahlung erstellt.',
 
 
     // links
