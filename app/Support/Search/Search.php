@@ -123,7 +123,7 @@ class Search implements SearchInterface
     {
         $filteredQuery       = app('steam')->cleanString($query);
         $this->originalQuery = $filteredQuery;
-        $pattern             = '/[[:alpha:]_]*:"?[\P{C}_-]*"?/ui';
+        $pattern             = '/[[:alpha:]_]*:(".*"|[\P{Zs}_-]*)/ui';
         $matches             = [];
         preg_match_all($pattern, $filteredQuery, $matches);
 
