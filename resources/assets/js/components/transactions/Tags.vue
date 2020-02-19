@@ -29,6 +29,7 @@
             <vue-tags-input
                     v-model="tag"
                     :tags="tags"
+                    :title="$t('firefly.tags')"
                     classes="form-input"
                     :autocomplete-items="autocompleteItems"
                     :add-only-from-autocomplete="false"

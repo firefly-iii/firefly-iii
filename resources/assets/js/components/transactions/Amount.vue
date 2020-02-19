@@ -25,9 +25,16 @@
         </div>
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" @input="handleInput" ref="amount" :value="value" step="any" class="form-control"
-                   name="amount[]"
-                   title="$t('firefly.amount')" autocomplete="off" v-bind:placeholder="$t('firefly.amount')">
+            <input type="number" 
+            @input="handleInput" 
+            ref="amount" 
+            :value="value" 
+            step="any" 
+            class="form-control"
+            name="amount[]"
+            :title="$t('firefly.amount')" 
+            autocomplete="off" 
+            v-bind:placeholder="$t('firefly.amount')">
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>

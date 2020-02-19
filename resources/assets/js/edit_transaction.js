@@ -1,5 +1,5 @@
 /*
- * app.js
+ * edit_transactions.js
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,15 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import * as uiv from 'uiv';
 import CustomAttachments from "./components/transactions/CustomAttachments";
-import CreateTransaction from './components/transactions/CreateTransaction';
 import EditTransaction from './components/transactions/EditTransaction';
-import Clients from './components/passport/Clients';
-import AuthorizedClients from "./components/passport/AuthorizedClients";
-import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
 import CustomDate from "./components/transactions/CustomDate";
 import CustomString from "./components/transactions/CustomString";
 import CustomTextarea from "./components/transactions/CustomTextarea";
@@ -44,17 +37,12 @@ import AccountSelect from "./components/transactions/AccountSelect";
 import Budget from "./components/transactions/Budget";
 
 /**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
+ * First we will load Axios via bootstrap.js
+ * jquery and bootstrap-sass preloaded in app.js
+ * vue, uiv and vuei18n are in app_vue.js
  */
 
-require('./bootstrap');
-
-Vue.use(VueI18n);
-window.Vue = Vue;
-
-Vue.use(uiv);
+ require('./bootstrap');
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
@@ -65,7 +53,6 @@ Vue.component('custom-textarea', CustomTextarea);
 Vue.component('standard-date', StandardDate);
 Vue.component('group-description', GroupDescription);
 Vue.component('transaction-description', TransactionDescription);
-
 Vue.component('custom-transaction-fields', CustomTransactionFields);
 Vue.component('piggy-bank', PiggyBank);
 Vue.component('tags', Tags);
@@ -78,7 +65,7 @@ Vue.component('account-select', AccountSelect);
 Vue.component('edit-transaction', EditTransaction);
 
 // Create VueI18n instance with options
-const i18n = new VueI18n({
+const i18n = new vuei18n({
                              locale: document.documentElement.lang, // set locale
                              fallbackLocale: 'en',
                              messages: {

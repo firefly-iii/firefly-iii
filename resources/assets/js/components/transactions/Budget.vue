@@ -27,9 +27,19 @@
             {{ $t('firefly.budget') }}
         </div>
         <div class="col-sm-12">
-            <select name="budget[]" ref="budget" v-model="value" @input="handleInput" class="form-control"
-                    v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets" :label="cBudget.name" :value="cBudget.id">{{cBudget.name}}</option>
+            <select 
+            name="budget[]" 
+            ref="budget" 
+            v-model="selected" 
+            @input="handleInput"
+            v-on:change="signalChange" 
+            :title="$t('firefly.budget')"
+            class="form-control"
+             v-if="this.budgets.length > 0">
+                <option v-for="cBudget in this.budgets" 
+                    :label="cBudget.name" 
+                    :value="cBudget.id">{{cBudget.name}}
+                </option>
             </select>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
@@ -41,17 +51,29 @@
 <script>
     export default {
         name: "Budget",
-        props: ['transactionType', 'value', 'error','no_budget'],
+        props: {
+            transactionType: String, 
+            value: {
+                type: [String, Number], 
+                default: 0
+            },
+            error: Array,
+            no_budget: String,
+        },
         mounted() {
             this.loadBudgets();
-            //this.value = null === this.value ? 0 : this.value;
         },
         data() {
             return {
+                selected: this.value,
                 budgets: [],
             }
         },
         methods: {
+            // Fixes edit change budget not updating on every broswer
+            signalChange: function(e) {
+                this.$emit('input', this.$refs.budget.value);
+            },
             handleInput(e) {
                 this.$emit('input', this.$refs.budget.value);
             },

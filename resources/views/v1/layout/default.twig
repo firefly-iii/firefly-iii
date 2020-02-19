@@ -182,8 +182,14 @@
 {# All kinds of variables. #}
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
-{# big fat JS thing courtesy of Vue#}
-<script src="v1/js/{{ VUE_SCRIPT_NAME|default('app') }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+{# Base script: jquery and bootstrap #}
+<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+
+{# Vue scripts and components. Only loaded when needed #}
+{% if VUE_SCRIPT_NAME %}
+    <script src="v1/js/app_vue.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+{% endif %}
 
 {# date range picker, current template, etc.#}
 <script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>

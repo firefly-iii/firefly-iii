@@ -1,5 +1,5 @@
 /*
- * app.js
+ * app_vue.js
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,17 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* We'll load jQuery and the Bootstrap jQuery plugin which provides support
-* for JavaScript based Bootstrap features such as modals and tabs. This
-* code may be modified to fit the specific needs of your application.
+/* Creates a base file for vue apps
+ * Bootstrat-sass and jquery are loaded via app.js
 */
+import Vue from 'vue';
+import VueI18n from 'vue-i18n'
+import * as uiv from 'uiv';
 
-try {
-   window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap-sass');
-} catch (e) {}
-
-
-
-
+window.vuei18n = VueI18n;
+window.uiv =uiv;
+Vue.use(vuei18n);
+Vue.use(uiv);
+window.Vue = Vue;
