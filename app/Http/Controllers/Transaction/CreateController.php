@@ -70,6 +70,8 @@ class CreateController extends Controller
         $service  = app(GroupCloneService::class);
         $newGroup = $service->cloneGroup($group);
 
+        app('preferences')->mark();
+
         return redirect(route('transactions.show', [$newGroup->id]));
     }
 
