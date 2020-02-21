@@ -29,6 +29,8 @@ TODO: hide and show columns
         {% if showBudget %}
             <th>{{ trans('list.budget') }}</th>
         {% endif %}
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
@@ -174,7 +176,7 @@ TODO: hide and show columns
 
                 {% if group.count == 1 %}
                     <td style=" {{ style|raw }};">
-                        <div class="btn-group btn-group-xs">
+                        <div class="btn-group btn-group-xs pull-right">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
