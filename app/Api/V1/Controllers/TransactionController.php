@@ -294,7 +294,7 @@ class TransactionController extends Controller
 
             return response()->json($response, 422);
         }
-
+        app('preferences')->mark();
         event(new StoredTransactionGroup($transactionGroup));
 
         $manager = $this->getManager();
@@ -338,6 +338,7 @@ class TransactionController extends Controller
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = $this->getManager();
 
+        app('preferences')->mark();
         event(new UpdatedTransactionGroup($transactionGroup));
 
         /** @var User $admin */
