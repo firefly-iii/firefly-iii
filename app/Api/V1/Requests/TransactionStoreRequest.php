@@ -30,7 +30,7 @@ use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
-
+use Log;
 
 /**
  * Class TransactionStoreRequest
@@ -46,6 +46,7 @@ class TransactionStoreRequest extends Request
      */
     public function authorize(): bool
     {
+        Log::debug('Authorize TransactionStoreRequest');
         // Only allow authenticated users
         return auth()->check();
     }
@@ -57,6 +58,7 @@ class TransactionStoreRequest extends Request
      */
     public function getAll(): array
     {
+        Log::debug('get all data in TransactionStoreRequest');
         $data = [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
@@ -73,6 +75,7 @@ class TransactionStoreRequest extends Request
      */
     public function rules(): array
     {
+        Log::debug('Collect rules of TransactionStoreRequest');
         $rules = [
             // basic fields for group:
             'group_title'                          => 'between:1,1000|nullable',

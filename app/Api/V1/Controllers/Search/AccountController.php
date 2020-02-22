@@ -32,6 +32,7 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
+use Log;
 
 /**
  * Class AccountController
@@ -62,6 +63,7 @@ class AccountController extends Controller
      */
     public function search(Request $request)
     {
+        Log::debug('Now in account search()');
         $manager = $this->getManager();
         $query   = $request->get('query');
         $field   = $request->get('field');
@@ -70,6 +72,8 @@ class AccountController extends Controller
             return response(null, 422);
         }
         $types = $this->mapAccountTypes($type);
+        Log::debug(sprintf('Going to search for "%s" in types', $query), $types);
+
         /** @var AccountSearch $search */
         $search = app(AccountSearch::class);
         $search->setUser(auth()->user());
@@ -78,6 +82,8 @@ class AccountController extends Controller
         $search->setQuery($query);
 
         $accounts = $search->search();
+
+        Log::debug(sprintf('Found %d accounts', $accounts->count()));
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

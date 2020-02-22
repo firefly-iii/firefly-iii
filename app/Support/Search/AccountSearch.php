@@ -82,8 +82,8 @@ class AccountSearch implements GenericSearchInterface
                 $query->orWhere(
                     static function (Builder $q) use ($originalQuery) {
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
-                        $q->where('account_meta.name', 'account_number');
-                        $q->where('account_meta.data', $json);
+                        $q->where('account_meta.name', '=', 'account_number');
+                        $q->where('account_meta.data', 'LIKE', $json);
                     }
                 );
                 break;
@@ -107,7 +107,6 @@ class AccountSearch implements GenericSearchInterface
                 );
                 break;
         }
-
         return $query->distinct()->get(['accounts.*']);
     }
 

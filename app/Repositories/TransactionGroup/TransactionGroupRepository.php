@@ -45,6 +45,7 @@ use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Log;
 
 /**
  * Class TransactionGroupRepository
@@ -337,8 +338,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
         $factory->setUser($this->user);
+        try {
+            return $factory->create($data);
+        } catch (DuplicateTransactionException $e) {
+            Log::warning('Group repository caught group factory with a duplicate exception!');
+            throw new DuplicateTransactionException($e->getMessage());
+        }
 
-        return $factory->create($data);
+
     }
 
     /**

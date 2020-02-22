@@ -129,11 +129,11 @@ class TransactionJournalFactory
     public function create(array $data): Collection
     {
         // convert to special object.
-        $data = new NullArrayObject($data);
+        $dataObject = new NullArrayObject($data);
 
         Log::debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection;
-        $transactions = $data['transactions'] ?? [];
+        $transactions = $dataObject['transactions'] ?? [];
         if (0 === count($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
@@ -145,7 +145,12 @@ class TransactionJournalFactory
             Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
 
             Log::debug('Going to call createJournal', $row);
-            $journal = $this->createJournal(new NullArrayObject($row));
+            try {
+                $journal = $this->createJournal(new NullArrayObject($row));
+            } catch (DuplicateTransactionException|Exception $e) {
+                Log::warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
+                throw new DuplicateTransactionException($e->getMessage());
+            }
             if (null !== $journal) {
                 $collection->push($journal);
             }
@@ -395,17 +400,20 @@ class TransactionJournalFactory
      */
     private function errorIfDuplicate(string $hash): void
     {
+        Log::debug(sprintf('In errorIfDuplicate(%s)', $hash));
         if (false === $this->errorOnHash) {
             return;
         }
         $result = null;
         if ($this->errorOnHash) {
+            Log::debug('Will verify duplicate!');
             /** @var TransactionJournalMeta $result */
             $result = TransactionJournalMeta::where('data', json_encode($hash, JSON_THROW_ON_ERROR))
                                             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
                                             ->first();
         }
         if (null !== $result) {
+            Log::warning('Found a duplicate!');
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $result->transactionJournal->transaction_group_id));
         }
     }
@@ -526,6 +534,9 @@ class TransactionJournalFactory
     public function setErrorOnHash(bool $errorOnHash): void
     {
         $this->errorOnHash = $errorOnHash;
+        if (true === $errorOnHash) {
+            Log::info('Will trigger duplication alert for this journal.');
+        }
     }
 
 

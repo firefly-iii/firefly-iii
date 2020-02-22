@@ -559,7 +559,7 @@ class AccountValidator
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string)trans('validation.transfer_source_need_data');
-
+            Log::warning('Not a valid source, need more data.');
             return false;
         }
 
@@ -567,10 +567,11 @@ class AccountValidator
         $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-
+            Log::warning('Not a valid source, cant find it.', $validTypes);
             return false;
         }
         $this->source = $search;
+        Log::debug('Valid source!');
 
         return true;
     }
@@ -634,6 +635,7 @@ class AccountValidator
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string)trans('validation.withdrawal_source_need_data');
+            Log::warning('Not a valid source. Need more data.');
 
             return false;
         }
@@ -642,10 +644,11 @@ class AccountValidator
         $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-
+            Log::warning('Not a valid source. Cant find it.', $validTypes);
             return false;
         }
         $this->source = $search;
+        Log::debug('Valid source account!');
 
         return true;
     }

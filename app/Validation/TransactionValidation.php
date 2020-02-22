@@ -42,6 +42,7 @@ trait TransactionValidation
      */
     public function validateAccountInformation(Validator $validator): void
     {
+        Log::debug('Now in validateAccountInformation()');
         $transactions = $this->getTransactionsArray($validator);
         $data         = $validator->getData();
 
@@ -88,6 +89,7 @@ trait TransactionValidation
      */
     public function validateAccountInformationUpdate(Validator $validator): void
     {
+        Log::debug('Now in validateAccountInformationUpdate()');
         $transactions = $this->getTransactionsArray($validator);
 
         /** @var AccountValidator $accountValidator */
@@ -141,9 +143,10 @@ trait TransactionValidation
      */
     public function validateDescriptions(Validator $validator): void
     {
+        Log::debug('Now in validateDescriptions()');
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
-        foreach ($transactions as $index => $transaction) {
+        foreach ($transactions as $transaction) {
             if ('' !== (string)($transaction['description'] ?? null)) {
                 $validDescriptions++;
             }
@@ -164,6 +167,7 @@ trait TransactionValidation
      */
     public function validateForeignCurrencyInformation(Validator $validator): void
     {
+        Log::debug('Now in validateForeignCurrencyInformation()');
         $transactions = $this->getTransactionsArray($validator);
 
         foreach ($transactions as $index => $transaction) {
@@ -191,6 +195,7 @@ trait TransactionValidation
      */
     public function validateGroupDescription(Validator $validator): void
     {
+        Log::debug('Now in validateGroupDescription()');
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
@@ -207,6 +212,7 @@ trait TransactionValidation
      */
     public function validateOneRecurrenceTransaction(Validator $validator): void
     {
+        Log::debug('Now in validateOneRecurrenceTransaction()');
         $transactions = $this->getTransactionsArray($validator);
 
         // need at least one transaction
@@ -222,6 +228,7 @@ trait TransactionValidation
      */
     public function validateOneRecurrenceTransactionUpdate(Validator $validator): void
     {
+        Log::debug('Now in validateOneRecurrenceTransactionUpdate()');
         $transactions = $this->getTransactionsArray($validator);
         // need at least one transaction
         if (0 === count($transactions)) {
@@ -236,11 +243,15 @@ trait TransactionValidation
      */
     public function validateOneTransaction(Validator $validator): void
     {
+        Log::debug('Now in validateOneTransaction()');
         $transactions = $this->getTransactionsArray($validator);
         // need at least one transaction
         if (0 === count($transactions)) {
             $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
+            Log::debug('Added error: at_least_one_transaction.');
+            return;
         }
+        Log::debug('Added NO errors.');
     }
 
     /**
@@ -250,6 +261,7 @@ trait TransactionValidation
      */
     public function validateTransactionTypes(Validator $validator): void
     {
+        Log::debug('Now in validateTransactionTypes()');
         $transactions = $this->getTransactionsArray($validator);
 
         $types = [];
@@ -276,6 +288,7 @@ trait TransactionValidation
      */
     public function validateTransactionTypesForUpdate(Validator $validator): void
     {
+        Log::debug('Now in validateTransactionTypesForUpdate()');
         $transactions = $this->getTransactionsArray($validator);
         $types        = [];
         foreach ($transactions as $index => $transaction) {
@@ -383,6 +396,7 @@ trait TransactionValidation
      */
     private function validateEqualAccounts(Validator $validator): void
     {
+        Log::debug('Now in validateEqualAccounts()');
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
@@ -433,6 +447,7 @@ trait TransactionValidation
      */
     private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {
+        Log::debug('Now in validateEqualAccountsForUpdate()');
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
@@ -525,6 +540,7 @@ trait TransactionValidation
      */
     private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
+        Log::debug('Now in validateJournalIds()');
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
 
