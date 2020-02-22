@@ -23,6 +23,6 @@
 declare(strict_types=1);
 
 return [
-    'failed'   => 'Ces identifiants n\'ont aucune correspondance.',
+    'failed'   => 'Aucun compte ne correspond à ces identifiants.',
     'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
 ];

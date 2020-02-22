@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'html_language'           => 'fi',
-    'locale'                  => 'fi, Finnish, en_US.utf8, en_US.UTF-8',
+    'locale'                  => 'fi, Finnish, fi_FI.utf8, fi_FI.UTF-8',
     'month'                   => '%B %Y',
     'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js' => 'D MMM, YYYY',

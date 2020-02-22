@@ -625,13 +625,13 @@ return [
     'delete_local_info_only'        => '由于您以 ":login_provider" 验证，仅会删除本机 Firefly III 资讯。',
 
     // export data:
-    'import_and_export_menu'        => 'Import and export',
-    'export_data_title'             => 'Export data from Firefly III',
-    'export_data_menu'              => 'Export data',
-    'export_data_bc'                => 'Export data from Firefly III',
-    'export_data_main_title'        => 'Export data from Firefly III',
+    'import_and_export_menu'        => '导入和导出',
+    'export_data_title'             => '从 Fifly III 导出数据',
+    'export_data_menu'              => '导出数据',
+    'export_data_bc'                => '从 Fifly III 导出数据',
+    'export_data_main_title'        => '从 Fifly III 导出数据',
     'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
-    'export_data_all_transactions'  => 'Export all transactions',
+    'export_data_all_transactions'  => '导出所有交易',
     'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
 
     // attachments
