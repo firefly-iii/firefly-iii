@@ -118,6 +118,7 @@ class DebugController extends Controller
         $search  = ['~', '#'];
         $replace = ['\~', '# '];
 
+        $installationId = app('fireflyconfig')->get('installation_id', '')->data;
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
         $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
@@ -126,8 +127,6 @@ class DebugController extends Controller
         $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
-        $isSandstorm    = var_export(config('firefly.is_sandstorm'), true);
-        $toSandbox      = var_export(config('firefly.bunq_use_sandbox'), true);
         $trustedProxies = config('firefly.trusted_proxies');
         $displayErrors  = ini_get('display_errors');
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
@@ -174,9 +173,10 @@ class DebugController extends Controller
 
         return view(
             'debug', compact(
-            'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers', 'currentDriver', 'loginProvider',
-            'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isSandstorm', 'trustedProxies', 'toSandbox'
-        )
+                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers', 'currentDriver',
+                       'loginProvider',
+                       'userAgent', 'displayErrors', 'installationId', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'trustedProxies'
+                   )
         );
     }
 
