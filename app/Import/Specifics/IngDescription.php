@@ -79,6 +79,7 @@ class IngDescription implements SpecificInterface
                 case 'DV':                               // Divers
                     $this->removeIBANIngDescription();   // Remove "IBAN:", because it is already at "Tegenrekening"
                     $this->removeNameIngDescription();   // Remove "Naam:", because it is already at "Naam/ Omschrijving"
+                    $this->removeIngDescription();       // Remove "Omschrijving", but not the value from description
                     // if "tegenrekening" empty, copy the description. Primitive, but it works.
                     $this->copyDescriptionToOpposite();
                     break;
@@ -98,6 +99,14 @@ class IngDescription implements SpecificInterface
     protected function addNameIngDescription(): void
     {
         $this->row[8] = $this->row[1] . ' ' . $this->row[8];
+    }
+
+    /**
+     * Remove "Omschrijving" (and NOT its value) from the description.
+     */
+    protected function removeIngDescription(): void
+    {
+        $this->row[8] = preg_replace('/Omschrijving: /', '', $this->row[8]);
     }
 
     /**
