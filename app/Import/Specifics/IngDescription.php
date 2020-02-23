@@ -114,7 +114,7 @@ class IngDescription implements SpecificInterface
      */
     protected function removeIBANIngDescription(): void
     {
-        // Try replace the iban number with nothing. The IBAN nr is found in the third row
+        // Try replace the iban number with nothing. The IBAN nr is found in the third column
         $this->row[8] = preg_replace('/\sIBAN:\s' . $this->row[3] . '/', '', $this->row[8]);
     }
 
