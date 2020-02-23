@@ -80,8 +80,7 @@ class IngDescription implements SpecificInterface
                     $this->removeIBANIngDescription();   // Remove "IBAN:", because it is already at "Tegenrekening"
                     $this->removeNameIngDescription();   // Remove "Naam:", because it is already at "Naam/ Omschrijving"
                     $this->removeIngDescription();       // Remove "Omschrijving", but not the value from description
-                    // if "tegenrekening" empty, copy the description. Primitive, but it works.
-                    $this->copyDescriptionToOpposite();
+                    $this->MoveSavingsAccount();         // Move savings account number and name
                     break;
                 case 'BA':                              // Betaalautomaat
                     $this->addNameIngDescription();
@@ -128,13 +127,22 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * Copy description to name of opposite account.
+     * Move savings account number to column 1 and name to column 3.
      */
-    private function copyDescriptionToOpposite(): void
+    private function MoveSavingsAccount(): void
     {
-        $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
+        $matches = array();
         if ('' === (string)$this->row[3]) {
-            $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
+            if (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[8], $matches)) {
+                $matches[3] = sprintf("%010d", $matches[3]);
+                $this->row[1] = $matches[2]; // Savings account name
+                $this->row[3] = $matches[3]; // Savings account number
+                $this->row[8] = preg_replace('/(Naar|Van) (.*rekening) ([0-9]+)/', '', $this->row[8]); // Remove the savings account content from description
+            } elseif (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[1], $matches)) {
+                $matches[3] = sprintf("%010d", $matches[3]);
+                $this->row[1] = $matches[2]; // Savings account name
+                $this->row[3] = $matches[3]; // Savings account number
+            }
         }
     }
 }
