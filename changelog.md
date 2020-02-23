@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.0 (API 1.0.0)] - 2020-02-xx
+## [5.1.0 (API 1.0.0)] - 2020-03-xx
 
 Before this release came out, several alpha and beta versions had been released already:
 
 - 5.1.0-alpha.1 on 2020-02-16
+- 5.1.0-beta.1 on 2020-02-23
 
 ### Added
 - [Issue 2575](https://github.com/firefly-iii/firefly-iii/issues/2575) You can now create a transaction from a rule.
@@ -25,22 +26,29 @@ Before this release came out, several alpha and beta versions had been released 
 - Foreign currencies should show up less often in edit/create transaction screens. 
 
 ### Fixed
+- [Issue 3042](https://github.com/firefly-iii/firefly-iii/issues/3042) Rule engine behavior was inconsistent when importing data.
+- [Issue 3045](https://github.com/firefly-iii/firefly-iii/issues/3045) Linking bills to liability accounts through rules was broken.
 - [Issue 3050](https://github.com/firefly-iii/firefly-iii/issues/3050) Date blocks were rendered badly.
 - [Issue 3070](https://github.com/firefly-iii/firefly-iii/issues/3070) The currency symbol would not precede the amount in some locales.
 - [Issue 3083](https://github.com/firefly-iii/firefly-iii/issues/3083) Fix category sort in report.
-- [Issue 3045](https://github.com/firefly-iii/firefly-iii/issues/3045) Linking bills to liability accounts through rules was broken.
-- [Issue 3042](https://github.com/firefly-iii/firefly-iii/issues/3042) Rule engine behavior was inconsistent when importing data.
 - [Issue 3064](https://github.com/firefly-iii/firefly-iii/issues/3064) Weird bug in reports.
-- [Issue 3099](https://github.com/firefly-iii/firefly-iii/issues/3099) Can't make piggy banks on accounts with no currency.
-- [Issue 3119](https://github.com/firefly-iii/firefly-iii/issues/3119) Command would break if transaction was incomplete.
 - [Issue 3073](https://github.com/firefly-iii/firefly-iii/issues/3073) Rules would not be applied to all splits if a split was newly created.
+- [Issue 3099](https://github.com/firefly-iii/firefly-iii/issues/3099) Can't make piggy banks on accounts with no currency.
 - [Issue 3111](https://github.com/firefly-iii/firefly-iii/issues/3111) Budget amount edit redirect.
 - [Issue 3114](https://github.com/firefly-iii/firefly-iii/issues/3114) Removed double entry from budget list.
+- [Issue 3119](https://github.com/firefly-iii/firefly-iii/issues/3119) Command would break if transaction was incomplete.
+- [Issue 3127](https://github.com/firefly-iii/firefly-iii/issues/3127) Cloning a transaction would not clear the cache.
+- [Issue 3129](https://github.com/firefly-iii/firefly-iii/issues/3129) Issue importing interest dates.
+- [Issue 3130](https://github.com/firefly-iii/firefly-iii/issues/3130) A forwarder sent you to a 404.
+- [Issue 3131](https://github.com/firefly-iii/firefly-iii/issues/3131) The search modifiers would claim the whole query.
+- [Issue 3135](https://github.com/firefly-iii/firefly-iii/issues/3135) Could not change liability type.
+- [Issue 3137](https://github.com/firefly-iii/firefly-iii/issues/3137) Fix mis-alignment in table rows.
+- [Issue 3140](https://github.com/firefly-iii/firefly-iii/issues/3140) New user email message had a broken link.
+- [Issue 3141](https://github.com/firefly-iii/firefly-iii/issues/3141) Cache issue
 
 ### API
 - [Issue 3097](https://github.com/firefly-iii/firefly-iii/issues/3097) Unifying API models
 - [Issue 3098](https://github.com/firefly-iii/firefly-iii/issues/3098) Add field to link types.
-
 
 ## [5.0.5 (API 1.0.0)] - 2020-02-13
 
