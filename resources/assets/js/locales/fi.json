@@ -10,7 +10,7 @@
         "transaction_journal_information": "Tapahtumatiedot",
         "source_account": "L\u00e4hdetili",
         "destination_account": "Kohdetili",
-        "add_another_split": "Lis\u00e4\u00e4 uusi jako",
+        "add_another_split": "Lis\u00e4\u00e4 tapahtumaan uusi osa",
         "submission": "Vahvistus",
         "create_another": "Tallennuksen j\u00e4lkeen, palaa takaisin luomaan uusi tapahtuma.",
         "reset_after": "Tyhjenn\u00e4 lomake l\u00e4hetyksen j\u00e4lkeen",
@@ -33,9 +33,9 @@
         "destination_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman kohdetili\u00e4.",
         "source_account_reconciliation": "Et voi muokata t\u00e4sm\u00e4ytystapahtuman l\u00e4hdetili\u00e4.",
         "budget": "Budjetti",
-        "you_create_withdrawal": "You're creating a withdrawal.",
-        "you_create_transfer": "You're creating a transfer.",
-        "you_create_deposit": "You're creating a deposit."
+        "you_create_withdrawal": "Olet luomassa nostoa.",
+        "you_create_transfer": "Olet luomassa siirtoa.",
+        "you_create_deposit": "Olet luomassa talletusta."
     },
     "form": {
         "interest_date": "Korkop\u00e4iv\u00e4",
