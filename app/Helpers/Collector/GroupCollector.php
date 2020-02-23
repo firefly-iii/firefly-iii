@@ -961,7 +961,12 @@ class GroupCollector implements GroupCollectorInterface
             // join some extra tables:
             $this->hasJoinedAttTables = true;
             $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                        ->where('attachments.attachable_type', TransactionJournal::class);
+                        ->where(
+                            static function (EloquentBuilder $q1) {
+                                $q1->where('attachments.attachable_type', TransactionJournal::class);
+                                $q1->orWhereNull('attachments.attachable_type');
+                            }
+                        );
         }
     }
 
