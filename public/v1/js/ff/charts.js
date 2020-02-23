@@ -376,13 +376,17 @@ function drawAChart(URI, container, chartType, options, colorData) {
         containerObj.removeClass('general-chart-error');
 
         // if result is empty array, or the labels array is empty, show error.
+        // console.log(URI);
+        // console.log(data.length);
+        // console.log(typeof data.labels);
+        // console.log(data.labels.length);
         if (
             // is undefined
             typeof data === 'undefined' ||
             // is empty
             0 === data.length ||
             // isn't empty but contains no labels
-            (data.length > 0 && typeof data.labels !== 'undefined' && 0 === data.labels.length)
+            (typeof data === 'object' && typeof data.labels === 'object' && 0 === data.labels.length)
         ) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
