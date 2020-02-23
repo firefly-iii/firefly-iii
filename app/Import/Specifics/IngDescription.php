@@ -111,12 +111,11 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' ).
+     * Remove "Naam" (and its value) from the description.
      */
     protected function removeNameIngDescription(): void
     {
-        // Try remove everything before the 'Omschrijving'
-        $this->row[8] = preg_replace('/.+Omschrijving: /', '', $this->row[8]);
+        $this->row[8] = preg_replace('/Naam:.*?([a-zA-Z\/]+:)/', '$1', $this->row[8]);
     }
 
     /**
