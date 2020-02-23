@@ -70,6 +70,7 @@ class IngDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = array_values($row);
+        array_push($this->row); // New column for "Valutadatum"
         if (count($this->row) >= 8) {                    // check if the array is correct
             switch ($this->row[4]) {                     // Get value for the mutation type
                 case 'GT':                               // InternetBankieren
@@ -80,9 +81,11 @@ class IngDescription implements SpecificInterface
                     $this->removeIBANIngDescription();   // Remove "IBAN:", because it is already at "Tegenrekening"
                     $this->removeNameIngDescription();   // Remove "Naam:", because it is already at "Naam/ Omschrijving"
                     $this->removeIngDescription();       // Remove "Omschrijving", but not the value from description
+                    $this->moveValutadatumDescription(); // Move "Valutadatum" from description to new column
                     $this->MoveSavingsAccount();         // Move savings account number and name
                     break;
                 case 'BA':                              // Betaalautomaat
+                    $this->moveValutadatumDescription(); // Move "Valutadatum" from description to new column
                     $this->addNameIngDescription();
                     break;
             }
@@ -124,6 +127,17 @@ class IngDescription implements SpecificInterface
     protected function removeNameIngDescription(): void
     {
         $this->row[8] = preg_replace('/Naam:.*?([a-zA-Z\/]+:)/', '$1', $this->row[8]);
+    }
+
+    /**
+     * Move "Valutadatum" from the description to new column.
+     */
+    protected function moveValutadatumDescription(): void
+    {
+        $matches = array();
+        preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches);
+        $this->row[9] = date("Ymd", strtotime($matches[1]));
+        $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
     }
 
     /**
