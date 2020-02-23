@@ -76,8 +76,9 @@ class IngDescription implements SpecificInterface
                 case 'OV':                               // Overschrijving
                 case 'VZ':                               // Verzamelbetaling
                 case 'IC':                               // Incasso
-                    $this->removeIBANIngDescription();
-                    $this->removeNameIngDescription();
+                case 'DV':                               // Divers
+                    $this->removeIBANIngDescription();   // Remove "IBAN:", because it is already at "Tegenrekening"
+                    $this->removeNameIngDescription();   // Remove "Naam:", because it is already at "Naam/ Omschrijving"
                     // if "tegenrekening" empty, copy the description. Primitive, but it works.
                     $this->copyDescriptionToOpposite();
                     break;
