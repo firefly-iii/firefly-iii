@@ -106,6 +106,9 @@ TODO: hide and show columns
                     {% if transaction.reconciled %}
                         <i class="fa fa-check"></i>
                     {% endif %}
+                    {% if transaction.attachments|length > 0 %}
+                        <i class="fa fa-paperclip"></i>
+                    {% endif %}
                     {% if group.count == 1 %}
                     <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
                         {% endif %}
