@@ -374,9 +374,16 @@ function drawAChart(URI, container, chartType, options, colorData) {
 
     $.getJSON(URI).done(function (data) {
         containerObj.removeClass('general-chart-error');
-        console.log(data);
-        if (!(Array.isArray(data) && data.length) ||
-            (typeof data.labels != 'undefined' && data.labels.length === 0)) {
+
+        // if result is empty array, or the labels array is empty, show error.
+        if (
+            // is undefined
+            typeof data === 'undefined' ||
+            // is empty
+            0 === data.length ||
+            // isn't empty but contains no labels
+            (data.length > 0 && typeof data.labels !== 'undefined' && 0 === data.labels.length)
+        ) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
             if (holder.hasClass('box') || holder.hasClass('box-body')) {
