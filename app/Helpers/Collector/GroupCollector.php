@@ -60,6 +60,8 @@ class GroupCollector implements GroupCollectorInterface
     private $hasCatInformation;
     /** @var bool Will be true of the query has the tag info tables joined. */
     private $hasJoinedTagTables;
+    /** @var bool Will be true for attachments */
+    private $hasJoinedAttTables;
     /** @var int The maximum number of results. */
     private $limit;
     /** @var int The page to return. */
@@ -86,7 +88,8 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasBudgetInformation = false;
         $this->hasBillInformation   = false;
         $this->hasJoinedTagTables   = false;
-        $this->integerFields = [
+        $this->hasJoinedAttTables   = false;
+        $this->integerFields        = [
             'transaction_group_id',
             'user_id',
             'transaction_journal_id',
@@ -101,10 +104,10 @@ class GroupCollector implements GroupCollectorInterface
             'destination_transaction_id',
             'destination_account_id',
             'category_id',
-            'budget_id'
+            'budget_id',
         ];
-        $this->total  = 0;
-        $this->fields = [
+        $this->total                = 0;
+        $this->fields               = [
             # group
             'transaction_groups.id as transaction_group_id',
             'transaction_groups.user_id as user_id',
@@ -281,11 +284,10 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        $start = microtime(true);
+        //$start = microtime(true);
         /** @var Collection $result */
         $result = $this->query->get($this->fields);
-        $end    = round(microtime(true) - $start, 5);
-
+        //$end    = round(microtime(true) - $start, 5);
         // log info about query time.
         //Log::info(sprintf('Query took Firefly III %s seconds', $end));
         //Log::info($this->query->toSql(), $this->query->getBindings());
@@ -951,6 +953,24 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Join table to get attachment information.
+     */
+    private function joinAttachmentTables(): void
+    {
+        if (false === $this->hasJoinedAttTables) {
+            // join some extra tables:
+            $this->hasJoinedAttTables = true;
+            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
+                        ->where(
+                            static function (EloquentBuilder $q1) {
+                                $q1->where('attachments.attachable_type', TransactionJournal::class);
+                                $q1->orWhereNull('attachments.attachable_type');
+                            }
+                        );
+        }
+    }
+
+    /**
      * @param array              $existingJournal
      * @param TransactionJournal $newJournal
      *
@@ -981,6 +1001,26 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @param array              $existingJournal
+     * @param TransactionJournal $newJournal
+     *
+     * @return array
+     */
+    private function mergeAttachments(array $existingJournal, TransactionJournal $newJournal): array
+    {
+        $newArray = $newJournal->toArray();
+        if (isset($newArray['attachment_id'])) {
+            $attachmentId                                  = (int)$newJournal['tag_id'];
+            $existingJournal['attachments'][$attachmentId] = [
+                'id' => $attachmentId,
+            ];
+        }
+
+        return $existingJournal;
+    }
+
+
+    /**
      * @param Collection $collection
      *
      * @return Collection
@@ -994,7 +1034,7 @@ class GroupCollector implements GroupCollectorInterface
 
             if (!isset($groups[$groupId])) {
                 // make new array
-                $parsedGroup                            = $this->parseAugmentedGroup($augumentedJournal);
+                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
                 $groupArray                             = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => (int)$augumentedJournal->user_id,
@@ -1014,11 +1054,14 @@ class GroupCollector implements GroupCollectorInterface
             $groups[$groupId]['count']++;
 
             if (isset($groups[$groupId]['transactions'][$journalId])) {
+                // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
+                $groups[$groupId]['transactions'][$journalId] = $this->mergeAttachments($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
             }
 
             if (!isset($groups[$groupId]['transactions'][$journalId])) {
-                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augumentedJournal);
+                // create second, third, fourth split:
+                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
             }
 
 
@@ -1034,10 +1077,11 @@ class GroupCollector implements GroupCollectorInterface
      *
      * @return array
      */
-    private function parseAugmentedGroup(TransactionJournal $augumentedJournal): array
+    private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
     {
-        $result         = $augumentedJournal->toArray();
-        $result['tags'] = [];
+        $result                = $augumentedJournal->toArray();
+        $result['tags']        = [];
+        $result['attachments'] = [];
         try {
             $result['date']       = new Carbon($result['date']);
             $result['created_at'] = new Carbon($result['created_at']);
@@ -1064,6 +1108,14 @@ class GroupCollector implements GroupCollectorInterface
                 'name'        => $result['tag_name'],
                 'date'        => $tagDate,
                 'description' => $result['tag_description'],
+            ];
+        }
+
+        // also merge attachments:
+        if (isset($augumentedJournal['attachment_id'])) {
+            $attachmentId                         = (int)$augumentedJournal['attachment_id'];
+            $result['attachments'][$attachmentId] = [
+                'id' => $attachmentId,
             ];
         }
 
@@ -1227,6 +1279,17 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where('transaction_journals.updated_at', '>=', $after);
         $this->query->where('transaction_journals.updated_at', '<=', $before);
         Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withAttachmentInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'attachments.id as attachment_id';
+        $this->joinAttachmentTables();
 
         return $this;
     }

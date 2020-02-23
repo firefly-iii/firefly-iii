@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_08_25_091522_changes_for_3101.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *

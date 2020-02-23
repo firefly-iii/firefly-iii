@@ -19,6 +19,7 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | --- | --- |
 | FF version | {{ FF_VERSION }} |
 | FF API version | {{ config('firefly.api_version') }} |
+| Installation ID | {{ installationId }} |
 | App environment | {{ appEnv }} |
 | App debug mode | {{ appDebug }} |
 | App cache driver | {{ cacheDriver }} |
@@ -38,10 +39,6 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
 | Login provider | {{ loginProvider }}  |
-| Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
-{% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
-| Is Sandstorm (.env) | {{ isSandstorm }} |
-| bunq uses sandbox | {{ toSandbox }} |
 | Trusted proxies (.env) | {{ trustedProxies }} |
 | User agent | {{ userAgent }} |
 | Loaded extensions | {{ extensions }} |

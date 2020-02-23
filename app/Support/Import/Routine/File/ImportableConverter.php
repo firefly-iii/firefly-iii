@@ -1,7 +1,7 @@
 <?php
 /**
  * ImportableConverter.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -83,6 +83,7 @@ class ImportableConverter
             }
             if (null !== $entry) {
                 $result[] = $entry;
+                Log::debug('Final result of importable converter', $entry);
             }
         }
 
@@ -267,9 +268,9 @@ class ImportableConverter
                     'notes' => $importable->note,
                     'tags'  => $importable->tags,
 
-                    'internal_reference' => $importable->meta['internal-reference'] ?? null,
+                    'internal_reference' => $importable->meta['internal_reference'] ?? null,
                     'external_id'        => $importable->externalId,
-                    'original_source'    => $importable->meta['original-source'] ?? null,
+                    'original_source'    => $importable->meta['original_source'] ?? null,
 
                     'sepa_cc'       => $importable->meta['sepa_cc'] ?? null,
                     'sepa_ct_op'    => $importable->meta['sepa_ct_op'] ?? null,
@@ -280,12 +281,12 @@ class ImportableConverter
                     'sepa_ci'       => $importable->meta['sepa_ci'] ?? null,
                     'sepa_batch_id' => $importable->meta['sepa_batch_id'] ?? null,
 
-                    'interest_date' => $this->convertDateValue($importable->meta['date-interest'] ?? null),
-                    'book_date'     => $this->convertDateValue($importable->meta['date-book'] ?? null),
-                    'process_date'  => $this->convertDateValue($importable->meta['date-process'] ?? null),
-                    'due_date'      => $this->convertDateValue($importable->meta['date-due'] ?? null),
-                    'payment_date'  => $this->convertDateValue($importable->meta['date-payment'] ?? null),
-                    'invoice_date'  => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
+                    'interest_date' => $this->convertDateValue($importable->meta['date_interest'] ?? null),
+                    'book_date'     => $this->convertDateValue($importable->meta['date_book'] ?? null),
+                    'process_date'  => $this->convertDateValue($importable->meta['date_process'] ?? null),
+                    'due_date'      => $this->convertDateValue($importable->meta['date_due'] ?? null),
+                    'payment_date'  => $this->convertDateValue($importable->meta['date_payment'] ?? null),
+                    'invoice_date'  => $this->convertDateValue($importable->meta['date_invoice'] ?? null),
                 ],
             ],
         ];

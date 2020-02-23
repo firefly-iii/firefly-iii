@@ -58,6 +58,13 @@ interface GroupCollectorInterface
     public function amountLess(string $amount): GroupCollectorInterface;
 
     /**
+     * Add basic info on attachments of transactions.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAttachmentInformation(): GroupCollectorInterface;
+
+    /**
      * Get transactions where the amount is more than.
      *
      * @param string $amount

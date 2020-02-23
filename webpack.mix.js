@@ -1,6 +1,6 @@
 /*
  * webpack.mix.js
- * Copyright (c) 2020 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,7 +19,7 @@
  */
 
 let mix = require('laravel-mix');
-
+ 
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -49,8 +49,9 @@ mix.webpackConfig({
                       }
                   });
 
-//mix.sourceMaps().js('resources/assets/js/app.js', 'public/v1/js');
+//mix.sourceMaps().js('resources/assets/js/app.js', 'public/v2/js');
 mix.js('resources/assets/js/app.js', 'public/v1/js');
+mix.js('resources/assets/js/app_vue.js', 'public/v1/js');
 mix.js('resources/assets/js/create_transaction.js', 'public/v1/js');
 mix.js('resources/assets/js/edit_transaction.js', 'public/v1/js');
 mix.js('resources/assets/js/profile.js', 'public/v1/js');

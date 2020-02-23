@@ -18,35 +18,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import * as uiv from 'uiv';
-import CustomAttachments from "./components/transactions/CustomAttachments";
-import CreateTransaction from './components/transactions/CreateTransaction';
-import EditTransaction from './components/transactions/EditTransaction';
-import Clients from './components/passport/Clients';
-import AuthorizedClients from "./components/passport/AuthorizedClients";
-import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
-import CustomDate from "./components/transactions/CustomDate";
-import CustomString from "./components/transactions/CustomString";
-import CustomTextarea from "./components/transactions/CustomTextarea";
-import StandardDate from "./components/transactions/StandardDate";
-import GroupDescription from "./components/transactions/GroupDescription";
-import TransactionDescription from "./components/transactions/TransactionDescription";
-import CustomTransactionFields from "./components/transactions/CustomTransactionFields";
-import PiggyBank from "./components/transactions/PiggyBank";
-import Tags from "./components/transactions/Tags";
-import Category from "./components/transactions/Category";
-import Amount from "./components/transactions/Amount";
-import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
-import TransactionType from "./components/transactions/TransactionType";
-import AccountSelect from "./components/transactions/AccountSelect";
-import Budget from "./components/transactions/Budget";
+/* We'll load jQuery and the Bootstrap jQuery plugin which provides support
+* for JavaScript based Bootstrap features such as modals and tabs. This
+* code may be modified to fit the specific needs of your application.
+*/
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+try {
+   window.$ = window.jQuery = require('jquery');
 
-require('./bootstrap');
+    require('bootstrap-sass');
+} catch (e) {}
+
+
+
+

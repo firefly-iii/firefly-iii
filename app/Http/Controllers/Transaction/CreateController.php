@@ -70,6 +70,12 @@ class CreateController extends Controller
         $service  = app(GroupCloneService::class);
         $newGroup = $service->cloneGroup($group);
 
+        app('preferences')->mark();
+
+        $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+
+        session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
+
         return redirect(route('transactions.show', [$newGroup->id]));
     }
 

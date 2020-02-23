@@ -2,7 +2,7 @@
 
 /**
  * 2018_01_01_000005_create_oauth_personal_access_clients_table.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *

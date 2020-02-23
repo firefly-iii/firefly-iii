@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountFilter.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -41,7 +41,8 @@ trait AccountFilter
     protected function mapAccountTypes(string $type): array
     {
         $types  = [
-            'all'                        => [AccountType::DEFAULT, AccountType::CASH, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
+            'all'                        => [AccountType::DEFAULT, AccountType::CASH,
+                                             AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
                                              AccountType::INITIAL_BALANCE, AccountType::BENEFICIARY, AccountType::IMPORT, AccountType::RECONCILIATION,
                                              AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             'asset'                      => [AccountType::DEFAULT, AccountType::ASSET,],

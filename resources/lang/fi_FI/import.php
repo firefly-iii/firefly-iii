@@ -208,7 +208,7 @@ return [
     'specific_abn_descr'              => 'Korjaa ABN AMRO-tiedostojen mahdollisia ongelmia',
     'specific_rabo_name'              => 'Rabobank NL',
     'specific_rabo_descr'             => 'Korjaa Rabobank-tiedostojen mahdollisia ongelmia',
-    'specific_pres_name'              => 'President\\'s Choice Financial CA',
+    'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Korjaa PC-tiedostoihin mahdollisesti liittyviä ongelmia',
     'specific_belfius_name'           => 'Belfius BE',
     'specific_belfius_descr'          => 'Korjaa Belfius-tiedostojen mahdolliset ongelmat',
@@ -237,7 +237,7 @@ return [
 
 
     // import status page:
-    'import_with_key'                 => 'Tuo näppäimellä \\':key\\'',
+    'import_with_key'                 => 'Tuo näppäimellä \':key\'',
     'status_wait_title'               => 'Ole hyvä ja odota',
     'status_wait_text'                => 'Tämä ruutu katoaa hetken kuluttua.',
     'status_running_title'            => 'Tuonti on käynnissä',

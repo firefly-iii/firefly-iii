@@ -3,7 +3,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -137,7 +137,7 @@ return [
     ],
 
     'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                => '5.1.0-alpha.1',
+    'version'                => '5.1.0-beta.1',
     'api_version'            => '1.0.1',
     'db_version'             => 12,
     'maxUploadSize'          => 15242880,

@@ -57,7 +57,7 @@ return [
     'amount'                  => 'Summa',
     'internal_reference'      => 'Sisäinen viite',
     'date'                    => 'Päivämäärä',
-    'interest_date'           => 'Korkopäivä',
+    'interest_date'           => 'Koronlaskupäivä',
     'book_date'               => 'Kirjauspäivä',
     'process_date'            => 'Käsittelypäivä',
     'due_date'                => 'Eräpäivä',

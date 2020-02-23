@@ -107,7 +107,8 @@ class IndexController extends Controller
                   ->setPage($page)
                   ->withBudgetInformation()
                   ->withCategoryInformation()
-                  ->withAccountInformation();
+                  ->withAccountInformation()
+                  ->withAttachmentInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
@@ -147,7 +148,8 @@ class IndexController extends Controller
                   ->setPage($page)
                   ->withAccountInformation()
                   ->withBudgetInformation()
-                  ->withCategoryInformation();
+                  ->withCategoryInformation()
+                  ->withAttachmentInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 

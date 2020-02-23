@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountUpdateService.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -41,16 +41,15 @@ class AccountUpdateService
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
     /** @var array */
-    private $canHaveVirtual;
-    /** @var User */
-    private $user;
-
-    /** @var array */
     protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
     protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
     protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+    /** @var array */
+    private $canHaveVirtual;
+    /** @var User */
+    private $user;
 
     /**
      * Constructor.
@@ -81,7 +80,13 @@ class AccountUpdateService
         // update the account itself:
         $account->name   = $data['name'] ?? $account->name;
         $account->active = $data['active'] ?? $account->active;
-        $account->iban = $data['iban'] ?? $account->iban;
+        $account->iban   = $data['iban'] ?? $account->iban;
+
+        // if account type is a liability, the liability type (account type)
+        // can be updated to another one.
+        if ($this->isLiability($account) && $this->isLiabilityTypeId((int)($data['account_type_id'] ?? 0))) {
+            $account->account_type_id = (int)$data['account_type_id'];
+        }
 
         // update virtual balance (could be set to zero if empty string).
         if (null !== $data['virtual_balance']) {
@@ -118,8 +123,8 @@ class AccountUpdateService
                     $location->locatable()->associate($account);
                 }
 
-                $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
-                $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
                 $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
                 $location->save();
             }
@@ -146,5 +151,31 @@ class AccountUpdateService
         }
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    private function isLiability(Account $account): bool
+    {
+        $type = $account->accountType->type;
+
+        return in_array($type, [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true);
+    }
+
+    /**
+     * @param int $accountTypeId
+     *
+     * @return bool
+     */
+    private function isLiabilityTypeId(int $accountTypeId): bool
+    {
+        if (0 === $accountTypeId) {
+            return false;
+        }
+
+        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('id', $accountTypeId)->count();
     }
 }

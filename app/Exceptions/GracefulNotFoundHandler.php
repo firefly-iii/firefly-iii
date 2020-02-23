@@ -65,6 +65,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
                 return parent::render($request, $exception);
             case 'accounts.show':
+            case 'accounts.show.all':
                 return $this->handleAccount($request, $exception);
             case 'transactions.show':
                 return $this->handleGroup($request, $exception);

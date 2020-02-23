@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionGroupRepository.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -45,6 +45,7 @@ use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Log;
 
 /**
  * Class TransactionGroupRepository
@@ -337,8 +338,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
         $factory->setUser($this->user);
+        try {
+            return $factory->create($data);
+        } catch (DuplicateTransactionException $e) {
+            Log::warning('Group repository caught group factory with a duplicate exception!');
+            throw new DuplicateTransactionException($e->getMessage());
+        }
 
-        return $factory->create($data);
+
     }
 
     /**

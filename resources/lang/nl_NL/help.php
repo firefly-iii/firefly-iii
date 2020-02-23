@@ -2,7 +2,7 @@
 
 /**
  * help.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 james@firefly-iii.org
  *
  * This file is part of Firefly III.
  *
@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 /**
  * help.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (C) 2016 james@firefly-iii.org
  *
  * This software may be modified and distributed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International License.

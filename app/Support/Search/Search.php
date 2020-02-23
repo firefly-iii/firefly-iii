@@ -1,7 +1,7 @@
 <?php
 /**
  * Search.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -123,7 +123,7 @@ class Search implements SearchInterface
     {
         $filteredQuery       = app('steam')->cleanString($query);
         $this->originalQuery = $filteredQuery;
-        $pattern             = '/[[:alpha:]_]*:"?[\P{C}_-]*"?/ui';
+        $pattern             = '/[[:alpha:]_]*:(".*"|[\P{Zs}_-]*)/ui';
         $matches             = [];
         preg_match_all($pattern, $filteredQuery, $matches);
 

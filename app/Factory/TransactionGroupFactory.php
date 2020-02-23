@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionGroupFactory.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
+use Log;
 
 /**
  * Class TransactionGroupFactory
@@ -60,7 +61,12 @@ class TransactionGroupFactory
         $this->journalFactory->setUser($this->user);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
 
-        $collection = $this->journalFactory->create($data);
+        try {
+            $collection = $this->journalFactory->create($data);
+        } catch(DuplicateTransactionException $e) {
+            Log::warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
+            throw new DuplicateTransactionException($e->getMessage());
+        }
         $title      = $data['group_title'] ?? null;
         $title      = '' === $title ? null : $title;
 

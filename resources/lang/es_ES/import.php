@@ -37,7 +37,7 @@ return [
     'general_index_intro'                 => 'Bienvenido a la rutina de importación de Firefly III. Hay algunas formas de importar datos a Firefly III, que se muestran aquí como botones.',
 
     // notices about the CSV importer:
-    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'deprecate_csv_import' => 'Como se describe en <a href="https://www.patreon.com/posts/future-updates-30012174">esta publicación de patreón</a>, la forma en que Firefly III administra los datos importados va a cambiar. Esto significa que el importador CSV se trasladará a una nueva herramienta separada. Ya puede probar esta herramienta si visita <a href="https://github.com/firefly-iii/csv-importer">este repositorio de GitHub</a>. Le agradecería que probara el nuevo importador y me hiciera saber lo que piensa.',
 
     // import provider strings (index):
     'button_fake'                         => 'Simular una importación',

@@ -33,9 +33,9 @@ return [
     'index_cash_account'                              => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Valitse suosikkiomaisuustilisi tai -vastuusi tästä alasvetovalikosta.',
+    'transactions_create_withdrawal_source'           => 'Valitse suosikkiomaisuustilisi tai -vastuutilisi tästä alasvetovalikosta.',
     'transactions_create_withdrawal_destination'      => 'Valitse tästä kulutustili. Jätä se tyhjäksi, jos haluat tehdä käteismaksun.',
-    'transactions_create_withdrawal_foreign_currency' => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
+    'transactions_create_withdrawal_foreign_currency' => 'Tämän kentän avulla voit asettaa valuutan ja summan.',
     'transactions_create_withdrawal_more_meta'        => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
     'transactions_create_withdrawal_split_add'        => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
 
@@ -44,14 +44,14 @@ return [
     'transactions_create_deposit_destination'         => 'Valitse omaisuus- tai vastuutili täältä.',
     'transactions_create_deposit_foreign_currency'    => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
     'transactions_create_deposit_more_meta'           => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_deposit_split_add'           => 'Jos haluat jakaa tapahtuman, lisää useampia jakoja tällä painikkeella',
+    'transactions_create_deposit_split_add'           => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää tapahtumaan osia tällä painikkeella',
 
     // transactions (transfer)
     'transactions_create_transfer_source'             => 'Valitse lähdetili täältä.',
     'transactions_create_transfer_destination'        => 'Valitse kohdetili täältä.',
     'transactions_create_transfer_foreign_currency'   => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
     'transactions_create_transfer_more_meta'          => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_transfer_split_add'          => 'Jos haluat jakaa tapahtuman, lisää useampia jakoja tällä painikkeella',
+    'transactions_create_transfer_split_add'          => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää tapahtumaan osia tällä painikkeella',
 
     // create account:
     'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',
@@ -117,7 +117,7 @@ return [
     // bill index
     'bills_index_rules'                                       => 'Täältä näet tämän laskun ehtojen tarkistussäännöt',
     'bills_index_paid_in_period'                              => 'Tämä kenttä osoittaa, milloin lasku viimeksi maksettiin.',
-    'bills_index_expected_in_period'                          => 'Tämä kenttä ilmoittaa jokaiselle laskulle jos ja milloin seuraavan laskun eräpäivä on.',
+    'bills_index_expected_in_period'                          => 'Tämä kenttä näyttää jokaiselle laskulle milloin tämän jakson seuraava eräpäivä on.',
 
     // show bill
     'bills_show_billInfo'                                     => 'Tämä taulukko näyttää joitain yleisiä tietoja tästä laskusta.',
@@ -128,7 +128,7 @@ return [
     'bills_create_intro'                                      => 'Käytä laskuja seurataksesi rahan määrää, jonka joudut maksamaan jokaisella jaksolla. Ajattele kuluja, kuten vuokria, vakuutuksia tai asuntolainan maksuja.',
     'bills_create_name'                                       => 'Käytä kuvaavaa nimeä, kuten "Vuokra" tai "Sairausvakuutus".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Valitse laskun vähimmäis- ja enimmäismäärä.',
+    'bills_create_amount_min_holder'                          => 'Aseta laskun vähimmäis- ja enimmäissumma.',
     'bills_create_repeat_freq_holder'                         => 'Useimmat laskut toistuvat kuukausittain, mutta voit asettaa täällä niille myös erilaisia jaksoja.',
     'bills_create_skip_holder'                                => 'Jos lasku toistuu kahden viikon välein, "ohita"-kenttään tulee asettaa arvoksi "1", jolloin joka toinen viikko ohitetaan.',
 
@@ -138,14 +138,14 @@ return [
     'rules_index_new_rule'                                    => 'Luo niin monta sääntöä kuin haluat.',
     'rules_index_prio_buttons'                                => 'Järjestä ne kuten haluat.',
     'rules_index_test_buttons'                                => 'Voit testata sääntöjäsi tai soveltaa niitä olemassa oleviin tapahtumiin.',
-    'rules_index_rule-triggers'                               => 'Säännöillä on "ehtoja" ja "tapahtumia" joita voit järjestää vetämällä ja pudottamalla.',
+    'rules_index_rule-triggers'                               => 'Säännöillä on "ehtoja" ja "toimintoja" joita voit järjestää vetämällä ja pudottamalla.',
     'rules_index_outro'                                       => 'Muista tarkistaa ohjeet oikealla yläkulmassa olevalla (?) -Kuvakkeella!',
 
     // create rule:
     'rules_create_mandatory'                                  => 'Valitse kuvaava otsikko, ja aseta milloin säännön tulisi liipaistua.',
-    'rules_create_ruletriggerholder'                          => 'Lisää niin monta ehtoa kuin haluat, mutta muista että KAIKKIEN ehtojen täytyy täyttyä ennen kuin tapahtumat toteutuvat.',
+    'rules_create_ruletriggerholder'                          => 'Lisää niin monta ehtoa kuin haluat, mutta muista että KAIKKIEN ehtojen täytyy täyttyä ennen kuin toiminnot toteutuvat.',
     'rules_create_test_rule_triggers'                         => 'Käytä tätä painiketta nähdäksesi, mitkä tapahtumat vastaisivat sääntöäsi.',
-    'rules_create_actions'                                    => 'Aseta niin monta tapahtumaa kuin haluat.',
+    'rules_create_actions'                                    => 'Aseta niin monta toimintoa kuin haluat.',
 
     // preferences
     'preferences_index_tabs'                                  => 'Lisää vaihtoehtoja on saatavana näiden välilehtien takana.',

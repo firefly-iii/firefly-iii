@@ -274,6 +274,7 @@ class TransactionController extends Controller
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
+        Log::debug('Now in API TransactionController::store()');
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
 
@@ -283,6 +284,7 @@ class TransactionController extends Controller
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
+            Log::warning('Caught a duplicate. Return error message.');
             // return bad validation message.
             // TODO use Laravel's internal validation thing to do this.
             $response = [
@@ -294,7 +296,7 @@ class TransactionController extends Controller
 
             return response()->json($response, 422);
         }
-
+        app('preferences')->mark();
         event(new StoredTransactionGroup($transactionGroup));
 
         $manager = $this->getManager();
@@ -338,6 +340,7 @@ class TransactionController extends Controller
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = $this->getManager();
 
+        app('preferences')->mark();
         event(new UpdatedTransactionGroup($transactionGroup));
 
         /** @var User $admin */

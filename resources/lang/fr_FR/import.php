@@ -84,7 +84,7 @@ return [
 
     // job configuration:
     'job_config_apply_rules_title'        => 'Configuration de la tâche - Appliquer vos règles ?',
-    'job_config_apply_rules_text'         => 'Une fois le fournisseur de la simulation exécuté, vos règles peuvent être appliquées aux transactions. Notez que ceci allongera le temps de l\'importation.',
+    'job_config_apply_rules_text'         => 'Une fois le fournisseur de la simulation exécuté, vos règles peuvent être appliquées aux opérations. Notez que ceci allongera le temps de l\'importation.',
     'job_config_input'                    => 'Vos données d\'entrée',
     // job configuration for the fake provider:
     'job_config_fake_artist_title'        => 'Saisir un nom d\'album',
@@ -108,9 +108,9 @@ return [
     'job_config_uc_header_help'           => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes.',
     'job_config_uc_date_help'             => 'Le format de la date et de l’heure dans votre fichier. Suivez les options de formatage décrites sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">cette page</a>. La valeur par défaut va analyser les dates ayant cette syntaxe : :dateExample.',
     'job_config_uc_delimiter_help'        => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n\'en êtes pas certain, la virgule est l’option la plus sûre.',
-    'job_config_uc_account_help'          => 'Si votre fichier ne contient AUCUNE information concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le fichier s\'appliquent.',
+    'job_config_uc_account_help'          => 'Si votre fichier ne contient AUCUNE information concernant vos compte(s) actif(s), utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le fichier s\'appliquent.',
     'job_config_uc_apply_rules_title'     => 'Appliquer les règles',
-    'job_config_uc_apply_rules_text'      => 'Appliquer vos règles à chaque opération importée. Notez que cela peut ralentir significativement l\'importation .',
+    'job_config_uc_apply_rules_text'      => 'Appliquer vos règles à chaque opération importée. Notez que cela peut ralentir significativement l\'importation.',
     'job_config_uc_specifics_title'       => 'Options spécifiques à la banque',
     'job_config_uc_specifics_txt'         => 'Certaines banques délivrent des fichiers mal formatés. Firefly III peut les corriger automatiquement. Si votre banque délivre de tels fichiers mais qu\'elle n\'est pas listée ici, merci d\'ouvrir une demande sur GitHub.',
     'job_config_uc_submit'                => 'Continuer',
@@ -189,7 +189,7 @@ return [
     'spectre_extra_key_cards'              => 'Cartes',
     'spectre_extra_key_units'              => 'Unités',
     'spectre_extra_key_unit_price'         => 'Prix unitaire',
-    'spectre_extra_key_transactions_count' => 'Nombre de transactions',
+    'spectre_extra_key_transactions_count' => 'Nombre d\'opérations',
 
     //job configuration for finTS
     'fints_connection_failed'              => 'Une erreur s’est produite lors de la tentative de connexion à votre banque. Veuillez vous assurer que toutes les données saisies sont correctes. Message d’erreur d\'origine : :originalError',
@@ -252,8 +252,8 @@ return [
     'finished_with_errors'            => 'Des erreurs se sont produites pendant l\'importation. Veuillez les examiner avec attention.',
     'unknown_import_result'           => 'Résultat de l\'importation inconnu',
     'result_no_transactions'          => 'Aucune opération n\'a été importée. Il s\'agissait peut être de doublons, ou il n\'y avait simplement aucune opération a importer. Le fichier de log pourra peut être vous en dire plus sur ce qu\'il s\'est passé. Si vous importez des données régulièrement, ceci est normal.',
-    'result_one_transaction'          => 'Une seule transaction a été importée. Elle est stockée sous le tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> où vous pouvez l\'afficher en détail.',
-    'result_many_transactions'        => 'Firefly III a importé :count transactions. Elles sont stockées sous le tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> où vous pouvez les afficher en détail.',
+    'result_one_transaction'          => 'Une seule opération a été importée. Elle est stockée sous le tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> où vous pouvez l\'afficher en détail.',
+    'result_many_transactions'        => 'Firefly III a importé :count opérations. Elles sont stockées sous le tag <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> où vous pouvez les afficher en détail.',
 
 
     // general errors and warnings:
@@ -282,13 +282,13 @@ return [
     'column_currency-id'              => 'Devise (ID correspondant à FF3)',
     'column_currency-name'            => 'Nom de la devise (correspondant à FF3)',
     'column_currency-symbol'          => 'Symbole de la devise (correspondant à FF3)',
-    'column_date-interest'            => 'Date de calcul des intérêts',
-    'column_date-book'                => 'Date d\'enregistrement de la transaction',
-    'column_date-process'             => 'Date de traitement de la transaction',
+    'column_date-interest'            => 'Date de valeur des intérêts',
+    'column_date-book'                => 'Date d\'enregistrement de l\'opération',
+    'column_date-process'             => 'Date de traitement de l\'opération',
     'column_date-transaction'         => 'Date',
-    'column_date-due'                 => 'Date d\'échéance de la transaction',
-    'column_date-payment'             => 'Date de paiement de la transaction',
-    'column_date-invoice'             => 'Date de facturation de la transaction',
+    'column_date-due'                 => 'Date d\'échéance de l\'opération',
+    'column_date-payment'             => 'Date de paiement de l\'opération',
+    'column_date-invoice'             => 'Date de facturation de l\'opération',
     'column_description'              => 'Description',
     'column_opposing-iban'            => 'Compte opposé (IBAN)',
     'column_opposing-bic'             => 'Compte opposé (BIC)',
