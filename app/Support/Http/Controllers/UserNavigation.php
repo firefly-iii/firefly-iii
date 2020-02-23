@@ -97,7 +97,7 @@ trait UserNavigation
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $type = $transaction->account->accountType->type;
-            if (!in_array($type, $ignore)) {
+            if (!in_array($type, $ignore, true)) {
                 return redirect(route('accounts.edit', [$transaction->account_id]));
             }
         }

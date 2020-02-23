@@ -198,7 +198,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount'] ?? '0'));
         }
 
         return $array;

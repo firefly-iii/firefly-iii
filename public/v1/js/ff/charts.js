@@ -374,7 +374,9 @@ function drawAChart(URI, container, chartType, options, colorData) {
 
     $.getJSON(URI).done(function (data) {
         containerObj.removeClass('general-chart-error');
-        if (data.labels.length === 0) {
+        console.log(data);
+        if (!(Array.isArray(data) && data.length) ||
+            (typeof data.labels != 'undefined' && data.labels.length === 0)) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
             if (holder.hasClass('box') || holder.hasClass('box-body')) {
