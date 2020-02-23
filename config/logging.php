@@ -38,7 +38,7 @@ return [
     */
 
     'default' => envNonEmpty('LOG_CHANNEL', 'stack'),
-
+    'level' => envNonEmpty('APP_LOG_LEVEL', 'info'),
     /*
     |--------------------------------------------------------------------------
     | Log Channels
