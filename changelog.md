@@ -45,6 +45,9 @@ Before this release came out, several alpha and beta versions had been released 
 - [Issue 3137](https://github.com/firefly-iii/firefly-iii/issues/3137) Fix mis-alignment in table rows.
 - [Issue 3140](https://github.com/firefly-iii/firefly-iii/issues/3140) New user email message had a broken link.
 - [Issue 3141](https://github.com/firefly-iii/firefly-iii/issues/3141) Cache issue
+- [Issue 3145](https://github.com/firefly-iii/firefly-iii/issues/3145) Issue with empty charts.
+- [Issue 3146](https://github.com/firefly-iii/firefly-iii/issues/3146) Better handling of CSV imports from ING.
+- Bad redirect when editing opening balances.
 
 ### API
 - [Issue 3097](https://github.com/firefly-iii/firefly-iii/issues/3097) Unifying API models
