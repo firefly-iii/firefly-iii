@@ -76,8 +76,15 @@ class Steam
                                           ->where('transactions.transaction_currency_id', '!=', $currency->id)
                                           ->sum('transactions.foreign_amount');
 
+        // check:
+        Log::debug(sprintf('Steam::balance. Native balance is "%s"', $nativeBalance));
+        Log::debug(sprintf('Steam::balance. Foreign balance is "%s"', $foreignBalance));
+
         $balance = bcadd($nativeBalance, $foreignBalance);
         $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+
+        Log::debug(sprintf('Steam::balance. Virtual balance is "%s"', $virtual));
+
         $balance = bcadd($balance, $virtual);
         $cache->store($balance);
 

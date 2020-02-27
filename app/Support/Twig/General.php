@@ -147,7 +147,7 @@ class General extends AbstractExtension
             'balance',
             static function (?Account $account): string {
                 if (null === $account) {
-                    return 'NULL';
+                    return '0';
                 }
                 /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());
