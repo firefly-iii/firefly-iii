@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -386,6 +387,9 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var Transaction $transaction */
         $transaction = $journal->transactions()->with('account')->where('amount', '<', 0)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no source transaction.', $journal->id));
+        }
 
         return $transaction->account;
     }
@@ -397,6 +401,9 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var Transaction $transaction */
         $transaction = $journal->transactions()->with('account')->where('amount', '>', 0)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no destination transaction.', $journal->id));
+        }
 
         return $transaction->account;
     }
