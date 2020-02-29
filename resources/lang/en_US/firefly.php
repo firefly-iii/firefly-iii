@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => 'average per bill',
     'expected_total'                             => 'expected total',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version Authorization Request',
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name in :currency',
     'paid_in_currency'                           => 'Paid in :currency',
     'unpaid_in_currency'                         => 'Unpaid in :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(partially) refunds',
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Splits',

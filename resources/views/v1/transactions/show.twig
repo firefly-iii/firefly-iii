@@ -302,7 +302,7 @@
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
-                                        <td>{{ link.link }} "<a href="{{ route('transactions.show', link.group) }}"
+                                        <td>{{ trans('firefly.'~link.link) }} "<a href="{{ route('transactions.show', link.group) }}"
                                                                 title="{{ link.description }}">{{ link.description }}</a>"
 
                                             ({{ link.amount|raw }})

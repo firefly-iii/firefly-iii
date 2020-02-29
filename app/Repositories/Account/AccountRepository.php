@@ -473,7 +473,9 @@ class AccountRepository implements AccountRepositoryInterface
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-        $name = $account->name . ' reconciliation';
+
+        $name = trans('firefly.reconciliation_account_name', ['name' => $account->name]);
+
         /** @var AccountType $type */
         $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
