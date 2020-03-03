@@ -263,11 +263,11 @@ class TransactionStoreRequest extends Request
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:
-                'internal_reference'    => $this->stringFromValue($object['internal_reference']),
-                'external_id'           => $this->stringFromValue($object['external_id']),
+                'internal_reference'    => $this->stringFromValue((string)$object['internal_reference']),
+                'external_id'           => $this->stringFromValue((string)$object['external_id']),
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
-                'bunq_payment_id'       => $this->stringFromValue($object['bunq_payment_id']),
+                'bunq_payment_id'       => $this->stringFromValue((string)$object['bunq_payment_id']),
 
                 'sepa_cc'       => $this->stringFromValue($object['sepa_cc']),
                 'sepa_ct_op'    => $this->stringFromValue($object['sepa_ct_op']),
