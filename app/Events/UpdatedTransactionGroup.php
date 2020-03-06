@@ -37,6 +37,8 @@ class UpdatedTransactionGroup extends Event
 {
     use SerializesModels;
 
+    /** @var bool */
+    public $applyRules;
     /** @var TransactionGroup The group that was stored. */
     public $transactionGroup;
 
@@ -45,8 +47,9 @@ class UpdatedTransactionGroup extends Event
      *
      * @param TransactionGroup $transactionGroup
      */
-    public function __construct(TransactionGroup $transactionGroup)
+    public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true)
     {
         $this->transactionGroup = $transactionGroup;
+        $this->applyRules       = $applyRules;
     }
 }

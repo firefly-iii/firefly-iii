@@ -47,6 +47,7 @@ class TransactionStoreRequest extends Request
     public function authorize(): bool
     {
         Log::debug('Authorize TransactionStoreRequest');
+
         // Only allow authenticated users
         return auth()->check();
     }
@@ -62,6 +63,7 @@ class TransactionStoreRequest extends Request
         $data = [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
+            'apply_rules'             => $this->boolean('apply_rules', true),
             'transactions'            => $this->getTransactionData(),
         ];
 
@@ -80,6 +82,7 @@ class TransactionStoreRequest extends Request
             // basic fields for group:
             'group_title'                          => 'between:1,1000|nullable',
             'error_if_duplicate_hash'              => [new IsBoolean],
+            'apply_rules'                          => [new IsBoolean],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',

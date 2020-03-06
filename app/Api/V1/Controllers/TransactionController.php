@@ -297,7 +297,7 @@ class TransactionController extends Controller
             return response()->json($response, 422);
         }
         app('preferences')->mark();
-        event(new StoredTransactionGroup($transactionGroup));
+        event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         $manager = $this->getManager();
         /** @var User $admin */
@@ -341,7 +341,7 @@ class TransactionController extends Controller
         $manager          = $this->getManager();
 
         app('preferences')->mark();
-        event(new UpdatedTransactionGroup($transactionGroup));
+        event(new UpdatedTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         /** @var User $admin */
         $admin = auth()->user();

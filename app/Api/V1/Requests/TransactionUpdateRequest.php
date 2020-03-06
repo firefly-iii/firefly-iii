@@ -138,6 +138,7 @@ class TransactionUpdateRequest extends Request
 
         $data = [
             'transactions' => $this->getTransactionData(),
+            'apply_rules'  => $this->boolean('apply_rules', true),
         ];
         if ($this->has('group_title')) {
             $data['group_title'] = $this->string('group_title');
@@ -156,6 +157,7 @@ class TransactionUpdateRequest extends Request
         $rules = [
             // basic fields for group:
             'group_title'                          => 'between:1,1000',
+            'apply_rules'                          => [new IsBoolean],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
