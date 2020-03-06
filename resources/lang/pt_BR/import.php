@@ -38,7 +38,7 @@ return [
 
     // notices about the CSV importer:
     'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
-    'final_csv_import'     => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that this is the last version of Firefly III that will feature a CSV importer. A separated tool is available that you should try for yourself: <a href="https://github.com/firefly-iii/csv-importer">the Firefly III CSV importer</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'final_csv_import'     => 'Como descrito neste <a href="https://www.patreon.com/posts/future-updates-30012174">post no Patreon</a>, a forma como o Firefly III gerencia a importação de dados vai mudar. Isto significa que esta é a última versão do Firefly III que incluirá um importador CSV. Uma ferramenta separada está disponível e você deveria testar: <a href="https://github.com/firefly-iii/csv-importer">o importador CSV Firefly III.</a>. Agradeço se você puder testar o novo importador e me dizer o que acha.',
 
     // import provider strings (index):
     'button_fake'                         => 'Fingir uma importação',

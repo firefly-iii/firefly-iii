@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => 'průměr na účet',
     'expected_total'                             => 'očekávaný celkový součet',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Požadavek na ověření – Firefly III verze :version',
     'authorization_request_intro'                => '<strong>:client</strong> žádá oprávnění pro přístup k vaší finanční správě. Chcete autorizovat <strong>:client</strong> pro přístup k těmto záznamům?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name v :currency',
     'paid_in_currency'                           => 'Zaplaceno v :currency',
     'unpaid_in_currency'                         => 'Nezaplaceno v :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Zjistit dostupnost případných aktualizací',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(partially) refunds',
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Rozúčtování',

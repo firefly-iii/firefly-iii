@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Wijzig transactie ":description"',
     'edit_reconciliation'    => 'Wijzig ":description"',
     'delete_journal'         => 'Verwijder transactie ":description"',
+    'delete_group'           => 'Verwijder transactie ":description"',
     'tags'                   => 'Tags',
     'createTag'              => 'Maak nieuwe tag',
     'edit_tag'               => 'Wijzig tag ":tag"',

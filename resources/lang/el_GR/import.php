@@ -38,7 +38,7 @@ return [
 
     // notices about the CSV importer:
     'deprecate_csv_import' => 'Όπως αποτυπώνεται σε <a href="https://www.patreon.com/posts/future-updates-30012174"> αυτό το Patreon post</a>, ο τρόπος που το Firefly III διαχειρίζεται την εισαγωγή δεδομένων πρόκειται να αλλάξει. Αυτό σημαίνει ότι η εισαγωγή CSV θα μετακινηθεί σε ένα νέο, ξεχωριστό εργαλείο. Μπορείτε να δοκιμάσετε ήδη αυτό το beta εργαλείο εάν επισκεφτείτε <a href="https://github.com/firefly-iii/csv-importer"> αυτό το Github repository</a>. Θα το εκτιμούσα εάν δοκιμάζατε τη νέα εισαγωγή και μου κοινοποιούσατε τις απόψεις σας.',
-    'final_csv_import'     => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that this is the last version of Firefly III that will feature a CSV importer. A separated tool is available that you should try for yourself: <a href="https://github.com/firefly-iii/csv-importer">the Firefly III CSV importer</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'final_csv_import'     => 'Όπως περιγράφεται σε αυτή την <a href="https://www.patreon.com/posts/future-updates-30012174">ανάρτηση στο Patreon</a>, ο τρόπος με τον οποίο το Firefly III χειρίζεται τα δεδομένα κατά τη διαδικασία εισαγωγής πρόκειται να αλλάξει. Αυτό σημαίνει ότι αυτή είναι η τελευταία έκδοση του Firefly III που θα περιλαμβάνει αυτό τον εισαγωγέα αρχείων CSV. Διατίθεται τώρα ένα ξεχωριστό εργαλείο που θα πρέπει να το δοκιμάσετε: <a href="https://github.com/firefly-iii/csv-importer">ο εισαγωγέας CSV για το Firefly III</a>. Θα το εκτιμούσα αν δοκιμάσετε το νέο εργαλείο εισαγωγής και μοιραστείτε τις εντυπώσεις σας.',
 
     // import provider strings (index):
     'button_fake'                         => 'Προσποιηθήτε μία εισαγωγή',
@@ -53,7 +53,7 @@ return [
 
 
     // prerequisites box (index)
-    'need_prereq_title'                   => 'Εισαγωγή προϋποθέσεων',
+    'need_prereq_title'                   => 'Προϋποθέσεις εισαγωγής',
     'need_prereq_intro'                   => 'Κάποιες μέθοδοι εισαγωγής χρειάζονται την προσοχή σας πριν τη χρήση. Για παράδειγμα, μπορεί να απαιτούν ειδικά κλειδιά API ή κωδικούς εφαρμογής. Μπορείτε να τις ρυθμίσετε εδώ. Το εικονίδιο καταδεικνύει εάν οι προϋποθέσεις έχουν ικανοποιηθεί.',
     'do_prereq_fake'                      => 'Προϋποθέσεις για τον ψευδή πάροχο',
     'do_prereq_file'                      => 'Προϋποθέσεις για εισαγωγές αρχείων',

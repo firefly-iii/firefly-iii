@@ -51,6 +51,7 @@ return [
     'edit_journal'           => '":description" tranzakció szerkesztése',
     'edit_reconciliation'    => '":description" szerkesztése',
     'delete_journal'         => '":description" tranzakció törlése',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Cimkék',
     'createTag'              => 'Új címke létrehozása',
     'edit_tag'               => '":tag" címke szerkesztése',

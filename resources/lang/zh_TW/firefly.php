@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => '每張帳單的平均數',
     'expected_total'                             => '預期總數',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III :version 版授權請求',
     'authorization_request_intro'                => '<strong>:client</strong> 正要求權限存取您的財務管理，您是否願意授權 <strong>:client</strong> 存取這些紀錄？',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name 於 :currency',
     'paid_in_currency'                           => '以 :currency 支付',
     'unpaid_in_currency'                         => '未以 :currency 支付',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => '檢查更新',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(部分) 退還',
     '(partially) pays for_outward'          => '(部分) 支付',
     '(partially) reimburses_outward'        => '(部分) 核銷',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => '拆分',

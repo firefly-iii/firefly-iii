@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'numai facturi active și așteptate',
     'average_per_bill'                           => 'media pe factură',
     'expected_total'                             => 'total așteptat',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'v: Solicitare de autorizare',
     'authorization_request_intro'                => '<strong> :client </ strong> solicită permisiunea de a accesa administrația financiară. Doriți să autorizați <strong> :client </ strong> pentru a accesa aceste înregistrări?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name în :currency',
     'paid_in_currency'                           => 'Plătit în :currency',
     'unpaid_in_currency'                         => 'Neplătit în :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Verifică actualizări',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(parțial) restituiri',
     '(partially) pays for_outward'          => '(parțial) plătește pentru',
     '(partially) reimburses_outward'        => '(parțial) ramburseaza',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Desparte',

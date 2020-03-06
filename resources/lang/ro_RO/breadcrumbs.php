@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Editează tranzacția ":description"',
     'edit_reconciliation'    => 'Editează ":description"',
     'delete_journal'         => 'Șterge tranzacția ":description"',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Etichete',
     'createTag'              => 'Crează o etichetă nouă',
     'edit_tag'               => 'Editează eticheta ":tag"',

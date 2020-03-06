@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Redigera transaktionen ”:description”',
     'edit_reconciliation'    => 'Redigera ”:description”',
     'delete_journal'         => 'Ta bort transaktionen ”:description”',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Etiketter',
     'createTag'              => 'Skapa en ny etikett',
     'edit_tag'               => 'Redigera etiketten ”:tag”',

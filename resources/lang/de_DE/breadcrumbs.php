@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Transaktion ":description" bearbeiten',
     'edit_reconciliation'    => '„:description” bearbeiten',
     'delete_journal'         => 'Transaktion ":description" löschen',
+    'delete_group'           => 'Buchung „:description” löschen',
     'tags'                   => 'Schlagwörter',
     'createTag'              => 'Neues Schlagwort erstellen',
     'edit_tag'               => 'Schlagwort „:tag” bearbeiten',

@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Edit transaksi ":description"',
     'edit_reconciliation'    => 'Edit ":description"',
     'delete_journal'         => 'Hapus transaksi ":description"',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Label',
     'createTag'              => 'Buat label baru',
     'edit_tag'               => 'Edit label ":tag"',

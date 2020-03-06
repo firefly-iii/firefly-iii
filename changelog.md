@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.0 (API 1.0.0)] - 2020-03-xx
+## [5.1.0 (API 1.0.0)] - 2020-03-06
 
 Before this release came out, several alpha and beta versions had been released already:
 
@@ -47,6 +47,8 @@ Before this release came out, several alpha and beta versions had been released 
 - [Issue 3141](https://github.com/firefly-iii/firefly-iii/issues/3141) Cache issue
 - [Issue 3145](https://github.com/firefly-iii/firefly-iii/issues/3145) Issue with empty charts.
 - [Issue 3146](https://github.com/firefly-iii/firefly-iii/issues/3146) Better handling of CSV imports from ING.
+- [Issue 3154](https://github.com/firefly-iii/firefly-iii/issues/3154) Problem with bcadd() in PHP 7.4
+- [Issue 3159](https://github.com/firefly-iii/firefly-iii/issues/3159) Fixed some untranslatable strings.
 - Bad redirect when editing opening balances.
 
 ### API

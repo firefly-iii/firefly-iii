@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'uniquement les factures actives et attendues',
     'average_per_bill'                           => 'moyenne par facture',
     'expected_total'                             => 'total prévu',
+    'reconciliation_account_name'                => 'Régularisation :name',
     // API access
     'authorization_request'                      => 'Firefly III v:version demande d\'autorisation',
     'authorization_request_intro'                => '<strong>:client</strong> demande l\'autorisation d\'accéder à votre administration financière. Souhaitez-vous autoriser <strong>:client</strong> à accéder à ces enregistrements?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name en :currency',
     'paid_in_currency'                           => 'Payé en :currency',
     'unpaid_in_currency'                         => 'Non payé en :currency',
+    'is_alpha_warning'                           => 'Vous utilisez une version ALPHA. Méfiez-vous des bogues et des problèmes.',
+    'is_beta_warning'                            => 'Vous utilisez une version BETA. Méfiez-vous des bogues et des problèmes.',
 
     // check for updates:
     'update_check_title'                         => 'Vérifier les mises à jour',
@@ -938,9 +941,9 @@ return [
     'delete_withdrawal'                         => 'Supprimer le retrait ":description"',
     'delete_deposit'                            => 'Supprimer le dépôt ":description"',
     'delete_transfer'                           => 'Supprimer le transfert ":description"',
-    'deleted_withdrawal'                        => 'Retrait ":name" correctement supprimé',
-    'deleted_deposit'                           => 'Dépôt ":name" correctement supprimé',
-    'deleted_transfer'                          => 'Opération ":name" correctement supprimée',
+    'deleted_withdrawal'                        => 'Retrait ":description" correctement supprimé',
+    'deleted_deposit'                           => 'Dépôt ":description" correctement supprimé',
+    'deleted_transfer'                          => 'Opération ":description" correctement supprimée',
     'stored_journal'                            => 'Opération ":description" créée avec succès',
     'stored_journal_no_descr'                   => 'Nouvelle opération créée avec succès',
     'updated_journal_no_descr'                  => 'Votre opération a été mise à jour avec succès',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => 'rembourse (partiellement)',
     '(partially) pays for_outward'          => 'paye (partiellement) pour',
     '(partially) reimburses_outward'        => 'rembourse (partiellement)',
+    'is (partially) refunded by'            => 'est (partiellement) remboursé par',
+    'is (partially) paid for by'            => 'est (partiellement) payé par',
+    'is (partially) reimbursed by'          => 'est (partiellement) remboursé par',
+    'relates to'                            => 'se rapporte à',
+    '(partially) refunds'                   => 'rembourse (partiellement)',
+    '(partially) pays for'                  => 'paye (partiellement) pour',
+    '(partially) reimburses'                => 'rembourse (partiellement)',
 
     // split a transaction:
     'splits'                                => 'Ventilations',

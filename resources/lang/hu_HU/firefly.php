@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => 'számlánkénti átlag',
     'expected_total'                             => 'várható teljes összeg',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version engedély kérelem',
     'authorization_request_intro'                => '<strong>:client</strong> hozzáférést kért az Ön pénzügyi adminisztrációjához. Szeretne hozzáférést ezekhez adatokhoz <strong>:client</strong> részére?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name - :currency',
     'paid_in_currency'                           => 'Fizetve :currency -ban',
     'unpaid_in_currency'                         => 'Be nem fizetett :currency -ban',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Frissítések ellenőrzése',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(részben) visszatérítve',
     '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(részben) visszafizetve',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Felosztások',

@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'endast aktiva och väntade notor',
     'average_per_bill'                           => 'medel per nota',
     'expected_total'                             => 'total förväntad',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version Auktorisationsbegäran',
     'authorization_request_intro'                => '<strong>:client</strong> begär tillstånd för åtkomst till din ekonomi administration. Vill du tillåta <strong>:client</strong> åtkomst till dessa poster?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name i :currency',
     'paid_in_currency'                           => 'Betalad i :currency',
     'unpaid_in_currency'                         => 'Obetalad i :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Sök uppdateringar',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(delvis) återbetalningar',
     '(partially) pays for_outward'          => '(delvis) betalning för',
     '(partially) reimburses_outward'        => '(delvis) ersättning',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Dela upp',

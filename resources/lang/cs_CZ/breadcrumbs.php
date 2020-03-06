@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Upravit transakci „:description“',
     'edit_reconciliation'    => 'Upravit „:description“',
     'delete_journal'         => 'Odstranit transakci „:description“',
+    'delete_group'           => 'Odstranit transakci „:description“',
     'tags'                   => 'Štítky',
     'createTag'              => 'Vytvořit nový štítek',
     'edit_tag'               => 'Upravit štítek „:tag“',

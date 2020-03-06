@@ -51,6 +51,7 @@ return [
     'edit_journal'           => '":description" işlemini düzenle',
     'edit_reconciliation'    => '":description" açıklamasını düzenle',
     'delete_journal'         => '":description" işlemini sil',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Etiketler',
     'createTag'              => 'Yeni etiket oluştur',
     'edit_tag'               => '":tag" etiketini düzenle',

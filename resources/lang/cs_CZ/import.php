@@ -238,7 +238,7 @@ return [
 
 
     // import status page:
-    'import_with_key'                 => 'Importovat s klíčem „:key“',
+    'import_with_key'                 => 'Importováno s klíčem „:key“',
     'status_wait_title'               => 'Vyčkejte…',
     'status_wait_text'                => 'Toto okno za okamžik zmizí.',
     'status_running_title'            => 'Import je spuštěn',
