@@ -185,7 +185,7 @@ class BoxController extends Controller
         foreach ($set as $journal) {
             $currencyId            = (int)$journal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount']);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount'] ?? '0');
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
             $sums[$currencyId]     = bcadd($sums[$currencyId], $journal['amount']);
         }

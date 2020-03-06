@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Редактирование транзакции ":description"',
     'edit_reconciliation'    => 'Редактировать ":description"',
     'delete_journal'         => 'Удаление транзакции ":description"',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => 'Метки',
     'createTag'              => 'Создать новую метку',
     'edit_tag'               => 'Редактирование метки ":tag"',

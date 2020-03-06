@@ -347,6 +347,7 @@ class Request extends FormRequest
         $longitudeKey = null === $prefix ? 'longitude' : sprintf('%s_longitude', $prefix);
         $latitudeKey  = null === $prefix ? 'latitude' : sprintf('%s_latitude', $prefix);
         $zoomLevelKey = null === $prefix ? 'zoom_level' : sprintf('%s_zoom_level', $prefix);
+        $hasLocationKey = null === $prefix ? 'has_location' : sprintf('%s_has_location', $prefix);
 
         // for a POST (store, all fields must be present and accounted for:
         if (
@@ -354,7 +355,8 @@ class Request extends FormRequest
             && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
         ) {
             Log::debug('Method is POST and all fields present.');
-            $data['store_location'] = true;
+
+            $data['store_location'] = $this->boolean($hasLocationKey);
             $data['longitude']      = '' === $this->string($longitudeKey) ? null : $this->string($longitudeKey);
             $data['latitude']       = '' === $this->string($latitudeKey) ? null : $this->string($latitudeKey);
             $data['zoom_level']     = '' === $this->string($zoomLevelKey) ? null : $this->integer($zoomLevelKey);

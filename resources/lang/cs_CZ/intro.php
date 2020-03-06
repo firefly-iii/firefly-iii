@@ -47,11 +47,11 @@ return [
     'transactions_create_deposit_split_add'           => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
+    'transactions_create_transfer_source'             => 'Zde vyberte zdrojový účet aktiv.',
+    'transactions_create_transfer_destination'        => 'Zde vyberte cílový účet aktiv.',
+    'transactions_create_transfer_foreign_currency'   => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
     'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_split_add'          => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
 
     // create account:
     'accounts_create_iban'                            => 'Zadejte u svých účtů platný IBAN identifikátor. To by v budoucnu mohlo velmi ulehčit import dat.',

@@ -88,7 +88,7 @@ class ShowController extends Controller
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = $first->transactionType->type;
+        $type     = (string)trans(sprintf('firefly.%s',$first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 

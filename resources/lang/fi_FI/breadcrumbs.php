@@ -51,6 +51,7 @@ return [
     'edit_journal'           => 'Muokkaa tapahtumaa ":description"',
     'edit_reconciliation'    => 'Muokkaa ":description"',
     'delete_journal'         => 'Poista tapahtuma ":description"',
+    'delete_group'           => 'Poista tapahtuma ":description"',
     'tags'                   => 'Tägit',
     'createTag'              => 'Luo uusi tägi',
     'edit_tag'               => 'Muokkaa tägiä ":tag"',

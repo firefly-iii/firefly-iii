@@ -51,6 +51,7 @@ return [
     'edit_journal'           => '编辑交易 ":description"',
     'edit_reconciliation'    => '编辑 ":description"',
     'delete_journal'         => '删除交易 ":description"',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => '标签',
     'createTag'              => '建立新标签',
     'edit_tag'               => '编辑标签 ":tag"',

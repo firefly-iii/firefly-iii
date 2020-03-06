@@ -114,7 +114,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            // return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // currency repos:
@@ -163,22 +163,24 @@ class CategoryController extends Controller
 
         // no category per currency:
         $noCategory = $noCatRepository->sumExpenses($start, $end);
+        if (0 !== bccomp($noCategory[0]['sum'] ?? '0', '0')) {
 
-        foreach ($noCategory as $currency) {
-            $currencyId              = $currency['currency_id'];
-            $currencies[$currencyId] = $currencies[$currencyId] ?? [
-                    'currency_id'             => $currency['currency_id'],
-                    'currency_name'           => $currency['currency_name'],
-                    'currency_symbol'         => $currency['currency_symbol'],
-                    'currency_code'           => $currency['currency_code'],
-                    'currency_decimal_places' => $currency['currency_decimal_places'],
+            foreach ($noCategory as $currency) {
+                $currencyId              = $currency['currency_id'];
+                $currencies[$currencyId] = $currencies[$currencyId] ?? [
+                        'currency_id'             => $currency['currency_id'],
+                        'currency_name'           => $currency['currency_name'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_code'           => $currency['currency_code'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
+                    ];
+                $tempData[]              = [
+                    'name'        => trans('firefly.no_category'),
+                    'sum'         => $currency['sum'],
+                    'sum_float'   => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
+                    'currency_id' => $currency['currency_id'],
                 ];
-            $tempData[]              = [
-                'name'        => trans('firefly.no_category'),
-                'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => $currency['currency_id'],
-            ];
+            }
         }
 
         // sort temp array by amount.
@@ -203,6 +205,7 @@ class CategoryController extends Controller
             $name                                     = $entry['name'];
             $chartData[$currencyId]['entries'][$name] = bcmul($entry['sum'], '-1');
         }
+
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 

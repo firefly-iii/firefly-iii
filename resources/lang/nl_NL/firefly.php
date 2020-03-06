@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'alleen actieve en verwachte contracten',
     'average_per_bill'                           => 'gemiddeld per contract',
     'expected_total'                             => 'verwacht totaal',
+    'reconciliation_account_name'                => ':name afstemmingsrekening',
     // API access
     'authorization_request'                      => 'Firefly III v:version autorisatieverzoek',
     'authorization_request_intro'                => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name in :currency',
     'paid_in_currency'                           => 'Betaald in :currency',
     'unpaid_in_currency'                         => 'Nog niet betaald in :currency',
+    'is_alpha_warning'                           => 'Je gebruikt een ALPHA versie. Let op bugs en fouten.',
+    'is_beta_warning'                            => 'Je gebruikt een BETA versie. Let op bugs en fouten.',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => 'is een (gedeeltelijke) terugbetaling voor',
     '(partially) pays for_outward'          => 'betaalt (deels) voor',
     '(partially) reimburses_outward'        => 'vergoedt (deels)',
+    'is (partially) refunded by'            => 'wordt (deels) terugbetaald door',
+    'is (partially) paid for by'            => 'wordt (deels) betaald door',
+    'is (partially) reimbursed by'          => 'wordt (deels) vergoed door',
+    'relates to'                            => 'gerelateerd aan',
+    '(partially) refunds'                   => 'is een (gedeeltelijke) terugbetaling voor',
+    '(partially) pays for'                  => 'betaalt (deels) voor',
+    '(partially) reimburses'                => 'vergoedt (deels)',
 
     // split a transaction:
     'splits'                                => 'Splitten',

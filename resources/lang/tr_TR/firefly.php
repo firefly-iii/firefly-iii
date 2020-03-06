@@ -206,6 +206,7 @@ return [
     'active_exp_bills_only'                      => 'sadece aktif ve beklenen faturalar',
     'average_per_bill'                           => 'fatura başına ortalama',
     'expected_total'                             => 'beklenen toplam',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v: version Yetkilendirme İsteği',
     'authorization_request_intro'                => '<strong>:client</strong> finansal yönetiminize erişmek için izin istiyor. Bu kayıtlara erişmek için  <strong>:client</strong> \'yi yetkilendirmek ister misiniz?',
@@ -216,6 +217,8 @@ return [
     'name_in_currency'                           => ':name :currency',
     'paid_in_currency'                           => ':currency olarak ödenen',
     'unpaid_in_currency'                         => ':currency olarak ödenmeyen',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Güncellemeleri kontrol et',
@@ -1393,6 +1396,13 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     '(partially) refunds_outward'           => '(kısmen) geri ödeme',
     '(partially) pays for_outward'          => 'için (kısmen) öder',
     '(partially) reimburses_outward'        => '(kısmen) iade edilir',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Bölmeler',

@@ -86,6 +86,7 @@
                 console.log('Set object location: lat(' + e.latlng.lat + '), long(' + e.latlng.lng + '), zoom (' + mymap.getZoom() + ')');
                 $('input[name="{{ latitudevar }}"]').val(e.latlng.lat);
                 $('input[name="{{ longitudevar }}"]').val(e.latlng.lng);
+                $('input[name="{{ haslocationvar }}"]').val('true');
             }
             if (typeof e.latlng === 'undefined') {
                 console.log('Set object zoom level to ' + mymap.getZoom());

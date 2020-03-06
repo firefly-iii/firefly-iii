@@ -51,6 +51,7 @@ return [
     'edit_journal'           => '編輯交易 ":description"',
     'edit_reconciliation'    => '編輯 ":description"',
     'delete_journal'         => '刪除交易 ":description"',
+    'delete_group'           => 'Delete transaction ":description"',
     'tags'                   => '標籤',
     'createTag'              => '建立新標籤',
     'edit_tag'               => '編輯標籤 ":tag"',

@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'vain aktiiviset ja odotettavissa olevat laskut',
     'average_per_bill'                           => 'keskiarvo laskuittain',
     'expected_total'                             => 'odotettavissa yhteensä',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version Valtuutus Pyyntö',
     'authorization_request_intro'                => '<strong>:client</strong> pyytää valtuutustasi nähdäkseen sinun taloushallintosi. Haluatko antaa hänelle pääsyn näihin tietoihin?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name valuutassa :currency',
     'paid_in_currency'                           => 'Maksettu valuutassa :currency',
     'unpaid_in_currency'                         => 'Maksamatta valuutassa :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(osittainen) palautus',
     '(partially) pays for_outward'          => '(osittainen) maksu',
     '(partially) reimburses_outward'        => '(osittainen) korvaus',
+    'is (partially) refunded by'            => 'on (osittain) palauttanut',
+    'is (partially) paid for by'            => 'on (osittain) maksanut',
+    'is (partially) reimbursed by'          => 'on (osittain) korvannut',
+    'relates to'                            => 'liittyy',
+    '(partially) refunds'                   => '(osittainen) palautus',
+    '(partially) pays for'                  => '(osittainen) maksu',
+    '(partially) reimburses'                => '(osittainen) korvaus',
 
     // split a transaction:
     'splits'                                => 'Tapahtuman osat',

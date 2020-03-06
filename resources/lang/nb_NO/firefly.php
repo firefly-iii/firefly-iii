@@ -205,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => 'gjennomsnitt per regning',
     'expected_total'                             => 'forventet totalt',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version autorisasjonsforespørsel',
     'authorization_request_intro'                => '<strong>:client</strong> ber om tillatelse til å få tilgang til finansadministrasjonen din. Vil du autorisere <strong>:client</strong> slik at den får tilgang til disse dine data?',
@@ -215,6 +216,8 @@ return [
     'name_in_currency'                           => ':name i :currency',
     'paid_in_currency'                           => 'Betalt i :currency',
     'unpaid_in_currency'                         => 'Ubetalt i :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
 
     // check for updates:
     'update_check_title'                         => 'Se etter oppdateringer',
@@ -1391,6 +1394,13 @@ return [
     '(partially) refunds_outward'           => '(delvise) refusjoner',
     '(partially) pays for_outward'          => 'betaler (delvis) for',
     '(partially) reimburses_outward'        => 'tilbakebetaler (delvis)',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Deler opp',
