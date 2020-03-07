@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ trans('firefly.import_index_title') }}</h3>
@@ -20,7 +20,7 @@
                     <div class="row">
                         {% for name, provider in providers %}
                             {# button for each import thing: #}
-                            <div class="col-lg-1 col-md-4 col-sm-6 text-center">
+                            <div class="col-lg-2 col-md-4 col-sm-6 text-center">
                                 {% if not provider.allowed_for_demo and isDemoUser %}
                                     <img src="v1/images/logos/{{ name }}.png" alt="{{ trans(('import.button_'~name)) }}"/><br/>
                                     {{ trans(('import.button_'~name)) }}<br>
@@ -35,6 +35,26 @@
 
                         {% endfor %}
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('firefly.import_tools_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ trans('firefly.tools_index_intro')|raw }}
+                    </p>
+                    <ul>
+                        <li>
+                            <a href="http://github.com/firefly-iii/csv-importer" title="{{ 'firefly_iii_csv_importer_name'|_ }}">{{ 'firefly_iii_csv_importer_name'|_ }}</a>
+                        </li>
+                        <li>
+                            <a href="http://github.com/firefly-iii/bunq-importer" title="{{ 'firefly_iii_bunq_importer_name'|_ }}">{{ 'firefly_iii_bunq_importer_name'|_ }}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

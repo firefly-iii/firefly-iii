@@ -44,7 +44,7 @@ return [
     // these import providers are available:
     'enabled'          => [
         'fake'    => true,
-        'file'    => true,
+        'file'    => false,
         'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
@@ -69,8 +69,8 @@ return [
     // a normal user user can use these import providers (when enabled):
     'allowed_for_user' => [
         'fake'    => false,
-        'file'    => true,
-        'bunq'    => true,
+        'file'    => false,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,
@@ -82,7 +82,7 @@ return [
     'has_prereq'       => [
         'fake'    => true,
         'file'    => false,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,
@@ -105,8 +105,8 @@ return [
     // some providers may need extra configuration per job
     'has_job_config'   => [
         'fake'    => true,
-        'file'    => true,
-        'bunq'    => true,
+        'file'    => false,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => false,
