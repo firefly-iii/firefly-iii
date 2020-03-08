@@ -103,7 +103,7 @@ class BoxController extends Controller
         if ($availableBudgets->count() > 0) {
             $display  = 0; // assume user overspent
             $boxTitle = (string)trans('firefly.overspent');
-            $totalAvailableSum = $availableBudgets->sum('amount');
+            $totalAvailableSum = (string)$availableBudgets->sum('amount');
             // calculate with available budget.
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             if (1 === bccomp($leftToSpendAmount, '0')) {
