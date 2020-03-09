@@ -302,7 +302,7 @@ try {
             if ($object instanceof Bill) {
                 $breadcrumbs->parent('bills.show', $object);
             }
-            $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
+            $breadcrumbs->push(limitStringLength(trans('firefly.edit_attachment', ['name' => $attachment->filename])), route('attachments.edit', [$attachment]));
         }
     );
     Breadcrumbs::register(
