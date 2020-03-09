@@ -312,7 +312,7 @@ class Search implements SearchInterface
     {
         $parts = explode(':', $string);
         if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
-            $type  = trim((string)$parts[0]);
+            $type  = strtolower(trim((string)$parts[0]));
             $value = trim((string)$parts[1]);
             $value = trim(trim($value, '"\''));
             if (in_array($type, $this->validModifiers, true)) {
