@@ -24,18 +24,27 @@
             {{ $t('firefly.description') }}
         </div>
         <div class="col-sm-12">
-            <input
-                    type="text"
-                    class="form-control"
-                    name="description[]"
-                    :title="$t('firefly.description')"
-                    v-on:keypress="handleEnter"
-                    v-on:submit.prevent
-                    ref="descr"
-                    autocomplete="off"
-                    v-bind:placeholder="$t('firefly.description')"
-                    :value="value" @input="handleInput"
-            >
+            <div class="input-group">
+                <input
+                        type="text"
+                        class="form-control"
+                        name="description[]"
+                        :title="$t('firefly.description')"
+                        v-on:keypress="handleEnter"
+                        v-on:submit.prevent
+                        ref="descr"
+                        autocomplete="off"
+                        v-bind:placeholder="$t('firefly.description')"
+                        :value="value" @input="handleInput"
+                >
+                <span class="input-group-btn">
+            <button
+                    v-on:click="clearDescription"
+                    tabIndex="-1"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+            </div>
             <typeahead
                     :open-on-empty=true
                     :open-on-focus=true
@@ -72,11 +81,20 @@
             hasError: function () {
                 return this.error.length > 0;
             },
+            clearDescription: function () {
+                //props.value = '';
+                this.name = '';
+                this.$refs.input.value = '';
+                this.$emit('input', this.$refs.input.value);
+                // some event?
+                this.$emit('clear:description')
+            },
             handleInput(e) {
                 this.$emit('input', this.$refs.descr.value);
             },
             handleEnter: function (e) {
                 // todo feels sloppy
+
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }

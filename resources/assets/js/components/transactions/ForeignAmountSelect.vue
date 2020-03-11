@@ -21,11 +21,14 @@
 <template>
     <!--
     Show if:
-    - more than one currency enabled in system.
-
+    - more than one currency enabled, always show
+    - if just one, but is deposit or withdrawal
     -->
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="
-    this.enabledCurrencies.length > 1">
+    this.enabledCurrencies.length > 1 ||
+    (this.enabledCurrencies.length >= 1 && ('deposit' === this.transactionType.toLowerCase() || 'withdrawal' === this.transactionType.toLowerCase()))
+
+">
         <div class="col-sm-8 col-sm-offset-4 text-sm">
             {{ $t('form.foreign_amount') }}
         </div>
@@ -61,7 +64,7 @@
 
         props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title',],
         mounted() {
-            //console.log('loadCurrencies()');
+            console.log('ForeignAmountSelect mounted()');
             this.liability = false;
             this.loadCurrencies();
         },
@@ -76,25 +79,25 @@
         },
         watch: {
             source: function () {
-                // console.log('watch source in foreign currency');
+                console.log('ForeignAmountSelect watch source');
                 this.changeData();
             },
             destination: function () {
-                // console.log('watch destination in foreign currency');
+                console.log('ForeignAmountSelect watch destination');
                 this.changeData();
             },
             transactionType: function () {
-                // console.log('watch transaction type in foreign currency');
+                console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
                 this.changeData();
             }
         },
         methods: {
             hasError: function () {
-                // console.log('Has error');
+                console.log('ForeignAmountSelect hasError');
                 return this.error.length > 0;
             },
             handleInput(e) {
-                // console.log('handleInput');
+                console.log('ForeignAmountSelect handleInput');
                 let obj = {
                     amount: this.$refs.amount.value,
                     currency_id: this.$refs.currency_select.value,
@@ -104,7 +107,7 @@
                 );
             },
             changeData: function () {
-                //console.log('Now in changeData()');
+                console.log('ForeignAmountSelect changeData');
                 this.enabledCurrencies = [];
                 let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
                 let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
