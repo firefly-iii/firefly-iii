@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => '啥兩步驟我忘了。',
     'two_factor_lost_header'                     => '遺失您的兩步驟驗證嗎？',
     'two_factor_lost_intro'                      => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions, or run <code>docker logs &lt;container_id&gt;</code> to see the instructions (refresh this page).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => '否則，請寄送電子郵件至網站擁有者 <a href="mailto::site_owner">:site_owner</a> 要求重設您的兩步驟驗證。',
     'mfa_backup_code'                            => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'           => 'Get new backup codes',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => '將交易記錄導入',
     'import_data'                           => '匯入資料',
     'import_transactions'                   => '匯入交易',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => '當您在 Sandstorm.io 環境使用 Firefly III 時，此功能不可用。',
 

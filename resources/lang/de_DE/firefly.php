@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ich kann keine 2FA-Codes generieren.',
     'two_factor_lost_header'                     => 'Haben Sie ihre Zwei-Faktor-Authentifizierung verloren?',
     'two_factor_lost_intro'                      => 'Wenn Sie auch Ihre Sicherungsschlüssel verloren haben, haben Sie Pech. Dies ist nichts, was Sie über die Weboberfläche beheben können. Sie haben jedoch zwei Möglichkeiten.',
-    'two_factor_lost_fix_self'                   => 'Wenn Sie Ihre eigene Instanz von Firefly III ausführen, überprüfen Sie die Protokolle in <code>storage/logs</code> auf Anweisungen, oder führen Sie <code>docker logs &lt;container_id&gt;</code> aus, um die Anweisungen zu lesen (aktualisieren Sie diese Seite).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Ansonsten, mailen Sie dem Inhaber der Website, <a href="mailto::site_owner">:site_owner</a> und bitten Sie ihn, Ihre Zwei-Faktor Authentifizierung zurückzusetzen.',
     'mfa_backup_code'                            => 'Sie haben sich mit einem Sicherungsschlüssel bei Firefly III angemeldet. Dieser kann nun nicht mehr verwendet werden, also streichen Sie ihn aus Ihrer Liste.',
     'pref_two_factor_new_backup_codes'           => 'Neue Sicherungsschlüssel abrufen',
@@ -393,7 +393,7 @@ return [
     'rule_trigger_to_account_nr_ends'               => 'Zielkontonummer/IBAN endet auf „:trigger_value”',
     'rule_trigger_to_account_nr_is_choice'          => 'Zielkontonummer/IBAN ist …',
     'rule_trigger_to_account_nr_is'                 => 'Zielkontonummer/IBAN ist „:trigger_value”',
-    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN beginnt enthält …',
+    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN enthält …',
     'rule_trigger_to_account_nr_contains'           => 'Zielkontonummer/IBAN enthält „:trigger_value”',
 
     'rule_trigger_transaction_type_choice'       => 'Buchung ist vom Typ..',
@@ -451,7 +451,7 @@ return [
     'rule_action_set_category'                   => 'Kategorie auf ":action_value" setzen',
     'rule_action_clear_category'                 => 'Kategorie entfernen',
     'rule_action_set_budget'                     => 'Budget auf „:action_value” setzen',
-    'rule_action_clear_budget'                   => 'Budget löschen',
+    'rule_action_clear_budget'                   => 'Budget leeren',
     'rule_action_add_tag'                        => 'Schlagwort „:action_value” hinzufügen',
     'rule_action_remove_tag'                     => 'Schlagwort „:action_value” entfernen',
     'rule_action_remove_all_tags'                => 'Alle Schlüsselwörter entfernen',
@@ -585,10 +585,10 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
-    'delete_all_budgets'                        => 'Alle Ihre Kostenrahmen löschen',
+    'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
     'delete_all_categories'                     => 'Alle Ihre Kategorien löschen',
     'delete_all_tags'                           => 'Alle Ihre Stichwörter löschen',
-    'deleted_all_budgets'                       => 'Alle Kostenrahmen wurden gelöscht',
+    'deleted_all_budgets'                       => 'Alle Budgets wurden gelöscht',
     'deleted_all_categories'                    => 'Alle Kategorien wurden gelöscht',
     'deleted_all_tags'                          => 'Alle Schlagwörter wurden gelöscht',
     'change_your_password'                      => 'Passwort ändern',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Buchungen in Firefly III importieren',
     'import_data'                           => 'Daten importieren',
     'import_transactions'                   => 'Buchungen importieren',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Es gibt mehrere Werkzeuge, um Daten in Firefly III zu importieren (Diese werden unten vorgestellt). Weitere Informationen finden Sie unter <a href="https://docs.firefly-iii.org/importing-data/introduction">hier auf dieser Seite</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV-Import',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III Bunq 🌈 importieren',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
 

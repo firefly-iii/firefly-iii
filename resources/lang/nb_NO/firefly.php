@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Jeg har glemt/mistet min tofaktor-ting.',
     'two_factor_lost_header'                     => 'Mistet tofaktorautentisering?',
     'two_factor_lost_intro'                      => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions, or run <code>docker logs &lt;container_id&gt;</code> to see the instructions (refresh this page).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Ellers sender du e-postadressen eieren, <a href="mailto::site_owner">:site_owner</a> og ber vedkommende om å tilbakestille tofaktorautentiseringen din.',
     'mfa_backup_code'                            => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'           => 'Get new backup codes',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Importer transaksjoner til Firefly III',
     'import_data'                           => 'Importer data',
     'import_transactions'                   => 'Importer transaksjoner',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Denne funksjonen er ikke tilgjengelig når du bruker Firefly III i et Sandstorm.io miljø.',
 

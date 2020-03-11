@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'J’ai oublié mon code d\'identification à deux facteurs.',
     'two_factor_lost_header'                     => 'Perdu votre authentification à deux facteurs ?',
     'two_factor_lost_intro'                      => 'Si vous avez aussi perdu vos codes de récupération, vous n\'avez pas de chance. Ce n\'est pas quelque chose que vous pouvez corriger depuis l\'interface web. Vous avez deux choix.',
-    'two_factor_lost_fix_self'                   => 'Si vous éxecutez votre propre instance de Firefly III, vérifiez les logs de <code>storage/logs</code> pour obtenir des instructions, ou lancez <code>docker logs &lt;container_id&gt;</code> pour voir les instructions (actualisez cette page).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Dans le cas contraire, contactez le propriétaire du site par courriel <a href="mailto::site_owner">:site_owner</a> et demandez-lui de réinitialiser votre authentification à deux facteurs.',
     'mfa_backup_code'                            => 'Vous avez utilisé un code de récupération pour vous connecter à Firefly III. Il ne peut être réutilisé, donc rayez-le de votre liste.',
     'pref_two_factor_new_backup_codes'           => 'Obtenir de nouveaux codes de récupération',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Importer des opérations dans Firefly III',
     'import_data'                           => 'Importer des données',
     'import_transactions'                   => 'Importer des opérations',
-
+    'import_tools_title'                    => 'Outils d\'importation',
+    'tools_index_intro'                     => 'Plusieurs outils permettent d\'importer des données dans Firefly III. Vous les retrouverez ci-dessous. Pour plus d\'informations, consultez <a href="https://docs.firefly-iii.org/importing-data/introduction">cette page</a> (en anglais).',
+    'firefly_iii_csv_importer_name'         => 'Importation CSV Firefly III',
+    'firefly_iii_bunq_importer_name'        => 'Importation Bunq Firefly III',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Cette fonction n\'est pas disponible lorsque vous utilisez Firefly III dans un environnement Sandstorm.io.',
 

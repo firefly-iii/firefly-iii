@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Jag har glömt min tvåfaktors-pryl.',
     'two_factor_lost_header'                     => 'Förlorad tvåfaktorsautentisering?',
     'two_factor_lost_intro'                      => 'Om du har förlorat även dina backupkoder har du otur. Detta är inte något du kan fixa från webbgränssnittet. Du har två val.',
-    'two_factor_lost_fix_self'                   => 'Om du kör din egen instans av Firefly III, kontrollera loggarna i <code>storage/logs</code> efter instruktioner, eller kör <code>docker logs &lt;container_id&gt;</code> för att se instruktioner (ladda om den här sidan).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Annars, skicka epost till sajt-ägaren, <a href="mailto::site_owner">:site_owner</a> och be hen att återställa din tvåfaktorsautentisering.',
     'mfa_backup_code'                            => 'Du har använt en engångskod för att logga in i Firefly III. Den kan inte användas igen, så stryk den från din lista.',
     'pref_two_factor_new_backup_codes'           => 'Generera nya engångskoder',
@@ -634,7 +634,7 @@ return [
     'export_data_bc'                => 'Export data from Firefly III',
     'export_data_main_title'        => 'Export data from Firefly III',
     'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
-    'export_data_all_transactions'  => 'Export all transactions',
+    'export_data_all_transactions'  => 'Exportera alla transaktioner',
     'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
 
     // attachments
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Importera transaktioner till Firefly III',
     'import_data'                           => 'Importera data',
     'import_transactions'                   => 'Importera transaktioner',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Denna funktion är inte tillgänglig om Firefly III används i en Sandstorm.io miljö.',
 

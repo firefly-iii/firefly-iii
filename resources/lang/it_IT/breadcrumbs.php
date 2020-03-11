@@ -51,7 +51,7 @@ return [
     'edit_journal'           => 'Modifica transazione ":description"',
     'edit_reconciliation'    => 'Modifica ":description"',
     'delete_journal'         => 'Elimina transazione ":description"',
-    'delete_group'           => 'Delete transaction ":description"',
+    'delete_group'           => 'Elimina transazione ":description"',
     'tags'                   => 'Etichette',
     'createTag'              => 'Crea nuova etichetta',
     'edit_tag'               => 'Modifica etichetta ":tag"',

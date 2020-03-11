@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Zapomniałem mojego uwierzytelnienia dwuskładnikowego.',
     'two_factor_lost_header'                     => 'Straciłeś uwierzytelnianie dwuskładnikowe?',
     'two_factor_lost_intro'                      => 'Jeżeli także nie masz kodów, to niestety nie masz szczęścia. To nie jest coś, co możemy naprawić z poziomu przeglądarki. Masz dwie opcje.',
-    'two_factor_lost_fix_self'                   => 'Jeśli masz własną instancję Firefly III, sprawdź logi w <code>storage/logs</code> po wskazówki, lub uruchom <code>docker logs &lt;container_id&gt;</code> aby zobaczyć wskazówki (odśwież tę stronę).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'W przeciwnym razie, powiadom właściciela strony, <a href="mailto::site_owner">:site_owner</a> i poproś go o zresetowanie Twojego uwierzytelnienia dwuskładnikowego.',
     'mfa_backup_code'                            => 'Użyłeś kodu zapasowego do zalogowania się do Firefly III. Nie możesz go użyć ponownie, więc wykreśl go z listy.',
     'pref_two_factor_new_backup_codes'           => 'Wygeneruj nowe kody zapasowe',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Importuj transakcje do Firefly III',
     'import_data'                           => 'Importuj dane',
     'import_transactions'                   => 'Importuj transakcje',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',
 

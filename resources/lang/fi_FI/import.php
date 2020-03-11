@@ -38,7 +38,7 @@ return [
 
     // notices about the CSV importer:
     'deprecate_csv_import' => 'Kuten <a href="https://www.patreon.com/posts/future-updates-30012174">tässä Patreon-artikkelissa</a> esitetään, Firefly III:n tuontitietojen hallintatapa muuttuu. Tämä tarkoittaa, että CSV-tuoja siirretään uuteen, erilliseen työkaluun. Tätä toimintoa voi jo testata vierailemalla <a href="https://github.com/firefly-iii/csv-importer">tässä GitHub-arkistossa</a>. Olisin kiitollinen, jos testaisit uutta työkalua ja kertoisit mielipiteesi siitä.',
-    'final_csv_import'     => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that this is the last version of Firefly III that will feature a CSV importer. A separated tool is available that you should try for yourself: <a href="https://github.com/firefly-iii/csv-importer">the Firefly III CSV importer</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'final_csv_import'     => 'Kuten <a href="https://www.patreon.com/posts/future-updates-30012174"> tässä Patreon-viestissä </a> kuvataan, Firefly III:n tietojen tuonnin hallintatapa muuttuu. Tämä tarkoittaa, että tämä on viimeinen versio Firefly III:sta, jossa on CSV-tuontityökalu. Sen sijaan saatavana on erillinen työkalu, jota sinun tulisi kokeilla itse: <a href="https://github.com/firefly-iii/csv-importer"> Firefly III CSV -tuontityökalu </a>. Olisin kiitollinen, jos testaisit uuden työkalun ja kerrot minulle mielipiteesi.',
 
     // import provider strings (index):
     'button_fake'                         => 'Tee harjoittelutuonti',

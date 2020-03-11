@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Unohdin kaksivaiheisen tunnistusjuttuni.',
     'two_factor_lost_header'                     => 'Unohdit kaksivaiheisen tunnistuksen koodisi?',
     'two_factor_lost_intro'                      => 'Jos olet hävittänyt myös varakoodisi, onnesi on kääntynyt. Tätä et ikävä kyllä pysty korjaamaan selaimella. Sinulla on nyt kaksi vaihtoehtoa.',
-    'two_factor_lost_fix_self'                   => 'Jos Firefly III pyörii omalla serverilläsi, löydät ohjeet osoitteesta <code>storage/logs</code>, tai dockerista komennolla <code>docker logs &lt;container_id&gt;</code>. (päivitä tämä sivu).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Muussa tapauksessa, ota yhteyttä ylläpitäjään, <a href="mailto::site_owner">:site_owner</a> ja pyydä että kaksivaiheinen tunnistautumisesi nollataan.',
     'mfa_backup_code'                            => 'Olet käyttänyt varakoodin kirjautuessasi Firefly III:een. Varakoodi on kertakäyttöinen, joten muista merkitä se käytetyksi.',
     'pref_two_factor_new_backup_codes'           => 'Luo uudet varmistuskoodit',
@@ -205,7 +205,7 @@ return [
     'active_exp_bills_only'                      => 'vain aktiiviset ja odotettavissa olevat laskut',
     'average_per_bill'                           => 'keskiarvo laskuittain',
     'expected_total'                             => 'odotettavissa yhteensä',
-    'reconciliation_account_name'                => ':name reconciliation',
+    'reconciliation_account_name'                => 'täsmäytetään :name',
     // API access
     'authorization_request'                      => 'Firefly III v:version Valtuutus Pyyntö',
     'authorization_request_intro'                => '<strong>:client</strong> pyytää valtuutustasi nähdäkseen sinun taloushallintosi. Haluatko antaa hänelle pääsyn näihin tietoihin?',
@@ -216,8 +216,8 @@ return [
     'name_in_currency'                           => ':name valuutassa :currency',
     'paid_in_currency'                           => 'Maksettu valuutassa :currency',
     'unpaid_in_currency'                         => 'Maksamatta valuutassa :currency',
-    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
-    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'is_alpha_warning'                           => 'Käytät ALPHA-versiota. Varaudu virheisiin ja ongelmiin.',
+    'is_beta_warning'                            => 'Käytät BETA-versiota. Varaudu virheisiin ja ongelmiin.',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Tuo tapahtumia Firefly III:een',
     'import_data'                           => 'Tuo tiedot',
     'import_transactions'                   => 'Tuo tapahtumia',
-
+    'import_tools_title'                    => 'Tuontityökalut',
+    'tools_index_intro'                     => 'Tietojen tuomiseen Firefly III:een on olemassa useita työkaluja. Löydät ne alta. Lisätietoja on <a href="https://docs.firefly-iii.org/importing-data/introduction"> tällä sivulla </a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV tuoja',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 tuoja',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Tätä toimintoa ei ole kun Firefly III on asennettu Sandstorm.io ympäristöön.',
 

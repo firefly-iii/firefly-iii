@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ξέχασα τον παράγοντα ταυτοποίησης.',
     'two_factor_lost_header'                     => 'Χάσατε την ταυτότητα δύο παραγόντων;',
     'two_factor_lost_intro'                      => 'Εάν χάσατε τους εφεδρικούς κωδικούς σας επίσης, είστε άτυχοι. Αυτό δε μπορεί να διορθωθεί απευθείας. Έχετε δύο επιλογές.',
-    'two_factor_lost_fix_self'                   => 'Εάν εκτελείτε μια δική σας εγκατάσταση του Firefly III, ελέγξτε τα αρχεία καταγραφής στο <code>storage/logs</code> για οδηγίες ή εκτελέστε τα<code>αρχεία καταγραφής του docker&lt;container_id&gt;</code> για να δείτε τις οδηγίες (ανανεώστε αυτή τη σελίδα).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Ειδάλλως, στείλτε email στον ιδιοκτήτη του ιστότοπου, <a href="mailto::site_owner">:site_owner</a> και ζητήστε να σας επαναφέρει την ταυτότητα δύο παραγόντων.',
     'mfa_backup_code'                            => 'Έχετε χρησιμοποιήσει ένα εφεδρικό κωδικό για να συνδεθείτε στο Firefly III. Δε μπορεί να χρησιμοποιηθεί ξανά, οπότε διαγράψτε το από τη λίστα σας.',
     'pref_two_factor_new_backup_codes'           => 'Λάβετε νέους εφεδρικούς κωδικούς',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Εισαγωγή συναλλαγών στο Firefly III',
     'import_data'                           => 'Εισαγωγή δεδομένων',
     'import_transactions'                   => 'Εισαγωγή συναλλαγών',
-
+    'import_tools_title'                    => 'Εργαλεία εισαγωγής',
+    'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
+    'firefly_iii_csv_importer_name'         => 'Εργαλείο εισαγωγής CSV στο Firefly III',
+    'firefly_iii_bunq_importer_name'        => 'Εργαλείο εισαγωγής bunq 🌈 στο Firefly III',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν χρησιμοποιείτε το Firefly III σε περιβάλλον Sandstorm.io.',
 

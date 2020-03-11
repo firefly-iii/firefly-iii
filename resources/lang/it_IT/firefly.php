@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ho dimenticato la mia chiave a due fattori.',
     'two_factor_lost_header'                     => 'Hai perso l\'autenticazione a due fattori?',
     'two_factor_lost_intro'                      => 'Se hai perso anche i codici di recupero, sei sfortunato. Questo non è qualcosa che puoi risolvere tramite l\'interfaccia web. Hai due scelte.',
-    'two_factor_lost_fix_self'                   => 'Se gestisci tu l\'installazione di Firefly III, controlla i log in <code>storage/logs</code> per le istruzioni, o esegui <code>docker logs&lt;id_container&gt;</code> per visualizzare le istruzioni (aggiorna questa pagina).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'In caso contrario, invia un mail al proprietario del sito, <a href="mailto::site_owner">:site_owner</a>, e chiedi loro di resettare l\'autenticazione a due fattori.',
     'mfa_backup_code'                            => 'Hai usato un codice di recupero per accedere a Firefly III. Questo codice non potrà essere utilizzato di nuovo, quindi cancellalo dalla lista.',
     'pref_two_factor_new_backup_codes'           => 'Ottieni nuovi codici di recupero',
@@ -205,7 +205,7 @@ return [
     'active_exp_bills_only'                      => 'solo bollette attive e previste',
     'average_per_bill'                           => 'media per bolletta',
     'expected_total'                             => 'totale previsto',
-    'reconciliation_account_name'                => ':name reconciliation',
+    'reconciliation_account_name'                => 'Riconciliazione di :name',
     // API access
     'authorization_request'                      => 'Firefly III v:version Richiesta Autorizzazione',
     'authorization_request_intro'                => '<strong>:client</strong> sta richiedendo l\'autorizzazione per accedere alla tua amministrazione finanziaria. Desideri autorizzare <strong>:client</strong> ad accedere a questi record?',
@@ -216,8 +216,8 @@ return [
     'name_in_currency'                           => ':name in :currency',
     'paid_in_currency'                           => 'Pagata in :currency',
     'unpaid_in_currency'                         => 'Non pagata in :currency',
-    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
-    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'is_alpha_warning'                           => 'Stai eseguendo una versione ALHPA. Fai attenzione a bug e problemi.',
+    'is_beta_warning'                            => 'Stai eseguendo una versione BETA. Fai attenzione a bug e problemi.',
 
     // check for updates:
     'update_check_title'                         => 'Controlla aggiornamenti',
@@ -1394,13 +1394,13 @@ return [
     '(partially) refunds_outward'           => 'rimborsa (parzialmente)',
     '(partially) pays for_outward'          => '(parzialmente) paga per',
     '(partially) reimburses_outward'        => '(parzialmente) rimborsa',
-    'is (partially) refunded by'            => 'is (partially) refunded by',
-    'is (partially) paid for by'            => 'is (partially) paid for by',
-    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
-    'relates to'                            => 'relates to',
-    '(partially) refunds'                   => '(partially) refunds',
-    '(partially) pays for'                  => '(partially) pays for',
-    '(partially) reimburses'                => '(partially) reimburses',
+    'is (partially) refunded by'            => 'è (parzialmente) rimborsata da',
+    'is (partially) paid for by'            => 'è (parzialmente) pagata da',
+    'is (partially) reimbursed by'          => 'è (parzialmente) rimborsata da',
+    'relates to'                            => 'inerente a',
+    '(partially) refunds'                   => 'rimborsa (parzialmente)',
+    '(partially) pays for'                  => '(parzialmente) paga per',
+    '(partially) reimburses'                => '(parzialmente) rimborsa',
 
     // split a transaction:
     'splits'                                => 'Suddivisioni',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Importa le transazioni in Firefly III',
     'import_data'                           => 'Importa dati',
     'import_transactions'                   => 'Importa transazioni',
-
+    'import_tools_title'                    => 'Strumenti di importazione',
+    'tools_index_intro'                     => 'Esistono diversi strumenti per importare dati in Firefly III. Controlla quelli qui sotto. Per ulteriori informazioni, consulta <a href="https://docs.firefly-iii.org/importing-data/introduction">questa pagina</a>.',
+    'firefly_iii_csv_importer_name'         => 'Importatore CSV di Firefly III',
+    'firefly_iii_bunq_importer_name'        => 'Importatore bunq🌈 di Firefly III',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Questa funzione non è disponibile quando si utilizza Firefly III in un ambiente Sandstorm.io.',
 

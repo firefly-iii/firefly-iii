@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => '我忘记了我的双重验。',
     'two_factor_lost_header'                     => '遗失了您的两步验证吗？',
     'two_factor_lost_intro'                      => '如果您不幸丢失了备份代码。您不能通过网页节目修复。你有两个选择。',
-    'two_factor_lost_fix_self'                   => '如果你运行您自己的 Fireflus III 实例，请在 <code>存储/日志</code> 中检查日志，或者运行 <code>docker logs &lt;container_id&gt;</code> 查看说明 (刷新此页面)。',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => '否则，请致信网站拥有者，<a href="mailto::site_owner">:site_owner</a> 并要求他们重置你的两步骤验证。',
     'mfa_backup_code'                            => '您已使用备用代码登录到 Firefly III 。 您不能再使用它，因此请将其划掉。',
     'pref_two_factor_new_backup_codes'           => '生成备份代码',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => '将交易记录导入',
     'import_data'                           => '导入资料',
     'import_transactions'                   => '导入交易',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => '当您在 Sandstorm.io 环境使用 Firefly III 时，此功能不可用。',
 

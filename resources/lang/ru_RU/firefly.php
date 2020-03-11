@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Я забыл свой ключ для двухфакторной авторизации.',
     'two_factor_lost_header'                     => 'Потеряли вашу двухфакторную аутентификацию?',
     'two_factor_lost_intro'                      => 'Если вы потеряли также и ваши резервные коды, вам не повезло. Эту проблему вы не сможете решить через веб-интерфейс. Теперь у вас есть два варианта.',
-    'two_factor_lost_fix_self'                   => 'Если вы работаете с собственной инсталляцией Firefly III, проверьте логи в каталоге <code>storage/logs</code> для инструкций или запустите <code>docker logs &lt;container_id&gt;</code>, чтобы увидеть инструкции (обновите эту страницу).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Иначе, свяжитесь по email с владельцем сайта <a href="mailto::site_owner">:site_owner</a> и попросите сбросить вашу двухфакторную аутентификацию.',
     'mfa_backup_code'                            => 'Вы использовали резервный код для входа в Firefly III. Его нельзя использовать второй раз, поэтому вычеркните его из своего списка.',
     'pref_two_factor_new_backup_codes'           => 'Получить новые коды резервирования',
@@ -1425,7 +1425,11 @@ return [
     'import_index_title'                    => 'Импорт транзакций в Firefly III',
     'import_data'                           => 'Импорт данных',
     'import_transactions'                   => 'Импорт транзакций',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Эта функция недоступна, если вы используете Firefly III в среде Sandstorm.io.',
 

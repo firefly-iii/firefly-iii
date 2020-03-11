@@ -96,7 +96,7 @@ return [
     'two_factor_forgot'                          => 'İki faktörlü kimlik doğrulama cihazını unuttum.',
     'two_factor_lost_header'                     => 'İki faktörlü kimlik doğrulamanızı mı kaybettiniz?',
     'two_factor_lost_intro'                      => 'Eğer yedek kodlarınızı da kayıp ettiyseniz, şansınız kötü. Bu web arayüzünden düzeltebileceğiniz bir şey değil. İki seçeneğiniz var.',
-    'two_factor_lost_fix_self'                   => 'Eğer kendi Firefly III sunucunuz üzerinden kullanıyorsanız, <code>storage/logs</code> da bulunan talimatları, yada <code>docker logs &lt;container_id&gt;</code> çalıştırarak talimatları kontrol ediniz. (bu sayfayı yenileyin).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Aksi takdirde, site sahibine (<a href="mailto::site_owner">:site_owner</a>) e-posta gönderin ve iki faktörlü kimlik doğrulamasını sıfırlamasını isteyin.',
     'mfa_backup_code'                            => 'Firefly III giriş yapmak için yedek kullandınız. Bu kod tekrar kullanılamaz, o yüzden listenizden çıkartın.',
     'pref_two_factor_new_backup_codes'           => 'Yeni yedek kodları alın',
@@ -1427,7 +1427,11 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'import_index_title'                    => 'Firefly III\'e veri aktarma',
     'import_data'                           => 'Veriyi içe aktar',
     'import_transactions'                   => 'İşlemleri içe aktarma',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Bir Sandstorm.io ortamında Firefly III kullanıyorsanız, bu işlev kullanılamaz.',
 
