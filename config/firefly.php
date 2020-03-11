@@ -317,6 +317,7 @@ return [
         // currently enabled languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
+        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
@@ -345,7 +346,7 @@ return [
         //        'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
         //        'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
         //        'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
-        //        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
+        //
         //        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
         //        'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
         //        'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
