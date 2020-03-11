@@ -63,9 +63,6 @@
             changeData: function () {
                 let transactionType = this.transactionType;
                 // reset of all are empty:
-                //console.log('Type   "' + transactionType + '"');
-                //console.log('Source "' + this.source.name + '"');
-                //console.log('Dest   "' + this.destination.name + '"');
                 if (!transactionType && !this.source.name && !this.destination.name) {
                     $(this.$refs.cur).text('');
 
@@ -82,14 +79,34 @@
                     $(this.$refs.cur).text(this.destination.currency_name);
                     return;
                 }
+                // for normal transactions, the source leads the currency
                 if (transactionType.toLowerCase() === 'withdrawal' ||
                     transactionType.toLowerCase() === 'reconciliation' ||
                     transactionType.toLowerCase() === 'transfer') {
                     $(this.$refs.cur).text(this.source.currency_name);
                     return;
                 }
-                if (transactionType === 'Deposit') {
+                // for deposits, the destination leads the currency
+                // but source must not be a liability
+                if (transactionType.toLowerCase() === 'deposit'
+                    &&
+                    !('debt' === this.source.type.toLowerCase() ||
+                      'loan' === this.source.type.toLowerCase() ||
+                      'mortgage' === this.source.type.toLowerCase()
+                    )
+                ) {
                     $(this.$refs.cur).text(this.destination.currency_name);
+                }
+                // for deposits, the destination leads the currency
+                // unless source is liability, then source leads:
+                if (transactionType.toLowerCase() === 'deposit'
+                    &&
+                    ('debt' === this.source.type.toLowerCase() ||
+                      'loan' === this.source.type.toLowerCase() ||
+                      'mortgage' === this.source.type.toLowerCase()
+                    )
+                ) {
+                    $(this.$refs.cur).text(this.source.currency_name);
                 }
             }
         },

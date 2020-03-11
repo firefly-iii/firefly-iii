@@ -21,14 +21,10 @@
 <template>
     <!--
     Show if:
-    - more than one currency enabled, always show
-    - if just one, but is deposit or withdrawal
+    - one or more currencies.
     -->
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="
-    this.enabledCurrencies.length > 1 ||
-    (this.enabledCurrencies.length >= 1 && ('deposit' === this.transactionType.toLowerCase() || 'withdrawal' === this.transactionType.toLowerCase()))
-
-">
+    this.enabledCurrencies.length >= 1">
         <div class="col-sm-8 col-sm-offset-4 text-sm">
             {{ $t('form.foreign_amount') }}
         </div>
