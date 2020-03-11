@@ -185,7 +185,7 @@ class TransactionFactory
             );
 
             // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
+            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
                 $result->foreign_currency_id = $this->foreignCurrency->id;
                 $result->foreign_amount      = $foreignAmount;
 
