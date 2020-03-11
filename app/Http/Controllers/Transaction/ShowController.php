@@ -80,8 +80,11 @@ class ShowController extends Controller
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
+        var_dump($transactionGroup);
+        exit;
+
         /** @var TransactionJournal $first */
-        $first    = $transactionGroup->transactionJournals()->first();
+        $first    = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
         $splits   = $transactionGroup->transactionJournals()->count();
 
         if(null === $first) {
