@@ -1104,7 +1104,8 @@ return [
     'errors'                                    => 'Errors',
     'debt_start_date'                           => 'Start date of debt',
     'debt_start_amount'                         => 'Start amount of debt',
-    'debt_start_amount_help'                    => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Store new liability',
     'edit_liabilities_account'                  => 'Edit liability ":name"',
 
