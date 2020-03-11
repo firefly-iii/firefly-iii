@@ -108,6 +108,9 @@ class TransactionFactory
      */
     public function createNegative(string $amount, ?string $foreignAmount): ?Transaction
     {
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
         if (null !== $foreignAmount) {
             $foreignAmount = app('steam')->negative($foreignAmount);
         }
@@ -124,6 +127,9 @@ class TransactionFactory
      */
     public function createPositive(string $amount, ?string $foreignAmount): ?Transaction
     {
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
         if (null !== $foreignAmount) {
             $foreignAmount = app('steam')->positive($foreignAmount);
         }
@@ -158,7 +164,10 @@ class TransactionFactory
     private function create(string $amount, ?string $foreignAmount): ?Transaction
     {
         $result = null;
-        $data   = [
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
+        $data = [
             'reconciled'              => $this->reconciled,
             'account_id'              => $this->account->id,
             'transaction_journal_id'  => $this->journal->id,
