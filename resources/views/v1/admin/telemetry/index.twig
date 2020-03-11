@@ -1,0 +1,72 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'telemetry_admin_index'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'telemetry_intro'|_ }}
+                    </p>
+                    <p>
+                        {{ trans('firefly.telemetry_what_collected', {version: version})|raw }}
+                    </p>
+                    <p class="lead">
+                        {{ 'telemetry_is_enabled_yes_no'|_ }}
+                        {% if enabled %}
+                            <strong class="text-warning">{{ 'telemetry_disabled_yes'|_ }}</strong>
+                        {% else %}
+                            <strong class="text-success">{{ 'telemetry_disabled_no'|_ }}</strong>
+                        {% endif %}
+                    </p>
+                    {% if enabled %}
+                    <p>
+                        {{ 'telemetry_enabled_now_what'|_ }}
+                    </p>
+                    {% else %}
+                    <p>
+                        {{ 'telemetry_disabled_now_what'|_ }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'telemetry_collected_info'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {% if count == 0 %}
+                    <p>
+                        {{ 'no_telemetry_present'|_ }}
+                    </p>
+                    {% else %}
+                    <p>
+                        {{ trans('firefly.records_telemetry_present', {count: count}) }}
+                    </p>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-default" href="{{ route('admin.telemetry.view') }}" title="{{ 'telemetry_button_view'|_ }}">
+                                <i class="fa fa-eye"></i>
+                                {{ 'telemetry_button_view'|_ }}
+                            </a>
+                            <a class="btn btn-danger" href="{{ route('admin.telemetry.delete') }}" title="{{ 'telemetry_button_delete'|_ }}">
+                                <i class="fa fa-trash"></i>
+                                {{ 'telemetry_button_delete'|_ }}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

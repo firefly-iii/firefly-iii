@@ -134,6 +134,7 @@ return [
     ],
     'feature_flags' => [
         'export' => true,
+        'telemetry' => false,
     ],
 
     'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
@@ -160,6 +161,7 @@ return [
     'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'        => 'https://version.firefly-iii.org/index.json',
+    'send_telemetry'         => env('SEND_TELEMETRY', false),
     'update_minimum_age'     => 6,
     'default_location'       => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),

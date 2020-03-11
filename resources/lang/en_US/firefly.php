@@ -1566,4 +1566,20 @@ return [
     'box_net_worth_in_currency'          => 'Net worth (:currency)',
     'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];

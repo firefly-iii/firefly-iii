@@ -272,6 +272,22 @@ try {
     );
 
     Breadcrumbs::register(
+        'admin.telemetry.index',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('admin.index');
+            $breadcrumbs->push(trans('breadcrumbs.telemetry_index'), route('admin.telemetry.index'));
+        }
+    );
+
+    Breadcrumbs::register(
+        'admin.telemetry.view',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('admin.telemetry.index');
+            $breadcrumbs->push(trans('breadcrumbs.telemetry_view'));
+        }
+    );
+
+    Breadcrumbs::register(
         'transactions.link.delete',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournalLink $link) {
             $breadcrumbs->parent('home');
