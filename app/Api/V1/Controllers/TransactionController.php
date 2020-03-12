@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -291,6 +292,19 @@ class TransactionController extends Controller
                 'message' => 'The given data was invalid.',
                 'errors'  => [
                     'transactions.0.description' => [$e->getMessage()],
+                ],
+            ];
+
+            return response()->json($response, 422);
+        } catch(FireflyException $e) {
+            Log::warning('Caught an exception. Return error message.');
+            Log::error($e->getMessage());
+            // return bad validation message.
+            // TODO use Laravel's internal validation thing to do this.
+            $response = [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.description' => [sprintf('Internal exception: %s',$e->getMessage())],
                 ],
             ];
 

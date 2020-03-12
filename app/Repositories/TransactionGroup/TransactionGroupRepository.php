@@ -332,6 +332,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     public function store(array $data): TransactionGroup
     {
@@ -343,6 +344,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         } catch (DuplicateTransactionException $e) {
             Log::warning('Group repository caught group factory with a duplicate exception!');
             throw new DuplicateTransactionException($e->getMessage());
+        } catch(FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException($e->getMessage());
         }
 
 

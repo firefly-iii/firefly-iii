@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -102,11 +103,13 @@ class TransactionFactory
     /**
      * Create transaction with negative amount (for source accounts).
      *
-     * @param string $amount
+     * @param string      $amount
      * @param string|null $foreignAmount
-     * @return Transaction|null
+     *
+     * @return Transaction
+     * @throws FireflyException
      */
-    public function createNegative(string $amount, ?string $foreignAmount): ?Transaction
+    public function createNegative(string $amount, ?string $foreignAmount): Transaction
     {
         if ('' === $foreignAmount) {
             $foreignAmount = null;
@@ -121,11 +124,13 @@ class TransactionFactory
     /**
      * Create transaction with positive amount (for destination accounts).
      *
-     * @param string $amount
+     * @param string      $amount
      * @param string|null $foreignAmount
-     * @return Transaction|null
+     *
+     * @return Transaction
+     * @throws FireflyException
      */
-    public function createPositive(string $amount, ?string $foreignAmount): ?Transaction
+    public function createPositive(string $amount, ?string $foreignAmount): Transaction
     {
         if ('' === $foreignAmount) {
             $foreignAmount = null;
@@ -133,7 +138,6 @@ class TransactionFactory
         if (null !== $foreignAmount) {
             $foreignAmount = app('steam')->positive($foreignAmount);
         }
-
         return $this->create(app('steam')->positive($amount), $foreignAmount);
     }
 
@@ -157,11 +161,13 @@ class TransactionFactory
     }
 
     /**
-     * @param string $amount
+     * @param string      $amount
      * @param string|null $foreignAmount
-     * @return Transaction|null
+     *
+     * @return Transaction
+     * @throws FireflyException
      */
-    private function create(string $amount, ?string $foreignAmount): ?Transaction
+    private function create(string $amount, ?string $foreignAmount): Transaction
     {
         $result = null;
         if ('' === $foreignAmount) {
@@ -183,6 +189,12 @@ class TransactionFactory
             // @codeCoverageIgnoreStart
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException('Query exception when creating transaction.');
+        }
+        if (null === $result) {
+            throw new FireflyException('Transaction is NULL.');
         }
         // @codeCoverageIgnoreEnd
         if (null !== $result) {
