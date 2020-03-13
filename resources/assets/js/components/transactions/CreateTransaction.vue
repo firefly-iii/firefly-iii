@@ -265,7 +265,7 @@
                 };
                 let value = arr[searchType] ?? searchType;
 
-                console.log('FULL account type: ' + value);
+                // console.log('FULL account type: ' + value);
                 return value;
             },
             convertData: function () {
@@ -288,7 +288,7 @@
                 // the presence of a source or destination account
                 firstSource = this.transactions[0].source_account.type;
                 firstDestination = this.transactions[0].destination_account.type;
-                console.log('Type of first source is  ' + firstSource);
+                // console.log('Type of first source is  ' + firstSource);
 
                 if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
                     transactionType = 'withdrawal';
@@ -831,8 +831,8 @@
                     // force types on destination selector.
                     this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
                 }
-                console.log('Transactions:');
-                console.log(this.transactions);
+                //console.log('Transactions:');
+                //console.log(this.transactions);
             },
             selectedDestinationAccount: function (index, model) {
                 // console.log('Now in selectedDestinationAccount()');

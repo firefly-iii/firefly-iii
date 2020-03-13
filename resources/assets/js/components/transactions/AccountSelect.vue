@@ -116,7 +116,7 @@
                 this.triggerTransactionType();
             },
             accountName() {
-              console.log('AccountSelect watch accountName!');
+              // console.log('AccountSelect watch accountName!');
               this.name = this.accountName;
             },
             accountTypeFilters() {
