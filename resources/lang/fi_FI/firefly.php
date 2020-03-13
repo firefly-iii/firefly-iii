@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Unohdin kaksivaiheisen tunnistusjuttuni.',
     'two_factor_lost_header'                     => 'Unohdit kaksivaiheisen tunnistuksen koodisi?',
     'two_factor_lost_intro'                      => 'Jos olet hävittänyt myös varakoodisi, onnesi on kääntynyt. Tätä et ikävä kyllä pysty korjaamaan selaimella. Sinulla on nyt kaksi vaihtoehtoa.',
-    'two_factor_lost_fix_self'                   => 'Jos Firefly III pyörii omalla serverilläsi, löydät ohjeet osoitteesta <code>storage/logs</code>, tai dockerista komennolla <code>docker logs &lt;container_id&gt;</code>. (päivitä tämä sivu).',
+    'two_factor_lost_fix_self'                   => 'Jos ajat omaa Firefly III-instanssiasi, lue <a href = "https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup- koodit ">tämä merkintä UKK:ssa</a>.',
     'two_factor_lost_fix_owner'                  => 'Muussa tapauksessa, ota yhteyttä ylläpitäjään, <a href="mailto::site_owner">:site_owner</a> ja pyydä että kaksivaiheinen tunnistautumisesi nollataan.',
     'mfa_backup_code'                            => 'Olet käyttänyt varakoodin kirjautuessasi Firefly III:een. Varakoodi on kertakäyttöinen, joten muista merkitä se käytetyksi.',
     'pref_two_factor_new_backup_codes'           => 'Luo uudet varmistuskoodit',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days päivän tietojen lataus saattaa kestää jonkin aikaa.',
     'registered'                                 => 'Rekisteröitymisesi onnistui!',
     'Default asset account'                      => 'Oletusomaisuustili',
-    'no_budget_pointer'                          => 'Sinulla ei näyttäisi olevan vielä yhtään budjettia. Sinun kannattaisi luoda niitä <a href=":link">budjetit</a>-sivulla. Budjetit voivat auttaa sinua pitämään kirjaa kuluistasi.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Säästötili',
     'Credit card'                                => 'Luottokortti',
     'source_accounts'                            => 'Lähdetili(t)',
@@ -205,7 +205,7 @@ return [
     'active_exp_bills_only'                      => 'vain aktiiviset ja odotettavissa olevat laskut',
     'average_per_bill'                           => 'keskiarvo laskuittain',
     'expected_total'                             => 'odotettavissa yhteensä',
-    'reconciliation_account_name'                => ':name reconciliation',
+    'reconciliation_account_name'                => 'täsmäytetään :name',
     // API access
     'authorization_request'                      => 'Firefly III v:version Valtuutus Pyyntö',
     'authorization_request_intro'                => '<strong>:client</strong> pyytää valtuutustasi nähdäkseen sinun taloushallintosi. Haluatko antaa hänelle pääsyn näihin tietoihin?',
@@ -216,8 +216,8 @@ return [
     'name_in_currency'                           => ':name valuutassa :currency',
     'paid_in_currency'                           => 'Maksettu valuutassa :currency',
     'unpaid_in_currency'                         => 'Maksamatta valuutassa :currency',
-    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
-    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'is_alpha_warning'                           => 'Käytät ALPHA-versiota. Varaudu virheisiin ja ongelmiin.',
+    'is_beta_warning'                            => 'Käytät BETA-versiota. Varaudu virheisiin ja ongelmiin.',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Noston ":description" poisto onnistui',
     'deleted_deposit'                           => 'Talletuksen ":description" poisto onnistui',
     'deleted_transfer'                          => 'Siirron ":description" poisto onnistui',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Loit onnistuneesti uuden tapahtuman ":description"',
     'stored_journal_no_descr'                   => 'Loit onnistuneesti uuden tapahtumasi',
     'updated_journal_no_descr'                  => 'Päivitit tapahtumaasi onnistuneesti',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(ei budjettia)',
     'account_per_budget'                        => 'Tili per budjetti',
     'account_per_category'                      => 'Tili per kategoria',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(tyhjä)',
     'all_other_budgets'                         => '(kaikki muut budjetit)',
     'all_other_accounts'                        => '(kaikki muut tilit)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => 'Virheet',
     'debt_start_date'                           => 'Velan aloituspäivä',
     'debt_start_amount'                         => 'Velan aloitussaldo',
-    'debt_start_amount_help'                    => 'Jos olet velkaa tähän kirjataan negatiivinen summa, koska se vaikuttaa varallisuuteesi. Jos sinulle ollaan velkaa, sama pätee. Löydät opastesivuilta lisätietoja.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Tallenna uusi vastuu',
     'edit_liabilities_account'                  => 'Muokkaa vastuuta ":name"',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => 'Tallenna asetukset',
     'single_user_administration'       => 'Käyttäjän :email ylläpito',
     'edit_user'                        => 'Muokkaa käyttäjää :email',
-    'hidden_fields_preferences'        => 'Voit aktivoida lisää tapahtumavalintoja <a href=":link">asetuksissa</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Käyttäjätiedot',
     'user_information'                 => 'Käyttäjätiedot',
     'total_size'                       => 'koko yhteensä',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => 'Tuo tapahtumia Firefly III:een',
     'import_data'                           => 'Tuo tiedot',
     'import_transactions'                   => 'Tuo tapahtumia',
-
+    'import_tools_title'                    => 'Tuontityökalut',
+    'tools_index_intro'                     => 'Tietojen tuomiseen Firefly III:een on olemassa useita työkaluja. Löydät ne alta. Lisätietoja on <a href="https://docs.firefly-iii.org/importing-data/introduction"> tällä sivulla </a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV tuoja',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 tuoja',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Tätä toimintoa ei ole kun Firefly III on asennettu Sandstorm.io ympäristöön.',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => 'Varallisuus (:currency)',
     'box_spend_per_day'                  => 'Käytettävissä per päivä: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III tukee käytön telemetrian keräämistä ja lähettämistä. Tämä tarkoittaa, että Firefly III yrittää kerätä tietoja siitä, kuinka käytät Firefly III:a, ja lähettää sen Firefly III:n kehittäjälle. Tämä on aina vapaaehtoista ja oletuksena poissa käytöstä. Firefly III ei koskaan kerää tai lähetä taloudellisia tietoja. Firefly III ei myöskään koskaan kerää tai lähetä taloudellisia metatietoja, kuten summia tai laskelmia. Kerättyjä tietoja ei koskaan julkisteta.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];

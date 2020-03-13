@@ -25,20 +25,32 @@
         </div>
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" 
-            @input="handleInput" 
-            ref="amount" 
-            :value="value" 
-            step="any" 
-            class="form-control"
-            name="amount[]"
-            :title="$t('firefly.amount')" 
-            autocomplete="off" 
-            v-bind:placeholder="$t('firefly.amount')">
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
+            <div class="input-group">
+                <input type="number"
+                       @input="handleInput"
+                       ref="amount"
+                       :value="value"
+                       step="any"
+                       class="form-control"
+                       name="amount[]"
+                       :title="$t('firefly.amount')"
+                       autocomplete="off"
+                       v-bind:placeholder="$t('firefly.amount')">
+
+                <span class="input-group-btn">
+            <button
+                    v-on:click="clearAmount"
+                    tabIndex="-1"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+            </div>
         </div>
+
+        <ul class="list-unstyled" v-for="error in this.error">
+            <li class="text-danger">{{ error }}</li>
+        </ul>
+    </div>
     </div>
 </template>
 
@@ -57,15 +69,18 @@
             handleInput(e) {
                 this.$emit('input', this.$refs.amount.value);
             },
+            clearAmount: function () {
+                this.$refs.amount.value = '';
+                this.$emit('input', this.$refs.amount.value);
+                // some event?
+                this.$emit('clear:amount')
+            },
             hasError: function () {
                 return this.error.length > 0;
             },
             changeData: function () {
                 let transactionType = this.transactionType;
                 // reset of all are empty:
-                //console.log('Type   "' + transactionType + '"');
-                //console.log('Source "' + this.source.name + '"');
-                //console.log('Dest   "' + this.destination.name + '"');
                 if (!transactionType && !this.source.name && !this.destination.name) {
                     $(this.$refs.cur).text('');
 
@@ -82,14 +97,34 @@
                     $(this.$refs.cur).text(this.destination.currency_name);
                     return;
                 }
+                // for normal transactions, the source leads the currency
                 if (transactionType.toLowerCase() === 'withdrawal' ||
                     transactionType.toLowerCase() === 'reconciliation' ||
                     transactionType.toLowerCase() === 'transfer') {
                     $(this.$refs.cur).text(this.source.currency_name);
                     return;
                 }
-                if (transactionType === 'Deposit') {
+                // for deposits, the destination leads the currency
+                // but source must not be a liability
+                if (transactionType.toLowerCase() === 'deposit'
+                    &&
+                    !('debt' === this.source.type.toLowerCase() ||
+                      'loan' === this.source.type.toLowerCase() ||
+                      'mortgage' === this.source.type.toLowerCase()
+                    )
+                ) {
                     $(this.$refs.cur).text(this.destination.currency_name);
+                }
+                // for deposits, the destination leads the currency
+                // unless source is liability, then source leads:
+                if (transactionType.toLowerCase() === 'deposit'
+                    &&
+                    ('debt' === this.source.type.toLowerCase() ||
+                      'loan' === this.source.type.toLowerCase() ||
+                      'mortgage' === this.source.type.toLowerCase()
+                    )
+                ) {
+                    $(this.$refs.cur).text(this.source.currency_name);
                 }
             }
         },

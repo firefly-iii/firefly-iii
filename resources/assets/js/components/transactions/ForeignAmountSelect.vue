@@ -21,11 +21,10 @@
 <template>
     <!--
     Show if:
-    - more than one currency enabled in system.
-
+    - one or more currencies.
     -->
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="
-    this.enabledCurrencies.length > 1">
+    this.enabledCurrencies.length >= 1">
         <div class="col-sm-8 col-sm-offset-4 text-sm">
             {{ $t('form.foreign_amount') }}
         </div>
@@ -44,10 +43,18 @@
             </select>
         </div>
         <div class="col-sm-8">
+            <div class="input-group">
             <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
                    name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
                    :title="this.title" autocomplete="off" :placeholder="this.title">
-
+                <span class="input-group-btn">
+                <button
+                        v-on:click="clearAmount"
+                        tabIndex="-1"
+                        class="btn btn-default"
+                        type="button"><i class="fa fa-trash-o"></i></button>
+                </span>
+            </div>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -61,7 +68,7 @@
 
         props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title',],
         mounted() {
-            //console.log('loadCurrencies()');
+            //console.log('ForeignAmountSelect mounted()');
             this.liability = false;
             this.loadCurrencies();
         },
@@ -76,25 +83,31 @@
         },
         watch: {
             source: function () {
-                // console.log('watch source in foreign currency');
+                //console.log('ForeignAmountSelect watch source');
                 this.changeData();
             },
             destination: function () {
-                // console.log('watch destination in foreign currency');
+                //console.log('ForeignAmountSelect watch destination');
                 this.changeData();
             },
             transactionType: function () {
-                // console.log('watch transaction type in foreign currency');
+                //console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
                 this.changeData();
             }
         },
         methods: {
+            clearAmount: function () {
+                this.$refs.amount.value = '';
+                this.$emit('input', this.$refs.amount.value);
+                // some event?
+                this.$emit('clear:amount')
+            },
             hasError: function () {
-                // console.log('Has error');
+                //console.log('ForeignAmountSelect hasError');
                 return this.error.length > 0;
             },
             handleInput(e) {
-                // console.log('handleInput');
+                //console.log('ForeignAmountSelect handleInput');
                 let obj = {
                     amount: this.$refs.amount.value,
                     currency_id: this.$refs.currency_select.value,
@@ -104,7 +117,7 @@
                 );
             },
             changeData: function () {
-                //console.log('Now in changeData()');
+                // console.log('ForeignAmountSelect changeData');
                 this.enabledCurrencies = [];
                 let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
                 let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
@@ -171,6 +184,14 @@
                             enabled: true
                         }
                     ];
+
+                    this.enabledCurrencies   = [
+                        {
+                            name: this.no_currency,
+                            id: 0,
+                            enabled: true
+                        }
+                    ];
                     for (const key in res.data) {
                         if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             if (res.data[key].enabled) {
@@ -179,6 +200,7 @@
                             }
                         }
                     }
+                    // console.log(this.enabledCurrencies);
                 });
             }
         }

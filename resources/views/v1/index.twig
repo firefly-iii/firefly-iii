@@ -74,20 +74,36 @@
                         {% endif %}
 
                         <div class="box-footer clearfix">
+                            <!-- Single button -->
+                            <div class="btn-group">
+                                <a type="button" class="btn btn-success  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ 'create_new_object'|_ }} <span class="caret"></span>
+                                </a>
+                                <a class="btn btn-default"
+                                   href="{{ route('accounts.show', [data[1].id]) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ data[1].id }}">{{ 'create_new_withdrawal'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create', ['deposit']) }}?destination={{ data[1].id }}">{{ 'create_new_deposit'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create', ['transfer']) }}?source={{ data[1].id }}">{{ 'create_new_transfer'|_ }}</a></li>
+                                </ul>
+
+                            </div>
+                            <!--
                             <div class="btn-group" role="group">
 
                             </div>
 
                             <div class="btn-group" role="group" aria-label="...">
 
+
+
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('transactions.create', ['withdrawal']) }}" class="btn btn-success"><i
+                                    <a href="" class="btn btn-success"><i
                                                 class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
                                 </div>
-                                <a class="btn btn-default"
-                                   href="{{ route('accounts.show',data[1].id) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>
-                            </div>
 
+                            </div>
+                            -->
                         </div>
                     </div>
                 {% endfor %}

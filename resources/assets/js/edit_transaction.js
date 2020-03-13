@@ -73,6 +73,7 @@ const i18n = new vuei18n({
                                  'de': require('./locales/de.json'),
                                  'en': require('./locales/en.json'),
                                  'es': require('./locales/es.json'),
+                                 'el': require('./locales/el.json'),
                                  'fr': require('./locales/fr.json'),
                                  'hu': require('./locales/hu.json'),
                                  'id': require('./locales/id.json'),

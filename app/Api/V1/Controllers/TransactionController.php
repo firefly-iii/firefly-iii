@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -295,9 +296,22 @@ class TransactionController extends Controller
             ];
 
             return response()->json($response, 422);
+        } catch(FireflyException $e) {
+            Log::warning('Caught an exception. Return error message.');
+            Log::error($e->getMessage());
+            // return bad validation message.
+            // TODO use Laravel's internal validation thing to do this.
+            $response = [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.description' => [sprintf('Internal exception: %s',$e->getMessage())],
+                ],
+            ];
+
+            return response()->json($response, 422);
         }
         app('preferences')->mark();
-        event(new StoredTransactionGroup($transactionGroup));
+        event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         $manager = $this->getManager();
         /** @var User $admin */
@@ -341,7 +355,7 @@ class TransactionController extends Controller
         $manager          = $this->getManager();
 
         app('preferences')->mark();
-        event(new UpdatedTransactionGroup($transactionGroup));
+        event(new UpdatedTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         /** @var User $admin */
         $admin = auth()->user();

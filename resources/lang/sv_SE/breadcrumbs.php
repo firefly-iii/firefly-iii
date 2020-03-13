@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Redigera etiketten ”:tag”',
     'delete_tag'             => 'Ta bort etiketten ”:tag”',
     'delete_journal_link'    => 'Ta bort länken mellan transaktioner',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ik kan geen codes meer genereren.',
     'two_factor_lost_header'                     => 'Kan je geen codes meer genereren?',
     'two_factor_lost_intro'                      => 'Als je ook je backupcodes kwijt bent heb je pech gehad. Dit kan je niet via de web-interface fixen. Je kan kiezen.',
-    'two_factor_lost_fix_self'                   => 'Als je eigen installatie van Firefly III draait check je de logs in <code>storage/logs</code> voor instructies, of draai <code>docker logs &lt;container_id&gt;</code> voor instructies (ververs de pagina).',
+    'two_factor_lost_fix_self'                   => 'Als je je eigen installatie van Firefly III draait lees dan <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">dit item in de FAQ</a> voor instructies.',
     'two_factor_lost_fix_owner'                  => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
     'mfa_backup_code'                            => 'Je hebt een backupcode gebruikt om in te loggen op Firefly III. Deze kan je niet meer gebruiken dus streep hem weg.',
     'pref_two_factor_new_backup_codes'           => 'Nieuwe backupcodes genereren',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                 => 'Je bent geregistreerd!',
     'Default asset account'                      => 'Standaard betaalrekening',
-    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href=":link">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
+    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
     'Savings account'                            => 'Spaarrekening',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Bronrekening(en)',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Uitgave ":description" verwijderd',
     'deleted_deposit'                           => 'Inkomsten ":description" verwijderd',
     'deleted_transfer'                          => 'Overschrijving ":description" verwijderd',
+    'deleted_reconciliation'                    => 'Afstemming ":description" verwijderd',
     'stored_journal'                            => 'Nieuw transactie ":description" opgeslagen',
     'stored_journal_no_descr'                   => 'Uw nieuwe transactie is succesvol aangemaakt',
     'updated_journal_no_descr'                  => 'De transactie is geüpdatet',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(geen budget)',
     'account_per_budget'                        => 'Rekening per budget',
     'account_per_category'                      => 'Rekening per categorie',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(leeg)',
     'all_other_budgets'                         => '(alle andere budgetten)',
     'all_other_accounts'                        => '(alle andere rekeningen)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => 'Fouten',
     'debt_start_date'                           => 'Begindatum van schuld',
     'debt_start_amount'                         => 'Beginbedrag van schuld',
-    'debt_start_amount_help'                    => 'Vul hier altijd de lening als een positief bedrag in. Check de helppagina\'s voor meer info.',
+    'debt_start_amount_help'                    => 'Het is handig om hier een negatief bedrag in te stellen. Lees de help-pagina\'s ((?)-icoontje rechtsboven) voor meer info.',
+    'interest_period_help'                      => 'Dit veld doet verder niks. Firefly III gaat dit niet voor je uitrekenen. Banken pakken dit toch altijd net anders aan.',
     'store_new_liabilities_account'             => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                  => 'Passiva ":name" wijzigen',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => 'Configuratie opslaan',
     'single_user_administration'       => 'Gebruikersadministratie voor :email',
     'edit_user'                        => 'Wijzig gebruiker :email',
-    'hidden_fields_preferences'        => 'Je kan meer transactieopties inschakelen in je <a href=":link">instellingen</a>.',
+    'hidden_fields_preferences'        => 'Je kan meer transactieopties inschakelen in je <a href="/preferences">instellingen</a>.',
     'user_data_information'            => 'Gebruikersgegevens',
     'user_information'                 => 'Gebruikersinformatie',
     'total_size'                       => 'totale grootte',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => 'Transacties importeren in Firefly III',
     'import_data'                           => 'Importeer data',
     'import_transactions'                   => 'Importeer transacties',
-
+    'import_tools_title'                    => 'Importtools',
+    'tools_index_intro'                     => 'Er bestaan een paar tools om data te importeren in Firefly III. Zie hieronder voor de lijst. Check ook <a href="https://docs.firefly-iii.org/importing-data/introduction">deze pagina</a> voor meer info.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-import tool',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => 'Kapitaal (:currency)',
     'box_spend_per_day'                  => 'Te besteden per dag: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetrie',
+    'telemetry_intro'                    => 'Firefly III kan telemetrie verzamelen over je gebruik. Dat betekent dat Firefly III informatie probeert te verzamelen over hoe je Firefly III gebruikt, en deze zal verzenden naar de developer van Firefly III. Dit is altijd opt-in en staat standaard uit. Firefly III zal nooit financiele informatie verzamelen of verzenden. Firefly III zal ook nooit financiële meta-informatie verzamelen of verzenden (zoals sommen of totalen). De verstuurde informatie wordt nooit publiek beschikbaar gemaakt.',
+    'telemetry_what_collected'           => 'Wat Firefly III verzamelt en verzend is per versie anders. Je draait versie :version. Wat Firefly III verzamelt en verzend in versie :version lees je in de help-pagina\'s. Klik op het (?) icoontje rechtsboven <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">of kijk direct op GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Zal Firefly III telemetrie verzenden?',
+    'telemetry_disabled_no'              => 'Telemetrie staat UIT',
+    'telemetry_disabled_yes'             => 'Telemetrie staat aan',
+    'telemetry_enabled_now_what'         => 'Je kan telemetrie op dezelfde manier weer uitzetten als je het hebt aangezet: wijzig je .env bestand of verander je Docker-configuratie.',
+    'telemetry_disabled_now_what'        => 'Als je dat wilt, kan je telemetrie aanzetten in je .env bestand of in je Docker-configuratie.',
+    'telemetry_collected_info'           => 'Verzamelde informatie',
+    'no_telemetry_present'               => 'Firefly III heeft geen telemetrie verzameld.',
+    'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record(s) verzameld.',
+    'telemetry_button_view'              => 'Bekijk telemetrie',
+    'telemetry_button_delete'            => 'Verwijder telemetrie',
+    'telemetry_admin_overview'           => 'Telemetrie-overzicht',
+    'telemetry_back_to_index'            => 'Terug naar telemetrie'
 ];

@@ -35,16 +35,22 @@ class UpdatedGroupEventHandler
     /**
      * This method will check all the rules when a journal is updated.
      *
-     * @param UpdatedTransactionGroup $updatedJournalEvent
+     * @param UpdatedTransactionGroup $updatedGroupEvent
      */
-    public function processRules(UpdatedTransactionGroup $updatedJournalEvent): void
+    public function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
+        if (false === $updatedGroupEvent->applyRules) {
+            Log::info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
+
+            return;
+        }
+
         /** @var RuleEngine $ruleEngine */
         $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser($updatedJournalEvent->transactionGroup->user);
+        $ruleEngine->setUser($updatedGroupEvent->transactionGroup->user);
         $ruleEngine->setAllRules(true);
         $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_UPDATE);
-        $journals = $updatedJournalEvent->transactionGroup->transactionJournals;
+        $journals = $updatedGroupEvent->transactionGroup->transactionJournals;
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

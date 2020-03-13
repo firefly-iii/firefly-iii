@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
@@ -32,6 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TransactionGroupTransformer
@@ -98,9 +100,11 @@ class TransactionGroupTransformer extends AbstractTransformer
      * @param TransactionGroup $group
      *
      * @return array
+     * @throws FireflyException
      */
     public function transformObject(TransactionGroup $group): array
     {
+        try {
         $result = [
             'id'           => (int)$group->id,
             'created_at'   => $group->created_at->toAtomString(),
@@ -115,7 +119,11 @@ class TransactionGroupTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
+        } catch(FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id));
+        }
         // do something else.
 
         return $result;
@@ -125,36 +133,47 @@ class TransactionGroupTransformer extends AbstractTransformer
      * @param TransactionJournal $journal
      *
      * @return Transaction
+     * @throws FireflyException
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-
-        return $journal->transactions->first(
+        $result = $journal->transactions->first(
             static function (Transaction $transaction) {
                 return (float)$transaction->amount > 0;
             }
         );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
+        }
+
+        return $result;
     }
 
     /**
      * @param TransactionJournal $journal
      *
      * @return Transaction
+     * @throws FireflyException
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
-
-        return $journal->transactions->first(
+        $result = $journal->transactions->first(
             static function (Transaction $transaction) {
                 return (float)$transaction->amount < 0;
             }
         );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
+        }
+
+        return $result;
     }
 
     /**
      * @param Collection $transactionJournals
      *
      * @return array
+     * @throws FireflyException
      */
     private function transformJournals(Collection $transactionJournals): array
     {

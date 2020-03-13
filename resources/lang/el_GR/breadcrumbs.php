@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Επεξεργασία ετικέτας ":tag"',
     'delete_tag'             => 'Διαγραφή ετικέτας ":tag"',
     'delete_journal_link'    => 'Διαγραφή συνδέσμου μεταξύ των συναλλαγών',
+    'telemetry_index'        => 'Τηλεμετρία',
+    'telemetry_view'         => 'Προβολή τηλεμετρίας',
 ];

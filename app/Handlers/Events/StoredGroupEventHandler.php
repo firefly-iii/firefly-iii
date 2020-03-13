@@ -35,21 +35,23 @@ class StoredGroupEventHandler
     /**
      * This method grabs all the users rules and processes them.
      *
-     * @param StoredTransactionGroup $storedJournalEvent
+     * @param StoredTransactionGroup $storedGroupEvent
      */
-    public function processRules(StoredTransactionGroup $storedJournalEvent): void
+    public function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
-        if (false === $storedJournalEvent->applyRules) {
+        if (false === $storedGroupEvent->applyRules) {
+            Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
+
             return;
         }
         Log::debug('Now in StoredGroupEventHandler::processRules()');
 
         /** @var RuleEngine $ruleEngine */
         $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser($storedJournalEvent->transactionGroup->user);
+        $ruleEngine->setUser($storedGroupEvent->transactionGroup->user);
         $ruleEngine->setAllRules(true);
         $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
-        $journals = $storedJournalEvent->transactionGroup->transactionJournals;
+        $journals = $storedGroupEvent->transactionGroup->transactionJournals;
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

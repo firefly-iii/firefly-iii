@@ -51,10 +51,12 @@ return [
     'edit_journal'           => 'Modifica transazione ":description"',
     'edit_reconciliation'    => 'Modifica ":description"',
     'delete_journal'         => 'Elimina transazione ":description"',
-    'delete_group'           => 'Delete transaction ":description"',
+    'delete_group'           => 'Elimina transazione ":description"',
     'tags'                   => 'Etichette',
     'createTag'              => 'Crea nuova etichetta',
     'edit_tag'               => 'Modifica etichetta ":tag"',
     'delete_tag'             => 'Elimina etichetta ":tag"',
     'delete_journal_link'    => 'Elimina il collegamento tra le transazioni',
+    'telemetry_index'        => 'Telemetria',
+    'telemetry_view'         => 'Visualizza telemetria',
 ];

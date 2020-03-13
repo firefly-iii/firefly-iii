@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ξέχασα τον παράγοντα ταυτοποίησης.',
     'two_factor_lost_header'                     => 'Χάσατε την ταυτότητα δύο παραγόντων;',
     'two_factor_lost_intro'                      => 'Εάν χάσατε τους εφεδρικούς κωδικούς σας επίσης, είστε άτυχοι. Αυτό δε μπορεί να διορθωθεί απευθείας. Έχετε δύο επιλογές.',
-    'two_factor_lost_fix_self'                   => 'Εάν εκτελείτε μια δική σας εγκατάσταση του Firefly III, ελέγξτε τα αρχεία καταγραφής στο <code>storage/logs</code> για οδηγίες ή εκτελέστε τα<code>αρχεία καταγραφής του docker&lt;container_id&gt;</code> για να δείτε τις οδηγίες (ανανεώστε αυτή τη σελίδα).',
+    'two_factor_lost_fix_self'                   => 'Εάν εκτελείτε μια δική σας εγκατάσταση του Firefly III, διαβάστε <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">αυτήν την καταχώρηση στις Συχνές Ερωτήσεις</a> για να δείτε τις οδηγίες.',
     'two_factor_lost_fix_owner'                  => 'Ειδάλλως, στείλτε email στον ιδιοκτήτη του ιστότοπου, <a href="mailto::site_owner">:site_owner</a> και ζητήστε να σας επαναφέρει την ταυτότητα δύο παραγόντων.',
     'mfa_backup_code'                            => 'Έχετε χρησιμοποιήσει ένα εφεδρικό κωδικό για να συνδεθείτε στο Firefly III. Δε μπορεί να χρησιμοποιηθεί ξανά, οπότε διαγράψτε το από τη λίστα σας.',
     'pref_two_factor_new_backup_codes'           => 'Λάβετε νέους εφεδρικούς κωδικούς',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days ημέρες δεδομένων θα καθυστερήσουν λιγάκι να φορτώσουν.',
     'registered'                                 => 'Έχετε εγγραφεί επιτυχώς!',
     'Default asset account'                      => 'Βασικός λογαριασμός κεφαλαίου',
-    'no_budget_pointer'                          => 'Φαίνεται πως δεν έχετε ορίσει προϋπολογισμούς ακόμη. Πρέπει να δημιουργήσετε κάποιον στη σελίδα <a href=":link">προϋπολογισμών</a>. Οι προϋπολογισμοί σας βοηθούν να επιβλέπετε τις δαπάνες σας.',
+    'no_budget_pointer'                          => 'Φαίνεται πως δεν έχετε ορίσει προϋπολογισμούς ακόμη. Πρέπει να δημιουργήσετε κάποιον στη σελίδα <a href="/budgets">προϋπολογισμών</a>. Οι προϋπολογισμοί σας βοηθούν να επιβλέπετε τις δαπάνες σας.',
     'Savings account'                            => 'Λογαριασμός αποταμίευσης',
     'Credit card'                                => 'Πιστωτική κάρτα',
     'source_accounts'                            => 'Λογαριασμός(οί) προέλευσης',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Επιτυχής διαγραφή της ανάληψης ":description"',
     'deleted_deposit'                           => 'Επιτυχής διαγραφή της κατάθεσης ":description"',
     'deleted_transfer'                          => 'Επιτυχής διαγραφή της μεταφοράς ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή ":description"',
     'stored_journal_no_descr'                   => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή',
     'updated_journal_no_descr'                  => 'Ενημερώθηκε επιτυχώς η συναλλαγή σας',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(χωρίς προϋπολογισμό)',
     'account_per_budget'                        => 'Λογαριασμός ανά προϋπολογισμό',
     'account_per_category'                      => 'Λογαριασμοί ανά κατηγορία',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(κενό)',
     'all_other_budgets'                         => '(όλοι οι άλλοι προϋπολογισμοί)',
     'all_other_accounts'                        => '(όλοι οι άλλοι λογαριασμοί)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => 'Σφάλματα',
     'debt_start_date'                           => 'Ημερομηνία έναρξης χρέους',
     'debt_start_amount'                         => 'Αρχικό ποσό χρέους',
-    'debt_start_amount_help'                    => 'Εάν οφείλετε ένα ποσό είναι καλύτερα να εισάγετε ένα αρνητικό ποσό, επειδή θα επηρεάζει την καθαρή αξία. Εάν σας οφείλουν ένα ποσό ισχύει το ίδιο. Ανατρέξτε στις σελίδες βοήθειας για περισσότερες πληροφορίες.',
+    'debt_start_amount_help'                    => 'Είναι πάντα καλύτερα να ορίζετε σε αυτήν την τιμή ένα αρνητικό ποσό. Διαβάστε τις σελίδες βοήθειας (εικονίδιο (?) επάνω δεξιά) για περισσότερες πληροφορίες.',
+    'interest_period_help'                      => 'Αυτό το πεδίο είναι διακοσμητικό και δεν θα υπολογιστεί για εσάς. Όπως φαίνεται, οι τράπεζες είναι αρκετά πονηρές οπότε το Firefly III δεν το βρίσκει ποτέ σωστά.',
     'store_new_liabilities_account'             => 'Αποθήκευση νέας υποχρέωσης',
     'edit_liabilities_account'                  => 'Επεξεργασία υποχρέωσης ":name"',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => 'Αποθήκευση παραμετροποίησης',
     'single_user_administration'       => 'Διαχείριση χρήστη :email',
     'edit_user'                        => 'Επεξεργασία χρήστη :email',
-    'hidden_fields_preferences'        => 'Μπορείτε να ενεργοποιήσετε περισσότερες επιλογές συναλλαγών στις <a href=":link">ρυθμίσεις</a>.',
+    'hidden_fields_preferences'        => 'Μπορείτε να ενεργοποιήσετε περισσότερες επιλογές συναλλαγών στις <a href="/preferences">ρυθμίσεις</a>.',
     'user_data_information'            => 'Δεδομένα χρήστη',
     'user_information'                 => 'Πληροφορίες χρήστη',
     'total_size'                       => 'συνολικό μέγεθος',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => 'Εισαγωγή συναλλαγών στο Firefly III',
     'import_data'                           => 'Εισαγωγή δεδομένων',
     'import_transactions'                   => 'Εισαγωγή συναλλαγών',
-
+    'import_tools_title'                    => 'Εργαλεία εισαγωγής',
+    'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
+    'firefly_iii_csv_importer_name'         => 'Εργαλείο εισαγωγής CSV στο Firefly III',
+    'firefly_iii_bunq_importer_name'        => 'Εργαλείο εισαγωγής bunq 🌈 στο Firefly III',
+    'ludo_revolut_importer_name'            => 'Εισαγωγέας δεδομένων Revolut του Ludo444',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν χρησιμοποιείτε το Firefly III σε περιβάλλον Sandstorm.io.',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => 'Καθαρή αξία (:currency)',
     'box_spend_per_day'                  => 'Απομένουν για δαπάνες ανά ημέρα: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Τηλεμετρία',
+    'telemetry_intro'                    => 'Το Firefly III υποστηρίζει τη συλλογή και αποστολή τηλεμετρίας χρήσης. Αυτό σημαίνει ότι το Firefly III θα προσπαθήσει να συλλέξει πληροφορίες για το πώς χρησιμοποιείτε το Firefly III και να τις αποστείλει στον προγραμματιστή του Firefly III. Μπορείτε πάντα να επιλέξετε αν θέλετε να συμμετάσχετε και η επιλογή είναι κλειστή από προεπιλογή. Το Firefly III δεν θα συλλέξει ούτε θα αποστείλει ποτέ οικονομικές πληροφορίες. Το Firefly III επίσης ποτέ δεν θα συλλέξει ούτε θα αποστείλει οικονομικές πληροφορίες μεταδεδομένων, όπως ποσά ή υπολογισμούς. Τα συγκεντρωμένα δεδομένα δεν θα γίνουν ποτέ προσβάσιμα από το ευρύ κοινό.',
+    'telemetry_what_collected'           => 'Τα δεδομένα που συλλέγει και στέλνει το Firefly III είναι διαφορετικά για κάθε έκδοση. Εσείς εκτελείτε την έκδοση :version. Τα δεδομένα που συλλέγει το Firefly III στην έκδοση :version είναι κάτι που μπορείτε διαβάσετε στις σελίδες βοήθειας. Κάντε κλικ στο εικονίδιο (?) στην επάνω δεξιά γωνία <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">ή επισκεφτείτε την σελίδα βοήθειας απευθείας στο GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Είναι ενεργοποιημένη η τηλεμετρία του Firefly III;',
+    'telemetry_disabled_no'              => 'Η τηλεμετρία ΔΕΝ είναι ενεργοποιημένη',
+    'telemetry_disabled_yes'             => 'Η τηλεμετρία είναι ενεργοποιημένη',
+    'telemetry_enabled_now_what'         => 'Μπορείτε να απενεργοποιήσετε την τηλεμετρία με τον ίδιο τρόπο που την ενεργοποιήσατε: Στο αρχείο .env ή στην παραμετροποίηση του Docker.',
+    'telemetry_disabled_now_what'        => 'Αν θέλετε, μπορείτε να ενεργοποιήσετε την τηλεμετρία στο αρχείο .env ή στην παραμετροποίηση του Docker.',
+    'telemetry_collected_info'           => 'Συγκεντρωμένες πληροφορίες',
+    'no_telemetry_present'               => 'Το Firefly III δεν έχει συγκεντρώσει αρχεία τηλεμετρίας.',
+    'records_telemetry_present'          => 'Το Firefly III έχει συγκεντρώσει :count αρχείο(α) τηλεμετρίας.',
+    'telemetry_button_view'              => 'Προβολή τηλεμετρίας',
+    'telemetry_button_delete'            => 'Διαγραφή τηλεμετρίας',
+    'telemetry_admin_overview'           => 'Επισκόπηση τηλεμετρίας',
+    'telemetry_back_to_index'            => 'Επιστροφή στην τηλεμετρία'
 ];

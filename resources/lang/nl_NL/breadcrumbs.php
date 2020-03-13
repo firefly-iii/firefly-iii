@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Wijzig tag ":tag"',
     'delete_tag'             => 'Verwijder tag ":tag"',
     'delete_journal_link'    => 'Verwijder koppeling tussen transacties',
+    'telemetry_index'        => 'Telemetrie',
+    'telemetry_view'         => 'Bekijk telemetrie',
 ];

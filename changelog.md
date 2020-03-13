@@ -2,7 +2,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.0 (API 1.0.0)] - 2020-03-06
+## [5.1.1 (API 1.0.2)] - 2020-03-xx
+
+### Added
+- [Issue 2672](https://github.com/firefly-iii/firefly-iii/issues/2672) Buttons to create transactions from the list of accounts is back.
+
+### Changed
+- [Issue 3176](https://github.com/firefly-iii/firefly-iii/issues/3176) Greek language support is enabled again!
+
+### Fixed
+- [Issue 3160](https://github.com/firefly-iii/firefly-iii/issues/3160) Deleting a reconciliation won't send you to a 404.
+- [Issue 3172](https://github.com/firefly-iii/firefly-iii/issues/3172) Remaining amount left calculation is wrong over multiple months.
+- [Issue 3173](https://github.com/firefly-iii/firefly-iii/issues/3173) Amount is invisible when viewing transactions.
+- [Issue 3177](https://github.com/firefly-iii/firefly-iii/issues/3177) Fix attachment breadcrumb.
+- [Issue 3180](https://github.com/firefly-iii/firefly-iii/issues/3180) Improve instructions for when the user loses MFA info.
+- [Issue 3182](https://github.com/firefly-iii/firefly-iii/issues/3182) Better fallback when transaction errors out.
+- Search modifiers are now case insensitive.
+
+### Security
+- The minimal password length for new users is now 16 characters.
+- Have I Been Pwnd check is now enabled by default.
+
+### API
+- A new call to `apply_rules` is available when submitting transactions.
+
+## [5.1.0 (API 1.0.1)] - 2020-03-06
 
 Before this release came out, several alpha and beta versions had been released already:
 

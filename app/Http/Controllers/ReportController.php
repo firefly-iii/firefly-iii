@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -262,11 +263,32 @@ class ReportController extends Controller
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
-        $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts         = $repository->getAccountsByType(
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]
+        );
+
+        // group accounts by role:
+        $groupedAccounts = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $type = $account->accountType->type;
+            $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+
+            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
+                $role = sprintf('opt_group_l_%s',$type);
+            }
+
+            if ('' === $role || 'opt_group_' === $role) {
+                $role = 'opt_group_defaultAsset';
+            }
+            $groupedAccounts[trans(sprintf('firefly.%s',$role))][$account->id] = $account;
+        }
+        ksort($groupedAccounts);
+
         $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
+        return view('reports.index', compact('months', 'accounts', 'start', 'accountList','groupedAccounts', 'customFiscalYear'));
     }
 
     /**

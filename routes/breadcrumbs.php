@@ -272,6 +272,22 @@ try {
     );
 
     Breadcrumbs::register(
+        'admin.telemetry.index',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('admin.index');
+            $breadcrumbs->push(trans('breadcrumbs.telemetry_index'), route('admin.telemetry.index'));
+        }
+    );
+
+    Breadcrumbs::register(
+        'admin.telemetry.view',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('admin.telemetry.index');
+            $breadcrumbs->push(trans('breadcrumbs.telemetry_view'));
+        }
+    );
+
+    Breadcrumbs::register(
         'transactions.link.delete',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournalLink $link) {
             $breadcrumbs->parent('home');
@@ -302,7 +318,7 @@ try {
             if ($object instanceof Bill) {
                 $breadcrumbs->parent('bills.show', $object);
             }
-            $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
+            $breadcrumbs->push(limitStringLength(trans('firefly.edit_attachment', ['name' => $attachment->filename])), route('attachments.edit', [$attachment]));
         }
     );
     Breadcrumbs::register(
@@ -1108,7 +1124,12 @@ try {
                 $title = limitStringLength($group->title);
             }
             if('opening balance' === $type) {
-
+                // TODO  link to account.
+                $breadcrumbs->push($title, route('transactions.show', [$group->id]));
+                return;
+            }
+            if('reconciliation' === $type) {
+                // TODO  link to account.
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
                 return;
             }

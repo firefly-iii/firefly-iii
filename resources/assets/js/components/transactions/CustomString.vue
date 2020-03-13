@@ -26,11 +26,20 @@
             {{ title }}
         </div>
         <div class="col-sm-12">
+            <div class="input-group">
             <input type="text" class="form-control" :name="name"
                    :title="title" autocomplete="off"
                    ref="str"
                    :value="value" @input="handleInput"
                    :placeholder="title">
+            <span class="input-group-btn">
+            <button
+                    tabIndex="-1"
+                    v-on:click="clearField"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+        </div>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -49,6 +58,12 @@
         },
         methods: {
             handleInput(e) {
+                this.$emit('input', this.$refs.str.value);
+            },
+            clearField: function () {
+                //props.value = '';
+                this.name = '';
+                this.$refs.str.value = '';
                 this.$emit('input', this.$refs.str.value);
             },
             hasError: function () {

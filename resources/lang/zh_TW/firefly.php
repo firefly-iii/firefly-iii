@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => '啥兩步驟我忘了。',
     'two_factor_lost_header'                     => '遺失您的兩步驟驗證嗎？',
     'two_factor_lost_intro'                      => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions, or run <code>docker logs &lt;container_id&gt;</code> to see the instructions (refresh this page).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => '否則，請寄送電子郵件至網站擁有者 <a href="mailto::site_owner">:site_owner</a> 要求重設您的兩步驟驗證。',
     'mfa_backup_code'                            => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'           => 'Get new backup codes',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => '載入 :days 天的資料或會相當耗時。',
     'registered'                                 => '您已成功註冊！',
     'Default asset account'                      => '預設資產帳戶',
-    'no_budget_pointer'                          => '您似乎尚無預算，您可至 <a href=":link">預算</a>頁面來建立預算。預算可協助您追蹤支出。',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => '儲蓄帳戶',
     'Credit card'                                => '信用卡',
     'source_accounts'                            => '來源帳戶',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => '已成功刪除提款 “:description”',
     'deleted_deposit'                           => '已成功刪除存款 “:description”',
     'deleted_transfer'                          => '已成功刪除轉帳 “:description”',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => '已成功建立新交易 “:description”',
     'stored_journal_no_descr'                   => '已成功建立新交易',
     'updated_journal_no_descr'                  => '已成功更新您的交易',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(無預算)',
     'account_per_budget'                        => 'Account per budget',
     'account_per_category'                      => 'Account per category',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(empty)',
     'all_other_budgets'                         => '(all other budgets)',
     'all_other_accounts'                        => '(all other accounts)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => '錯誤',
     'debt_start_date'                           => '負債開始日期',
     'debt_start_amount'                         => '負債開始金額',
-    'debt_start_amount_help'                    => '如欠債未還，建議您輸入負數，以便在您的資產淨值反映。如有別人的欠款，反之亦然。請參見說明頁面中的詳解。',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => '儲存新債務',
     'edit_liabilities_account'                  => '編輯債務 “:name”',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => '儲存設定',
     'single_user_administration'       => ':email 的使用者管理後臺',
     'edit_user'                        => '編輯使用者 :email',
-    'hidden_fields_preferences'        => '您可在 <a href=":link">設定</a> 啟用更多交易選項。',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => '使用者資料',
     'user_information'                 => '使用者資訊',
     'total_size'                       => '總大小',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => '將交易記錄導入',
     'import_data'                           => '匯入資料',
     'import_transactions'                   => '匯入交易',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => '當您在 Sandstorm.io 環境使用 Firefly III 時，此功能不可用。',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => '淨值 (:currency)',
     'box_spend_per_day'                  => '每日可供花費: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];

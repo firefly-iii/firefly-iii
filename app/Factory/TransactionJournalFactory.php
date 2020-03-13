@@ -29,6 +29,7 @@ use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -40,6 +41,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
@@ -125,6 +127,7 @@ class TransactionJournalFactory
      *
      * @return Collection
      * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     public function create(array $data): Collection
     {
@@ -139,24 +142,30 @@ class TransactionJournalFactory
 
             return new Collection;
         }
-
-        /** @var array $row */
-        foreach ($transactions as $index => $row) {
-            Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
-
-            Log::debug('Going to call createJournal', $row);
-            try {
+        try {
+            /** @var array $row */
+            foreach ($transactions as $index => $row) {
+                Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
                 $journal = $this->createJournal(new NullArrayObject($row));
-            } catch (DuplicateTransactionException|Exception $e) {
-                Log::warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
-                throw new DuplicateTransactionException($e->getMessage());
+                if (null !== $journal) {
+                    $collection->push($journal);
+                }
+                if (null === $journal) {
+                    Log::error('The createJournal() method returned NULL. This may indicate an error.');
+                }
             }
-            if (null !== $journal) {
-                $collection->push($journal);
-            }
-            if (null === $journal) {
-                Log::error('The createJournal() method returned NULL. This may indicate an error.');
-            }
+        } catch (DuplicateTransactionException $e) {
+            Log::warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->forceDeleteOnError($collection);
+            throw new DuplicateTransactionException($e->getMessage());
+        } catch (FireflyException $e) {
+            Log::warning('TransactionJournalFactory::create() caught an exception.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->forceDeleteOnError($collection);
+            throw new FireflyException($e->getMessage());
         }
 
         return $collection;
@@ -204,7 +213,7 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return TransactionJournal|null
-     * @throws Exception
+     * @throws FireflyException
      * @throws DuplicateTransactionException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
@@ -232,36 +241,33 @@ class TransactionJournalFactory
         try {
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
-            /** create or get source and destination accounts  */
-
-            $sourceInfo = [
-                'id'     => (int)$row['source_id'],
-                'name'   => $row['source_name'],
-                'iban'   => $row['source_iban'],
-                'number' => $row['source_number'],
-                'bic'    => $row['source_bic'],
-            ];
-
-            $destInfo = [
-                'id'     => (int)$row['destination_id'],
-                'name'   => $row['destination_name'],
-                'iban'   => $row['destination_iban'],
-                'number' => $row['destination_number'],
-                'bic'    => $row['destination_bic'],
-            ];
-            Log::debug('Source info:', $sourceInfo);
-            Log::debug('Destination info:', $destInfo);
-
-            $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
-            $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
-            // @codeCoverageIgnoreStart
         } catch (FireflyException $e) {
             Log::error('Could not validate source or destination.');
             Log::error($e->getMessage());
 
             return null;
         }
-        // @codeCoverageIgnoreEnd
+        /** create or get source and destination accounts  */
+        $sourceInfo = [
+            'id'     => (int)$row['source_id'],
+            'name'   => $row['source_name'],
+            'iban'   => $row['source_iban'],
+            'number' => $row['source_number'],
+            'bic'    => $row['source_bic'],
+        ];
+
+        $destInfo = [
+            'id'     => (int)$row['destination_id'],
+            'name'   => $row['destination_name'],
+            'iban'   => $row['destination_iban'],
+            'number' => $row['destination_number'],
+            'bic'    => $row['destination_bic'],
+        ];
+        Log::debug('Source info:', $sourceInfo);
+        Log::debug('Destination info:', $destInfo);
+
+        $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
+        $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
 
         // TODO AFTER 4.8,0 better handling below:
 
@@ -337,7 +343,15 @@ class TransactionJournalFactory
         $transactionFactory->setCurrency($sourceCurrency);
         $transactionFactory->setForeignCurrency($sourceForeignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
-        $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
+        try {
+            $negative = $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
+        } catch (FireflyException $e) {
+            Log::error('Exception creating negative transaction.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->forceDeleteOnError(new Collection([$journal]));
+            throw new FireflyException($e->getMessage());
+        }
 
         // and the destination one:
         /** @var TransactionFactory $transactionFactory */
@@ -348,7 +362,18 @@ class TransactionJournalFactory
         $transactionFactory->setCurrency($destCurrency);
         $transactionFactory->setForeignCurrency($destForeignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
-        $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
+        try {
+            $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
+        } catch (FireflyException $e) {
+            Log::error('Exception creating positive transaction.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            Log::warning('Delete negative transaction.');
+            $this->forceTrDelete($negative);
+            $this->forceDeleteOnError(new Collection([$journal]));
+            throw new FireflyException($e->getMessage());
+        }
+
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         // TODO this can't be faked so it can't be tested.
@@ -415,6 +440,37 @@ class TransactionJournalFactory
         if (null !== $result) {
             Log::warning('Found a duplicate!');
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $result->transactionJournal->transaction_group_id));
+        }
+    }
+
+    /**
+     * Force the deletion of an entire set of transaction journals and their meta object in case of
+     * an error creating a group.
+     *
+     * @param Collection $collection
+     */
+    private function forceDeleteOnError(Collection $collection): void
+    {
+        Log::debug(sprintf('forceDeleteOnError on collection size %d item(s)', $collection->count()));
+        $service = app(JournalDestroyService::class);
+        /** @var TransactionJournal $journal */
+        foreach ($collection as $journal) {
+            Log::debug(sprintf('forceDeleteOnError on journal #%d', $journal->id));
+            $service->destroy($journal);
+        }
+    }
+
+    /**
+     * @param Transaction $transaction
+     */
+    private function forceTrDelete(Transaction $transaction): void
+    {
+        try {
+            $transaction->delete();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            Log::error('Could not delete negative transaction.');
         }
     }
 

@@ -95,22 +95,25 @@
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_home_screen_accounts'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
-                                        {% for account in accounts %}
+                                        {% for type, accounts in groupedAccounts %}
+                                            <strong>{{ type }}</strong>
+                                            {% for id, name in accounts %}
                                             <div class="form-group">
                                                 <div class="col-sm-10">
                                                     <div class="checkbox">
                                                         <label>
-                                                            {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"
-                                                                       checked> {{ account.name }}
+                                                            {% if id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
+                                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ id }}"
+                                                                       checked> {{ name }}
                                                             {% else %}
                                                                 <input type="checkbox" name="frontPageAccounts[]"
-                                                                       value="{{ account.id }}"> {{ account.name }}
+                                                                       value="{{ id }}"> {{ name }}
                                                             {% endif %}
                                                         </label>
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endfor %}
                                         {% endfor %}
                                     </div>
                                 </div>

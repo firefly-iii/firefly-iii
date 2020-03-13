@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Log;
@@ -60,7 +61,6 @@ class TransactionGroupFactory
     {
         $this->journalFactory->setUser($this->user);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
-
         try {
             $collection = $this->journalFactory->create($data);
         } catch(DuplicateTransactionException $e) {

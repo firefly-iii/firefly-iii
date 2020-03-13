@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Jag har glömt min tvåfaktors-pryl.',
     'two_factor_lost_header'                     => 'Förlorad tvåfaktorsautentisering?',
     'two_factor_lost_intro'                      => 'Om du har förlorat även dina backupkoder har du otur. Detta är inte något du kan fixa från webbgränssnittet. Du har två val.',
-    'two_factor_lost_fix_self'                   => 'Om du kör din egen instans av Firefly III, kontrollera loggarna i <code>storage/logs</code> efter instruktioner, eller kör <code>docker logs &lt;container_id&gt;</code> för att se instruktioner (ladda om den här sidan).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Annars, skicka epost till sajt-ägaren, <a href="mailto::site_owner">:site_owner</a> och be hen att återställa din tvåfaktorsautentisering.',
     'mfa_backup_code'                            => 'Du har använt en engångskod för att logga in i Firefly III. Den kan inte användas igen, så stryk den från din lista.',
     'pref_two_factor_new_backup_codes'           => 'Generera nya engångskoder',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days dagar med data kan ta ett tag att ladda.',
     'registered'                                 => 'Din registrering lyckades!',
     'Default asset account'                      => 'Förvalt tillgångskonto',
-    'no_budget_pointer'                          => 'Du verkar inte ha några budgetar än. Du borde skapa några på <a href=":link">budget</a>-sidan. Budgetar kan hjälpa dig att hålla reda på utgifterna.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Sparkonto',
     'Credit card'                                => 'Kreditkort',
     'source_accounts'                            => 'Från konto',
@@ -634,7 +634,7 @@ return [
     'export_data_bc'                => 'Export data from Firefly III',
     'export_data_main_title'        => 'Export data from Firefly III',
     'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
-    'export_data_all_transactions'  => 'Export all transactions',
+    'export_data_all_transactions'  => 'Exportera alla transaktioner',
     'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
 
     // attachments
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Uttag ":description" har tagits bort',
     'deleted_deposit'                           => 'Insättning ":description" har tagits bort',
     'deleted_transfer'                          => 'Överföring ":description" har tagits bort',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Transaktion ":description" har tagits bort',
     'stored_journal_no_descr'                   => 'Ny transaktion skapades lyckat',
     'updated_journal_no_descr'                  => 'Transaktion har uppdaterats',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(ingen budget)',
     'account_per_budget'                        => 'Konto per budget',
     'account_per_category'                      => 'Konto per etikett',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(tom)',
     'all_other_budgets'                         => '(övriga budgetar)',
     'all_other_accounts'                        => '(alla övriga konton)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => 'Fel',
     'debt_start_date'                           => 'Skuldens startdatum',
     'debt_start_amount'                         => 'Skuldens startsumma',
-    'debt_start_amount_help'                    => 'Om du är skyldig ett belopp är det bäst att ange ett negativt värde, detta influenserar ditt nettovärde. Om du har lånat ut ett belopp gäller det samma. Se hjälpsidorna för mer information.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Spara en ny skuld',
     'edit_liabilities_account'                  => 'Ändra skuld ":name"',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => 'Spara konfiguration',
     'single_user_administration'       => 'Användaradministration för :email',
     'edit_user'                        => 'Redigera användare :email',
-    'hidden_fields_preferences'        => 'Du kan aktivera mer transaktionsalternativ under dina <a href=":link">inställningar</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Användardata',
     'user_information'                 => 'Användar information',
     'total_size'                       => 'total storlek',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => 'Importera transaktioner till Firefly III',
     'import_data'                           => 'Importera data',
     'import_transactions'                   => 'Importera transaktioner',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Denna funktion är inte tillgänglig om Firefly III används i en Sandstorm.io miljö.',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => 'Net worth (:currency)',
     'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];

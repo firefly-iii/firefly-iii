@@ -38,12 +38,16 @@
 
                             <div class="col-sm-9" id="inputAccountsSelect">
                                 <select id="inputAccounts" name="accounts[]" multiple class="form-control">
-                                    {% for account in accounts %}
+                                    {% for role, accountList in groupedAccounts  %}
+                                        <optgroup label="{{ role }}">
+                                    {% for account in accountList %}
                                         <option
                                                 value="{{ account.id }}"
                                                 label="{{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
                                             {{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
                                         </option>
+                                    {% endfor %}
+                                        </optgroup>
                                     {% endfor %}
                                 </select>
 

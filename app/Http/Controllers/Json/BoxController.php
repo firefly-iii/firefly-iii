@@ -59,8 +59,6 @@ class BoxController extends Controller
      */
     public function available(): JsonResponse
     {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
         /** @var AvailableBudgetRepositoryInterface $abRepository */
@@ -102,13 +100,12 @@ class BoxController extends Controller
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
         $spentAmount = $spent[(int)$currency->id]['sum'] ?? '0';
         $spentPerDay = '-1';
-        if (1 === $availableBudgets->count()) {
+        if ($availableBudgets->count() > 0) {
             $display  = 0; // assume user overspent
             $boxTitle = (string)trans('firefly.overspent');
-            /** @var AvailableBudget $availableBudget */
-            $availableBudget = $availableBudgets->first();
+            $totalAvailableSum = (string)$availableBudgets->sum('amount');
             // calculate with available budget.
-            $leftToSpendAmount = bcadd($availableBudget->amount, $spentAmount);
+            $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             if (1 === bccomp($leftToSpendAmount, '0')) {
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;

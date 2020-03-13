@@ -26,11 +26,20 @@
             {{ title }}
         </div>
         <div class="col-sm-12">
+            <div class="input-group">
             <input type="date" class="form-control" :name="name"
                    :title="title" autocomplete="off"
                    ref="date"
                    :value="value ? value.substr(0,10): ''" @input="handleInput"
                    :placeholder="title">
+            <span class="input-group-btn">
+            <button
+                    tabIndex="-1"
+                    v-on:click="clearDate"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+        </div>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -53,6 +62,12 @@
             },
             hasError: function () {
                 return this.error.length > 0;
+            },
+            clearDate: function () {
+                //props.value = '';
+                this.name = '';
+                this.$refs.date.value = '';
+                this.$emit('input', this.$refs.date.value);
             },
         }
     }

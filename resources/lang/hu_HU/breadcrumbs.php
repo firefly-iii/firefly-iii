@@ -57,4 +57,6 @@ return [
     'edit_tag'               => '":tag" címke szerkesztése',
     'delete_tag'             => '":tag" címke törlése',
     'delete_journal_link'    => 'Tranzakciók közötti kapcsolat törlése',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

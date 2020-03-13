@@ -70,7 +70,7 @@ return [
     'allowed_for_user' => [
         'fake'    => false,
         'file'    => true,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,
@@ -82,7 +82,7 @@ return [
     'has_prereq'       => [
         'fake'    => true,
         'file'    => false,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,

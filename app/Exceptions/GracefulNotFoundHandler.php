@@ -30,6 +30,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
@@ -224,6 +225,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
         $type = $journal->transactionType->type;
         $request->session()->reflash();
+
+        if (TransactionType::RECONCILIATION === $type) {
+            return redirect(route('accounts.index', ['asset']));
+        }
 
         return redirect(route('transactions.index', [strtolower($type)]));
 

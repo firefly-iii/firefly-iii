@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ich kann keine 2FA-Codes generieren.',
     'two_factor_lost_header'                     => 'Haben Sie ihre Zwei-Faktor-Authentifizierung verloren?',
     'two_factor_lost_intro'                      => 'Wenn Sie auch Ihre Sicherungsschlüssel verloren haben, haben Sie Pech. Dies ist nichts, was Sie über die Weboberfläche beheben können. Sie haben jedoch zwei Möglichkeiten.',
-    'two_factor_lost_fix_self'                   => 'Wenn Sie Ihre eigene Instanz von Firefly III ausführen, überprüfen Sie die Protokolle in <code>storage/logs</code> auf Anweisungen, oder führen Sie <code>docker logs &lt;container_id&gt;</code> aus, um die Anweisungen zu lesen (aktualisieren Sie diese Seite).',
+    'two_factor_lost_fix_self'                   => 'Wenn Sie Ihre eigene Instanz von Firefly III betreiben, lesen Sie <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">diesen Eintrag in den FAQ</a> für Anweisungen.',
     'two_factor_lost_fix_owner'                  => 'Ansonsten, mailen Sie dem Inhaber der Website, <a href="mailto::site_owner">:site_owner</a> und bitten Sie ihn, Ihre Zwei-Faktor Authentifizierung zurückzusetzen.',
     'mfa_backup_code'                            => 'Sie haben sich mit einem Sicherungsschlüssel bei Firefly III angemeldet. Dieser kann nun nicht mehr verwendet werden, also streichen Sie ihn aus Ihrer Liste.',
     'pref_two_factor_new_backup_codes'           => 'Neue Sicherungsschlüssel abrufen',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days Tage Daten können eine Weile zum Laden benötigen.',
     'registered'                                 => 'Sie haben sich erfolgreich registriert!',
     'Default asset account'                      => 'Standard-Bestandskonto',
-    'no_budget_pointer'                          => 'Sie scheinen noch keine Budgets festgelegt zu haben. Sie sollten einige davon auf der Seite <a href=":link">Budgets</a> anlegen. Budgets können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
+    'no_budget_pointer'                          => 'Sie scheinen noch keine Kostenrahmen festgelegt zu haben. Sie sollten einige davon auf der Seite <a href="/budgets">„Kostenrahmen”</a> anlegen. Kostenrahmen können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
     'Savings account'                            => 'Sparkonto',
     'Credit card'                                => 'Kreditkarte',
     'source_accounts'                            => 'Ausgangskonto',
@@ -393,7 +393,7 @@ return [
     'rule_trigger_to_account_nr_ends'               => 'Zielkontonummer/IBAN endet auf „:trigger_value”',
     'rule_trigger_to_account_nr_is_choice'          => 'Zielkontonummer/IBAN ist …',
     'rule_trigger_to_account_nr_is'                 => 'Zielkontonummer/IBAN ist „:trigger_value”',
-    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN beginnt enthält …',
+    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN enthält …',
     'rule_trigger_to_account_nr_contains'           => 'Zielkontonummer/IBAN enthält „:trigger_value”',
 
     'rule_trigger_transaction_type_choice'       => 'Buchung ist vom Typ..',
@@ -451,7 +451,7 @@ return [
     'rule_action_set_category'                   => 'Kategorie auf ":action_value" setzen',
     'rule_action_clear_category'                 => 'Kategorie entfernen',
     'rule_action_set_budget'                     => 'Budget auf „:action_value” setzen',
-    'rule_action_clear_budget'                   => 'Budget löschen',
+    'rule_action_clear_budget'                   => 'Budget leeren',
     'rule_action_add_tag'                        => 'Schlagwort „:action_value” hinzufügen',
     'rule_action_remove_tag'                     => 'Schlagwort „:action_value” entfernen',
     'rule_action_remove_all_tags'                => 'Alle Schlüsselwörter entfernen',
@@ -585,10 +585,10 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
-    'delete_all_budgets'                        => 'Alle Ihre Kostenrahmen löschen',
+    'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
     'delete_all_categories'                     => 'Alle Ihre Kategorien löschen',
     'delete_all_tags'                           => 'Alle Ihre Stichwörter löschen',
-    'deleted_all_budgets'                       => 'Alle Kostenrahmen wurden gelöscht',
+    'deleted_all_budgets'                       => 'Alle Budgets wurden gelöscht',
     'deleted_all_categories'                    => 'Alle Kategorien wurden gelöscht',
     'deleted_all_tags'                          => 'Alle Schlagwörter wurden gelöscht',
     'change_your_password'                      => 'Passwort ändern',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Ausgabe ":description" erfolgreich gelöscht',
     'deleted_deposit'                           => 'Einnahme ":description" erfolgreich gelöscht',
     'deleted_transfer'                          => 'Umbuchung ":description" erfolgreich gelöscht',
+    'deleted_reconciliation'                    => 'Ausgleichsbuchung „:description” erfolgreich gelöscht',
     'stored_journal'                            => 'Neue Überweisung ":description" erfolgreich erstellt',
     'stored_journal_no_descr'                   => 'Ihre neue Buchung wurde erfolgreich erstellt',
     'updated_journal_no_descr'                  => 'Ihre Buchung wurde erfolgreich aktualisiert',
@@ -969,6 +970,7 @@ return [
     'no_budget'                                 => '(kein Budget)',
     'account_per_budget'                        => 'Konto je Budget',
     'account_per_category'                      => 'Konto je Kategorie',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(leer)',
     'all_other_budgets'                         => '(alle anderen Budgets)',
     'all_other_accounts'                        => '(alle anderen Konten)',
@@ -1103,7 +1105,8 @@ return [
     'errors'                                    => 'Fehler',
     'debt_start_date'                           => 'Startdatum der Verschuldung',
     'debt_start_amount'                         => 'Startbetrag der Verschuldung',
-    'debt_start_amount_help'                    => 'Für einen zu zahlenden Betrag geben Sie am besten einen negativen Wert ein, da dieser mit dem Eigenkapital verrechnet wird. Wenn Ihnen ein Betrag geschuldet wird, gilt das Gleiche. Weitere Informationen finden Sie in der Hilfe.',
+    'debt_start_amount_help'                    => 'Es wird empfohlen, diesen Wert auf einen negativen Betrag festzulegen. Lesen Sie die Hilfeseiten (oben rechts ❓-Symbol) für weitere Informationen.',
+    'interest_period_help'                      => 'Dieses Feld ist rein kosmetisch und wird für Sie nicht berechnet. Wie sich herausstellt, sind Banken sehr hinterhältig, so dass Firefly III es nie richtig macht.',
     'store_new_liabilities_account'             => 'Neue Verbindlichkeit speichern',
     'edit_liabilities_account'                  => 'Verbindlichkeit „:name” bearbeiten',
 
@@ -1306,7 +1309,7 @@ return [
     'store_configuration'              => 'Konfiguration speichern',
     'single_user_administration'       => 'Benutzerverwaltung für :email',
     'edit_user'                        => 'Benutzer :email bearbeiten',
-    'hidden_fields_preferences'        => 'Sie können weitere Buchungsoptionen in Ihren <a href=":link">Einstellungen</a> aktivieren.',
+    'hidden_fields_preferences'        => 'Sie können weitere Buchungsoptionen in Ihren <a href="/preferences">Einstellungen</a> aktivieren.',
     'user_data_information'            => 'Nutzerdaten',
     'user_information'                 => 'Benutzerinformationen',
     'total_size'                       => 'Gesamtgröße',
@@ -1425,7 +1428,12 @@ return [
     'import_index_title'                    => 'Buchungen in Firefly III importieren',
     'import_data'                           => 'Daten importieren',
     'import_transactions'                   => 'Buchungen importieren',
-
+    'import_tools_title'                    => 'Werkzeuge importieren',
+    'tools_index_intro'                     => 'Es gibt mehrere Werkzeuge, um Daten in Firefly III zu importieren (Diese werden unten vorgestellt). Weitere Informationen finden Sie unter <a href="https://docs.firefly-iii.org/importing-data/introduction">hier auf dieser Seite</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV-Import',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III Bunq 🌈 importieren',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-Importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
 
@@ -1560,4 +1568,20 @@ return [
     'box_net_worth_in_currency'          => 'Eigenkapital (:currency)',
     'box_spend_per_day'                  => 'Pro Tag verbleibend zum Ausgeben: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetrie',
+    'telemetry_intro'                    => 'Firefly III unterstützt das Erfassen und Versenden von Telemetriedaten zu dessen Nutzung. Das bedeutet, dass Firefly III versuchen wird, Informationen darüber zu sammeln, wie Sie Firefly III verwenden, und diese an den Entwickler von Firefly III zu senden. Dies ist immer optional und standardmäßig deaktiviert. Firefly III wird niemals finanzielle Informationen sammeln oder senden. Firefly III wird auch niemals finanzielle Meta-Informationen, wie Summen oder Berechnungen, sammeln oder versenden. Die gesammelten Daten werden niemals öffentlich zugänglich sein.',
+    'telemetry_what_collected'           => 'Was Firefly III genau erfasst und versendet, ist für jede Version unterschiedlich. Sie verwenden Version :version. Welche Daten Firefly III in Version :version erfasst, können Sie auf den Hilfeseiten nachlesen. Klicken Sie auf das ❓-Symbol in der rechten oberen Ecke <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">oder besuchen Sie die Hilfeseite direkt auf GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Ist die Firefly-III-Telemetrie aktiviert?',
+    'telemetry_disabled_no'              => 'Die Telemetrie ist NICHT aktiviert',
+    'telemetry_disabled_yes'             => 'Die Telemetrie ist aktiviert',
+    'telemetry_enabled_now_what'         => 'Sie können die Telemetrie auf dieselbe Weise deaktivieren, wie Sie sie aktiviert haben: in Ihrer .env-Datei oder in Ihrer Docker-Konfiguration.',
+    'telemetry_disabled_now_what'        => 'Wenn Sie möchten, können Sie die Telemetrie in Ihrer .env-Datei oder in Ihrer Docker-Konfiguration aktivieren.',
+    'telemetry_collected_info'           => 'Gesammelte Informationen',
+    'no_telemetry_present'               => 'Firefly III hat keinerlei Telemetriedaten aufgezeichnet.',
+    'records_telemetry_present'          => 'Firefly III hat :count Telemetriedaten erfasst.',
+    'telemetry_button_view'              => 'Telemetrie anzeigen',
+    'telemetry_button_delete'            => 'Telemetriedaten löschen',
+    'telemetry_admin_overview'           => 'Telemetrieübersicht',
+    'telemetry_back_to_index'            => 'Zurück zur Telemetrie'
 ];

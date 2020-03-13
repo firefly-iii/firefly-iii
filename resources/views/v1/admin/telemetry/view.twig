@@ -1,0 +1,27 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'telemetry_admin_overview'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        <em>(this version does not yet support telemetry)</em>
+                    </p>
+                </div>
+                <div class="box-footer">
+                    <a class="btn btn-default" href="{{ route('admin.telemetry.index') }}">{{ 'telemetry_back_to_index'|_ }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

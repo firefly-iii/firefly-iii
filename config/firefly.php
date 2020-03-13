@@ -134,11 +134,12 @@ return [
     ],
     'feature_flags' => [
         'export' => true,
+        'telemetry' => false,
     ],
 
     'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                => '5.1.0',
-    'api_version'            => '1.0.1',
+    'version'                => '5.1.1',
+    'api_version'            => '1.0.2',
     'db_version'             => 12,
     'maxUploadSize'          => 15242880,
     'send_error_message'     => env('SEND_ERROR_MESSAGE', true),
@@ -160,6 +161,7 @@ return [
     'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'        => 'https://version.firefly-iii.org/index.json',
+    'send_telemetry'         => env('SEND_TELEMETRY', false),
     'update_minimum_age'     => 6,
     'default_location'       => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
@@ -317,6 +319,7 @@ return [
         // currently enabled languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
+        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
@@ -345,7 +348,7 @@ return [
         //        'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
         //        'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
         //        'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
-        //        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
+        //
         //        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
         //        'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
         //        'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],

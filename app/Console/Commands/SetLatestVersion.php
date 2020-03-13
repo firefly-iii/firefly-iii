@@ -25,6 +25,9 @@ namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetLatestVersion
+ */
 class SetLatestVersion extends Command
 {
     /**
@@ -53,18 +56,21 @@ class SetLatestVersion extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         if (!$this->option('james-is-cool')) {
             $this->error('Am too!');
 
-            return;
+            return 0;
         }
         app('fireflyconfig')->set('db_version', config('firefly.db_version'));
         app('fireflyconfig')->set('ff3_version', config('firefly.version'));
         $this->line('Updated version.');
+
+        //Telemetry::string('db_version', config('firefly.db_version'));
+        //Telemetry::string('ff3_version', config('firefly.version'));
 
         return 0;
     }

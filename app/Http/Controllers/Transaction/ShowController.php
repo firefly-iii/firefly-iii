@@ -81,8 +81,8 @@ class ShowController extends Controller
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
-        $first    = $transactionGroup->transactionJournals->first();
-        $splits   = $transactionGroup->transactionJournals->count();
+        $first    = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits   = $transactionGroup->transactionJournals()->count();
 
         if(null === $first) {
             throw new FireflyException('This transaction is broken :(.');
