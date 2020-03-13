@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 use FireflyIII\AutoBudget;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\BudgetFormRequest;
+use FireflyIII\Http\Requests\BudgetFormStoreRequest;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -106,13 +106,14 @@ class CreateController extends Controller
     /**
      * Stores a budget.
      *
-     * @param BudgetFormRequest $request
+     * @param BudgetFormStoreRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BudgetFormRequest $request): RedirectResponse
+    public function store(BudgetFormStoreRequest $request): RedirectResponse
     {
         $data   = $request->getBudgetData();
+
         $budget = $this->repository->store($data);
         $this->repository->cleanupBudgets();
         $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));

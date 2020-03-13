@@ -21,7 +21,9 @@
 
 namespace FireflyIII;
 
+use FireflyIII\Models\Budget;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -35,5 +37,13 @@ class AutoBudget extends Model
     public const AUTO_BUDGET_ROLLOVER = 2;
 
     use SoftDeletes;
-    //
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function budget(): BelongsTo
+    {
+        return $this->belongsTo(Budget::class);
+    }
 }

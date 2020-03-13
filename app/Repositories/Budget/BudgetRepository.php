@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyIII\AutoBudget;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -282,10 +283,24 @@ class BudgetRepository implements BudgetRepositoryInterface
                     'name'    => $data['name'],
                 ]
             );
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.');
         }
 
+        // try to create associated auto budget:
+        $option = $data['auto_budget_option'] ?? 0;
+        if (0 === $option) {
+            return $newBudget;
+        }
+        $autoBudget = new AutoBudget;
+        $autoBudget->budget()->associate($newBudget);
+        $autoBudget->transaction_currency_id = $data['transaction_currency_id'] ?? 1;
+        $autoBudget->auto_budget_type        = $option;
+        $autoBudget->amount                  = $data['auto_budget_amount'] ?? '1';
+        $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
+        $autoBudget->save();
         return $newBudget;
     }
 

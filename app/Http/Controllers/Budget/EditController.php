@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\BudgetFormRequest;
+use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
@@ -90,12 +90,12 @@ class EditController extends Controller
     /**
      * Budget update routine.
      *
-     * @param BudgetFormRequest $request
-     * @param Budget            $budget
+     * @param BudgetFormUpdateRequest $request
+     * @param Budget                 $budget
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BudgetFormRequest $request, Budget $budget): RedirectResponse
+    public function update(BudgetFormUpdateRequest $request, Budget $budget): RedirectResponse
     {
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\AutoBudget;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -120,6 +121,16 @@ class Budget extends Model
     public function budgetlimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
+    }
+
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function autoBudgets(): HasMany
+    {
+        return $this->hasMany(AutoBudget::class);
     }
 
     /**

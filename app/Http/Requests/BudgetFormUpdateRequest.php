@@ -25,12 +25,10 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\Budget;
 
 /**
- * Class BudgetFormRequest.
- *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0, split for update/store
+ * Class BudgetFormUpdateRequest
  */
-class BudgetFormRequest extends Request
+class BudgetFormUpdateRequest extends Request
 {
     /**
      * Verify the request.
