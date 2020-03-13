@@ -43,10 +43,18 @@
             </select>
         </div>
         <div class="col-sm-8">
+            <div class="input-group">
             <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
                    name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
                    :title="this.title" autocomplete="off" :placeholder="this.title">
-
+                <span class="input-group-btn">
+                <button
+                        v-on:click="clearAmount"
+                        tabIndex="-1"
+                        class="btn btn-default"
+                        type="button"><i class="fa fa-trash-o"></i></button>
+                </span>
+            </div>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -88,6 +96,12 @@
             }
         },
         methods: {
+            clearAmount: function () {
+                this.$refs.amount.value = '';
+                this.$emit('input', this.$refs.amount.value);
+                // some event?
+                this.$emit('clear:amount')
+            },
             hasError: function () {
                 console.log('ForeignAmountSelect hasError');
                 return this.error.length > 0;

@@ -25,20 +25,32 @@
         </div>
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" 
-            @input="handleInput" 
-            ref="amount" 
-            :value="value" 
-            step="any" 
-            class="form-control"
-            name="amount[]"
-            :title="$t('firefly.amount')" 
-            autocomplete="off" 
-            v-bind:placeholder="$t('firefly.amount')">
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
+            <div class="input-group">
+                <input type="number"
+                       @input="handleInput"
+                       ref="amount"
+                       :value="value"
+                       step="any"
+                       class="form-control"
+                       name="amount[]"
+                       :title="$t('firefly.amount')"
+                       autocomplete="off"
+                       v-bind:placeholder="$t('firefly.amount')">
+
+                <span class="input-group-btn">
+            <button
+                    v-on:click="clearAmount"
+                    tabIndex="-1"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+            </div>
         </div>
+
+        <ul class="list-unstyled" v-for="error in this.error">
+            <li class="text-danger">{{ error }}</li>
+        </ul>
+    </div>
     </div>
 </template>
 
@@ -56,6 +68,12 @@
         methods: {
             handleInput(e) {
                 this.$emit('input', this.$refs.amount.value);
+            },
+            clearAmount: function () {
+                this.$refs.amount.value = '';
+                this.$emit('input', this.$refs.amount.value);
+                // some event?
+                this.$emit('clear:amount')
             },
             hasError: function () {
                 return this.error.length > 0;

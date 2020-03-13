@@ -20,6 +20,7 @@
 
 <template>
     <div>
+        <p class="help-block" v-html="$t('firefly.hidden_fields_preferences')"></p>
         <component
                 :error="error.interest_date"
                 v-model="value.interest_date" v-if="this.fields.interest_date" name="interest_date[]" v-bind:title="$t('form.interest_date')" v-bind:is="dateComponent"></component>
@@ -51,8 +52,6 @@
         <component
                 :error="error.notes"
                 v-model="value.notes" v-if="this.fields.notes" name="notes[]" v-bind:title="$t('firefly.notes')" v-bind:is="textareaComponent"></component>
-
-
     </div>
 </template>
 

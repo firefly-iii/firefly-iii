@@ -62,12 +62,16 @@
 </template>
 
 <script>
+    import Autocomplete from '@trevoreyre/autocomplete-vue'
     export default {
         props: ['error', 'value', 'index'],
         name: "TransactionDescription",
         mounted() {
             this.target = this.$refs.descr;
             this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/transaction-journals/all?search=";
+        },
+        components: {
+            Autocomplete
         },
         data() {
             return {
@@ -78,14 +82,17 @@
             }
         },
         methods: {
+            search: function(input) {
+                return ['ab','cd'];
+            },
             hasError: function () {
                 return this.error.length > 0;
             },
             clearDescription: function () {
                 //props.value = '';
-                this.name = '';
-                this.$refs.input.value = '';
-                this.$emit('input', this.$refs.input.value);
+                this.description = '';
+                this.$refs.descr.value = '';
+                this.$emit('input', this.$refs.descr.value);
                 // some event?
                 this.$emit('clear:description')
             },

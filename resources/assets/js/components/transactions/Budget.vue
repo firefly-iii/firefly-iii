@@ -41,6 +41,7 @@
                     :value="cBudget.id">{{cBudget.name}}
                 </option>
             </select>
+            <p class="help-block" v-if="this.budgets.length === 1" v-html="$t('firefly.no_budget_pointer')"></p>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>

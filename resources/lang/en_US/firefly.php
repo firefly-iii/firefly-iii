@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days days of data may take a while to load.',
     'registered'                                 => 'You have registered successfully!',
     'Default asset account'                      => 'Default asset account',
-    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href=":link">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Savings account',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Source account(s)',
@@ -1308,7 +1308,7 @@ return [
     'store_configuration'              => 'Store configuration',
     'single_user_administration'       => 'User administration for :email',
     'edit_user'                        => 'Edit user :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'User data',
     'user_information'                 => 'User information',
     'total_size'                       => 'total size',
@@ -1431,6 +1431,7 @@ return [
     'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
     'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
     'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
     //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

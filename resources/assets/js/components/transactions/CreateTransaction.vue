@@ -40,24 +40,6 @@
                 </div>
             </div>
         </div>
-        <div class="row" v-if="transactions.length > 1">
-            <div class="col-lg-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            {{ $t('firefly.split_transaction_title')}}
-                        </h3>
-                    </div>
-                    <div class="box-body">
-                        <group-description
-                                :error="group_title_errors"
-                                v-model="group_title"
-                        ></group-description>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div>
             <div class="row" v-for="(transaction, index) in transactions">
                 <div class="col-lg-12">
@@ -174,8 +156,25 @@
                 </div>
             </div>
         </div>
+        <div class="row" v-if="transactions.length > 1">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ $t('firefly.split_transaction_title')}}
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <group-description
+                                :error="group_title_errors"
+                                v-model="group_title"
+                        ></group-description>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
@@ -188,6 +187,8 @@
                                 <input v-model="createAnother" name="create_another" type="checkbox">
                                 {{ $t('firefly.create_another') }}
                             </label>
+                        </div>
+                        <div class="checkbox">
                             <label v-bind:class="{ 'text-muted': this.createAnother === false}">
                                 <input v-model="resetFormAfter" :disabled="this.createAnother === false"
                                        name="reset_form" type="checkbox">
