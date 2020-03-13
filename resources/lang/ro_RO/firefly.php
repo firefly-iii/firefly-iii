@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(nici un buget)',
     'account_per_budget'                        => 'Cont pe buget',
     'account_per_category'                      => 'Cont pe categorie',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(gol)',
     'all_other_budgets'                         => '(toate celelalte bugete)',
     'all_other_accounts'                        => '(toate celelalte conturi)',

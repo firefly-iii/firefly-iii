@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(žádný rozpočet)',
     'account_per_budget'                        => 'Účty pro jednotlivé rozpočty',
     'account_per_category'                      => 'Účty pro jednotlivé kategorie',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(prázdné)',
     'all_other_budgets'                         => '(všechny ostatní rozpočty)',
     'all_other_accounts'                        => '(všechny ostatní účty)',

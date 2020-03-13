@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(вне бюджета)',
     'account_per_budget'                        => 'Счёт в бюджете',
     'account_per_category'                      => 'Счёт по категории',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(пусто)',
     'all_other_budgets'                         => '(все остальные бюджеты)',
     'all_other_accounts'                        => '(все остальные счета)',

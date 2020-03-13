@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(nincs költségkeret)',
     'account_per_budget'                        => 'Account per budget',
     'account_per_category'                      => 'Account per category',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(üres)',
     'all_other_budgets'                         => '(minden más költségkeret)',
     'all_other_accounts'                        => '(minden más számla)',

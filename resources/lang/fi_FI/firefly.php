@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(ei budjettia)',
     'account_per_budget'                        => 'Tili per budjetti',
     'account_per_category'                      => 'Tili per kategoria',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(tyhjä)',
     'all_other_budgets'                         => '(kaikki muut budjetit)',
     'all_other_accounts'                        => '(kaikki muut tilit)',

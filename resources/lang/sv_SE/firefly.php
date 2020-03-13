@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(ingen budget)',
     'account_per_budget'                        => 'Konto per budget',
     'account_per_category'                      => 'Konto per etikett',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(tom)',
     'all_other_budgets'                         => '(övriga budgetar)',
     'all_other_accounts'                        => '(alla övriga konton)',

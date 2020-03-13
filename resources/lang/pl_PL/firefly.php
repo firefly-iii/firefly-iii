@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(brak budżetu)',
     'account_per_budget'                        => 'Account per budget',
     'account_per_category'                      => 'Account per category',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(pusty)',
     'all_other_budgets'                         => '(wszystkie inne budżety)',
     'all_other_accounts'                        => '(wszystkie inne konta)',

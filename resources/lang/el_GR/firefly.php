@@ -970,6 +970,7 @@ return [
     'no_budget'                                 => '(χωρίς προϋπολογισμό)',
     'account_per_budget'                        => 'Λογαριασμός ανά προϋπολογισμό',
     'account_per_category'                      => 'Λογαριασμοί ανά κατηγορία',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(κενό)',
     'all_other_budgets'                         => '(όλοι οι άλλοι προϋπολογισμοί)',
     'all_other_accounts'                        => '(όλοι οι άλλοι λογαριασμοί)',
