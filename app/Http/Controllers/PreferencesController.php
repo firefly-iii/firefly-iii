@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -59,10 +60,29 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+
+        // group accounts
+        $groupedAccounts = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $type = $account->accountType->type;
+            $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+
+            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
+                $role = sprintf('opt_group_l_%s',$type);
+            }
+
+            if ('' === $role || 'opt_group_' === $role) {
+                $role = 'opt_group_defaultAsset';
+            }
+            $groupedAccounts[trans(sprintf('firefly.%s',$role))][$account->id] = $account->name;
+        }
+        ksort($groupedAccounts);
+
         $accountIds    = $accounts->pluck('id')->toArray();
         $viewRangePref = app('preferences')->get('viewRange', '1M');
-        /** @noinspection NullPointerExceptionInspection */
+
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
         $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
@@ -82,7 +102,7 @@ class PreferencesController extends Controller
             'preferences.index',
             compact(
                 'language',
-                'accounts',
+                'groupedAccounts',
                 'frontPageAccounts',
                 'tjOptionalFields',
                 'viewRange',
@@ -135,7 +155,7 @@ class PreferencesController extends Controller
         // language:
         /** @var Preference $currentLang */
         $currentLang = app('preferences')->get('language', 'en_US');
-        $lang = $request->get('language');
+        $lang        = $request->get('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
             app('preferences')->set('language', $lang);
         }
