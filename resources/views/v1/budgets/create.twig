@@ -23,7 +23,21 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for auto-budget#}
-                abc
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.select('auto_budget_option', autoBudgetOptions) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id') }}
+                        {{ ExpandedForm.amountNoCurrency('auto_budget_amount') }}
+                        {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, null) }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn pull-right btn-success">{{ 'store_new_budget'|_ }}</button>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="row">

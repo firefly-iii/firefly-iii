@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 
+use FireflyIII\AutoBudget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -68,6 +69,29 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
+        $hasOldInput = null !== $request->old('_token');
+
+        // auto budget options
+        $autoBudgetOptions = [
+            0 => (string)trans('firefly.auto_budget_none'),
+            AutoBudget::AUTO_BUDGET_RESET => (string)trans('firefly.auto_budget_reset'),
+            AutoBudget::AUTO_BUDGET_ROLLOVER => (string)trans('firefly.auto_budget_rollover'),
+        ];
+        $autoBudgetPeriods = [
+            'daily'     => (string)trans('firefly.auto_budget_period_daily'),
+            'weekly'    => (string)trans('firefly.auto_budget_period_weekly'),
+            'monthly'   => (string)trans('firefly.auto_budget_period_monthly'),
+            'quarterly' => (string)trans('firefly.auto_budget_period_quarterly'),
+            'half_year' => (string)trans('firefly.auto_budget_period_half_year'),
+            'yearly'    => (string)trans('firefly.auto_budget_period_yearly'),
+        ];
+
+        $preFilled = [
+            'auto_budget_period' => $hasOldInput ? (bool)$request->old('auto_budget_period') : 'monthly',
+        ];
+
+        $request->session()->flash('preFilled', $preFilled);
+
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('budgets.create.fromStore')) {
             $this->rememberPreviousUri('budgets.create.uri');
@@ -75,7 +99,7 @@ class CreateController extends Controller
         $request->session()->forget('budgets.create.fromStore');
         $subTitle = (string)trans('firefly.create_new_budget');
 
-        return view('budgets.create', compact('subTitle'));
+        return view('budgets.create', compact('subTitle', 'autoBudgetOptions', 'autoBudgetPeriods'));
     }
 
 
