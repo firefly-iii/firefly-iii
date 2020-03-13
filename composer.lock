@@ -5230,7 +5230,7 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v7.1.1",
+            "version": "v7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
