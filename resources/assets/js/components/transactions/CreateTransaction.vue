@@ -214,11 +214,60 @@
         components: {},
         mounted() {
             this.addTransactionToArray();
-        },
-        ready() {
-
+            document.onreadystatechange = () => {
+                if (document.readyState === "complete") {
+                    this.prefillSourceAccount();
+                    this.prefillDestinationAccount();
+                }
+            }
         },
         methods: {
+            prefillSourceAccount() {
+                if (0 === window.sourceId) {
+                    return;
+                }
+                this.getAccount(window.sourceId, 'source_account');
+            },
+            prefillDestinationAccount() {
+                if (0 === destinationId) {
+                    return;
+                }
+                this.getAccount(window.destinationId, 'destination_account');
+            },
+            getAccount(accountId, slot) {
+                const uri = './api/v1/accounts/' + accountId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                axios.get(uri).then(response => {
+                    let model = response.data.data.attributes;
+                    model.type = this.fullAccountType(model.type, model.liability_type);
+                    model.id = parseInt(response.data.data.id);
+                    if ('source_account' === slot) {
+                        this.selectedSourceAccount(0, model);
+                    }
+                    if('destination_account' === slot) {
+                        this.selectedDestinationAccount(0, model);
+                    }
+                }).catch(error => {
+                    console.warn('Could  not auto fill account');
+                    console.warn(error);
+                });
+
+            },
+            fullAccountType: function (shortType, liabilityType) {
+                let searchType = shortType;
+                if ('liabilities' === shortType) {
+                    searchType = liabilityType;
+                }
+                let arr = {
+                    'asset': 'Asset account',
+                    'loan': 'Loan',
+                    'debt': 'Debt',
+                    'mortgage': 'Mortgage'
+                };
+                let value = arr[searchType] ?? searchType;
+
+                console.log('FULL account type: ' + value);
+                return value;
+            },
             convertData: function () {
                 // console.log('Now in convertData()');
                 let data = {
@@ -239,12 +288,13 @@
                 // the presence of a source or destination account
                 firstSource = this.transactions[0].source_account.type;
                 firstDestination = this.transactions[0].destination_account.type;
+                console.log('Type of first source is  ' + firstSource);
 
-                if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+                if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
                     transactionType = 'withdrawal';
                 }
 
-                if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
+                if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
                     transactionType = 'deposit';
                 }
 
@@ -759,11 +809,13 @@
             },
 
             selectedSourceAccount: function (index, model) {
-                // console.log('Now in selectedSourceAccount()');
+                console.log('Now in selectedSourceAccount()');
                 if (typeof model === 'string') {
+                    console.log('model is string.')
                     // cant change types, only name.
                     this.transactions[index].source_account.name = model;
                 } else {
+                    console.log('model is NOT string.')
                     this.transactions[index].source_account = {
                         id: model.id,
                         name: model.name,
@@ -773,12 +825,14 @@
                         currency_code: model.currency_code,
                         currency_decimal_places: model.currency_decimal_places,
                         allowed_types: this.transactions[index].source_account.allowed_types,
-                        default_allowed_types: ['Asset account','Revenue account','Loan','Debt','Mortgage']
+                        default_allowed_types: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage']
                     };
 
                     // force types on destination selector.
                     this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
                 }
+                console.log('Transactions:');
+                console.log(this.transactions);
             },
             selectedDestinationAccount: function (index, model) {
                 // console.log('Now in selectedDestinationAccount()');

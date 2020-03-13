@@ -115,6 +115,10 @@
             transactionType() {
                 this.triggerTransactionType();
             },
+            accountName() {
+              console.log('AccountSelect watch accountName!');
+              this.name = this.accountName;
+            },
             accountTypeFilters() {
                 let types = this.accountTypeFilters.join(',');
                 if (0 === this.accountTypeFilters.length) {

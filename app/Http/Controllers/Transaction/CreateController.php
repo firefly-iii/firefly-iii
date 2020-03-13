@@ -90,6 +90,9 @@ class CreateController extends Controller
     {
         app('preferences')->mark();
 
+        $sourceId      = (int)request()->get('source');
+        $destinationId = (int)request()->get('destination');
+
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
@@ -112,7 +115,7 @@ class CreateController extends Controller
             'transactions.create', compact(
                                      'subTitleIcon', 'cash', 'objectType', 'subTitle', 'defaultCurrency', 'previousUri', 'optionalFields', 'preFilled',
                                      'allowedOpposingTypes',
-                                     'accountToTypes'
+                                     'accountToTypes','sourceId','destinationId'
                                  )
         );
     }

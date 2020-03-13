@@ -14,5 +14,7 @@
         var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
         var cashAccountId = {{ cash.id }};
         var previousUri = '{{ previousUri }}';
+        window.sourceId = {{ sourceId }};
+        window.destinationId = {{ destinationId }};
     </script>
 {% endblock %}

@@ -68,7 +68,7 @@
 
         props: ['source', 'destination', 'transactionType', 'value', 'error', 'no_currency', 'title',],
         mounted() {
-            console.log('ForeignAmountSelect mounted()');
+            //console.log('ForeignAmountSelect mounted()');
             this.liability = false;
             this.loadCurrencies();
         },
@@ -83,15 +83,15 @@
         },
         watch: {
             source: function () {
-                console.log('ForeignAmountSelect watch source');
+                //console.log('ForeignAmountSelect watch source');
                 this.changeData();
             },
             destination: function () {
-                console.log('ForeignAmountSelect watch destination');
+                //console.log('ForeignAmountSelect watch destination');
                 this.changeData();
             },
             transactionType: function () {
-                console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
+                //console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
                 this.changeData();
             }
         },
@@ -103,11 +103,11 @@
                 this.$emit('clear:amount')
             },
             hasError: function () {
-                console.log('ForeignAmountSelect hasError');
+                //console.log('ForeignAmountSelect hasError');
                 return this.error.length > 0;
             },
             handleInput(e) {
-                console.log('ForeignAmountSelect handleInput');
+                //console.log('ForeignAmountSelect handleInput');
                 let obj = {
                     amount: this.$refs.amount.value,
                     currency_id: this.$refs.currency_select.value,
@@ -117,7 +117,7 @@
                 );
             },
             changeData: function () {
-                console.log('ForeignAmountSelect changeData');
+                //console.log('ForeignAmountSelect changeData');
                 this.enabledCurrencies = [];
                 let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
                 let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';

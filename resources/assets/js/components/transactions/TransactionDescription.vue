@@ -62,7 +62,6 @@
 </template>
 
 <script>
-    import Autocomplete from '@trevoreyre/autocomplete-vue'
     export default {
         props: ['error', 'value', 'index'],
         name: "TransactionDescription",
@@ -71,7 +70,6 @@
             this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/transaction-journals/all?search=";
         },
         components: {
-            Autocomplete
         },
         data() {
             return {
