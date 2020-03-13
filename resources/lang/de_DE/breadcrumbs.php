@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Schlagwort „:tag” bearbeiten',
     'delete_tag'             => 'Schlagwort „:tag” löschen',
     'delete_journal_link'    => 'Transaktionsverknüpfung löschen',
+    'telemetry_index'        => 'Telemetrie',
+    'telemetry_view'         => 'Telemetrie anzeigen',
 ];

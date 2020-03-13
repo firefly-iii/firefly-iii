@@ -57,4 +57,6 @@ return [
     'edit_tag'               => '编辑标签 ":tag"',
     'delete_tag'             => '删除标签 ":tag"',
     'delete_journal_link'    => '删除交易记录之间的连结',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

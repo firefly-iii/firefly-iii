@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days hari data mungkin perlu beberapa saat untuk memuat.',
     'registered'                                 => 'Anda telah berhasil mendaftar!',
     'Default asset account'                      => 'Akun aset standar',
-    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href=":link">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Rekening tabungan',
     'Credit card'                                => 'Kartu kredit',
     'source_accounts'                            => 'Akun sumber',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Penarikan yang berhasil dihapus ":description"',
     'deleted_deposit'                           => 'Berhasil menghapus deposit ":description"',
     'deleted_transfer'                          => 'Berhasil menghapus transfer ":description"',
+    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
     'stored_journal'                            => 'Berhasil membuat transaksi baru ":description"',
     'stored_journal_no_descr'                   => 'Successfully created your new transaction',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',
@@ -1103,7 +1104,8 @@ return [
     'errors'                                    => 'Kesalahan',
     'debt_start_date'                           => 'Start date of debt',
     'debt_start_amount'                         => 'Start amount of debt',
-    'debt_start_amount_help'                    => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Store new liability',
     'edit_liabilities_account'                  => 'Edit liability ":name"',
 
@@ -1306,7 +1308,7 @@ return [
     'store_configuration'              => 'Konfigurasi toko',
     'single_user_administration'       => 'Administrasi pengguna untuk :email',
     'edit_user'                        => 'Edit pengguna :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Data pengguna',
     'user_information'                 => 'Informasi pengguna',
     'total_size'                       => 'ukuran total',
@@ -1429,6 +1431,7 @@ return [
     'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
     'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
     'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
     //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Fungsi ini tidak tersedia saat Anda menggunakan Firefly III di dalam lingkungan Sandstorm.io.',
@@ -1564,4 +1567,20 @@ return [
     'box_net_worth_in_currency'          => 'Net worth (:currency)',
     'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];

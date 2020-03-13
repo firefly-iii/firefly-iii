@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Muokkaa tägiä ":tag"',
     'delete_tag'             => 'Poista tägi ":tag"',
     'delete_journal_link'    => 'Poista linkki tapahtumien väliltä',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

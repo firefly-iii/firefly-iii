@@ -57,4 +57,6 @@ return [
     'edit_tag'               => '":tag" etiketini düzenle',
     'delete_tag'             => '":tag" etiketini sil',
     'delete_journal_link'    => 'Hesap hareketleri arasındaki bağlantıyı sil',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

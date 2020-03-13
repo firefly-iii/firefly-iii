@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Редактирование метки ":tag"',
     'delete_tag'             => 'Удаление метки ":tag"',
     'delete_journal_link'    => 'Удалить связь между транзакциями',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

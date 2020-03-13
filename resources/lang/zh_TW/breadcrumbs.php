@@ -57,4 +57,6 @@ return [
     'edit_tag'               => '編輯標籤 ":tag"',
     'delete_tag'             => '刪除標籤 ":tag"',
     'delete_journal_link'    => '刪除交易記錄之間的連結',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Edit label ":tag"',
     'delete_tag'             => 'Hapus label ":tag"',
     'delete_journal_link'    => 'Hapus tautan antar transaksi',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

@@ -57,4 +57,6 @@ return [
     'edit_tag'               => 'Editează eticheta ":tag"',
     'delete_tag'             => 'Șterge eticheta ":tag"',
     'delete_journal_link'    => 'Şterge legătura dintre tranzacţii',
+    'telemetry_index'        => 'Telemetry',
+    'telemetry_view'         => 'View telemetry',
 ];

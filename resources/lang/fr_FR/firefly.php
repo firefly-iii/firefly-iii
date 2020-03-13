@@ -95,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'J’ai oublié mon code d\'identification à deux facteurs.',
     'two_factor_lost_header'                     => 'Perdu votre authentification à deux facteurs ?',
     'two_factor_lost_intro'                      => 'Si vous avez aussi perdu vos codes de récupération, vous n\'avez pas de chance. Ce n\'est pas quelque chose que vous pouvez corriger depuis l\'interface web. Vous avez deux choix.',
-    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'                   => 'Si vous exécutez votre propre instance de Firefly III, lisez <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">cette entrée dans la FAQ</a> pour obtenir des instructions.',
     'two_factor_lost_fix_owner'                  => 'Dans le cas contraire, contactez le propriétaire du site par courriel <a href="mailto::site_owner">:site_owner</a> et demandez-lui de réinitialiser votre authentification à deux facteurs.',
     'mfa_backup_code'                            => 'Vous avez utilisé un code de récupération pour vous connecter à Firefly III. Il ne peut être réutilisé, donc rayez-le de votre liste.',
     'pref_two_factor_new_backup_codes'           => 'Obtenir de nouveaux codes de récupération',
@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days jours de données peuvent prendre un certain temps à charger.',
     'registered'                                 => 'Vous avez été enregistré avec succès !',
     'Default asset account'                      => 'Compte d’actif par défaut',
-    'no_budget_pointer'                          => 'Vous semblez n’avoir encore aucun budget. Vous devriez en créer un sur la page des <a href=":link">budgets</a>. Les budgets peuvent vous aider à garder une trace des dépenses.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Compte d’épargne',
     'Credit card'                                => 'Carte de Crédit',
     'source_accounts'                            => 'Compte(s) source',
@@ -944,6 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Retrait ":description" correctement supprimé',
     'deleted_deposit'                           => 'Dépôt ":description" correctement supprimé',
     'deleted_transfer'                          => 'Opération ":description" correctement supprimée',
+    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
     'stored_journal'                            => 'Opération ":description" créée avec succès',
     'stored_journal_no_descr'                   => 'Nouvelle opération créée avec succès',
     'updated_journal_no_descr'                  => 'Votre opération a été mise à jour avec succès',
@@ -1103,7 +1104,8 @@ return [
     'errors'                                    => 'Erreurs',
     'debt_start_date'                           => 'Date de début de la dette',
     'debt_start_amount'                         => 'Montant initial de la dette',
-    'debt_start_amount_help'                    => 'Si vous devez une somme, il est préférable d\'entrer un montant négatif parce que cela influence votre avoir net. Si vous êtes redevable d\'une somme, la même chose s\'applique. Consultez les pages d\'aide pour plus d\'informations.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Enregistrer un nouveau passif',
     'edit_liabilities_account'                  => 'Modifier le passif ":name"',
 
@@ -1306,7 +1308,7 @@ return [
     'store_configuration'              => 'Sauvegarder la configuration',
     'single_user_administration'       => 'Gestion de l\'utilisateur pour :email',
     'edit_user'                        => 'Modifier l\'utilisateur :email',
-    'hidden_fields_preferences'        => 'Vous pouvez activer plus d\'options d\'opération dans vos <a href=":link">paramètres</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Données utilisateur',
     'user_information'                 => 'Informations utilisateur',
     'total_size'                       => 'taille totale',
@@ -1429,6 +1431,7 @@ return [
     'tools_index_intro'                     => 'Plusieurs outils permettent d\'importer des données dans Firefly III. Vous les retrouverez ci-dessous. Pour plus d\'informations, consultez <a href="https://docs.firefly-iii.org/importing-data/introduction">cette page</a> (en anglais).',
     'firefly_iii_csv_importer_name'         => 'Importation CSV Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Importation Bunq Firefly III',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
     //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Cette fonction n\'est pas disponible lorsque vous utilisez Firefly III dans un environnement Sandstorm.io.',
@@ -1564,4 +1567,20 @@ return [
     'box_net_worth_in_currency'          => 'Avoir net (:currency)',
     'box_spend_per_day'                  => 'Reste à dépenser par jour: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry'
 ];
