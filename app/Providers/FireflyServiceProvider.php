@@ -58,6 +58,7 @@ use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\Support\Telemetry;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Validator;
@@ -91,33 +92,33 @@ class FireflyServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'preferences',
-            function () {
+            static function () {
                 return new Preferences;
             }
         );
 
         $this->app->bind(
             'fireflyconfig',
-            function () {
+            static function () {
                 return new FireflyConfig;
             }
         );
         $this->app->bind(
             'navigation',
-            function () {
+            static function () {
                 return new Navigation;
             }
         );
         $this->app->bind(
             'amount',
-            function () {
+            static function () {
                 return new Amount;
             }
         );
 
         $this->app->bind(
             'steam',
-            function () {
+            static function () {
                 return new Steam;
             }
         );
@@ -152,6 +153,13 @@ class FireflyServiceProvider extends ServiceProvider
             'ruleform',
             static function () {
                 return new RuleForm;
+            }
+        );
+
+        $this->app->bind(
+            'telemetry',
+            static function () {
+                return new Telemetry;
             }
         );
 
