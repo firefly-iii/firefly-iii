@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Noston ":description" poisto onnistui',
     'deleted_deposit'                           => 'Talletuksen ":description" poisto onnistui',
     'deleted_transfer'                          => 'Siirron ":description" poisto onnistui',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Loit onnistuneesti uuden tapahtuman ":description"',
     'stored_journal_no_descr'                   => 'Loit onnistuneesti uuden tapahtumasi',
     'updated_journal_no_descr'                  => 'Päivitit tapahtumaasi onnistuneesti',

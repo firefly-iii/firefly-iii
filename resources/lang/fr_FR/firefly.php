@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Retrait ":description" correctement supprimé',
     'deleted_deposit'                           => 'Dépôt ":description" correctement supprimé',
     'deleted_transfer'                          => 'Opération ":description" correctement supprimée',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Opération ":description" créée avec succès',
     'stored_journal_no_descr'                   => 'Nouvelle opération créée avec succès',
     'updated_journal_no_descr'                  => 'Votre opération a été mise à jour avec succès',

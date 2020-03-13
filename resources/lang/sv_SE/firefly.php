@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Uttag ":description" har tagits bort',
     'deleted_deposit'                           => 'Insättning ":description" har tagits bort',
     'deleted_transfer'                          => 'Överföring ":description" har tagits bort',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Transaktion ":description" har tagits bort',
     'stored_journal_no_descr'                   => 'Ny transaktion skapades lyckat',
     'updated_journal_no_descr'                  => 'Transaktion har uppdaterats',

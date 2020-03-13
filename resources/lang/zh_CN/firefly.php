@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => '已成功删除提款 ”:description“',
     'deleted_deposit'                           => '已成功删除存款 ”:description“',
     'deleted_transfer'                          => '已成功删除转帐 ”:description“',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => '已成功建立新交易 ”:description“',
     'stored_journal_no_descr'                   => '成功创建您的新交易',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',

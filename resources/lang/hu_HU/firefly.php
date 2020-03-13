@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'A költség sikeresen törölve ":description"',
     'deleted_deposit'                           => '":description" bevétel sikeresen törölve',
     'deleted_transfer'                          => '":description" átvezetés sikeresen törölve',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => '":description" új tranzakció sikeresen létrehozva',
     'stored_journal_no_descr'                   => 'Új tranzakció sikeresen létrehozva',
     'updated_journal_no_descr'                  => 'Tranzakció sikeresen frissítve',

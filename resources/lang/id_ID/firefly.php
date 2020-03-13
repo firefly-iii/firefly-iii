@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Penarikan yang berhasil dihapus ":description"',
     'deleted_deposit'                           => 'Berhasil menghapus deposit ":description"',
     'deleted_transfer'                          => 'Berhasil menghapus transfer ":description"',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Berhasil membuat transaksi baru ":description"',
     'stored_journal_no_descr'                   => 'Successfully created your new transaction',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',

@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Úspěšně smazán výběr „:description“',
     'deleted_deposit'                           => 'Úspěšně smazán vklad „:description“',
     'deleted_transfer'                          => 'Úspěšně smazán převod „:description“',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Úspěšně vytvořena nová transakce „:description“',
     'stored_journal_no_descr'                   => 'Successfully created your new transaction',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',

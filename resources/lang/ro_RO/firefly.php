@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Retragerea ":description" ștearsă cu succes',
     'deleted_deposit'                           => 'Depozitul ":description" șters cu succes',
     'deleted_transfer'                          => 'Transferul ":description" șters cu succes',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'A fost creată cu succes o tranzacție nouă ":description"',
     'stored_journal_no_descr'                   => 'Tranzacția s-a creat cu succes',
     'updated_journal_no_descr'                  => 'Tranzacția s-a actualizat cu succes',

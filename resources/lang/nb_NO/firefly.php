@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Slettet uttak ":description"',
     'deleted_deposit'                           => 'Slettet innskudd ":description"',
     'deleted_transfer'                          => 'Slettet overføring ":description"',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Opprettet ny transaksjon ":description"',
     'stored_journal_no_descr'                   => 'Successfully created your new transaction',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',

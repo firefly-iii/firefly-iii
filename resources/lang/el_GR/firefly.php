@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Επιτυχής διαγραφή της ανάληψης ":description"',
     'deleted_deposit'                           => 'Επιτυχής διαγραφή της κατάθεσης ":description"',
     'deleted_transfer'                          => 'Επιτυχής διαγραφή της μεταφοράς ":description"',
-    'deleted_reconciliation'                    =>'Επιτυχής τακτοποίηση συναλλαγής ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή ":description"',
     'stored_journal_no_descr'                   => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή',
     'updated_journal_no_descr'                  => 'Ενημερώθηκε επιτυχώς η συναλλαγή σας',

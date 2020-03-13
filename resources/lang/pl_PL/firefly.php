@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Pomyślnie usunięto wypłatę ":description"',
     'deleted_deposit'                           => 'Pomyślnie usunięto depozyt ":description"',
     'deleted_transfer'                          => 'Pomyślnie usunięto transfer ":description"',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Pomyślnie utworzono nową transakcję ":description"',
     'stored_journal_no_descr'                   => 'Pomyślnie utworzono nową transakcję',
     'updated_journal_no_descr'                  => 'Pomyślnie zaktualizowano Twoją transakcję',

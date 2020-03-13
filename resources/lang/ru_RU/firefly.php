@@ -944,7 +944,7 @@ return [
     'deleted_withdrawal'                        => 'Расход ":description" успешно удалён',
     'deleted_deposit'                           => 'Доход ":description" успешно удалён',
     'deleted_transfer'                          => 'Перевод ":description" успешно удалён',
-    'deleted_reconciliation'                    =>'Successfully reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Новая транзакция ":description" успешно создана',
     'stored_journal_no_descr'                   => 'Ваша новая транзакция успешно создана',
     'updated_journal_no_descr'                  => 'Ваша транзакция успешно обновлена',

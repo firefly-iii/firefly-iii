@@ -197,7 +197,7 @@ return [
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
     'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
-    'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
-    'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
-    'gte.array'   => 'The :attribute must have :value items or more.',
+    'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',
+    'gte.string'  => ':attribute muss mindestens :value Zeichen enthalten.',
+    'gte.array'   => ':attribute muss mindestens :value Elemente enthalten.',
 ];
