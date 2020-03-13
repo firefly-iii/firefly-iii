@@ -260,4 +260,9 @@ return [
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
 
+    'auto_budget_option'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+
 ];

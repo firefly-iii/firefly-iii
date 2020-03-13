@@ -783,6 +783,15 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
 
     // bills:
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
