@@ -50,7 +50,7 @@ class BudgetFormStoreRequest extends Request
         return [
             'name'                    => $this->string('name'),
             'active'                  => $this->boolean('active'),
-            'auto_budget_type'      => $this->integer('auto_budget_type'),
+            'auto_budget_type'        => $this->integer('auto_budget_type'),
             'transaction_currency_id' => $this->integer('transaction_currency_id'),
             'auto_budget_amount'      => $this->string('auto_budget_amount'),
             'auto_budget_period'      => $this->string('auto_budget_period'),
@@ -67,8 +67,8 @@ class BudgetFormStoreRequest extends Request
         return [
             'name'                    => 'required|between:1,100|uniqueObjectForUser:budgets,name',
             'active'                  => 'numeric|between:0,1',
-            'auto_budget_option'      => 'numeric|between:0,2',
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'auto_budget_type'        => 'numeric|between:0,2',
+            'auto_budget_currency_id' => 'required|exists:transaction_currencies,id',
             'auto_budget_amount'      => 'min:0|max:1000000000',
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         ];

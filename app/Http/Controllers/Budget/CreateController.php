@@ -71,8 +71,8 @@ class CreateController extends Controller
     {
         $hasOldInput = null !== $request->old('_token');
 
-        // auto budget options
-        $autoBudgetOptions = [
+        // auto budget types
+        $autoBudgetTypes = [
             0 => (string)trans('firefly.auto_budget_none'),
             AutoBudget::AUTO_BUDGET_RESET => (string)trans('firefly.auto_budget_reset'),
             AutoBudget::AUTO_BUDGET_ROLLOVER => (string)trans('firefly.auto_budget_rollover'),
@@ -101,7 +101,7 @@ class CreateController extends Controller
         $request->session()->forget('budgets.create.fromStore');
         $subTitle = (string)trans('firefly.create_new_budget');
 
-        return view('budgets.create', compact('subTitle', 'autoBudgetOptions', 'autoBudgetPeriods'));
+        return view('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
     }
 
 

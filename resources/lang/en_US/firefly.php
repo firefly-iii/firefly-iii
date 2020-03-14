@@ -792,6 +792,7 @@ return [
     'auto_budget_period_quarterly'              => 'Quarterly',
     'auto_budget_period_half_year'              => 'Every half year',
     'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
 
     // bills:
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
