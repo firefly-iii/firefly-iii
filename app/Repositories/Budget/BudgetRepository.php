@@ -348,7 +348,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('none' === $autoBudgetType) {
             $autoBudgetType = 0;
         }
-
         if (0 !== $autoBudgetType) {
             $autoBudget = $this->getAutoBudget($budget);
             if (null === $autoBudget) {

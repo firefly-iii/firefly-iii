@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
@@ -72,8 +72,9 @@ class EditController extends Controller
     {
         $subTitle   = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
         $autoBudget = $this->repository->getAutoBudget($budget);
-        // auto budget options
-        $autoBudgetOptions = [
+
+        // auto budget types
+        $autoBudgetTypes   = [
             0                                => (string)trans('firefly.auto_budget_none'),
             AutoBudget::AUTO_BUDGET_RESET    => (string)trans('firefly.auto_budget_reset'),
             AutoBudget::AUTO_BUDGET_ROLLOVER => (string)trans('firefly.auto_budget_rollover'),
@@ -89,15 +90,13 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
+        $currency    = app('amount')->getDefaultCurrency();
         $preFilled   = [
-            'active'             => $hasOldInput ? (bool)$request->old('active') : $budget->active,
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $budget->active,
+            'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
         if($autoBudget) {
             $preFilled['auto_budget_amount'] = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
-            //'auto_budget_option'      => $request->,
-            //'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            //'auto_budget_amount' => $request->old('auto_budget_amount'),
-            //'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -107,7 +106,7 @@ class EditController extends Controller
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('budgets.edit', compact('budget', 'subTitle', 'autoBudgetOptions', 'autoBudgetPeriods', 'autoBudget'));
+        return view('budgets.edit', compact('budget', 'subTitle', 'autoBudgetTypes', 'autoBudgetPeriods', 'autoBudget'));
     }
 
     /**

@@ -28,8 +28,8 @@
                     <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.select('auto_budget_option', autoBudgetOptions, autoBudget.auto_budget_type) }}
-                    {{ CurrencyForm.currencyList('transaction_currency_id', autoBudget.transaction_currency_id) }}
+                    {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
+                    {{ CurrencyForm.currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
                     {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
                     {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
                 </div>
