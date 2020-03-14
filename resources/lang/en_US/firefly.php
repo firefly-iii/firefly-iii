@@ -218,6 +218,7 @@ return [
     'unpaid_in_currency'                         => 'Unpaid in :currency',
     'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
     'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',

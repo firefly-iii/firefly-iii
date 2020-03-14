@@ -488,6 +488,21 @@ Route::group(
 
     }
 );
+
+/**
+ * Chart\Transactions Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/transactions', 'as' => 'chart.transactions.'],
+    static function () {
+        Route::get('categories/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@categories', 'as' => 'categories']);
+        Route::get('budgets/{start_date}/{end_date}', ['uses' => 'TransactionController@budgets', 'as' => 'budgets']);
+        Route::get('destinationAccounts/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@destinationAccounts', 'as' => 'destinationAccounts']);
+        //
+
+    }
+);
+
 /**
  * Export controller
  */

@@ -15,6 +15,51 @@
         </div>
     {% endif %}
 
+    {% if periods|length > 0 %}
+
+        {% set boxSize = 'col-lg-6 col-md-6 col-sm-12 col-xs-12' %}
+        {% if objectType == 'withdrawal' %}
+            {% set boxSize = 'col-lg-4 col-md-6 col-sm-12 col-xs-12' %}
+        {% endif %}
+        <div class="row">
+            {# for withdrawals, deposits and transfers #}
+            <div class="{{ boxSize }}">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="category_chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+            {# only for withdrawals #}
+            {% if objectType == 'withdrawal' %}
+                <div class="{{ boxSize }}">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <canvas id="budget_chart" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {# for all #}
+            <div class="{{ boxSize }}">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'all_destination_accounts'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="destination_chart" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     {# list with journals #}
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
@@ -68,4 +113,18 @@
 {% block scripts %}
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var showAll = {% if periods|length > 0 %}false{% else %}true{% endif %};
+
+        var categoryChartUri = '{{ route('chart.transactions.categories', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var budgetChartUri = '{{ route('chart.transactions.budgets', [start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var destinationChartUri = '{{ route('chart.transactions.destinationAccounts', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+
+    </script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+
+    <script type="text/javascript" src="v1/js/ff/transactions/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
