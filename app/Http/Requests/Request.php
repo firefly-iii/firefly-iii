@@ -25,7 +25,9 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Exception;
+use FireflyIII\Models\AutoBudget;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 use Log;
 
 /**
@@ -383,6 +385,28 @@ class Request extends FormRequest
         Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
 
         return $data;
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    protected function validateAutoBudgetAmount(Validator $validator): void
+    {
+        $data   = $validator->getData();
+        $option = (int)$data['auto_budget_option'];
+        $amount = $data['auto_budget_amount'] ?? '';
+        switch ($option) {
+            case AutoBudget::AUTO_BUDGET_RESET:
+            case AutoBudget::AUTO_BUDGET_ROLLOVER:
+                // basic float check:
+                if ('' === $amount) {
+                    $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
+                }
+                if (1 !== bccomp((string)$amount, '0')) {
+                    $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
+                }
+                break;
+        }
     }
 
 }

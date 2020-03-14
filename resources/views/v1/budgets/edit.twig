@@ -22,8 +22,18 @@
 
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {# auto budget#}
-            bla bla
+            {# panel for auto-budget #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.select('auto_budget_option', autoBudgetOptions, autoBudget.auto_budget_type) }}
+                    {{ CurrencyForm.currencyList('transaction_currency_id', autoBudget.transaction_currency_id) }}
+                    {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
+                    {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">

@@ -49,10 +49,16 @@ class BudgetDestroyService
      */
     public function destroy(Budget $budget): void
     {
+
         try {
             $budget->delete();
         } catch (Exception $e) { // @codeCoverageIgnore
             Log::error(sprintf('Could not delete budget: %s', $e->getMessage())); // @codeCoverageIgnore
+        }
+
+        // also delete auto budget:
+        foreach ($budget->autoBudgets()->get() as $autoBudget) {
+            $autoBudget->delete();
         }
 
         // also delete all relations between categories and transaction journals:

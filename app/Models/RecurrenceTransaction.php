@@ -50,7 +50,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $recurrence_id
- * @property int $transaction_currency_id
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction newQuery()

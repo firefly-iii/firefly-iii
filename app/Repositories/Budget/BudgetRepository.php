@@ -25,7 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use DB;
 use Exception;
-use FireflyIII\AutoBudget;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -316,6 +316,22 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
+
+        // update or create auto-budget:
+        $autoBudgetType = $data['auto_budget_option'] ?? 0;
+        if (0 !== $autoBudgetType) {
+            $autoBudget = $this->getAutoBudget($budget);
+            if (null === $autoBudget) {
+                $autoBudget = new AutoBudget;
+                $autoBudget->budget()->associate($budget);
+            }
+            $autoBudget->transaction_currency_id = $data['transaction_currency_id'] ?? 1;
+            $autoBudget->auto_budget_type        = $autoBudgetType;
+            $autoBudget->amount                  = $data['auto_budget_amount'] ?? '0';
+            $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
+            $autoBudget->save();
+        }
+
         $this->updateRuleTriggers($oldName, $data['name']);
         $this->updateRuleActions($oldName, $data['name']);
         app('preferences')->mark();
@@ -379,5 +395,13 @@ class BudgetRepository implements BudgetRepositoryInterface
             RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
             $budget->delete();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget
+    {
+        return $budget->autoBudgets()->first();
     }
 }

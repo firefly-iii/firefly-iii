@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\AutoBudget;
 use Illuminate\Validation\Validator;
 
 /**
@@ -87,30 +86,9 @@ class BudgetFormStoreRequest extends Request
         $validator->after(
             function (Validator $validator) {
                 // validate all account info
-                $this->validateAmount($validator);
+                $this->validateAutoBudgetAmount($validator);
             }
         );
     }
 
-    /**
-     * @param Validator $validator
-     */
-    private function validateAmount(Validator $validator): void
-    {
-        $data   = $validator->getData();
-        $option = (int)$data['auto_budget_option'];
-        $amount = $data['auto_budget_amount'] ?? '';
-        switch ($option) {
-            case AutoBudget::AUTO_BUDGET_RESET:
-            case AutoBudget::AUTO_BUDGET_ROLLOVER:
-                // basic float check:
-                if ('' === $amount) {
-                    $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
-                }
-                if (1 !== bccomp((string)$amount, '0')) {
-                    $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
-                }
-                break;
-        }
-    }
 }

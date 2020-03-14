@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 
-use FireflyIII\AutoBudget;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormStoreRequest;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -85,9 +85,11 @@ class CreateController extends Controller
             'half_year' => (string)trans('firefly.auto_budget_period_half_year'),
             'yearly'    => (string)trans('firefly.auto_budget_period_yearly'),
         ];
+        $currency          = app('amount')->getDefaultCurrency();
 
         $preFilled = [
-            'auto_budget_period' => $hasOldInput ? (bool)$request->old('auto_budget_period') : 'monthly',
+            'auto_budget_period'      => $hasOldInput ? (bool)$request->old('auto_budget_period') : 'monthly',
+            'transaction_currency_id' => $hasOldInput ? (int)$request->old('transaction_currency_id') : $currency->id,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
