@@ -234,6 +234,14 @@
                                     </div>
                                 </td>
                                 <td data-value="{{ budget.name }}">
+                                    {% if budget.auto_budget %}
+                                    {% if 1 == budget.auto_budget.auto_budget_type %}
+                                        <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>
+                                    {% endif %}
+                                    {% if 2 == budget.auto_budget.auto_budget_type %}
+                                        <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
+                                    {% endif %}
+                                    {% endif %}
                                     <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
                                 </td>
                                 <td data-value="-1">

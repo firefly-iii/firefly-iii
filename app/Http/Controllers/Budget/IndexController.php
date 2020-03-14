@@ -160,6 +160,7 @@ class IndexController extends Controller
             $array             = $current->toArray();
             $array['spent']    = [];
             $array['budgeted'] = [];
+            $array['auto_budget'] = $this->repository->getAutoBudget($current);
             $budgetLimits      = $this->blRepository->getBudgetLimits($current, $start, $end);
 
             /** @var BudgetLimit $limit */
