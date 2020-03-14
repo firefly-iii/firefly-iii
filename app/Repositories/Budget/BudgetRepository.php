@@ -305,7 +305,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $currencyId = (int)($data['transaction_currency_id'] ?? 0);
         $currencyCode = (string)($data['transaction_currency_code'] ?? '');
 
-
         $currency = $repos->findNull($currencyId);
         if(null === $currency) {
             $currency = $repos->findByCodeNull($currencyCode);
@@ -339,20 +338,48 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->save();
 
         // update or create auto-budget:
-        $autoBudgetType = $data['auto_budget_option'] ?? 0;
+        $autoBudgetType = $data['auto_budget_type'] ?? 0;
+        if ('reset' === $autoBudgetType) {
+            $autoBudgetType = AutoBudget::AUTO_BUDGET_RESET;
+        }
+        if ('rollover' === $autoBudgetType) {
+            $autoBudgetType = AutoBudget::AUTO_BUDGET_ROLLOVER;
+        }
+        if ('none' === $autoBudgetType) {
+            $autoBudgetType = 0;
+        }
+
         if (0 !== $autoBudgetType) {
             $autoBudget = $this->getAutoBudget($budget);
             if (null === $autoBudget) {
                 $autoBudget = new AutoBudget;
                 $autoBudget->budget()->associate($budget);
             }
-            $autoBudget->transaction_currency_id = $data['transaction_currency_id'] ?? 1;
+
+            $repos = app(CurrencyRepositoryInterface::class);
+            $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+            $currencyCode = (string)($data['transaction_currency_code'] ?? '');
+
+            $currency = $repos->findNull($currencyId);
+            if(null === $currency) {
+                $currency = $repos->findByCodeNull($currencyCode);
+            }
+            if(null === $currency) {
+                $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            }
+
+            $autoBudget->transaction_currency_id = $currency->id;
             $autoBudget->auto_budget_type        = $autoBudgetType;
             $autoBudget->amount                  = $data['auto_budget_amount'] ?? '0';
             $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
             $autoBudget->save();
         }
-
+        if (0 === $autoBudgetType) {
+            $autoBudget = $this->getAutoBudget($budget);
+            if (null !== $autoBudget) {
+                $this->destroyAutoBudget($budget);
+            }
+        }
         $this->updateRuleTriggers($oldName, $data['name']);
         $this->updateRuleActions($oldName, $data['name']);
         app('preferences')->mark();
@@ -424,5 +451,16 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getAutoBudget(Budget $budget): ?AutoBudget
     {
         return $budget->autoBudgets()->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAutoBudget(Budget $budget): void
+    {
+        /** @var AutoBudget $autoBudget */
+        foreach ($budget->autoBudgets()->get() as $autoBudget) {
+            $autoBudget->delete();
+        }
     }
 }

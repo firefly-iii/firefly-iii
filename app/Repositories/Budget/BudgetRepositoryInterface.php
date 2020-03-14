@@ -46,6 +46,11 @@ interface BudgetRepositoryInterface
      */
     public function getAutoBudget(Budget $budget): ?AutoBudget;
 
+    /**
+     * @param Budget $budget
+     */
+    public function destroyAutoBudget(Budget $budget): void;
+
 
     /**
      * @return bool

@@ -78,7 +78,7 @@ class BudgetStoreRequest extends Request
         return [
             'name'                      => 'required|between:1,100|uniqueObjectForUser:budgets,name',
             'active'                    => [new IsBoolean],
-            'auto_budget_type'          => 'in:reset,rollover',
+            'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
             'auto_budget_amount'        => 'min:0|max:1000000000',
