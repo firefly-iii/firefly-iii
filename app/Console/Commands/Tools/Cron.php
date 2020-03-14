@@ -74,7 +74,7 @@ class Cron extends Command
          * Fire recurring transaction cron job.
          */
         try {
-            //$this->recurringCronJob($force, $date);
+            $this->recurringCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
