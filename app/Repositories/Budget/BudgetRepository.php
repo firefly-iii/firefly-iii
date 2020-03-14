@@ -25,13 +25,14 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use DB;
 use Exception;
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
@@ -290,17 +291,37 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // try to create associated auto budget:
-        $option = $data['auto_budget_option'] ?? 0;
-        if (0 === $option) {
+        $type = $data['auto_budget_type'] ?? 0;
+        if (0 === $type) {
             return $newBudget;
         }
+        if ('reset' === $type) {
+            $type = AutoBudget::AUTO_BUDGET_RESET;
+        }
+        if ('rollover' === $type) {
+            $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
+        }
+        $repos = app(CurrencyRepositoryInterface::class);
+        $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+        $currencyCode = (string)($data['transaction_currency_code'] ?? '');
+
+
+        $currency = $repos->findNull($currencyId);
+        if(null === $currency) {
+            $currency = $repos->findByCodeNull($currencyCode);
+        }
+        if(null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
         $autoBudget = new AutoBudget;
         $autoBudget->budget()->associate($newBudget);
-        $autoBudget->transaction_currency_id = $data['transaction_currency_id'] ?? 1;
-        $autoBudget->auto_budget_type        = $option;
+        $autoBudget->transaction_currency_id = $currency->id;
+        $autoBudget->auto_budget_type        = $type;
         $autoBudget->amount                  = $data['auto_budget_amount'] ?? '1';
         $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
         $autoBudget->save();
+
         return $newBudget;
     }
 

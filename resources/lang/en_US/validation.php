@@ -204,4 +204,5 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

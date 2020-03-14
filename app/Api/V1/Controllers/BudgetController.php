@@ -25,7 +25,8 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Exception;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
-use FireflyIII\Api\V1\Requests\BudgetRequest;
+use FireflyIII\Api\V1\Requests\BudgetStoreRequest;
+use FireflyIII\Api\V1\Requests\BudgetUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
@@ -179,13 +180,13 @@ class BudgetController extends Controller
     /**
      * Store a budget.
      *
-     * @param BudgetRequest $request
+     * @param BudgetStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      *
      */
-    public function store(BudgetRequest $request): JsonResponse
+    public function store(BudgetStoreRequest $request): JsonResponse
     {
         $budget  = $this->repository->store($request->getAll());
         $manager = $this->getManager();
@@ -291,12 +292,12 @@ class BudgetController extends Controller
     /**
      * Update a budget.
      *
-     * @param BudgetRequest $request
+     * @param BudgetUpdateRequest $request
      * @param Budget        $budget
      *
      * @return JsonResponse
      */
-    public function update(BudgetRequest $request, Budget $budget): JsonResponse
+    public function update(BudgetUpdateRequest $request, Budget $budget): JsonResponse
     {
         $data    = $request->getAll();
         $budget  = $this->repository->update($budget, $data);

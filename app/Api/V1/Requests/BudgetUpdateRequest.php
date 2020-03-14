@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetRequest.php
+ * BudgetUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,16 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 
 /**
- * Class BudgetRequest
+ * Class BudgetUpdateRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class BudgetRequest extends Request
+class BudgetUpdateRequest extends Request
 {
     /**
      * Authorize logged in users.
@@ -71,21 +69,11 @@ class BudgetRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
-            'name'   => 'required|between:1,100|uniqueObjectForUser:budgets,name',
+        $budget = $this->route()->parameter('budget');
+
+        return [
+            'name'   => sprintf('required|between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active' => [new IsBoolean],
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var Budget $budget */
-                $budget        = $this->route()->parameter('budget');
-                $rules['name'] = sprintf('required|between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id);
-                break;
-        }
-
-        return $rules;
     }
 }

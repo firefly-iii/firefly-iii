@@ -98,11 +98,11 @@ class BudgetTransformer extends AbstractTransformer
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
             'name'                      => $budget->name,
+            'auto_budget_type'          => $abType,
+            'auto_budget_period'        => $abPeriod,
             'auto_budget_currency_id'   => $abCurrencyId,
             'auto_budget_currency_code' => $abCurrencyCode,
-            'auto_budget_type'          => $abType,
             'auto_budget_amount'        => $abAmount,
-            'auto_budget_period'        => $abPeriod,
             'spent'                     => $spent,
             'links'                     => [
                 [

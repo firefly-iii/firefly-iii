@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -41,10 +42,9 @@ use League\Fractal\Resource\Collection as FractalCollection;
 class TransferController extends Controller
 {
     /**
-     * @param Request $request
+     * @param TransferRequest $request
      *
      * @return JsonResponse|Response
-     * @throws FireflyException
      */
     public function search(TransferRequest $request)
     {

@@ -42,7 +42,6 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class SummaryController

@@ -85,7 +85,7 @@ class AvailableBudgetController extends Controller
         }
         $left = bcadd($availableBudget->amount, (string)$spent);
         // left less than zero? Set to zero.
-        if (bccomp($left, '0') === -1) {
+        if (-1 === bccomp($left, '0')) {
             $left = '0';
         }
 
