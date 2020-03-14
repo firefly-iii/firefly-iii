@@ -115,6 +115,11 @@
                                                 <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default"
                                                    title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}">
                                                     <i class="fa fa-fw fa-power-off "></i></a>
+
+                                                {# duplicate rule #}
+                                                <a href="{{ route('rules.duplicate',rule.id) }}" class="btn btn-default"
+                                                   title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}">
+                                                    <i class="fa fa-fw fa-copy"></i></a>
                                             </div>
                                         </td>
                                         <td class="markdown">

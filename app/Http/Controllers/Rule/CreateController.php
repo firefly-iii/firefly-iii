@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\Rule;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -111,6 +112,21 @@ class CreateController extends Controller
         return view(
             'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return RedirectResponse
+     */
+    public function duplicate(Rule $rule): RedirectResponse
+    {
+        /** @var Rule $newRule */
+        $newRule = $this->ruleRepos->duplicate($rule);
+
+        session()->flash('success', trans('firefly.duplicated_rule', ['title' => $rule->title,'newTitle' => $newRule->title]));
+
+        return redirect(route('rules.index'));
     }
 
     /**

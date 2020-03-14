@@ -881,6 +881,7 @@ Route::group(
     Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
     Route::get('create-from-journal/{tj}', ['uses' => 'Rule\CreateController@createFromJournal', 'as' => 'create-from-journal']);
     Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
+    Route::get('duplicate/{rule}', ['uses' => 'Rule\CreateController@duplicate', 'as' => 'duplicate']);
 
     // delete controller
     Route::get('delete/{rule}', ['uses' => 'Rule\DeleteController@delete', 'as' => 'delete']);

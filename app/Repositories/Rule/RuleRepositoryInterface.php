@@ -47,6 +47,13 @@ interface RuleRepositoryInterface
     public function destroy(Rule $rule): bool;
 
     /**
+     * @param Rule $rule
+     *
+     * @return Rule
+     */
+    public function duplicate(Rule $rule): Rule;
+
+    /**
      * @param int $ruleId
      *
      * @return Rule|null
