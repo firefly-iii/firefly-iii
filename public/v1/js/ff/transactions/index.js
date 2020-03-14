@@ -24,5 +24,6 @@ $(function () {
         multiCurrencyPieChart(categoryChartUri, 'category_chart');
         multiCurrencyPieChart(budgetChartUri, 'budget_chart');
         multiCurrencyPieChart(destinationChartUri, 'destination_chart');
+        multiCurrencyPieChart(sourceChartUri, 'source_chart');
     }
 });

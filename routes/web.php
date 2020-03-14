@@ -498,6 +498,7 @@ Route::group(
         Route::get('categories/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@categories', 'as' => 'categories']);
         Route::get('budgets/{start_date}/{end_date}', ['uses' => 'TransactionController@budgets', 'as' => 'budgets']);
         Route::get('destinationAccounts/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@destinationAccounts', 'as' => 'destinationAccounts']);
+        Route::get('sourceAccounts/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@sourceAccounts', 'as' => 'sourceAccounts']);
         //
 
     }

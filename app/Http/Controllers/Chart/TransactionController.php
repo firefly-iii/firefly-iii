@@ -170,7 +170,6 @@ class TransactionController extends Controller
         return response()->json($chart);
     }
 
-
     /**
      * @param string $objectType
      * @param Carbon $start
@@ -215,6 +214,72 @@ class TransactionController extends Controller
         /** @var array $journal */
         foreach ($result as $journal) {
             $name = $journal['destination_account_name'];
+            $title    = sprintf('%s (%s)', $name, $journal['currency_symbol']);
+            $data[$title]           = $data[$title] ?? [
+                    'amount'          => '0',
+                    'currency_symbol' => $journal['currency_symbol'],
+                ];
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
+
+            if (null !== $journal['foreign_amount']) {
+                $title                  = sprintf('%s (%s)', $name, $journal['foreign_currency_symbol']);
+                $data[$title]           = $data[$title] ?? [
+                        'amount'          => $journal['foreign_amount'],
+                        'currency_symbol' => $journal['currency_symbol'],
+                    ];
+                $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['foreign_amount']);
+            }
+        }
+        $chart = $this->generator->multiCurrencyPieChart($data);
+        $cache->store($chart);
+
+        return response()->json($chart);
+    }
+
+    /**
+     * @param string $objectType
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws FireflyException
+     */
+    public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($objectType);
+        $cache->addProperty('chart.transactions.sources');
+        if ($cache->has()) {
+            //return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end);
+        $collector->withAccountInformation();
+        switch ($objectType) {
+            default:
+                throw new FireflyException(sprintf('Cant handle "%s"', $objectType));
+            case 'withdrawal':
+                $collector->setTypes([TransactionType::WITHDRAWAL]);
+                break;
+            case 'deposit':
+                $collector->setTypes([TransactionType::DEPOSIT]);
+                break;
+            case 'transfers':
+                $collector->setTypes([TransactionType::TRANSFER]);
+                break;
+        }
+        $result = $collector->getExtractedJournals();
+        $data   = [];
+
+        // group by category.
+        /** @var array $journal */
+        foreach ($result as $journal) {
+            $name = $journal['source_account_name'];
             $title    = sprintf('%s (%s)', $name, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
