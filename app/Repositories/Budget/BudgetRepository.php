@@ -321,6 +321,23 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
         $autoBudget->save();
 
+        // create initial budget limit.
+        $today = new Carbon;
+        $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
+        $end   = app('navigation')->startOfPeriod($start, $autoBudget->period);
+
+        $limitRepos = app(BudgetLimitRepositoryInterface::class);
+        $limitRepos->setUser($this->user);
+        $limitRepos->store(
+            [
+                'budget_id'               => $newBudget->id,
+                'transaction_currency_id' => $autoBudget->transaction_currency_id,
+                'start_date'              => $start->format('Y-m-d'),
+                'end_date'                => $end->format('Y-m-d'),
+                'amount'                  => $autoBudget->amount,
+            ]
+        );
+
         return $newBudget;
     }
 
