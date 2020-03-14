@@ -23,14 +23,52 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use Carbon\Carbon;
+use Exception;
 /**
  * Class AbstractCronjob
+ *
  * @codeCoverageIgnore
  */
 abstract class AbstractCronjob
 {
     /** @var int */
     public $timeBetweenRuns = 43200;
+
+    /** @var bool */
+    protected $force;
+
+    /** @var Carbon */
+    protected $date;
+
+    /**
+     * AbstractCronjob constructor.
+     *
+     * @throws Exception
+     */
+    public function __construct()
+    {
+        $this->force = false;
+        $this->date  = new Carbon;
+    }
+
+
+
+    /**
+     * @param bool $force
+     */
+    public function setForce(bool $force): void
+    {
+        $this->force = $force;
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
+    }
 
     /**
      * @return bool

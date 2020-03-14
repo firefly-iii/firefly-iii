@@ -1,7 +1,7 @@
 <?php
 /**
- * RecurringCronjob.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * AutoBudgetCronjob.php
+ * Copyright (c) 2020 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,55 +19,53 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Support\Cronjobs;
 
+
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Jobs\CreateRecurringTransactions;
+use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;
 use Log;
 
 /**
- * Class RecurringCronjob
+ * Class AutoBudgetCronjob
  */
-class RecurringCronjob extends AbstractCronjob
+class AutoBudgetCronjob extends AbstractCronjob
 {
+
     /**
-     * @return bool
-     * @throws FireflyException
+     * @inheritDoc
      */
     public function fire(): bool
     {
         /** @var Configuration $config */
-        $config        = app('fireflyconfig')->get('last_rt_job', 0);
+        $config        = app('fireflyconfig')->get('last_ab_job', 0);
         $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
         $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), true);
         if (0 === $lastTime) {
-            Log::info('Recurring transactions cron-job has never fired before.');
+            Log::info('Auto budget cron-job has never fired before.');
         }
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43200) {
-            Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired.', $diffForHumans));
+            Log::info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
-                Log::info('The cron-job will not fire now.');
+                Log::info('The auto budget cron-job will not fire now.');
 
                 return false;
             }
 
             // fire job regardless.
             if (true === $this->force) {
-                Log::info('Execution of the recurring transaction cron-job has been FORCED.');
+                Log::info('Execution of the auto budget cron-job has been FORCED.');
             }
         }
 
         if ($lastTime > 0 && $diff > 43200) {
-            Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired. It will fire now!', $diffForHumans));
+            Log::info(sprintf('It has been %s since the auto budget cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        $this->fireRecurring();
+        $this->fireAutoBudget();
 
         app('preferences')->mark();
 
@@ -77,15 +75,14 @@ class RecurringCronjob extends AbstractCronjob
     /**
      *
      */
-    private function fireRecurring(): void
+    private function fireAutoBudget(): void
     {
-        Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d')));
-        /** @var CreateRecurringTransactions $job */
-        $job = app(CreateRecurringTransactions::class);
+        Log::info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
+        /** @var CreateAutoBudgetLimits $job */
+        $job = app(CreateAutoBudgetLimits::class);
         $job->setDate($this->date);
-        $job->setForce($this->force);
         $job->handle();
-        app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
-        Log::info('Done with recurring cron job task.');
+        app('fireflyconfig')->set('last_ab_job', (int)$this->date->format('U'));
+        Log::info('Done with auto budget cron job task.');
     }
 }
