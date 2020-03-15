@@ -227,10 +227,8 @@ class AccountController extends Controller
         if (null !== $limit && $limit > 0) {
             $pageSize = $limit;
         }
-
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = $this->getManager();
-
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -240,7 +238,6 @@ class AccountController extends Controller
         $collector->setUser($admin)->setAccounts(new Collection([$account]))
                   ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types);
 
-        // set range if necessary:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }

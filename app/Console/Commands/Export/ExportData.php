@@ -77,20 +77,11 @@ class ExportData extends Command
     private $user;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      * @throws FireflyException
+     * @throws \League\Csv\CannotInsertRecord
      */
     public function handle(): int
     {
@@ -206,6 +197,7 @@ class ExportData extends Command
      *
      * @return Carbon
      * @throws FireflyException
+     * @throws \Exception
      */
     private function getDateParameter(string $field): Carbon
     {

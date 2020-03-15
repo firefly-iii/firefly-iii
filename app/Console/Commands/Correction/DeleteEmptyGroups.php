@@ -25,7 +25,6 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use Exception;
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Log;
 
@@ -59,7 +58,7 @@ class DeleteEmptyGroups extends Command
         $start  = microtime(true);
         $groupIds  =
             TransactionGroup
-            ::leftJoin('transaction_journals','transaction_groups.id','=','transaction_journals.transaction_group_id')
+            ::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
             ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
 
         $total = count($groupIds);

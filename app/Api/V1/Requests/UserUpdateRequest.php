@@ -69,14 +69,13 @@ class UserUpdateRequest extends Request
         if (null !== $this->get('blocked')) {
             $blocked = $this->boolean('blocked');
         }
-        $data = [
+
+        return [
             'email'        => $this->string('email'),
             'blocked'      => $blocked,
             'blocked_code' => $this->string('blocked_code'),
             'role'         => $this->string('role'),
         ];
-
-        return $data;
     }
 
     /**
@@ -87,14 +86,13 @@ class UserUpdateRequest extends Request
     public function rules(): array
     {
         $user  = $this->route()->parameter('user');
-        $rules = [
+
+        return [
             'email'        => sprintf('email|unique:users,email,%d', $user->id),
             'blocked'      => [new IsBoolean],
             'blocked_code' => 'in:email_changed',
             'role'         => 'in:owner,demo,',
         ];
-
-        return $rules;
     }
 
 }

@@ -40,7 +40,6 @@ use Illuminate\Console\Command;
  */
 class OtherCurrenciesCorrections extends Command
 {
-
     public const CONFIG_NAME = '480_other_currencies';
     /**
      * The console command description.
@@ -136,8 +135,6 @@ class OtherCurrenciesCorrections extends Command
         $this->accountCurrencies[$accountId] = $currency;
 
         return $currency;
-
-
     }
 
     /**
@@ -186,8 +183,12 @@ class OtherCurrenciesCorrections extends Command
         $currency = $this->getCurrency($account);
         if (null === $currency) {
             // @codeCoverageIgnoreStart
-            $this->error(sprintf('Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
-                                 $account->id, $account->name, $journal->id));
+            $this->error(sprintf(
+                'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
+                $account->id,
+                $account->name,
+                $journal->id
+            ));
             $this->count++;
 
             return;

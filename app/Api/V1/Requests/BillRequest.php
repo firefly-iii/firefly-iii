@@ -60,7 +60,7 @@ class BillRequest extends Request
             $active = $this->boolean('active');
         }
 
-        $data = [
+        return [
             'name'          => $this->string('name'),
             'amount_min'    => $this->string('amount_min'),
             'amount_max'    => $this->string('amount_max'),
@@ -72,8 +72,6 @@ class BillRequest extends Request
             'active'        => $active,
             'notes'         => $this->nlString('notes'),
         ];
-
-        return $data;
     }
 
     /**

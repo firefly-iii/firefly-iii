@@ -177,9 +177,9 @@ class MigrateToRules extends Command
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param Bill $bill
-     * @throws FireflyException
+     * @param RuleGroup  $ruleGroup
+     * @param Bill       $bill
+     * @param Preference $language
      */
     private function migrateBill(RuleGroup $ruleGroup, Bill $bill, Preference $language): void
     {

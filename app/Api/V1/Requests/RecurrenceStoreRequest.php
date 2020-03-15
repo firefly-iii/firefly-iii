@@ -63,7 +63,8 @@ class RecurrenceStoreRequest extends Request
         if (null !== $this->get('apply_rules')) {
             $applyRules = $this->boolean('apply_rules');
         }
-        $return = [
+
+        return [
             'recurrence'   => [
                 'type'         => $this->string('type'),
                 'title'        => $this->string('title'),
@@ -77,8 +78,6 @@ class RecurrenceStoreRequest extends Request
             'transactions' => $this->getTransactionData(),
             'repetitions'  => $this->getRepetitionData(),
         ];
-
-        return $return;
     }
 
     /**

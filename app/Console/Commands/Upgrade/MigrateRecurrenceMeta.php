@@ -115,7 +115,7 @@ class MigrateRecurrenceMeta extends Command
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);
-            $value = json_encode($array);
+            $value = json_encode($array, JSON_THROW_ON_ERROR, 512);
         }
 
         RecurrenceTransactionMeta::create(

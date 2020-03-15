@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Search;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Search\AccountSearch;
@@ -98,5 +97,4 @@ class AccountController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 }

@@ -91,8 +91,11 @@ class DeleteOrphanedTransactions extends Command
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(
-                sprintf('Deleted transaction journal #%d because account #%d was already deleted.',
-                        $transaction->transaction_journal_id, $transaction->account_id)
+                sprintf(
+                    'Deleted transaction journal #%d because account #%d was already deleted.',
+                    $transaction->transaction_journal_id,
+                    $transaction->account_id
+                )
             );
             $count++;
         }
@@ -134,6 +137,5 @@ class DeleteOrphanedTransactions extends Command
         if (0 === $count) {
             $this->info('No orphaned transactions.');
         }
-
     }
 }

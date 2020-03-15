@@ -60,14 +60,13 @@ class TransactionStoreRequest extends Request
     public function getAll(): array
     {
         Log::debug('get all data in TransactionStoreRequest');
-        $data = [
+
+        return [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
             'apply_rules'             => $this->boolean('apply_rules', true),
             'transactions'            => $this->getTransactionData(),
         ];
-
-        return $data;
     }
 
     /**
@@ -78,7 +77,8 @@ class TransactionStoreRequest extends Request
     public function rules(): array
     {
         Log::debug('Collect rules of TransactionStoreRequest');
-        $rules = [
+
+        return [
             // basic fields for group:
             'group_title'                          => 'between:1,1000|nullable',
             'error_if_duplicate_hash'              => [new IsBoolean],
@@ -155,8 +155,6 @@ class TransactionStoreRequest extends Request
             'transactions.*.payment_date'          => 'date|nullable',
             'transactions.*.invoice_date'          => 'date|nullable',
         ];
-
-        return $rules;
 
 
     }

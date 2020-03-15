@@ -302,7 +302,8 @@ class MigrateToGroups extends Command
                 $this->error(
                     sprintf(
                         'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
-                        $journal->id, $transaction->id
+                        $journal->id,
+                        $transaction->id
                     )
                 );
                 continue;
@@ -365,12 +366,20 @@ class MigrateToGroups extends Command
 
         // report on result:
         Log::debug(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s',
-                    $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
+            sprintf(
+                'Migrated journal #%d into group #%d with these journals: #%s',
+                $journal->id,
+                $group->id,
+                implode(', #', $group->transactionJournals->pluck('id')->toArray())
+            )
         );
         $this->line(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s',
-                    $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
+            sprintf(
+                'Migrated journal #%d into group #%d with these journals: #%s',
+                $journal->id,
+                $group->id,
+                implode(', #', $group->transactionJournals->pluck('id')->toArray())
+            )
         );
     }
 
@@ -447,5 +456,4 @@ class MigrateToGroups extends Command
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
-
 }

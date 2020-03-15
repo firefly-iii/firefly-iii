@@ -65,7 +65,7 @@ class RuleUpdateRequest extends Request
             $stopProcessing = $this->boolean('stop_processing');
         }
 
-        $data = [
+        return [
             'title'            => $this->nullableString('title'),
             'description'      => $this->nullableString('description'),
             'rule_group_id'    => $this->nullableInteger('rule_group_id'),
@@ -77,8 +77,6 @@ class RuleUpdateRequest extends Request
             'triggers'         => $this->getRuleTriggers(),
             'actions'          => $this->getRuleActions(),
         ];
-
-        return $data;
     }
 
     /**
@@ -95,7 +93,8 @@ class RuleUpdateRequest extends Request
         // some triggers and actions require text:
         $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
-        $rules           = [
+
+        return [
             'title'                      => sprintf('between:1,100|uniqueObjectForUser:rules,title,%d', $rule->id),
             'description'                => 'between:1,5000|nullable',
             'rule_group_id'              => 'belongsToUser:rule_groups',
@@ -113,8 +112,6 @@ class RuleUpdateRequest extends Request
             'stop_processing'            => [new IsBoolean],
             'active'                     => [new IsBoolean],
         ];
-
-        return $rules;
     }
 
     /**

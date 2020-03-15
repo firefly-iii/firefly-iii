@@ -64,7 +64,6 @@ class ScanAttachments extends Command
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             $fileName         = $attachment->fileName();
-            $decryptedContent = '';
             try {
                 $encryptedContent = $disk->get($fileName);
             } catch (FileNotFoundException $e) {

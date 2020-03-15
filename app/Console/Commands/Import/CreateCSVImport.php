@@ -93,7 +93,7 @@ class CreateCSVImport extends Command
 
         $this->importRepository->setUser($user);
 
-        $configurationData = json_decode(file_get_contents($configuration), true);
+        $configurationData = json_decode(file_get_contents($configuration), true, 512, JSON_THROW_ON_ERROR);
         $this->importJob   = $this->importRepository->create('file');
 
 
@@ -214,7 +214,7 @@ class CreateCSVImport extends Command
             return false;
         }
 
-        $configurationData = json_decode(file_get_contents($configuration), true);
+        $configurationData = json_decode(file_get_contents($configuration), true, 512, JSON_THROW_ON_ERROR);
         if (null === $configurationData) {
             $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
 

@@ -53,14 +53,11 @@ class RuleTriggerRequest extends Request
      */
     public function getTriggerParameters(): array
     {
-        $return = [
+        return [
             'start_date' => $this->getDate('start_date'),
             'end_date'   => $this->getDate('end_date'),
             'accounts'   => $this->getAccounts(),
         ];
-
-
-        return $return;
     }
 
     /**

@@ -100,9 +100,11 @@ class Cron extends Command
     /**
      * @param bool        $force
      * @param Carbon|null $date
+     *
      * @throws FireflyException
+     * @throws Exception
      */
-    private function autoBudgetCronJob(bool $force, ?Carbon $date)
+    private function autoBudgetCronJob(bool $force, ?Carbon $date): void
     {
         $autoBudget = new AutoBudgetCronjob;
         $autoBudget->setForce($force);

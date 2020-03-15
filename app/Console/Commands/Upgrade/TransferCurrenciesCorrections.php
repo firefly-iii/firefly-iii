@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -41,7 +40,6 @@ use Log;
  */
 class TransferCurrenciesCorrections extends Command
 {
-
     public const CONFIG_NAME = '480_transfer_currencies';
     /**
      * The console command description.
@@ -162,8 +160,6 @@ class TransferCurrenciesCorrections extends Command
         $this->accountCurrencies[$accountId] = $result;
 
         return $result;
-
-
     }
 
     /**
@@ -297,7 +293,6 @@ class TransferCurrenciesCorrections extends Command
      */
     private function updateTransferCurrency(TransactionJournal $transfer): void
     {
-
         $this->resetInformation();
 
         // @codeCoverageIgnoreStart
@@ -325,7 +320,8 @@ class TransferCurrenciesCorrections extends Command
         // @codeCoverageIgnoreStart
         if ($this->isNoCurrencyPresent()) {
             $this->error(
-                sprintf('Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.', $transfer->id));
+                sprintf('Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.', $transfer->id)
+            );
 
             return;
         }
@@ -355,7 +351,6 @@ class TransferCurrenciesCorrections extends Command
 
         // fix journal itself:
         $this->fixTransactionJournalCurrency($transfer);
-
     }
 
     /**
@@ -367,8 +362,11 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->sourceTransaction->transaction_currency_id && null !== $this->sourceCurrency) {
             $this->sourceTransaction
                 ->transaction_currency_id = (int)$this->sourceCurrency->id;
-            $message                      = sprintf('Transaction #%d has no currency setting, now set to %s.',
-                                                    $this->sourceTransaction->id, $this->sourceCurrency->code);
+            $message                      = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->sourceTransaction->id,
+                $this->sourceCurrency->code
+            );
             Log::debug($message);
             $this->line($message);
             $this->count++;
@@ -385,8 +383,11 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->destinationTransaction->transaction_currency_id && null !== $this->destinationCurrency) {
             $this->destinationTransaction
                 ->transaction_currency_id = (int)$this->destinationCurrency->id;
-            $message                      = sprintf('Transaction #%d has no currency setting, now set to %s.',
-                                                    $this->destinationTransaction->id, $this->destinationCurrency->code);
+            $message                      = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->destinationTransaction->id,
+                $this->destinationCurrency->code
+            );
             Log::debug($message);
             $this->line($message);
             $this->count++;
@@ -490,9 +491,13 @@ class TransferCurrenciesCorrections extends Command
                 sprintf(
                     'Currency for account "%s" is %s, and currency for account "%s" is also
              %s, so transactions #%d and #%d has been verified to be to %s exclusively.',
-                    $this->destinationAccount->name, $this->destinationCurrency->code,
-                    $this->sourceAccount->name, $this->sourceCurrency->code,
-                    $this->sourceTransaction->id, $this->destinationTransaction->id, $this->sourceCurrency->code
+                    $this->destinationAccount->name,
+                    $this->destinationCurrency->code,
+                    $this->sourceAccount->name,
+                    $this->sourceCurrency->code,
+                    $this->sourceTransaction->id,
+                    $this->destinationTransaction->id,
+                    $this->sourceCurrency->code
                 )
             );
         }
@@ -528,8 +533,11 @@ class TransferCurrenciesCorrections extends Command
             $this->sourceTransaction->foreign_amount = bcmul((string)$this->destinationTransaction->foreign_amount, '-1');
             $this->sourceTransaction->save();
             $this->count++;
-            Log::debug(sprintf('Restored foreign amount of source transaction #%d to %s',
-                               $this->sourceTransaction->id, $this->sourceTransaction->foreign_amount));
+            Log::debug(sprintf(
+                'Restored foreign amount of source transaction #%d to %s',
+                $this->sourceTransaction->id,
+                $this->sourceTransaction->foreign_amount
+            ));
         }
     }
 
@@ -543,8 +551,11 @@ class TransferCurrenciesCorrections extends Command
             $this->destinationTransaction->foreign_amount = bcmul((string)$this->sourceTransaction->foreign_amount, '-1');
             $this->destinationTransaction->save();
             $this->count++;
-            Log::debug(sprintf('Restored foreign amount of destination transaction #%d to %s',
-                               $this->destinationTransaction->id, $this->destinationTransaction->foreign_amount));
+            Log::debug(sprintf(
+                'Restored foreign amount of destination transaction #%d to %s',
+                $this->destinationTransaction->id,
+                $this->destinationTransaction->foreign_amount
+            ));
         }
     }
 
@@ -565,8 +576,11 @@ class TransferCurrenciesCorrections extends Command
 
         // destination account must have a currency preference.
         if (null === $this->destinationCurrency) {
-            $message = sprintf('Account #%d ("%s") must have currency preference but has none.',
-                               $this->destinationAccount->id, $this->destinationAccount->name);
+            $message = sprintf(
+                'Account #%d ("%s") must have currency preference but has none.',
+                $this->destinationAccount->id,
+                $this->destinationAccount->name
+            );
             Log::error($message);
             $this->error($message);
 
@@ -575,5 +589,4 @@ class TransferCurrenciesCorrections extends Command
 
         return false;
     }
-
 }

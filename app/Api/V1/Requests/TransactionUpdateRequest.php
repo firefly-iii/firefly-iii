@@ -154,7 +154,7 @@ class TransactionUpdateRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             // basic fields for group:
             'group_title'                          => 'between:1,1000',
             'apply_rules'                          => [new IsBoolean],
@@ -222,8 +222,6 @@ class TransactionUpdateRequest extends Request
             'transactions.*.payment_date'          => 'date|nullable',
             'transactions.*.invoice_date'          => 'date|nullable',
         ];
-
-        return $rules;
     }
 
     /**

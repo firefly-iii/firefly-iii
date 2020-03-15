@@ -69,14 +69,13 @@ class UserStoreRequest extends Request
         if (null !== $this->get('blocked')) {
             $blocked = $this->boolean('blocked');
         }
-        $data = [
+
+        return [
             'email'        => $this->string('email'),
             'blocked'      => $blocked,
             'blocked_code' => $this->string('blocked_code'),
             'role'         => $this->string('role'),
         ];
-
-        return $data;
     }
 
     /**

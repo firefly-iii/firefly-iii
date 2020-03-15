@@ -167,9 +167,12 @@ class FixAccountTypes extends Command
                 $dest->save();
                 $this->info(
                     sprintf(
-                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $oldDest->id, $oldDest->name,
-                        $result->id, $result->name
+                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+                        $journal->id,
+                        $oldDest->id,
+                        $oldDest->name,
+                        $result->id,
+                        $result->name
                     )
                 );
                 $this->inspectJournal($journal);
@@ -184,9 +187,12 @@ class FixAccountTypes extends Command
                 $source->save();
                 $this->info(
                     sprintf(
-                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $oldSource->id, $oldSource->name,
-                        $result->id, $result->name
+                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
+                        $journal->id,
+                        $oldSource->id,
+                        $oldSource->name,
+                        $result->id,
+                        $result->name
                     )
                 );
                 $this->inspectJournal($journal);
@@ -198,7 +204,6 @@ class FixAccountTypes extends Command
                 break;
 
         }
-
     }
 
     /**
@@ -273,5 +278,4 @@ class FixAccountTypes extends Command
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
         }
     }
-
 }

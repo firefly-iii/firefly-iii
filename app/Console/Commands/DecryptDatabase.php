@@ -92,7 +92,7 @@ class DecryptDatabase extends Command
                     // A separate routine for preferences:
                     if ('preferences' === $table) {
                         // try to json_decrypt the value.
-                        $value = json_decode($value, true) ?? $value;
+                        $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
                         Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, print_r($value, true), $table, $id));
 
                         /** @var Preference $object */

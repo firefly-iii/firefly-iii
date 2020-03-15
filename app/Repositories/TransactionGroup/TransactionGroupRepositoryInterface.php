@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionGroup;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
@@ -135,6 +136,7 @@ interface TransactionGroupRepositoryInterface
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     public function store(array $data): TransactionGroup;
 

@@ -94,7 +94,8 @@ class FixUnevenAmount extends Command
         if (null === $source) {
             $this->error(
                 sprintf(
-                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
                     $journal->description ?? ''
                 )
             );
@@ -113,7 +114,8 @@ class FixUnevenAmount extends Command
         if (null === $destination) {
             $this->error(
                 sprintf(
-                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
                     $journal->description ?? ''
                 )
             );

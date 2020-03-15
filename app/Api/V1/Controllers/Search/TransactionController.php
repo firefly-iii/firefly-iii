@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Search;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * Class TransactionController
@@ -60,9 +57,8 @@ class TransactionController extends Controller
      *
      * @return void
      */
-    public function search(Request $request)
+    public function search(Request $request): void
     {
         die('the route is present but nobody\'s home.');
     }
-
 }

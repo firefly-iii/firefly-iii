@@ -76,7 +76,7 @@ class RenameAccountMeta extends Command
             $count += AccountMeta::where('name', $old)->update(['name' => $new]);
 
             // delete empty entries while we're at it.
-            AccountMeta::where('name', $new)->where('data','""')->delete();
+            AccountMeta::where('name', $new)->where('data', '""')->delete();
         }
 
         $this->markAsExecuted();

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Search;
 
-
 use FireflyIII\Api\V1\Requests\Request;
 use FireflyIII\Rules\IsTransferAccount;
 
@@ -55,5 +54,4 @@ class TransferRequest extends Request
             'date'        => 'required|date',
         ];
     }
-
 }

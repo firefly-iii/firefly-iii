@@ -178,7 +178,8 @@ class AccountCurrencies extends Command
                 static function (Transaction $transaction) use ($accountCurrency) {
                     $transaction->transaction_currency_id = $accountCurrency;
                     $transaction->save();
-                });
+                }
+            );
             $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
             $this->count++;
 

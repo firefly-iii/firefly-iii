@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Requests\DateRequest;
@@ -124,7 +123,6 @@ class SummaryController extends Controller
         }
 
         return response()->json($return);
-
     }
 
     /**
@@ -149,25 +147,6 @@ class SummaryController extends Controller
         }
 
         return $result;
-    }
-
-    /**
-     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
-     *
-     * @param array               $spentInfo
-     * @param TransactionCurrency $currency
-     *
-     * @return string
-     */
-    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): string
-    {
-        foreach ($spentInfo as $array) {
-            if ($array['currency_id'] === $currency->id) {
-                return (string)$array['amount'];
-            }
-        }
-
-        return '0'; // @codeCoverageIgnore
     }
 
     /**
@@ -197,7 +176,6 @@ class SummaryController extends Controller
         $set = $collector->getExtractedJournals();
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-
             $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
@@ -373,12 +351,15 @@ class SummaryController extends Controller
                 'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
                 'sub_title'               => (string)trans(
-                    'firefly.box_spend_per_day', ['amount' => app('amount')->formatFlat(
-                    $row['currency_symbol'], $row['currency_decimal_places'], $perDay, false
-                )]
+                    'firefly.box_spend_per_day',
+                    ['amount' => app('amount')->formatFlat(
+                        $row['currency_symbol'],
+                        $row['currency_decimal_places'],
+                        $perDay,
+                        false
+                    )]
                 ),
             ];
-
         }
         return $return;
     }
@@ -442,5 +423,4 @@ class SummaryController extends Controller
 
         return $return;
     }
-
 }

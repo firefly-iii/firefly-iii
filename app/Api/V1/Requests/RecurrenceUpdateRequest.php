@@ -63,7 +63,8 @@ class RecurrenceUpdateRequest extends Request
         if (null !== $this->get('apply_rules')) {
             $applyRules = $this->boolean('apply_rules');
         }
-        $return = [
+
+        return [
             'recurrence'   => [
                 'type'              => $this->nullableString('type'),
                 'title'             => $this->nullableString('title'),
@@ -78,8 +79,6 @@ class RecurrenceUpdateRequest extends Request
             'transactions' => $this->getTransactionData(),
             'repetitions'  => $this->getRepetitionData(),
         ];
-
-        return $return;
     }
 
     /**

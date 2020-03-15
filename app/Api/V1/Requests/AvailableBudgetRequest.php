@@ -64,15 +64,13 @@ class AvailableBudgetRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'amount'        => 'required|numeric|more:0',
             'start'         => 'required|date|before:end',
             'end'           => 'required|date|after:start',
         ];
-
-        return $rules;
     }
 
 

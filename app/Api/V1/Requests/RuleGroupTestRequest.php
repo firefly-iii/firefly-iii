@@ -54,7 +54,7 @@ class RuleGroupTestRequest extends Request
      */
     public function getTestParameters(): array
     {
-        $return = [
+        return [
             'page'          => $this->getPage(),
             'start_date'    => $this->getDate('start_date'),
             'end_date'      => $this->getDate('end_date'),
@@ -62,9 +62,6 @@ class RuleGroupTestRequest extends Request
             'trigger_limit' => $this->getTriggerLimit(),
             'accounts'      => $this->getAccounts(),
         ];
-
-
-        return $return;
     }
 
     /**

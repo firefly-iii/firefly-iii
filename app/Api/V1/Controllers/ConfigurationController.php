@@ -51,7 +51,6 @@ class ConfigurationController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @noinspection UnusedConstructorDependenciesInspection */
                 $this->repository = app(UserRepositoryInterface::class);
                 /** @var User $admin */
                 $admin = auth()->user();
@@ -109,13 +108,12 @@ class ConfigurationController extends Controller
         $lastCheck = app('fireflyconfig')->get('last_update_check');
         /** @var Configuration $singleUser */
         $singleUser = app('fireflyconfig')->get('single_user_mode');
-        $data       = [
+
+        return [
             'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
             'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
             'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
             'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
         ];
-
-        return $data;
     }
 }
