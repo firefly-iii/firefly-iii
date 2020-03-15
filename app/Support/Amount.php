@@ -117,37 +117,16 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param \FireflyIII\Models\TransactionCurrency $format
-     * @param string                                 $amount
-     * @param bool                                   $coloured
+     * @param TransactionCurrency $format
+     * @param string              $amount
+     * @param bool                $coloured
      *
      * @return string
      *
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        $coloured  = $coloured ?? true;
-        $float     = round($amount, 12);
-        $info      = $this->getLocaleInfo();
-        $formatted = number_format($float, (int)$format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
-
-        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
-        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = true === $separated ? ' ' : '';
-        $result    = false === $precedes ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
-
-        if (true === $coloured) {
-            if ($amount > 0) {
-                return sprintf('<span class="text-success">%s</span>', $result);
-            }
-            if ($amount < 0) {
-                return sprintf('<span class="text-danger">%s</span>', $result);
-            }
-
-            return sprintf('<span style="color:#999">%s</span>', $result);
-        }
-
-        return $result;
+        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
     }
 
     /**
@@ -169,14 +148,6 @@ class Amount
         $float     = round($amount, 12);
         $info      = $this->getLocaleInfo();
         $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
-
-        // some complicated switches to format the amount correctly:
-        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
-                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
-
-        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
-                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
-
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = true === $separated ? ' ' : '';
