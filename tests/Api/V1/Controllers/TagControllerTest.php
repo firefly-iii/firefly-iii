@@ -44,6 +44,7 @@ class TagControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -51,7 +52,7 @@ class TagControllerTest extends TestCase
      * Create Tag over API.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TagController
-     * @covers \FireflyIII\Api\V1\Requests\TagRequest
+     * @covers \FireflyIII\Api\V1\Requests\TagStoreRequest
      */
     public function testStore(): void
     {
@@ -120,7 +121,7 @@ class TagControllerTest extends TestCase
      * Update Tag over API.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TagController
-     * @covers \FireflyIII\Api\V1\Requests\TagRequest
+     * @covers \FireflyIII\Api\V1\Requests\TagUpdateRequest
      */
     public function testUpdate(): void
     {

@@ -46,6 +46,7 @@ class AccountControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -59,6 +60,7 @@ class AccountControllerTest extends TestCase
      */
     public function testStoreInvalidBalance(): void
     {
+
         // mock repositories
         $repository = $this->mock(AccountRepositoryInterface::class);
 

@@ -48,6 +48,7 @@ class AttachmentControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -114,10 +115,10 @@ class AttachmentControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'filename'    => 'Some new att',
-            'description' => sprintf('Attempt #%d', $this->randomInt()),
-            'model'       => 'TransactionJournal',
-            'model_id'    => $journal->id,
+            'filename'        => 'Some new att',
+            'description'     => sprintf('Attempt #%d', $this->randomInt()),
+            'attachable_type' => 'TransactionJournal',
+            'attachable_id'   => $journal->id,
         ];
 
 
@@ -158,10 +159,10 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('getNoteText')->andReturn('Hi There');
         // data to submit
         $data = [
-            'filename'    => $attachment->filename,
-            'description' => sprintf('Attempt #%d', $this->randomInt()),
-            'model'       => 'TransactionJournal',
-            'model_id'    => 1,
+            'filename'        => $attachment->filename,
+            'description'     => sprintf('Attempt #%d', $this->randomInt()),
+            'attachable_type' => 'TransactionJournal',
+            'attachable_id'   => 1,
         ];
 
         // test API
