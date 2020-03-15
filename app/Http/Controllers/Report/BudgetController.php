@@ -390,6 +390,14 @@ class BudgetController extends Controller
             ];
         $noBudget             = $this->nbRepository->sumExpenses($start, $end);
         foreach ($noBudget as $noBudgetEntry) {
+
+            // currency information:
+            $nbCurrencyId     = (int)($noBudgetEntry['currency_id'] ?? $defaultCurrency->id);
+            $nbCurrencyCode   = $noBudgetEntry['currency_code'] ?? $defaultCurrency->code;
+            $nbCurrencyName   = $noBudgetEntry['currency_name'] ?? $defaultCurrency->name;
+            $nbCurrencySymbol = $noBudgetEntry['currency_symbol'] ?? $defaultCurrency->symbol;
+            $nbCurrencyDp     = $noBudgetEntry['currency_decimal_places'] ?? $defaultCurrency->decimal_places;
+
             $report['budgets'][0]['budget_limits'][] = [
                 'budget_limit_id'         => null,
                 'start_date'              => $start,
@@ -400,25 +408,24 @@ class BudgetController extends Controller
                 'spent_pct'               => '0',
                 'left'                    => '0',
                 'overspent'               => '0',
-                'currency_id'             => (int)($noBudgetEntry['currency_id'] ?? $defaultCurrency->id),
-                'currency_code'           => $noBudgetEntry['currency_code'] ?? $defaultCurrency->code,
-                'currency_name'           => $noBudgetEntry['currency_name'] ?? $defaultCurrency->name,
-                'currency_symbol'         => $noBudgetEntry['currency_symbol'] ?? $defaultCurrency->symbol,
-                'currency_decimal_places' => $noBudgetEntry['currency_decimal_places'] ?? $defaultCurrency->decimal_places,
+                'currency_id'             => $nbCurrencyId,
+                'currency_code'           => $nbCurrencyCode,
+                'currency_name'           => $nbCurrencyName,
+                'currency_symbol'         => $nbCurrencySymbol,
+                'currency_decimal_places' => $nbCurrencyDp,
             ];
-            $report['sums'][$noBudgetEntry['currency_id']]['spent']
-                                                     = bcadd($report['sums'][$noBudgetEntry['currency_id']]['spent'] ?? '0', $noBudgetEntry['sum']);
+            $report['sums'][$nbCurrencyId]['spent']  = bcadd($report['sums'][$nbCurrencyId]['spent'] ?? '0', $noBudgetEntry['sum']);
             // append currency info because it may be missing:
-            $report['sums'][$noBudgetEntry['currency_id']]['currency_id'] = (int)($noBudgetEntry['currency_id'] ?? $defaultCurrency->id);
-            $report['sums'][$noBudgetEntry['currency_id']]['currency_code'] = $noBudgetEntry['currency_code'] ?? $defaultCurrency->code;
-            $report['sums'][$noBudgetEntry['currency_id']]['currency_name'] = $noBudgetEntry['currency_name'] ?? $defaultCurrency->name;
-            $report['sums'][$noBudgetEntry['currency_id']]['currency_symbol'] = $noBudgetEntry['currency_symbol'] ?? $defaultCurrency->symbol;
-            $report['sums'][$noBudgetEntry['currency_id']]['currency_decimal_places'] = $noBudgetEntry['currency_decimal_places'] ?? $defaultCurrency->decimal_places;
+            $report['sums'][$nbCurrencyId]['currency_id']             = $nbCurrencyId;
+            $report['sums'][$nbCurrencyId]['currency_code']           = $nbCurrencyCode;
+            $report['sums'][$nbCurrencyId]['currency_name']           = $nbCurrencyName;
+            $report['sums'][$nbCurrencyId]['currency_symbol']         = $nbCurrencySymbol;
+            $report['sums'][$nbCurrencyId]['currency_decimal_places'] = $nbCurrencyDp;
 
             // append other sums because they might be missing:
-            $report['sums'][$noBudgetEntry['currency_id']]['overspent'] = $report['sums'][$noBudgetEntry['currency_id']]['overspent'] ?? '0';
-            $report['sums'][$noBudgetEntry['currency_id']]['left'] = $report['sums'][$noBudgetEntry['currency_id']]['left'] ?? '0';
-            $report['sums'][$noBudgetEntry['currency_id']]['budgeted'] = $report['sums'][$noBudgetEntry['currency_id']]['budgeted'] ?? '0';
+            $report['sums'][$nbCurrencyId]['overspent'] = $report['sums'][$nbCurrencyId]['overspent'] ?? '0';
+            $report['sums'][$nbCurrencyId]['left']      = $report['sums'][$nbCurrencyId]['left'] ?? '0';
+            $report['sums'][$nbCurrencyId]['budgeted']  = $report['sums'][$nbCurrencyId]['budgeted'] ?? '0';
 
         }
         // make percentages based on total amount.
@@ -445,7 +452,6 @@ class BudgetController extends Controller
                 $report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
         }
-        //var_dump($report);exit;
 
         return view('reports.partials.budgets', compact('report'))->render();
     }
