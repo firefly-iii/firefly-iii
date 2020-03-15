@@ -191,7 +191,12 @@ class Request extends FormRequest
         if (!$this->has($field)) {
             return null;
         }
-        return app('steam')->cleanString((string)($this->get($field) ?? ''));
+        $res = trim(app('steam')->cleanString((string)($this->get($field) ?? '')));
+        if ('' === $res) {
+            return null;
+        }
+
+        return $res;
     }
 
     /**
@@ -344,11 +349,10 @@ class Request extends FormRequest
         $data['latitude']        = null;
         $data['zoom_level']      = null;
 
-
-        $longitudeKey = null === $prefix ? 'longitude' : sprintf('%s_longitude', $prefix);
-        $latitudeKey  = null === $prefix ? 'latitude' : sprintf('%s_latitude', $prefix);
-        $zoomLevelKey = null === $prefix ? 'zoom_level' : sprintf('%s_zoom_level', $prefix);
-        $hasLocationKey = null === $prefix ? 'has_location' : sprintf('%s_has_location', $prefix);
+        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
+        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
 
         // for a POST (store, all fields must be present and accounted for:
         if (
@@ -356,11 +360,10 @@ class Request extends FormRequest
             && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
         ) {
             Log::debug('Method is POST and all fields present.');
-
             $data['store_location'] = $this->boolean($hasLocationKey);
-            $data['longitude']      = '' === $this->string($longitudeKey) ? null : $this->string($longitudeKey);
-            $data['latitude']       = '' === $this->string($latitudeKey) ? null : $this->string($latitudeKey);
-            $data['zoom_level']     = '' === $this->string($zoomLevelKey) ? null : $this->integer($zoomLevelKey);
+            $data['longitude']      = $this->nullableString($longitudeKey);
+            $data['latitude']       = $this->nullableString($latitudeKey);
+            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
         }
         if (
             ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
@@ -371,9 +374,9 @@ class Request extends FormRequest
         ) {
             Log::debug('Method is PUT and all fields present.');
             $data['update_location'] = true;
-            $data['longitude']       = '' === $this->string($longitudeKey) ? null : $this->string($longitudeKey);
-            $data['latitude']        = '' === $this->string($latitudeKey) ? null : $this->string($latitudeKey);
-            $data['zoom_level']      = '' === $this->string($zoomLevelKey) ? null : $this->integer($zoomLevelKey);
+            $data['longitude']      = $this->nullableString($longitudeKey);
+            $data['latitude']       = $this->nullableString($latitudeKey);
+            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
         }
         if (null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
             Log::debug('One of the fields is NULL, wont save.');
@@ -417,6 +420,21 @@ class Request extends FormRequest
         if ('' === $currencyCode && '' === $currencyId) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.require_currency_info'));
         }
+    }
+
+    /**
+     * @param string|null $prefix
+     * @param string      $key
+     *
+     * @return string
+     */
+    private function getLocationKey(?string $prefix, string $key): string
+    {
+        if (null === $prefix) {
+            return $key;
+        }
+
+        return sprintf('%s_%s', $prefix, $key);
     }
 
 
