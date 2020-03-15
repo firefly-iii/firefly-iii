@@ -68,6 +68,7 @@
         mounted() {
             this.target = this.$refs.descr;
             this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/transaction-journals/all?search=";
+            this.$refs.descr.focus();
         },
         components: {
         },
@@ -101,7 +102,7 @@
                 // todo feels sloppy
 
                 if (e.keyCode === 13) {
-                    e.preventDefault();
+                    //e.preventDefault();
                 }
             },
             selectedItem: function (e) {

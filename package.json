@@ -15,12 +15,11 @@
         "bootstrap-sass": "^3.3.7",
         "cross-env": "^5.1",
         "font-awesome": "^4.7.0",
-        "jquery": "^3.1.1",
-        "laravel-mix": "^4.1.2",
-        "laravel-mix-bundle-analyzer": "^1.0.5",
-        "uiv": "^0.31.5",
-        "vue": "^2.6.10",
-        "vue-i18n": "^8.14.1",
-        "vue-template-compiler": "^2.6.10"
+        "jquery": "^3.4.1",
+        "laravel-mix": "^5.0",
+        "uiv": "^0.34",
+        "vue": "^2.6",
+        "vue-i18n": "^8.15",
+        "vue-template-compiler": "^2.6.11"
     }
 }

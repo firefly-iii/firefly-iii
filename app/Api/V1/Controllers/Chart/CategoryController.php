@@ -90,8 +90,8 @@ class CategoryController extends Controller
         $tempData      = [];
         $spentWith     = $this->opsRepository->listExpenses($start, $end);
         $earnedWith    = $this->opsRepository->listIncome($start, $end);
-        $spentWithout  = $this->noCatRepository->listExpenses($start, $end); // refactored
-        $earnedWithout = $this->noCatRepository->listIncome($start, $end); // refactored
+        $spentWithout  = $this->noCatRepository->listExpenses($start, $end);
+        $earnedWithout = $this->noCatRepository->listIncome($start, $end);
         $categories    = [];
 
 

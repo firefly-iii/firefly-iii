@@ -401,7 +401,7 @@ class Request extends FormRequest
         if (is_numeric($type)) {
             $type = (int)$type;
         }
-        if (0 === $type || 'none' === $type) {
+        if (0 === $type || 'none' === $type || '' === $type) {
             return;
         }
         // basic float check:
