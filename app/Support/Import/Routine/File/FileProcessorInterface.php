@@ -28,7 +28,8 @@ use FireflyIII\Models\ImportJob;
 
 /**
  * Interface FileProcessorInterface
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface FileProcessorInterface
 {

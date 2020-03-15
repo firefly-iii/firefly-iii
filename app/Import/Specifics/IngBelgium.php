@@ -24,6 +24,8 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class IngBelgium.
+ * @deprecated
+ * @codeCoverageIgnore
  *
  * Parses the description and opposing account information (IBAN and name) from CSV files for ING Belgium bank accounts.
  *

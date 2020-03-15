@@ -30,6 +30,7 @@ use Log;
  *
  * This class contains all the routines necessary to import from a file. Hint: there are none.
  *
+ * @deprecated
  * @codeCoverageIgnore
  */
 class FilePrerequisites implements PrerequisitesInterface

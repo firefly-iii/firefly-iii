@@ -24,6 +24,8 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class IngDescription.
+ * @deprecated
+ * @codeCoverageIgnore
  *
  * Parses the description from CSV files for Ing bank accounts.
  *

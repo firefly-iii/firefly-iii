@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Exception;
 /**
  * @codeCoverageIgnore
  * Class WrongRequestFormatException
+ * @deprecated
  */
 class WrongRequestFormatException extends SpectreException
 {

@@ -51,6 +51,8 @@ use Log;
  * Creates new transactions based on arrays.
  *
  * Class ImportArrayStorage
+ * @codeCoverageIgnore
+ * @deprecated
  *
  */
 class ImportArrayStorage

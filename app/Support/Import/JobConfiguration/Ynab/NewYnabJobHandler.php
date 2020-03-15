@@ -34,6 +34,8 @@ use RuntimeException;
 
 /**
  * Class NewYnabJobHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class NewYnabJobHandler implements YnabJobConfigurationInterface
 {

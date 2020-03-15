@@ -34,6 +34,8 @@ use Log;
 
 /**
  * Class JobStatusController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class JobStatusController extends Controller
 {

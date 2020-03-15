@@ -26,6 +26,8 @@ use Log;
 
 /**
  * Class Amount.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Amount implements ConverterInterface
 {

@@ -39,6 +39,8 @@ use Log;
 
 /**
  * Class CreateCSVImport.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CreateCSVImport extends Command
 {

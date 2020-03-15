@@ -34,6 +34,8 @@ use Log;
 
 /**
  * Class BunqJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class BunqJobConfiguration implements JobConfigurationInterface
 {

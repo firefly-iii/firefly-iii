@@ -24,6 +24,8 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Interface ConverterInterface.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface ConverterInterface
 {

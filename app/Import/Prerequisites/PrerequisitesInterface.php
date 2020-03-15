@@ -27,6 +27,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface PrerequisitesInterface
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface PrerequisitesInterface
 {

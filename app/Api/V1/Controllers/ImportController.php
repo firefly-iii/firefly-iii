@@ -40,6 +40,8 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class ImportController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ImportController extends Controller
 {

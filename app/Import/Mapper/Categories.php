@@ -27,6 +27,8 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 /**
  * Class Categories.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Categories implements MapperInterface
 {

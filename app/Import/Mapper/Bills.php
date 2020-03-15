@@ -27,6 +27,8 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
 /**
  * Class Bills.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Bills implements MapperInterface
 {

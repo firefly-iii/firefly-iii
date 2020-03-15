@@ -37,6 +37,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class FileJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FileJobConfiguration implements JobConfigurationInterface
 {

@@ -30,6 +30,8 @@ use Log;
  * This class contains all the routines necessary for the fake import provider.
  *
  * Class FakePrerequisites
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FakePrerequisites implements PrerequisitesInterface
 {

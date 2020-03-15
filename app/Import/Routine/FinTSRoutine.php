@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Log;
 /**
  *
  * Class FinTSRoutine
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FinTSRoutine implements RoutineInterface
 {

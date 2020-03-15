@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class CallbackController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CallbackController extends Controller
 {

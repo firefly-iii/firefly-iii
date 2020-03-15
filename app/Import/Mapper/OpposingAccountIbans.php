@@ -28,6 +28,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class OpposingAccounts.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class OpposingAccountIbans implements MapperInterface
 {

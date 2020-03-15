@@ -27,6 +27,7 @@ namespace FireflyIII\Support\Import\Placeholder;
  * Class ColumnValue
  *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ColumnValue
 {

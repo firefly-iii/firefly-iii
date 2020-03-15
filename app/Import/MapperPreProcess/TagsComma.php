@@ -24,6 +24,8 @@ namespace FireflyIII\Import\MapperPreProcess;
 
 /**
  * Class TagsComma.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class TagsComma implements PreProcessorInterface
 {

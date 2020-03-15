@@ -28,6 +28,7 @@ use Log;
 /**
  * @codeCoverageIgnore
  * Class StageAhoyHandler
+ * @deprecated
  */
 class StageAhoyHandler
 {

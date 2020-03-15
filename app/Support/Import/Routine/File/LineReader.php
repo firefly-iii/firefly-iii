@@ -36,6 +36,8 @@ use Log;
 
 /**
  * Class LineReader
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class LineReader
 {

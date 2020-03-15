@@ -29,7 +29,9 @@ use Log;
 
 /**
  * Class ListCustomersRequest
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ListCustomersRequest extends SpectreRequest
 {

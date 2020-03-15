@@ -36,6 +36,8 @@ use Log;
 
 /**
  * Class ChooseAccountsHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ChooseAccountsHandler implements BunqJobConfigurationInterface
 {

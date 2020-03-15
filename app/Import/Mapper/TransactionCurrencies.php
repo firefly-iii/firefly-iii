@@ -26,6 +26,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 
 /**
  * Class TransactionCurrencies.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class TransactionCurrencies implements MapperInterface
 {

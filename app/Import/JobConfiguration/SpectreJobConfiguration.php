@@ -37,6 +37,8 @@ use Log;
 
 /**
  * Class SpectreJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class SpectreJobConfiguration implements JobConfigurationInterface
 {

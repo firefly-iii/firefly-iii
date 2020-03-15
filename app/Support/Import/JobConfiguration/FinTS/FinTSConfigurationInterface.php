@@ -26,7 +26,8 @@ use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
 
 /**
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface FinTSConfigurationInterface
 {

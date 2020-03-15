@@ -31,6 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImportProvider.
+ *
+ * @deprecated
  */
 class ImportProvider implements BinderInterface
 {

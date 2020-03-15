@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class StageAuthenticatedHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageAuthenticatedHandler
 {

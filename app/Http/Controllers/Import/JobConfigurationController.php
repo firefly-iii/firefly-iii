@@ -34,6 +34,8 @@ use Log;
 
 /**
  * Class JobConfigurationController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class JobConfigurationController extends Controller
 {

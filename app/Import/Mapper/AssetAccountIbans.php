@@ -28,6 +28,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccounts.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AssetAccountIbans implements MapperInterface
 {

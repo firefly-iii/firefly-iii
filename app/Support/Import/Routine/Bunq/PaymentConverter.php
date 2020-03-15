@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class PaymentConverter
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class PaymentConverter
 {

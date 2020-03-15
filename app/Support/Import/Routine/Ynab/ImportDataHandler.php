@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class ImportDataHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ImportDataHandler
 {

@@ -37,6 +37,8 @@ use Log;
 
 /**
  * Class SelectAccountsHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class SelectAccountsHandler implements YnabJobConfigurationInterface
 {

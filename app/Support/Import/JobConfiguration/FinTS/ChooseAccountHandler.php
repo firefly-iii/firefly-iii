@@ -35,7 +35,9 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class ChooseAccountHandler
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ChooseAccountHandler implements FinTSConfigurationInterface
 {

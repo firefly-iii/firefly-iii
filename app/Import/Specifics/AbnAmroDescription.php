@@ -24,6 +24,8 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class AbnAmroDescription.
+ * @deprecated
+ * @codeCoverageIgnore
  *
  * Parses the description from txt files for ABN AMRO bank accounts.
  *

@@ -34,6 +34,8 @@ use Log;
 /**
  *
  * Class IndexController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class IndexController extends Controller
 {

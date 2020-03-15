@@ -33,6 +33,8 @@ use Log;
 
 /**
  * Class FakeRoutine
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FakeRoutine implements RoutineInterface
 {

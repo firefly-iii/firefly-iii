@@ -36,6 +36,8 @@ use Log;
 
 /**
  * Class NewFileJobHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class NewFileJobHandler implements FileConfigurationInterface
 {

@@ -27,6 +27,7 @@ namespace FireflyIII\Services\Spectre\Object;
  * Class Holder
  *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class Holder extends SpectreObject
 {

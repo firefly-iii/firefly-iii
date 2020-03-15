@@ -32,6 +32,8 @@ use Illuminate\Support\MessageBag;
 /**
  *
  * Class FinTSJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FinTSJobConfiguration implements JobConfigurationInterface
 {

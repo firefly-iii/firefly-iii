@@ -30,6 +30,8 @@ use Log;
 
 /**
  * Class CurrencyMapper
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CurrencyMapper
 {

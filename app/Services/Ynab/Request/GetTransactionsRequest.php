@@ -27,7 +27,9 @@ use Log;
 
 /**
  * Class GetTransactionsRequest
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class GetTransactionsRequest extends YnabRequest
 {

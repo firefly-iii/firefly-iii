@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class YnabJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class YnabJobConfiguration implements JobConfigurationInterface
 {

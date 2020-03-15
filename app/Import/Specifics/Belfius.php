@@ -24,6 +24,8 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class Belfius.
+ * @deprecated
+ * @codeCoverageIgnore
  *
  * Fixes Belfius CSV files to:
  *  - Correct descriptions for recurring transactions so doubles can be detected when the equivalent incoming

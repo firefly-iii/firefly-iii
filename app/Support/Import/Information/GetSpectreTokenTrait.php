@@ -31,7 +31,9 @@ use Log;
 
 /**
  * Trait GetSpectreTokenTrait
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 trait GetSpectreTokenTrait
 {

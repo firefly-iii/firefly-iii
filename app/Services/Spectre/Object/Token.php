@@ -28,6 +28,7 @@ use Carbon\Carbon;
 /**
  * @codeCoverageIgnore
  * Class Token
+ * @deprecated
  */
 class Token extends SpectreObject
 {

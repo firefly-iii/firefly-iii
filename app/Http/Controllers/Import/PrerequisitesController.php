@@ -32,6 +32,8 @@ use Log;
 
 /**
  * Class PrerequisitesController
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class PrerequisitesController extends Controller
 {

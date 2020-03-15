@@ -32,7 +32,7 @@ use Log;
  * @codeCoverageIgnore
  *
  * Class NewSpectreJobHandler
- *
+ * @deprecated
  */
 class NewSpectreJobHandler implements SpectreJobConfigurationInterface
 {

@@ -29,6 +29,8 @@ use Log;
 
 /**
  * This class contains all the routines necessary to connect to Spectre.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class SpectrePrerequisites implements PrerequisitesInterface
 {

@@ -27,6 +27,8 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
  * Class Budgets.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Budgets implements MapperInterface
 {

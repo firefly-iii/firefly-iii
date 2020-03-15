@@ -26,6 +26,8 @@ namespace FireflyIII\Import\JobConfiguration;
 /**
  *
  * Class FinTSConfigurationSteps
+ * @deprecated
+ * @codeCoverageIgnore
  */
 abstract class FinTSConfigurationSteps
 {

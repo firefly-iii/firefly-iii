@@ -34,6 +34,7 @@ use Illuminate\Support\MessageBag;
 /**
  * Class NewFinTSJobHandler
  * @codeCoverageIgnore
+ * @deprecated
  */
 class NewFinTSJobHandler implements FinTSConfigurationInterface
 {

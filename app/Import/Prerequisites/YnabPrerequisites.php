@@ -29,6 +29,8 @@ use Log;
 
 /**
  * Class YnabPrerequisites
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class YnabPrerequisites implements PrerequisitesInterface
 {

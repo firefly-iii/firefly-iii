@@ -31,7 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImportJob.
- *
+ * @codeCoverageIgnore
+ * @deprecated
  * @property array  $transactions
  * @property array  $configuration
  * @property User   $user

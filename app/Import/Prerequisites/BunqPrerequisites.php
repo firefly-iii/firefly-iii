@@ -33,6 +33,8 @@ use Log;
 
 /**
  * This class contains all the routines necessary to connect to Bunq.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class BunqPrerequisites implements PrerequisitesInterface
 {

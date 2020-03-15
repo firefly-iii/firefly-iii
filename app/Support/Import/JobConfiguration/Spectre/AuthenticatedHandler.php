@@ -31,6 +31,7 @@ use Log;
  * @codeCoverageIgnore
  *
  * Class AuthenticatedHandler
+ * @deprecated
  */
 class AuthenticatedHandler implements SpectreJobConfigurationInterface
 {

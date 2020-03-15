@@ -29,6 +29,8 @@ use Log;
 /**
  *
  * Class BankDebitCredit
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class BankDebitCredit implements ConverterInterface
 {

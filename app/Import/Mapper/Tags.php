@@ -27,6 +27,8 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 
 /**
  * Class Tags.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Tags implements MapperInterface
 {

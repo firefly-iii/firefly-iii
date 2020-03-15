@@ -30,6 +30,8 @@ use FireflyIII\Services\Ynab\Request\GetAccountsRequest;
 
 /**
  * Class GetAccountsHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class GetAccountsHandler
 {

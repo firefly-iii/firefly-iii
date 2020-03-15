@@ -29,6 +29,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class FakeJobConfiguration
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FakeJobConfiguration implements JobConfigurationInterface
 {
