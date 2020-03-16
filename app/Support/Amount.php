@@ -314,28 +314,30 @@ class Amount
      */
     public function getLocaleInfo(): array
     {
-        $locale = explode(',', (string)trans('config.locale'));
+        $locale = explode(',', (string) trans('config.locale'));
         $locale = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
         $info = localeconv();
         // correct variables
-        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
-                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
+        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
-                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
-
-        $info['n_sep_by_space'] = (is_bool($info['n_sep_by_space']) && true === $info['n_sep_by_space'])
-                                  || (is_int($info['n_sep_by_space']) && 1 === $info['n_sep_by_space']);
-
-        $info['p_sep_by_space'] = (is_bool($info['p_sep_by_space']) && true === $info['p_sep_by_space'])
-                                  || (is_int($info['p_sep_by_space']) && 1 === $info['p_sep_by_space']);
-
-        // n_sep_by_space
-        // p_sep_by_space
+        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
 
         return $info;
+    }
 
+    /**
+     * @param array  $info
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function getLocaleField(array $info, string $field): bool
+    {
+        return (is_bool($info[$field]) && true === $info[$field])
+               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 
     /**
