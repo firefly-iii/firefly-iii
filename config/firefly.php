@@ -335,6 +335,7 @@ return [
         'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
         'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
+        'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
 
 
         // currently disabled languages:
