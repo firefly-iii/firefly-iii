@@ -86,13 +86,14 @@ class PreferencesController extends Controller
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
         $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $languages          = config('firefly.languages');
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
 
-        ksort($language);
+        ksort($languages);
 
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
@@ -106,6 +107,7 @@ class PreferencesController extends Controller
                 'language',
                 'groupedAccounts',
                 'frontPageAccounts',
+                'languages',
                 'tjOptionalFields',
                 'viewRange',
                 'customFiscalYear',
