@@ -378,51 +378,19 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $array                      = $journal->toArray();
         $array['transactions']      = [];
-        $array['meta']              = [];
-        $array['tags']              = [];
-        $array['categories']        = [];
-        $array['budgets']           = [];
-        $array['notes']             = [];
-        $array['locations']         = [];
-        $array['attachments']       = [];
-        $array['links']             = [];
-        $array['piggy_bank_events'] = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = []; // todo
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = []; // todo
+        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
             $array['transactions'][] = $this->expandTransaction($transaction);
-        }
-        foreach ($journal->transactionJournalMeta as $meta) {
-            $array['meta'][] = $meta->toArray();
-        }
-
-        foreach ($journal->tags as $tag) {
-            $array['tags'][] = $tag->toArray();
-        }
-        foreach ($journal->categories as $category) {
-            $array['categories'][] = $category->toArray();
-        }
-
-        foreach ($journal->budgets as $budget) {
-            $array['budgets'][] = $budget->toArray();
-        }
-        foreach ($journal->notes as $note) {
-            $array['notes'][] = $note->toArray();
-        }
-
-        foreach ($journal->attachments as $attachment) {
-            $array['attachments'][] = $attachment->toArray();
-        }
-        // TODO apparantly this doesnt work.
-        foreach ($journal->sourceJournalLinks as $link) {
-            $array['links'][] = $link->toArray();
-        }
-        foreach ($journal->destJournalLinks as $link) {
-            $array['links'][] = $link->toArray();
-        }
-
-        foreach ($journal->piggyBankEvents as $event) {
-            $array['piggy_bank_events'][] = $event->toArray();
         }
 
         return $array;

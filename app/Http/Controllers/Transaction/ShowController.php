@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
@@ -84,11 +83,11 @@ class ShowController extends Controller
         $first    = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
         $splits   = $transactionGroup->transactionJournals()->count();
 
-        if(null === $first) {
+        if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string)trans(sprintf('firefly.%s',$first->transactionType->type));
+        $type     = (string) trans(sprintf('firefly.%s', $first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 
@@ -113,10 +112,19 @@ class ShowController extends Controller
         $links       = $this->repository->getLinks($transactionGroup);
 
         return view(
-            'transactions.show', compact(
-                                   'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
-                                   'events', 'attachments', 'links'
-                               )
+            'transactions.show',
+            compact(
+                'transactionGroup',
+                'amounts',
+                'first',
+                'type',
+                'subTitle',
+                'splits',
+                'groupArray',
+                'events',
+                'attachments',
+                'links'
+            )
         );
     }
 
