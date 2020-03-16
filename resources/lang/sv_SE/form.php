@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Valuta',
     'currency_id'               => 'Valuta',
     'transaction_currency_id'   => 'Valuta',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Din servers externa IP',
     'attachments'               => 'Bilagor',
     'journal_amount'            => 'Belopp',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Källkonto',
     'expected_on'               => 'Förväntad',
     'paid'                      => 'Betald',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

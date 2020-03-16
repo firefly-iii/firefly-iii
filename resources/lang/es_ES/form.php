@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Divisa',
     'currency_id'               => 'Divisa',
     'transaction_currency_id'   => 'Moneda',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'IP externa de su servidor',
     'attachments'               => 'Adjuntos',
     'journal_amount'            => 'Importe',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Cuenta de origen',
     'expected_on'               => 'Esperado para',
     'paid'                      => 'Pagado',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

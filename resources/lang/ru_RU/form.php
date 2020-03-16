@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Валюта',
     'currency_id'               => 'Валюта',
     'transaction_currency_id'   => 'Валюта',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Внешний IP-адрес вашего сервера',
     'attachments'               => 'Вложения',
     'journal_amount'            => 'Сумма',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Исходный счёт',
     'expected_on'               => 'Ожидаем',
     'paid'                      => 'Оплачено',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

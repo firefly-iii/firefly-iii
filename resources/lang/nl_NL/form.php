@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Valuta',
     'currency_id'               => 'Valuta',
     'transaction_currency_id'   => 'Valuta',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Het externe IP-adres van je server',
     'attachments'               => 'Bijlagen',
     'journal_amount'            => 'Bedrag',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Bronrekening',
     'expected_on'               => 'Verwacht op',
     'paid'                      => 'Betaald',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Nog niet betaald in :currency',
     'is_alpha_warning'                           => 'Je gebruikt een ALPHA versie. Let op bugs en fouten.',
     'is_beta_warning'                            => 'Je gebruikt een BETA versie. Let op bugs en fouten.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Nieuwe regelgroep ":title" opgeslagen!',
     'updated_rule_group'                         => 'Regelgroep ":title" geüpdatet.',
     'edit_rule_group'                            => 'Wijzig regelgroep ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Verwijder regelgroep ":title"',
     'deleted_rule_group'                         => 'Regelgroep ":title" verwijderd',
     'update_rule_group'                          => 'Wijzig regelgroep',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
