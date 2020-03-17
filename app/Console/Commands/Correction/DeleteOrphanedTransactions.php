@@ -51,8 +51,8 @@ class DeleteOrphanedTransactions extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws Exception
+     * @return int
      */
     public function handle(): int
     {
@@ -79,7 +79,7 @@ class DeleteOrphanedTransactions extends Command
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             // delete journals
-            $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
+            $journal = TransactionJournal::find((int) $transaction->transaction_journal_id);
             if ($journal) {
                 try {
                     $journal->delete();
@@ -89,7 +89,7 @@ class DeleteOrphanedTransactions extends Command
                 }
                 // @codeCoverageIgnoreEnd
             }
-            Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
+            Transaction::where('transaction_journal_id', (int) $transaction->transaction_journal_id)->delete();
             $this->line(
                 sprintf(
                     'Deleted transaction journal #%d because account #%d was already deleted.',
@@ -123,7 +123,7 @@ class DeleteOrphanedTransactions extends Command
             );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $transaction = Transaction::find((int)$entry->transaction_id);
+            $transaction = Transaction::find((int) $entry->transaction_id);
             $transaction->delete();
             $this->info(
                 sprintf(

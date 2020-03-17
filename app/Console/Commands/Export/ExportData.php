@@ -22,6 +22,7 @@
 namespace FireflyIII\Console\Commands\Export;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
@@ -32,6 +33,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use League\Csv\CannotInsertRecord;
 use Log;
 
 /**
@@ -79,9 +81,9 @@ class ExportData extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
-     * @throws \League\Csv\CannotInsertRecord
+     * @throws CannotInsertRecord
+     * @return int
      */
     public function handle(): int
     {
@@ -162,8 +164,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return Collection
      * @throws FireflyException
+     * @return Collection
      */
     private function getAccountsParameter(): Collection
     {
@@ -171,7 +173,7 @@ class ExportData extends Command
         $accounts    = new Collection;
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
+        if (null !== $accountList && '' !== (string) $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
@@ -195,9 +197,9 @@ class ExportData extends Command
     /**
      * @param string $field
      *
-     * @return Carbon
      * @throws FireflyException
-     * @throws \Exception
+     * @throws Exception
+     * @return Carbon
      */
     private function getDateParameter(string $field): Carbon
     {
@@ -231,8 +233,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return string
      * @throws FireflyException
+     * @return string
      */
     private function getExportDirectory(): string
     {
@@ -248,8 +250,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return array
      * @throws FireflyException
+     * @return array
      */
     private function parseOptions(): array
     {

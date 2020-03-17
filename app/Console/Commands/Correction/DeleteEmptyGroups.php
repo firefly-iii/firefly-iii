@@ -49,15 +49,15 @@ class DeleteEmptyGroups extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      * @throws Exception;
+     * @return mixed
      */
     public function handle(): int
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $start  = microtime(true);
-        $groupIds  =
-            TransactionGroup
+        $start = microtime(true);
+        $groupIds
+               = TransactionGroup
             ::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
             ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
 

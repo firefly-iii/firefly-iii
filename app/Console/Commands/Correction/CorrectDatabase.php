@@ -30,6 +30,7 @@ use Schema;
 
 /**
  * Class CorrectDatabase
+ *
  * @codeCoverageIgnore
  */
 class CorrectDatabase extends Command
@@ -73,7 +74,7 @@ class CorrectDatabase extends Command
             'firefly-iii:fix-ob-currencies',
             'firefly-iii:fix-long-descriptions',
             'firefly-iii:fix-recurring-transactions',
-            'firefly-iii:restore-oauth-keys'
+            'firefly-iii:restore-oauth-keys',
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));

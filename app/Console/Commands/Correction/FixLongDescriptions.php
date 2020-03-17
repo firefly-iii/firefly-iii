@@ -51,7 +51,7 @@ class FixLongDescriptions extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
+        $start    = microtime(true);
         $journals = TransactionJournal::get(['id', 'description']);
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -73,6 +73,7 @@ class FixLongDescriptions extends Command
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified all transaction group and journal title lengths in %s seconds.', $end));
+
         return 0;
     }
 }

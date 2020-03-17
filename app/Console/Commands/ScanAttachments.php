@@ -63,7 +63,7 @@ class ScanAttachments extends Command
         $disk        = Storage::disk('upload');
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
-            $fileName         = $attachment->fileName();
+            $fileName = $attachment->fileName();
             try {
                 $encryptedContent = $disk->get($fileName);
             } catch (FileNotFoundException $e) {

@@ -27,8 +27,8 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Log;
@@ -68,7 +68,7 @@ class Cron extends Command
             $this->error(sprintf('"%s" is not a valid date', $this->option('date')));
             $e->getMessage();
         }
-        $force = (bool)$this->option('force');
+        $force = (bool) $this->option('force');
 
         /*
          * Fire recurring transaction cron job.

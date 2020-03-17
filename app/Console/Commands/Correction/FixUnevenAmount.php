@@ -63,8 +63,8 @@ class FixUnevenAmount extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
-            if (0 !== bccomp((string)$entry->the_sum, '0')) {
-                $this->fixJournal((int)$entry->transaction_journal_id);
+            if (0 !== bccomp((string) $entry->the_sum, '0')) {
+                $this->fixJournal((int) $entry->transaction_journal_id);
                 $count++;
             }
         }
@@ -105,7 +105,7 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', (string)$source->amount);
+        $amount = bcmul('-1', (string) $source->amount);
 
         // fix amount of destination:
         /** @var Transaction $destination */

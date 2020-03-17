@@ -50,15 +50,12 @@ class TransactionIdentifier extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
-
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
-
     /** @var JournalCLIRepositoryInterface */
     private $cliRepository;
-
     /** @var int */
     private $count;
+    /** @var JournalRepositoryInterface */
+    private $journalRepository;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
@@ -108,17 +105,36 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
+     * @param Transaction $transaction
+     * @param array       $exclude
      *
-     * @codeCoverageIgnore
+     * @return Transaction|null
      */
-    private function stupidLaravel(): void
+    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
-        $this->count             = 0;
+        // find opposing:
+        $amount = bcmul((string) $transaction->amount, '-1');
+
+        try {
+            /** @var Transaction $opposing */
+            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
+                                   ->where('amount', $amount)->where('identifier', '=', 0)
+                                   ->whereNotIn('id', $exclude)
+                                   ->first();
+            // @codeCoverageIgnoreStart
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
+            $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
+            $this->error('Please run "php artisan migrate" to add this field to the table.');
+            $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
+
+            return null;
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return $opposing;
     }
 
     /**
@@ -128,7 +144,7 @@ class TransactionIdentifier extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -140,6 +156,20 @@ class TransactionIdentifier extends Command
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
+        $this->count             = 0;
     }
 
     /**
@@ -170,37 +200,5 @@ class TransactionIdentifier extends Command
             ++$identifier;
         }
 
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param array $exclude
-     * @return Transaction|null
-     */
-    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
-    {
-        // find opposing:
-        $amount = bcmul((string)$transaction->amount, '-1');
-
-        try {
-            /** @var Transaction $opposing */
-            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
-                                   ->where('amount', $amount)->where('identifier', '=', 0)
-                                   ->whereNotIn('id', $exclude)
-                                   ->first();
-            // @codeCoverageIgnoreStart
-        } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
-            $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-            $this->error('Please run "php artisan migrate" to add this field to the table.');
-            $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
-
-            return null;
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return $opposing;
     }
 }
