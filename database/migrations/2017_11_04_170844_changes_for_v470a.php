@@ -1,7 +1,7 @@
 <?php
 /**
  * 2017_11_04_170844_changes_for_v470a.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ChangesForV470a
+ * Class ChangesForV470a.
  */
 class ChangesForV470a extends Migration
 {
@@ -36,7 +36,7 @@ class ChangesForV470a extends Migration
     {
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('reconciled');
             }
         );
@@ -51,7 +51,7 @@ class ChangesForV470a extends Migration
     {
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->boolean('reconciled')->after('deleted_at')->default(0);
             }
         );

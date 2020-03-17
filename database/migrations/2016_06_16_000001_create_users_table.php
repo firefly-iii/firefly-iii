@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_06_16_000001_create_users_table.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class CreateUsersTable
+ * Class CreateUsersTable.
  */
 class CreateUsersTable extends Migration
 {
@@ -46,7 +46,7 @@ class CreateUsersTable extends Migration
         if (!Schema::hasTable('users')) {
             Schema::create(
                 'users',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->string('email', 255);

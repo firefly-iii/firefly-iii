@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_11_24_210552_changes_for_v420.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV420
+ * Class ChangesForV420.
  */
 class ChangesForV420 extends Migration
 {
@@ -35,7 +35,7 @@ class ChangesForV420 extends Migration
     {
         Schema::table(
             'journal_meta',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropSoftDeletes();
             }
         );
@@ -50,7 +50,7 @@ class ChangesForV420 extends Migration
     {
         Schema::table(
             'journal_meta',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->softDeletes();
             }
         );

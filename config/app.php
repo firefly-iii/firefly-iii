@@ -1,7 +1,7 @@
 <?php
 /**
  * app.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,11 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 declare(strict_types=1);
 
 use FireflyIII\Providers\ImportServiceProvider;
-
 
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),

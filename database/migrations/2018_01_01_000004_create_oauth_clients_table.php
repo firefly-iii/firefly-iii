@@ -2,7 +2,7 @@
 
 /**
  * 2018_01_01_000004_create_oauth_clients_table.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateOauthClientsTable
+ * Class CreateOauthClientsTable.
  */
 class CreateOauthClientsTable extends Migration
 {
@@ -46,17 +46,17 @@ class CreateOauthClientsTable extends Migration
     public function up(): void
     {
         Schema::create(
-            'oauth_clients', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->index()->nullable();
-            $table->string('name');
-            $table->string('secret', 100);
-            $table->text('redirect');
-            $table->boolean('personal_access_client');
-            $table->boolean('password_client');
-            $table->boolean('revoked');
-            $table->timestamps();
-        }
+            'oauth_clients', static function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->index()->nullable();
+                $table->string('name');
+                $table->string('secret', 100);
+                $table->text('redirect');
+                $table->boolean('personal_access_client');
+                $table->boolean('password_client');
+                $table->boolean('revoked');
+                $table->timestamps();
+            }
         );
     }
 }

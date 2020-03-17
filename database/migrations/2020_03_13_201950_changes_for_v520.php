@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV520
+ * Class ChangesForV520.
  */
 class ChangesForV520 extends Migration
 {
@@ -37,7 +39,6 @@ class ChangesForV520 extends Migration
                     $table->tinyInteger('auto_budget_type', false, true)->default(1);
                     $table->decimal('amount', 22, 12);
                     $table->string('period', 50);
-
 
                     //$table->string('password', 60);
                     //$table->string('remember_token', 100)->nullable();

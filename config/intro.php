@@ -1,7 +1,7 @@
 <?php
 /**
  * intro.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -33,7 +33,7 @@ return [
         'box_out_holder' => ['element' => '#box_out_holder'],
         'help'           => ['element' => '#help', 'position' => 'bottom'],
         'sidebar-toggle' => ['element' => '#sidebar-toggle', 'position' => 'bottom'],
-        'cash_account' => ['element' => '#all_transactions','position' => 'left'],
+        'cash_account'   => ['element' => '#all_transactions', 'position' => 'left'],
         'outro'          => [],
     ],
     // accounts: create
@@ -42,24 +42,24 @@ return [
     ],
     // transactions: create
     'transactions_create_withdrawal'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
+        'source'                => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+        'more_meta'             => ['element' => 'input[name="category[]"]'],
+        'split_add'             => ['element' => '.split_add_btn'],
     ],
 
     'transactions_create_deposit'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
+        'source'                => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+        'more_meta'             => ['element' => 'input[name="category[]"]'],
+        'split_add'             => ['element' => '.split_add_btn'],
     ],
 
     'transactions_create_transfer'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
+        'source'                => ['element' => 'input[name="source[]"]'],
         'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+        'more_meta'             => ['element' => 'input[name="category[]"]'],
+        'split_add'             => ['element' => '.split_add_btn'],
     ],
 
     // extra text for asset account creation.
@@ -72,7 +72,7 @@ return [
     // budgets: index
     'budgets_index'          => [
         'intro'            => [],
-        'set_budget'       => ['element' => '#availableBar',],
+        'set_budget'       => ['element' => '#availableBar'],
         'see_expenses_bar' => ['element' => '#spentBar'],
         'navigate_periods' => ['element' => '#periodNavigator'],
         'new_budget'       => ['element' => '#createBudgetBox'],
@@ -115,7 +115,7 @@ return [
     // piggies: index, create, show
     'piggy-banks_index'              => [
         'saved'         => ['element' => '.piggySaved'],
-        'button'        => ['element' => '.piggyBar',],
+        'button'        => ['element' => '.piggyBar'],
         'accountStatus' => ['element' => '#accountStatus', 'position' => 'top'],
     ],
     'piggy-banks_create'             => [
@@ -173,9 +173,9 @@ return [
     'currencies_index'               => [
         'intro'   => [],
         'default' => ['element' => '#default-currency'],
-        'buttons' => ['element' => '.buttons',]
+        'buttons' => ['element' => '.buttons'],
     ],
     'currencies_create'              => [
-        'code' => ['element' => '#ffInput_code',],
+        'code' => ['element' => '#ffInput_code'],
     ],
 ];

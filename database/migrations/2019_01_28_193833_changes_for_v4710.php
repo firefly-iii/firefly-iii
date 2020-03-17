@@ -2,7 +2,7 @@
 
 /**
  * 2019_01_28_193833_changes_for_v4710.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -49,23 +49,22 @@ class ChangesForV4710 extends Migration
     {
         if (!Schema::hasTable('transaction_groups')) {
             Schema::create(
-                'transaction_groups', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->string('title', 1024)->nullable();
+                'transaction_groups', static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('title', 1024)->nullable();
 
-
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('group_journals')) {
             Schema::create(
                 'group_journals',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->integer('transaction_group_id', false, true);
                     $table->integer('transaction_journal_id', false, true);
@@ -78,6 +77,5 @@ class ChangesForV4710 extends Migration
                 }
             );
         }
-
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 /**
  * debugbar.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2020 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +23,6 @@
  */
 
 return [
-
     /*
      |--------------------------------------------------------------------------
      | Debugbar Settings
@@ -36,8 +36,8 @@ return [
      */
 
     'enabled' => env('DEBUGBAR_ENABLED', null),
-    'except' => [
-        'telescope*'
+    'except'  => [
+        'telescope*',
     ],
 
     /*
@@ -57,7 +57,7 @@ return [
         'driver'     => 'file', // redis, file, pdo, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
-        'provider'   => '' // Instance of StorageInterface for custom driver
+        'provider'   => '', // Instance of StorageInterface for custom driver
     ],
 
     /*
@@ -87,7 +87,7 @@ return [
      | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
      */
 
-    'capture_ajax' => true,
+    'capture_ajax'    => true,
     'add_ajax_timing' => false,
 
     /*
@@ -163,26 +163,26 @@ return [
             'with_params'       => true,   // Render SQL with the parameters substituted
             'backtrace'         => true,   // Use a backtrace to find the origin of the query in your files.
             'timeline'          => false,  // Add the queries to the timeline
-            'explain' => [                 // Show EXPLAIN output on queries
+            'explain'           => [                 // Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => ['SELECT'],     // // workaround ['SELECT'] only. https://github.com/barryvdh/laravel-debugbar/issues/888 ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
+                'types'   => ['SELECT'],     // // workaround ['SELECT'] only. https://github.com/barryvdh/laravel-debugbar/issues/888 ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
             ],
             'hints'             => true,    // Show hints for common mistakes
         ],
         'mail' => [
-            'full_log' => false
+            'full_log' => false,
         ],
         'views' => [
             'data' => true,    //Note: Can slow down the application, because the data can be quite large..
         ],
         'route' => [
-            'label' => true  // show complete route on bar
+            'label' => true,  // show complete route on bar
         ],
         'logs' => [
-            'file' => null
+            'file' => null,
         ],
         'cache' => [
-            'values' => true // collect cache values
+            'values' => true, // collect cache values
         ],
     ],
 

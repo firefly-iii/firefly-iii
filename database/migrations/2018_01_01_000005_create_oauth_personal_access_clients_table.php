@@ -2,7 +2,7 @@
 
 /**
  * 2018_01_01_000005_create_oauth_personal_access_clients_table.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateOauthPersonalAccessClientsTable
+ * Class CreateOauthPersonalAccessClientsTable.
  */
 class CreateOauthPersonalAccessClientsTable extends Migration
 {
@@ -37,7 +37,6 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     public function down(): void
     {
         Schema::drop('oauth_personal_access_clients');
-
     }
 
     /**
@@ -47,11 +46,11 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     public function up(): void
     {
         Schema::create(
-            'oauth_personal_access_clients', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('client_id')->index();
-            $table->timestamps();
-        }
+            'oauth_personal_access_clients', static function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('client_id')->index();
+                $table->timestamps();
+            }
         );
     }
 }

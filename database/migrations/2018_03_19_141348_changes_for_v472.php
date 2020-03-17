@@ -2,7 +2,7 @@
 
 /**
  * 2018_03_19_141348_changes_for_v472.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,7 +26,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV472
+ * Class ChangesForV472.
  */
 class ChangesForV472 extends Migration
 {
@@ -39,13 +39,13 @@ class ChangesForV472 extends Migration
     {
         Schema::table(
             'attachments',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->text('notes')->nullable();
             }
         );
         Schema::table(
             'budgets',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('order');
             }
         );
@@ -61,14 +61,14 @@ class ChangesForV472 extends Migration
     {
         Schema::table(
             'attachments',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('notes');
             }
         );
 
         Schema::table(
             'budgets',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->mediumInteger('order', false, true)->default(0);
             }
         );

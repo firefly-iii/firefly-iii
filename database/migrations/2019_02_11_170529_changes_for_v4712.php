@@ -1,7 +1,7 @@
 <?php
 /**
  * 2019_02_11_170529_changes_for_v4712.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,7 +26,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ChangesForV4712
+ * Class ChangesForV4712.
  */
 class ChangesForV4712 extends Migration
 {
@@ -57,9 +57,9 @@ class ChangesForV4712 extends Migration
          * nice.
          */
         Schema::table(
-            'transaction_journals', function (Blueprint $table) {
-            $table->dateTime('date')->change();
-        }
+            'transaction_journals', static function (Blueprint $table) {
+                $table->dateTime('date')->change();
+            }
         );
     }
 }

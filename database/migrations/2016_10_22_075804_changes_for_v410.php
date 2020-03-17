@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_10_22_075804_changes_for_v410.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV410
+ * Class ChangesForV410.
  */
 class ChangesForV410 extends Migration
 {
@@ -45,7 +45,7 @@ class ChangesForV410 extends Migration
     {
         Schema::create(
             'notes',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
                 $table->softDeletes();

@@ -1,7 +1,7 @@
 <?php
 /**
  * 2017_08_20_062014_changes_for_v470.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ChangesForV470
+ * Class ChangesForV470.
  */
 class ChangesForV470 extends Migration
 {
@@ -48,7 +48,7 @@ class ChangesForV470 extends Migration
         if (!Schema::hasTable('link_types')) {
             Schema::create(
                 'link_types',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();
@@ -65,7 +65,7 @@ class ChangesForV470 extends Migration
         if (!Schema::hasTable('journal_links')) {
             Schema::create(
                 'journal_links',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->integer('link_type_id', false, true);

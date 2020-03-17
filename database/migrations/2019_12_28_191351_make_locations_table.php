@@ -2,7 +2,7 @@
 
 /**
  * 2019_12_28_191351_make_locations_table.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2020 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class MakeLocationsTable
+ * Class MakeLocationsTable.
  */
 class MakeLocationsTable extends Migration
 {
@@ -50,17 +50,17 @@ class MakeLocationsTable extends Migration
     {
         Schema::create(
             'locations', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-            $table->softDeletes();
+                $table->bigIncrements('id');
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->integer('locatable_id', false, true);
-            $table->string('locatable_type', 255);
+                $table->integer('locatable_id', false, true);
+                $table->string('locatable_type', 255);
 
-            $table->decimal('latitude', 24, 12)->nullable();
-            $table->decimal('longitude', 24, 12)->nullable();
-            $table->smallInteger('zoom_level', false, true)->nullable();
-        }
+                $table->decimal('latitude', 24, 12)->nullable();
+                $table->decimal('longitude', 24, 12)->nullable();
+                $table->smallInteger('zoom_level', false, true)->nullable();
+            }
         );
     }
 }
