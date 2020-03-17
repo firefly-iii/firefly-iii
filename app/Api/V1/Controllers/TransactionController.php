@@ -152,7 +152,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -302,7 +302,7 @@ class TransactionController extends Controller
             $response = [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.description' => [sprintf('Internal exception: %s', $e->getMessage())]
+                    'transactions.0.description' => [sprintf('Internal exception: %s', $e->getMessage())],
                 ],
             ];
 

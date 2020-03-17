@@ -99,10 +99,10 @@ class AccountController extends Controller
 
         // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
             foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId = (int)$currencyId;
+                $currencyId = (int) $currencyId;
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
@@ -114,7 +114,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float)$diff,
+                        'diff_float'  => (float) $diff,
                         'currency_id' => $currencyId,
                     ];
                 }
@@ -247,10 +247,10 @@ class AccountController extends Controller
 
         // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             // loop each expense entry (each entry can be a different currency).
             foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId = (int)$currencyId;
+                $currencyId = (int) $currencyId;
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
@@ -263,7 +263,7 @@ class AccountController extends Controller
                         'name'        => $accountNames[$accountId],
                         'difference'  => bcmul($diff, '-1'),
                         //  For some reason this line is never covered in code coverage:
-                        'diff_float'  => ((float)$diff) * -1, // @codeCoverageIgnore
+                        'diff_float'  => ((float) $diff) * -1, // @codeCoverageIgnore
                         'currency_id' => $currencyId,
                     ];
                 }

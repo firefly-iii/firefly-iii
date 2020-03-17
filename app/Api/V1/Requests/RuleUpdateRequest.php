@@ -142,7 +142,7 @@ class RuleUpdateRequest extends Request
         $actions = $data['actions'] ?? null;
         // need at least one action
         if (is_array($actions) && 0 === count($actions)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
         }
     }
 
@@ -157,7 +157,7 @@ class RuleUpdateRequest extends Request
         $triggers = $data['triggers'] ?? null;
         // need at least one trigger
         if (is_array($triggers) && 0 === count($triggers)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -176,8 +176,8 @@ class RuleUpdateRequest extends Request
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -200,8 +200,8 @@ class RuleUpdateRequest extends Request
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }

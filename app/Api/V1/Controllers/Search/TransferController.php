@@ -79,7 +79,7 @@ class TransferController extends Controller
         }
 
         // collector to return results.
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();

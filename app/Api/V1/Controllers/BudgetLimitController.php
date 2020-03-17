@@ -102,9 +102,9 @@ class BudgetLimitController extends Controller
     public function index(Request $request): JsonResponse
     {
         $manager  = $this->getManager();
-        $budgetId = (int)($request->get('budget_id') ?? 0);
+        $budgetId = (int) ($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budgetId);
 
         $collection = new Collection;
@@ -156,9 +156,9 @@ class BudgetLimitController extends Controller
      *
      * @param BudgetLimitRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
      *
+     * @return JsonResponse
      */
     public function store(BudgetLimitRequest $request): JsonResponse
     {
@@ -191,7 +191,7 @@ class BudgetLimitController extends Controller
      */
     public function transactions(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

@@ -76,7 +76,7 @@ class RuleTriggerRequest extends Request
      */
     private function getAccounts(): Collection
     {
-        $accountList = '' === (string)$this->query('accounts') ? [] : explode(',', $this->query('accounts'));
+        $accountList = '' === (string) $this->query('accounts') ? [] : explode(',', $this->query('accounts'));
         $accounts    = new Collection;
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -84,7 +84,7 @@ class RuleTriggerRequest extends Request
 
         foreach ($accountList as $accountId) {
             Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $accountRepository->findNull((int)$accountId);
+            $account = $accountRepository->findNull((int) $accountId);
             if ($this->validAccount($account)) {
                 /** @noinspection NullPointerExceptionInspection */
                 Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));

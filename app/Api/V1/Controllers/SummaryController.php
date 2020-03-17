@@ -96,8 +96,8 @@ class SummaryController extends Controller
     /**
      * @param DateRequest $request
      *
-     * @return JsonResponse
      * @throws Exception
+     * @return JsonResponse
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -176,7 +176,7 @@ class SummaryController extends Controller
         $set = $collector->getExtractedJournals();
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId           = (int)$transactionJournal['currency_id'];
+            $currencyId           = (int) $transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
@@ -198,7 +198,7 @@ class SummaryController extends Controller
 
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId            = (int)$transactionJournal['currency_id'];
+            $currencyId            = (int) $transactionJournal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
@@ -272,7 +272,7 @@ class SummaryController extends Controller
         $return       = [];
         foreach ($paidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->findNull((int)$currencyId);
+            $currency = $this->currencyRepos->findNull((int) $currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -292,7 +292,7 @@ class SummaryController extends Controller
 
         foreach ($unpaidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->findNull((int)$currencyId);
+            $currency = $this->currencyRepos->findNull((int) $currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -317,8 +317,8 @@ class SummaryController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return array
      * @throws Exception
+     * @return array
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -337,7 +337,7 @@ class SummaryController extends Controller
             $days   = $today->diffInDays($end) + 1;
             $perDay = '0';
             if (0 !== $days && bccomp($leftToSpend, '0') > -1) {
-                $perDay = bcdiv($leftToSpend, (string)$days);
+                $perDay = bcdiv($leftToSpend, (string) $days);
             }
 
             $return[] = [
@@ -350,7 +350,7 @@ class SummaryController extends Controller
                 'currency_decimal_places' => $row['currency_decimal_places'],
                 'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
-                'sub_title'               => (string)trans(
+                'sub_title'               => (string) trans(
                     'firefly.box_spend_per_day',
                     ['amount' => app('amount')->formatFlat(
                         $row['currency_symbol'],
@@ -361,6 +361,7 @@ class SummaryController extends Controller
                 ),
             ];
         }
+
         return $return;
     }
 

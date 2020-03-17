@@ -105,7 +105,7 @@ class TransactionLinkController extends Controller
         $name = $request->get('name');
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $linkType = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.
@@ -155,8 +155,8 @@ class TransactionLinkController extends Controller
      *
      * @param TransactionLinkRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function store(TransactionLinkRequest $request): JsonResponse
     {
@@ -186,8 +186,8 @@ class TransactionLinkController extends Controller
      * @param TransactionLinkRequest $request
      * @param TransactionJournalLink $journalLink
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {

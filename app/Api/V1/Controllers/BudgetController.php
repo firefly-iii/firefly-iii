@@ -90,7 +90,7 @@ class BudgetController extends Controller
     public function budgetLimits(Budget $budget): JsonResponse
     {
         $manager  = $this->getManager();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budget->id);
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
@@ -135,7 +135,7 @@ class BudgetController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getBudgets();
@@ -182,9 +182,9 @@ class BudgetController extends Controller
      *
      * @param BudgetStoreRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
      *
+     * @return JsonResponse
      */
     public function store(BudgetStoreRequest $request): JsonResponse
     {
@@ -206,8 +206,8 @@ class BudgetController extends Controller
      * @param BudgetLimitRequest $request
      * @param Budget             $budget
      *
-     * @return JsonResponse
      * @throws Exception
+     * @return JsonResponse
      */
     public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
     {
@@ -237,7 +237,7 @@ class BudgetController extends Controller
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');
@@ -293,7 +293,7 @@ class BudgetController extends Controller
      * Update a budget.
      *
      * @param BudgetUpdateRequest $request
-     * @param Budget        $budget
+     * @param Budget              $budget
      *
      * @return JsonResponse
      */

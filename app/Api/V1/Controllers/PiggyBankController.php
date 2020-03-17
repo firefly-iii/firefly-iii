@@ -93,7 +93,7 @@ class PiggyBankController extends Controller
     {
         $manager = $this->getManager();
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks();
@@ -126,7 +126,7 @@ class PiggyBankController extends Controller
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
 
         $collection = $this->repository->getEvents($piggyBank);
@@ -175,13 +175,13 @@ class PiggyBankController extends Controller
      *
      * @param PiggyBankRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function store(PiggyBankRequest $request): JsonResponse
     {
         $piggyBank = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
+        $manager   = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);

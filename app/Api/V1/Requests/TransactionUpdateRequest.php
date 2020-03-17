@@ -297,33 +297,33 @@ class TransactionUpdateRequest extends Request
             // for each field, add it to the array if a reference is present in the request:
             foreach ($this->integerFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
+                    $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
                 }
             }
 
             foreach ($this->stringFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
+                    $current[$fieldName] = $this->stringFromValue((string) $transaction[$fieldName]);
                 }
             }
 
             foreach ($this->textareaFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
+                    $current[$fieldName] = $this->nlStringFromValue((string) $transaction[$fieldName]);
                 }
             }
 
             foreach ($this->dateFields as $fieldName) {
                 Log::debug(sprintf('Now at date field %s', $fieldName));
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
-                    Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
+                    $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+                    Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
                 }
             }
 
             foreach ($this->booleanFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
+                    $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
                 }
             }
 

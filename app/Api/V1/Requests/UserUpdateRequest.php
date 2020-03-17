@@ -85,7 +85,7 @@ class UserUpdateRequest extends Request
      */
     public function rules(): array
     {
-        $user  = $this->route()->parameter('user');
+        $user = $this->route()->parameter('user');
 
         return [
             'email'        => sprintf('email|unique:users,email,%d', $user->id),

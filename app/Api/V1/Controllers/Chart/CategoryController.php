@@ -104,7 +104,7 @@ class CategoryController extends Controller
                     // make data arrays if not yet present.
                     $tempData[$inKey]  = $tempData[$inKey] ?? [
                             'currency_id'             => $currency['currency_id'],
-                            'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                            'label'                   => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                             'currency_code'           => $currency['currency_code'],
                             'currency_symbol'         => $currency['currency_symbol'],
                             'currency_decimal_places' => $currency['currency_decimal_places'],
@@ -117,7 +117,7 @@ class CategoryController extends Controller
                         ];
                     $tempData[$outKey] = $tempData[$outKey] ?? [
                             'currency_id'             => $currency['currency_id'],
-                            'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                            'label'                   => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
                             'currency_code'           => $currency['currency_code'],
                             'currency_symbol'         => $currency['currency_symbol'],
                             'currency_decimal_places' => $currency['currency_decimal_places'],
@@ -141,48 +141,48 @@ class CategoryController extends Controller
             }
         }
 
-//        foreach ([] as $set) {
-//            foreach ($set as $currency) {
-//                $inKey        = sprintf('%d-i', $currency['currency_id']);
-//                $outKey       = sprintf('%d-e', $currency['currency_id']);
-//                $categories[] = (string)trans('firefly.no_category');
-//                // make data arrays if not yet present.
-//                $tempData[$inKey]  = $tempData[$inKey] ?? [
-//                        'currency_id'             => $currency['currency_id'],
-//                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
-//                        'currency_code'           => $currency['currency_code'],
-//                        'currency_symbol'         => $currency['currency_symbol'],
-//                        'currency_decimal_places' => $currency['currency_decimal_places'],
-//                        'type'                    => 'bar', // line, area or bar
-//                        'yAxisID'                 => 0, // 0, 1, 2
-//                        'entries'                 => [
-//                            // per category:
-//                            // "category" => 5,
-//                        ],
-//                    ];
-//                $tempData[$outKey] = $tempData[$outKey] ?? [
-//                        'currency_id'             => $currency['currency_id'],
-//                        'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
-//                        'currency_code'           => $currency['currency_code'],
-//                        'currency_symbol'         => $currency['currency_symbol'],
-//                        'currency_decimal_places' => $currency['currency_decimal_places'],
-//                        'type'                    => 'bar', // line, area or bar
-//                        'yAxisID'                 => 0, // 0, 1, 2
-//                        'entries'                 => [
-//                            // per category:
-//                            // "category" => 5,
-//                        ],
-//                    ];
-//                foreach ($currency['transaction_journals'] as $journal) {
-//                    // is it expense or income?
-//                    $letter                                  = -1 === bccomp($journal['amount'], '0') ? 'e' : 'i';
-//                    $currentKey                              = sprintf('%d-%s', $currency['currency_id'], $letter);
-//                    $name                                    = (string)trans('firefly.no_category');
-//                    $tempData[$currentKey]['entries'][$name] = $tempData[$currentKey]['entries'][$name] ?? '0';
-//                    $tempData[$currentKey]['entries'][$name] = bcadd($tempData[$currentKey]['entries'][$name], $journal['amount']);
-//                }
-//            }
-//        }
+        //        foreach ([] as $set) {
+        //            foreach ($set as $currency) {
+        //                $inKey        = sprintf('%d-i', $currency['currency_id']);
+        //                $outKey       = sprintf('%d-e', $currency['currency_id']);
+        //                $categories[] = (string)trans('firefly.no_category');
+        //                // make data arrays if not yet present.
+        //                $tempData[$inKey]  = $tempData[$inKey] ?? [
+        //                        'currency_id'             => $currency['currency_id'],
+        //                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+        //                        'currency_code'           => $currency['currency_code'],
+        //                        'currency_symbol'         => $currency['currency_symbol'],
+        //                        'currency_decimal_places' => $currency['currency_decimal_places'],
+        //                        'type'                    => 'bar', // line, area or bar
+        //                        'yAxisID'                 => 0, // 0, 1, 2
+        //                        'entries'                 => [
+        //                            // per category:
+        //                            // "category" => 5,
+        //                        ],
+        //                    ];
+        //                $tempData[$outKey] = $tempData[$outKey] ?? [
+        //                        'currency_id'             => $currency['currency_id'],
+        //                        'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+        //                        'currency_code'           => $currency['currency_code'],
+        //                        'currency_symbol'         => $currency['currency_symbol'],
+        //                        'currency_decimal_places' => $currency['currency_decimal_places'],
+        //                        'type'                    => 'bar', // line, area or bar
+        //                        'yAxisID'                 => 0, // 0, 1, 2
+        //                        'entries'                 => [
+        //                            // per category:
+        //                            // "category" => 5,
+        //                        ],
+        //                    ];
+        //                foreach ($currency['transaction_journals'] as $journal) {
+        //                    // is it expense or income?
+        //                    $letter                                  = -1 === bccomp($journal['amount'], '0') ? 'e' : 'i';
+        //                    $currentKey                              = sprintf('%d-%s', $currency['currency_id'], $letter);
+        //                    $name                                    = (string)trans('firefly.no_category');
+        //                    $tempData[$currentKey]['entries'][$name] = $tempData[$currentKey]['entries'][$name] ?? '0';
+        //                    $tempData[$currentKey]['entries'][$name] = bcadd($tempData[$currentKey]['entries'][$name], $journal['amount']);
+        //                }
+        //            }
+        //        }
 
         // re-sort every spent array and add 0 for missing entries.
         foreach ($tempData as $index => $set) {

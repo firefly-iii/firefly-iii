@@ -40,6 +40,7 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class ImportController
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -77,7 +78,7 @@ class ImportController extends Controller
     {
         // create some objects:
         $manager  = $this->getManager();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->get();
@@ -127,7 +128,7 @@ class ImportController extends Controller
      */
     public function transactions(Request $request, ImportJob $importJob): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

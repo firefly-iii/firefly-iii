@@ -104,7 +104,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
@@ -142,7 +142,7 @@ class AccountController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks($account);
@@ -218,7 +218,7 @@ class AccountController extends Controller
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

@@ -25,8 +25,8 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\TagUpdateRequest;
 use FireflyIII\Api\V1\Requests\TagStoreRequest;
+use FireflyIII\Api\V1\Requests\TagUpdateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -117,7 +117,7 @@ class TagController extends Controller
     {
         $manager = $this->getManager();
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->get();
@@ -190,7 +190,7 @@ class TagController extends Controller
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -236,7 +236,7 @@ class TagController extends Controller
      * Update a rule.
      *
      * @param TagUpdateRequest $request
-     * @param Tag        $tag
+     * @param Tag              $tag
      *
      * @return JsonResponse
      */
@@ -288,8 +288,8 @@ class TagController extends Controller
         ];
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $earned = (float)$this->repository->earnedInPeriod($tag, $start, $end);
-            $spent  = (float)$this->repository->spentInPeriod($tag, $start, $end);
+            $earned = (float) $this->repository->earnedInPeriod($tag, $start, $end);
+            $spent  = (float) $this->repository->spentInPeriod($tag, $start, $end);
             $size   = ($spent * -1) + $earned;
             $min    = $min ?? $size;
             if ($size > 0) {
