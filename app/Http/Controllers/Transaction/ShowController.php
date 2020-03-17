@@ -29,8 +29,11 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -53,7 +56,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -64,7 +67,7 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function debugShow(TransactionGroup $transactionGroup)
     {
@@ -74,14 +77,14 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
+     * @return Factory|View
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
-        $first    = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
-        $splits   = $transactionGroup->transactionJournals()->count();
+        $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits = $transactionGroup->transactionJournals()->count();
 
         if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');

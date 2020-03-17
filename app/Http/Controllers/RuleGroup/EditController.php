@@ -27,7 +27,11 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class EditController
@@ -39,6 +43,7 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -47,7 +52,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->repository = app(RuleGroupRepositoryInterface::class);
@@ -62,7 +67,7 @@ class EditController extends Controller
      *
      * @param RuleGroup $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function down(RuleGroup $ruleGroup)
     {
@@ -75,18 +80,18 @@ class EditController extends Controller
     /**
      * Edit a rule group.
      *
-     * @param Request $request
+     * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, RuleGroup $ruleGroup)
     {
-        $subTitle = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle  = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
-            'active' => $hasOldInput ? (bool)$request->old('active') : $ruleGroup->active,
+        $preFilled = [
+            'active' => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active,
         ];
 
 
@@ -105,7 +110,7 @@ class EditController extends Controller
      *
      * @param RuleGroup $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      *
      */
     public function up(RuleGroup $ruleGroup)
@@ -119,24 +124,24 @@ class EditController extends Controller
      * Update the rule group.
      *
      * @param RuleGroupFormRequest $request
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup            $ruleGroup
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|RedirectResponse|Redirector
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {
         $data = [
             'title'       => $request->string('title'),
             'description' => $request->nlString('description'),
-            'active'      => 1 === (int)$request->input('active'),
+            'active'      => 1 === (int) $request->input('active'),
         ];
 
         $this->repository->update($ruleGroup, $data);
 
-        session()->flash('success', (string)trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string) trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('rule-groups.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rule-groups.edit.fromUpdate', true);
 

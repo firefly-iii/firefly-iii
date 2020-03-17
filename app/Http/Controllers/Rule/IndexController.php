@@ -28,9 +28,12 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\User;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class IndexController
@@ -45,6 +48,7 @@ class IndexController extends Controller
 
     /**
      * RuleController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -52,7 +56,7 @@ class IndexController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
                 $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
                 $this->ruleRepos      = app(RuleRepositoryInterface::class);
@@ -67,7 +71,7 @@ class IndexController extends Controller
      *
      * @param Rule $rule
      *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function down(Rule $rule)
     {
@@ -79,7 +83,7 @@ class IndexController extends Controller
     /**
      * Index of all rules and groups.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -134,7 +138,7 @@ class IndexController extends Controller
      *
      * @param Rule $rule
      *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function up(Rule $rule)
     {

@@ -23,11 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class CreateController
@@ -49,8 +52,7 @@ class CreateController extends Controller
         app('view')->share('uploadSize', $uploadSize);
         $this->middleware(
             static function ($request, $next) {
-
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -61,7 +63,7 @@ class CreateController extends Controller
     /**
      * @param TransactionGroup $group
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function cloneGroup(TransactionGroup $group)
     {
@@ -84,20 +86,20 @@ class CreateController extends Controller
      *
      * @param string|null objectType
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(?string $objectType)
     {
         app('preferences')->mark();
 
-        $sourceId      = (int)request()->get('source');
-        $destinationId = (int)request()->get('destination');
+        $sourceId      = (int) request()->get('source');
+        $destinationId = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
+        $subTitle             = (string) trans('breadcrumbs.create_new_transaction');
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
@@ -112,11 +114,21 @@ class CreateController extends Controller
 
 
         return view(
-            'transactions.create', compact(
-                                     'subTitleIcon', 'cash', 'objectType', 'subTitle', 'defaultCurrency', 'previousUri', 'optionalFields', 'preFilled',
-                                     'allowedOpposingTypes',
-                                     'accountToTypes','sourceId','destinationId'
-                                 )
+            'transactions.create',
+            compact(
+                'subTitleIcon',
+                'cash',
+                'objectType',
+                'subTitle',
+                'defaultCurrency',
+                'previousUri',
+                'optionalFields',
+                'preFilled',
+                'allowedOpposingTypes',
+                'accountToTypes',
+                'sourceId',
+                'destinationId'
+            )
         );
     }
 }

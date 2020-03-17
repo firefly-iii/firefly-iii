@@ -28,9 +28,12 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -67,7 +70,7 @@ class RegisterController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function register(Request $request)
     {
@@ -97,7 +100,7 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        session()->flash('success', (string)trans('firefly.registered'));
+        session()->flash('success', (string) trans('firefly.registered'));
 
         $this->registered($request, $user);
 
@@ -109,7 +112,7 @@ class RegisterController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function showRegistrationForm(Request $request)
     {
@@ -118,7 +121,7 @@ class RegisterController extends Controller
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
-        $pageTitle         = (string)trans('firefly.register_page_title');
+        $pageTitle         = (string) trans('firefly.register_page_title');
 
         if (true === $isDemoSite) {
             $allowRegistration = false;

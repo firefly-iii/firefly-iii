@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Log;
 use Throwable;
 
@@ -43,7 +45,7 @@ class SearchController extends Controller
         $this->middleware(
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-search');
-                app('view')->share('title', (string)trans('firefly.search'));
+                app('view')->share('title', (string) trans('firefly.search'));
 
                 return $next($request);
             }
@@ -56,19 +58,19 @@ class SearchController extends Controller
      * @param Request         $request
      * @param SearchInterface $searcher
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = (string)$request->get('search');
-        $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $fullQuery = (string) $request->get('search');
+        $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         // parse search terms:
         $searcher->parseQuery($fullQuery);
         $query     = $searcher->getWordsAsString();
         $modifiers = $searcher->getModifiers();
-        $subTitle  = (string)trans('breadcrumbs.search_result', ['query' => $query]);
+        $subTitle  = (string) trans('breadcrumbs.search_result', ['query' => $query]);
 
-        return view('search.index', compact('query', 'modifiers', 'page','fullQuery', 'subTitle'));
+        return view('search.index', compact('query', 'modifiers', 'page', 'fullQuery', 'subTitle'));
     }
 
     /**
@@ -77,16 +79,16 @@ class SearchController extends Controller
      * @param Request         $request
      * @param SearchInterface $searcher
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $fullQuery = (string)$request->get('query');
-        $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $fullQuery = (string) $request->get('query');
+        $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
-        $searcher->setLimit((int)config('firefly.search_result_limit'));
+        $searcher->setLimit((int) config('firefly.search_result_limit'));
         $groups     = $searcher->searchTransactions();
         $hasPages   = $groups->hasPages();
         $searchTime = round($searcher->searchTime(), 3); // in seconds

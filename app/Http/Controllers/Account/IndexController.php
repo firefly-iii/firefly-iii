@@ -28,8 +28,10 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\View\View;
 
 /**
  *
@@ -43,6 +45,7 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -53,7 +56,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -66,19 +69,19 @@ class IndexController extends Controller
      * @param Request $request
      * @param string  $objectType
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function inactive(Request $request, string $objectType)
     {
         $objectType   = $objectType ?? 'asset';
         $inactivePage = true;
-        $subTitle     = (string)trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection   = $this->repository->getInactiveAccountsByType($types);
         $total        = $collection->count();
-        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
@@ -99,8 +102,8 @@ class IndexController extends Controller
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
                 $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
-                $account->interestPeriod    = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
-                $account->accountTypeString = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+                $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+                $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
             }
         );
 
@@ -108,7 +111,7 @@ class IndexController extends Controller
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
-        return view('accounts.index', compact('objectType','inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
+        return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
 
     }
 
@@ -116,20 +119,20 @@ class IndexController extends Controller
      * Show list of accounts.
      *
      * @param Request $request
-     * @param string $objectType
+     * @param string  $objectType
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(Request $request, string $objectType)
     {
         $objectType    = $objectType ?? 'asset';
-        $subTitle      = (string)trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection    = $this->repository->getActiveAccountsByType($types);
         $total         = $collection->count();
-        $page          = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize      = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
 
@@ -153,9 +156,9 @@ class IndexController extends Controller
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
                 $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
-                $account->interestPeriod    = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
-                $account->accountTypeString = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
-                $account->location = $this->repository->getLocation($account);
+                $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+                $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+                $account->location          = $this->repository->getLocation($account);
             }
         );
 

@@ -58,13 +58,6 @@ interface GroupCollectorInterface
     public function amountLess(string $amount): GroupCollectorInterface;
 
     /**
-     * Add basic info on attachments of transactions.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withAttachmentInformation(): GroupCollectorInterface;
-
-    /**
      * Get transactions where the amount is more than.
      *
      * @param string $amount
@@ -129,15 +122,6 @@ interface GroupCollectorInterface
     public function setAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
-     * Either account can be set, but NOT both. This effectively excludes internal transfers.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setXorAccounts(Collection $accounts): GroupCollectorInterface;
-
-    /**
      * Collect transactions after a specific date.
      *
      * @param Carbon $date
@@ -145,24 +129,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setAfter(Carbon $date): GroupCollectorInterface;
-
-    /**
-     * Collect transactions created on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCreatedAt(Carbon $date): GroupCollectorInterface;
-
-    /**
-     * Collect transactions updated on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setUpdatedAt(Carbon $date): GroupCollectorInterface;
 
     /**
      * Collect transactions before a specific date.
@@ -236,6 +202,14 @@ interface GroupCollectorInterface
      */
     public function setCategory(Category $category): GroupCollectorInterface;
 
+    /**
+     * Collect transactions created on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCreatedAt(Carbon $date): GroupCollectorInterface;
 
     /**
      * Limit results to a specific currency, either foreign or normal one.
@@ -356,6 +330,15 @@ interface GroupCollectorInterface
     public function setTypes(array $types): GroupCollectorInterface;
 
     /**
+     * Collect transactions updated on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUpdatedAt(Carbon $date): GroupCollectorInterface;
+
+    /**
      * Set the user object and start the query.
      *
      * @param User $user
@@ -363,6 +346,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Either account can be set, but NOT both. This effectively excludes internal transfers.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setXorAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
      * Automatically include all stuff required to make API calls work.
@@ -377,6 +369,13 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withAccountInformation(): GroupCollectorInterface;
+
+    /**
+     * Add basic info on attachments of transactions.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAttachmentInformation(): GroupCollectorInterface;
 
     /**
      * Include bill name + ID.

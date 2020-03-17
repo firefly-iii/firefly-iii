@@ -49,7 +49,7 @@ class APIEventHandler
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull((int)$event->userId);
+        $user       = $repository->findNull((int) $event->userId);
         if (null !== $user) {
             $email     = $user->email;
             $ipAddress = Request::ip();

@@ -27,7 +27,11 @@ namespace FireflyIII\Http\Controllers\Budget;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  *
@@ -40,6 +44,7 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -48,7 +53,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -63,11 +68,11 @@ class DeleteController extends Controller
      *
      * @param Budget $budget
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function delete(Budget $budget)
     {
-        $subTitle = (string)trans('firefly.delete_budget', ['name' => $budget->name]);
+        $subTitle = (string) trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');
@@ -81,13 +86,13 @@ class DeleteController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function destroy(Request $request, Budget $budget)
     {
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', (string)trans('firefly.deleted_budget', ['name' => $name]));
+        $request->session()->flash('success', (string) trans('firefly.deleted_budget', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));

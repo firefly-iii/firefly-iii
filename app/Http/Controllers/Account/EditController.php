@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
@@ -31,7 +30,11 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  *
@@ -56,7 +59,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -69,11 +72,11 @@ class EditController extends Controller
     /**
      * Edit account overview.
      *
-     * @param Request $request
-     * @param Account $account
+     * @param Request                    $request
+     * @param Account                    $account
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      *
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
@@ -83,7 +86,7 @@ class EditController extends Controller
         }
 
         $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitle       = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $roles          = $this->getRoles();
         $liabilityTypes = $this->getLiabilityTypes();
@@ -103,9 +106,9 @@ class EditController extends Controller
 
         // interest calculation periods:
         $interestPeriods = [
-            'daily'   => (string)trans('firefly.interest_calc_daily'),
-            'monthly' => (string)trans('firefly.interest_calc_monthly'),
-            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
+            'daily'   => (string) trans('firefly.interest_calc_daily'),
+            'monthly' => (string) trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string) trans('firefly.interest_calc_yearly'),
         ];
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -114,7 +117,7 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
+        $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -139,15 +142,25 @@ class EditController extends Controller
             'interest'                => $repository->getMetaValue($account, 'interest'),
             'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
             'notes'                   => $this->repository->getNoteText($account),
-            'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $account->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
 
         return view(
-            'accounts.edit', compact(
-            'account', 'currency', 'subTitle', 'subTitleIcon', 'locations', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'
-        )
+            'accounts.edit',
+            compact(
+                'account',
+                'currency',
+                'subTitle',
+                'subTitleIcon',
+                'locations',
+                'objectType',
+                'roles',
+                'preFilled',
+                'liabilityTypes',
+                'interestPeriods'
+            )
         );
     }
 
@@ -156,9 +169,9 @@ class EditController extends Controller
      * Update the account.
      *
      * @param AccountFormRequest $request
-     * @param Account $account
+     * @param Account            $account
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|RedirectResponse|Redirector
      */
     public function update(AccountFormRequest $request, Account $account)
     {
@@ -169,11 +182,11 @@ class EditController extends Controller
         $data = $request->getAccountData();
         $this->repository->update($account, $data);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
         app('preferences')->mark();
 
         $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 
@@ -182,5 +195,4 @@ class EditController extends Controller
 
         return $redirect;
     }
-
 }

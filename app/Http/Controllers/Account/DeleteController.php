@@ -28,7 +28,11 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class DeleteController
@@ -42,6 +46,7 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -52,7 +57,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -66,7 +71,7 @@ class DeleteController extends Controller
      *
      * @param Account $account
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function delete(Account $account)
     {
@@ -75,7 +80,7 @@ class DeleteController extends Controller
         }
 
         $typeName    = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $subTitle    = (string)trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
+        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
         $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         $objectType  = $typeName;
         unset($accountList[$account->id]);
@@ -92,7 +97,7 @@ class DeleteController extends Controller
      * @param Request $request
      * @param Account $account
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function destroy(Request $request, Account $account)
     {
@@ -103,11 +108,11 @@ class DeleteController extends Controller
         $type     = $account->accountType->type;
         $typeName = config(sprintf('firefly.shortNamesByFullName.%s', $type));
         $name     = $account->name;
-        $moveTo   = $this->repository->findNull((int)$request->get('move_account_before_delete'));
+        $moveTo   = $this->repository->findNull((int) $request->get('move_account_before_delete'));
 
         $this->repository->destroy($account, $moveTo);
 
-        $request->session()->flash('success', (string)trans(sprintf('firefly.%s_deleted', $typeName), ['name' => $name]));
+        $request->session()->flash('success', (string) trans(sprintf('firefly.%s_deleted', $typeName), ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('accounts.delete.uri'));
