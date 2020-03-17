@@ -76,28 +76,11 @@ class AccountUpdateService
     {
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
-
-        // update the account itself:
-        $account->name   = $data['name'] ?? $account->name;
-        $account->active = $data['active'] ?? $account->active;
-        $account->iban   = $data['iban'] ?? $account->iban;
-
-        // if account type is a liability, the liability type (account type)
-        // can be updated to another one.
-        if ($this->isLiability($account) && $this->isLiabilityTypeId((int)($data['account_type_id'] ?? 0))) {
-            $account->account_type_id = (int)$data['account_type_id'];
-        }
-
-        // update virtual balance (could be set to zero if empty string).
-        if (null !== $data['virtual_balance']) {
-            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
-        }
-
-        $account->save();
+        $account    = $this->updateAccount($account, $data);
 
         // find currency, or use default currency instead.
         if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
-            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;
         }
@@ -177,5 +160,34 @@ class AccountUpdateService
         }
 
         return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('id', $accountTypeId)->count();
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     */
+    private function updateAccount(Account $account, array $data): Account
+    {
+        // update the account itself:
+        $account->name   = $data['name'] ?? $account->name;
+        $account->active = $data['active'] ?? $account->active;
+        $account->iban   = $data['iban'] ?? $account->iban;
+
+        // if account type is a liability, the liability type (account type)
+        // can be updated to another one.
+        if ($this->isLiability($account) && $this->isLiabilityTypeId((int) ($data['account_type_id'] ?? 0))) {
+            $account->account_type_id = (int) $data['account_type_id'];
+        }
+
+        // update virtual balance (could be set to zero if empty string).
+        if (null !== $data['virtual_balance']) {
+            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
+        }
+
+        $account->save();
+
+        return $account;
     }
 }
