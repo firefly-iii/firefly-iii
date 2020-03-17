@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
 
 /**
@@ -35,11 +36,11 @@ class SecureHeaders
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param Request $request
+     * @param Closure $next
      *
+     * @throws Exception
      * @return mixed
-     * @throws \Exception
      */
     public function handle(Request $request, Closure $next)
     {
@@ -105,8 +106,8 @@ class SecureHeaders
      */
     private function getTrackingScriptSource(): string
     {
-        if ('' !== (string)config('firefly.tracker_site_id') && '' !== (string)config('firefly.tracker_url')) {
-            return (string)config('firefly.tracker_url');
+        if ('' !== (string) config('firefly.tracker_site_id') && '' !== (string) config('firefly.tracker_url')) {
+            return (string) config('firefly.tracker_url');
         }
 
         return '';

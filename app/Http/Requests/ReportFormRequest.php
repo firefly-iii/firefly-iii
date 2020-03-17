@@ -62,7 +62,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->findNull((int)$accountId);
+                $account = $repository->findNull((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -85,7 +85,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->findNull((int)$budgetId);
+                $budget = $repository->findNull((int) $budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -108,7 +108,7 @@ class ReportFormRequest extends Request
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->findNull((int)$categoryId);
+                $category = $repository->findNull((int) $categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -119,17 +119,40 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of accounts which exist twice in system.
+     *
+     * @return Collection
+     */
+    public function getDoubleList(): Collection
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $set        = $this->get('double');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $accountId) {
+                $account = $repository->findNull((int) $accountId);
+                if (null !== $account) {
+                    $collection->push($account);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
      * Validate end date.
      *
+     * @throws FireflyException
      * @return Carbon
      *
-     * @throws FireflyException
      */
     public function getEndDate(): Carbon
     {
         $date  = new Carbon;
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string)$range);
+        $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
@@ -147,40 +170,17 @@ class ReportFormRequest extends Request
     }
 
     /**
-     * Validate list of accounts which exist twice in system.
-     *
-     * @return Collection
-     */
-    public function getDoubleList(): Collection
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $set        = $this->get('double');
-        $collection = new Collection;
-        if (is_array($set)) {
-            foreach ($set as $accountId) {
-                $account = $repository->findNull((int)$accountId);
-                if (null !== $account) {
-                    $collection->push($account);
-                }
-            }
-        }
-
-        return $collection;
-    }
-
-    /**
      * Validate start date.
      *
+     * @throws FireflyException
      * @return Carbon
      *
-     * @throws FireflyException
      */
     public function getStartDate(): Carbon
     {
         $date  = new Carbon;
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string)$range);
+        $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
@@ -216,7 +216,7 @@ class ReportFormRequest extends Request
                     $collection->push($tag);
                     continue;
                 }
-                $tag = $repository->findNull((int)$tagTag);
+                $tag = $repository->findNull((int) $tagTag);
                 if (null !== $tag) {
                     $collection->push($tag);
                     continue;

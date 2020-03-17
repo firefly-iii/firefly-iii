@@ -51,7 +51,7 @@ class JournalLinkRequest extends Request
         $return                           = [];
         $linkType                         = $this->get('link_type');
         $parts                            = explode('_', $linkType);
-        $return['link_type_id']           = (int)$parts[0];
+        $return['link_type_id']           = (int) $parts[0];
         $return['transaction_journal_id'] = $this->integer('opposing');
         $return['notes']                  = $this->string('notes');
         $return['direction']              = $parts[1];

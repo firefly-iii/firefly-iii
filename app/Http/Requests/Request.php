@@ -124,7 +124,7 @@ class Request extends FormRequest
             return null;
         }
 
-        return (float)$res;
+        return (float) $res;
     }
 
     /**
@@ -136,7 +136,7 @@ class Request extends FormRequest
      */
     public function integer(string $field): int
     {
-        return (int)$this->get($field);
+        return (int) $this->get($field);
     }
 
     /**
@@ -155,60 +155,7 @@ class Request extends FormRequest
             return null;
         }
 
-        return (int)$string;
-    }
-
-    /**
-     * Return integer value, or NULL when it's not set.
-     *
-     * @param string $field
-     *
-     * @return int|null
-     */
-    public function nullableInteger(string $field): ?int
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
-
-        $value = (string)$this->get($field);
-        if ('' === $value) {
-            return null;
-        }
-
-        return (int)$value;
-    }
-
-    /**
-     * Return string value, or NULL if empty.
-     *
-     * @param string $field
-     *
-     * @return string|null
-     */
-    public function nullableString(string $field): ?string
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
-        $res = trim(app('steam')->cleanString((string)($this->get($field) ?? '')));
-        if ('' === $res) {
-            return null;
-        }
-
-        return $res;
-    }
-
-    /**
-     * Return string value.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function string(string $field): string
-    {
-        return app('steam')->cleanString((string)($this->get($field) ?? ''));
+        return (int) $string;
     }
 
     /**
@@ -220,41 +167,7 @@ class Request extends FormRequest
      */
     public function nlString(string $field): string
     {
-        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
-    }
-
-
-    /**
-     * Return string value, but keep newlines, or NULL if empty.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function nullableNlString(string $field): ?string
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
-        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
-    }
-
-    /**
-     * Parse and clean a string.
-     *
-     * @param string|null $string
-     *
-     * @return string|null
-     */
-    public function stringFromValue(?string $string): ?string
-    {
-        if (null === $string) {
-            return null;
-        }
-        $result = app('steam')->cleanString($string);
-
-        return '' === $result ? null : $result;
-
+        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -276,59 +189,90 @@ class Request extends FormRequest
     }
 
     /**
-     * Return date or NULL.
+     * Return integer value, or NULL when it's not set.
      *
      * @param string $field
      *
-     * @return Carbon|null
+     * @return int|null
      */
-    protected function date(string $field): ?Carbon
+    public function nullableInteger(string $field): ?int
     {
-        $result = null;
-        try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
-        } catch (Exception $e) {
-            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        if (!$this->has($field)) {
+            return null;
         }
 
-        return $result;
+        $value = (string) $this->get($field);
+        if ('' === $value) {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     /**
-     * Return date time or NULL.
+     * Return string value, but keep newlines, or NULL if empty.
      *
      * @param string $field
      *
-     * @return Carbon|null
+     * @return string
      */
-    protected function dateTime(string $field): ?Carbon
+    public function nullableNlString(string $field): ?string
     {
-        if (null === $this->get($field)) {
-            return null;
-        }
-        $value = (string)$this->get($field);
-        if (10 === strlen($value)) {
-            // probably a date format.
-            try {
-                $result = Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException $e) {
-                Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
-
-                return null;
-            }
-
-            return $result;
-        }
-        // is an atom string, I hope?
-        try {
-            $result = Carbon::parse($value);
-        } catch (InvalidDateException $e) {
-            Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
-
+        if (!$this->has($field)) {
             return null;
         }
 
-        return $result;
+        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
+    }
+
+    /**
+     * Return string value, or NULL if empty.
+     *
+     * @param string $field
+     *
+     * @return string|null
+     */
+    public function nullableString(string $field): ?string
+    {
+        if (!$this->has($field)) {
+            return null;
+        }
+        $res = trim(app('steam')->cleanString((string) ($this->get($field) ?? '')));
+        if ('' === $res) {
+            return null;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Return string value.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function string(string $field): string
+    {
+        return app('steam')->cleanString((string) ($this->get($field) ?? ''));
+    }
+
+    /**
+     * Parse and clean a string.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function stringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->cleanString($string);
+
+        return '' === $result ? null : $result;
+
     }
 
     /**
@@ -374,9 +318,9 @@ class Request extends FormRequest
         ) {
             Log::debug('Method is PUT and all fields present.');
             $data['update_location'] = true;
-            $data['longitude']      = $this->nullableString($longitudeKey);
-            $data['latitude']       = $this->nullableString($latitudeKey);
-            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
+            $data['longitude']       = $this->nullableString($longitudeKey);
+            $data['latitude']        = $this->nullableString($latitudeKey);
+            $data['zoom_level']      = $this->nullableString($zoomLevelKey);
         }
         if (null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
             Log::debug('One of the fields is NULL, wont save.');
@@ -389,6 +333,61 @@ class Request extends FormRequest
         return $data;
     }
 
+    /**
+     * Return date or NULL.
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function date(string $field): ?Carbon
+    {
+        $result = null;
+        try {
+            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+        } catch (Exception $e) {
+            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return date time or NULL.
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function dateTime(string $field): ?Carbon
+    {
+        if (null === $this->get($field)) {
+            return null;
+        }
+        $value = (string) $this->get($field);
+        if (10 === strlen($value)) {
+            // probably a date format.
+            try {
+                $result = Carbon::createFromFormat('Y-m-d', $value);
+            } catch (InvalidDateException $e) {
+                Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
+
+                return null;
+            }
+
+            return $result;
+        }
+        // is an atom string, I hope?
+        try {
+            $result = Carbon::parse($value);
+        } catch (InvalidDateException $e) {
+            Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
+
+            return null;
+        }
+
+        return $result;
+    }
 
     /**
      * @param Validator $validator
@@ -398,27 +397,27 @@ class Request extends FormRequest
         $data         = $validator->getData();
         $type         = $data['auto_budget_type'] ?? '';
         $amount       = $data['auto_budget_amount'] ?? '';
-        $period       = (string)($data['auto_budget_period'] ?? '');
+        $period       = (string) ($data['auto_budget_period'] ?? '');
         $currencyId   = $data['auto_budget_currency_id'] ?? '';
         $currencyCode = $data['auto_budget_currency_code'] ?? '';
         if (is_numeric($type)) {
-            $type = (int)$type;
+            $type = (int) $type;
         }
         if (0 === $type || 'none' === $type || '' === $type) {
             return;
         }
         // basic float check:
         if ('' === $amount) {
-            $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
         }
-        if (1 !== bccomp((string)$amount, '0')) {
-            $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
+        if (1 !== bccomp((string) $amount, '0')) {
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.auto_budget_amount_positive'));
         }
         if ('' === $period) {
-            $validator->errors()->add('auto_budget_period', (string)trans('validation.auto_budget_period_mandatory'));
+            $validator->errors()->add('auto_budget_period', (string) trans('validation.auto_budget_period_mandatory'));
         }
         if ('' === $currencyCode && '' === $currencyId) {
-            $validator->errors()->add('auto_budget_amount', (string)trans('validation.require_currency_info'));
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.require_currency_info'));
         }
     }
 

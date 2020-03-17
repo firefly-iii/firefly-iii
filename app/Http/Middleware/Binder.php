@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Support\Domain;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
 /**
@@ -35,7 +36,7 @@ class Binder
     /**
      * The authentication factory instance.
      *
-     * @var \Illuminate\Contracts\Auth\Factory
+     * @var Auth
      */
     protected $auth;
     /**
@@ -48,7 +49,7 @@ class Binder
     /**
      * Binder constructor.
      *
-     * @param  \Illuminate\Contracts\Auth\Factory $auth
+     * @param Auth $auth
      */
     public function __construct(Auth $auth)
     {
@@ -60,8 +61,8 @@ class Binder
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      *

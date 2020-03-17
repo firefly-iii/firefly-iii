@@ -36,9 +36,9 @@ class IsAdmin
     /**
      * Handle an incoming request. Must be admin.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
+     * @param Request     $request
+     * @param Closure     $next
+     * @param string|null $guard
      *
      * @return mixed
      */

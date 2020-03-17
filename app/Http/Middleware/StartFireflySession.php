@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Log;
@@ -36,8 +37,8 @@ class StartFireflySession extends StartSession
     /**
      * Store the current URL for the request if necessary.
      *
-     * @param \Illuminate\Http\Request              $request
-     * @param \Illuminate\Contracts\Session\Session $session
+     * @param Request $request
+     * @param Session $session
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {
@@ -45,12 +46,13 @@ class StartFireflySession extends StartSession
         $isScriptPage = strpos($uri, 'jscript');
         $isDeletePage = strpos($uri, 'delete');
         $isLoginPage  = strpos($uri, '/login');
-        $isJsonPage  = strpos($uri, '/json');
+        $isJsonPage   = strpos($uri, '/json');
 
         // also stop remembering "delete" URL's.
 
         if (false === $isScriptPage && false === $isDeletePage
-            && false === $isLoginPage && false === $isJsonPage
+            && false === $isLoginPage
+            && false === $isJsonPage
             && 'GET' === $request->method()
             && !$request->ajax()) {
             $session->setPreviousUrl($uri);
