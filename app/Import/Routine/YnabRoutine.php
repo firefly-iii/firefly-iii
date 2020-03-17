@@ -34,6 +34,7 @@ use Log;
 
 /**
  * Class YnabRoutine
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

@@ -32,6 +32,7 @@ use Illuminate\Support\MessageBag;
 /**
  *
  * Class FinTSJobConfiguration
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -56,8 +57,8 @@ class FinTSJobConfiguration implements JobConfigurationInterface
      *
      * @param array $data
      *
-     * @return MessageBag
      * @throws FireflyException
+     * @return MessageBag
      */
     public function configureJob(array $data): MessageBag
     {
@@ -67,8 +68,8 @@ class FinTSJobConfiguration implements JobConfigurationInterface
     /**
      * Return the data required for the next step in the job configuration.
      *
-     * @return array
      * @throws FireflyException
+     * @return array
      */
     public function getNextData(): array
     {
@@ -78,8 +79,8 @@ class FinTSJobConfiguration implements JobConfigurationInterface
     /**
      * Returns the view of the next step in the job configuration.
      *
-     * @return string
      * @throws FireflyException
+     * @return string
      */
     public function getNextView(): string
     {
@@ -108,8 +109,8 @@ class FinTSJobConfiguration implements JobConfigurationInterface
     /**
      * Get the configuration handler for this specific stage.
      *
-     * @return FinTSConfigurationInterface
      * @throws FireflyException
+     * @return FinTSConfigurationInterface
      */
     private function getConfigurationObject(): FinTSConfigurationInterface
     {

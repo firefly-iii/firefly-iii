@@ -29,6 +29,7 @@ use Log;
 
 /**
  * This class contains all the routines necessary to connect to Spectre.
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -178,7 +179,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
         if (null === $appId) {
             return false;
         }
-        if ('' === (string)$appId->data) {
+        if ('' === (string) $appId->data) {
             return false;
         }
 
@@ -196,7 +197,7 @@ class SpectrePrerequisites implements PrerequisitesInterface
         if (null === $secret) {
             return false;
         }
-        if ('' === (string)$secret->data) {
+        if ('' === (string) $secret->data) {
             return false;
         }
 

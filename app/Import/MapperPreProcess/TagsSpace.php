@@ -24,6 +24,7 @@ namespace FireflyIII\Import\MapperPreProcess;
 
 /**
  * Class TagsSpace.
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

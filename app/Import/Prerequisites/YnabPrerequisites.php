@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class YnabPrerequisites
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -131,7 +132,7 @@ class YnabPrerequisites implements PrerequisitesInterface
         if (null === $clientId) {
             return false;
         }
-        if ('' === (string)$clientId->data) {
+        if ('' === (string) $clientId->data) {
             return false;
         }
 
@@ -149,7 +150,7 @@ class YnabPrerequisites implements PrerequisitesInterface
         if (null === $clientSecret) {
             return false;
         }
-        if ('' === (string)$clientSecret->data) {
+        if ('' === (string) $clientSecret->data) {
             return false;
         }
 

@@ -33,6 +33,7 @@ use Log;
 
 /**
  * This class contains all the routines necessary to connect to Bunq.
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -82,7 +83,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         if (!$this->hasExternalIP()) {
             /** @var IPRetrievalInterface $service */
             $service    = app(IPRetrievalInterface::class);
-            $externalIP = (string)$service->getIP();
+            $externalIP = (string) $service->getIP();
         }
 
         return ['api_key' => $key, 'external_ip' => $externalIP];
@@ -190,7 +191,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         if (null === $apiContext) {
             return false;
         }
-        if ('' === (string)$apiContext->data) {
+        if ('' === (string) $apiContext->data) {
             return false;
         }
 
@@ -208,7 +209,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         if (null === $apiKey) {
             return false;
         }
-        if ('' === (string)$apiKey->data) {
+        if ('' === (string) $apiKey->data) {
             return false;
         }
 
@@ -226,7 +227,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         if (null === $externalIP) {
             return false;
         }
-        if ('' === (string)$externalIP->data) {
+        if ('' === (string) $externalIP->data) {
             return false;
         }
 

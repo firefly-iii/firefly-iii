@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Class BunqRoutine
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

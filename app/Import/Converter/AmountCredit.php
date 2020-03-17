@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Class AmountCredit
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

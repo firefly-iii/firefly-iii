@@ -34,6 +34,7 @@ use Log;
 
 /**
  * Class BunqJobConfiguration
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -107,8 +108,8 @@ class BunqJobConfiguration implements JobConfigurationInterface
     /**
      * Get correct handler.
      *
-     * @return BunqJobConfigurationInterface
      * @throws FireflyException
+     * @return BunqJobConfigurationInterface
      */
     private function getHandler(): BunqJobConfigurationInterface
     {

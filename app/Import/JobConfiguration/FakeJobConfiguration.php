@@ -29,6 +29,7 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class FakeJobConfiguration
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -78,7 +79,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $artist        = strtolower($data['artist'] ?? '');
         $song          = strtolower($data['song'] ?? '');
         $album         = strtolower($data['album'] ?? '');
-        $applyRules    = isset($data['apply_rules']) ? 1 === (int)$data['apply_rules'] : null;
+        $applyRules    = isset($data['apply_rules']) ? 1 === (int) $data['apply_rules'] : null;
         $configuration = $this->importJob->configuration;
         if ('david bowie' === $artist) {
             // store artist
@@ -118,8 +119,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
     {
         return [
             'rulesOptions' => [
-                1 => (string)trans('firefly.yes'),
-                0 => (string)trans('firefly.no'),
+                1 => (string) trans('firefly.yes'),
+                0 => (string) trans('firefly.no'),
             ],
         ];
     }

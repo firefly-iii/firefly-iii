@@ -24,6 +24,7 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class PresidentsChoice.
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

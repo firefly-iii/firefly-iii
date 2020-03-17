@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Class SpectreRoutine
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  *
  * Class FinTSRoutine
+ *
  * @deprecated
  * @codeCoverageIgnore
  */

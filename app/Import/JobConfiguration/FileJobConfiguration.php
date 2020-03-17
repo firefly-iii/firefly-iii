@@ -37,6 +37,7 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class FileJobConfiguration
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -63,8 +64,8 @@ class FileJobConfiguration implements JobConfigurationInterface
      *
      * @param array $data
      *
-     * @return MessageBag
      * @throws FireflyException
+     * @return MessageBag
      */
     public function configureJob(array $data): MessageBag
     {
@@ -91,9 +92,9 @@ class FileJobConfiguration implements JobConfigurationInterface
     /**
      * Returns the view of the next step in the job configuration.
      *
+     * @throws FireflyException
      * @return string
      *
-     *@throws FireflyException
      */
     public function getNextView(): string
     {
@@ -130,9 +131,9 @@ class FileJobConfiguration implements JobConfigurationInterface
     /**
      * Get the configuration handler for this specific stage.
      *
-     * @return FileConfigurationInterface
      * @throws FireflyException
      *
+     * @return FileConfigurationInterface
      */
     private function getConfigurationObject(): FileConfigurationInterface
     {

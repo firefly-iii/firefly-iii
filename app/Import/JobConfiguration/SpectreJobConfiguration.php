@@ -37,6 +37,7 @@ use Log;
 
 /**
  * Class SpectreJobConfiguration
+ *
  * @deprecated
  * @codeCoverageIgnore
  */
@@ -110,9 +111,9 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     /**
      * Get correct handler.
      *
-     * @return SpectreJobConfigurationInterface
      * @throws FireflyException
      *
+     * @return SpectreJobConfigurationInterface
      */
     private function getHandler(): SpectreJobConfigurationInterface
     {
