@@ -23,44 +23,47 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionCurrency.
  *
- * @property string $code
- * @property string $symbol
- * @property int    $decimal_places
- * @property int    $id
- * @property string name
- * @property bool   $enabled
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetLimits
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property string                               $code
+ * @property string                               $symbol
+ * @property int                                  $decimal_places
+ * @property int                                  $id
+ * @property string                               name
+ * @property bool                                 $enabled
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property-read Collection|BudgetLimit[]        $budgetLimits
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read Collection|Transaction[]        $transactions
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
+ * @method static Builder|TransactionCurrency onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereDecimalPlaces($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereEnabled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereSymbol($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionCurrency whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereDecimalPlaces($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereSymbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereUpdatedAt($value)
+ * @method static Builder|TransactionCurrency withTrashed()
+ * @method static Builder|TransactionCurrency withoutTrashed()
+ * @mixin Eloquent
  */
 class TransactionCurrency extends Model
 {
@@ -87,13 +90,13 @@ class TransactionCurrency extends Model
      *
      * @param string $value
      *
-     * @return TransactionCurrency
      * @throws NotFoundHttpException
+     * @return TransactionCurrency
      */
     public static function routeBinder(string $value): TransactionCurrency
     {
         if (auth()->check()) {
-            $currencyId = (int)$value;
+            $currencyId = (int) $value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 return $currency;

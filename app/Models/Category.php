@@ -24,45 +24,48 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Category.
  *
- * @property string      $name
- * @property int         $id
- * @property float       $spent // used in category reports
- * @property Carbon|null lastActivity
- * @property bool        encrypted
- * @property User        $user
- * @property Carbon      $created_at
- * @property Carbon      $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property string                                                                                $name
+ * @property int                                  $id
+ * @property float                                $spent // used in category reports
+ * @property Carbon|null                          lastActivity
+ * @property bool                                 encrypted
+ * @property User                                 $user
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property int                                  $user_id
+ * @property bool                                 $encrypted
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read Collection|Transaction[]        $transactions
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
+ * @method static Builder|Category onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereEncrypted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
+ * @method static Builder|Category withTrashed()
+ * @method static Builder|Category withoutTrashed()
+ * @mixin Eloquent
  */
 class Category extends Model
 {
@@ -90,13 +93,13 @@ class Category extends Model
      *
      * @param string $value
      *
-     * @return Category
      * @throws NotFoundHttpException
+     * @return Category
      */
     public static function routeBinder(string $value): Category
     {
         if (auth()->check()) {
-            $categoryId = (int)$value;
+            $categoryId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Category $category */

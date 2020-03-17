@@ -126,8 +126,10 @@ class CreateAutoBudgetLimits implements ShouldQueue
         Log::debug(
             sprintf(
                 'Current period is %s-%s, so previous period is %s-%s',
-                $start->format('Y-m-d'), $end->format('Y-m-d'),
-                $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d')
+                $start->format('Y-m-d'),
+                $end->format('Y-m-d'),
+                $previousStart->format('Y-m-d'),
+                $previousEnd->format('Y-m-d')
             )
         );
 
@@ -147,7 +149,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
-        $currencyId  = (int)$autoBudget->transaction_currency_id;
+        $currencyId  = (int) $autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
@@ -176,7 +178,10 @@ class CreateAutoBudgetLimits implements ShouldQueue
     {
         Log::debug(
             sprintf(
-                'Going to find a budget limit for budget #%d ("%s") between %s and %s', $budget->id, $budget->name, $start->format('Y-m-d'),
+                'Going to find a budget limit for budget #%d ("%s") between %s and %s',
+                $budget->id,
+                $budget->name,
+                $start->format('Y-m-d'),
                 $end->format('Y-m-d')
             )
         );
@@ -197,16 +202,25 @@ class CreateAutoBudgetLimits implements ShouldQueue
             Log::info(
                 sprintf(
                     'Today (%s) is not a magic day for %s auto-budget #%d (part of budget #%d "%s")',
-                    $this->date->format('Y-m-d'), $autoBudget->period, $autoBudget->id, $autoBudget->budget->id, $autoBudget->budget->name
+                    $this->date->format('Y-m-d'),
+                    $autoBudget->period,
+                    $autoBudget->id,
+                    $autoBudget->budget->id,
+                    $autoBudget->budget->name
                 )
             );
             Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+
             return;
         }
         Log::info(
             sprintf(
                 'Today (%s) is a magic day for %s auto-budget #%d (part of budget #%d "%s")',
-                $this->date->format('Y-m-d'), $autoBudget->period, $autoBudget->id, $autoBudget->budget->id, $autoBudget->budget->name
+                $this->date->format('Y-m-d'),
+                $autoBudget->period,
+                $autoBudget->id,
+                $autoBudget->budget->id,
+                $autoBudget->budget->name
             )
         );
 
@@ -239,8 +253,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
     /**
      * @param AutoBudget $autoBudget
      *
-     * @return bool
      * @throws FireflyException
+     * @return bool
      */
     private function isMagicDay(AutoBudget $autoBudget): bool
     {

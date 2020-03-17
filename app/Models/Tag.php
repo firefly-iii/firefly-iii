@@ -23,54 +23,56 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Tag.
  *
- * @property Collection     $transactionJournals
- * @property string         $tag
- * @property int            $id
- * @property \Carbon\Carbon $date
- * @property int            zoomLevel
- * @property float          latitude
- * @property float          longitude
- * @property string         description
- * @property string         amount_sum
- * @property string         tagMode
- * @property Carbon         created_at
- * @property Carbon         updated_at
+ * @property Collection                      $transactionJournals
+ * @property string                          $tag
+ * @property int                             $id
+ * @property Carbon                          $date
+ * @property int                             zoomLevel
+ * @property float                           latitude
+ * @property float                           longitude
+ * @property string                          description
+ * @property string                          amount_sum
+ * @property string                          tagMode
+ * @property Carbon                          created_at
+ * @property Carbon                          updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property-read \FireflyIII\User $user
+ * @property int                             $user_id
+ * @property-read User                       $user
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
+ * @method static Builder|Tag onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLatitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereLongitude($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTag($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereTagMode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Tag whereZoomLevel($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereTagMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
+ * @method static Builder|Tag withTrashed()
+ * @method static Builder|Tag withoutTrashed()
+ * @mixin Eloquent
  */
 class Tag extends Model
 {
@@ -92,31 +94,22 @@ class Tag extends Model
             'longitude'  => 'float',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'tag', 'date', 'description','tagMode'];
+    protected $fillable = ['user_id', 'tag', 'date', 'description', 'tagMode'];
 
     protected $hidden = ['zoomLevel', 'latitude', 'longitude'];
-
-    /**
-     * @codeCoverageIgnore
-     * @return MorphMany
-     */
-    public function locations(): MorphMany
-    {
-        return $this->morphMany(Location::class, 'locatable');
-    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param string $value
      *
-     * @return Tag
      * @throws NotFoundHttpException
+     * @return Tag
      */
     public static function routeBinder(string $value): Tag
     {
         if (auth()->check()) {
-            $tagId = (int)$value;
+            $tagId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Tag $tag */
@@ -128,6 +121,14 @@ class Tag extends Model
         throw new NotFoundHttpException;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function locations(): MorphMany
+    {
+        return $this->morphMany(Location::class, 'locatable');
+    }
 
     /**
      * @codeCoverageIgnore

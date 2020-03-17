@@ -24,37 +24,40 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class RecurrenceMeta
  *
- * @property string $name
- * @property string $value
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property-read \FireflyIII\Models\Recurrence $recurrence
+ * @property string                          $name
+ * @property string                          $value
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int                             $recurrence_id
+ * @property-read Recurrence                 $recurrence
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newQuery()
+ * @method static Builder|RecurrenceMeta onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereRecurrenceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceMeta whereValue($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceMeta withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereRecurrenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereValue($value)
+ * @method static Builder|RecurrenceMeta withTrashed()
+ * @method static Builder|RecurrenceMeta withoutTrashed()
+ * @mixin Eloquent
  */
 class RecurrenceMeta extends Model
 {

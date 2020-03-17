@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,18 +43,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              spent
  * @property int                 $transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereBudgetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereEndDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereStartDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\BudgetLimit whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|BudgetLimit newModelQuery()
+ * @method static Builder|BudgetLimit newQuery()
+ * @method static Builder|BudgetLimit query()
+ * @method static Builder|BudgetLimit whereAmount($value)
+ * @method static Builder|BudgetLimit whereBudgetId($value)
+ * @method static Builder|BudgetLimit whereCreatedAt($value)
+ * @method static Builder|BudgetLimit whereEndDate($value)
+ * @method static Builder|BudgetLimit whereId($value)
+ * @method static Builder|BudgetLimit whereStartDate($value)
+ * @method static Builder|BudgetLimit whereTransactionCurrencyId($value)
+ * @method static Builder|BudgetLimit whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class BudgetLimit extends Model
 {
@@ -70,20 +72,20 @@ class BudgetLimit extends Model
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount','transaction_currency_id'];
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param string $value
      *
-     * @return mixed
      * @throws NotFoundHttpException
+     * @return mixed
      */
     public static function routeBinder(string $value): BudgetLimit
     {
         if (auth()->check()) {
-            $budgetLimitId = (int)$value;
+            $budgetLimitId = (int) $value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                                  ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                  ->where('budgets.user_id', auth()->user()->id)

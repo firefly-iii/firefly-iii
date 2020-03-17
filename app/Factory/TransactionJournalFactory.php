@@ -221,6 +221,26 @@ class TransactionJournalFactory
     }
 
     /**
+     * Set foreign currency to NULL if it's the same as the normal currency:
+     *
+     * @param TransactionCurrency      $currency
+     * @param TransactionCurrency|null $foreignCurrency
+     *
+     * @return TransactionCurrency|null
+     */
+    private function compareCurrencies(?TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): ?TransactionCurrency
+    {
+        if (null === $currency) {
+            return null;
+        }
+        if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
+            return null;
+        }
+
+        return $foreignCurrency;
+    }
+
+    /**
      * @param NullArrayObject $row
      *
      * @throws FireflyException
@@ -245,9 +265,6 @@ class TransactionJournalFactory
 
         /** Manipulate basic fields */
         $carbon->setTimezone(config('app.timezone'));
-
-        /** Get source + destination account */
-        Log::debug(sprintf('Currency is #%d (%s)', $currency->id, $currency->code));
 
         try {
             // validate source and destination using a new Validator.
@@ -279,55 +296,10 @@ class TransactionJournalFactory
 
         $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
-
-        // TODO AFTER 4.8,0 better handling below:
-
-        /** double check currencies. */
-        $sourceCurrency        = $currency;
-        $destCurrency          = $currency;
-        $sourceForeignCurrency = $foreignCurrency;
-        $destForeignCurrency   = $foreignCurrency;
-
-        if (TransactionType::WITHDRAWAL === $type->type) {
-            // make sure currency is correct.
-            $currency = $this->getCurrency($currency, $sourceAccount);
-            // make sure foreign currency != currency.
-            if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
-                $foreignCurrency = null;
-            }
-            $sourceCurrency        = $currency;
-            $destCurrency          = $currency;
-            $sourceForeignCurrency = $foreignCurrency;
-            $destForeignCurrency   = $foreignCurrency;
-        }
-        if (TransactionType::DEPOSIT === $type->type) {
-            // make sure currency is correct.
-            $currency = $this->getCurrency($currency, $destinationAccount);
-            // make sure foreign currency != currency.
-            if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
-                $foreignCurrency = null;
-            }
-
-            $sourceCurrency        = $currency;
-            $destCurrency          = $currency;
-            $sourceForeignCurrency = $foreignCurrency;
-            $destForeignCurrency   = $foreignCurrency;
-        }
-
-        if (TransactionType::TRANSFER === $type->type) {
-            // get currencies
-            $currency        = $this->getCurrency($currency, $sourceAccount);
-            $foreignCurrency = $this->getCurrency($foreignCurrency, $destinationAccount);
-
-            $sourceCurrency        = $currency;
-            $destCurrency          = $currency;
-            $sourceForeignCurrency = $foreignCurrency;
-            $destForeignCurrency   = $foreignCurrency;
-        }
-
-        $description = '' === $description ? '(empty description)' : $description;
-        $description = substr($description, 0, 255);
-
+        $currency           = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
+        $foreignCurrency    = $this->compareCurrencies($currency, $foreignCurrency);
+        $foreignCurrency    = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
+        $description        = $this->getDescription($description);
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -351,8 +323,8 @@ class TransactionJournalFactory
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($sourceAccount);
-        $transactionFactory->setCurrency($sourceCurrency);
-        $transactionFactory->setForeignCurrency($sourceForeignCurrency);
+        $transactionFactory->setCurrency($currency);
+        $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
         try {
             $negative = $transactionFactory->createNegative((string) $row['amount'], (string) $row['foreign_amount']);
@@ -370,8 +342,8 @@ class TransactionJournalFactory
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($destinationAccount);
-        $transactionFactory->setCurrency($destCurrency);
-        $transactionFactory->setForeignCurrency($destForeignCurrency);
+        $transactionFactory->setCurrency($currency);
+        $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
         try {
             $transactionFactory->createPositive((string) $row['amount'], (string) $row['foreign_amount']);
@@ -502,6 +474,55 @@ class TransactionJournalFactory
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
         return $result;
+    }
+
+    /**
+     * @param string                   $type
+     * @param TransactionCurrency|null $currency
+     * @param Account                  $source
+     * @param Account                  $destination
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
+    {
+        switch ($type) {
+            default:
+            case TransactionType::WITHDRAWAL:
+            case TransactionType::TRANSFER:
+                return $this->getCurrency($currency, $source);
+            case TransactionType::DEPOSIT:
+                return $this->getCurrency($currency, $destination);
+
+        }
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return string
+     */
+    private function getDescription(string $description): string
+    {
+        $description = '' === $description ? '(empty description)' : $description;
+
+        return substr($description, 0, 255);
+    }
+
+    /**
+     * @param string                   $type
+     * @param TransactionCurrency|null $foreignCurrency
+     * @param Account                  $destination
+     *
+     * @return TransactionCurrency|null
+     */
+    private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
+    {
+        if (TransactionType::TRANSFER === $type) {
+            return $this->getCurrency($foreignCurrency, $destination);
+        }
+
+        return $foreignCurrency;
     }
 
     /**
