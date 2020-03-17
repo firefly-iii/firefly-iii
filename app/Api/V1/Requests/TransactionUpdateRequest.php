@@ -395,7 +395,7 @@ class TransactionUpdateRequest extends Request
          * @var int   $index
          * @var array $transaction
          */
-        foreach ($this->get('transactions') $transaction) {
+        foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
             $current  = [];
             $current  = $this->getIntegerData($current, $transaction);
