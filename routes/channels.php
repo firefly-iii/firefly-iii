@@ -2,7 +2,7 @@
 
 /**
  * channels.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -35,7 +34,7 @@ declare(strict_types=1);
 */
 
 Broadcast::channel(
-    'App.User.{id}', function ($user, $id) {
-    return (int)$user->id === (int)$id;
-}
+    'App.User.{id}', static function ($user, $id) {
+        return (int)$user->id === (int)$id;
+    }
 );

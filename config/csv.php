@@ -2,7 +2,7 @@
 
 /**
  * csv.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,14 +23,13 @@
 declare(strict_types=1);
 
 use FireflyIII\Import\Specifics\AbnAmroDescription;
+use FireflyIII\Import\Specifics\Belfius;
+use FireflyIII\Import\Specifics\IngBelgium;
 use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Import\Specifics\PresidentsChoice;
 use FireflyIII\Import\Specifics\SnsDescription;
-use FireflyIII\Import\Specifics\Belfius;
-use FireflyIII\Import\Specifics\IngBelgium;
 
 return [
-
     /*
      * Configuration for the CSV specifics.
      */
@@ -40,7 +39,7 @@ return [
         'SnsDescription'     => SnsDescription::class,
         'PresidentsChoice'   => PresidentsChoice::class,
         'Belfius'            => Belfius::class,
-        'IngBelgium'         => IngBelgium::class
+        'IngBelgium'         => IngBelgium::class,
     ],
 
     /*
@@ -87,7 +86,6 @@ return [
             'field'           => 'ignored',
             'converter'       => 'Ignore',
             'mapper'          => null,
-
 
         ],
         'bill-id'               => [

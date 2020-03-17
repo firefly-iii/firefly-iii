@@ -2,7 +2,7 @@
 
 /**
  * 2018_11_06_172532_changes_for_v479.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,7 +26,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV479
+ * Class ChangesForV479.
  */
 class ChangesForV479 extends Migration
 {
@@ -38,9 +38,9 @@ class ChangesForV479 extends Migration
     public function down()
     {
         Schema::table(
-            'transaction_currencies', function (Blueprint $table) {
-            $table->dropColumn(['enabled']);
-        }
+            'transaction_currencies', static function (Blueprint $table) {
+                $table->dropColumn(['enabled']);
+            }
         );
     }
 
@@ -54,7 +54,7 @@ class ChangesForV479 extends Migration
     {
         Schema::table(
             'transaction_currencies',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->boolean('enabled')->default(0)->after('deleted_at');
             }
         );

@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountTypeSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use FireflyIII\Models\AccountType;
 use Illuminate\Database\Seeder;
 
 /**
- * Class AccountTypeSeeder
+ * Class AccountTypeSeeder.
  */
 class AccountTypeSeeder extends Seeder
 {

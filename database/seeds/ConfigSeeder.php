@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 /**
  * ConfigSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +26,7 @@ use FireflyIII\Models\Configuration;
 use Illuminate\Database\Seeder;
 
 /**
- * Class ConfigSeeder
+ * Class ConfigSeeder.
  */
 class ConfigSeeder extends Seeder
 {

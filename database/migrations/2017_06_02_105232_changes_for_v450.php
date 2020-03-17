@@ -1,7 +1,7 @@
 <?php
 /**
  * 2017_06_02_105232_changes_for_v450.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV450
+ * Class ChangesForV450.
  */
 class ChangesForV450 extends Migration
 {
@@ -38,7 +38,6 @@ class ChangesForV450 extends Migration
             'transactions',
             static function (Blueprint $table) {
                 $table->dropColumn('foreign_amount');
-
             }
         );
 
@@ -70,7 +69,7 @@ class ChangesForV450 extends Migration
         // add "foreign_amount" to transactions
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->decimal('foreign_amount', 22, 12)->nullable()->after('amount');
             }
         );
@@ -78,7 +77,7 @@ class ChangesForV450 extends Migration
         // add foreign transaction currency id to transactions (is nullable):
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->integer('foreign_currency_id', false, true)->default(null)->after('foreign_amount')->nullable();
                 $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
             }

@@ -1,7 +1,7 @@
 <?php
 /**
  * mail.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,9 +21,7 @@
 
 declare(strict_types=1);
 
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Mail Driver
@@ -77,7 +75,6 @@ return [
     |
     */
     'from' => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
-
 
     /*
     |--------------------------------------------------------------------------
