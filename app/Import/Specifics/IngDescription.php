@@ -135,9 +135,10 @@ class IngDescription implements SpecificInterface
     protected function moveValutadatumDescription(): void
     {
         $matches = array();
-        preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches);
-        $this->row[9] = date("Ymd", strtotime($matches[1]));
-        $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
+        if (preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches)) {
+            $this->row[9] = date("Ymd", strtotime($matches[1]));
+            $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
+        }
     }
 
     /**
