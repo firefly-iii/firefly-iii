@@ -44,6 +44,7 @@ class BillFactory
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -56,15 +57,15 @@ class BillFactory
     /**
      * @param array $data
      *
-     * @return Bill|null
      * @throws FireflyException
+     * @return Bill|null
      */
     public function create(array $data): ?Bill
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
-        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+        $currency = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
 
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
@@ -86,7 +87,7 @@ class BillFactory
                     'active'                  => $data['active'] ?? true,
                 ]
             );
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             throw new FireflyException('400000: Could not store bill.');
@@ -100,15 +101,15 @@ class BillFactory
     }
 
     /**
-     * @param int|null $billId
+     * @param int|null    $billId
      * @param null|string $billName
      *
      * @return Bill|null
      */
     public function find(?int $billId, ?string $billName): ?Bill
     {
-        $billId   = (int)$billId;
-        $billName = (string)$billName;
+        $billId   = (int) $billId;
+        $billName = (string) $billName;
         $bill     = null;
         // first find by ID:
         if ($billId > 0) {

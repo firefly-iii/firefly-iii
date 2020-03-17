@@ -40,6 +40,7 @@ class CategoryFactory
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -63,13 +64,13 @@ class CategoryFactory
      * @param int|null    $categoryId
      * @param null|string $categoryName
      *
-     * @return Category|null
      * @throws FireflyException
+     * @return Category|null
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
-        $categoryId   = (int)$categoryId;
-        $categoryName = (string)$categoryName;
+        $categoryId   = (int) $categoryId;
+        $categoryName = (string) $categoryName;
 
         Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
