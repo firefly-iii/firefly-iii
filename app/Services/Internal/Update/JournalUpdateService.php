@@ -153,56 +153,14 @@ class JournalUpdateService
         $this->transactionJournal->save();
         $this->transactionJournal->refresh();
 
-        // update category
-        if ($this->hasFields(['category_id', 'category_name'])) {
-            Log::debug('Will update category.');
-
-            $this->storeCategory($this->transactionJournal, new NullArrayObject($this->data));
-        }
-        // update budget
-        if ($this->hasFields(['budget_id', 'budget_name'])) {
-            Log::debug('Will update budget.');
-            $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
-        }
-        // update tags
-
-        if ($this->hasFields(['tags'])) {
-            Log::debug('Will update tags.');
-            $tags = $this->data['tags'] ?? null;
-            $this->storeTags($this->transactionJournal, $tags);
-        }
-
-        // update notes.
-        if ($this->hasFields(['notes'])) {
-            $notes = '' === (string)$this->data['notes'] ? null : $this->data['notes'];
-            $this->storeNotes($this->transactionJournal, $notes);
-        }
-        // update meta fields.
-        // first string
-        if ($this->hasFields($this->metaString)) {
-            Log::debug('Meta string fields are present.');
-            $this->updateMetaFields();
-        }
-
-        // then date fields.
-        if ($this->hasFields($this->metaDate)) {
-            Log::debug('Meta date fields are present.');
-            $this->updateMetaDateFields();
-        }
-
-
-        // update transactions.
-        if ($this->hasFields(['currency_id', 'currency_code'])) {
-            $this->updateCurrency();
-        }
-        if ($this->hasFields(['amount'])) {
-            $this->updateAmount();
-        }
-
-        // amount, foreign currency.
-        if ($this->hasFields(['foreign_currency_id', 'foreign_currency_code', 'foreign_amount'])) {
-            $this->updateForeignAmount();
-        }
+        $this->updateCategory();
+        $this->updateBudget();
+        $this->updateTags();
+        $this->updateNotes();
+        $this->updateMeta();
+        $this->updateCurrency();
+        $this->updateAmount();
+        $this->updateForeignAmount();
 
         // TODO update hash
 
@@ -477,6 +435,10 @@ class JournalUpdateService
      */
     private function updateAmount(): void
     {
+        if (!$this->hasFields(['amount'])) {
+            return;
+        }
+
         $value = $this->data['amount'] ?? '';
         try {
             $amount = $this->getAmount($value);
@@ -513,8 +475,8 @@ class JournalUpdateService
             )
             && TransactionType::WITHDRAWAL === $type
         ) {
-            $billId                            = (int)($this->data['bill_id'] ?? 0);
-            $billName                          = (string)($this->data['bill_name'] ?? '');
+            $billId                            = (int) ($this->data['bill_id'] ?? 0);
+            $billName                          = (string) ($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = null === $bill ? null : $bill->id;
             Log::debug('Updated bill ID');
@@ -524,8 +486,37 @@ class JournalUpdateService
     /**
      *
      */
+    private function updateBudget(): void
+    {
+        // update budget
+        if ($this->hasFields(['budget_id', 'budget_name'])) {
+            Log::debug('Will update budget.');
+            $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
+        }
+    }
+
+    /**
+     *
+     */
+    private function updateCategory(): void
+    {
+        // update category
+        if ($this->hasFields(['category_id', 'category_name'])) {
+            Log::debug('Will update category.');
+
+            $this->storeCategory($this->transactionJournal, new NullArrayObject($this->data));
+        }
+    }
+
+    /**
+     *
+     */
     private function updateCurrency(): void
     {
+        // update transactions.
+        if (!$this->hasFields(['currency_id', 'currency_code'])) {
+            return;
+        }
         $currencyId   = $this->data['currency_id'] ?? null;
         $currencyCode = $this->data['currency_code'] ?? null;
         $currency     = $this->currencyRepository->findCurrency($currencyId, $currencyCode);
@@ -568,6 +559,11 @@ class JournalUpdateService
      */
     private function updateForeignAmount(): void
     {
+        // amount, foreign currency.
+        if (!$this->hasFields(['foreign_currency_id', 'foreign_currency_code', 'foreign_amount'])) {
+            return;
+        }
+
         $amount          = $this->data['foreign_amount'] ?? null;
         $foreignAmount   = $this->getForeignAmount($amount);
         $source          = $this->getSourceTransaction();
@@ -625,6 +621,25 @@ class JournalUpdateService
     /**
      *
      */
+    private function updateMeta(): void
+    {
+        // update meta fields.
+        // first string
+        if ($this->hasFields($this->metaString)) {
+            Log::debug('Meta string fields are present.');
+            $this->updateMetaFields();
+        }
+
+        // then date fields.
+        if ($this->hasFields($this->metaDate)) {
+            Log::debug('Meta date fields are present.');
+            $this->updateMetaDateFields();
+        }
+    }
+
+    /**
+     *
+     */
     private function updateMetaDateFields(): void
     {
         /** @var TransactionJournalMetaFactory $factory */
@@ -669,6 +684,30 @@ class JournalUpdateService
                 ];
                 $factory->updateOrCreate($set);
             }
+        }
+    }
+
+    /**
+     *
+     */
+    private function updateNotes(): void
+    {
+        // update notes.
+        if ($this->hasFields(['notes'])) {
+            $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
+            $this->storeNotes($this->transactionJournal, $notes);
+        }
+    }
+
+    /**
+     *
+     */
+    private function updateTags(): void
+    {
+        if ($this->hasFields(['tags'])) {
+            Log::debug('Will update tags.');
+            $tags = $this->data['tags'] ?? null;
+            $this->storeTags($this->transactionJournal, $tags);
         }
     }
 
