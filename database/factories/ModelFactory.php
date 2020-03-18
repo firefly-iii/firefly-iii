@@ -221,8 +221,8 @@ $factory->define(
     FireflyIII\Models\Transaction::class,
     static function (Faker\Generator $faker) {
         return [
-            'transaction_amount'          => (string)$faker->randomFloat(2, -100, 100),
-            'destination_amount'          => (string)$faker->randomFloat(2, -100, 100),
+            'transaction_amount'          => (string) $faker->randomFloat(2, -100, 100),
+            'destination_amount'          => (string) $faker->randomFloat(2, -100, 100),
             'opposing_account_id'         => $faker->numberBetween(1, 10),
             'source_id'                   => $faker->numberBetween(1, 10),
             'opposing_account_name'       => $faker->words(3, true),
@@ -231,7 +231,7 @@ $factory->define(
             'destination_id'              => $faker->numberBetween(1, 10),
             'date'                        => new Carbon,
             'destination_name'            => $faker->words(3, true),
-            'amount'                      => (string)$faker->randomFloat(2, -100, 100),
+            'amount'                      => (string) $faker->randomFloat(2, -100, 100),
             'budget_id'                   => 0,
             'category'                    => $faker->words(3, true),
             'transaction_journal_id'      => $faker->numberBetween(1, 10),

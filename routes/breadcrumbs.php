@@ -114,8 +114,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start ? $start->formatLocalized((string)trans('config.month_and_day')) : '',
-                        'end'   => $end ? $end->formatLocalized((string)trans('config.month_and_day')) : '', ]
+                    ['start'    => $start ? $start->formatLocalized((string) trans('config.month_and_day')) : '',
+                        'end'   => $end ? $end->formatLocalized((string) trans('config.month_and_day')) : '', ]
                 );
                 $breadcrumbs->push($title, route('accounts.show', $account));
             }
@@ -415,8 +415,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string)trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string)trans('config.month_and_day')), ]
+                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
+                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
                 );
                 $breadcrumbs->push($title, route('budgets.no-budget'));
             }
@@ -449,8 +449,8 @@ try {
 
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start'    => $budgetLimit->start_date->formatLocalized((string)trans('config.month_and_day')),
-                    'end'   => $budgetLimit->end_date->formatLocalized((string)trans('config.month_and_day')), ]
+                ['start'    => $budgetLimit->start_date->formatLocalized((string) trans('config.month_and_day')),
+                    'end'   => $budgetLimit->end_date->formatLocalized((string) trans('config.month_and_day')), ]
             );
 
             $breadcrumbs->push(
@@ -499,8 +499,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string)trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string)trans('config.month_and_day')), ]
+                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
+                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
                 );
                 $breadcrumbs->push($title, route('categories.show', [$category->id]));
             }
@@ -524,8 +524,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string)trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string)trans('config.month_and_day')), ]
+                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
+                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
                 );
                 $breadcrumbs->push($title, route('categories.no-category'));
             }
@@ -744,10 +744,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.audit', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -757,10 +757,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, string $budgetIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.budget', [$accountIds, $budgetIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -771,10 +771,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, string $tagTags, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_tag', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_tag', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.tag', [$accountIds, $tagTags, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -785,10 +785,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, string $categoryIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.category', [$accountIds, $categoryIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -799,10 +799,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, string $doubleIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_double', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_double', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.double', [$accountIds, $doubleIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -813,10 +813,10 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string)trans('config.month_and_day');
+            $monthFormat = (string) trans('config.month_and_day');
             $startString = $start->formatLocalized($monthFormat);
             $endString   = $end->formatLocalized($monthFormat);
-            $title       = (string)trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
+            $title       = (string) trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.default', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -1016,8 +1016,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string)trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string)trans('config.month_and_day')), ]
+                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
+                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
                 );
                 $breadcrumbs->push($title, route('tags.show', [$tag->id, $start, $end]));
             }
@@ -1029,7 +1029,7 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, Tag $tag) {
             $breadcrumbs->parent('tags.index');
             $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id]));
-            $title = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $title = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $breadcrumbs->push($title, route('tags.show.all', $tag->id));
         }
     );
@@ -1046,8 +1046,8 @@ try {
                 // add date range:
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string)trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string)trans('config.month_and_day')), ]
+                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
+                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
                 );
                 $breadcrumbs->push($title, route('transactions.index', [$what, $start, $end]));
             }
