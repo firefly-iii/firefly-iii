@@ -24,15 +24,24 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\User;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
@@ -80,53 +89,150 @@ class IsValidAttachmentModel implements Rule
         if (!auth()->check()) {
             return false;
         }
+        $methods = [
+            Account::class            => 'validateAccount',
+            Bill::class               => 'validateBill',
+            Budget::class             => 'validateBudget',
+            Category::class           => 'validateCategory',
+            ImportJob::class          => 'validateImportJob',
+            PiggyBank::class          => 'validatePiggyBank',
+            Tag::class                => 'validateTag',
+            Transaction::class        => 'validateTransaction',
+            TransactionJournal::class => 'validateJournal',
+        ];
+        if (!isset($methods[$this->model])) {
+            Log::error(sprintf('Cannot validate model "%s" in %s.', $this->model, __METHOD__));
 
-
-        if (Bill::class === $this->model) {
-            /** @var BillRepositoryInterface $repository */
-            $repository = app(BillRepositoryInterface::class);
-            /** @var User $user */
-            $user = auth()->user();
-            $repository->setUser($user);
-            $bill = $repository->find((int)$value);
-
-            return null !== $bill;
+            return false;
         }
+        $method = $methods[$this->model];
 
-        if (ImportJob::class === $this->model) {
-            /** @var ImportJobRepositoryInterface $repository */
-            $repository = app(ImportJobRepositoryInterface::class);
-            /** @var User $user */
-            $user = auth()->user();
-            $repository->setUser($user);
-            $importJob = $repository->find((int)$value);
+        return $this->$method((int) $value);
+    }
 
-            return null !== $importJob;
-        }
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateTag(int $value): bool
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser(auth()->user());
 
-        if (Transaction::class === $this->model) {
-            /** @var JournalAPIRepositoryInterface $repository */
-            $repository = app(JournalAPIRepositoryInterface::class);
+        return null !== $repository->findNull($value);
+    }
 
-            /** @var User $user */
-            $user = auth()->user();
-            $repository->setUser($user);
-            $transaction = $repository->findTransaction((int)$value);
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validatePiggyBank(int $value): bool
+    {
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser(auth()->user());
 
-            return null !== $transaction;
-        }
+        return null !== $repository->findNull($value);
+    }
 
-        if (TransactionJournal::class === $this->model) {
-            $repository = app(JournalRepositoryInterface::class);
-            $user       = auth()->user();
-            $repository->setUser($user);
-            $result = $repository->findNull((int)$value);
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateBudget(int $value): bool
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUser(auth()->user());
 
-            return null !== $result;
-        }
-        Log::error(sprintf('No model was recognized from string "%s"', $this->model));
+        return null !== $repository->findNull($value);
+    }
 
-        return false;
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateCategory(int $value): bool
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->findNull($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateAccount(int $value): bool
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->findNull($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateJournal(int $value): bool
+    {
+        $repository = app(JournalRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->findNull($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateTransaction(int $value): bool
+    {
+        /** @var JournalAPIRepositoryInterface $repository */
+        $repository = app(JournalAPIRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->findTransaction((int) $value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateImportJob(int $value): bool
+    {
+        /** @var ImportJobRepositoryInterface $repository */
+        $repository = app(ImportJobRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->find($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateBill(int $value): bool
+    {
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->find($value);
     }
 
     /**
@@ -141,6 +247,7 @@ class IsValidAttachmentModel implements Rule
         $model   = str_replace($search, $replace, $model);
 
         $model = sprintf('FireflyIII\Models\%s', $model);
+
         return $model;
     }
 }
