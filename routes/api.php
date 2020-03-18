@@ -86,16 +86,16 @@ Route::group(
         'as'         => 'api.v1.bills.', ], static function () {
 
     // Bills API routes:
-         Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
-         Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
-         Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
-         Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
-         Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
+            Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+            Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
+            Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+            Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
+            Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
 
-         Route::get('{bill}/attachments', ['uses' => 'BillController@attachments', 'as' => 'attachments']);
-         Route::get('{bill}/rules', ['uses' => 'BillController@rules', 'as' => 'rules']);
-         Route::get('{bill}/transactions', ['uses' => 'BillController@transactions', 'as' => 'transactions']);
-     }
+            Route::get('{bill}/attachments', ['uses' => 'BillController@attachments', 'as' => 'attachments']);
+            Route::get('{bill}/rules', ['uses' => 'BillController@rules', 'as' => 'rules']);
+            Route::get('{bill}/transactions', ['uses' => 'BillController@transactions', 'as' => 'transactions']);
+        }
 );
 
 Route::group(
