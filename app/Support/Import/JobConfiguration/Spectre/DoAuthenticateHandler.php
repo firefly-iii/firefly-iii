@@ -34,7 +34,8 @@ use Log;
 
 /**
  * Class AuthenticateConfig
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class DoAuthenticateHandler implements SpectreJobConfigurationInterface
 {

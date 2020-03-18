@@ -69,8 +69,8 @@ class CurrencyExchangeRateController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {

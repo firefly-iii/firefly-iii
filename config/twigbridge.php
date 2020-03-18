@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the TwigBridge package.
  *
@@ -28,7 +30,6 @@ use TwigBridge\Extension\Loader\Functions;
  * Configuration options for Twig.
  */
 return [
-
     'twig' => [
         /*
         |--------------------------------------------------------------------------
@@ -181,12 +182,11 @@ return [
             'Steam',
             'Config',
             'Request',
-            'Form'          => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],],
+            'Form'          => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file']],
             'ExpandedForm'  => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
                     'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'percentage',
-
 
                 ],
             ],
@@ -201,19 +201,17 @@ return [
                     'currencyList', 'currencyListEmpty', 'balanceAll',
                 ],
             ],
-            'PiggyBankForm' =>
-                [
-                    'is_safe' => [
-                        'piggyBankList',
-                    ],
+            'PiggyBankForm' => [
+                'is_safe' => [
+                    'piggyBankList',
                 ],
+            ],
             'RuleForm'      => [
                 'is_safe' => [
                     'ruleGroupList', 'ruleGroupListWithEmpty',
                 ],
             ],
         ],
-
 
         /*
         |--------------------------------------------------------------------------

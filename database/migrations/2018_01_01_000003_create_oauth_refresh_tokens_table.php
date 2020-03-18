@@ -2,7 +2,7 @@
 
 /**
  * 2018_01_01_000003_create_oauth_refresh_tokens_table.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateOauthRefreshTokensTable
+ * Class CreateOauthRefreshTokensTable.
  */
 class CreateOauthRefreshTokensTable extends Migration
 {
@@ -46,12 +46,12 @@ class CreateOauthRefreshTokensTable extends Migration
     public function up(): void
     {
         Schema::create(
-            'oauth_refresh_tokens', function (Blueprint $table) {
-            $table->string('id', 100)->primary();
-            $table->string('access_token_id', 100)->index();
-            $table->boolean('revoked');
-            $table->dateTime('expires_at')->nullable();
-        }
+            'oauth_refresh_tokens', static function (Blueprint $table) {
+                $table->string('id', 100)->primary();
+                $table->string('access_token_id', 100)->index();
+                $table->boolean('revoked');
+                $table->dateTime('expires_at')->nullable();
+            }
         );
     }
 }

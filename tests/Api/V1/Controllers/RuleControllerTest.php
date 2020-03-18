@@ -35,9 +35,9 @@ use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Mockery;
 
 /**
  *
@@ -55,6 +55,7 @@ class RuleControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 

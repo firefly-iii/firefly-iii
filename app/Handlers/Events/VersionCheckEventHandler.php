@@ -25,9 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 
-use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -53,9 +51,10 @@ class VersionCheckEventHandler
 
         // should not check for updates:
         $permission = app('fireflyconfig')->get('permission_update_check', -1);
-        $value      = (int)$permission->data;
+        $value      = (int) $permission->data;
         if (1 !== $value) {
             Log::info('Update check is not enabled.');
+
             return;
         }
 
@@ -65,6 +64,7 @@ class VersionCheckEventHandler
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
+
             return;
         }
 
@@ -75,11 +75,12 @@ class VersionCheckEventHandler
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800) {
             Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+
             return;
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release      = $this->getLatestRelease();
+        $release = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
         app('fireflyconfig')->set('last_update_check', time());

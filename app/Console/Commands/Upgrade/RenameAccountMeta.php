@@ -76,7 +76,7 @@ class RenameAccountMeta extends Command
             $count += AccountMeta::where('name', $old)->update(['name' => $new]);
 
             // delete empty entries while we're at it.
-            AccountMeta::where('name', $new)->where('data','""')->delete();
+            AccountMeta::where('name', $new)->where('data', '""')->delete();
         }
 
         $this->markAsExecuted();
@@ -101,7 +101,7 @@ class RenameAccountMeta extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore

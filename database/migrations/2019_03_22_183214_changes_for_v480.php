@@ -1,7 +1,7 @@
 <?php
 /**
  * 2019_03_22_183214_changes_for_v480.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,12 +21,11 @@
 
 declare(strict_types=1);
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV480
+ * Class ChangesForV480.
  */
 class ChangesForV480 extends Migration
 {
@@ -39,7 +38,7 @@ class ChangesForV480 extends Migration
     {
         Schema::table(
             'transaction_journals',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 // drop transaction_group_id + foreign key.
                 // cannot drop foreign keys in SQLite:
                 if ('sqlite' !== config('database.default')) {
@@ -50,14 +49,14 @@ class ChangesForV480 extends Migration
         );
         Schema::table(
             'rule_groups', static function (Blueprint $table) {
-            $table->dropColumn('stop_processing');
-        }
+                $table->dropColumn('stop_processing');
+            }
         );
 
         Schema::table(
             'users', static function (Blueprint $table) {
-            $table->dropColumn('mfa_secret');
-        }
+                $table->dropColumn('mfa_secret');
+            }
         );
     }
 
@@ -69,11 +68,9 @@ class ChangesForV480 extends Migration
      */
     public function up(): void
     {
-
         Schema::table(
             'transaction_journals',
             static function (Blueprint $table) {
-
                 $table->integer('transaction_currency_id', false, true)->nullable()->change();
 
                 // add column "group_id" after "transaction_type_id"
@@ -86,13 +83,13 @@ class ChangesForV480 extends Migration
         );
         Schema::table(
             'rule_groups', static function (Blueprint $table) {
-            $table->boolean('stop_processing')->default(false);
-        }
+                $table->boolean('stop_processing')->default(false);
+            }
         );
         Schema::table(
             'users', static function (Blueprint $table) {
-            $table->string('mfa_secret', 50)->nullable();
-        }
+                $table->string('mfa_secret', 50)->nullable();
+            }
         );
     }
 }

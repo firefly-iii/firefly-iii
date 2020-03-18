@@ -29,7 +29,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface SpectreJobConfigurationInterface
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface SpectreJobConfigurationInterface
 {

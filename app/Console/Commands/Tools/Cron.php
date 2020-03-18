@@ -27,9 +27,11 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
+use Log;
 
 /**
  * Class Cron
@@ -56,39 +58,38 @@ class Cron extends Command
 
     /**
      * @return int
-     * @throws Exception
      */
     public function handle(): int
     {
         $date = null;
         try {
             $date = new Carbon($this->option('date'));
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|Exception $e) {
             $this->error(sprintf('"%s" is not a valid date', $this->option('date')));
             $e->getMessage();
         }
+        $force = (bool) $this->option('force');
 
-
-        $recurring = new RecurringCronjob;
-        $recurring->setForce($this->option('force'));
-
-        // set date in cron job:
-        if (null !== $date) {
-            $recurring->setDate($date);
-        }
-
+        /*
+         * Fire recurring transaction cron job.
+         */
         try {
-            $result = $recurring->fire();
+            $this->recurringCronJob($force, $date);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->error($e->getMessage());
+        }
 
-            return 0;
-        }
-        if (false === $result) {
-            $this->line('The recurring transaction cron job did not fire.');
-        }
-        if (true === $result) {
-            $this->line('The recurring transaction cron job fired successfully.');
+        /*
+         * Fire auto-budget cron job:
+         */
+        try {
+            $this->autoBudgetCronJob($force, $date);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->error($e->getMessage());
         }
 
         $this->info('More feedback on the cron jobs can be found in the log files.');
@@ -96,5 +97,56 @@ class Cron extends Command
         return 0;
     }
 
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     *
+     * @throws FireflyException
+     * @throws Exception
+     */
+    private function autoBudgetCronJob(bool $force, ?Carbon $date): void
+    {
+        $autoBudget = new AutoBudgetCronjob;
+        $autoBudget->setForce($force);
+        // set date in cron job:
+        if (null !== $date) {
+            $autoBudget->setDate($date);
+        }
 
+        $result = $autoBudget->fire();
+
+        if (false === $result) {
+            $this->line('The auto budget cron job did not fire.');
+        }
+        if (true === $result) {
+            $this->line('The auto budget cron job fired successfully.');
+        }
+
+    }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     *
+     * @throws FireflyException
+     */
+    private function recurringCronJob(bool $force, ?Carbon $date): void
+    {
+        $recurring = new RecurringCronjob;
+        $recurring->setForce($force);
+
+        // set date in cron job:
+        if (null !== $date) {
+            $recurring->setDate($date);
+        }
+
+        $result = $recurring->fire();
+
+        if (false === $result) {
+            $this->line('The recurring transaction cron job did not fire.');
+        }
+        if (true === $result) {
+            $this->line('The recurring transaction cron job fired successfully.');
+        }
+    }
 }

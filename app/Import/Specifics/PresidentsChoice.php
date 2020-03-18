@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class PresidentsChoice.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class PresidentsChoice implements SpecificInterface
 {

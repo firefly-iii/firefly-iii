@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Maksamatta valuutassa :currency',
     'is_alpha_warning'                           => 'Käytät ALPHA-versiota. Varaudu virheisiin ja ongelmiin.',
     'is_beta_warning'                            => 'Käytät BETA-versiota. Varaudu virheisiin ja ongelmiin.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Uusi sääntöryhmä ":title" tallennettiin!',
     'updated_rule_group'                         => 'Sääntöryhmän ":title" päivitys onnistui.',
     'edit_rule_group'                            => 'Muokkaa sääntöryhmää ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Poista sääntöryhmä ":title"',
     'deleted_rule_group'                         => 'Poistettiin sääntöryhmä ":title"',
     'update_rule_group'                          => 'Päivitä sääntöryhmä',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Yleensä budjetoit summan :amount päivälle. Tällä kerralla budjetoit :over_amount päivälle. Oletko varma?',
     'transferred_in'                            => 'Siirretty (sisään)',
     'transferred_away'                          => 'Siirretty (ulos)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Lasku täsmää tapahtumiin välillä :low ja :high.',

@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Währung',
     'currency_id'               => 'Währung',
     'transaction_currency_id'   => 'Währung',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Die externe IP-Adresse Ihres Servers',
     'attachments'               => 'Anhänge',
     'journal_amount'            => 'Betrag',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Quellkonto',
     'expected_on'               => 'Erwartet am',
     'paid'                      => 'Bezahlt',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

@@ -35,7 +35,9 @@ use Tests\Object\FakeApiContext;
  * Special class to hide away bunq's static initialisation methods.
  *
  * Class ApiContext
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ApiContext
 {

@@ -27,6 +27,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Class FileConfigurationInterface.
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface FileConfigurationInterface
 {

@@ -50,10 +50,10 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle(): int
     {
-        if ('update' === (string)$this->argument('task')) {
+        if ('update' === (string) $this->argument('task')) {
             $this->updateInstructions();
         }
-        if ('install' === (string)$this->argument('task')) {
+        if ('install' === (string) $this->argument('task')) {
             $this->installInstructions();
         }
 

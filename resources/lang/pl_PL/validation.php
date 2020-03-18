@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Całkowita kwota nie może wynosić zero.',
     'current_target_amount'          => 'Bieżąca kwota musi być mniejsza niż kwota docelowa.',
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
+
     'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
     'valid_recurrence_rep_moment'    => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => ':attribute musi mieć rozmiar większy niż lub równy :value kilobajtów.',
     'gte.string'  => ':attribute musi mieć :value lub więcej znaków.',
     'gte.array'   => ':attribute musi mieć :value lub więcej elementów.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

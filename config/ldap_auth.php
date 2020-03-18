@@ -2,7 +2,7 @@
 
 /**
  * ldap_auth.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +25,6 @@ declare(strict_types=1);
 use Adldap\Laravel\Scopes\UidScope;
 use Adldap\Laravel\Scopes\UpnScope;
 
-
 // default OpenLDAP scopes.
 $scopes = [
     UidScope::class,
@@ -39,9 +38,7 @@ if ('ActiveDirectory' === env('ADLDAP_CONNECTION_SCHEME')) {
     ];
 }
 
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Connection
@@ -77,7 +74,6 @@ return [
 
     'provider' => Adldap\Laravel\Auth\DatabaseUserProvider::class,
     //'provider' => Adldap\Laravel\Auth\NoDatabaseUserProvider::class,
-
 
     /*
     |--------------------------------------------------------------------------
@@ -174,7 +170,7 @@ return [
         'ldap' => [
 
             'locate_users_by'     => envNonEmpty('ADLDAP_DISCOVER_FIELD', 'userprincipalname'),
-            'bind_users_by' => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
+            'bind_users_by'       => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
 
         ],
 

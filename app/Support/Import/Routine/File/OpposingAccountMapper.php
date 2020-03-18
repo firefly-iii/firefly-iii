@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class OpposingAccountMapper
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class OpposingAccountMapper
 {

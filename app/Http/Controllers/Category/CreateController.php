@@ -27,7 +27,11 @@ namespace FireflyIII\Http\Controllers\Category;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class CreateController
@@ -39,6 +43,7 @@ class CreateController extends Controller
 
     /**
      * CategoryController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -47,7 +52,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -62,7 +67,7 @@ class CreateController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(Request $request)
     {
@@ -70,7 +75,7 @@ class CreateController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle = (string)trans('firefly.create_new_category');
+        $subTitle = (string) trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
@@ -81,18 +86,18 @@ class CreateController extends Controller
      *
      * @param CategoryFormRequest $request
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|RedirectResponse|Redirector
      */
     public function store(CategoryFormRequest $request)
     {
         $data     = $request->getCategoryData();
         $category = $this->repository->store($data);
 
-        $request->session()->flash('success', (string)trans('firefly.stored_category', ['name' => $category->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_category', ['name' => $category->name]));
         app('preferences')->mark();
 
         $redirect = redirect(route('categories.index'));
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 

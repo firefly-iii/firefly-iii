@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Νόμισμα',
     'currency_id'               => 'Νόμισμα',
     'transaction_currency_id'   => 'Νόμισμα',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Η εξωτερική IP του εξυπηρετητή σας',
     'attachments'               => 'Συνημμένα',
     'journal_amount'            => 'Ποσό',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Λογαριασμός προέλευσης',
     'expected_on'               => 'Αναμένεται στις',
     'paid'                      => 'Πληρώθηκε',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

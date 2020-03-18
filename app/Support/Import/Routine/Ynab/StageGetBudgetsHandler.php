@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class StageGetBudgetsHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageGetBudgetsHandler
 {

@@ -1,7 +1,7 @@
 <?php
 /**
  * PermissionSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;
 
 /**
- * Class PermissionSeeder
+ * Class PermissionSeeder.
  */
 class PermissionSeeder extends Seeder
 {

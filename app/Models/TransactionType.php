@@ -22,34 +22,38 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionType.
  *
- * @property string $type
- * @property int    $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property string                                                             $type
+ * @property int                                                                $id
+ * @property Carbon|null                                    $created_at
+ * @property Carbon|null                                    $updated_at
+ * @property Carbon|null                                    $deleted_at
+ * @property-read Collection|TransactionJournal[] $transactionJournals
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionType onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newQuery()
+ * @method static Builder|TransactionType onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionType whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionType withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionType withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereUpdatedAt($value)
+ * @method static Builder|TransactionType withTrashed()
+ * @method static Builder|TransactionType withoutTrashed()
+ * @mixin Eloquent
  */
 class TransactionType extends Model
 {
@@ -94,8 +98,8 @@ class TransactionType extends Model
      *
      * @param string $type
      *
-     * @return Model|null|static
      * @throws NotFoundHttpException
+     * @return Model|null|static
      */
     public static function routeBinder(string $type): TransactionType
     {

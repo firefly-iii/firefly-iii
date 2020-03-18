@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionCurrencySeeder.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\Seeder;
 
 /**
- * Class TransactionCurrencySeeder
+ * Class TransactionCurrencySeeder.
  */
 class TransactionCurrencySeeder extends Seeder
 {

@@ -39,6 +39,8 @@ use Log;
 
 /**
  * Class ConfigureMappingHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ConfigureMappingHandler implements FileConfigurationInterface
 {

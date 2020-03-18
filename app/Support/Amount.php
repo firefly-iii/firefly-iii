@@ -117,37 +117,16 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param \FireflyIII\Models\TransactionCurrency $format
-     * @param string                                 $amount
-     * @param bool                                   $coloured
+     * @param TransactionCurrency $format
+     * @param string              $amount
+     * @param bool                $coloured
      *
      * @return string
      *
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        $coloured  = $coloured ?? true;
-        $float     = round($amount, 12);
-        $info      = $this->getLocaleInfo();
-        $formatted = number_format($float, (int)$format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
-
-        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
-        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = true === $separated ? ' ' : '';
-        $result    = false === $precedes ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
-
-        if (true === $coloured) {
-            if ($amount > 0) {
-                return sprintf('<span class="text-success">%s</span>', $result);
-            }
-            if ($amount < 0) {
-                return sprintf('<span class="text-danger">%s</span>', $result);
-            }
-
-            return sprintf('<span style="color:#999">%s</span>', $result);
-        }
-
-        return $result;
+        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
     }
 
     /**
@@ -169,14 +148,6 @@ class Amount
         $float     = round($amount, 12);
         $info      = $this->getLocaleInfo();
         $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
-
-        // some complicated switches to format the amount correctly:
-        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
-                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
-
-        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
-                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
-
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = true === $separated ? ' ' : '';
@@ -343,28 +314,30 @@ class Amount
      */
     public function getLocaleInfo(): array
     {
-        $locale = explode(',', (string)trans('config.locale'));
+        $locale = explode(',', (string) trans('config.locale'));
         $locale = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
         $info = localeconv();
         // correct variables
-        $info['n_cs_precedes'] = (is_bool($info['n_cs_precedes']) && true === $info['n_cs_precedes'])
-                                 || (is_int($info['n_cs_precedes']) && 1 === $info['n_cs_precedes']);
+        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['p_cs_precedes'] = (is_bool($info['p_cs_precedes']) && true === $info['p_cs_precedes'])
-                                 || (is_int($info['p_cs_precedes']) && 1 === $info['p_cs_precedes']);
-
-        $info['n_sep_by_space'] = (is_bool($info['n_sep_by_space']) && true === $info['n_sep_by_space'])
-                                  || (is_int($info['n_sep_by_space']) && 1 === $info['n_sep_by_space']);
-
-        $info['p_sep_by_space'] = (is_bool($info['p_sep_by_space']) && true === $info['p_sep_by_space'])
-                                  || (is_int($info['p_sep_by_space']) && 1 === $info['p_sep_by_space']);
-
-        // n_sep_by_space
-        // p_sep_by_space
+        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
 
         return $info;
+    }
 
+    /**
+     * @param array  $info
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function getLocaleField(array $info, string $field): bool
+    {
+        return (is_bool($info[$field]) && true === $info[$field])
+               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 
     /**

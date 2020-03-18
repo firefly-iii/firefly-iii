@@ -34,6 +34,9 @@ use Log;
 
 /**
  * Class YnabRoutine
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class YnabRoutine implements RoutineInterface
 {

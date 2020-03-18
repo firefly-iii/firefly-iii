@@ -68,35 +68,32 @@ class ApplyRules extends Command
                             {--all_rules : If set, will overrule both settings and simply apply ALL of your rules.}
                             {--start_date= : The date of the earliest transaction to be included (inclusive). If omitted, will be your very first transaction ever. Format: YYYY-MM-DD}
                             {--end_date= : The date of the latest transaction to be included (inclusive). If omitted, will be your latest transaction ever. Format: YYYY-MM-DD}';
-
-    /** @var Collection */
-    private $accounts;
     /** @var array */
     private $acceptedAccounts;
+    /** @var Collection */
+    private $accounts;
+    /** @var bool */
+    private $allRules;
     /** @var Carbon */
     private $endDate;
+    /** @var Collection */
+    private $groups;
+    /** @var RuleGroupRepositoryInterface */
+    private $ruleGroupRepository;
     /** @var array */
     private $ruleGroupSelection;
+    /** @var RuleRepositoryInterface */
+    private $ruleRepository;
     /** @var array */
     private $ruleSelection;
     /** @var Carbon */
     private $startDate;
-    /** @var Collection */
-    private $groups;
-    /** @var bool */
-    private $allRules;
-
-    /** @var RuleRepositoryInterface */
-    private $ruleRepository;
-
-    /** @var RuleGroupRepositoryInterface */
-    private $ruleGroupRepository;
 
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
+     * @return int
      */
     public function handle(): int
     {
@@ -170,6 +167,49 @@ class ApplyRules extends Command
     }
 
     /**
+     * @return array
+     */
+    private function getRulesToApply(): array
+    {
+        $rulesToApply = [];
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if (true === $test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply[] = $rule->id;
+                }
+            }
+        }
+
+        return $rulesToApply;
+    }
+
+    /**
+     */
+    private function grabAllRules(): void
+    {
+        $this->groups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    /**
+     * @param Rule      $rule
+     * @param RuleGroup $group
+     *
+     * @return bool
+     */
+    private function includeRule(Rule $rule, RuleGroup $group): bool
+    {
+        return in_array($group->id, $this->ruleGroupSelection, true)
+               || in_array($rule->id, $this->ruleSelection, true)
+               || $this->allRules;
+    }
+
+    /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
@@ -189,8 +229,8 @@ class ApplyRules extends Command
     }
 
     /**
-     * @return bool
      * @throws FireflyException
+     * @return bool
      */
     private function verifyInput(): bool
     {
@@ -212,8 +252,8 @@ class ApplyRules extends Command
     }
 
     /**
-     * @return bool
      * @throws FireflyException
+     * @return bool
      */
     private function verifyInputAccounts(): bool
     {
@@ -240,7 +280,7 @@ class ApplyRules extends Command
 
 
         foreach ($accountList as $accountId) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             $account   = $accountRepository->findNull($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
@@ -256,66 +296,6 @@ class ApplyRules extends Command
 
         return true;
 
-    }
-
-    /**
-     * @return bool
-     */
-    private function verifyInputRuleGroups(): bool
-    {
-        $ruleGroupString = $this->option('rule_groups');
-        if (null === $ruleGroupString || '' === $ruleGroupString) {
-            // can be empty.
-            return true;
-        }
-        $ruleGroupList = explode(',', $ruleGroupString);
-        // @codeCoverageIgnoreStart
-        if (0 === count($ruleGroupList)) {
-            // can be empty.
-            return true;
-        }
-        // @codeCoverageIgnoreEnd
-        foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
-            if ($ruleGroup->active) {
-                $this->ruleGroupSelection[] = $ruleGroup->id;
-            }
-            if (false === $ruleGroup->active) {
-                $this->warn(sprintf('Will ignore inactive rule group #%d ("%s")', $ruleGroup->id, $ruleGroup->title));
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function verifyInputRules(): bool
-    {
-        $ruleString = $this->option('rules');
-        if (null === $ruleString || '' === $ruleString) {
-            // can be empty.
-            return true;
-        }
-        $ruleList = explode(',', $ruleString);
-
-        // @codeCoverageIgnoreStart
-        if (0 === count($ruleList)) {
-            // can be empty.
-
-            return true;
-        }
-        // @codeCoverageIgnoreEnd
-
-        foreach ($ruleList as $ruleId) {
-            $rule = $this->ruleRepository->find((int)$ruleId);
-            if (null !== $rule && $rule->active) {
-                $this->ruleSelection[] = $rule->id;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -355,44 +335,62 @@ class ApplyRules extends Command
     }
 
     /**
-     */
-    private function grabAllRules(): void
-    {
-        $this->groups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    /**
-     * @param Rule $rule
-     * @param RuleGroup $group
      * @return bool
      */
-    private function includeRule(Rule $rule, RuleGroup $group): bool
+    private function verifyInputRuleGroups(): bool
     {
-        return in_array($group->id, $this->ruleGroupSelection, true) ||
-               in_array($rule->id, $this->ruleSelection, true) ||
-               $this->allRules;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRulesToApply(): array
-    {
-        $rulesToApply = [];
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if (true === $test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $rulesToApply[] = $rule->id;
-                }
+        $ruleGroupString = $this->option('rule_groups');
+        if (null === $ruleGroupString || '' === $ruleGroupString) {
+            // can be empty.
+            return true;
+        }
+        $ruleGroupList = explode(',', $ruleGroupString);
+        // @codeCoverageIgnoreStart
+        if (0 === count($ruleGroupList)) {
+            // can be empty.
+            return true;
+        }
+        // @codeCoverageIgnoreEnd
+        foreach ($ruleGroupList as $ruleGroupId) {
+            $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
+            if ($ruleGroup->active) {
+                $this->ruleGroupSelection[] = $ruleGroup->id;
+            }
+            if (false === $ruleGroup->active) {
+                $this->warn(sprintf('Will ignore inactive rule group #%d ("%s")', $ruleGroup->id, $ruleGroup->title));
             }
         }
 
-        return $rulesToApply;
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function verifyInputRules(): bool
+    {
+        $ruleString = $this->option('rules');
+        if (null === $ruleString || '' === $ruleString) {
+            // can be empty.
+            return true;
+        }
+        $ruleList = explode(',', $ruleString);
+
+        // @codeCoverageIgnoreStart
+        if (0 === count($ruleList)) {
+            // can be empty.
+
+            return true;
+        }
+        // @codeCoverageIgnoreEnd
+
+        foreach ($ruleList as $ruleId) {
+            $rule = $this->ruleRepository->find((int) $ruleId);
+            if (null !== $rule && $rule->active) {
+                $this->ruleSelection[] = $rule->id;
+            }
+        }
+
+        return true;
     }
 }

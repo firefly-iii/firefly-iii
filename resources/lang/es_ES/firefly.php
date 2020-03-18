@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Impago en :currency',
     'is_alpha_warning'                           => 'Está ejecutando una versión ALPHA. Tenga cuidado con los errores y problemas.',
     'is_beta_warning'                            => 'Está ejecutando una versión BETA. Tenga cuidado con los errores y problemas.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Ver actualizaciones',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Nuevo grupo de reglas ":title" guardado!',
     'updated_rule_group'                         => 'Grupo de reglas actualizado exitosamente ":title".',
     'edit_rule_group'                            => 'Editar grupo de reglas ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Eliminar grupo de reglas ":title"',
     'deleted_rule_group'                         => 'Eliminar grupo de reglas ":title"',
     'update_rule_group'                          => 'Actualizar grupo de reglas',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Generalmente usted presupone :amount por día. Esta vez es :over_amount por día. ¿Está seguro?',
     'transferred_in'                            => 'Transferido (dentro)',
     'transferred_away'                          => 'Transferido (fuera)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'La cuenta iguala transacciones entre :low y :high.',

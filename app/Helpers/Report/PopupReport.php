@@ -87,7 +87,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
 
@@ -124,7 +124,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
 
@@ -154,7 +154,7 @@ class PopupReport implements PopupReportInterface
      * Collect journals by a category.
      *
      * @param Category|null $category
-     * @param array    $attributes
+     * @param array         $attributes
      *
      * @return array
      */
@@ -166,7 +166,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -179,10 +179,10 @@ class PopupReport implements PopupReportInterface
                   ->withCategoryInformation()
                   ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation();
 
-        if(null!== $category) {
+        if (null !== $category) {
             $collector->setCategory($category);
         }
-        if(null === $category) {
+        if (null === $category) {
             $collector->withoutCategory();
         }
 
@@ -209,7 +209,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
         /** @var JournalRepositoryInterface $repository */

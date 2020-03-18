@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Suma totală nu poate fi zero.',
     'current_target_amount'          => 'Suma curentă trebuie să fie mai mică decât suma vizată.',
     'unique_piggy_bank_for_user'     => 'Numele pușculiței trebuie să fie unic.',
+
     'secure_password'                => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
     'valid_recurrence_rep_moment'    => 'Momentul repetiției nevalid pentru acest tip de repetare.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => ':attribute trebuie să fie mai mare sau egal cu :value kilobytes.',
     'gte.string'  => ':attribute trebuie să fie mai mare sau egal cu :value caractere.',
     'gte.array'   => ':attribute trebuie sa aiba :value valori sau mai multe.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

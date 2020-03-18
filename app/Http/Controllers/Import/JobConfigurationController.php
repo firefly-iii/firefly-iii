@@ -27,13 +27,20 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\MessageBag;
+use Illuminate\View\View;
 use Log;
 
 /**
  * Class JobConfigurationController
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class JobConfigurationController extends Controller
 {
@@ -51,7 +58,7 @@ class JobConfigurationController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', (string)trans('firefly.import_index_title'));
+                app('view')->share('title', (string) trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -64,9 +71,9 @@ class JobConfigurationController extends Controller
      *
      * @param ImportJob $importJob
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
-     *
      * @throws FireflyException
+     *
+     * @return Factory|RedirectResponse|Redirector|View
      *
      */
     public function index(ImportJob $importJob)
@@ -75,7 +82,7 @@ class JobConfigurationController extends Controller
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
+            session()->flash('error', (string) trans('import.bad_job_status', ['status' => e($importJob->status)]));
 
             return redirect(route('import.index'));
         }
@@ -83,7 +90,7 @@ class JobConfigurationController extends Controller
 
         // if provider has no config, just push it through:
         $importProvider = $importJob->provider;
-        if (!(bool)config(sprintf('import.has_job_config.%s', $importProvider))) {
+        if (!(bool) config(sprintf('import.has_job_config.%s', $importProvider))) {
             // @codeCoverageIgnoreStart
             Log::debug('Job needs no config, is ready to run!');
             $this->repository->setStatus($importJob, 'ready_to_run');
@@ -102,7 +109,7 @@ class JobConfigurationController extends Controller
 
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
-        $subTitle     = (string)trans('import.job_configuration_breadcrumb', ['key' => $importJob->key]);
+        $subTitle     = (string) trans('import.job_configuration_breadcrumb', ['key' => $importJob->key]);
         $subTitleIcon = 'fa-wrench';
 
         return view($view, compact('data', 'importJob', 'subTitle', 'subTitleIcon'));
@@ -114,16 +121,16 @@ class JobConfigurationController extends Controller
      * @param Request   $request
      * @param ImportJob $importJob
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
      * @throws FireflyException
+     * @return RedirectResponse|Redirector
+     *
      */
     public function post(Request $request, ImportJob $importJob)
     {
         // catch impossible status:
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
-            session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
+            session()->flash('error', (string) trans('import.bad_job_status', ['status' => e($importJob->status)]));
 
             return redirect(route('import.index'));
         }

@@ -126,7 +126,7 @@ class AccountStoreRequest extends Request
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
-        $rules = Location::requestRules($rules);
+        $rules          = Location::requestRules($rules);
 
         return $rules;
     }

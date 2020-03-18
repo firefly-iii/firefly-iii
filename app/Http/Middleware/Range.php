@@ -36,8 +36,8 @@ class Range
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Closure                  $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      */
@@ -77,7 +77,7 @@ class Range
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
-        $locale = explode(',', (string)trans('config.locale'));
+        $locale = explode(',', (string) trans('config.locale'));
         $locale = array_map('trim', $locale);
 
         setlocale(LC_TIME, $locale);
@@ -89,12 +89,12 @@ class Range
         }
 
         // save some formats:
-        $monthAndDayFormat = (string)trans('config.month_and_day');
-        $dateTimeFormat    = (string)trans('config.date_time');
+        $monthAndDayFormat = (string) trans('config.month_and_day');
+        $dateTimeFormat    = (string) trans('config.date_time');
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
         // also format for moment JS:
-        $madMomentJS = (string)trans('config.month_and_day_moment_js');
+        $madMomentJS = (string) trans('config.month_and_day_moment_js');
 
         app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);

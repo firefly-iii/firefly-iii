@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Neplătit în :currency',
     'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
     'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Verifică actualizări',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Grup nou de reguli ":title" stocat!',
     'updated_rule_group'                         => 'Grup de reguli actualizat cu succes ":title".',
     'edit_rule_group'                            => 'Editați grupul de reguli ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Ștergeți  grupul de reguli ":title"',
     'deleted_rule_group'                         => 'Grupul de reguli ":title" a fost șters',
     'update_rule_group'                          => 'Actualizați grupul de reguli',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> În mod normal bugetați aproximativ :amount pe zi. Acum este :over_amount pe zi. Sunteți sigur?',
     'transferred_in'                            => 'Transferat (în)',
     'transferred_away'                          => 'Transferat (departe)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Factura se potrivește tranzacțiilor între :low și :high.',

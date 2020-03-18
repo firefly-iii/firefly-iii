@@ -23,15 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -54,7 +56,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -65,7 +67,7 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function debugShow(TransactionGroup $transactionGroup)
     {
@@ -75,20 +77,20 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
+     * @return Factory|View
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
-        $first    = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
-        $splits   = $transactionGroup->transactionJournals()->count();
+        $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits = $transactionGroup->transactionJournals()->count();
 
-        if(null === $first) {
+        if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string)trans(sprintf('firefly.%s',$first->transactionType->type));
+        $type     = (string) trans(sprintf('firefly.%s', $first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 
@@ -113,10 +115,19 @@ class ShowController extends Controller
         $links       = $this->repository->getLinks($transactionGroup);
 
         return view(
-            'transactions.show', compact(
-                                   'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
-                                   'events', 'attachments', 'links'
-                               )
+            'transactions.show',
+            compact(
+                'transactionGroup',
+                'amounts',
+                'first',
+                'type',
+                'subTitle',
+                'splits',
+                'groupArray',
+                'events',
+                'attachments',
+                'links'
+            )
         );
     }
 

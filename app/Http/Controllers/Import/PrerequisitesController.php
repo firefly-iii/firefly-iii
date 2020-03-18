@@ -27,11 +27,18 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
  * Class PrerequisitesController
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class PrerequisitesController extends Controller
 {
@@ -49,7 +56,7 @@ class PrerequisitesController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', (string)trans('firefly.import_index_title'));
+                app('view')->share('title', (string) trans('firefly.import_index_title'));
                 app('view')->share('subTitleIcon', 'fa-check');
 
                 $this->repository = app(ImportJobRepositoryInterface::class);
@@ -66,7 +73,7 @@ class PrerequisitesController extends Controller
      * @param string    $importProvider
      * @param ImportJob $importJob
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
@@ -74,13 +81,13 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::index() only accepts %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
+            session()->flash('error', (string) trans('import.bad_job_status', ['status' => e($importJob->status)]));
 
             return redirect(route('import.index'));
         }
 
-        app('view')->share('subTitle', (string)trans('import.prerequisites_breadcrumb_' . $importProvider));
-        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
+        app('view')->share('subTitle', (string) trans('import.prerequisites_breadcrumb_' . $importProvider));
+        $class = (string) config(sprintf('import.prerequisites.%s', $importProvider));
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */
@@ -97,7 +104,7 @@ class PrerequisitesController extends Controller
 
 
         $view       = $object->getView();
-        $parameters = ['title' => (string)trans('firefly.import_index_title'), 'mainTitleIcon' => 'fa-archive', 'importJob' => $importJob];
+        $parameters = ['title' => (string) trans('firefly.import_index_title'), 'mainTitleIcon' => 'fa-archive', 'importJob' => $importJob];
         $parameters = array_merge($object->getViewParameters(), $parameters);
 
         return view($view, $parameters);
@@ -113,7 +120,7 @@ class PrerequisitesController extends Controller
      * @param string    $importProvider
      * @param ImportJob $importJob
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      * @see PrerequisitesInterface::storePrerequisites
      *
      */
@@ -125,13 +132,13 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::post() only accepts %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', (string)trans('import.bad_job_status', ['status' => e($importJob->status)]));
+            session()->flash('error', (string) trans('import.bad_job_status', ['status' => e($importJob->status)]));
 
             return redirect(route('import.index'));
         }
 
 
-        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
+        $class = (string) config(sprintf('import.prerequisites.%s', $importProvider));
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */
@@ -151,7 +158,7 @@ class PrerequisitesController extends Controller
         }
 
         // session flash!
-        $request->session()->flash('success', (string)trans('import.prerequisites_saved_for_' . $importProvider));
+        $request->session()->flash('success', (string) trans('import.prerequisites_saved_for_' . $importProvider));
 
         // if has job, redirect to global config for provider
         // if no job, back to index!

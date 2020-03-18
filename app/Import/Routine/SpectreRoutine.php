@@ -32,6 +32,9 @@ use Log;
 
 /**
  * Class SpectreRoutine
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class SpectreRoutine implements RoutineInterface
 {

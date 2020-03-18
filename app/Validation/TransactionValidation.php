@@ -48,37 +48,52 @@ trait TransactionValidation
 
         $transactionType = $data['type'] ?? 'invalid';
 
+        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
+        /**
+         * @var int   $index
+         * @var array $transaction
+         */
+        foreach ($transactions as $index => $transaction) {
+            $this->validateSingleAccount($validator, $index, $transactionType, $transaction);
+        }
+    }
+
+    /**
+     * @param Validator $validator
+     * @param int       $index
+     * @param string    $transactionType
+     * @param array     $transaction
+     */
+    protected function validateSingleAccount(Validator $validator, int $index, string $transactionType, array $transaction): void
+    {
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
 
-        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
-        foreach ($transactions as $index => $transaction) {
-            $transactionType = $transaction['type'] ?? $transactionType;
-            $accountValidator->setTransactionType($transactionType);
+        $transactionType = $transaction['type'] ?? $transactionType;
+        $accountValidator->setTransactionType($transactionType);
 
-            // validate source account.
-            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
-            $sourceName  = $transaction['source_name'] ?? null;
-            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+        // validate source account.
+        $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
+        $sourceName  = $transaction['source_name'] ?? null;
+        $validSource = $accountValidator->validateSource($sourceId, $sourceName);
 
-            // do something with result:
-            if (false === $validSource) {
-                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
-                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+        // do something with result:
+        if (false === $validSource) {
+            $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
 
-                return;
-            }
-            // validate destination account
-            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
-            $destinationName  = $transaction['destination_name'] ?? null;
-            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
-            // do something with result:
-            if (false === $validDestination) {
-                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
-                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+            return;
+        }
+        // validate destination account
+        $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
+        $destinationName  = $transaction['destination_name'] ?? null;
+        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+        // do something with result:
+        if (false === $validDestination) {
+            $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+            $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
 
-                return;
-            }
+            return;
         }
     }
 
@@ -92,46 +107,57 @@ trait TransactionValidation
         Log::debug('Now in validateAccountInformationUpdate()');
         $transactions = $this->getTransactionsArray($validator);
 
+        /**
+         * @var int   $index
+         * @var array $transaction
+         */
+        foreach ($transactions as $index => $transaction) {
+            $this->validateSingleUpdate($validator, $index, $transaction);
+        }
+    }
+
+    /**
+     * @param Validator $validator
+     * @param int       $index
+     * @param array     $transaction
+     */
+    protected function validateSingleUpdate(Validator $validator, int $index, array $transaction): void
+    {
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
+        $originalType     = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
+        $originalData     = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
+        $transactionType  = $transaction['type'] ?? $originalType;
+        $accountValidator->setTransactionType($transactionType);
 
-        foreach ($transactions as $index => $transaction) {
-            $originalType    = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
-            $originalData    = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
-            $transactionType = $transaction['type'] ?? $originalType;
-            $accountValidator->setTransactionType($transactionType);
+        // if no account types are given, just skip the check.
+        if (!isset($transaction['source_id'])
+            && !isset($transaction['source_name'])
+            && !isset($transaction['destination_id'])
+            && !isset($transaction['destination_name'])) {
+            return;
+        }
 
-            // if no account types are given, just skip the check.
-            if (!isset($transaction['source_id'])
-                && !isset($transaction['source_name'])
-                && !isset($transaction['destination_id'])
-                && !isset($transaction['destination_name'])) {
-                continue;
-            }
+        // validate source account.
+        $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
+        $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
+        $validSource = $accountValidator->validateSource($sourceId, $sourceName);
 
-            // validate source account.
-            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
-            $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
-            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+        // do something with result:
+        if (false === $validSource) {
+            $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
 
-            // do something with result:
-            if (false === $validSource) {
-                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
-                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
-
-                continue;
-            }
-            // validate destination account
-            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
-            $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
-            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
-            // do something with result:
-            if (false === $validDestination) {
-                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
-                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
-
-                continue;
-            }
+            return;
+        }
+        // validate destination account
+        $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
+        $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
+        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+        // do something with result:
+        if (false === $validDestination) {
+            $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+            $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
         }
     }
 
@@ -265,7 +291,7 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         $types = [];
-        foreach ($transactions as $index => $transaction) {
+        foreach ($transactions as $transaction) {
             $types[] = $transaction['type'] ?? 'invalid';
         }
         $unique = array_unique($types);
@@ -277,7 +303,6 @@ trait TransactionValidation
         $first = $unique[0] ?? 'invalid';
         if ('invalid' === $first) {
             $validator->errors()->add('transactions.0.type', (string)trans('validation.invalid_transaction_type'));
-
         }
     }
 
@@ -291,7 +316,7 @@ trait TransactionValidation
         Log::debug('Now in validateTransactionTypesForUpdate()');
         $transactions = $this->getTransactionsArray($validator);
         $types        = [];
-        foreach ($transactions as $index => $transaction) {
+        foreach ($transactions as $transaction) {
             $originalType = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
             // if type is not set, fall back to the type of the journal, if one is given.
 

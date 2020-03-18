@@ -154,7 +154,7 @@ class TransactionUpdateRequest extends Request
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             // basic fields for group:
             'group_title'                          => 'between:1,1000',
             'apply_rules'                          => [new IsBoolean],
@@ -222,8 +222,6 @@ class TransactionUpdateRequest extends Request
             'transactions.*.payment_date'          => 'date|nullable',
             'transactions.*.invoice_date'          => 'date|nullable',
         ];
-
-        return $rules;
     }
 
     /**
@@ -280,6 +278,111 @@ class TransactionUpdateRequest extends Request
     }
 
     /**
+     * @param array $current
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function getArrayData(array $current, array $transaction): array
+    {
+        foreach ($this->arrayFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array $current
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function getBooleanData(array $current, array $transaction): array
+    {
+        foreach ($this->booleanFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array $current
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function getDateData(array $current, array $transaction): array
+    {
+        foreach ($this->dateFields as $fieldName) {
+            Log::debug(sprintf('Now at date field %s', $fieldName));
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+                Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * For each field, add it to the array if a reference is present in the request:
+     *
+     * @param array $current
+     *
+     * @return array
+     */
+    private function getIntegerData(array $current, array $transaction): array
+    {
+        foreach ($this->integerFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array $current
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function getNlStringData(array $current, array $transaction): array
+    {
+        foreach ($this->textareaFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->nlStringFromValue((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array $current
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function getStringData(array $current, array $transaction): array
+    {
+        foreach ($this->stringFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->stringFromValue((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
      * Get transaction data.
      *
      * @return array
@@ -292,48 +395,15 @@ class TransactionUpdateRequest extends Request
          * @var int   $index
          * @var array $transaction
          */
-        foreach ($this->get('transactions') as $index => $transaction) {
+        foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
-            $current = [];
-
-            // for each field, add it to the array if a reference is present in the request:
-            foreach ($this->integerFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->stringFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->textareaFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->dateFields as $fieldName) {
-                Log::debug(sprintf('Now at date field %s', $fieldName));
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
-                    Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
-                }
-            }
-
-            foreach ($this->booleanFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->arrayFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
-                }
-            }
+            $current  = [];
+            $current  = $this->getIntegerData($current, $transaction);
+            $current  = $this->getStringData($current, $transaction);
+            $current  = $this->getNlStringData($current, $transaction);
+            $current  = $this->getDateData($current, $transaction);
+            $current  = $this->getBooleanData($current, $transaction);
+            $current  = $this->getArrayData($current, $transaction);
             $return[] = $current;
         }
 

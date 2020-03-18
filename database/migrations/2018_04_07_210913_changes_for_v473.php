@@ -2,7 +2,7 @@
 
 /**
  * 2018_04_07_210913_changes_for_v473.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ChangesForV473
+ * Class ChangesForV473.
  */
 class ChangesForV473 extends Migration
 {
@@ -40,7 +40,7 @@ class ChangesForV473 extends Migration
     {
         Schema::table(
             'bills',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
 
                 // cannot drop foreign keys in SQLite:
                 if ('sqlite' !== config('database.default')) {
@@ -50,10 +50,9 @@ class ChangesForV473 extends Migration
             }
         );
 
-
         Schema::table(
             'rules',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('strict');
             }
         );
@@ -69,14 +68,14 @@ class ChangesForV473 extends Migration
     {
         Schema::table(
             'bills',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->integer('transaction_currency_id', false, true)->nullable()->after('user_id');
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
             }
         );
         Schema::table(
             'rules',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->boolean('strict')->default(true);
             }
         );

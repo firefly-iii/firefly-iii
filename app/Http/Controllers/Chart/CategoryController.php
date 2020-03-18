@@ -191,7 +191,7 @@ class CategoryController extends Controller
         /** @var array $currency */
         foreach ($currencies as $currency) {
             $dataSet                             = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currency['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $this->expandNames($tempData),
@@ -353,7 +353,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int)$category->id;
+            $categoryId    = (int) $category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
@@ -372,7 +372,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -380,7 +380,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                 = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

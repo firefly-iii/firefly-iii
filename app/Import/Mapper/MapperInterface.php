@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Mapper;
 
 /**
  * Interface MapperInterface.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface MapperInterface
 {

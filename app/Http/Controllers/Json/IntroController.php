@@ -115,7 +115,7 @@ class IntroController
         app('preferences')->set($key, false);
         app('preferences')->mark();
 
-        return response()->json(['message' => (string)trans('firefly.intro_boxes_after_refresh')]);
+        return response()->json(['message' => (string) trans('firefly.intro_boxes_after_refresh')]);
     }
 
     /**

@@ -27,7 +27,9 @@ use Log;
 
 /**
  * Class GetAccountsRequest
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class GetAccountsRequest extends YnabRequest
 {

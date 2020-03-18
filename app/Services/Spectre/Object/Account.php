@@ -30,6 +30,7 @@ use Carbon\Carbon;
  *
  * @codeCoverageIgnore
  * @SuppressWarnings(PHPMD.ShortVariable)
+ * @deprecated
  */
 class Account extends SpectreObject
 {

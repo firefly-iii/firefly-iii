@@ -24,6 +24,9 @@ namespace FireflyIII\Import\MapperPreProcess;
 
 /**
  * Class TagsSpace.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class TagsSpace implements PreProcessorInterface
 {

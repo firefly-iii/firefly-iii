@@ -26,10 +26,15 @@ use Adldap;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use Log;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class LoginController
@@ -66,11 +71,11 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @throws ValidationException
+     * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse
      *
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
     {
@@ -121,13 +126,13 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
+     * @return Factory|\Illuminate\Http\Response|View
      */
     public function showLoginForm(Request $request)
     {
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
-        $title         = (string)trans('firefly.login_page_title');
+        $title         = (string) trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
@@ -155,11 +160,11 @@ class LoginController extends Controller
     /**
      * Get the failed login response instance.
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
      *
      * @throws ValidationException
+     * @return Response
+     *
      */
     protected function sendFailedLoginResponse(Request $request)
     {

@@ -30,6 +30,7 @@ use Schema;
 
 /**
  * Class ReportIntegrity
+ *
  * @codeCoverageIgnore
  */
 class ReportIntegrity extends Command

@@ -33,6 +33,9 @@ use Log;
 
 /**
  * Class FakeRoutine
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FakeRoutine implements RoutineInterface
 {
@@ -49,9 +52,9 @@ class FakeRoutine implements RoutineInterface
      * "ahoy": will log some nonsense and then drop job into status:"need_job_config" to force it back to the job config routine.
      * "final": will do some logging, sleep for 10 seconds and then finish. Generates 5 random transactions.
      *
-     * @return void
      * @throws FireflyException
      *
+     * @return void
      */
     public function run(): void
     {

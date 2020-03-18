@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Valuutta',
     'currency_id'               => 'Valuutta',
     'transaction_currency_id'   => 'Valuutta',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Serverin ulkoinen verkko-osoite (IP)',
     'attachments'               => 'Liitteet',
     'journal_amount'            => 'Summa',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Lähdetili',
     'expected_on'               => 'Odotettavissa',
     'paid'                      => 'Maksettu',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

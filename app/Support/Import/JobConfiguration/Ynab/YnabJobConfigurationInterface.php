@@ -28,7 +28,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface YnabJobConfigurationInterface
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface YnabJobConfigurationInterface
 {

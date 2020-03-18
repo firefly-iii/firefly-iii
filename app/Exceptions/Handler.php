@@ -82,15 +82,17 @@ class Handler extends ExceptionHandler
                         'line'      => $exception->getLine(),
                         'file'      => $exception->getFile(),
                         'trace'     => $exception->getTrace(),
-                    ], 500
+                    ],
+                    500
                 );
             }
 
             return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
         }
 
-        if($exception instanceof NotFoundHttpException) {
+        if ($exception instanceof NotFoundHttpException) {
             $handler = app(GracefulNotFoundHandler::class);
+
             return $handler->render($request, $exception);
         }
 
@@ -113,13 +115,12 @@ class Handler extends ExceptionHandler
      *
      * @param Exception $exception
      *
+     * @throws Exception
      * @return mixed|void
      *
-     * @throws Exception
      */
     public function report(Exception $exception)
     {
-
         $doMailError = config('firefly.send_error_message');
         // if the user wants us to mail:
         if (true === $doMailError
@@ -149,7 +150,7 @@ class Handler extends ExceptionHandler
 
             // create job that will mail.
             $ipAddress = Request::ip() ?? '0.0.0.0';
-            $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
+            $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
             dispatch($job);
         }
 

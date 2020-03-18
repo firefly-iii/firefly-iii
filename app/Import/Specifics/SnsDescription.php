@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Class SnsDescription.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class SnsDescription implements SpecificInterface
 {

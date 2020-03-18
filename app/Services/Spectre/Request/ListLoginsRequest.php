@@ -31,7 +31,9 @@ use Log;
 
 /**
  * Class ListLoginsRequest
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ListLoginsRequest extends SpectreRequest
 {

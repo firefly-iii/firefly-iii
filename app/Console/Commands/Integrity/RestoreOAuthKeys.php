@@ -21,8 +21,6 @@
 
 namespace FireflyIII\Console\Commands\Integrity;
 
-use Artisan;
-use Crypt;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 

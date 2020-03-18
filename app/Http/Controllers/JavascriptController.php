@@ -44,7 +44,7 @@ class JavascriptController extends Controller
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
@@ -60,7 +60,7 @@ class JavascriptController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $currency  = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency  = (int) $repository->getMetaValue($account, 'currency_id');
             /** @noinspection NullPointerExceptionInspection */
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
@@ -102,15 +102,15 @@ class JavascriptController extends Controller
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $account    = $repository->findNull((int)$request->get('account'));
+        $account    = $repository->findNull((int) $request->get('account'));
         $currencyId = 0;
         if (null !== $account) {
             // TODO we can use getAccountCurrency() instead
-            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+            $currencyId = (int) $repository->getMetaValue($account, 'currency_id');
         }
         /** @var TransactionCurrency $currency */
         $currency = $currencyRepository->findNull($currencyId);

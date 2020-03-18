@@ -26,11 +26,13 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
@@ -282,9 +284,59 @@ class BudgetRepository implements BudgetRepositoryInterface
                     'name'    => $data['name'],
                 ]
             );
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.');
         }
+
+        // try to create associated auto budget:
+        $type = $data['auto_budget_type'] ?? 0;
+        if (0 === $type) {
+            return $newBudget;
+        }
+        if ('reset' === $type) {
+            $type = AutoBudget::AUTO_BUDGET_RESET;
+        }
+        if ('rollover' === $type) {
+            $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
+        }
+        $repos = app(CurrencyRepositoryInterface::class);
+        $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+        $currencyCode = (string)($data['transaction_currency_code'] ?? '');
+
+        $currency = $repos->findNull($currencyId);
+        if(null === $currency) {
+            $currency = $repos->findByCodeNull($currencyCode);
+        }
+        if(null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
+        $autoBudget = new AutoBudget;
+        $autoBudget->budget()->associate($newBudget);
+        $autoBudget->transaction_currency_id = $currency->id;
+        $autoBudget->auto_budget_type        = $type;
+        $autoBudget->amount                  = $data['auto_budget_amount'] ?? '1';
+        $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
+        $autoBudget->save();
+
+        // create initial budget limit.
+        $today = new Carbon;
+        $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
+        $end   = app('navigation')->startOfPeriod($start, $autoBudget->period);
+
+        $limitRepos = app(BudgetLimitRepositoryInterface::class);
+        $limitRepos->setUser($this->user);
+        $limitRepos->store(
+            [
+                'budget_id'               => $newBudget->id,
+                'transaction_currency_id' => $autoBudget->transaction_currency_id,
+                'start_date'              => $start->format('Y-m-d'),
+                'end_date'                => $end->format('Y-m-d'),
+                'amount'                  => $autoBudget->amount,
+            ]
+        );
 
         return $newBudget;
     }
@@ -301,6 +353,49 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
+
+        // update or create auto-budget:
+        $autoBudgetType = $data['auto_budget_type'] ?? 0;
+        if ('reset' === $autoBudgetType) {
+            $autoBudgetType = AutoBudget::AUTO_BUDGET_RESET;
+        }
+        if ('rollover' === $autoBudgetType) {
+            $autoBudgetType = AutoBudget::AUTO_BUDGET_ROLLOVER;
+        }
+        if ('none' === $autoBudgetType) {
+            $autoBudgetType = 0;
+        }
+        if (0 !== $autoBudgetType) {
+            $autoBudget = $this->getAutoBudget($budget);
+            if (null === $autoBudget) {
+                $autoBudget = new AutoBudget;
+                $autoBudget->budget()->associate($budget);
+            }
+
+            $repos = app(CurrencyRepositoryInterface::class);
+            $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+            $currencyCode = (string)($data['transaction_currency_code'] ?? '');
+
+            $currency = $repos->findNull($currencyId);
+            if(null === $currency) {
+                $currency = $repos->findByCodeNull($currencyCode);
+            }
+            if(null === $currency) {
+                $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            }
+
+            $autoBudget->transaction_currency_id = $currency->id;
+            $autoBudget->auto_budget_type        = $autoBudgetType;
+            $autoBudget->amount                  = $data['auto_budget_amount'] ?? '0';
+            $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
+            $autoBudget->save();
+        }
+        if (0 === $autoBudgetType) {
+            $autoBudget = $this->getAutoBudget($budget);
+            if (null !== $autoBudget) {
+                $this->destroyAutoBudget($budget);
+            }
+        }
         $this->updateRuleTriggers($oldName, $data['name']);
         $this->updateRuleActions($oldName, $data['name']);
         app('preferences')->mark();
@@ -363,6 +458,25 @@ class BudgetRepository implements BudgetRepositoryInterface
             RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
             RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
             $budget->delete();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget
+    {
+        return $budget->autoBudgets()->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAutoBudget(Budget $budget): void
+    {
+        /** @var AutoBudget $autoBudget */
+        foreach ($budget->autoBudgets()->get() as $autoBudget) {
+            $autoBudget->delete();
         }
     }
 }

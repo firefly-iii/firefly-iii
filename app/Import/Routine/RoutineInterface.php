@@ -27,6 +27,9 @@ use FireflyIII\Models\ImportJob;
 
 /**
  * Interface RoutineInterface
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface RoutineInterface
 {

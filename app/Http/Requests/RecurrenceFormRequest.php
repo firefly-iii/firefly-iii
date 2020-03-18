@@ -53,9 +53,9 @@ class RecurrenceFormRequest extends Request
     /**
      * Get the data required by the controller.
      *
-     * @return array
      * @throws FireflyException
      *
+     * @return array
      */
     public function getAll(): array
     {
@@ -136,9 +136,9 @@ class RecurrenceFormRequest extends Request
     /**
      * The rules for this request.
      *
-     * @return array
      * @throws FireflyException
      *
+     * @return array
      */
     public function rules(): array
     {
@@ -250,16 +250,16 @@ class RecurrenceFormRequest extends Request
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
             case 'withdrawal':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['withdrawal_destination_id'];
+                $sourceId      = (int) $data['source_id'];
+                $destinationId = (int) $data['withdrawal_destination_id'];
                 break;
             case 'deposit':
-                $sourceId      = (int)$data['deposit_source_id'];
-                $destinationId = (int)$data['destination_id'];
+                $sourceId      = (int) $data['deposit_source_id'];
+                $destinationId = (int) $data['destination_id'];
                 break;
             case 'transfer':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['destination_id'];
+                $sourceId      = (int) $data['source_id'];
+                $destinationId = (int) $data['destination_id'];
                 break;
         }
 
@@ -269,7 +269,7 @@ class RecurrenceFormRequest extends Request
 
         // do something with result:
         if (false === $validSource) {
-            $message = (string)trans('validation.generic_invalid_source');
+            $message = (string) trans('validation.generic_invalid_source');
             $validator->errors()->add('source_id', $message);
             $validator->errors()->add('deposit_source_id', $message);
 
@@ -280,7 +280,7 @@ class RecurrenceFormRequest extends Request
         $validDestination = $accountValidator->validateDestination($destinationId, null);
         // do something with result:
         if (false === $validDestination) {
-            $message = (string)trans('validation.generic_invalid_destination');
+            $message = (string) trans('validation.generic_invalid_destination');
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
 

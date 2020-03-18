@@ -60,7 +60,7 @@ class BillRequest extends Request
             $active = $this->boolean('active');
         }
 
-        $data = [
+        return [
             'name'          => $this->string('name'),
             'amount_min'    => $this->string('amount_min'),
             'amount_max'    => $this->string('amount_max'),
@@ -72,8 +72,6 @@ class BillRequest extends Request
             'active'        => $active,
             'notes'         => $this->nlString('notes'),
         ];
-
-        return $data;
     }
 
     /**
@@ -121,10 +119,10 @@ class BillRequest extends Request
         $validator->after(
             static function (Validator $validator) {
                 $data = $validator->getData();
-                $min  = (float)($data['amount_min'] ?? 0);
-                $max  = (float)($data['amount_max'] ?? 0);
+                $min  = (float) ($data['amount_min'] ?? 0);
+                $max  = (float) ($data['amount_max'] ?? 0);
                 if ($min > $max) {
-                    $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
+                    $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
                 }
             }
         );

@@ -22,45 +22,49 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
  * Class TransactionGroup.
  *
- * @property int                                                                                   $id
- * @property \Illuminate\Support\Carbon|null                                                       $created_at
- * @property \Illuminate\Support\Carbon|null                                                       $updated_at
- * @property \Illuminate\Support\Carbon|null                                                       $deleted_at
- * @property int                                                                                   $user_id
- * @property string|null                                                                           $title
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read \FireflyIII\User                                                                 $user
+ * @property int                                                                $id
+ * @property Carbon|null                                    $created_at
+ * @property Carbon|null                                    $updated_at
+ * @property Carbon|null                                    $deleted_at
+ * @property int                                                                $user_id
+ * @property string|null                                                        $title
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read User                                                          $user
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newQuery()
+ * @method static Builder|TransactionGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserId($value)
+ * @method static Builder|TransactionGroup withTrashed()
+ * @method static Builder|TransactionGroup withoutTrashed()
+ * @mixin Eloquent
  * @property string                                                                                amount
  * @property string                                                                                foreign_amount
  * @property int                                                                                   transaction_group_id
- * @property int transaction_journal_id
- * @property string transaction_group_title
+ * @property int                                                                                   transaction_journal_id
+ * @property string                                                                                transaction_group_title
  */
 class TransactionGroup extends Model
 {
@@ -89,18 +93,18 @@ class TransactionGroup extends Model
      *
      * @param string $value
      *
-     * @return TransactionGroup
      * @throws NotFoundHttpException
+     * @return TransactionGroup
      */
     public static function routeBinder(string $value): TransactionGroup
     {
         if (auth()->check()) {
-            $groupId = (int)$value;
+            $groupId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */
             $group = $user->transactionGroups()
-                ->with(['transactionJournals','transactionJournals.transactions'])
+                          ->with(['transactionJournals', 'transactionJournals.transactions'])
                           ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
                 return $group;

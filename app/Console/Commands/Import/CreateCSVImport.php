@@ -39,6 +39,9 @@ use Log;
 
 /**
  * Class CreateCSVImport.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CreateCSVImport extends Command
 {
@@ -60,12 +63,12 @@ class CreateCSVImport extends Command
                             {configuration? : The configuration file to use for the import.}
                             {--user=1 : The user ID that the import should import for.}
                             {--token= : The user\'s access token.}';
-    /** @var UserRepositoryInterface */
-    private $userRepository;
-    /** @var ImportJobRepositoryInterface */
-    private $importRepository;
     /** @var ImportJob */
     private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $importRepository;
+    /** @var UserRepositoryInterface */
+    private $userRepository;
 
     /**
      * Run the command.
@@ -87,13 +90,13 @@ class CreateCSVImport extends Command
         }
         // @codeCoverageIgnoreEnd
         /** @var User $user */
-        $user          = $this->userRepository->findNull((int)$this->option('user'));
-        $file          = (string)$this->argument('file');
-        $configuration = (string)$this->argument('configuration');
+        $user          = $this->userRepository->findNull((int) $this->option('user'));
+        $file          = (string) $this->argument('file');
+        $configuration = (string) $this->argument('configuration');
 
         $this->importRepository->setUser($user);
 
-        $configurationData = json_decode(file_get_contents($configuration), true);
+        $configurationData = json_decode(file_get_contents($configuration), true, 512, JSON_THROW_ON_ERROR);
         $this->importJob   = $this->importRepository->create('file');
 
 
@@ -147,21 +150,9 @@ class CreateCSVImport extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-     * @codeCoverageIgnore
-     */
-    private function stupidLaravel(): void
-    {
-        $this->userRepository   = app(UserRepositoryInterface::class);
-        $this->importRepository = app(ImportJobRepositoryInterface::class);
-    }
-
-    /**
-     * @param string $message
+     * @param string     $message
      * @param array|null $data
+     *
      * @codeCoverageIgnore
      */
     private function errorLine(string $message, array $data = null): void
@@ -172,73 +163,39 @@ class CreateCSVImport extends Command
     }
 
     /**
+     *
+     */
+    private function giveFeedback(): void
+    {
+        $this->infoLine('Job has finished.');
+
+
+        if (null !== $this->importJob->tag) {
+            $this->infoLine(sprintf('%d transaction(s) have been imported.', $this->importJob->tag->transactionJournals->count()));
+            $this->infoLine(sprintf('You can find your transactions under tag "%s"', $this->importJob->tag->tag));
+        }
+
+        if (null === $this->importJob->tag) {
+            $this->errorLine('No transactions have been imported :(.');
+        }
+        if (count($this->importJob->errors) > 0) {
+            $this->infoLine(sprintf('%d error(s) occurred:', count($this->importJob->errors)));
+            foreach ($this->importJob->errors as $err) {
+                $this->errorLine('- ' . $err);
+            }
+        }
+    }
+
+    /**
      * @param string $message
-     * @param array $data
+     * @param array  $data
+     *
      * @codeCoverageIgnore
      */
     private function infoLine(string $message, array $data = null): void
     {
         Log::info($message, $data ?? []);
         $this->line($message);
-    }
-
-    /**
-     * Verify user inserts correct arguments.
-     *
-     * @noinspection MultipleReturnStatementsInspection
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    private function validArguments(): bool
-    {
-        $file          = (string)$this->argument('file');
-        $configuration = (string)$this->argument('configuration');
-        $cwd           = getcwd();
-        $enabled       = (bool)config('import.enabled.file');
-
-        if (false === $enabled) {
-            $this->errorLine('CSV Provider is not enabled.');
-
-            return false;
-        }
-
-        if (!file_exists($file)) {
-            $this->errorLine(sprintf('Firefly III cannot find file "%s" (working directory: "%s").', $file, $cwd));
-
-            return false;
-        }
-
-        if (!file_exists($configuration)) {
-            $this->errorLine(sprintf('Firefly III cannot find configuration file "%s" (working directory: "%s").', $configuration, $cwd));
-
-            return false;
-        }
-
-        $configurationData = json_decode(file_get_contents($configuration), true);
-        if (null === $configurationData) {
-            $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Store the supplied file as an attachment to this job.
-     *
-     * @param string $file
-     * @throws FireflyException
-     */
-    private function storeFile(string $file): void
-    {
-        // store file as attachment.
-        if ('' !== $file) {
-            $messages = $this->importRepository->storeCLIUpload($this->importJob, 'import_file', $file);
-            if ($messages->count() > 0) {
-                throw new FireflyException($messages->first());
-            }
-        }
     }
 
     /**
@@ -307,26 +264,75 @@ class CreateCSVImport extends Command
     }
 
     /**
+     * Store the supplied file as an attachment to this job.
      *
+     * @param string $file
+     *
+     * @throws FireflyException
      */
-    private function giveFeedback(): void
+    private function storeFile(string $file): void
     {
-        $this->infoLine('Job has finished.');
-
-
-        if (null !== $this->importJob->tag) {
-            $this->infoLine(sprintf('%d transaction(s) have been imported.', $this->importJob->tag->transactionJournals->count()));
-            $this->infoLine(sprintf('You can find your transactions under tag "%s"', $this->importJob->tag->tag));
-        }
-
-        if (null === $this->importJob->tag) {
-            $this->errorLine('No transactions have been imported :(.');
-        }
-        if (count($this->importJob->errors) > 0) {
-            $this->infoLine(sprintf('%d error(s) occurred:', count($this->importJob->errors)));
-            foreach ($this->importJob->errors as $err) {
-                $this->errorLine('- ' . $err);
+        // store file as attachment.
+        if ('' !== $file) {
+            $messages = $this->importRepository->storeCLIUpload($this->importJob, 'import_file', $file);
+            if ($messages->count() > 0) {
+                throw new FireflyException($messages->first());
             }
         }
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->userRepository   = app(UserRepositoryInterface::class);
+        $this->importRepository = app(ImportJobRepositoryInterface::class);
+    }
+
+    /**
+     * Verify user inserts correct arguments.
+     *
+     * @noinspection MultipleReturnStatementsInspection
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    private function validArguments(): bool
+    {
+        $file          = (string) $this->argument('file');
+        $configuration = (string) $this->argument('configuration');
+        $cwd           = getcwd();
+        $enabled       = (bool) config('import.enabled.file');
+
+        if (false === $enabled) {
+            $this->errorLine('CSV Provider is not enabled.');
+
+            return false;
+        }
+
+        if (!file_exists($file)) {
+            $this->errorLine(sprintf('Firefly III cannot find file "%s" (working directory: "%s").', $file, $cwd));
+
+            return false;
+        }
+
+        if (!file_exists($configuration)) {
+            $this->errorLine(sprintf('Firefly III cannot find configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+
+            return false;
+        }
+
+        $configurationData = json_decode(file_get_contents($configuration), true, 512, JSON_THROW_ON_ERROR);
+        if (null === $configurationData) {
+            $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+
+            return false;
+        }
+
+        return true;
     }
 }

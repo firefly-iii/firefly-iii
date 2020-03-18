@@ -29,6 +29,9 @@ use Log;
 /**
  *
  * Class BankDebitCredit
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class BankDebitCredit implements ConverterInterface
 {
@@ -36,9 +39,10 @@ class BankDebitCredit implements ConverterInterface
     /**
      * Convert a value.
      *
+     * @param $value
+     *
      * @return mixed
      *
-     * @param $value
      */
     public function convert($value): int
     {

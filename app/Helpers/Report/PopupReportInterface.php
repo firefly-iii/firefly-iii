@@ -25,7 +25,6 @@ namespace FireflyIII\Helpers\Report;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
-use Illuminate\Support\Collection;
 
 /**
  * Interface PopupReportInterface.
@@ -68,7 +67,7 @@ interface PopupReportInterface
      * Group by category.
      *
      * @param Category|null $category
-     * @param array    $attributes
+     * @param array         $attributes
      *
      * @return array
      */

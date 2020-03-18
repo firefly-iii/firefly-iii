@@ -97,7 +97,7 @@ class CategoryController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getCategories();
@@ -146,13 +146,13 @@ class CategoryController extends Controller
      *
      * @param CategoryRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function store(CategoryRequest $request): JsonResponse
     {
         $category = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
+        $manager  = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -175,7 +175,7 @@ class CategoryController extends Controller
      */
     public function transactions(Request $request, Category $category): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

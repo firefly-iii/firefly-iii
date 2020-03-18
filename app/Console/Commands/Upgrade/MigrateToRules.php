@@ -53,22 +53,21 @@ class MigrateToRules extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
-
-    /** @var UserRepositoryInterface */
-    private $userRepository;
-    /** @var RuleGroupRepositoryInterface */
-    private $ruleGroupRepository;
     /** @var BillRepositoryInterface */
     private $billRepository;
+    private $count;
+    /** @var RuleGroupRepositoryInterface */
+    private $ruleGroupRepository;
     /** @var RuleRepositoryInterface */
     private $ruleRepository;
-    private $count;
+    /** @var UserRepositoryInterface */
+    private $userRepository;
 
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
+     * @return int
      */
     public function handle(): int
     {
@@ -104,29 +103,13 @@ class MigrateToRules extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-     * @codeCoverageIgnore
-     */
-    private function stupidLaravel(): void
-    {
-        $this->count               = 0;
-        $this->userRepository      = app(UserRepositoryInterface::class);
-        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->billRepository      = app(BillRepositoryInterface::class);
-        $this->ruleRepository      = app(RuleRepositoryInterface::class);
-    }
-
-    /**
      * @return bool
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -141,45 +124,9 @@ class MigrateToRules extends Command
     }
 
     /**
-     * Migrate bills to new rule structure for a specific user.
-     *
-     * @param User $user
-     * @throws FireflyException
-     */
-    private function migrateUser(User $user): void
-    {
-        $this->ruleGroupRepository->setUser($user);
-        $this->billRepository->setUser($user);
-        $this->ruleRepository->setUser($user);
-
-        /** @var Preference $lang */
-        $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
-        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
-        $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
-        //$currency   = $this->getCurrency($user);
-
-        if (null === $ruleGroup) {
-            $ruleGroup = $this->ruleGroupRepository->store(
-                [
-                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
-                    'active'      => true,
-                ]
-            );
-        }
-        $bills = $this->billRepository->getBills();
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            $this->migrateBill($ruleGroup, $bill, $lang);
-        }
-
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     * @param Bill $bill
-     * @throws FireflyException
+     * @param RuleGroup  $ruleGroup
+     * @param Bill       $bill
+     * @param Preference $language
      */
     private function migrateBill(RuleGroup $ruleGroup, Bill $bill, Preference $language): void
     {
@@ -194,8 +141,8 @@ class MigrateToRules extends Command
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
-            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
+            'title'           => (string) trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
+            'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [
@@ -245,5 +192,58 @@ class MigrateToRules extends Command
         ];
         $this->billRepository->update($bill, $newBillData);
         $this->count++;
+    }
+
+    /**
+     * Migrate bills to new rule structure for a specific user.
+     *
+     * @param User $user
+     *
+     * @throws FireflyException
+     */
+    private function migrateUser(User $user): void
+    {
+        $this->ruleGroupRepository->setUser($user);
+        $this->billRepository->setUser($user);
+        $this->ruleRepository->setUser($user);
+
+        /** @var Preference $lang */
+        $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
+        $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+        $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
+        //$currency   = $this->getCurrency($user);
+
+        if (null === $ruleGroup) {
+            $ruleGroup = $this->ruleGroupRepository->store(
+                [
+                    'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data),
+                    'description' => (string) trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                    'active'      => true,
+                ]
+            );
+        }
+        $bills = $this->billRepository->getBills();
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $this->migrateBill($ruleGroup, $bill, $lang);
+        }
+
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count               = 0;
+        $this->userRepository      = app(UserRepositoryInterface::class);
+        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $this->billRepository      = app(BillRepositoryInterface::class);
+        $this->ruleRepository      = app(RuleRepositoryInterface::class);
     }
 }

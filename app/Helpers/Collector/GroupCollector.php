@@ -58,10 +58,12 @@ class GroupCollector implements GroupCollectorInterface
     private $hasBudgetInformation;
     /** @var bool Will be true if query result contains category info. */
     private $hasCatInformation;
-    /** @var bool Will be true of the query has the tag info tables joined. */
-    private $hasJoinedTagTables;
     /** @var bool Will be true for attachments */
     private $hasJoinedAttTables;
+    /** @var bool Will be true of the query has the tag info tables joined. */
+    private $hasJoinedTagTables;
+    /** @var array */
+    private $integerFields;
     /** @var int The maximum number of results. */
     private $limit;
     /** @var int The page to return. */
@@ -72,8 +74,6 @@ class GroupCollector implements GroupCollectorInterface
     private $total;
     /** @var User The user object. */
     private $user;
-    /** @var array */
-    private $integerFields;
 
     /**
      * Group collector constructor.
@@ -210,7 +210,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function dumpQuery(): void
     {
-
         echo $this->query->toSql();
         echo '<pre>';
         print_r($this->query->getBindings());
@@ -304,7 +303,6 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $collection;
-
     }
 
     /**
@@ -331,7 +329,7 @@ class GroupCollector implements GroupCollectorInterface
         $sum      = '0';
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $amount = (string)$journal['amount'];
+            $amount = (string) $journal['amount'];
             $sum    = bcadd($sum, $amount);
         }
 
@@ -506,6 +504,24 @@ class GroupCollector implements GroupCollectorInterface
     {
         $this->withCategoryInformation();
         $this->query->where('categories.id', $category->id);
+
+        return $this;
+    }
+
+    /**
+     * Collect transactions created on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCreatedAt(Carbon $date): GroupCollectorInterface
+    {
+        $after  = $date->format('Y-m-d 00:00:00');
+        $before = $date->format('Y-m-d 23:59:59');
+        $this->query->where('transaction_journals.created_at', '>=', $after);
+        $this->query->where('transaction_journals.created_at', '<=', $before);
+        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
 
         return $this;
     }
@@ -743,6 +759,24 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Collect transactions updated on a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUpdatedAt(Carbon $date): GroupCollectorInterface
+    {
+        $after  = $date->format('Y-m-d 00:00:00');
+        $before = $date->format('Y-m-d 23:59:59');
+        $this->query->where('transaction_journals.updated_at', '>=', $after);
+        $this->query->where('transaction_journals.updated_at', '<=', $before);
+        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
+
+        return $this;
+    }
+
+    /**
      * Set the user object and start the query.
      *
      * @param User $user
@@ -753,6 +787,43 @@ class GroupCollector implements GroupCollectorInterface
     {
         $this->user = $user;
         $this->startQuery();
+
+        return $this;
+    }
+
+    /**
+     * Either account can be set, but NOT both. This effectively excludes internal transfers.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setXorAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->where(
+                static function (EloquentBuilder $q1) use ($accountIds) {
+                    // sourceAccount is in the set, and destination is NOT.
+
+                    $q1->where(
+                        static function (EloquentBuilder $q2) use ($accountIds) {
+                            $q2->whereIn('source.account_id', $accountIds);
+                            $q2->whereNotIn('destination.account_id', $accountIds);
+                        }
+                    );
+                    // destination is in the set, and source is NOT
+                    $q1->orWhere(
+                        static function (EloquentBuilder $q3) use ($accountIds) {
+                            $q3->whereNotIn('source.account_id', $accountIds);
+                            $q3->whereIn('destination.account_id', $accountIds);
+                        }
+                    );
+                }
+            );
+
+            app('log')->debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
+        }
 
         return $this;
     }
@@ -806,6 +877,17 @@ class GroupCollector implements GroupCollectorInterface
 
             $this->hasAccountInfo = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withAttachmentInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'attachments.id as attachment_id';
+        $this->joinAttachmentTables();
 
         return $this;
     }
@@ -933,23 +1015,10 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToInteger(array $array): array
     {
         foreach ($this->integerFields as $field) {
-            $array[$field] = isset($array[$field]) ? (int)$array[$field] : null;
+            $array[$field] = isset($array[$field]) ? (int) $array[$field] : null;
         }
 
         return $array;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    private function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
     }
 
     /**
@@ -971,33 +1040,16 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * @param array              $existingJournal
-     * @param TransactionJournal $newJournal
-     *
-     * @return array
+     * Join table to get tag information.
      */
-    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
+    private function joinTagTables(): void
     {
-        $newArray = $newJournal->toArray();
-        if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
-            $tagId = (int)$newJournal['tag_id'];
-
-            $tagDate = null;
-            try {
-                $tagDate = Carbon::parse($newArray['tag_date']);
-            } catch (InvalidDateException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
-            }
-
-            $existingJournal['tags'][$tagId] = [
-                'id'          => (int)$newArray['tag_id'],
-                'name'        => $newArray['tag_name'],
-                'date'        => $tagDate,
-                'description' => $newArray['tag_description'],
-            ];
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
         }
-
-        return $existingJournal;
     }
 
     /**
@@ -1010,7 +1062,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (isset($newArray['attachment_id'])) {
-            $attachmentId                                  = (int)$newJournal['tag_id'];
+            $attachmentId                                  = (int) $newJournal['tag_id'];
             $existingJournal['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
             ];
@@ -1019,6 +1071,35 @@ class GroupCollector implements GroupCollectorInterface
         return $existingJournal;
     }
 
+    /**
+     * @param array              $existingJournal
+     * @param TransactionJournal $newJournal
+     *
+     * @return array
+     */
+    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
+    {
+        $newArray = $newJournal->toArray();
+        if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
+            $tagId = (int) $newJournal['tag_id'];
+
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($newArray['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $existingJournal['tags'][$tagId] = [
+                'id'          => (int) $newArray['tag_id'],
+                'name'        => $newArray['tag_name'],
+                'date'        => $tagDate,
+                'description' => $newArray['tag_description'],
+            ];
+        }
+
+        return $existingJournal;
+    }
 
     /**
      * @param Collection $collection
@@ -1036,21 +1117,21 @@ class GroupCollector implements GroupCollectorInterface
                 // make new array
                 $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
                 $groupArray                             = [
-                    'id'               => (int)$augumentedJournal->transaction_group_id,
-                    'user_id'          => (int)$augumentedJournal->user_id,
+                    'id'               => (int) $augumentedJournal->transaction_group_id,
+                    'user_id'          => (int) $augumentedJournal->user_id,
                     'title'            => $augumentedJournal->transaction_group_title,
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
                     'sums'             => [],
                     'transactions'     => [],
                 ];
-                $journalId                              = (int)$augumentedJournal->transaction_journal_id;
+                $journalId                              = (int) $augumentedJournal->transaction_journal_id;
                 $groupArray['transactions'][$journalId] = $parsedGroup;
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
             // or parse the rest.
-            $journalId = (int)$augumentedJournal->transaction_journal_id;
+            $journalId = (int) $augumentedJournal->transaction_journal_id;
             $groups[$groupId]['count']++;
 
             if (isset($groups[$groupId]['transactions'][$journalId])) {
@@ -1063,8 +1144,6 @@ class GroupCollector implements GroupCollectorInterface
                 // create second, third, fourth split:
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
             }
-
-
         }
 
         $groups = $this->parseSums($groups);
@@ -1093,9 +1172,9 @@ class GroupCollector implements GroupCollectorInterface
         // convert values to integers:
         $result = $this->convertToInteger($result);
 
-        $result['reconciled'] = 1 === (int)$result['reconciled'];
+        $result['reconciled'] = 1 === (int) $result['reconciled'];
         if (isset($augumentedJournal['tag_id'])) { // assume the other fields are present as well.
-            $tagId   = (int)$augumentedJournal['tag_id'];
+            $tagId   = (int) $augumentedJournal['tag_id'];
             $tagDate = null;
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
@@ -1104,7 +1183,7 @@ class GroupCollector implements GroupCollectorInterface
             }
 
             $result['tags'][$tagId] = [
-                'id'          => (int)$result['tag_id'],
+                'id'          => (int) $result['tag_id'],
                 'name'        => $result['tag_name'],
                 'date'        => $tagDate,
                 'description' => $result['tag_description'],
@@ -1113,7 +1192,7 @@ class GroupCollector implements GroupCollectorInterface
 
         // also merge attachments:
         if (isset($augumentedJournal['attachment_id'])) {
-            $attachmentId                         = (int)$augumentedJournal['attachment_id'];
+            $attachmentId                         = (int) $augumentedJournal['attachment_id'];
             $result['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
             ];
@@ -1136,7 +1215,7 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId = (int)$transaction['currency_id'];
+                $currencyId = (int) $transaction['currency_id'];
 
                 // set default:
                 if (!isset($groups[$groudId]['sums'][$currencyId])) {
@@ -1149,7 +1228,7 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount'] ?? '0');
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId = (int)$transaction['foreign_currency_id'];
+                    $currencyId = (int) $transaction['foreign_currency_id'];
 
                     // set default:
                     if (!isset($groups[$groudId]['sums'][$currencyId])) {
@@ -1160,7 +1239,8 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     }
                     $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd(
-                        $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount'] ?? '0'
+                        $groups[$groudId]['sums'][$currencyId]['amount'],
+                        $transaction['foreign_amount'] ?? '0'
                     );
                 }
             }
@@ -1183,17 +1263,19 @@ class GroupCollector implements GroupCollectorInterface
 
             // join source transaction.
             ->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
+                'transactions as source',
+                function (JoinClause $join) {
+                    $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
                      ->where('source.amount', '<', 0);
-            }
+                }
             )
             // join destination transaction
             ->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
+                'transactions as destination',
+                function (JoinClause $join) {
+                    $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
                      ->where('destination.amount', '>', 0);
-            }
+                }
             )
             // left join transaction type.
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -1208,89 +1290,5 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
-    }
-
-    /**
-     * Either account can be set, but NOT both. This effectively excludes internal transfers.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setXorAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds) {
-                    // sourceAccount is in the set, and destination is NOT.
-
-                    $q1->where(
-                        static function (EloquentBuilder $q2) use ($accountIds) {
-                            $q2->whereIn('source.account_id', $accountIds);
-                            $q2->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    );
-                    // destination is in the set, and source is NOT
-                    $q1->orWhere(
-                        static function (EloquentBuilder $q3) use ($accountIds) {
-                            $q3->whereNotIn('source.account_id', $accountIds);
-                            $q3->whereIn('destination.account_id', $accountIds);
-                        }
-                    );
-                }
-            );
-
-            app('log')->debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions created on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCreatedAt(Carbon $date): GroupCollectorInterface
-    {
-        $after  = $date->format('Y-m-d 00:00:00');
-        $before = $date->format('Y-m-d 23:59:59');
-        $this->query->where('transaction_journals.created_at', '>=', $after);
-        $this->query->where('transaction_journals.created_at', '<=', $before);
-        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions updated on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setUpdatedAt(Carbon $date): GroupCollectorInterface
-    {
-        $after  = $date->format('Y-m-d 00:00:00');
-        $before = $date->format('Y-m-d 23:59:59');
-        $this->query->where('transaction_journals.updated_at', '>=', $after);
-        $this->query->where('transaction_journals.updated_at', '<=', $before);
-        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withAttachmentInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'attachments.id as attachment_id';
-        $this->joinAttachmentTables();
-
-        return $this;
     }
 }

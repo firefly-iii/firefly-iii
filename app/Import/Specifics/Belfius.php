@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Specifics;
 /**
  * Class Belfius.
  *
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Fixes Belfius CSV files to:
  *  - Correct descriptions for recurring transactions so doubles can be detected when the equivalent incoming
  *    transaction is imported.
@@ -55,19 +58,6 @@ class Belfius implements SpecificInterface
     }
 
     /**
-     * Run the fix.
-     *
-     * @param array $row
-     *
-     * @return array
-     *
-     */
-    public function run(array $row): array
-    {
-        return Belfius::processRecurringTransactionDescription($row);
-    }
-
-    /**
      * Fixes the description for outgoing recurring transactions so doubles can be detected when the equivalent incoming
      * transaction is imported for another bank account.
      *
@@ -80,7 +70,7 @@ class Belfius implements SpecificInterface
         }
 
         $opposingAccountName = $row[5];
-        $description = $row[14];
+        $description         = $row[14];
 
         preg_match('/DOORLOPENDE OPDRACHT.*\s+' . preg_quote($opposingAccountName, '/') . '\s+(.+)\s+REF.\s*:/', $description, $matches);
 
@@ -89,5 +79,18 @@ class Belfius implements SpecificInterface
         }
 
         return $row;
+    }
+
+    /**
+     * Run the fix.
+     *
+     * @param array $row
+     *
+     * @return array
+     *
+     */
+    public function run(array $row): array
+    {
+        return Belfius::processRecurringTransactionDescription($row);
     }
 }

@@ -39,6 +39,7 @@ class PiggyBankEventFactory
 {
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -60,6 +61,7 @@ class PiggyBankEventFactory
         Log::debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
         if (null === $piggyBank) {
             Log::debug('Piggy bank is null');
+
             return null;
         }
 

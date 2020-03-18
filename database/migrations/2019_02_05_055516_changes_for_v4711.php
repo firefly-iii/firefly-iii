@@ -2,7 +2,7 @@
 
 /**
  * 2019_02_05_055516_changes_for_v4711.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -55,15 +55,15 @@ class ChangesForV4711 extends Migration
          * nice.
          */
         Schema::table(
-            'transaction_journals', function (Blueprint $table) {
-            $table->dateTime('date')->change();
-        }
+            'transaction_journals', static function (Blueprint $table) {
+                $table->dateTime('date')->change();
+            }
         );
 
         Schema::table(
-            'preferences', function (Blueprint $table) {
-            $table->text('data')->nullable()->change();
-        }
+            'preferences', static function (Blueprint $table) {
+                $table->text('data')->nullable()->change();
+            }
         );
     }
 }

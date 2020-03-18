@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
+
     'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
     'valid_recurrence_rep_moment'    => 'Période de répétition non valide pour ce type de répétition.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'L\'attribut :attribute doit contenir au moins :value kilo-octets.',
     'gte.string'  => 'Le texte :attribute doit contenir au moins :value caractères.',
     'gte.array'   => 'L\'attribut :attribute doit avoir :value éléments ou plus.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

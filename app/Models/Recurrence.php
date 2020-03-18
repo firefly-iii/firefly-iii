@@ -24,65 +24,69 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Recurrence
  *
- * @property int                                $id
- * @property \Carbon\Carbon                     $created_at
- * @property \Carbon\Carbon                     $updated_at
- * @property int                                $user_id
- * @property int                                $transaction_type_id
- * @property int                                $transaction_currency_id
- * @property string                             $title
- * @property string                             $description
- * @property \Carbon\Carbon                     $first_date
- * @property \Carbon\Carbon                     $repeat_until
- * @property \Carbon\Carbon                     $latest_date
- * @property string                             $repetition_type
- * @property string                             $repetition_moment
- * @property int                                $repetition_skip
- * @property int                                $repetitions
- * @property bool                               $active
- * @property bool                               $apply_rules
- * @property \FireflyIII\User                   $user
- * @property \Illuminate\Support\Collection     $recurrenceRepetitions
- * @property \Illuminate\Support\Collection     $recurrenceMeta
- * @property \Illuminate\Support\Collection     $recurrenceTransactions
- * @property \FireflyIII\Models\TransactionType $transactionType
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
- * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @property int                                                                     $id
+ * @property \Carbon\Carbon                                                          $created_at
+ * @property \Carbon\Carbon                                                          $updated_at
+ * @property int                                                                     $user_id
+ * @property int                                                                     $transaction_type_id
+ * @property int                                                                     $transaction_currency_id
+ * @property string                                                                  $title
+ * @property string                         $description
+ * @property \Carbon\Carbon                 $first_date
+ * @property \Carbon\Carbon                 $repeat_until
+ * @property \Carbon\Carbon                 $latest_date
+ * @property string                         $repetition_type
+ * @property string                         $repetition_moment
+ * @property int                            $repetition_skip
+ * @property int                            $repetitions
+ * @property bool                           $active
+ * @property bool                           $apply_rules
+ * @property User                           $user
+ * @property \Illuminate\Support\Collection $recurrenceRepetitions
+ * @property \Illuminate\Support\Collection $recurrenceMeta
+ * @property \Illuminate\Support\Collection $recurrenceTransactions
+ * @property TransactionType                $transactionType
+ * @property Carbon|null                    $deleted_at
+ * @property-read Collection|Note[]         $notes
+ * @property-read TransactionCurrency       $transactionCurrency
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence newQuery()
+ * @method static Builder|Recurrence onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereApplyRules($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereFirstDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereLatestDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereRepeatUntil($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereRepetitions($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereTransactionTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Recurrence whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Recurrence withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereApplyRules($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereFirstDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereLatestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereRepeatUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereRepetitions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserId($value)
+ * @method static Builder|Recurrence withTrashed()
+ * @method static Builder|Recurrence withoutTrashed()
+ * @mixin Eloquent
  */
 class Recurrence extends Model
 {
@@ -118,13 +122,13 @@ class Recurrence extends Model
      *
      * @param string $value
      *
-     * @return Recurrence
      * @throws NotFoundHttpException
+     * @return Recurrence
      */
     public static function routeBinder(string $value): Recurrence
     {
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Recurrence $recurrence */

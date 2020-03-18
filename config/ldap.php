@@ -2,7 +2,7 @@
 
 /**
  * ldap.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -37,8 +37,8 @@ if ('FreeIPA' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
 if ('ActiveDirectory' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
     $schema = ActiveDirectory::class;
 }
-return [
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Connections

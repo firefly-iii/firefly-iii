@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Log;
@@ -54,8 +53,8 @@ class TransactionGroupFactory
      *
      * @param array $data
      *
-     * @return TransactionGroup
      * @throws DuplicateTransactionException
+     * @return TransactionGroup
      */
     public function create(array $data): TransactionGroup
     {
@@ -63,12 +62,12 @@ class TransactionGroupFactory
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
         try {
             $collection = $this->journalFactory->create($data);
-        } catch(DuplicateTransactionException $e) {
+        } catch (DuplicateTransactionException $e) {
             Log::warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
             throw new DuplicateTransactionException($e->getMessage());
         }
-        $title      = $data['group_title'] ?? null;
-        $title      = '' === $title ? null : $title;
+        $title = $data['group_title'] ?? null;
+        $title = '' === $title ? null : $title;
 
         if (null !== $title) {
             $title = substr($title, 0, 1000);

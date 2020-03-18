@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Moeda',
     'currency_id'               => 'Moeda',
     'transaction_currency_id'   => 'Moeda',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'O IP externo do seu servidor',
     'attachments'               => 'Anexos',
     'journal_amount'            => 'Quantia',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Conta de origem',
     'expected_on'               => 'Esperado em',
     'paid'                      => 'Pago',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

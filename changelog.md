@@ -2,6 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## Unreleased [5.2.0 (API 1.1.0)] - 2020-xx-xx
+
+### Added
+- #2578 Budget rollover / auto-set thing.
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Initial release.
+
+### Security
+- Initial release.
+
+### API
+- Initial release
+
+
+
 ## [5.1.1 (API 1.0.2)] - 2020-03-xx
 
 ### Added

@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => '未以 :currency 支付',
     'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
     'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => '檢查更新',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => '新規則群組 ":title" 已儲存！',
     'updated_rule_group'                         => '已成功更新 ":title" 規則群組。',
     'edit_rule_group'                            => '編輯 ":title" 規則群組',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => '刪除 ":title" 規則群組',
     'deleted_rule_group'                         => '規則群組 ":title" 已刪除',
     'update_rule_group'                          => '更新規則群組',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> 您通常每日預算 :amount。這回卻是每日 :over_amount。您確定嗎？',
     'transferred_in'                            => '轉帳 (轉入)',
     'transferred_away'                          => '轉帳 (轉出)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => '帳單配合自 :low 至 :high 的交易。',

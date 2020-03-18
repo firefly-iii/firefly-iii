@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => '貨幣',
     'currency_id'               => '貨幣',
     'transaction_currency_id'   => '貨幣',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => '您的伺服器外部IP',
     'attachments'               => '附加檔案',
     'journal_amount'            => '金額',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Source account',
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

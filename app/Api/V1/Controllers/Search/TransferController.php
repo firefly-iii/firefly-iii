@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -21,16 +22,13 @@
 
 namespace FireflyIII\Api\V1\Controllers\Search;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Search\TransferRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Support\Search\TransferSearch;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -41,10 +39,9 @@ use League\Fractal\Resource\Collection as FractalCollection;
 class TransferController extends Controller
 {
     /**
-     * @param Request $request
+     * @param TransferRequest $request
      *
      * @return JsonResponse|Response
-     * @throws FireflyException
      */
     public function search(TransferRequest $request)
     {
@@ -82,7 +79,7 @@ class TransferController extends Controller
         }
 
         // collector to return results.
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
         /** @var User $admin */
         $admin = auth()->user();

@@ -50,8 +50,8 @@ class CreateAccessTokens extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws Exception
+     * @return int
      */
     public function handle(): int
     {

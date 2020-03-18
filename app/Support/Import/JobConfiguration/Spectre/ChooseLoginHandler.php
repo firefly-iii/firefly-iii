@@ -35,7 +35,8 @@ use Log;
 
 /**
  * Class ChooseLoginHandler
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ChooseLoginHandler implements SpectreJobConfigurationInterface
 {

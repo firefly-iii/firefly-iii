@@ -34,6 +34,9 @@ use Log;
 
 /**
  * Class JobStatusController
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class JobStatusController extends Controller
 {
@@ -53,7 +56,7 @@ class JobStatusController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', (string)trans('firefly.import_index_title'));
+                app('view')->share('title', (string) trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -71,7 +74,7 @@ class JobStatusController extends Controller
     public function index(ImportJob $importJob)
     {
         $subTitleIcon = 'fa-gear';
-        $subTitle     = (string)trans('import.job_status_breadcrumb', ['key' => $importJob->key]);
+        $subTitle     = (string) trans('import.job_status_breadcrumb', ['key' => $importJob->key]);
 
         return view('import.status', compact('importJob', 'subTitle', 'subTitleIcon'));
     }
@@ -92,7 +95,7 @@ class JobStatusController extends Controller
             'count'                => $count,
             'tag_id'               => $importJob->tag_id,
             'tag_name'             => null === $importJob->tag_id ? null : $importJob->tag->tag,
-            'report_txt'           => (string)trans('import.unknown_import_result'),
+            'report_txt'           => (string) trans('import.unknown_import_result'),
             'download_config'      => false,
             'download_config_text' => '',
         ];
@@ -109,11 +112,12 @@ class JobStatusController extends Controller
             $count = $this->repository->countByTag($importJob);
         }
         if (0 === $count) {
-            $json['report_txt'] = (string)trans('import.result_no_transactions');
+            $json['report_txt'] = (string) trans('import.result_no_transactions');
         }
         if (1 === $count && null !== $importJob->tag_id) {
             $json['report_txt'] = trans(
-                'import.result_one_transaction', ['route' => route('tags.show', [$importJob->tag_id, 'all']), 'tag' => $importJob->tag->tag]
+                'import.result_one_transaction',
+                ['route' => route('tags.show', [$importJob->tag_id, 'all']), 'tag' => $importJob->tag->tag]
             );
         }
         if ($count > 1 && null !== $importJob->tag_id) {
@@ -233,6 +237,4 @@ class JobStatusController extends Controller
         // expect nothing from routine, just return OK to user.
         return response()->json(['status' => 'OK', 'message' => 'storage_finished']);
     }
-
-
 }

@@ -30,6 +30,8 @@ use Log;
 
 /**
  * Class NewBunqJobHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class NewBunqJobHandler implements BunqJobConfigurationInterface
 {

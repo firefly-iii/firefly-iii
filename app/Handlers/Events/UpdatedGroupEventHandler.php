@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 

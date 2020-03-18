@@ -28,6 +28,7 @@ use Log;
 /**
  * @codeCoverageIgnore
  * Class StageNewHandler
+ * @deprecated
  */
 class StageNewHandler
 {

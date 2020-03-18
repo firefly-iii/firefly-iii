@@ -111,9 +111,9 @@ class BackToJournals extends Command
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')
-                       ->whereIn('transactions.id', $chunk)
-                       ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            $set = DB::table('transactions')
+                     ->whereIn('transactions.id', $chunk)
+                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
             /** @noinspection SlowArrayOperationsInLoopInspection */
             $array = array_merge($array, $set);
         }
@@ -128,7 +128,7 @@ class BackToJournals extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -141,7 +141,7 @@ class BackToJournals extends Command
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -212,7 +212,7 @@ class BackToJournals extends Command
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([(int) $budget->id]);
 
             return;
         }
@@ -220,7 +220,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([(int) $budget->id]);
         }
     }
 
@@ -271,12 +271,12 @@ class BackToJournals extends Command
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([(int) $category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([(int) $category->id]);
         }
     }
 }

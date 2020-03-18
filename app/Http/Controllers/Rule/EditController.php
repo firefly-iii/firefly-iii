@@ -30,8 +30,11 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class EditController
@@ -45,6 +48,7 @@ class EditController extends Controller
 
     /**
      * RuleController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -53,7 +57,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->ruleRepos = app(RuleRepositoryInterface::class);
@@ -69,7 +73,7 @@ class EditController extends Controller
      * @param Request $request
      * @param Rule    $rule
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, Rule $rule)
     {
@@ -95,15 +99,15 @@ class EditController extends Controller
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
-            'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
-            'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,
+            'active'          => $hasOldInput ? (bool) $request->old('active') : $rule->active,
+            'stop_processing' => $hasOldInput ? (bool) $request->old('stop_processing') : $rule->stop_processing,
+            'strict'          => $hasOldInput ? (bool) $request->old('strict') : $rule->strict,
 
         ];
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
-        $subTitle       = (string)trans('firefly.edit_rule', ['title' => $rule->title]);
+        $subTitle       = (string) trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {
@@ -122,17 +126,17 @@ class EditController extends Controller
      * @param RuleFormRequest $request
      * @param Rule            $rule
      *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {
         $data = $request->getRuleData();
         $this->ruleRepos->update($rule, $data);
 
-        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
+        session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('rules.edit.fromUpdate', true);
 

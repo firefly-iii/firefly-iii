@@ -34,4 +34,5 @@ use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
  */
 class Request extends FireflyIIIRequest
 {
+
 }

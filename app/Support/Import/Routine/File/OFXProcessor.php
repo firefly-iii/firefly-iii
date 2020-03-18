@@ -35,6 +35,8 @@ use OfxParser\Entities\Transaction;
 /**
  *
  * Class OFXProcessor
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class OFXProcessor implements FileProcessorInterface
 {

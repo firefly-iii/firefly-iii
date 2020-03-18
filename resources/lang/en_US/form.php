@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Currency',
     'currency_id'               => 'Currency',
     'transaction_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Your server\'s external IP',
     'attachments'               => 'Attachments',
     'journal_amount'            => 'Amount',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Source account',
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

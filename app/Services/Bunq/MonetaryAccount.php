@@ -32,6 +32,7 @@ use FireflyIII\Exceptions\FireflyException;
 /**
  * Class MonetaryAccount
  * @codeCoverageIgnore
+ * @deprecated
  */
 class MonetaryAccount
 {

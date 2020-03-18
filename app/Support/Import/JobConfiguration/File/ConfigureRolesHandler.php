@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class ConfigureRolesHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ConfigureRolesHandler implements FileConfigurationInterface
 {

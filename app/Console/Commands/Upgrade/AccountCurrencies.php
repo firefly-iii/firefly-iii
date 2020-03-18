@@ -54,10 +54,10 @@ class AccountCurrencies extends Command
     protected $signature = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
     /** @var AccountRepositoryInterface */
     private $accountRepos;
-    /** @var UserRepositoryInterface */
-    private $userRepos;
     /** @var int */
     private $count;
+    /** @var UserRepositoryInterface */
+    private $userRepos;
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
@@ -91,6 +91,27 @@ class AccountCurrencies extends Command
     }
 
     /**
+     * @return bool
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool) $configVar->data;
+        }
+
+        return false; // @codeCoverageIgnore
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
@@ -105,29 +126,7 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @return bool
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false; // @codeCoverageIgnore
-    }
-
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
-     * @param Account $account
+     * @param Account             $account
      * @param TransactionCurrency $currency
      */
     private function updateAccount(Account $account, TransactionCurrency $currency): void
@@ -135,13 +134,13 @@ class AccountCurrencies extends Command
         Log::debug(sprintf('Now in updateAccount(%d, %s)', $account->id, $currency->code));
         $this->accountRepos->setUser($account->user);
 
-        $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
         Log::debug(sprintf('Account currency is #%d', $accountCurrency));
 
-        $openingBalance  = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency      = 0;
+        $openingBalance = $this->accountRepos->getOpeningBalance($account);
+        $obCurrency     = 0;
         if (null !== $openingBalance) {
-            $obCurrency = (int)$openingBalance->transaction_currency_id;
+            $obCurrency = (int) $openingBalance->transaction_currency_id;
             Log::debug('Account has opening balance.');
         }
         Log::debug(sprintf('Account OB currency is #%d.', $obCurrency));
@@ -178,7 +177,8 @@ class AccountCurrencies extends Command
                 static function (Transaction $transaction) use ($accountCurrency) {
                     $transaction->transaction_currency_id = $accountCurrency;
                     $transaction->save();
-                });
+                }
+            );
             $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
             $this->count++;
 
@@ -194,7 +194,7 @@ class AccountCurrencies extends Command
     {
         Log::debug('Now in updateAccountCurrencies()');
         $users               = $this->userRepos->all();
-        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
+        $defaultCurrencyCode = (string) config('firefly.default_currency', 'EUR');
         Log::debug(sprintf('Default currency is %s', $defaultCurrencyCode));
         foreach ($users as $user) {
             $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
@@ -202,7 +202,7 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @param User $user
+     * @param User   $user
      * @param string $systemCurrencyCode
      */
     private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void

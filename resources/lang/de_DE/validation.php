@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein.',
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
+
     'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',
     'valid_recurrence_rep_moment'    => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',
     'gte.string'  => ':attribute muss mindestens :value Zeichen enthalten.',
     'gte.array'   => ':attribute muss mindestens :value Elemente enthalten.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

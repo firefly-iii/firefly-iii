@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_09_12_121359_fix_nullables.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class FixNullables
+ * Class FixNullables.
  */
 class FixNullables extends Migration
 {
@@ -44,14 +44,14 @@ class FixNullables extends Migration
     {
         Schema::table(
             'rule_groups',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->text('description')->nullable()->change();
             }
         );
 
         Schema::table(
             'rules',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->text('description')->nullable()->change();
             }
         );

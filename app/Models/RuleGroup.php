@@ -23,48 +23,50 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class RuleGroup.
  *
- * @property bool $active
- * @property User $user
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property string $title
- * @property string $text
- * @property int $id
- * @property int $order
- * @property Collection $rules
- * @property string description
+ * @property bool                            $active
+ * @property User                            $user
+ * @property Carbon                          $created_at
+ * @property Carbon                          $updated_at
+ * @property string                          $title
+ * @property string                          $text
+ * @property int                             $id
+ * @property int                             $order
+ * @property Collection                      $rules
+ * @property string                          description
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
+ * @property int                             $user_id
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
+ * @method static Builder|RuleGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withoutTrashed()
- * @property bool $stop_processing
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
+ * @method static Builder|RuleGroup withTrashed()
+ * @method static Builder|RuleGroup withoutTrashed()
+ * @property bool                            $stop_processing
+ * @mixin Eloquent
  */
 class RuleGroup extends Model
 {
@@ -92,13 +94,13 @@ class RuleGroup extends Model
      *
      * @param string $value
      *
-     * @return RuleGroup
      * @throws NotFoundHttpException
+     * @return RuleGroup
      */
     public static function routeBinder(string $value): RuleGroup
     {
         if (auth()->check()) {
-            $ruleGroupId = (int)$value;
+            $ruleGroupId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var RuleGroup $ruleGroup */

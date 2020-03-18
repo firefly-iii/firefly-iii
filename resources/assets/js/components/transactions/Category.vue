@@ -124,7 +124,7 @@
             handleEnter: function (e) {
                 // todo feels sloppy
                 if (e.keyCode === 13) {
-                    e.preventDefault();
+                    //e.preventDefault();
                 }
             }
         }

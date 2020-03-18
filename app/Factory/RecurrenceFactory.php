@@ -39,16 +39,16 @@ use Log;
  */
 class RecurrenceFactory
 {
-    /** @var User */
-    private $user;
-
     /** @var MessageBag */
     private $errors;
+    /** @var User */
+    private $user;
 
     use TransactionTypeTrait, RecurringTransactionTrait;
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -62,8 +62,8 @@ class RecurrenceFactory
     /**
      * @param array $data
      *
-     * @return Recurrence
      * @throws FireflyException
+     * @return Recurrence
      */
     public function create(array $data): Recurrence
     {
@@ -79,7 +79,7 @@ class RecurrenceFactory
         /** @var Carbon $firstDate */
         $firstDate = $data['recurrence']['first_date'];
 
-        $repetitions = (int)$data['recurrence']['repetitions'];
+        $repetitions = (int) $data['recurrence']['repetitions'];
         $recurrence  = new Recurrence(
             [
                 'user_id'             => $this->user->id,

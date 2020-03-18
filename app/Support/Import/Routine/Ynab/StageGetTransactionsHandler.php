@@ -28,6 +28,8 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 
 /**
  * Class StageGetTransactionsHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageGetTransactionsHandler
 {

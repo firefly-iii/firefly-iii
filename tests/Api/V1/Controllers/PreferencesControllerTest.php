@@ -49,6 +49,7 @@ class PreferencesControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -99,12 +100,12 @@ class PreferencesControllerTest extends TestCase
 
         $saved          = new Preference;
         $saved->user_id = $this->user()->id;
-        $saved->name    = 'twoFactorAuthEnabled';
+        $saved->name    = 'customFiscalYear';
         $saved->data    = false;
         $saved->save();
 
         Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'frontPageAccounts', []])->andReturn($countable);
-        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['twoFactorAuthEnabled', '1'])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['customFiscalYear', '1'])->atLeast()->once()->andReturn($pref);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -116,7 +117,7 @@ class PreferencesControllerTest extends TestCase
 
         /** @var Preference $preference */
         $data     = ['data' => '1'];
-        $response = $this->put(route('api.v1.preferences.update', ['twoFactorAuthEnabled']), $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.preferences.update', ['customFiscalYear']), $data, ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
 
@@ -147,7 +148,7 @@ class PreferencesControllerTest extends TestCase
 
         $saved          = new Preference;
         $saved->user_id = $this->user()->id;
-        $saved->name    = 'twoFactorEnabled';
+        $saved->name    = 'customFiscalYear';
         $saved->data    = false;
         $saved->save();
 

@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class MappingConverger
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class MappingConverger
 {

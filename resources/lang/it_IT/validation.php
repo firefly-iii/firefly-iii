@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'L\'importo totale non può essere zero.',
     'current_target_amount'          => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
+
     'secure_password'                => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
     'valid_recurrence_rep_moment'    => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'Il campo :attribute deve essere maggiore o uguale a :value kilobyte.',
     'gte.string'  => 'Il campo :attribute deve essere maggiore o uguale a :value caratteri.',
     'gte.array'   => 'Il campo :attribute deve avere :value o più elementi.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

@@ -25,11 +25,14 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\BudgetFormRequest;
+use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  *
@@ -42,6 +45,7 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -50,7 +54,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -65,17 +69,38 @@ class EditController extends Controller
      * @param Request $request
      * @param Budget  $budget
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, Budget $budget)
     {
-        $subTitle = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
+        $subTitle   = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
+        $autoBudget = $this->repository->getAutoBudget($budget);
+
+        // auto budget types
+        $autoBudgetTypes   = [
+            0                                => (string) trans('firefly.auto_budget_none'),
+            AutoBudget::AUTO_BUDGET_RESET    => (string) trans('firefly.auto_budget_reset'),
+            AutoBudget::AUTO_BUDGET_ROLLOVER => (string) trans('firefly.auto_budget_rollover'),
+        ];
+        $autoBudgetPeriods = [
+            'daily'     => (string) trans('firefly.auto_budget_period_daily'),
+            'weekly'    => (string) trans('firefly.auto_budget_period_weekly'),
+            'monthly'   => (string) trans('firefly.auto_budget_period_monthly'),
+            'quarterly' => (string) trans('firefly.auto_budget_period_quarterly'),
+            'half_year' => (string) trans('firefly.auto_budget_period_half_year'),
+            'yearly'    => (string) trans('firefly.auto_budget_period_yearly'),
+        ];
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
+        $currency    = app('amount')->getDefaultCurrency();
         $preFilled   = [
-            'active' => $hasOldInput ? (bool)$request->old('active') : $budget->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $budget->active,
+            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $currency->id,
         ];
+        if ($autoBudget) {
+            $preFilled['auto_budget_amount'] = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+        }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('budgets.edit.fromUpdate')) {
@@ -84,29 +109,29 @@ class EditController extends Controller
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('budgets.edit', compact('budget', 'subTitle'));
+        return view('budgets.edit', compact('budget', 'subTitle', 'autoBudgetTypes', 'autoBudgetPeriods', 'autoBudget'));
     }
 
     /**
      * Budget update routine.
      *
-     * @param BudgetFormRequest $request
-     * @param Budget            $budget
+     * @param BudgetFormUpdateRequest $request
+     * @param Budget                  $budget
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(BudgetFormRequest $request, Budget $budget): RedirectResponse
+    public function update(BudgetFormUpdateRequest $request, Budget $budget): RedirectResponse
     {
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_budget', ['name' => $budget->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_budget', ['name' => $budget->name]));
         $this->repository->cleanupBudgets();
         app('preferences')->mark();
 
         $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);
 

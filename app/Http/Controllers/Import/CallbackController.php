@@ -26,11 +26,18 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
  * Class CallbackController
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CallbackController extends Controller
 {
@@ -42,12 +49,12 @@ class CallbackController extends Controller
      *
      * @param ImportJobRepositoryInterface $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function ynab(Request $request, ImportJobRepositoryInterface $repository)
     {
-        $code   = (string)$request->get('code');
-        $jobKey = (string)$request->get('state');
+        $code   = (string) $request->get('code');
+        $jobKey = (string) $request->get('state');
 
         if ('' === $code) {
             return view('error')->with('message', 'You Need A Budget did not reply with a valid authorization code. Firefly III cannot continue.');

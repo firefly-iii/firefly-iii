@@ -30,6 +30,9 @@ use Log;
 
 /**
  * Class FileRoutine
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FileRoutine implements RoutineInterface
 {

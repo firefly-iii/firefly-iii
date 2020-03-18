@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Specifics;
 /**
  * Class IngBelgium.
  *
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Parses the description and opposing account information (IBAN and name) from CSV files for ING Belgium bank accounts.
  *
  */
@@ -53,33 +56,26 @@ class IngBelgium implements SpecificInterface
     }
 
     /**
-     * Run the specific code.
+     * Gets the description from the transaction details and makes sure structured descriptions are in the
+     * "+++090/9337/55493+++" format.
      *
-     * @param array $row
-     *
-     * @return array
-     *
+     * @return string the description
      */
-    public function run(array $row): array
+    protected static function description(string $transactionDetails): string
     {
-        return IngBelgium::processTransactionDetails($row);
+        $description = IngBelgium::parseInformationFromTransactionDetails($transactionDetails, '/Mededeling:\s*(.+)$/');
+
+        return IngBelgium::convertStructuredDescriptionToProperFormat($description);
     }
 
     /**
-     * Gets the description and opposing account information (IBAN and name) from the transaction details and adds
-     * them to the row of data.
+     * Gets the opposing account's IBAN from the transaction details.
      *
-     * @return array the row containing the description and opposing account's IBAN
+     * @return string the opposing account's IBAN
      */
-    protected static function processTransactionDetails(array $row): array
+    protected static function opposingAccountIban(string $transactionDetails): string
     {
-        if(isset($row[9])) {
-            $transactionDetails = $row[9];
-            $row[11] = IngBelgium::opposingAccountName($transactionDetails);
-            $row[12] = IngBelgium::opposingAccountIban($transactionDetails);
-            $row[13] = IngBelgium::description($transactionDetails);
-        }
-        return $row;
+        return IngBelgium::parseInformationFromTransactionDetails($transactionDetails, '/IBAN:\s*(.+?)(?=\s+)/');
     }
 
     /**
@@ -94,39 +90,36 @@ class IngBelgium implements SpecificInterface
     }
 
     /**
-     * Gets the opposing account's IBAN from the transaction details.
+     * Gets the description and opposing account information (IBAN and name) from the transaction details and adds
+     * them to the row of data.
      *
-     * @return string the opposing account's IBAN
+     * @return array the row containing the description and opposing account's IBAN
      */
-    protected static function opposingAccountIban(string $transactionDetails): string
+    protected static function processTransactionDetails(array $row): array
     {
-        return IngBelgium::parseInformationFromTransactionDetails($transactionDetails, '/IBAN:\s*(.+?)(?=\s+)/');
-    }
+        if (isset($row[9])) {
+            $transactionDetails = $row[9];
+            $row[11]            = IngBelgium::opposingAccountName($transactionDetails);
+            $row[12]            = IngBelgium::opposingAccountIban($transactionDetails);
+            $row[13]            = IngBelgium::description($transactionDetails);
+        }
 
-    /**
-     * Gets the description from the transaction details and makes sure structured descriptions are in the
-     * "+++090/9337/55493+++" format.
-     *
-     * @return string the description
-     */
-    protected static function description(string $transactionDetails): string
-    {
-        $description = IngBelgium::parseInformationFromTransactionDetails($transactionDetails, '/Mededeling:\s*(.+)$/');
-        return IngBelgium::convertStructuredDescriptionToProperFormat($description);
+        return $row;
     }
 
     private static function convertStructuredDescriptionToProperFormat(string $description): string
     {
         preg_match('/^\*\*\*(\d{3}\/\d{4}\/\d{5})\*\*\*$/', $description, $matches);
-        if(isset($matches[1])) {
+        if (isset($matches[1])) {
             return '+++' . $matches[1] . '+++';
         }
+
         return $description;
     }
 
     private static function parseInformationFromTransactionDetails(string $transactionDetails, string $regex): string
     {
-        if(isset($transactionDetails)) {
+        if (isset($transactionDetails)) {
             preg_match($regex, $transactionDetails, $matches);
             if (isset($matches[1])) {
                 return trim($matches[1]);
@@ -134,5 +127,18 @@ class IngBelgium implements SpecificInterface
         }
 
         return '';
+    }
+
+    /**
+     * Run the specific code.
+     *
+     * @param array $row
+     *
+     * @return array
+     *
+     */
+    public function run(array $row): array
+    {
+        return IngBelgium::processTransactionDetails($row);
     }
 }

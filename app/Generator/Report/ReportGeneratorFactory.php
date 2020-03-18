@@ -39,9 +39,9 @@ class ReportGeneratorFactory
      * @param Carbon $start
      * @param Carbon $end
      *
+     * @throws FireflyException
      * @return ReportGeneratorInterface
      *
-     * @throws FireflyException
      */
     public static function reportGenerator(string $type, Carbon $start, Carbon $end): ReportGeneratorInterface
     {

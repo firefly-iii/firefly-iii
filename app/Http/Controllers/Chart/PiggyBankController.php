@@ -44,6 +44,7 @@ class PiggyBankController extends Controller
 
     /**
      * PiggyBankController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -98,7 +99,7 @@ class PiggyBankController extends Controller
                 }
             );
             $currentSum        = $filtered->sum('amount');
-            $label             = $oldest->formatLocalized((string)trans('config.month_and_day'));
+            $label             = $oldest->formatLocalized((string) trans('config.month_and_day'));
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
@@ -109,7 +110,7 @@ class PiggyBankController extends Controller
             }
         );
         $finalSum               = $finalFiltered->sum('amount');
-        $finalLabel             = $today->formatLocalized((string)trans('config.month_and_day'));
+        $finalLabel             = $today->formatLocalized((string) trans('config.month_and_day'));
         $chartData[$finalLabel] = $finalSum;
 
         $data = $this->generator->singleSet($piggyBank->name, $chartData);

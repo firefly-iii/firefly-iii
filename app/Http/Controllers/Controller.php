@@ -78,9 +78,9 @@ class Controller extends BaseController
         $this->middleware(
             function ($request, $next) {
                 // translations for specific strings:
-                $this->monthFormat       = (string)trans('config.month');
-                $this->monthAndDayFormat = (string)trans('config.month_and_day');
-                $this->dateTimeFormat    = (string)trans('config.date_time');
+                $this->monthFormat       = (string) trans('config.month');
+                $this->monthAndDayFormat = (string) trans('config.month_and_day');
+                $this->dateTimeFormat    = (string) trans('config.date_time');
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
@@ -97,5 +97,4 @@ class Controller extends BaseController
             }
         );
     }
-
 }

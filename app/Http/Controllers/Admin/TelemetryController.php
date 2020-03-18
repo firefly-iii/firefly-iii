@@ -21,8 +21,9 @@
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-
 use FireflyIII\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 /**
  * Class TelemetryController
@@ -35,7 +36,7 @@ class TelemetryController extends Controller
 
         $this->middleware(
             static function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.administration'));
+                app('view')->share('title', (string) trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
                 return $next($request);
@@ -59,7 +60,7 @@ class TelemetryController extends Controller
     public function index()
     {
         app('view')->share('subTitleIcon', 'fa-eye');
-        app('view')->share('subTitle', (string)trans('firefly.telemetry_admin_index'));
+        app('view')->share('subTitle', (string) trans('firefly.telemetry_admin_index'));
         $version = config('firefly.version');
         $enabled = config('firefly.telemetry', false);
         $count   = 1;
@@ -68,11 +69,10 @@ class TelemetryController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function view()
     {
         return view('admin.telemetry.view');
     }
-
 }

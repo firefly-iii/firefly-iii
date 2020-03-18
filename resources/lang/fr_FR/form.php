@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Devise',
     'currency_id'               => 'Devise',
     'transaction_currency_id'   => 'Devise',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'L\'adresse IP externe de votre serveur',
     'attachments'               => 'Documents joints',
     'journal_amount'            => 'Montant',
@@ -259,5 +260,10 @@ return [
     'deposit_source_id'         => 'Compte source',
     'expected_on'               => 'Prévu le',
     'paid'                      => 'Payé',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
 
 ];

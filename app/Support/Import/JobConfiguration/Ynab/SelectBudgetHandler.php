@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class SelectBudgetHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class SelectBudgetHandler implements YnabJobConfigurationInterface
 {

@@ -28,6 +28,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccounts.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AssetAccounts implements MapperInterface
 {
@@ -47,7 +50,7 @@ class AssetAccounts implements MapperInterface
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $accountId = (int)$account->id;
+            $accountId = (int) $account->id;
             $name      = $account->name;
             $iban      = $account->iban ?? '';
             if ('' !== $iban) {
@@ -62,7 +65,7 @@ class AssetAccounts implements MapperInterface
             $list[$accountId] = $name;
         }
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

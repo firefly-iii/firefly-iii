@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Specifics;
 /**
  * Class IngDescription.
  *
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Parses the description from CSV files for Ing bank accounts.
  *
  * With Mutation 'InternetBankieren', 'Overschrijving', 'Verzamelbetaling' and
@@ -104,11 +107,14 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * Remove "Omschrijving" (and NOT its value) from the description.
+     * Move "Valutadatum" from the description to new column.
      */
-    protected function removeIngDescription(): void
+    protected function moveValutadatumDescription(): void
     {
-        $this->row[8] = preg_replace('/Omschrijving: /', '', $this->row[8]);
+        $matches = [];
+        preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches);
+        $this->row[9] = date("Ymd", strtotime($matches[1]));
+        $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
     }
 
     /**
@@ -122,17 +128,17 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * Remove "Naam" (and its value) from the description.
+     * Remove "Omschrijving" (and NOT its value) from the description.
      */
-    protected function removeNameIngDescription(): void
+    protected function removeIngDescription(): void
     {
-        $this->row[8] = preg_replace('/Naam:.*?([a-zA-Z\/]+:)/', '$1', $this->row[8]);
+        $this->row[8] = preg_replace('/Omschrijving: /', '', $this->row[8]);
     }
 
     /**
-     * Move "Valutadatum" from the description to new column.
+     * Remove "Naam" (and its value) from the description.
      */
-    protected function moveValutadatumDescription(): void
+    protected function removeNameIngDescription(): void
     {
         $matches = array();
         if (preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches)) {
@@ -146,15 +152,15 @@ class IngDescription implements SpecificInterface
      */
     private function MoveSavingsAccount(): void
     {
-        $matches = array();
-        if ('' === (string)$this->row[3]) {
+        $matches = [];
+        if ('' === (string) $this->row[3]) {
             if (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[8], $matches)) {
-                $matches[3] = sprintf("%010d", $matches[3]);
+                $matches[3]   = sprintf("%010d", $matches[3]);
                 $this->row[1] = $matches[2]; // Savings account name
                 $this->row[3] = $matches[3]; // Savings account number
                 $this->row[8] = preg_replace('/(Naar|Van) (.*rekening) ([0-9]+)/', '', $this->row[8]); // Remove the savings account content from description
             } elseif (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[1], $matches)) {
-                $matches[3] = sprintf("%010d", $matches[3]);
+                $matches[3]   = sprintf("%010d", $matches[3]);
                 $this->row[1] = $matches[2]; // Savings account name
                 $this->row[3] = $matches[3]; // Savings account number
             }

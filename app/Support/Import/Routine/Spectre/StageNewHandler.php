@@ -33,6 +33,8 @@ use Log;
 
 /**
  * Class StageNewHandler
+ * @deprecated
+ * @codeCoverageIgnore
  *
  */
 class StageNewHandler

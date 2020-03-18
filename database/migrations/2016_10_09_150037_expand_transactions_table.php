@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_10_09_150037_expand_transactions_table.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ExpandTransactionsTable
+ * Class ExpandTransactionsTable.
  */
 class ExpandTransactionsTable extends Migration
 {
@@ -35,7 +35,7 @@ class ExpandTransactionsTable extends Migration
     {
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->dropColumn('identifier');
             }
         );
@@ -50,7 +50,7 @@ class ExpandTransactionsTable extends Migration
     {
         Schema::table(
             'transactions',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->smallInteger('identifier', false, true)->default(0);
             }
         );

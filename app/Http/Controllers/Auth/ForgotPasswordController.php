@@ -26,13 +26,18 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\View\View;
 use Log;
 
 /**
  * Class ForgotPasswordController
+ *
  * @codeCoverageIgnore
  */
 class ForgotPasswordController extends Controller
@@ -51,11 +56,11 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request                 $request
      *
-     * @param UserRepositoryInterface   $repository
+     * @param UserRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
@@ -77,7 +82,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
-            return back()->withErrors(['email' => (string)trans('firefly.cannot_reset_demo_user')]);
+            return back()->withErrors(['email' => (string) trans('firefly.cannot_reset_demo_user')]);
         }
 
         // We will send the password reset link to this user. Once we have attempted
@@ -99,7 +104,7 @@ class ForgotPasswordController extends Controller
      *
      * @codeCoverageIgnore
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function showLinkRequestForm()
     {
@@ -114,7 +119,7 @@ class ForgotPasswordController extends Controller
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        $pageTitle         = (string)trans('firefly.forgot_pw_page_title');
+        $pageTitle         = (string) trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }

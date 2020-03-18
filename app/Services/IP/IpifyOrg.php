@@ -31,7 +31,9 @@ use RuntimeException;
 
 /**
  * Class IpifyOrg
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class IpifyOrg implements IPRetrievalInterface
 {

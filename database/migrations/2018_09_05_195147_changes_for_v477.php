@@ -2,7 +2,7 @@
 
 /**
  * 2018_09_05_195147_changes_for_v477.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,8 +26,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- *
- * Class ChangesForV477
+ * Class ChangesForV477.
  */
 class ChangesForV477 extends Migration
 {
@@ -39,15 +38,15 @@ class ChangesForV477 extends Migration
     public function down(): void
     {
         Schema::table(
-            'budget_limits', function (Blueprint $table) {
+            'budget_limits', static function (Blueprint $table) {
 
             // cannot drop foreign keys in SQLite:
-            if ('sqlite' !== config('database.default')) {
-                $table->dropForeign('budget_limits_transaction_currency_id_foreign');
-            }
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign('budget_limits_transaction_currency_id_foreign');
+                }
 
-            $table->dropColumn(['transaction_currency_id']);
-        }
+                $table->dropColumn(['transaction_currency_id']);
+            }
         );
     }
 
@@ -61,7 +60,7 @@ class ChangesForV477 extends Migration
     {
         Schema::table(
             'budget_limits',
-            function (Blueprint $table) {
+            static function (Blueprint $table) {
                 $table->integer('transaction_currency_id', false, true)->nullable()->after('budget_id');
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
             }

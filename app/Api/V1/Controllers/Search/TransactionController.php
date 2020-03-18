@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -21,13 +22,8 @@
 
 namespace FireflyIII\Api\V1\Controllers\Search;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Support\Search\SearchInterface;
-use FireflyIII\Support\Search\TransactionSearch;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * Class TransactionController
@@ -35,13 +31,13 @@ use Illuminate\Http\Response;
 class TransactionController extends Controller
 {
     /** @var string */
-    const SEARCH_ALL = 'all';
+    public const SEARCH_ALL = 'all';
     /** @var string */
-    const SEARCH_DESCRIPTION = 'description';
+    public const SEARCH_DESCRIPTION = 'description';
     /** @var string */
-    const SEARCH_NOTES = 'notes';
+    public const SEARCH_NOTES = 'notes';
     /** @var string */
-    const SEARCH_ACCOUNTS = 'accounts';
+    public const SEARCH_ACCOUNTS = 'accounts';
     /** @var array */
     private $validFields;
 
@@ -59,11 +55,10 @@ class TransactionController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse|Response
+     * @return void
      */
-    public function search(Request $request)
+    public function search(Request $request): void
     {
         die('the route is present but nobody\'s home.');
     }
-
 }

@@ -41,6 +41,8 @@ use Illuminate\Support\Facades\Log;
 /**
  *
  * Class StageImportDataHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageImportDataHandler
 {

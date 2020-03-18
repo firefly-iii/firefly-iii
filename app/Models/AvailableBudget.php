@@ -23,44 +23,46 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class AvailableBudget.
  *
- * @property int $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property User $user
- * @property TransactionCurrency $transactionCurrency
- * @property int $transaction_currency_id
- * @property Carbon $start_date
- * @property Carbon $end_date
- * @property string $amount
+ * @property int                             $id
+ * @property Carbon                          $created_at
+ * @property Carbon                          $updated_at
+ * @property User                            $user
+ * @property TransactionCurrency             $transactionCurrency
+ * @property int                             $transaction_currency_id
+ * @property Carbon                          $start_date
+ * @property Carbon                          $end_date
+ * @property string                          $amount
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
+ * @property int                             $user_id
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
+ * @method static Builder|AvailableBudget onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereEndDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereStartDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
+ * @method static Builder|AvailableBudget withTrashed()
+ * @method static Builder|AvailableBudget withoutTrashed()
+ * @mixin Eloquent
  */
 class AvailableBudget extends Model
 {
@@ -87,13 +89,13 @@ class AvailableBudget extends Model
      *
      * @param string $value
      *
-     * @return AvailableBudget
      * @throws NotFoundHttpException
+     * @return AvailableBudget
      */
     public static function routeBinder(string $value): AvailableBudget
     {
         if (auth()->check()) {
-            $availableBudgetId = (int)$value;
+            $availableBudgetId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var AvailableBudget $availableBudget */

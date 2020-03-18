@@ -120,6 +120,11 @@ class GroupCloneService
         }
     }
 
+    /**
+     * @param Note               $note
+     * @param TransactionJournal $newJournal
+     * @param int                $oldGroupId
+     */
     private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
     {
         $newNote              = $note->replicate();
@@ -139,6 +144,7 @@ class GroupCloneService
     {
         $newTransaction                         = $transaction->replicate();
         $newTransaction->transaction_journal_id = $newJournal->id;
+        $newTransaction->reconciled             = false;
         $newTransaction->save();
     }
 

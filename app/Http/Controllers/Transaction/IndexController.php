@@ -25,11 +25,14 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class IndexController
@@ -43,6 +46,7 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -53,7 +57,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -65,20 +69,20 @@ class IndexController extends Controller
     /**
      * Index for a range of transactions.
      *
-     * @param Request $request
-     * @param string $objectType
+     * @param Request     $request
+     * @param string      $objectType
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @throws Exception
+     * @return Factory|View
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
         $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
         $types        = config('firefly.transactionTypesByType.' . $objectType);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         if (null === $start) {
             $start = session('start');
             $end   = session('end');
@@ -91,7 +95,7 @@ class IndexController extends Controller
         $path     = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
+        $subTitle = (string) trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
 
         $firstJournal = $this->repository->firstNull();
         $startPeriod  = null === $firstJournal ? new Carbon : $firstJournal->date;
@@ -119,9 +123,10 @@ class IndexController extends Controller
      * Index for ALL transactions.
      *
      * @param Request $request
-     * @param string $objectType
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @param string  $objectType
+     *
+     * @throws Exception
+     * @return Factory|View
      */
     public function indexAll(Request $request, string $objectType)
     {
@@ -131,13 +136,13 @@ class IndexController extends Controller
 
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $objectType);
         $types        = config('firefly.transactionTypesByWhat.' . $objectType);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
         $end          = new Carbon;
-        $subTitle     = (string)trans('firefly.all_' . $objectType);
+        $subTitle     = (string) trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

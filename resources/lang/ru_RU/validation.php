@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Сумма не может быть равна нулю.',
     'current_target_amount'          => 'Текущая сумма должна быть меньше целевой суммы.',
     'unique_piggy_bank_for_user'     => 'Название копилки должно быть уникальным.',
+
     'secure_password'                => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Недопустимый тип для повторяющихся транзакций.',
     'valid_recurrence_rep_moment'    => 'Неверный период повторения для данного типа повторений.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

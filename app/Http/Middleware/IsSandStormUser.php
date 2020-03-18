@@ -35,9 +35,9 @@ class IsSandStormUser
     /**
      * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
+     * @param Request     $request
+     * @param Closure     $next
+     * @param string|null $guard
      *
      * @return mixed
      */
@@ -48,8 +48,8 @@ class IsSandStormUser
             return $next($request);
         }
 
-        if (1 === (int)getenv('SANDSTORM')) {
-            app('session')->flash('warning', (string)trans('firefly.sandstorm_not_available'));
+        if (1 === (int) getenv('SANDSTORM')) {
+            app('session')->flash('warning', (string) trans('firefly.sandstorm_not_available'));
 
             return response()->redirectTo(route('index'));
         }

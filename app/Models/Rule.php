@@ -23,54 +23,56 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Rule.
  *
- * @property bool       $stop_processing
- * @property int        $id
- * @property Collection $ruleTriggers
- * @property Collection $ruleActions
- * @property bool       $active
- * @property bool       $strict
- * @property User       $user
- * @property Carbon     $created_at
- * @property Carbon     $updated_at
- * @property string     $title
- * @property int        $order
- * @property RuleGroup  $ruleGroup
- * @property int        $rule_group_id
- * @property string     $description
+ * @property bool                            $stop_processing
+ * @property int                             $id
+ * @property Collection                      $ruleTriggers
+ * @property Collection                      $ruleActions
+ * @property bool                            $active
+ * @property bool                            $strict
+ * @property User                            $user
+ * @property Carbon                          $created_at
+ * @property Carbon                          $updated_at
+ * @property string                          $title
+ * @property int                             $order
+ * @property RuleGroup                       $ruleGroup
+ * @property int                             $rule_group_id
+ * @property string                          $description
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
+ * @property int                             $user_id
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
+ * @method static Builder|Rule onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereRuleGroupId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereStopProcessing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereStrict($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Rule whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereRuleGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereStopProcessing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereStrict($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
+ * @method static Builder|Rule withTrashed()
+ * @method static Builder|Rule withoutTrashed()
+ * @mixin Eloquent
  */
 class Rule extends Model
 {
@@ -100,13 +102,13 @@ class Rule extends Model
      *
      * @param string $value
      *
-     * @return Rule
      * @throws NotFoundHttpException
+     * @return Rule
      */
     public static function routeBinder(string $value): Rule
     {
         if (auth()->check()) {
-            $ruleId = (int)$value;
+            $ruleId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Rule $rule */
@@ -147,6 +149,7 @@ class Rule extends Model
 
     /**
      * @param $value
+     *
      * @codeCoverageIgnore
      */
     public function setDescriptionAttribute($value): void

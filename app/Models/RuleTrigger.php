@@ -23,35 +23,37 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class RuleTrigger.
  *
- * @property string $trigger_value
- * @property string $trigger_type
- * @property int    $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property int    $order
- * @property bool   $active
- * @property bool   $stop_processing
- * @property int $rule_id
- * @property-read \FireflyIII\Models\Rule $rule
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereRuleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereStopProcessing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereTriggerType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereTriggerValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property string    $trigger_value
+ * @property string    $trigger_type
+ * @property int       $id
+ * @property Carbon    $created_at
+ * @property Carbon    $updated_at
+ * @property int       $order
+ * @property bool      $active
+ * @property bool      $stop_processing
+ * @property int       $rule_id
+ * @property-read Rule $rule
+ * @method static Builder|RuleTrigger newModelQuery()
+ * @method static Builder|RuleTrigger newQuery()
+ * @method static Builder|RuleTrigger query()
+ * @method static Builder|RuleTrigger whereActive($value)
+ * @method static Builder|RuleTrigger whereCreatedAt($value)
+ * @method static Builder|RuleTrigger whereId($value)
+ * @method static Builder|RuleTrigger whereOrder($value)
+ * @method static Builder|RuleTrigger whereRuleId($value)
+ * @method static Builder|RuleTrigger whereStopProcessing($value)
+ * @method static Builder|RuleTrigger whereTriggerType($value)
+ * @method static Builder|RuleTrigger whereTriggerValue($value)
+ * @method static Builder|RuleTrigger whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class RuleTrigger extends Model
 {

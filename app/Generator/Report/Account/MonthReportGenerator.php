@@ -52,14 +52,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function generate(): string
     {
         $accountIds      = implode(',', $this->accounts->pluck('id')->toArray());
-        $doubleIds      = implode(',', $this->expense->pluck('id')->toArray());
+        $doubleIds       = implode(',', $this->expense->pluck('id')->toArray());
         $reportType      = 'account';
         $preferredPeriod = $this->preferredPeriod();
         try {
             $result = view('reports.double.report', compact('accountIds', 'reportType', 'doubleIds', 'preferredPeriod'))
                 ->with('start', $this->start)->with('end', $this->end)
-                                             ->with('doubles', $this->expense)
-                                             ->render();
+                ->with('doubles', $this->expense)
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Recurring;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\Recurrence;
@@ -31,7 +32,11 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -47,6 +52,7 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -57,8 +63,8 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string)trans('firefly.recurrences'));
-                app('view')->share('subTitle', (string)trans('firefly.recurrences'));
+                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
                 $this->budgets   = app(BudgetRepositoryInterface::class);
@@ -71,12 +77,12 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Recurrence $recurrence
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      *
+     * @return Factory|View
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
@@ -100,11 +106,11 @@ class EditController extends Controller
         }
         $request->session()->forget('recurrences.edit.fromUpdate');
 
-        $repetitionEnd  = 'forever';
+        $repetitionEnd = 'forever';
         $repetitionEnds = [
-            'forever'    => (string)trans('firefly.repeat_forever'),
-            'until_date' => (string)trans('firefly.repeat_until_date'),
-            'times'      => (string)trans('firefly.repeat_times'),
+            'forever'    => (string) trans('firefly.repeat_forever'),
+            'until_date' => (string) trans('firefly.repeat_until_date'),
+            'times'      => (string) trans('firefly.repeat_times'),
         ];
         if (null !== $recurrence->repeat_until) {
             $repetitionEnd = 'until_date'; // @codeCoverageIgnore
@@ -114,17 +120,17 @@ class EditController extends Controller
         }
 
         $weekendResponses = [
-            RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
-            RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
-            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
-            RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
+            RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string) trans('firefly.do_nothing'),
+            RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string) trans('firefly.skip_transaction'),
+            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string) trans('firefly.jump_to_friday'),
+            RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string) trans('firefly.jump_to_monday'),
         ];
 
         $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
+        $preFilled        = [
             'transaction_type'          => strtolower($recurrence->transactionType->type),
-            'active'                    => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
-            'apply_rules'               => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+            'active'                    => $hasOldInput ? (bool) $request->old('active') : $recurrence->active,
+            'apply_rules'               => $hasOldInput ? (bool) $request->old('apply_rules') : $recurrence->apply_rules,
             'deposit_source_id'         => $array['transactions'][0]['source_id'],
             'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
@@ -141,10 +147,10 @@ class EditController extends Controller
      * Update the recurring transaction.
      *
      * @param RecurrenceFormRequest $request
-     * @param Recurrence $recurrence
+     * @param Recurrence            $recurrence
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
+     * @return RedirectResponse|Redirector
      */
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
@@ -152,10 +158,10 @@ class EditController extends Controller
 
         $this->recurring->update($recurrence, $data);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
+        $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('recurrences.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('recurrences.edit.fromUpdate', true);
 

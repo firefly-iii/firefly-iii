@@ -22,33 +22,36 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Configuration.
  *
- * @property string $data
- * @property string $name
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string                          $data
+ * @property string                          $name
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration newQuery()
+ * @method static Builder|Configuration onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Configuration whereUpdatedAt($value)
+ * @method static Builder|Configuration withTrashed()
+ * @method static Builder|Configuration withoutTrashed()
+ * @mixin Eloquent
  */
 class Configuration extends Model
 {

@@ -51,9 +51,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Generates the report.
      *
-     * @return string
      * @throws FireflyException
      * @codeCoverageIgnore
+     * @return string
      */
     public function generate(): string
     {
@@ -100,9 +100,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param Account $account
      * @param Carbon  $date
      *
+     * @throws FireflyException
      * @return array
      *
-     * @throws FireflyException
      */
     public function getAuditReport(Account $account, Carbon $date): array
     {
@@ -117,7 +117,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
-            ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
+                  ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
         $journals         = $collector->getExtractedJournals();
         $journals         = array_reverse($journals, true);
         $dayBeforeBalance = app('steam')->balance($account, $date);
@@ -159,9 +159,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'journals'         => $journals,
             'currency'         => $currency,
             'exists'           => count($journals) > 0,
-            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
+            'end'              => $this->end->formatLocalized((string) trans('config.month_and_day')),
             'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
+            'dayBefore'        => $date->formatLocalized((string) trans('config.month_and_day')),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
 

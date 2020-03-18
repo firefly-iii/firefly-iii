@@ -89,6 +89,7 @@ const i18n = new vuei18n({
                                  'zh-tw': require('./locales/zh-tw.json'),
                                  'zh-cn': require('./locales/zh-cn.json'),
                                  'sv': require('./locales/sv.json'),
+                                 'vi': require('./locales/vi.json'),
                              }
                          });
 

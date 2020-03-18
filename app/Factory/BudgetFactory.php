@@ -38,6 +38,7 @@ class BudgetFactory
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -56,8 +57,8 @@ class BudgetFactory
      */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
-        $budgetId   = (int)$budgetId;
-        $budgetName = (string)$budgetName;
+        $budgetId   = (int) $budgetId;
+        $budgetName = (string) $budgetName;
 
         if (0 === $budgetId && '' === $budgetName) {
             return null;

@@ -27,7 +27,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
@@ -45,18 +44,16 @@ class AccountFactory
 
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
-    /** @var User */
-    private $user;
-
-    /** @var array */
-    private $canHaveVirtual;
-
     /** @var array */
     protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
     protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
     protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+    /** @var array */
+    private $canHaveVirtual;
+    /** @var User */
+    private $user;
 
     /**
      * AccountFactory constructor.
@@ -75,8 +72,8 @@ class AccountFactory
     /**
      * @param array $data
      *
-     * @return Account
      * @throws FireflyException
+     * @return Account
      */
     public function create(array $data): Account
     {
@@ -106,7 +103,7 @@ class AccountFactory
                 'iban'            => $data['iban'],
             ];
 
-            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;
 
@@ -159,8 +156,8 @@ class AccountFactory
      * @param string $accountName
      * @param string $accountType
      *
-     * @return Account
      * @throws FireflyException
+     * @return Account
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -197,7 +194,7 @@ class AccountFactory
     }
 
     /**
-     * @param int|null $accountTypeId
+     * @param int|null    $accountTypeId
      * @param null|string $accountType
      *
      * @return AccountType|null
@@ -205,7 +202,7 @@ class AccountFactory
      */
     protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
     {
-        $accountTypeId = (int)$accountTypeId;
+        $accountTypeId = (int) $accountTypeId;
         $result        = null;
         if ($accountTypeId > 0) {
             $result = AccountType::find($accountTypeId);

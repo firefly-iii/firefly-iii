@@ -31,7 +31,9 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Passport;
 use Log;
@@ -113,15 +115,15 @@ class InstallController extends Controller
     /**
      * Show index.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function index()
     {
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
 
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
 
         return view('install.index');
     }
@@ -154,7 +156,7 @@ class InstallController extends Controller
      */
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int)$request->get('index');
+        $requestIndex = (int) $request->get('index');
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,

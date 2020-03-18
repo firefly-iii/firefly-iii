@@ -25,7 +25,8 @@ namespace FireflyIII\Support\FinTS;
 use Fhp\Model\StatementOfAccount\Transaction as FinTSTransaction;
 
 /**
- *
+ * @deprecated
+ * @codeCoverageIgnore
  * Class MetadataParser
  */
 class MetadataParser

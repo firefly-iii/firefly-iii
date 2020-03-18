@@ -41,9 +41,9 @@ class InstallationId
      * @param \Illuminate\Http\Request $request
      * @param Closure                  $next
      *
-     * @return mixed
-     *
      * @throws FireflyException
+     *
+     * @return mixed
      *
      */
     public function handle($request, Closure $next)
@@ -51,7 +51,7 @@ class InstallationId
         $config = app('fireflyconfig')->get('installation_id', null);
         if (null === $config) {
             $uuid5    = Uuid::uuid5(Uuid::NAMESPACE_URL, 'firefly-iii.org');
-            $uniqueId = (string)$uuid5;
+            $uniqueId = (string) $uuid5;
             Log::info(sprintf('Created Firefly III installation ID %s', $uniqueId));
             app('fireflyconfig')->set('installation_id', $uniqueId);
         }

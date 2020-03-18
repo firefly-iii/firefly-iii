@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'A teljes mennyiség nem lehet nulla.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'A malacpersely nevének egyedinek kell lennie.',
+
     'secure_password'                => 'Ez nem biztonságos jelszó. Kérlek próbáld meg újra. További információért lásd: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Érvénytelen ismétléstípus az ismétlődő tranzakciókhoz.',
     'valid_recurrence_rep_moment'    => 'Érvénytelen ismétlési időpont ehhez az ismétléstípushoz.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

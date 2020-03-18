@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransferRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -20,7 +21,6 @@
  */
 
 namespace FireflyIII\Api\V1\Requests\Search;
-
 
 use FireflyIII\Api\V1\Requests\Request;
 use FireflyIII\Rules\IsTransferAccount;
@@ -54,5 +54,4 @@ class TransferRequest extends Request
             'date'        => 'required|date',
         ];
     }
-
 }
