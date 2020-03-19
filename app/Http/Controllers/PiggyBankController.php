@@ -247,9 +247,10 @@ class PiggyBankController extends Controller
         $accountTransformer->setParameters($parameters);
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
-            $array     = $transformer->transform($piggy);
-            $account   = $accountTransformer->transform($piggy->account);
-            $accountId = (int) $account['id'];
+            $array                = $transformer->transform($piggy);
+            $account              = $accountTransformer->transform($piggy->account);
+            $accountId            = (int) $account['id'];
+            $array['attachments'] = $this->piggyRepos->getAttachments($piggy);
             if (!isset($accounts[$accountId])) {
                 // create new:
                 $accounts[$accountId] = $account;
@@ -426,11 +427,12 @@ class PiggyBankController extends Controller
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($parameters);
-        $piggy    = $transformer->transform($piggyBank);
-        $events   = $this->piggyRepos->getEvents($piggyBank);
-        $subTitle = $piggyBank->name;
+        $piggy       = $transformer->transform($piggyBank);
+        $events      = $this->piggyRepos->getEvents($piggyBank);
+        $subTitle    = $piggyBank->name;
+        $attachments = $this->piggyRepos->getAttachments($piggyBank);
 
-        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy'));
+        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy', 'attachments'));
     }
 
     /**
