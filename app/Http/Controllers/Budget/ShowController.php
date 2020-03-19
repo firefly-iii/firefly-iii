@@ -31,6 +31,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -48,6 +49,9 @@ class ShowController extends Controller
     /** @var JournalRepositoryInterface */
     private $journalRepos;
 
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
     /**
      * ShowController constructor.
      *
@@ -62,6 +66,7 @@ class ShowController extends Controller
                 app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->journalRepos = app(JournalRepositoryInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -158,6 +163,7 @@ class ShowController extends Controller
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $limits     = $this->getLimits($budget, $allStart, $allEnd);
         $repetition = null;
+        $attachments = $this->repository->getAttachments($budget);
 
         // collector:
         /** @var GroupCollectorInterface $collector */
@@ -170,7 +176,7 @@ class ShowController extends Controller
 
         $subTitle = (string) trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
-        return view('budgets.show', compact('limits', 'budget', 'repetition', 'groups', 'subTitle'));
+        return view('budgets.show', compact('limits','attachments', 'budget', 'repetition', 'groups', 'subTitle'));
     }
 
     /**
@@ -212,8 +218,9 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start  = session('first', Carbon::now()->startOfYear());
         $end    = new Carbon;
+        $attachments = $this->repository->getAttachments($budget);
         $limits = $this->getLimits($budget, $start, $end);
 
-        return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'groups', 'subTitle'));
+        return view('budgets.show', compact('limits','attachments', 'budget', 'budgetLimit', 'groups', 'subTitle'));
     }
 }
