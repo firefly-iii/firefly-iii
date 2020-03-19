@@ -197,6 +197,7 @@ class BillController extends Controller
         $start           = session('start');
         $end             = session('end');
         $unfiltered      = $this->billRepository->getBills();
+
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $parameters      = new ParameterBag();
         $parameters->set('start', $start);
@@ -208,7 +209,7 @@ class BillController extends Controller
 
         /** @var Collection $bills */
         $bills = $unfiltered->map(
-            static function (Bill $bill) use ($transformer, $defaultCurrency) {
+            function (Bill $bill) use ($transformer, $defaultCurrency) {
                 $return                            = $transformer->transform($bill);
                 $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
                 $return['currency_id']             = $currency->id;
@@ -216,6 +217,7 @@ class BillController extends Controller
                 $return['currency_symbol']         = $currency->symbol;
                 $return['currency_code']           = $currency->code;
                 $return['currency_decimal_places'] = $currency->decimal_places;
+                $return['attachments']             = $this->billRepository->getAttachments($bill);
 
                 return $return;
             }

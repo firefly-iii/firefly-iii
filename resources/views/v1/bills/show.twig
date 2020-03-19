@@ -114,34 +114,7 @@
                         <h3 class="box-title">{{ 'attachments'|_ }}</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
-                        <table class="table table-hover">
-                            {% for att in attachments %}
-                                <tr>
-                                    <td>
-                                        <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
-                                            {% if att.title %}
-                                                {{ att.title }}
-                                            {% else %}
-                                                {{ att.filename }}
-                                            {% endif %}
-                                        </a>
-                                        ({{ att.size|filesize }})
-                                        {% if att.notes.first %}
-                                            <br/>
-                                            <em>{{ att.notes.first.text|markdown }}</em>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                        {%  include 'list.attachments'  %}
                     </div>
                 </div>
             {% endif %}

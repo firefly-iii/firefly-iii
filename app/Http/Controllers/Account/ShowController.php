@@ -169,6 +169,7 @@ class ShowController extends Controller
 
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);
+        $attachments      = $this->repository->getAttachments($account);
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = new Carbon;
         $today        = new Carbon;
@@ -196,6 +197,7 @@ class ShowController extends Controller
                 'location',
                 'objectType',
                 'isLiability',
+                'attachments',
                 'currency',
                 'today',
                 'chartUri',

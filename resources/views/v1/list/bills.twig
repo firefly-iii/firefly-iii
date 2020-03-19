@@ -27,7 +27,7 @@
                 {% endif %}
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
                 {# count attachments #}
-                {% if entry.attachments_count > 0 %}
+                {% if entry.attachments.count > 0 %}
                     <i class="fa fa-paperclip"></i>
                 {% endif %}
 
