@@ -451,6 +451,16 @@ class PiggyBankController extends Controller
         session()->flash('success', (string) trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
 
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($piggyBank, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
+
         $redirect = redirect($this->getPreviousUri('piggy-banks.create.uri'));
 
         if (1 === (int) $request->get('create_another')) {

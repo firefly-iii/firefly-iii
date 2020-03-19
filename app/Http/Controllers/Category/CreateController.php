@@ -101,6 +101,15 @@ class CreateController extends Controller
         $request->session()->flash('success', (string) trans('firefly.stored_category', ['name' => $category->name]));
         app('preferences')->mark();
 
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($category, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         $redirect = redirect(route('categories.index'));
         if (1 === (int) $request->get('create_another')) {
             // @codeCoverageIgnoreStart

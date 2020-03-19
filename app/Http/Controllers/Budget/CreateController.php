@@ -129,6 +129,15 @@ class CreateController extends Controller
         $request->session()->flash('success', (string) trans('firefly.stored_new_budget', ['name' => $budget->name]));
         app('preferences')->mark();
 
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($budget, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
 
         if (1 === (int) $request->get('create_another')) {
