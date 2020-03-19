@@ -349,10 +349,20 @@ class TagController extends Controller
     public function update(TagFormRequest $request, Tag $tag): RedirectResponse
     {
         $data = $request->collectTagData();
-        $this->repository->update($tag, $data);
+        $tag  = $this->repository->update($tag, $data);
 
         session()->flash('success', (string) trans('firefly.updated_tag', ['tag' => $data['tag']]));
         app('preferences')->mark();
+
+        // store new attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($tag, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
 
         $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
         if (1 === (int) $request->get('return_to_edit')) {

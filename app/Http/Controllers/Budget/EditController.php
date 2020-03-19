@@ -136,6 +136,15 @@ class EditController extends Controller
 
         $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
 
+        // store new attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($budget, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);

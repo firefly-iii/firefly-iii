@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Attachments;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\PiggyBank;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -243,8 +244,13 @@ class AttachmentHelper implements AttachmentHelperInterface
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
         $class = get_class($model);
-        /** @noinspection PhpUndefinedFieldInspection */
-        $count  = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        $count = 0;
+        if (PiggyBank::class === $class) {
+            $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        }
+        if (PiggyBank::class !== $class) {
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        }
         $result = false;
         if ($count > 0) {
             $msg = (string) trans('validation.file_already_attached', ['name' => $name]);
@@ -272,9 +278,15 @@ class AttachmentHelper implements AttachmentHelperInterface
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
+            $class = get_class($model);
+            $user = $model->user;
+            if (PiggyBank::class === $class) {
+                $user = $model->account->user;
+            }
+
             $attachment = new Attachment; // create Attachment object.
             /** @noinspection PhpUndefinedFieldInspection */
-            $attachment->user()->associate($model->user);
+            $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
             $attachment->md5      = md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
