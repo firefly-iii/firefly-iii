@@ -251,21 +251,6 @@ trait TransactionValidation
      *
      * @param Validator $validator
      */
-    public function validateOneRecurrenceTransactionUpdate(Validator $validator): void
-    {
-        Log::debug('Now in validateOneRecurrenceTransactionUpdate()');
-        $transactions = $this->getTransactionsArray($validator);
-        // need at least one transaction
-        if (0 === count($transactions)) {
-            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
-        }
-    }
-
-    /**
-     * Adds an error to the validator when there are no transactions in the array of data.
-     *
-     * @param Validator $validator
-     */
     public function validateOneTransaction(Validator $validator): void
     {
         Log::debug('Now in validateOneTransaction()');

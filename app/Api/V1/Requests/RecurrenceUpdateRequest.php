@@ -140,7 +140,7 @@ class RecurrenceUpdateRequest extends Request
     {
         $validator->after(
             function (Validator $validator) {
-                $this->validateOneRecurrenceTransactionUpdate($validator);
+                $this->validateOneRecurrenceTransaction($validator);
                 $this->validateOneRepetitionUpdate($validator);
                 $this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
