@@ -41,6 +41,13 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
+     * @return Collection
+     */
+    public function getAttachments(Category $category): Collection;
+
+    /**
+     * @param Category $category
+     *
      * @return bool
      */
     public function destroy(Category $category): bool;

@@ -58,8 +58,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
  * @property \Illuminate\Support\Carbon|null                                    $deleted_at
  * @property int                                                                $user_id
- * @property bool                                                               $name_encrypted
- * @property bool                                                               $match_encrypted
  * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]         $attachments
  * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
  * @method static bool|null forceDelete()

@@ -373,4 +373,12 @@ class CategoryRepository implements CategoryRepositoryInterface
             $category->delete();
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Category $category): Collection
+    {
+        return $category->attachments()->get();
+    }
 }

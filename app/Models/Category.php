@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,7 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon                               $updated_at
  * @property \Illuminate\Support\Carbon|null      $deleted_at
  * @property int                                  $user_id
- * @property bool                                 $encrypted
  * @property-read Collection|TransactionJournal[] $transactionJournals
  * @property-read Collection|Transaction[]        $transactions
  * @method static bool|null forceDelete()
@@ -118,6 +118,16 @@ class Category extends Model
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
+    }
+
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**

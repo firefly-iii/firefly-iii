@@ -479,4 +479,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             $autoBudget->delete();
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Budget $budget): Collection
+    {
+        return $budget->attachments()->get();
+    }
 }

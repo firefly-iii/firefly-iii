@@ -680,4 +680,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(PiggyBank $piggyBank): Collection
+    {
+        return $piggyBank->attachments()->get();
+    }
 }

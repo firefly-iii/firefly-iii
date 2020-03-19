@@ -645,4 +645,12 @@ class AccountRepository implements AccountRepositoryInterface
     {
         return $account->locations()->first();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Account $account): Collection
+    {
+        return $account->attachments()->get();
+    }
 }

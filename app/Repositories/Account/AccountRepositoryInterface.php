@@ -48,6 +48,13 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
+    public function getAttachments(Account $account): Collection;
+
+    /**
      * Get account location, if any.
      *
      * @param Account $account

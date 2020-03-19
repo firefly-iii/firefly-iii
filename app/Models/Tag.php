@@ -132,6 +132,15 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany

@@ -539,4 +539,12 @@ class TagRepository implements TagRepositoryInterface
 
         return $min;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Tag $tag): Collection
+    {
+        return $tag->attachments()->get();
+    }
 }

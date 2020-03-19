@@ -134,6 +134,16 @@ class Account extends Model
         throw new NotFoundHttpException;
     }
 
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
     /**
      * @return HasMany
      * @codeCoverageIgnore

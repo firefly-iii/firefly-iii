@@ -42,6 +42,13 @@ interface BudgetRepositoryInterface
     /**
      * @param Budget $budget
      *
+     * @return Collection
+     */
+    public function getAttachments(Budget $budget): Collection;
+
+    /**
+     * @param Budget $budget
+     *
      * @return AutoBudget|null
      */
     public function getAutoBudget(Budget $budget): ?AutoBudget;

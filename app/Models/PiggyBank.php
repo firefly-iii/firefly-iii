@@ -49,7 +49,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                                   $account_id
  * @property bool                                  encrypted
  * @property \Illuminate\Support\Carbon|null       $deleted_at
- * @property bool                                  $encrypted
  * @property-read Collection|Note[]                $notes
  * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
  * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
@@ -120,6 +119,15 @@ class PiggyBank extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
