@@ -86,6 +86,7 @@ class ShowController extends Controller
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int) $request->get('page');
+        $attachments  = $this->repository->getAttachments($category);
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
@@ -107,7 +108,7 @@ class ShowController extends Controller
 
         //Log::debug('End of show()');
 
-        return view('categories.show', compact('category', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -134,7 +135,7 @@ class ShowController extends Controller
         $start = $first ?? new Carbon;
         $end   = new Carbon;
         $path  = route('categories.show.all', [$category->id]);
-
+        $attachments  = $this->repository->getAttachments($category);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -145,6 +146,6 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('categories.show', compact('category', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 }

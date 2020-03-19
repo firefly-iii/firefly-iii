@@ -179,7 +179,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getCategories(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
+        $set = $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
 
         return $set;
     }
