@@ -34,7 +34,6 @@ use Log;
  */
 trait TransactionValidation
 {
-
     /**
      * Validates the given account information. Switches on given transaction type.
      *
@@ -422,16 +421,7 @@ trait TransactionValidation
     private function validateEqualAccounts(Validator $validator): void
     {
         Log::debug('Now in validateEqualAccounts()');
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-
-        if (!is_countable($transactions)) {
-            $validator->errors()->add(
-                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
-            );
-
-            return;
-        }
+        $transactions = $this->getTransactionsArray($validator);
 
         // needs to be split
         if (count($transactions) < 2) {
@@ -473,16 +463,7 @@ trait TransactionValidation
     private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {
         Log::debug('Now in validateEqualAccountsForUpdate()');
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-
-        if (!is_countable($transactions)) {
-            $validator->errors()->add(
-                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
-            );
-
-            return;
-        }
+        $transactions = $this->getTransactionsArray($validator);
 
         // needs to be split
         if (count($transactions) < 2) {
@@ -566,16 +547,7 @@ trait TransactionValidation
     private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
         Log::debug('Now in validateJournalIds()');
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-
-        if (!is_countable($transactions)) {
-            $validator->errors()->add(
-                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
-            );
-
-            return;
-        }
+        $transactions = $this->getTransactionsArray($validator);
 
         if (count($transactions) < 2) {
             return;
