@@ -61,6 +61,14 @@ class Controller extends BaseController
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
 
+        // upload size
+        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+
+
+        app('view')->share('uploadSize', $uploadSize);
+
         // share is alpha, is beta
         $isAlpha = false;
         if (false !== strpos(config('firefly.version'), 'alpha')) {
