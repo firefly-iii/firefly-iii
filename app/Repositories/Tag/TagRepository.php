@@ -185,7 +185,7 @@ class TagRepository implements TagRepositoryInterface
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()->with(['locations'])->orderBy('tags.tag');
+        $tagQuery = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -203,10 +203,11 @@ class TagRepository implements TagRepositoryInterface
         foreach ($collection as $tag) {
             // return value for tag cloud:
             $return[$tag->id] = [
-                'tag'        => $tag->tag,
-                'id'         => $tag->id,
-                'created_at' => $tag->created_at,
-                'location'   => $tag->locations->first(),
+                'tag'         => $tag->tag,
+                'id'          => $tag->id,
+                'created_at'  => $tag->created_at,
+                'location'    => $tag->locations->first(),
+                'attachments' => $tag->attachments,
             ];
         }
 

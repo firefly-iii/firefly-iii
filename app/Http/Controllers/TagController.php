@@ -242,6 +242,7 @@ class TagController extends Controller
         $start        = $start ?? session('start');
         $end          = $end ?? session('end');
         $location     = $this->repository->getLocation($tag);
+        $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(
             'firefly.journals_in_period_for_tag',
             ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
@@ -263,7 +264,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
@@ -285,6 +286,7 @@ class TagController extends Controller
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
         $end          = new Carbon;
+        $attachments  = $this->repository->getAttachments($tag);
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);
         /** @var GroupCollectorInterface $collector */
@@ -295,7 +297,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
