@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
 use FireflyIII\Models\AutoBudget;
@@ -43,6 +44,9 @@ class EditController extends Controller
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * EditController constructor.
      *
@@ -57,6 +61,7 @@ class EditController extends Controller
                 app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }

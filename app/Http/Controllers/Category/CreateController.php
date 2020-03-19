@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -41,6 +42,9 @@ class CreateController extends Controller
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * CategoryController constructor.
      *
@@ -55,6 +59,7 @@ class CreateController extends Controller
                 app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->repository = app(CategoryRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -55,6 +56,9 @@ class PiggyBankController extends Controller
     /** @var PiggyBankRepositoryInterface Piggy bank repository. */
     private $piggyRepos;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * PiggyBankController constructor.
      *
@@ -69,6 +73,7 @@ class PiggyBankController extends Controller
                 app('view')->share('title', (string) trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-sort-amount-asc');
 
+                $this->attachments = app(AttachmentHelperInterface::class);
                 $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);

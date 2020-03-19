@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
@@ -42,6 +43,10 @@ use Log;
 class CreateController extends Controller
 {
     use ModelInformation;
+
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -60,7 +65,8 @@ class CreateController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository = app(AccountRepositoryInterface::class);
+                $this->repository  = app(AccountRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -141,6 +147,16 @@ class CreateController extends Controller
             $frontPage[] = $account->id;
             app('preferences')->set('frontPageAccounts', $frontPage);
         }
+
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($account, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         // redirect to previous URL.
         $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
         if (1 === (int) $request->get('create_another')) {

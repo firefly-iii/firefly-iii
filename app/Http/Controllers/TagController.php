@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
@@ -45,6 +46,9 @@ class TagController extends Controller
     /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * TagController constructor.
      */
@@ -55,9 +59,11 @@ class TagController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(TagRepositoryInterface::class);
                 app('view')->share('title', (string) trans('firefly.tags'));
                 app('view')->share('mainTitleIcon', 'fa-tags');
+
+                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->repository = app(TagRepositoryInterface::class);
 
                 return $next($request);
             }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
@@ -48,6 +49,9 @@ class EditController extends Controller
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * EditController constructor.
      */
@@ -63,6 +67,7 @@ class EditController extends Controller
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -185,6 +190,17 @@ class EditController extends Controller
         $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
         app('preferences')->mark();
 
+        // store new attachments
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($account, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
+        // redirect
         $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
