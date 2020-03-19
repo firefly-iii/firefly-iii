@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('budgets.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('budgets.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input name="active" type="hidden" value="1">
 
@@ -32,6 +32,7 @@
                         {{ CurrencyForm.currencyList('auto_budget_currency_id') }}
                         {{ ExpandedForm.amountNoCurrency('auto_budget_amount') }}
                         {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, null) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>

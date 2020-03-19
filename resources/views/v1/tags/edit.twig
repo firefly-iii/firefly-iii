@@ -11,7 +11,7 @@
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
-    {{ Form.model(tag, {'class' : 'form-horizontal','id' : 'update','url' : route('tags.update',tag.id)}) }}
+    {{ Form.model(tag, {'class' : 'form-horizontal','enctype': 'multipart/form-data','id' : 'update','url' : route('tags.update',tag.id)}) }}
 
     <input type="hidden" name="id" value="{{ tag.id }}"/>
 
@@ -37,6 +37,7 @@
                     {{ ExpandedForm.date('date', tag.date.format('Y-m-d')) }}
                     {{ ExpandedForm.textarea('description', tag.description) }}
                     {{ ExpandedForm.location('location', null, {locations: locations}) }}
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                 </div>
             </div>
         </div>

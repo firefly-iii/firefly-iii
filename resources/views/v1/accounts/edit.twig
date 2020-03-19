@@ -11,8 +11,12 @@
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
-    {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
-
+    {{ Form.model(account, {
+        'class': 'form-horizontal',
+        'id': 'update',
+        'url': route('accounts.update',account.id),
+        'enctype': 'multipart/form-data'
+    } ) }}
     <input type="hidden" name="id" value="{{ account.id }}"/>
     <input type="hidden" name="objectType" value="{{ objectType }}"/>
 
@@ -70,6 +74,8 @@
                     {# only correct way to do active checkbox #}
 
                     {{ ExpandedForm.location('location', null, {locations: locations}) }}
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+
                 </div>
             </div>
 

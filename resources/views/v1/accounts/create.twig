@@ -9,7 +9,7 @@
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
-    <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal">
+    <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="objectType" value="{{ objectType }}"/>
         <input type="hidden" name="active" value="1"/>
@@ -58,6 +58,7 @@
                         {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                         {{ ExpandedForm.location('location', null, {locations: locations}) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>

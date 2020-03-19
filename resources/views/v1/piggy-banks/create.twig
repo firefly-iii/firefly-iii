@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('piggy-banks.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('piggy-banks.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="repeats" value="0"/>
         <div class="row">
@@ -32,6 +32,7 @@
                     <div class="box-body">
                         {{ ExpandedForm.date('targetdate') }}
                         {{ ExpandedForm.textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>
