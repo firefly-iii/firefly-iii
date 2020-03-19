@@ -311,7 +311,7 @@ class AccountRepository implements AccountRepositoryInterface
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');
-            }]
+            }, 'attachments']
         );
         if (count($types) > 0) {
             $query->accountTypeIn($types);

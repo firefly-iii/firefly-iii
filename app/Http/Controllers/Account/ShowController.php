@@ -103,6 +103,7 @@ class ShowController extends Controller
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
         $location         = $this->repository->getLocation($account);
+        $attachments      = $this->repository->getAttachments($account);
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $today            = new Carbon;
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
@@ -139,6 +140,7 @@ class ShowController extends Controller
                 'periods',
                 'subTitleIcon',
                 'groups',
+                'attachments',
                 'subTitle',
                 'start',
                 'end',
