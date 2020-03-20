@@ -18,6 +18,7 @@ class ChangesForV520 extends Migration
     public function down(): void
     {
         Schema::dropIfExists('auto_budgets');
+        Schema::dropIfExists('telemetry');
     }
 
     /**
@@ -40,14 +41,26 @@ class ChangesForV520 extends Migration
                     $table->decimal('amount', 22, 12);
                     $table->string('period', 50);
 
-                    //$table->string('password', 60);
-                    //$table->string('remember_token', 100)->nullable();
-                    //$table->string('reset', 32)->nullable();
-                    //$table->tinyInteger('blocked', false, true)->default('0');
-                    //$table->string('blocked_code', 25)->nullable();
-
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
                     $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                }
+            );
+        }
+
+        if (!Schema::hasTable('telemetry')) {
+            Schema::create(
+                'telemetry',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->dateTime('submitted')->nullable();
+                    $table->integer('user_id', false, true)->nullable();
+                    $table->string('installation_id', 50);
+                    $table->string('key', 50);
+                    $table->string('type', 25);
+                    $table->text('value');
+
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
                 }
             );
         }

@@ -21,6 +21,7 @@
 
 namespace FireflyIII\Support;
 
+use FireflyIII\Models\Telemetry as TelemetryModel;
 use Log;
 
 /**
@@ -47,14 +48,14 @@ class Telemetry
      */
     public function feature(string $flag): void
     {
-        if (false === config('firefly.send_telemetry')) {
+        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
             // hard stop if not allowed to do telemetry.
             // do nothing!
             return;
         }
         Log::info(sprintf('Logged telemetry feature flag "%s".', $flag));
 
-        // no storage backend yet, do nothing.
+        $this->storeEntry('flag', $flag, '');
     }
 
     /**
@@ -70,12 +71,33 @@ class Telemetry
      */
     public function string(string $name, string $value): void
     {
-        if (false === config('firefly.send_telemetry')) {
+        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
             // hard stop if not allowed to do telemetry.
             // do nothing!
             return;
         }
         Log::info(sprintf('Logged telemetry string "%s" with value "%s".', $name, $value));
+
+        // no storage backend yet, do nothing.
+        $this->storeEntry('string', $name, json_encode($value, JSON_THROW_ON_ERROR, 512));
+    }
+
+    /**
+     * Store new entry in DB.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    private function storeEntry(string $type, string $name, string $value): void
+    {
+        TelemetryModel::create(
+            [
+                'installation_id' => \FireflyConfig::get('installation_id', '')->data,
+                'key'             => $name,
+                'type'            => $type,
+                'value'           => $value,
+            ]
+        );
     }
 
 }
