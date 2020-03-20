@@ -97,7 +97,6 @@ trait ChartGeneration
             }
             $chartData[] = $currentSet;
         }
-        var_dump($chartData);exit;
         $data = $generator->multiSet($chartData);
         $cache->store($data);
 
