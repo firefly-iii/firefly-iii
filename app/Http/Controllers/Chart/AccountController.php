@@ -416,8 +416,6 @@ class AccountController extends Controller
     /**
      * Shows overview of account during a single period.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Account $account
      * @param Carbon  $start
      *
