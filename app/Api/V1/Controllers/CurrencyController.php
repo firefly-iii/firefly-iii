@@ -568,6 +568,26 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Show a currency.
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function showDefault(): JsonResponse
+    {
+        $manager  = $this->getManager();
+        $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
+
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Store new currency.
      *
      * @param CurrencyRequest $request
