@@ -54,6 +54,20 @@
     "source": "https://github.com/firefly-iii/firefly-iii",
     "docs": "https://docs.firefly-iii.org/"
   },
+    "funding": [
+      {
+        "type": "patreon",
+        "url": "https://www.patreon.com/JC5"
+      },
+      {
+        "type": "github",
+        "url": "https://github.com/sponsors/JC5"
+      },
+      {
+        "type": "paypal",
+        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"
+      }
+    ],
   "require": {
     "php": ">=7.3.0",
     "ext-bcmath": "*",
