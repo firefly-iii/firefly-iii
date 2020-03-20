@@ -27,7 +27,7 @@ use FireflyIII\Http\Middleware\IsAdmin;
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'about',
-        'as'        => 'api.v1.about.',],
+        'as'        => 'api.v1.about.'],
     static function () {
 
         // Accounts API routes:
