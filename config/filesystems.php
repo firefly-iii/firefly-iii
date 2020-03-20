@@ -66,17 +66,17 @@ return [
     */
 
     'disks' => [
-        'local' => [
+        'local'    => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
 
         // local storage configuration for upload and export:
-        'upload' => [
+        'upload'   => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export' => [
+        'export'   => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],

@@ -113,7 +113,7 @@ return [
         | `Twig\Extension\DebugExtension` is enabled automatically if twig.debug is TRUE.
         |
         */
-        'enabled' => [
+        'enabled'   => [
             Facades::class,
             Filters::class,
             Functions::class,
@@ -276,7 +276,7 @@ return [
         | </code>
         |
         */
-        'filters' => [
+        'filters'   => [
             'get' => 'data_get',
         ],
     ],

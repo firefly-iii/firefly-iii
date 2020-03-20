@@ -114,8 +114,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start ? $start->formatLocalized((string) trans('config.month_and_day')) : '',
-                        'end'   => $end ? $end->formatLocalized((string) trans('config.month_and_day')) : '', ]
+                    ['start' => $start ? $start->formatLocalized((string) trans('config.month_and_day')) : '',
+                     'end'   => $end ? $end->formatLocalized((string) trans('config.month_and_day')) : '',]
                 );
                 $breadcrumbs->push($title, route('accounts.show', $account));
             }
@@ -164,7 +164,8 @@ try {
             $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
             $breadcrumbs->push(
-                trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]), route('accounts.edit', [$account->id])
+                trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]),
+                route('accounts.edit', [$account->id])
             );
         }
     );
@@ -318,7 +319,10 @@ try {
             if ($object instanceof Bill) {
                 $breadcrumbs->parent('bills.show', $object);
             }
-            $breadcrumbs->push(limitStringLength(trans('firefly.edit_attachment', ['name' => $attachment->filename])), route('attachments.edit', [$attachment]));
+            $breadcrumbs->push(
+                limitStringLength(trans('firefly.edit_attachment', ['name' => $attachment->filename])),
+                route('attachments.edit', [$attachment])
+            );
         }
     );
     Breadcrumbs::register(
@@ -332,7 +336,8 @@ try {
                 $breadcrumbs->parent('bills.show', $object);
             }
             $breadcrumbs->push(
-                trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
+                trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]),
+                route('attachments.edit', [$attachment])
             );
         }
     );
@@ -415,8 +420,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
+                    ['start' => $start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('budgets.no-budget'));
             }
@@ -449,8 +454,8 @@ try {
 
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start'    => $budgetLimit->start_date->formatLocalized((string) trans('config.month_and_day')),
-                    'end'   => $budgetLimit->end_date->formatLocalized((string) trans('config.month_and_day')), ]
+                ['start' => $budgetLimit->start_date->formatLocalized((string) trans('config.month_and_day')),
+                 'end'   => $budgetLimit->end_date->formatLocalized((string) trans('config.month_and_day')),]
             );
 
             $breadcrumbs->push(
@@ -499,8 +504,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
+                    ['start' => $start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('categories.show', [$category->id]));
             }
@@ -524,8 +529,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
+                    ['start' => $start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('categories.no-category'));
             }
@@ -950,7 +955,8 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, Rule $rule) {
             $breadcrumbs->parent('rules.index');
             $breadcrumbs->push(
-                trans('firefly.rule_select_transactions', ['title' => $rule->title]), route('rules.select-transactions', [$rule])
+                trans('firefly.rule_select_transactions', ['title' => $rule->title]),
+                route('rules.select-transactions', [$rule])
             );
         }
     );
@@ -960,7 +966,8 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, RuleGroup $ruleGroup) {
             $breadcrumbs->parent('rules.index');
             $breadcrumbs->push(
-                trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup])
+                trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]),
+                route('rule-groups.select-transactions', [$ruleGroup])
             );
         }
     );
@@ -1016,8 +1023,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
+                    ['start' => $start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('tags.show', [$tag->id, $start, $end]));
             }
@@ -1046,8 +1053,8 @@ try {
                 // add date range:
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start'    => $start->formatLocalized((string) trans('config.month_and_day')),
-                        'end'   => $end->formatLocalized((string) trans('config.month_and_day')), ]
+                    ['start' => $start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('transactions.index', [$what, $start, $end]));
             }
@@ -1079,7 +1086,8 @@ try {
             $first = $group->transactionJournals()->first();
 
             $breadcrumbs->push(
-                trans('breadcrumbs.edit_journal', ['description' => limitStringLength($first->description)]), route('transactions.edit', [$group->id])
+                trans('breadcrumbs.edit_journal', ['description' => limitStringLength($first->description)]),
+                route('transactions.edit', [$group->id])
             );
         }
     );
@@ -1101,7 +1109,7 @@ try {
         static function (BreadcrumbsGenerator $breadcrumbs, TransactionGroup $group) {
             $breadcrumbs->parent('transactions.show', $group);
 
-            $journal  = $group->transactionJournals->first();
+            $journal = $group->transactionJournals->first();
             $breadcrumbs->push(
                 trans('breadcrumbs.delete_group', ['description' => limitStringLength($group->title ?? $journal->description)]),
                 route('transactions.delete', [$group->id])
@@ -1166,7 +1174,7 @@ try {
     Breadcrumbs::register(
         'transactions.mass.delete',
         static function (BreadcrumbsGenerator $breadcrumbs, array $journals) {
-            $objectType= strtolower(reset($journals)['transaction_type_type']);
+            $objectType = strtolower(reset($journals)['transaction_type_type']);
             $breadcrumbs->parent('transactions.index', $objectType);
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', ['']));
         }
@@ -1177,7 +1185,7 @@ try {
         'transactions.bulk.edit',
         static function (BreadcrumbsGenerator $breadcrumbs, array $journals): void {
             if (count($journals) > 0) {
-                $ids   = Arr::pluck($journals, 'transaction_journal_id');
+                $ids = Arr::pluck($journals, 'transaction_journal_id');
                 $first = reset($journals);
                 $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
                 $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $ids));

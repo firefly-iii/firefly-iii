@@ -51,17 +51,17 @@ return [
      * 2FA verified session var
      */
 
-    'session_var' => 'google2fa',
+    'session_var'          => 'google2fa',
 
     /*
      * One Time Password request input name
      */
-    'otp_input' => 'one_time_password',
+    'otp_input'            => 'one_time_password',
 
     /*
      * One Time Password Window
      */
-    'window' => 1,
+    'window'               => 1,
 
     /*
      * Forbid user to reuse One Time Passwords.
@@ -71,24 +71,24 @@ return [
     /*
      * User's table column for google2fa secret
      */
-    'otp_secret_column' => 'mfa_secret',
+    'otp_secret_column'    => 'mfa_secret',
 
     /*
      * One Time Password View
      */
-    'view' => 'auth.mfa',
+    'view'                 => 'auth.mfa',
 
     /*
      * One Time Password error message
      */
-    'error_messages' => [
+    'error_messages'       => [
         'wrong_otp' => "The 'One Time Password' typed was wrong.",
     ],
 
     /*
      * Throw exceptions or just fire events?
      */
-    'throw_exceptions' => true,
+    'throw_exceptions'     => true,
 
     'store_in_cookie' => true,
 
