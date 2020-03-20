@@ -101,6 +101,9 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
+
+        //        app('telemetry')->string('show-install-instructions', $version);
+
         $this->showLine();
         $this->boxed('');
         if (null === $text) {
@@ -147,6 +150,9 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
+
+        //app('telemetry')->string('show-update-instructions', $version);
+
         $this->showLine();
         $this->boxed('');
         if (null === $text) {
