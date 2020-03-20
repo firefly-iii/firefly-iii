@@ -433,40 +433,15 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+        $currencies = $this->accountRepository->getUsedCurrencies($account);
+        /** @var TransactionCurrency $currency */
+        foreach ($currencies as $currency) {
+            $chartData[] = $this->periodByCurrency($start, $end, $account, $currency);
         }
 
-        $step      = $this->calculateStep($start, $end);
-        $chartData = [];
-        $current   = clone $start;
-        switch ($step) {
-            case '1D':
-                $format   = (string) trans('config.month_and_day');
-                $range    = app('steam')->balanceInRange($account, $start, $end);
-                $previous = array_values($range)[0];
-                while ($end >= $current) {
-                    $theDate           = $current->format('Y-m-d');
-                    $balance           = $range[$theDate] ?? $previous;
-                    $label             = $current->formatLocalized($format);
-                    $chartData[$label] = (float) $balance;
-                    $previous          = $balance;
-                    $current->addDay();
-                }
-                break;
-            // @codeCoverageIgnoreStart
-            case '1W':
-            case '1M':
-            case '1Y':
-                while ($end >= $current) {
-                    $balance           = (float) app('steam')->balance($account, $current);
-                    $label             = app('navigation')->periodShow($current, $step);
-                    $chartData[$label] = $balance;
-                    $current           = app('navigation')->addPeriod($current, $step, 0);
-                }
-                break;
-            // @codeCoverageIgnoreEnd
-        }
-        $data = $this->generator->singleSet($account->name, $chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -579,5 +554,56 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param Account             $account
+     * @param TransactionCurrency $currency
+     *
+     * @return array
+     */
+    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
+    {
+        $step    = $this->calculateStep($start, $end);
+        $result  = [
+            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
+            'currency_symbol' => $currency->symbol,
+            'entries'         => [],
+        ];
+        $entries = [];
+        $current = clone $start;
+        switch ($step) {
+            case '1D':
+                // per day the entire period, balance for every day.
+                $format   = (string) trans('config.month_and_day');
+                $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
+                $previous = array_values($range)[0];
+                while ($end >= $current) {
+                    $theDate         = $current->format('Y-m-d');
+                    $balance         = $range[$theDate] ?? $previous;
+                    $label           = $current->formatLocalized($format);
+                    $entries[$label] = (float) $balance;
+                    $previous        = $balance;
+                    $current->addDay();
+                }
+                break;
+            // @codeCoverageIgnoreStart
+            case '1W':
+            case '1M':
+            case '1Y':
+                while ($end >= $current) {
+                    $balance         = (float) app('steam')->balance($account, $current, $currency);
+                    $label           = app('navigation')->periodShow($current, $step);
+                    $entries[$label] = $balance;
+                    $current         = app('navigation')->addPeriod($current, $step, 0);
+                }
+                break;
+            // @codeCoverageIgnoreEnd
+        }
+        $result['entries'] = $entries;
+
+        return $result;
     }
 }

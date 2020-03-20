@@ -52,6 +52,13 @@ interface AccountRepositoryInterface
      *
      * @return Collection
      */
+    public function getUsedCurrencies(Account $account): Collection;
+
+    /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
     public function getAttachments(Account $account): Collection;
 
     /**

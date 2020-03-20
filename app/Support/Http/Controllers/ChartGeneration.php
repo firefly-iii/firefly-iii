@@ -58,7 +58,7 @@ trait ChartGeneration
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
         /** @var GeneratorInterface $generator */
@@ -97,6 +97,7 @@ trait ChartGeneration
             }
             $chartData[] = $currentSet;
         }
+        var_dump($chartData);exit;
         $data = $generator->multiSet($chartData);
         $cache->store($data);
 

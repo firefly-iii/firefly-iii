@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,7 +45,7 @@ class Steam
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date): string
+    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -59,8 +60,9 @@ class Steam
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $currency   = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
-
+        if (null === $currency) {
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        }
         // first part: get all balances in own currency:
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -168,10 +170,11 @@ class Steam
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $start
      * @param \Carbon\Carbon             $end
+     * @param TransactionCurrency|null   $currency
      *
      * @return array
      */
-    public function balanceInRange(Account $account, Carbon $start, Carbon $end): array
+    public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -180,6 +183,7 @@ class Steam
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
+        $cache->addProperty($currency ? $currency->id : 0);
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -193,17 +197,14 @@ class Steam
         $startBalance = $this->balance($account, $start);
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($account->user);
 
         $balances[$formatted] = $startBalance;
-        $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
-
-        // use system default currency:
-        if (0 === $currencyId) {
-            $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
-            $currencyId = $currency->id;
+        if (null === $currency) {
+            $repository = app(AccountRepositoryInterface::class);
+            $repository->setUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
+        $currencyId = $currency->id;
 
         $start->addDay();
 
