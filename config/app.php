@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use FireflyIII\Providers\ImportServiceProvider;
+use FireflyIII\Support\Facades\Telemetry;
 
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
@@ -144,6 +145,7 @@ return [
         'AccountForm'   => \FireflyIII\Support\Facades\AccountForm::class,
         'PiggyBankForm' => \FireflyIII\Support\Facades\PiggyBankForm::class,
         'RuleForm'      => \FireflyIII\Support\Facades\RuleForm::class,
+        'Telemetry'     => Telemetry::class,
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
         'Twig'          => TwigBridge\Facade\Twig::class,
 
