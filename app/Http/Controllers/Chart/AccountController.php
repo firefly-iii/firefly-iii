@@ -427,7 +427,8 @@ class AccountController extends Controller
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $chartData = [];
+        $cache     = new CacheProperties;
         $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
