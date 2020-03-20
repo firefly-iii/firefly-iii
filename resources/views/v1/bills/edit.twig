@@ -17,7 +17,11 @@
                     <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.text('name') }}
+                    {% if rules.count > 0 %}
+                        {{ ExpandedForm.text('name',null, {helpText: trans('firefly.bill_edit_rules', {count: rules.count})}) }}
+                    {% else %}
+                        {{ ExpandedForm.text('name') }}
+                    {% endif %}
                     {{ CurrencyForm.currencyList('transaction_currency_id') }}
                     {{ ExpandedForm.amountNoCurrency('amount_min') }}
                     {{ ExpandedForm.amountNoCurrency('amount_max') }}

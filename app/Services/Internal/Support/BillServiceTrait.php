@@ -55,6 +55,7 @@ trait BillServiceTrait
 
         /** @var RuleAction $ruleAction */
         foreach ($set as $ruleAction) {
+            Log::debug(sprintf('Updated rule action #%d to search for new bill name "%s"', $ruleAction->id, $newName));
             $ruleAction->action_value = $newName;
             $ruleAction->save();
         }

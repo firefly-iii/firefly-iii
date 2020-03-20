@@ -170,6 +170,7 @@ class BillController extends Controller
         $currency         = app('amount')->getDefaultCurrency();
         $bill->amount_min = round((float) $bill->amount_min, $currency->decimal_places);
         $bill->amount_max = round((float) $bill->amount_max, $currency->decimal_places);
+        $rules            = $this->billRepository->getRulesForBill($bill);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
@@ -184,7 +185,7 @@ class BillController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'preFilled'));
+        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'defaultCurrency', 'preFilled'));
     }
 
     /**
