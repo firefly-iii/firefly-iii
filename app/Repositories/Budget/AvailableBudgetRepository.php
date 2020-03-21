@@ -290,4 +290,16 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     {
         $this->user->availableBudgets()->delete();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget
+    {
+        return $this->user
+            ->availableBudgets()
+            ->where('transaction_currency_id', $currency->id)
+            ->where('start_date', $start->format('Y-m-d 00:00:00'))
+            ->where('end_date', $end->format('Y-m-d 00:00:00'))->first();
+    }
 }

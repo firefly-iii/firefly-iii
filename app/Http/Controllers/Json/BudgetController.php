@@ -81,12 +81,24 @@ class BudgetController extends Controller
      */
     public function getBudgetInformation(TransactionCurrency $currency, Carbon $start, Carbon $end): JsonResponse
     {
-        $budgeted = $this->blRepository->budgeted($start, $end, $currency,);
+        $budgeted        = $this->blRepository->budgeted($start, $end, $currency,);
+        $availableBudget = $this->abRepository->getByCurrencyDate($start, $end, $currency);
+        $available       = '0';
+        $percentage      = '0';
 
+        if (null !== $availableBudget) {
+            $available  = $availableBudget->amount;
+            $percentage = bcmul(bcdiv($budgeted, $available), '100');
+        }
+
+        // if available, get the AB for this period + currency, so the bar can be redrawn.
         return response()->json(
             [
                 'budgeted'                => $budgeted,
                 'budgeted_formatted'      => app('amount')->formatAnything($currency, $budgeted, true),
+                'available'               => app('amount')->formatAnything($currency, $available, true),
+                'available_formatted'     => $available,
+                'percentage'              => $percentage,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
