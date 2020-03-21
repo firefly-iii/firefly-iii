@@ -61,6 +61,7 @@ class DeleteOrphanedTransactions extends Command
         $this->deleteFromOrphanedAccounts();
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified orphans in %s seconds', $end));
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

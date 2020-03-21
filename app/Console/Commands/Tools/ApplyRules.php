@@ -130,6 +130,7 @@ class ApplyRules extends Command
             $this->warn('    --rules=1,2,...');
             $this->warn('    --rule_groups=1,2,...');
             $this->warn('    --all_rules');
+
             // app('telemetry')->feature('executed-command-with-error', $this->signature);
             return 1;
         }
@@ -165,6 +166,7 @@ class ApplyRules extends Command
         }
         $this->line('');
         $this->line('Done!');
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

@@ -50,6 +50,7 @@ class RestoreOAuthKeys extends Command
     public function handle(): int
     {
         $this->restoreOAuthKeys();
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

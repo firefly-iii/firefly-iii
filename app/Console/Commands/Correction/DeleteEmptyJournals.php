@@ -57,6 +57,7 @@ class DeleteEmptyJournals extends Command
     {
         $this->deleteUnevenJournals();
         $this->deleteEmptyJournals();
+
         // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;

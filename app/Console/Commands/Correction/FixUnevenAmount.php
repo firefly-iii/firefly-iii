@@ -74,6 +74,7 @@ class FixUnevenAmount extends Command
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified amount integrity in %s seconds', $end));
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

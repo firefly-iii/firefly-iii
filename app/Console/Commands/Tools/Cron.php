@@ -93,6 +93,7 @@ class Cron extends Command
         }
 
         $this->info('More feedback on the cron jobs can be found in the log files.');
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

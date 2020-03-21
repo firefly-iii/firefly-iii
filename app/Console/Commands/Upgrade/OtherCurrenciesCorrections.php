@@ -89,6 +89,7 @@ class OtherCurrenciesCorrections extends Command
         $this->line(sprintf('Verified %d transaction(s) and journal(s).', $this->count));
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed transaction currencies in %s seconds.', $end));
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
@@ -271,13 +272,13 @@ class OtherCurrenciesCorrections extends Command
     {
         $set
             = $this->cliRepos->getAllJournals(
-                [
+            [
                 TransactionType::WITHDRAWAL,
                 TransactionType::DEPOSIT,
                 TransactionType::OPENING_BALANCE,
                 TransactionType::RECONCILIATION,
             ]
-            );
+        );
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {

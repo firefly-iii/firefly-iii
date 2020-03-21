@@ -91,6 +91,7 @@ class BudgetLimitCurrency extends Command
         $this->info(sprintf('Verified budget limits in %s seconds.', $end));
 
         $this->markAsExecuted();
+
         // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;

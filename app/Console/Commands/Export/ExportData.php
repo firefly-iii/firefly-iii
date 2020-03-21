@@ -135,9 +135,11 @@ class ExportData extends Command
             $this->exportData($options, $data);
         } catch (FireflyException $e) {
             $this->error(sprintf('Could not store data: %s', $e->getMessage()));
+
             // app('telemetry')->feature('executed-command-with-error', $this->signature);
             return 1;
         }
+
         // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }

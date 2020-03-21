@@ -82,6 +82,7 @@ class CorrectDatabase extends Command
             $result = Artisan::output();
             echo $result;
         }
+
         // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
