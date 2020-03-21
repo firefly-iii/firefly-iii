@@ -27,7 +27,9 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Exception;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
+use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
 use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
+use FireflyIII\Helpers\Collector\Extensions\TimeCollection;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -50,7 +52,7 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties, AccountCollection;
+    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection;
 
     /**
      * Group collector constructor.
@@ -126,60 +128,6 @@ class GroupCollector implements GroupCollectorInterface
             # destination account info (always present)
             'destination.account_id as destination_account_id',
         ];
-    }
-
-    /**
-     * Get transactions with a specific amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountIs(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('source.amount', app('steam')->negative($amount));
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountLess(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '<', app('steam')->positive($amount));
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
-     */
-    public function amountMore(string $amount): GroupCollectorInterface
-    {
-        $this->query->where(
-            function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '>', app('steam')->positive($amount));
-            }
-        );
-
-        return $this;
     }
 
     /**
@@ -273,38 +221,6 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $sum;
-    }
-
-    /**
-     * Collect transactions after a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setAfter(Carbon $date): GroupCollectorInterface
-    {
-        $afterStr = $date->format('Y-m-d 00:00:00');
-        $this->query->where('transaction_journals.date', '>=', $afterStr);
-        Log::debug(sprintf('GroupCollector range is now after %s (inclusive)', $afterStr));
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions before a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBefore(Carbon $date): GroupCollectorInterface
-    {
-        $beforeStr = $date->format('Y-m-d 00:00:00');
-        $this->query->where('transaction_journals.date', '<=', $beforeStr);
-        Log::debug(sprintf('GroupCollector range is now before %s (inclusive)', $beforeStr));
-
-        return $this;
     }
 
     /**
@@ -402,24 +318,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Collect transactions created on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCreatedAt(Carbon $date): GroupCollectorInterface
-    {
-        $after  = $date->format('Y-m-d 00:00:00');
-        $before = $date->format('Y-m-d 23:59:59');
-        $this->query->where('transaction_journals.created_at', '>=', $after);
-        $this->query->where('transaction_journals.created_at', '<=', $before);
-        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
-
-        return $this;
-    }
-
-    /**
      * Limit results to a specific currency, either foreign or normal one.
      *
      * @param TransactionCurrency $currency
@@ -429,7 +327,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(
-            function (EloquentBuilder $q) use ($currency) {
+            static function (EloquentBuilder $q) use ($currency) {
                 $q->where('source.transaction_currency_id', $currency->id);
                 $q->orWhere('source.foreign_currency_id', $currency->id);
             }
@@ -495,29 +393,6 @@ class GroupCollector implements GroupCollectorInterface
         $page       = 0 === $page ? 1 : $page;
         $this->page = $page;
         app('log')->debug(sprintf('GroupCollector: page is now %d', $page));
-
-        return $this;
-    }
-
-    /**
-     * Set the start and end time of the results to return.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface
-    {
-        if ($end < $start) {
-            [$start, $end] = [$end, $start];
-        }
-        $startStr = $start->format('Y-m-d H:i:s');
-        $endStr   = $end->format('Y-m-d H:i:s');
-
-        $this->query->where('transaction_journals.date', '>=', $startStr);
-        $this->query->where('transaction_journals.date', '<=', $endStr);
-        app('log')->debug(sprintf('GroupCollector range is now %s - %s (inclusive)', $startStr, $endStr));
 
         return $this;
     }
@@ -609,24 +484,6 @@ class GroupCollector implements GroupCollectorInterface
     public function setTypes(array $types): GroupCollectorInterface
     {
         $this->query->whereIn('transaction_types.type', $types);
-
-        return $this;
-    }
-
-    /**
-     * Collect transactions updated on a specific date.
-     *
-     * @param Carbon $date
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setUpdatedAt(Carbon $date): GroupCollectorInterface
-    {
-        $after  = $date->format('Y-m-d 00:00:00');
-        $before = $date->format('Y-m-d 23:59:59');
-        $this->query->where('transaction_journals.updated_at', '>=', $after);
-        $this->query->where('transaction_journals.updated_at', '<=', $before);
-        Log::debug(sprintf('GroupCollector created_at is now after %s (inclusive)', $after));
 
         return $this;
     }
