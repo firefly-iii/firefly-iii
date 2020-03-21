@@ -29,6 +29,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Support\Cronjobs\TelemetryCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Log;
@@ -86,6 +87,17 @@ class Cron extends Command
          */
         try {
             $this->autoBudgetCronJob($force, $date);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->error($e->getMessage());
+        }
+
+        /*
+         * Fire telemetry cron job (disabled):
+         */
+        try {
+            //$this->telemetryCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -150,4 +162,34 @@ class Cron extends Command
             $this->line('The recurring transaction cron job fired successfully.');
         }
     }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     */
+    private function telemetryCronJob(bool $force, ?Carbon $date): void
+    {
+        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
+            // if not configured to do anything with telemetry, do nothing.
+            return;
+        }
+        $telemetry = new TelemetryCronJob;
+        $telemetry->setForce($force);
+
+        // set date in cron job:
+        if (null !== $date) {
+            $telemetry->setDate($date);
+        }
+
+        $result = $telemetry->fire();
+
+        if (false === $result) {
+            $this->line('The telemetry cron job did not fire.');
+        }
+        if (true === $result) {
+            $this->line('The telemetry cron job fired successfully.');
+        }
+
+    }
+
 }
