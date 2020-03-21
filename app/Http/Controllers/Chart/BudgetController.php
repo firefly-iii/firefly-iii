@@ -498,7 +498,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);

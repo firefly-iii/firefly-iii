@@ -186,7 +186,7 @@ class TransactionController extends Controller
         $cache->addProperty($objectType);
         $cache->addProperty('chart.transactions.destinations');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
 
@@ -252,7 +252,7 @@ class TransactionController extends Controller
         $cache->addProperty($objectType);
         $cache->addProperty('chart.transactions.sources');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
 

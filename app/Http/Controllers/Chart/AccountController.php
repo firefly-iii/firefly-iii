@@ -262,7 +262,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var GroupCollectorInterface $collector */
