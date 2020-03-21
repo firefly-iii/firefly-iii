@@ -354,7 +354,7 @@ trait JournalServiceTrait
                 throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
             }
 
-            $result = $this->accountRepository->store(
+            $account = $this->accountRepository->store(
                 [
                     'account_type_id' => null,
                     'account_type'    => $preferredType,
