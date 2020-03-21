@@ -28,6 +28,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Support\Collection;
 
 /**
@@ -35,6 +36,7 @@ use Illuminate\Support\Collection;
  */
 class FrontpageChartGenerator
 {
+    use AugumentData;
     /** @var AccountRepositoryInterface */
     private $accountRepos;
     /** @var array */
@@ -73,9 +75,6 @@ class FrontpageChartGenerator
      */
     public function generate(): array
     {
-        // TODO collect currencies.
-        $chartData  = [];
-        $tempData   = [];
         $categories = $this->repository->getCategories();
         $accounts   = $this->accountRepos->getAccountsByType(
             [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]
@@ -101,98 +100,8 @@ class FrontpageChartGenerator
         array_multisort($amounts, SORT_DESC, $tempData);
 
         $currencyData = $this->createCurrencyGroups($tempData);
-        $mergedData   = $this->insertValues($currencyData, $tempData);
 
-        return $mergedData;
-        var_dump($currencyData);
-        var_dump($this->currencies);
-        var_dump($tempData);
-        exit;
-        //        // get income:
-        //        $income = $this->opsRepos->sumIncome($start, $end, $accounts, $collection);
-        //        foreach ($income as $currency) {
-        //            $currencyId              = $currency['currency_id'];
-        //            $currencies[$currencyId] = $currencies[$currencyId] ?? [
-        //                    'currency_id'             => $currencyId,
-        //                    'currency_name'           => $currency['currency_name'],
-        //                    'currency_symbol'         => $currency['currency_symbol'],
-        //                    'currency_code'           => $currency['currency_code'],
-        //                    'currency_decimal_places' => $currency['currency_decimal_places'],
-        //                ];
-        //            $tempData[]              = [
-        //                'name'        => $category->name,
-        //                'sum'         => $currency['sum'],
-        //                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
-        //                'currency_id' => $currencyId,
-        //            ];
-        //        }
-        //
-        //        // income + expense no category per currency:
-        //        $noCatExp
-        //            = $this->noCatRepos->sumExpenses($start, $end);
-        //        $noCatInc
-        //            = $this->noCatRepos->sumIncome($start, $end);
-        //        foreach ($noCatExp as $currency)
-        //        {
-        //            $currencyId
-        //                = $currency['currency_id'];
-        //            $currencies[$currencyId]
-        //                = $currencies[$currencyId] ?? ['currency_id' => $currency['currency_id'],
-        //                                               'currency_name' => $currency['currency_name'],
-        //                                               'currency_symbol' => $currency['currency_symbol'],
-        //                                               'currency_code' => $currency['currency_code'],
-        //                                               'currency_decimal_places' => $currency['currency_decimal_places'],];
-        //            $tempData[]
-        //                = ['name' => trans('firefly.no_category'),
-        //                   'sum' => $currency['sum'],
-        //                   'sum_float' => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
-        //                   'currency_id' => $currency['currency_id'],];
-        //        }
-        //
-        //        // sort temp array by amount.
-        //        $amounts = array_column($tempData, 'sum_float');
-        //        array_multisort($amounts, SORT_DESC, $tempData);
-        //
-        //        // loop all found currencies and build the data array for the chart.
-        //        /** @var array $currency */
-        //        foreach ($currencies as $currency) {
-        //            $dataSet                             = [
-        //                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
-        //                'type'            => 'bar',
-        //                'currency_symbol' => $currency['currency_symbol'],
-        //                'entries'         => $this->expandNames($tempData),
-        //            ];
-        //            $chartData[$currency['currency_id']] = $dataSet;
-        //        }
-        //
-        //        // loop temp data and place data in correct array:
-        //        foreach ($tempData as $entry) {
-        //            $currencyId                               = $entry['currency_id'];
-        //            $name                                     = $entry['name'];
-        //            $chartData[$currencyId]['entries'][$name] = bcmul($entry['sum'], '-1');
-        //        }
-        //
-        //        return $chartData;
-        //    }
-
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO double function.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    protected function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
+        return $this->insertValues($currencyData, $tempData);
     }
 
     /**
@@ -331,6 +240,7 @@ class FrontpageChartGenerator
 
         return $return;
     }
+
 
     /**
      * @param array $currencyData
