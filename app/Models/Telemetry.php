@@ -29,10 +29,20 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Telemetry extends Model
 {
-    /** @var string  */
+    /** @var string */
     protected $table = 'telemetry';
 
-    /** @var array  */
-    protected $fillable = ['installation_id','submitted','user_id','key','type','value'];
+    /** @var array */
+    protected $fillable = ['installation_id', 'submitted', 'user_id', 'key', 'type', 'value'];
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'submitted' => 'datetime',
+            'value'     => 'array',
+        ];
 
 }

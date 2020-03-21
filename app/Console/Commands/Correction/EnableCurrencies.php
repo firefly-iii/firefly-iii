@@ -100,6 +100,7 @@ class EnableCurrencies extends Command
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified currencies in %s seconds.', $end));
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }

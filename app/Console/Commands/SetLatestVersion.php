@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 /**
  * SetLatestVersion.php
@@ -59,8 +59,7 @@ class SetLatestVersion extends Command
         app('fireflyconfig')->set('ff3_version', config('firefly.version'));
         $this->line('Updated version.');
 
-        //Telemetry::string('db_version', config('firefly.db_version'));
-        //Telemetry::string('ff3_version', config('firefly.version'));
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }

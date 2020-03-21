@@ -30,9 +30,12 @@ use Log;
 class Telemetry
 {
     /**
-     * Feature telemetry stores a boolean "true" for the given $flag.
+     * Feature telemetry stores a $value for the given $feature.
+     * Will only store the given $feature / $value combination once.
+     *
      *
      * Examples:
+     * - execute-cli-command [value]
      * - use-help-pages
      * - has-created-bill
      * - do-big-import
@@ -44,18 +47,21 @@ class Telemetry
      *
      * Any meta-data stored is strictly non-financial.
      *
-     * @param string $flag
+     * @param string $key
+     * @param string $value
      */
-    public function feature(string $flag): void
+    public function feature(string $key, string $value): void
     {
         if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
             // hard stop if not allowed to do telemetry.
             // do nothing!
             return;
         }
-        Log::info(sprintf('Logged telemetry feature flag "%s".', $flag));
 
-        $this->storeEntry('flag', $flag, '');
+        Log::info(sprintf('Logged telemetry feature "%s" with value "%s".', $key, $value));
+        if (!$this->hasEntry('feature', $key, $value)) {
+            $this->storeEntry('feature', $key, $value);
+        }
     }
 
     /**
@@ -79,7 +85,23 @@ class Telemetry
         Log::info(sprintf('Logged telemetry string "%s" with value "%s".', $name, $value));
 
         // no storage backend yet, do nothing.
-        $this->storeEntry('string', $name, json_encode($value, JSON_THROW_ON_ERROR, 512));
+        $this->storeEntry('string', $name, $value);
+    }
+
+    /**
+     * @param string $type
+     * @param string $key
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function hasEntry(string $type, string $key, string $value): bool
+    {
+        return TelemetryModel
+                   ::where('type', $type)
+                   ->where('key', $key)
+                   ->where('value', json_encode($value, JSON_THROW_ON_ERROR, 512))
+                   ->count() > 0;
     }
 
     /**

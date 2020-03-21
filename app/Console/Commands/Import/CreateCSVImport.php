@@ -127,7 +127,7 @@ class CreateCSVImport extends Command
             $this->processFile();
         } catch (FireflyException $e) {
             $this->errorLine($e->getMessage());
-
+            // app('telemetry')->feature('executed-command-with-error', $this->signature);
             return 1;
         }
 
@@ -136,7 +136,7 @@ class CreateCSVImport extends Command
             $this->storeData();
         } catch (FireflyException $e) {
             $this->errorLine($e->getMessage());
-
+            // app('telemetry')->feature('executed-command-with-error', $this->signature);
             return 1;
         }
 
@@ -145,7 +145,7 @@ class CreateCSVImport extends Command
 
         // clear cache for user:
         app('preferences')->setForUser($user, 'lastActivity', microtime());
-
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

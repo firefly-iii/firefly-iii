@@ -56,7 +56,7 @@ class UpgradeFireflyInstructions extends Command
         if ('install' === (string) $this->argument('task')) {
             $this->installInstructions();
         }
-
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -102,7 +102,6 @@ class UpgradeFireflyInstructions extends Command
             }
         }
 
-        //        app('telemetry')->string('show-install-instructions', $version);
 
         $this->showLine();
         $this->boxed('');
@@ -150,8 +149,6 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
-
-        //app('telemetry')->string('show-update-instructions', $version);
 
         $this->showLine();
         $this->boxed('');

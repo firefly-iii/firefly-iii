@@ -100,7 +100,7 @@ class TransactionIdentifier extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed transaction identifiers in %s seconds.', $end));
         $this->markAsExecuted();
-
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

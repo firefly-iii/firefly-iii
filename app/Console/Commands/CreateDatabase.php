@@ -55,7 +55,6 @@ class CreateDatabase extends Command
     {
         if ('mysql' !== env('DB_CONNECTION')) {
             $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
-
             return 0;
         }
         // try to set up a raw connection:
@@ -69,7 +68,6 @@ class CreateDatabase extends Command
             $pdo = new PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
         } catch (PDOException $e) {
             $this->error(sprintf('Error when connecting to DB: %s', $e->getMessage()));
-
             return 1;
         }
         // with PDO, try to list DB's (

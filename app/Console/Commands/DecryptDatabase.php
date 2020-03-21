@@ -117,7 +117,7 @@ class DecryptDatabase extends Command
 
         }
         $this->info('Done!');
-
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

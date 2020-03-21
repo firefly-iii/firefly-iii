@@ -56,8 +56,8 @@ class ChangesForV520 extends Migration
                     $table->dateTime('submitted')->nullable();
                     $table->integer('user_id', false, true)->nullable();
                     $table->string('installation_id', 50);
-                    $table->string('key', 50);
                     $table->string('type', 25);
+                    $table->string('key', 50);
                     $table->text('value');
 
                     $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
