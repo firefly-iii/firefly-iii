@@ -161,61 +161,6 @@ trait TransactionValidation
     }
 
     /**
-     * Adds an error to the "description" field when the user has submitted no descriptions and no
-     * journal description.
-     *
-     * @param Validator $validator
-     */
-    public function validateDescriptions(Validator $validator): void
-    {
-        Log::debug('Now in validateDescriptions()');
-        $transactions      = $this->getTransactionsArray($validator);
-        $validDescriptions = 0;
-        foreach ($transactions as $transaction) {
-            if ('' !== (string)($transaction['description'] ?? null)) {
-                $validDescriptions++;
-            }
-        }
-
-        // no valid descriptions?
-        if (0 === $validDescriptions) {
-            $validator->errors()->add(
-                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
-            );
-        }
-    }
-
-    /**
-     * If the transactions contain foreign amounts, there must also be foreign currency information.
-     *
-     * @param Validator $validator
-     */
-    public function validateForeignCurrencyInformation(Validator $validator): void
-    {
-        Log::debug('Now in validateForeignCurrencyInformation()');
-        $transactions = $this->getTransactionsArray($validator);
-
-        foreach ($transactions as $index => $transaction) {
-            // if foreign amount is present, then the currency must be as well.
-            if (isset($transaction['foreign_amount']) && !(isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code']))
-                && 0 !== bccomp('0', $transaction['foreign_amount'])
-            ) {
-                $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
-                    (string)trans('validation.require_currency_info')
-                );
-            }
-            // if the currency is present, then the amount must be present as well.
-            if ((isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code'])) && !isset($transaction['foreign_amount'])) {
-                $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
-                    (string)trans('validation.require_currency_amount')
-                );
-            }
-        }
-    }
-
-    /**
      * @param Validator $validator
      */
     public function validateGroupDescription(Validator $validator): void

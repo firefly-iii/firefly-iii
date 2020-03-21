@@ -68,6 +68,31 @@ trait GroupValidation
     }
 
     /**
+     * Adds an error to the "description" field when the user has submitted no descriptions and no
+     * journal description.
+     *
+     * @param Validator $validator
+     */
+    protected function validateDescriptions(Validator $validator): void
+    {
+        Log::debug('Now in GroupValidation::validateDescriptions()');
+        $transactions      = $this->getTransactionsArray($validator);
+        $validDescriptions = 0;
+        foreach ($transactions as $transaction) {
+            if ('' !== (string)($transaction['description'] ?? null)) {
+                $validDescriptions++;
+            }
+        }
+
+        // no valid descriptions?
+        if (0 === $validDescriptions) {
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
+        }
+    }
+
+    /**
      * Do the validation required by validateJournalIds.
      *
      * @param Validator        $validator
@@ -86,4 +111,6 @@ trait GroupValidation
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
         }
     }
+
+
 }
