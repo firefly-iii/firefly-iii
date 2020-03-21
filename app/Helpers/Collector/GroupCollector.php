@@ -29,6 +29,7 @@ use Exception;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
 use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
+use FireflyIII\Helpers\Collector\Extensions\MetaCollection;
 use FireflyIII\Helpers\Collector\Extensions\TimeCollection;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -52,7 +53,7 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection;
+    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection;
 
     /**
      * Group collector constructor.
@@ -224,100 +225,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Limit the search to a specific bill.
-     *
-     * @param Bill $bill
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBill(Bill $bill): GroupCollectorInterface
-    {
-        $this->withBillInformation();
-        $this->query->where('transaction_journals.bill_id', '=', $bill->id);
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific set of bills.
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBills(Collection $bills): GroupCollectorInterface
-    {
-        $this->withBillInformation();
-        $this->query->whereIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBudget(Budget $budget): GroupCollectorInterface
-    {
-        $this->withBudgetInformation();
-        $this->query->where('budgets.id', $budget->id);
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific set of budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBudgets(Collection $budgets): GroupCollectorInterface
-    {
-        if ($budgets->count() > 0) {
-            $this->withBudgetInformation();
-            $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCategories(Collection $categories): GroupCollectorInterface
-    {
-        if ($categories->count() > 0) {
-            $this->withCategoryInformation();
-            $this->query->whereIn('categories.id', $categories->pluck('id')->toArray());
-        }
-
-        return $this;
-    }
-
-    /**
-     * Limit the search to a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setCategory(Category $category): GroupCollectorInterface
-    {
-        $this->withCategoryInformation();
-        $this->query->where('categories.id', $category->id);
-
-        return $this;
-    }
-
-    /**
      * Limit results to a specific currency, either foreign or normal one.
      *
      * @param TransactionCurrency $currency
@@ -430,35 +337,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    /**
-     * Limit results to a specific tag.
-     *
-     * @param Tag $tag
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setTag(Tag $tag): GroupCollectorInterface
-    {
-        $this->withTagInformation();
-        $this->query->where('tag_transaction_journal.tag_id', $tag->id);
-
-        return $this;
-    }
-
-    /**
-     * Limit results to a specific set of tags.
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setTags(Collection $tags): GroupCollectorInterface
-    {
-        $this->withTagInformation();
-        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
-
-        return $this;
-    }
 
     /**
      * Limit the search to one specific transaction group.
@@ -533,118 +411,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    /**
-     * Will include bill name + ID, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBillInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasBillInformation) {
-            // join bill table
-            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
-            // add fields
-            $this->fields[]           = 'bills.id as bill_id';
-            $this->fields[]           = 'bills.name as bill_name';
-            $this->hasBillInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Will include budget ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBudgetInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasBudgetInformation) {
-            // join link table
-            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
-            // add fields
-            $this->fields[]             = 'budgets.id as budget_id';
-            $this->fields[]             = 'budgets.name as budget_name';
-            $this->hasBudgetInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Will include category ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withCategoryInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasCatInformation) {
-            // join link table
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
-            // add fields
-            $this->fields[]          = 'categories.id as category_id';
-            $this->fields[]          = 'categories.name as category_name';
-            $this->hasCatInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function withTagInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'tags.id as tag_id';
-        $this->fields[] = 'tags.tag as tag_name';
-        $this->fields[] = 'tags.date as tag_date';
-        $this->fields[] = 'tags.description as tag_description';
-        $this->fields[] = 'tags.latitude as tag_latitude';
-        $this->fields[] = 'tags.longitude as tag_longitude';
-        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
-
-        $this->joinTagTables();
-
-        return $this;
-    }
-
-    /**
-     * Limit results to a transactions without a budget..
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withoutBudget(): GroupCollectorInterface
-    {
-        $this->withBudgetInformation();
-        $this->query->where(
-            function (EloquentBuilder $q) {
-                $q->whereNull('budget_transaction_journal.budget_id');
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withoutCategory(): GroupCollectorInterface
-    {
-        $this->withCategoryInformation();
-        $this->query->where(
-            function (EloquentBuilder $q) {
-                $q->whereNull('category_transaction_journal.category_id');
-            }
-        );
-
-        return $this;
-    }
 
     /**
      * Convert a selected set of fields to arrays.
@@ -677,19 +443,6 @@ class GroupCollector implements GroupCollectorInterface
                                 $q1->orWhereNull('attachments.attachable_type');
                             }
                         );
-        }
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    private function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
         }
     }
 
