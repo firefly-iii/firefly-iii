@@ -28,6 +28,12 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
+use FireflyIII\Validation\Account\AccountValidatorProperties;
+use FireflyIII\Validation\Account\DepositValidation;
+use FireflyIII\Validation\Account\OBValidation;
+use FireflyIII\Validation\Account\ReconciliationValidation;
+use FireflyIII\Validation\Account\TransferValidation;
+use FireflyIII\Validation\Account\WithdrawalValidation;
 use Log;
 
 /**
@@ -35,24 +41,7 @@ use Log;
  */
 class AccountValidator
 {
-    /** @var bool */
-    public $createMode;
-    /** @var string */
-    public $destError;
-    /** @var Account */
-    public $destination;
-    /** @var Account */
-    public $source;
-    /** @var string */
-    public $sourceError;
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var array */
-    private $combinations;
-    /** @var string */
-    private $transactionType;
-    /** @var User */
-    private $user;
+    use AccountValidatorProperties, WithdrawalValidation, DepositValidation, TransferValidation, ReconciliationValidation, OBValidation;
 
     /**
      * AccountValidator constructor.
@@ -98,7 +87,6 @@ class AccountValidator
      */
     public function validateDestination(?int $destinationId, $destinationName): bool
     {
-
         Log::debug(sprintf('Now in AccountValidator::validateDestination(%d, "%s")', $destinationId, $destinationName));
         if (null === $this->source) {
             Log::error('Source is NULL, always FALSE.');
@@ -175,7 +163,7 @@ class AccountValidator
      *
      * @return bool
      */
-    private function canCreateType(string $accountType): bool
+    protected function canCreateType(string $accountType): bool
     {
         $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE];
         if (in_array($accountType, $canCreate, true)) {
@@ -190,7 +178,7 @@ class AccountValidator
      *
      * @return bool
      */
-    private function canCreateTypes(array $accountTypes): bool
+    protected function canCreateTypes(array $accountTypes): bool
     {
         Log::debug('Can we create any of these types?', $accountTypes);
         /** @var string $accountType */
@@ -213,7 +201,7 @@ class AccountValidator
      *
      * @return Account|null
      */
-    private function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account
+    protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account
     {
         // find by ID
         if ($accountId > 0) {
@@ -229,428 +217,6 @@ class AccountValidator
         }
 
         return null;
-    }
-
-    /**
-     * @param int|null $accountId
-     * @param          $accountName
-     *
-     * @return bool
-     */
-    private function validateDepositDestination(?int $accountId, $accountName): bool
-    {
-        $result = null;
-        Log::debug(sprintf('Now in validateDepositDestination(%d, "%s")', $accountId, $accountName));
-
-        // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL we return false,
-            // because the destination of a deposit can't be created.
-            $this->destError = (string)trans('validation.deposit_dest_need_data');
-            Log::error('Both values are NULL, cant create deposit destination.');
-            $result = false;
-        }
-        // if the account can be created anyway we don't need to search.
-        if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            Log::debug('Can create some of these types, so return true.');
-            $result = true;
-        }
-
-        if (null === $result) {
-            // otherwise try to find the account:
-            $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
-            if (null === $search) {
-                Log::debug('findExistingAccount() returned NULL, so the result is false.');
-                $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
-                $result          = false;
-            }
-            if (null !== $search) {
-                Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
-                $this->destination = $search;
-                $result            = true;
-            }
-        }
-        $result = $result ?? false;
-        Log::debug(sprintf('validateDepositDestination(%d, "%s") will return %s', $accountId, $accountName, var_export($result, true)));
-
-        return $result;
-    }
-
-    /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    private function validateDepositSource(?int $accountId, ?string $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateDepositSource(%d, "%s")', $accountId, $accountName));
-        $result = null;
-        // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL return false,
-            // because the source of a deposit can't be created.
-            // (this never happens).
-            $this->sourceError = (string)trans('validation.deposit_source_need_data');
-            $result            = false;
-        }
-
-        // if the user submits an ID only but that ID is not of the correct type,
-        // return false.
-        if (null !== $accountId && null === $accountName) {
-            $search = $this->accountRepository->findNull($accountId);
-            if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
-                Log::debug(sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
-                $result = false;
-            }
-        }
-
-        // if the account can be created anyway we don't need to search.
-        if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            $result = true;
-
-            // set the source to be a (dummy) revenue account.
-            $account              = new Account;
-            $accountType          = AccountType::whereType(AccountType::REVENUE)->first();
-            $account->accountType = $accountType;
-            $this->source         = $account;
-        }
-        $result = $result ?? false;
-
-        // don't expect to end up here:
-        return $result;
-    }
-
-    /**
-     * @param int|null $accountId
-     * @param          $accountName
-     *
-     * @return bool
-     */
-    private function validateOBDestination(?int $accountId, $accountName): bool
-    {
-        $result = null;
-        Log::debug(sprintf('Now in validateOBDestination(%d, "%s")', $accountId, $accountName));
-
-        // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL we return false,
-            // because the destination of a deposit can't be created.
-            $this->destError = (string)trans('validation.ob_dest_need_data');
-            Log::error('Both values are NULL, cant create OB destination.');
-            $result = false;
-        }
-        // if the account can be created anyway we don't need to search.
-        if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            Log::debug('Can create some of these types, so return true.');
-            $result = true;
-        }
-
-        if (null === $result) {
-            // otherwise try to find the account:
-            $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
-            if (null === $search) {
-                Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
-                $this->destError = (string)trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
-                $result          = false;
-            }
-            if (null !== $search) {
-                Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
-                $this->destination = $search;
-                $result            = true;
-            }
-        }
-        $result = $result ?? false;
-        Log::debug(sprintf('validateOBDestination(%d, "%s") will return %s', $accountId, $accountName, var_export($result, true)));
-
-        return $result;
-    }
-
-    /**
-     * Source of an opening balance can either be an asset account
-     * or an "initial balance account". The latter can be created.
-     *
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    private function validateOBSource(?int $accountId, ?string $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateOBSource(%d, "%s")', $accountId, $accountName));
-        Log::debug(sprintf('The account name is null: %s', var_export(null === $accountName, true)));
-        $result = null;
-        // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL return false,
-            // because the source of a deposit can't be created.
-            // (this never happens).
-            $this->sourceError = (string)trans('validation.ob_source_need_data');
-            $result            = false;
-        }
-
-        // if the user submits an ID only but that ID is not of the correct type,
-        // return false.
-        if (null !== $accountId && null === $accountName) {
-            Log::debug('Source ID is not null, but name is null.');
-            $search = $this->accountRepository->findNull($accountId);
-
-            // the source resulted in an account, but it's not of a valid type.
-            if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
-                $message = sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type);
-                Log::debug($message);
-                $this->sourceError = $message;
-                $result            = false;
-            }
-            // the source resulted in an account, AND it's of a valid type.
-            if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
-                Log::debug(sprintf('Found account of correct type: #%d, "%s"', $search->id, $search->name));
-                $this->source = $search;
-                $result       = true;
-            }
-        }
-
-        // if the account can be created anyway we don't need to search.
-        if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            Log::debug('Result is still null.');
-            $result = true;
-
-            // set the source to be a (dummy) initial balance account.
-            $account              = new Account;
-            $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
-            $account->accountType = $accountType;
-            $this->source         = $account;
-        }
-        $result = $result ?? false;
-
-        return $result;
-    }
-
-    /**
-     * @param int|null $accountId
-     *
-     * @return bool
-     */
-    private function validateReconciliationDestination(?int $accountId): bool
-    {
-        Log::debug('Now in validateReconciliationDestination');
-        if (null === $accountId) {
-            Log::debug('Return FALSE');
-
-            return false;
-        }
-        $result = $this->accountRepository->findNull($accountId);
-        if (null === $result) {
-            $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
-            Log::debug('Return FALSE');
-
-            return false;
-        }
-        // $types depends on type of source:
-        $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        // if source is reconciliation, destination can't be.
-        if (null !== $this->source && AccountType::RECONCILIATION === $this->source->accountType->type) {
-            $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        }
-        // if source is not reconciliation, destination MUST be.
-        if (null !== $this->source
-            && in_array(
-                $this->source->accountType->type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true
-            )) {
-            $types = [AccountType::RECONCILIATION];
-        }
-
-        if (in_array($result->accountType->type, $types, true)) {
-            $this->destination = $result;
-            Log::debug('Return TRUE');
-
-            return true;
-        }
-        $this->destError = (string)trans('validation.deposit_dest_wrong_type');
-        Log::debug('Return FALSE');
-
-        return false;
-    }
-
-    /**
-     * @param int|null $accountId
-     *
-     * @return bool
-     */
-    private function validateReconciliationSource(?int $accountId): bool
-    {
-        Log::debug('In validateReconciliationSource');
-        if (null === $accountId) {
-            Log::debug('Return FALSE');
-            return false;
-        }
-        $result = $this->accountRepository->findNull($accountId);
-        $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
-        if (null === $result) {
-            Log::debug('Return FALSE');
-            return false;
-        }
-        if (in_array($result->accountType->type, $types, true)) {
-            $this->source = $result;
-            Log::debug('Return TRUE');
-            return true;
-        }
-        Log::debug('Return FALSE');
-        return false;
-    }
-
-    /**
-     * @param int|null $accountId
-     * @param          $accountName
-     *
-     * @return bool
-     */
-    private function validateTransferDestination(?int $accountId, $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateTransferDestination(%d, "%s")', $accountId, $accountName));
-        // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL we return false,
-            // because the destination of a transfer can't be created.
-            $this->destError = (string)trans('validation.transfer_dest_need_data');
-            Log::error('Both values are NULL, cant create transfer destination.');
-
-            return false;
-        }
-
-        // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
-        if (null === $search) {
-            $this->destError = (string)trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
-
-            return false;
-        }
-        $this->destination = $search;
-
-        // must not be the same as the source account
-        if (null !== $this->source && $this->source->id === $this->destination->id) {
-            $this->sourceError = 'Source and destination are the same.';
-            $this->destError   = 'Source and destination are the same.';
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    private function validateTransferSource(?int $accountId, ?string $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateTransferSource(%d, "%s")', $accountId, $accountName));
-        // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL we return false,
-            // because the source of a withdrawal can't be created.
-            $this->sourceError = (string)trans('validation.transfer_source_need_data');
-            Log::warning('Not a valid source, need more data.');
-            return false;
-        }
-
-        // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
-        if (null === $search) {
-            $this->sourceError = (string)trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            Log::warning('Not a valid source, cant find it.', $validTypes);
-            return false;
-        }
-        $this->source = $search;
-        Log::debug('Valid source!');
-
-        return true;
-    }
-
-    /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    private function validateWithdrawalDestination(?int $accountId, ?string $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateWithdrawalDestination(%d, "%s")', $accountId, $accountName));
-        // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL return false,
-            // because the destination of a withdrawal can never be created automatically.
-            $this->destError = (string)trans('validation.withdrawal_dest_need_data');
-
-            return false;
-        }
-
-        // if there's an ID it must be of the "validTypes".
-        if (null !== $accountId && 0 !== $accountId) {
-            $found = $this->accountRepository->findNull($accountId);
-            if (null !== $found) {
-                $type = $found->accountType->type;
-                if (in_array($type, $validTypes, true)) {
-                    return true;
-                }
-                $this->destError = (string)trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
-
-                return false;
-            }
-        }
-
-        // if the account can be created anyway don't need to search.
-        if (true === $this->canCreateTypes($validTypes)) {
-
-            return true;
-        }
-
-        // don't expect to end up here:
-
-        return false;
-    }
-
-    /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    private function validateWithdrawalSource(?int $accountId, ?string $accountName): bool
-    {
-        Log::debug(sprintf('Now in validateWithdrawalSource(%d, "%s")', $accountId, $accountName));
-        // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
-            // if both values are NULL we return false,
-            // because the source of a withdrawal can't be created.
-            $this->sourceError = (string)trans('validation.withdrawal_source_need_data');
-            Log::warning('Not a valid source. Need more data.');
-
-            return false;
-        }
-
-        // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
-        if (null === $search) {
-            $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            Log::warning('Not a valid source. Cant find it.', $validTypes);
-            return false;
-        }
-        $this->source = $search;
-        Log::debug('Valid source account!');
-
-        return true;
     }
 
 
