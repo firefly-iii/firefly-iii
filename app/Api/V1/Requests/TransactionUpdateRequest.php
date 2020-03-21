@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 use Log;
@@ -37,7 +38,7 @@ use Log;
  */
 class TransactionUpdateRequest extends Request
 {
-    use TransactionValidation;
+    use TransactionValidation, GroupValidation;
 
     /** @var array Array values. */
     private $arrayFields;

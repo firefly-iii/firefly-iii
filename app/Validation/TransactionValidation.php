@@ -381,7 +381,7 @@ trait TransactionValidation
      *
      * @return array
      */
-    private function getTransactionsArray(Validator $validator): array
+    protected function getTransactionsArray(Validator $validator): array
     {
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
@@ -522,28 +522,6 @@ trait TransactionValidation
                 $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
                 $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
                 break;
-        }
-    }
-
-    /**
-     * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
-     */
-    private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
-    {
-        Log::debug('Now in validateJournalIds()');
-        $transactions = $this->getTransactionsArray($validator);
-
-        if (count($transactions) < 2) {
-            return;
-        }
-        foreach ($transactions as $index => $transaction) {
-            $journalId = $transaction['transaction_journal_id'] ?? null;
-            $journalId = null === $journalId ? null : (int)$journalId;
-            $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
-            if (null === $journalId || (null !== $journalId && 0 !== $journalId && 0 === $count)) {
-                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
-            }
         }
     }
 }
