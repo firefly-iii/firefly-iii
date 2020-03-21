@@ -26,6 +26,8 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Exception;
+use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
+use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -48,32 +50,7 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    /** @var array The standard fields to select. */
-    private $fields;
-    /** @var bool Will be set to true if query result contains account information. (see function withAccountInformation). */
-    private $hasAccountInfo;
-    /** @var bool Will be true if query result includes bill information. */
-    private $hasBillInformation;
-    /** @var bool Will be true if query result contains budget info. */
-    private $hasBudgetInformation;
-    /** @var bool Will be true if query result contains category info. */
-    private $hasCatInformation;
-    /** @var bool Will be true for attachments */
-    private $hasJoinedAttTables;
-    /** @var bool Will be true of the query has the tag info tables joined. */
-    private $hasJoinedTagTables;
-    /** @var array */
-    private $integerFields;
-    /** @var int The maximum number of results. */
-    private $limit;
-    /** @var int The page to return. */
-    private $page;
-    /** @var HasMany The query object. */
-    private $query;
-    /** @var int Total number of results. */
-    private $total;
-    /** @var User The user object. */
-    private $user;
+    use CollectorProperties, AccountCollection;
 
     /**
      * Group collector constructor.
@@ -217,44 +194,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * These accounts must not be destination accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereNotIn('destination.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
-     * These accounts must not be source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereNotIn('source.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -337,29 +276,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) {
-                    $query->whereIn('source.account_id', $accountIds);
-                    $query->orWhereIn('destination.account_id', $accountIds);
-                }
-            );
-            app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
      * Collect transactions after a specific date.
      *
      * @param Carbon $date
@@ -417,29 +333,6 @@ class GroupCollector implements GroupCollectorInterface
     {
         $this->withBillInformation();
         $this->query->whereIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
-
-        return $this;
-    }
-
-    /**
-     * Both source AND destination must be in this list of accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setBothAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) {
-                    $query->whereIn('source.account_id', $accountIds);
-                    $query->whereIn('destination.account_id', $accountIds);
-                }
-            );
-            app('log')->debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
-        }
 
         return $this;
     }
@@ -546,25 +439,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('destination.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: setDestinationAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
      * Limit the result to a specific transaction group.
      *
      * @param TransactionGroup $transactionGroup
@@ -658,7 +532,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            function (EloquentBuilder $q) use ($array) {
+            static function (EloquentBuilder $q) use ($array) {
                 $q->where(
                     function (EloquentBuilder $q1) use ($array) {
                         foreach ($array as $word) {
@@ -668,7 +542,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->orWhere(
-                    function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array) {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
@@ -677,25 +551,6 @@ class GroupCollector implements GroupCollectorInterface
                 );
             }
         );
-
-        return $this;
-    }
-
-    /**
-     * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('source.account_id', $accountIds);
-
-            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
-        }
 
         return $this;
     }
@@ -792,43 +647,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Either account can be set, but NOT both. This effectively excludes internal transfers.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setXorAccounts(Collection $accounts): GroupCollectorInterface
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds) {
-                    // sourceAccount is in the set, and destination is NOT.
-
-                    $q1->where(
-                        static function (EloquentBuilder $q2) use ($accountIds) {
-                            $q2->whereIn('source.account_id', $accountIds);
-                            $q2->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    );
-                    // destination is in the set, and source is NOT
-                    $q1->orWhere(
-                        static function (EloquentBuilder $q3) use ($accountIds) {
-                            $q3->whereNotIn('source.account_id', $accountIds);
-                            $q3->whereIn('destination.account_id', $accountIds);
-                        }
-                    );
-                }
-            );
-
-            app('log')->debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
-        }
-
-        return $this;
-    }
-
-    /**
      * Automatically include all stuff required to make API calls work.
      *
      * @return GroupCollectorInterface
@@ -843,40 +661,6 @@ class GroupCollector implements GroupCollectorInterface
              ->withBudgetInformation()
             // include bill ID + name (if any)
              ->withBillInformation();
-
-        return $this;
-    }
-
-    /**
-     * Will include the source and destination account names and types.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withAccountInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasAccountInfo) {
-            // join source account table
-            $this->query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
-            // join source account type table
-            $this->query->leftJoin('account_types as source_account_type', 'source_account_type.id', '=', 'source_account.account_type_id');
-
-            // add source account fields:
-            $this->fields[] = 'source_account.name as source_account_name';
-            $this->fields[] = 'source_account.iban as source_account_iban';
-            $this->fields[] = 'source_account_type.type as source_account_type';
-
-            // same for dest
-            $this->query->leftJoin('accounts as dest_account', 'dest_account.id', '=', 'destination.account_id');
-            $this->query->leftJoin('account_types as dest_account_type', 'dest_account_type.id', '=', 'dest_account.account_type_id');
-
-            // and add fields:
-            $this->fields[] = 'dest_account.name as destination_account_name';
-            $this->fields[] = 'dest_account.iban as destination_account_iban';
-            $this->fields[] = 'dest_account_type.type as destination_account_type';
-
-
-            $this->hasAccountInfo = true;
-        }
 
         return $this;
     }
