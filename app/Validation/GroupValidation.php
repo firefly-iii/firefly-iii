@@ -113,4 +113,20 @@ trait GroupValidation
     }
 
 
+    /**
+     * @param Validator $validator
+     */
+    protected function validateGroupDescription(Validator $validator): void
+    {
+        Log::debug('Now in validateGroupDescription()');
+        $data         = $validator->getData();
+        $transactions = $this->getTransactionsArray($validator);
+
+        $groupTitle = $data['group_title'] ?? '';
+        if ('' === $groupTitle && count($transactions) > 1) {
+            $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
+        }
+    }
+
+
 }

@@ -39,7 +39,7 @@ trait CurrencyValidation
      * @return array
      */
     abstract protected function getTransactionsArray(Validator $validator): array;
-    
+
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *
