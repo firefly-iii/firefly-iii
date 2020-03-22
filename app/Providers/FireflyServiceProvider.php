@@ -37,6 +37,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\Telemetry\TelemetryRepository;
+use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
@@ -178,6 +180,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+        $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
         $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
         if ('' === $class) {

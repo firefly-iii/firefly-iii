@@ -1589,7 +1589,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetry',
     'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
     'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
     'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
     'telemetry_disabled_yes'             => 'Telemetry is enabled',
@@ -1599,7 +1599,14 @@ return [
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
     'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
     'telemetry_button_view'              => 'View telemetry',
-    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetry overview',
-    'telemetry_back_to_index'            => 'Back to telemetry'
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

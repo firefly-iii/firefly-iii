@@ -1137,7 +1137,9 @@ Route::group(
         // telemetry manager:
         Route::get('telemetry', ['uses' => 'TelemetryController@index', 'as' => 'telemetry.index']);
         Route::get('telemetry/view', ['uses' => 'TelemetryController@view', 'as' => 'telemetry.view']);
-        Route::get('telemetry/delete', ['uses' => 'TelemetryController@delete', 'as' => 'telemetry.delete']);
+        Route::get('telemetry/delete', ['uses' => 'TelemetryController@deleteAll', 'as' => 'telemetry.delete']);
+        Route::get('telemetry/delete-submitted', ['uses' => 'TelemetryController@deleteSubmitted', 'as' => 'telemetry.delete-submitted']);
+        Route::get('telemetry/submit', ['uses' => 'TelemetryController@submit', 'as' => 'telemetry.submit']);
 
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
