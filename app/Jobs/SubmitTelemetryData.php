@@ -127,7 +127,7 @@ class SubmitTelemetryData implements ShouldQueue
      */
     private function collectTelemetry(): Collection
     {
-        $collection = Telemetry::whereNull('submitted')->get();
+        $collection = Telemetry::whereNull('submitted')->take(50)->get();
         Log::debug(sprintf('Found %d entry(s) to submit', $collection->count()));
 
         return $collection;
