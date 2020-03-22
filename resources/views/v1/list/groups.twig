@@ -20,7 +20,7 @@ TODO: hide and show columns
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
-        <th>{{ trans('list.date') }}</th>
+        <th class="hidden-xs">{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
         {% if showCategory %}
@@ -149,7 +149,7 @@ TODO: hide and show columns
                         {% endif %}
                     {% endif %}
                 </td>
-                <td style=" {{ style|raw }}">
+                <td style=" {{ style|raw }}" class="hidden-xs">
                     {{ transaction.date.formatLocalized(monthAndDayFormat) }}
                 </td>
                 <td style=" {{ style|raw }}">
