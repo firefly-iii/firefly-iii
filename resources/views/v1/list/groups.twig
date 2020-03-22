@@ -29,8 +29,8 @@ TODO: hide and show columns
         {% if showBudget %}
             <th class="hidden-xs">{{ trans('list.budget') }}</th>
         {% endif %}
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
+        <th class="hidden-xs">&nbsp;</th><!-- actions -->
+        <th class="hidden-xs">&nbsp;</th><!-- checkbox -->
     </tr>
     </thead>
     <tbody>
@@ -61,7 +61,7 @@ TODO: hide and show columns
                 {% else %}
                     <td style="border-top:1px #aaa solid;" colspan="2">&nbsp;</td>
                 {% endif %}
-                <td style="border-top:1px #aaa solid;">
+                <td style="border-top:1px #aaa solid;" class="hidden-xs">
                     <div class="btn-group btn-group-xs pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
@@ -72,7 +72,7 @@ TODO: hide and show columns
                         </ul>
                     </div>
                 </td>
-                <td style="border-top:1px #aaa solid;">&nbsp;</td>
+                <td style="border-top:1px #aaa solid;" class="hidden-xs">&nbsp;</td>
             </tr>
         {% endif %}
         {% for index, transaction in group.transactions %}
@@ -178,7 +178,7 @@ TODO: hide and show columns
                 {% endif %}
 
                 {% if group.count == 1 %}
-                    <td style=" {{ style|raw }};">
+                    <td style=" {{ style|raw }};" class="hidden-xs">
                         <div class="btn-group btn-group-xs pull-right">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
@@ -194,11 +194,11 @@ TODO: hide and show columns
 
                 {% endif %}
                 {% if group.count != 1 %}
-                    <td style=" {{ style|raw }};">
+                    <td style=" {{ style|raw }};" class="hidden-xs">
                         &nbsp;
                     </td>
                 {% endif %}
-                <td style="{{ style|raw }}">
+                <td style="{{ style|raw }}" class="hidden-xs">
                     <div class="pull-right">
                         <input id="list_{{ transaction.transaction_journal_id }}" value="{{ transaction.transaction_journal_id }}"
                                name="journals[{{ transaction.transaction_journal_id }}]"
