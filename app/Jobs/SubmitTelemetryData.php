@@ -76,9 +76,7 @@ class SubmitTelemetryData implements ShouldQueue
             return;
         }
 
-
         $json = $this->parseJson($telemetry);
-
         $client  = new Client;
         $options = [
             'body'    => json_encode($json, JSON_THROW_ON_ERROR, 512),
@@ -94,7 +92,7 @@ class SubmitTelemetryData implements ShouldQueue
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-
+            Log::error('Could not submit telemetry.');
             return;
         }
         $body       = (string) $result->getBody();
