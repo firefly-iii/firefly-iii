@@ -38,6 +38,9 @@ class TelemetryController extends Controller
 
     public function __construct()
     {
+        if (false === config('firefly.feature_flags.telemetry')) {
+            die('Telemetry is disabled.');
+        }
         parent::__construct();
 
         $this->middleware(
