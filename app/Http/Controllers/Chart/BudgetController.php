@@ -157,9 +157,9 @@ class BudgetController extends Controller
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
-     * @throws FireflyException
      * @return JsonResponse
      *
+     * @throws FireflyException
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
@@ -186,12 +186,12 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string) trans('config.month_and_day'));
+            $format           = $start->formatLocalized((string)trans('config.month_and_day'));
             $entries[$format] = $amount;
 
             $start->addDay();
         }
-        $data = $this->generator->singleSet((string) trans('firefly.left'), $entries);
+        $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
         // add currency symbol from budget limit:
         $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
         $cache->store($data);
@@ -238,7 +238,7 @@ class BudgetController extends Controller
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $key                    = sprintf('%d-%d', (int) $journal['source_account_id'], $journal['currency_id']);
+            $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -250,7 +250,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts   = explode('-', $combinedId);
-            $assetId = (int) $parts[0];
+            $assetId = (int)$parts[0];
             $title   = sprintf('%s (%s)', $names[$assetId] ?? '(empty)', $info['currency_name']);
             $chartData[$title]
                      = [
@@ -314,7 +314,7 @@ class BudgetController extends Controller
         $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $categoryId        = (int) $parts[0];
+            $categoryId        = (int)$parts[0];
             $title             = sprintf('%s (%s)', $names[$categoryId] ?? '(empty)', $info['currency_name']);
             $chartData[$title] = [
                 'amount'          => $info['amount'],
@@ -379,7 +379,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $opposingId        = (int) $parts[0];
+            $opposingId        = (int)$parts[0];
             $name              = $names[$opposingId] ?? 'no name';
             $title             = sprintf('%s (%s)', $name, $info['currency_name']);
             $chartData[$title] = [
@@ -414,13 +414,13 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            // return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
-            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         /** @var Budget $budget */
@@ -458,17 +458,16 @@ class BudgetController extends Controller
                                 $limit->end_date->formatLocalized($this->monthAndDayFormat)
                             );
                         }
-
-                        $chartData[0]['entries'][$title] = bcmul($entry['sum'], '-1'); // spent
-                        $chartData[1]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ? bcadd($entry['sum'], $limit->amount)
+                        $sumSpent                        = bcmul($entry['sum'], '-1'); // spent
+                        $chartData[0]['entries'][$title] = 1 === bccomp($sumSpent, $limit->amount) ? $limit->amount : $sumSpent;
+                        $chartData[1]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? bcadd($entry['sum'], $limit->amount)
                             : '0';
-                        $chartData[2]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ?
+                        $chartData[2]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ?
                             '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1');
                     }
                 }
             }
         }
-
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -498,19 +497,19 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         $chartData      = [
             [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'entries'         => [],
                 'currency_symbol' => $currency->symbol,
             ],
             [
-                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
+                'label'           => (string)trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
                 'entries'         => [],
@@ -588,7 +587,7 @@ class BudgetController extends Controller
             $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
-        $data = $this->generator->singleSet((string) trans('firefly.spent'), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);
