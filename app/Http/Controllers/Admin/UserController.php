@@ -106,6 +106,8 @@ class UserController extends Controller
 
         $subTitle     = (string) trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon = 'fa-user-o';
+        $currentUser  = auth()->user();
+        $isAdmin      = $this->repository->hasRole($user, 'owner');
         $codes        = [
             ''              => (string) trans('firefly.no_block_code'),
             'bounced'       => (string) trans('firefly.block_code_bounced'),
@@ -113,7 +115,7 @@ class UserController extends Controller
             'email_changed' => (string) trans('firefly.block_code_email_changed'),
         ];
 
-        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
+        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes', 'currentUser','isAdmin'));
     }
 
     /**
@@ -182,6 +184,13 @@ class UserController extends Controller
         // update password
         if ('' !== $data['password']) {
             $this->repository->changePassword($user, $data['password']);
+        }
+        if (true === $data['is_owner']) {
+            $this->repository->attachRole($user, 'owner');
+            session()->flash('info', trans('firefly.give_admin_careful'));
+        }
+        if (false === $data['is_owner']) {
+            $this->repository->removeRole($user, 'owner');
         }
 
         $this->repository->changeStatus($user, $data['blocked'], $data['blocked_code']);

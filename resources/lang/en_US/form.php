@@ -194,6 +194,7 @@ return [
     'blocked'               => 'Is blocked?',
     'blocked_code'          => 'Reason for block',
     'login_name'            => 'Login',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Apply rules',

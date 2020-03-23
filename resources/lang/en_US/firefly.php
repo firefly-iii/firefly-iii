@@ -1351,6 +1351,7 @@ return [
     'send_test_email_text'             => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                     => 'Send message',
     'send_test_triggered'              => 'Test was triggered. Check your inbox and the log files.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',

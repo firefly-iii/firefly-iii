@@ -22,7 +22,9 @@
                     {{ ExpandedForm.password('password_confirmation') }}
                     {{ ExpandedForm.checkbox('blocked') }}
                     {{ ExpandedForm.select('blocked_code', codes, user.blocked_code) }}
-
+                    {% if user.id != currentUser.id %}
+                        {{ ExpandedForm.checkbox('is_owner',1,isAdmin) }}
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -52,6 +52,7 @@ class UserFormRequest extends Request
             'blocked'      => 1 === $this->integer('blocked'),
             'blocked_code' => $this->string('blocked_code'),
             'password'     => $this->string('password'),
+            'is_owner'     => 1 === $this->integer('is_owner'),
         ];
     }
 
@@ -68,6 +69,7 @@ class UserFormRequest extends Request
             'password'     => 'confirmed|secure_password',
             'blocked_code' => 'between:0,30|nullable',
             'blocked'      => 'between:0,1|numeric',
+            'is_owner'     => 'between:0,1|numeric',
         ];
     }
 }
