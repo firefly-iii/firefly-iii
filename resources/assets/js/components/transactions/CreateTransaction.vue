@@ -379,6 +379,11 @@
                 if (0 === sourceId) {
                     sourceId = null;
                 }
+                // parse amount if has exactly one comma:
+                // solves issues with some locales.
+                if (1 === (row.amount.match(/\,/g) || []).length) {
+                    row.amount = row.amount.replace(',', '.');
+                }
 
                 currentArray =
                     {
