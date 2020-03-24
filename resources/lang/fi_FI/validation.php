@@ -202,7 +202,7 @@ return [
     'gte.string'  => 'Määritteen :attribute pituus täytyy olla vähintään :value merkkiä.',
     'gte.array'   => 'Määritteellä :attribute tulee olla vähintään :value alkiota.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
+    'amount_required_for_auto_budget' => 'Summa on pakollinen.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
     'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

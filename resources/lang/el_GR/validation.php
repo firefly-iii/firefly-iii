@@ -202,7 +202,7 @@ return [
     'gte.string'  => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value χαρακτήρες.',
     'gte.array'   => 'Το :attribute πρέπει να έχει :value αντικείμενα ή παραπάνω.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'amount_required_for_auto_budget' => 'Πρέπει να συμπληρωθεί το ποσό.',
+    'auto_budget_amount_positive'     => 'Το ποσό πρέπει να είναι μεγαλύτερο από το μηδέν.',
+    'auto_budget_period_mandatory' => 'Η περίοδος αυτόματου προϋπολογισμού είναι υποχρεωτικό πεδίο.',
 ];

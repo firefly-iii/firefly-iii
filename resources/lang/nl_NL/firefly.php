@@ -829,6 +829,7 @@ return [
     'skips_over'                                => 'slaat over',
     'bill_store_error'                          => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
     'list_inactive_rule'                        => 'inactieve regel',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -1350,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Druk op deze knop om te zien of je installatie mail kan versturen. Je ziet hier geen foutmeldingen (als ze er zijn), deze <strong>vind je in de logboeken</strong>. Je kan deze knop zo vaak indrukken als je wilt. Er is geen optie die spam voorkomt. Het testbericht wordt verstuurd naar <code>:email</code> en zou vrij vlot aan moeten komen.',
     'send_message'                     => 'Verstuur bericht',
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
     'split_transaction_title_help'          => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
@@ -1588,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetrie',
     'telemetry_intro'                    => 'Firefly III kan telemetrie verzamelen over je gebruik. Dat betekent dat Firefly III informatie probeert te verzamelen over hoe je Firefly III gebruikt, en deze zal verzenden naar de developer van Firefly III. Dit is altijd opt-in en staat standaard uit. Firefly III zal nooit financiele informatie verzamelen of verzenden. Firefly III zal ook nooit financiële meta-informatie verzamelen of verzenden (zoals sommen of totalen). De verstuurde informatie wordt nooit publiek beschikbaar gemaakt.',
-    'telemetry_what_collected'           => 'Wat Firefly III verzamelt en verzend is per versie anders. Je draait versie :version. Wat Firefly III verzamelt en verzend in versie :version lees je in de help-pagina\'s. Klik op het (?) icoontje rechtsboven <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">of kijk direct op GitHub</a>.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
     'telemetry_is_enabled_yes_no'        => 'Zal Firefly III telemetrie verzenden?',
     'telemetry_disabled_no'              => 'Telemetrie staat UIT',
     'telemetry_disabled_yes'             => 'Telemetrie staat aan',
@@ -1598,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III heeft geen telemetrie verzameld.',
     'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record(s) verzameld.',
     'telemetry_button_view'              => 'Bekijk telemetrie',
-    'telemetry_button_delete'            => 'Verwijder telemetrie',
+    'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetrie-overzicht',
-    'telemetry_back_to_index'            => 'Terug naar telemetrie'
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

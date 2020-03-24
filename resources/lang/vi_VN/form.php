@@ -194,6 +194,7 @@ return [
     'blocked'               => 'Đã bị chặn?',
     'blocked_code'          => 'Lý do chặn',
     'login_name'            => 'Đăng nhập',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Áp dụng quy tắc',
@@ -264,6 +265,11 @@ return [
     'auto_budget_type'            => 'Auto-budget',
     'auto_budget_amount'            => 'Auto-budget amount',
     'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
 
 
 ];

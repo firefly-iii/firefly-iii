@@ -43,7 +43,7 @@ return [
     'journal_currency_id'       => 'Valuutta',
     'currency_id'               => 'Valuutta',
     'transaction_currency_id'   => 'Valuutta',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Valuutta',
     'external_ip'               => 'Serverin ulkoinen verkko-osoite (IP)',
     'attachments'               => 'Liitteet',
     'journal_amount'            => 'Summa',
@@ -194,6 +194,7 @@ return [
     'blocked'               => 'On estetty?',
     'blocked_code'          => 'Eston syy',
     'login_name'            => 'Käyttäjätunnus',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Aja säännöt',
@@ -264,6 +265,11 @@ return [
     'auto_budget_type'            => 'Auto-budget',
     'auto_budget_amount'            => 'Auto-budget amount',
     'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
 
 
 ];

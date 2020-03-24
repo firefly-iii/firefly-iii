@@ -194,6 +194,7 @@ return [
     'blocked'               => 'Заблокирован?',
     'blocked_code'          => 'Причина блокировки',
     'login_name'            => 'Логин',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Применить правила',
@@ -264,6 +265,11 @@ return [
     'auto_budget_type'            => 'Auto-budget',
     'auto_budget_amount'            => 'Auto-budget amount',
     'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
 
 
 ];

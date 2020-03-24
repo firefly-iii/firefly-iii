@@ -43,7 +43,7 @@ return [
     'journal_currency_id'       => 'Währung',
     'currency_id'               => 'Währung',
     'transaction_currency_id'   => 'Währung',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Währung',
     'external_ip'               => 'Die externe IP-Adresse Ihres Servers',
     'attachments'               => 'Anhänge',
     'journal_amount'            => 'Betrag',
@@ -194,6 +194,7 @@ return [
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
     'login_name'            => 'Login',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Regeln anwenden',
@@ -261,9 +262,14 @@ return [
     'expected_on'               => 'Erwartet am',
     'paid'                      => 'Bezahlt',
 
-    'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_type'            => 'Automatisches Budget',
+    'auto_budget_amount'            => 'Betrag des automatischen Budget',
+    'auto_budget_period'            => 'Zeitraum des automatischen Budget',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
 
 
 ];

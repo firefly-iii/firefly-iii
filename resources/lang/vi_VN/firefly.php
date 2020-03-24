@@ -829,6 +829,7 @@ return [
     'skips_over'                                => 'bỏ qua',
     'bill_store_error'                          => 'Một lỗi không mong muốn đã xảy ra trong khi lưu trữ hóa đơn mới của bạn. Vui lòng kiểm tra các tệp nhật ký',
     'list_inactive_rule'                        => 'quy tắc không hoạt động',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'Bạn có: đếm các tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang riêng này.',
@@ -1350,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Để xem cài đặt của bạn có khả năng gửi email hay không, vui lòng nhấn nút này. Bạn sẽ không thấy lỗi ở đây (nếu có), <strong>các tệp nhật ký sẽ phản ánh bất kỳ lỗi nào</strong>. Bạn có thể nhấn nút này bao nhiêu lần tùy thích. Không có kiểm soát thư rác. Tin nhắn sẽ được gửi đến <code>:email</code> và sẽ đến sớm.',
     'send_message'                     => 'Gửi tin nhắn',
     'send_test_triggered'              => 'Kiểm tra đã được kích hoạt. Kiểm tra hộp thư đến của bạn và các tệp nhật ký.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Mô tả giao dịch tách',
     'split_transaction_title_help'          => 'Nếu bạn tạo một giao dịch phân tách, phải có một mô tả toàn cầu cho tất cả các phân chia của giao dịch.',
@@ -1588,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Thu thập dữ liệu từ xa',
     'telemetry_intro'                    => 'Firefly III thu thập và gửi dữ  liệu từ xa. Mặc định chức năng này bị tắt. Firefly III sẽ không bao giờ thu thập thông tin cá nhận của bạn.',
-    'telemetry_what_collected'           => 'Những gì Firefly III thu thập và gửi là khác nhau cho mỗi phiên bản. Bạn đang chạy phiên bản: phiên bản. Những gì Firefly III thu thập trong phiên bản: version là thứ bạn có thể đọc trong các trang trợ giúp. Nhấp vào biểu tượng (?) - ở góc trên bên phải <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
     'telemetry_is_enabled_yes_no'        => 'Bạn có muốn bật thu thập dữ liệu cho nhà phát triển',
     'telemetry_disabled_no'              => 'Chưa cho phép thu thập dữ liệu',
     'telemetry_disabled_yes'             => 'Đã cho phép thu thập dữ liệu',
@@ -1598,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III đã thu thập 0 bản tin.',
     'records_telemetry_present'          => 'Firefly III đã thu thập :count telemetry record(s).',
     'telemetry_button_view'              => 'Xem dữ liệu thu thập',
-    'telemetry_button_delete'            => 'xóa đã thu thập',
+    'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Tổng quan thu thập dữ liệu',
-    'telemetry_back_to_index'            => 'Quay về mục thu thập dữ liệu'
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

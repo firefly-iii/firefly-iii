@@ -202,7 +202,7 @@ return [
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
+    'amount_required_for_auto_budget' => 'Az összeg kötelező.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
     'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];
