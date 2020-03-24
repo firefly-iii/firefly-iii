@@ -138,9 +138,9 @@ return [
     ],
 
     'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                      => '5.1.1',
-    'api_version'                  => '1.0.2',
-    'db_version'                   => 12,
+    'version'                      => '5.2.0-alpha.1',
+    'api_version'                  => '1.1.0',
+    'db_version'                   => 13,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),

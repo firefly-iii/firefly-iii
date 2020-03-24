@@ -829,7 +829,7 @@ return [
     'skips_over'                                => 'überschreitet',
     'bill_store_error'                          => 'Beim Speichern Ihrer neuen Rechnung ist ein unerwarteter Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien.',
     'list_inactive_rule'                        => 'Inaktive Regeln',
-    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
+    'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die :count Regel(n) in Bezug auf diese Rechnung ebenfalls zu bearbeiten. Wenn Sie diese Regel(n) jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
 
     // accounts:
     'inactive_account_link'                     => 'Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite einsehen können.',
@@ -1351,7 +1351,7 @@ return [
     'send_test_email_text'             => 'Um zu sehen, ob Ihre Installation E-Mails senden kann, drücken Sie bitte diese Taste. Sie werden hier keinen Fehler sehen, <strong>die Protokolldateien werden etwaige Fehler anzeigen</strong>. Sie können diese Taste so oft drücken, wie Sie möchten. Es gibt keine Spamüberprüfung. Die Nachricht wird an <code>:email</code> gesendet und sollte in Kürze ankommen.',
     'send_message'                     => 'Nachricht senden',
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
-    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'give_admin_careful'               => 'Benutzer mit Admin-Rechten können Ihnen Ihre Rechte entziehen. Seien Sie vorsichtig.',
 
     'split_transaction_title'               => 'Beschreibung der Splittbuchung',
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
@@ -1590,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetrie',
     'telemetry_intro'                    => 'Firefly III unterstützt das Erfassen und Versenden von Telemetriedaten zu dessen Nutzung. Das bedeutet, dass Firefly III versuchen wird, Informationen darüber zu sammeln, wie Sie Firefly III verwenden, und diese an den Entwickler von Firefly III zu senden. Dies ist immer optional und standardmäßig deaktiviert. Firefly III wird niemals finanzielle Informationen sammeln oder senden. Firefly III wird auch niemals finanzielle Meta-Informationen, wie Summen oder Berechnungen, sammeln oder versenden. Die gesammelten Daten werden niemals öffentlich zugänglich sein.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_what_collected'           => 'Was Firefly III genau zusammenträgt und versendet, ist bei jeder Version anders. Sie verwenden Version :version. Was Firefly III in Version :version sammelt, können Sie auf den Hilfeseiten nachlesen. Klicken Sie auf das „❓” in der rechten oberen Ecke <a href="https://docs.firefly-iii.org/support/telemetry">oder besuchen Sie die Dokumentationsseite</a>.',
     'telemetry_is_enabled_yes_no'        => 'Ist die Firefly-III-Telemetrie aktiviert?',
     'telemetry_disabled_no'              => 'Die Telemetrie ist NICHT aktiviert',
     'telemetry_disabled_yes'             => 'Die Telemetrie ist aktiviert',
@@ -1600,14 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III hat keinerlei Telemetriedaten aufgezeichnet.',
     'records_telemetry_present'          => 'Firefly III hat :count Telemetriedaten erfasst.',
     'telemetry_button_view'              => 'Telemetrie anzeigen',
-    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_button_delete'            => 'Alle Telemetriedaten löschen',
     'telemetry_admin_overview'           => 'Telemetrieübersicht',
-    'telemetry_back_to_index'            => 'Back to telemetry index',
-    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_back_to_index'            => 'Zurück zum Telemetrieindex',
+    'not_yet_submitted'                  => 'Noch nicht übermittelt',
     'telemetry_type_feature'             => 'Feature flag',
-    'telemetry_submit_all'               => 'Submit records',
-    'telemetry_delete_submitted_records' => 'Delete submitted records',
-    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
-    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
-    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
+    'telemetry_submit_all'               => 'Datensätze übermitteln',
+    'telemetry_delete_submitted_records' => 'Übertragene Datensätze löschen',
+    'telemetry_submission_executed'      => 'Datensätze wurden übermittelt. Überprüfen Sie Ihre Protokolldateien für weitere Informationen.',
+    'telemetry_all_deleted'              => 'Alle Telemetriedaten wurden gelöscht.',
+    'telemetry_submitted_deleted'        => 'Alle übermittelten Telemetriedaten wurden gelöscht.'
 ];

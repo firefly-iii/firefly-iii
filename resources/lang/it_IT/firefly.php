@@ -829,7 +829,7 @@ return [
     'skips_over'                                => 'ogni',
     'bill_store_error'                          => 'Si è verificato un errore imprevisto durante la memorizzazione della nuova bolletta. Controlla i file di log',
     'list_inactive_rule'                        => 'regola inattiva',
-    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
+    'bill_edit_rules'                           => 'Firefly III cercherà di modificare anche le :count regole relative a questa bolletta. Tuttavia, se hai modificato queste regole, Firefly III non effettuerà alcun cambiamento.',
 
     // accounts:
     'inactive_account_link'                     => 'Hai :count conti inattivi (archiviati) che puoi visualizzare in questa pagina separata.',
@@ -1113,7 +1113,7 @@ return [
     'bill'                                      => 'Bolletta',
     'yes'                                       => 'Si',
     'no'                                        => 'No',
-    'amount'                                    => 'Conto',
+    'amount'                                    => 'Importo',
     'overview'                                  => 'Panoramica',
     'saveOnAccount'                             => 'Risparmio sul conto',
     'unknown'                                   => 'Sconosciuto',
@@ -1351,7 +1351,7 @@ return [
     'send_test_email_text'             => 'Per vedere se la tua installazione è in grado di inviare e-mail, ti preghiamo di premere questo pulsante. Qui non vedrai un errore (se presente), <strong>i file di log rifletteranno eventuali errori</strong>. Puoi premere questo pulsante tutte le volte che vuoi. Non c\'è controllo dello spam. Il messaggio verrà inviato a <code>:email</code> e dovrebbe arrivare a breve.',
     'send_message'                     => 'Invia messaggio',
     'send_test_triggered'              => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
-    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'give_admin_careful'               => 'Gli utenti con privilegi di amministratore posso rimuovere i tuoi privilegi. Fai attenzione.',
 
     'split_transaction_title'               => 'Descrizione della transazione suddivisa',
     'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
@@ -1590,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetria',
     'telemetry_intro'                    => 'Firefly III supporta la raccolta e l\'invio della telemetria d\'uso. Ciò significa che Firefly III proverà a raccogliere informazioni su come usi Firefly III e la invierà allo sviluppatore di Firefly III. Questa è sempre un\'opzione da abilitare esplicitamente, ed è disabilitata per impostazione predefinita. Firefly III non raccoglierà né invierà mai informazioni finanziarie. Firefly III non raccoglierà né invierà mai informazioni finanziarie come somme o calcoli. I dati raccolti non saranno mai resi accessibili al pubblico.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_what_collected'           => 'Ciò che Firefly III raccoglie e invia è diverso per ogni versione. Stai eseguendo la versione :version. Ciò che Firefly III raccoglie nella versione :version è qualcosa che puoi leggere nelle pagine d\'aiuto. Clicca sull\'icona (?) nell\'angolo in alto a destra <a href="https://docs.firefly-iii.org/support/telemetry">o visita la pagina della documentazione</a>.',
     'telemetry_is_enabled_yes_no'        => 'La telemetria è abilitata in Firefly III?',
     'telemetry_disabled_no'              => 'La telemetria NON è abilitata',
     'telemetry_disabled_yes'             => 'La telemetria è abilitata',
@@ -1600,14 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III non ha raccolto dati di telemetria.',
     'records_telemetry_present'          => 'Firefly III ha raccolto :count dati di telemetria.',
     'telemetry_button_view'              => 'Visualizza telemetria',
-    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_button_delete'            => 'Elimina tutta la telemetria',
     'telemetry_admin_overview'           => 'Panoramica telemetria',
-    'telemetry_back_to_index'            => 'Back to telemetry index',
-    'not_yet_submitted'                  => 'Not yet submitted',
-    'telemetry_type_feature'             => 'Feature flag',
-    'telemetry_submit_all'               => 'Submit records',
-    'telemetry_delete_submitted_records' => 'Delete submitted records',
-    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
-    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
-    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
+    'telemetry_back_to_index'            => 'Torna all\'indice della telemetria',
+    'not_yet_submitted'                  => 'Non ancora inviata',
+    'telemetry_type_feature'             => 'Indicatore funzionalità',
+    'telemetry_submit_all'               => 'Invia dati',
+    'telemetry_delete_submitted_records' => 'Elimina i dati inviati',
+    'telemetry_submission_executed'      => 'I dati sono stati inviati. Controlla i file di log per maggiori informazioni.',
+    'telemetry_all_deleted'              => 'Tutti i dati di telemetria sono stati cancellati.',
+    'telemetry_submitted_deleted'        => 'Tutti i dati di telemetria inviati sono stati cancellati.'
 ];

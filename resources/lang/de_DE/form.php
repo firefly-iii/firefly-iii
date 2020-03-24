@@ -194,7 +194,7 @@ return [
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
     'login_name'            => 'Login',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Ist Administrator?',
 
     // import
     'apply_rules'           => 'Regeln anwenden',
@@ -266,10 +266,10 @@ return [
     'auto_budget_amount'            => 'Betrag des automatischen Budget',
     'auto_budget_period'            => 'Zeitraum des automatischen Budget',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Gesammelt',
+    'submitted' => 'Übermittelt',
+    'key' => 'Schlüssel',
+    'value' => 'Inhalt der Aufzeichnungen'
 
 
 ];

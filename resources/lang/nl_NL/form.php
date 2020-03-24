@@ -43,7 +43,7 @@ return [
     'journal_currency_id'       => 'Valuta',
     'currency_id'               => 'Valuta',
     'transaction_currency_id'   => 'Valuta',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Valuta',
     'external_ip'               => 'Het externe IP-adres van je server',
     'attachments'               => 'Bijlagen',
     'journal_amount'            => 'Bedrag',
@@ -194,7 +194,7 @@ return [
     'blocked'               => 'Is geblokkeerd?',
     'blocked_code'          => 'Reden voor blokkade',
     'login_name'            => 'Login',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Is beheerder?',
 
     // import
     'apply_rules'           => 'Regels toepassen',
@@ -263,13 +263,13 @@ return [
     'paid'                      => 'Betaald',
 
     'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_amount'            => 'Auto-budget bedrag',
+    'auto_budget_period'            => 'Auto-budget periode',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
+    'collected' => 'Verzameld',
+    'submitted' => 'Verstuurd',
     'key' => 'Key',
-    'value' => 'Content of record'
+    'value' => 'Inhoud'
 
 
 ];
