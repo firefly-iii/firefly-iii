@@ -63,8 +63,7 @@ class ScanAttachments extends Command
         $disk        = Storage::disk('upload');
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
-            $fileName         = $attachment->fileName();
-            $decryptedContent = '';
+            $fileName = $attachment->fileName();
             try {
                 $encryptedContent = $disk->get($fileName);
             } catch (FileNotFoundException $e) {
@@ -87,6 +86,7 @@ class ScanAttachments extends Command
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 }

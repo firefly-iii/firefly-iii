@@ -25,14 +25,17 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -58,7 +61,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('title', (string) trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -73,14 +76,14 @@ class IndexController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      *
+     * @return Factory|View
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
 
         // split collection
@@ -95,19 +98,19 @@ class IndexController extends Controller
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
-            $today      = new Carbon;
-            $year       = new Carbon;
+            $today = new Carbon;
+            $year  = new Carbon;
             $year->addYear();
-            if($recurrence->first_date > $today) {
-                $today =clone $recurrence->first_date;
-                $year = clone $today;
+            if ($recurrence->first_date > $today) {
+                $today = clone $recurrence->first_date;
+                $year  = clone $today;
                 $year->addYear();
             }
             $array                 = $transformer->transform($recurrence);
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
-            $array['occurrences']  = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year),0,1);
+            $array['occurrences']  = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
             $recurring[]           = $array;
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);

@@ -1,7 +1,7 @@
 <?php
 /**
  * database.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 
-
-
 $databaseUrl = getenv('DATABASE_URL');
 $host        = '';
 $username    = '';
@@ -33,7 +31,6 @@ $database    = '';
 $port        = '';
 
 if (!(false === $databaseUrl)) {
-
     $options  = parse_url($databaseUrl);
     $host     = $options['host'] ?? 'firefly_iii_db';
     $username = $options['user'] ?? 'firefly';
@@ -43,7 +40,6 @@ if (!(false === $databaseUrl)) {
 }
 
 return [
-
     'default'     => envNonEmpty('DB_CONNECTION', 'pgsql'),
     'connections' => [
         'sqlite' => [

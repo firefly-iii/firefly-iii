@@ -30,6 +30,7 @@ use Log;
  *
  * This class contains all the routines necessary to import from a file. Hint: there are none.
  *
+ * @deprecated
  * @codeCoverageIgnore
  */
 class FilePrerequisites implements PrerequisitesInterface
@@ -44,6 +45,7 @@ class FilePrerequisites implements PrerequisitesInterface
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
+
     /**
      * Returns view name that allows user to fill in prerequisites.
      *

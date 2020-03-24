@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
@@ -35,7 +36,7 @@ use Illuminate\Validation\Validator;
  */
 class RecurrenceUpdateRequest extends Request
 {
-    use RecurrenceValidation, TransactionValidation;
+    use RecurrenceValidation, TransactionValidation, CurrencyValidation;
 
     /**
      * Authorize logged in users.
@@ -63,7 +64,8 @@ class RecurrenceUpdateRequest extends Request
         if (null !== $this->get('apply_rules')) {
             $applyRules = $this->boolean('apply_rules');
         }
-        $return = [
+
+        return [
             'recurrence'   => [
                 'type'              => $this->nullableString('type'),
                 'title'             => $this->nullableString('title'),
@@ -78,8 +80,6 @@ class RecurrenceUpdateRequest extends Request
             'transactions' => $this->getTransactionData(),
             'repetitions'  => $this->getRepetitionData(),
         ];
-
-        return $return;
     }
 
     /**
@@ -141,7 +141,7 @@ class RecurrenceUpdateRequest extends Request
     {
         $validator->after(
             function (Validator $validator) {
-                $this->validateOneRecurrenceTransactionUpdate($validator);
+                $this->validateOneRecurrenceTransaction($validator);
                 $this->validateOneRepetitionUpdate($validator);
                 $this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
@@ -170,8 +170,8 @@ class RecurrenceUpdateRequest extends Request
             $return[] = [
                 'type'    => $repetition['type'],
                 'moment'  => $repetition['moment'],
-                'skip'    => (int)$repetition['skip'],
-                'weekend' => (int)$repetition['weekend'],
+                'skip'    => (int) $repetition['skip'],
+                'weekend' => (int) $repetition['weekend'],
             ];
         }
 
@@ -195,29 +195,7 @@ class RecurrenceUpdateRequest extends Request
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $return[] = [
-                'amount'                => $transaction['amount'],
-                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
-                'currency_code'         => $transaction['currency_code'] ?? null,
-                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
-                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
-                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
-                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
-                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
-                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'description'           => $transaction['description'],
-                'type'                  => $this->string('type'),
-
-                // new and updated fields:
-                'piggy_bank_id'         => isset($transaction['piggy_bank_id']) ? (int)$transaction['piggy_bank_id'] : null,
-                'piggy_bank_name'       => $transaction['piggy_bank_name'] ?? null,
-                'tags'                  => $transaction['tags'] ?? [],
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
-            ];
+            $return[] = $this->getSingleRecurrenceData($transaction);
         }
 
         return $return;

@@ -1,7 +1,7 @@
 <?php
 /**
  * logging.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,13 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 declare(strict_types=1);
 
 use FireflyIII\Support\Logging\AuditLogger;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Log Channel
@@ -38,7 +36,7 @@ return [
     */
 
     'default' => envNonEmpty('LOG_CHANNEL', 'stack'),
-    'level' => envNonEmpty('APP_LOG_LEVEL', 'info'),
+    'level'   => envNonEmpty('APP_LOG_LEVEL', 'info'),
     /*
     |--------------------------------------------------------------------------
     | Log Channels
@@ -54,39 +52,39 @@ return [
     */
 
     'channels' => [
-        'stack' => [
+        'stack'      => [
             'driver'   => 'stack',
             'channels' => ['daily', 'stdout'],
         ],
-        'single'    => [
+        'single'     => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-        'stdout'    => [
+        'stdout'     => [
             'driver' => 'single',
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-        'docker_out'    => [
+        'docker_out' => [
             'driver' => 'single',
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-        'daily'     => [
+        'daily'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
-        'audit'     => [
+        'audit'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-audit.log'),
             'tap'    => [AuditLogger::class],
             'level'  => 'info',
             'days'   => 90,
         ],
-        'dailytest' => [
+        'dailytest'  => [
             'driver' => 'daily',
             'path'   => storage_path('logs/test-ff3-' . PHP_SAPI . '.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),

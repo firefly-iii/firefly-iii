@@ -35,6 +35,9 @@ use Log;
 
 /**
  * Class YnabJobConfiguration
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class YnabJobConfiguration implements JobConfigurationInterface
 {
@@ -106,9 +109,9 @@ class YnabJobConfiguration implements JobConfigurationInterface
     /**
      * Get correct handler.
      *
-     * @return YnabJobConfigurationInterface
      * @throws FireflyException
      *
+     * @return YnabJobConfigurationInterface
      */
     private function getHandler(): YnabJobConfigurationInterface
     {

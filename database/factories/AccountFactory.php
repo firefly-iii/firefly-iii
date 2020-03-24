@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountFactory.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 
-
 $factory->define(
     FireflyIII\Models\Account::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'              => $faker->unique()->numberBetween(1000, 10000),
             'user_id'         => 1,

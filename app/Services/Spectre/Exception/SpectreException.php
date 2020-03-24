@@ -28,6 +28,7 @@ use Exception;
 /**
  * @codeCoverageIgnore
  * Class SpectreException
+ * @deprecated
  */
 class SpectreException extends Exception
 {

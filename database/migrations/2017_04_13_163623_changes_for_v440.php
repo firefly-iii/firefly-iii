@@ -1,7 +1,7 @@
 <?php
 /**
  * 2017_04_13_163623_changes_for_v440.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV440
+ * Class ChangesForV440.
  */
 class ChangesForV440 extends Migration
 {
@@ -83,8 +83,8 @@ class ChangesForV440 extends Migration
             'transactions',
             static function (Blueprint $table) {
                 if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
-                $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
-                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                    $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
+                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
                 }
             }
         );

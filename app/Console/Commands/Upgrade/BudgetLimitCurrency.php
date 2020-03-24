@@ -92,6 +92,8 @@ class BudgetLimitCurrency extends Command
 
         $this->markAsExecuted();
 
+        // app('telemetry')->feature('executed-command', $this->signature);
+
         return 0;
     }
 
@@ -102,7 +104,7 @@ class BudgetLimitCurrency extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore

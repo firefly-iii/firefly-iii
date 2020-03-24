@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use Illuminate\Support\Collection;
 
 /**

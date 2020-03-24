@@ -23,16 +23,10 @@
  */
 $(function () {
     "use strict";
-
-    //$('.updateIncome').on('click', updateIncome);
-
     /*
      On start, fill the "spent"-bar using the content from the page.
      */
-    //drawSpentBar();
     drawSpentBars();
-    //drawBudgetedBar();
-
     drawBudgetedBars();
 
     $('.update_ab').on('click', updateAvailableBudget);
@@ -45,8 +39,6 @@ $(function () {
     /*
      When the input changes, update the percentages for the budgeted bar:
      */
-    //$('input[type="number"]').on('change', updateBudgetedAmounts);
-
     $('.selectPeriod').change(function (e) {
         var selected = $(e.currentTarget);
         if (selected.find(":selected").val() !== "x") {
@@ -107,7 +99,8 @@ function updateBudgetedAmount(e) {
             if (data.left_per_day > 0) {
                 $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
             }
-            //$('.left_span[data-limit="0"][data-id="' + budgetId + '"]').text('XXXXX');
+            // update budgeted amount
+            updateTotalBudgetedAmount(data.transaction_currency_id);
 
         }).fail(function () {
             alert('I failed :(');
@@ -118,15 +111,57 @@ function updateBudgetedAmount(e) {
             amount: input.val(),
         }).done(function (data) {
             input.prop('disabled', false);
-            $('.left_span[data-limit="'+budgetLimitId+'"]').html(data.left_formatted);
+            $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted);
             if (data.left_per_day > 0) {
-                $('.left_span[data-limit="'+budgetLimitId+'"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
+                $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
             }
+            updateTotalBudgetedAmount(data.transaction_currency_id);
+            // update budgeted amount
 
         }).fail(function () {
             alert('I failed :(');
         });
     }
+}
+
+function updateTotalBudgetedAmount(currencyId) {
+    // fade info away:
+    $('span.budgeted_amount[data-currency="' + currencyId + '"]')
+        .fadeTo(100, 0.1, function () {
+            //$(this).fadeTo(500, 1.0);
+        });
+
+    // get new amount:
+    $.get(totalBudgetedUri.replace('REPLACEME',currencyId)).done(function (data) {
+        // set thing:
+        $('span.budgeted_amount[data-currency="' + currencyId + '"]')
+            .html(data.budgeted_formatted)
+            // fade back:
+            .fadeTo(300, 1.0);
+
+        // set bar:
+        var pct = parseFloat(data.percentage);
+        if (pct <= 100) {
+            console.log('<100 (' + pct + ')');
+            console.log($('div.budgeted_bar[data-currency="' + currencyId + '"]'));
+            // red bar to 0
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-danger').width('0%');
+            // orange to 0:
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-warning').width('0%');
+            // blue to the rest:
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-info').width(pct + '%');
+        } else {
+            var newPct = (100 / pct) * 100;
+            // red bar to new pct
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-danger').width(newPct + '%');
+            // orange to the rest:
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-warning').width((100 - newPct) + '%');
+            // blue to 0:
+            $('div.budgeted_bar[data-currency="' + currencyId + '"] div.progress-bar-info').width('0%');
+        }
+
+
+    });
 }
 
 var fixHelper = function (e, tr) {

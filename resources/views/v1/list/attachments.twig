@@ -1,0 +1,47 @@
+<table class="table table-hover">
+    {% for attachment in attachments %}
+        <tr>
+            <td style="width:120px;">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('attachments.edit', attachment.id) }}" class="btn btn-default"><i
+                                class="fa fa-pencil"></i></a>
+                    <a href="{{ route('attachments.delete', attachment.id) }}" class="btn btn-danger"><i
+                                class="fa fa-trash"></i></a>
+                    {% if attachment.file_exists %}
+                        <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><i
+                                    class="fa fa-download"></i></a>
+                    {% endif %}
+                    {% if not attachment.file_exists %}
+                        <a href="#" class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i></a>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                {% if attachment.file_exists %}
+                    <i class="fa {{ attachment.mime|mimeIcon }}"></i>
+                    <a href="{{ route('attachments.view', attachment.id) }}" title="{{ attachment.filename }}">
+                        {% if attachment.title %}
+                            {{ attachment.title }}
+                        {% else %}
+                            {{ attachment.filename }}
+                        {% endif %}
+                    </a>
+                    ({{ attachment.size|filesize }})
+                    {% if null != attachment.notes  and '' != attachment.notes %}
+                        {{ attachment.notes|markdown }}
+                    {% endif %}
+                {% endif %}
+                {% if not attachment.file_exists %}
+                    <i class="fa fa-fw fa-exclamation-triangle"></i>
+                    {% if attachment.title %}
+                        {{ attachment.title }}
+                    {% else %}
+                        {{ attachment.filename }}
+                    {% endif %}
+                    <br>
+                    <span class="text-danger">{{ 'attachment_not_found'|_ }}</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\RuleGroup;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -33,7 +34,9 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -49,6 +52,7 @@ class ExecutionController extends Controller
 
     /**
      * ExecutionController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -57,7 +61,7 @@ class ExecutionController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
+                app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->repository          = app(AccountRepositoryInterface::class);
@@ -73,10 +77,10 @@ class ExecutionController extends Controller
      * Execute the given rulegroup on a set of existing transactions.
      *
      * @param SelectTransactionsRequest $request
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup                 $ruleGroup
      *
+     * @throws Exception
      * @return RedirectResponse
-     * @throws \Exception
      */
     public function execute(SelectTransactionsRequest $request, RuleGroup $ruleGroup): RedirectResponse
     {
@@ -113,7 +117,7 @@ class ExecutionController extends Controller
         }
 
         // Tell the user that the job is queued
-        session()->flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string) trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
 
         return redirect()->route('rules.index');
     }
@@ -123,13 +127,13 @@ class ExecutionController extends Controller
      *
      * @param RuleGroup $ruleGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function selectTransactions(RuleGroup $ruleGroup)
     {
         $first    = session('first')->format('Y-m-d');
         $today    = Carbon::now()->format('Y-m-d');
-        $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
+        $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
         return view('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));
     }

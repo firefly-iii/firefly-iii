@@ -40,6 +40,13 @@ interface TagRepositoryInterface
     public function count(): int;
 
     /**
+     * @param Tag $tag
+     *
+     * @return Collection
+     */
+    public function getAttachments(Tag $tag): Collection;
+
+    /**
      * This method destroys a tag.
      *
      * @param Tag $tag

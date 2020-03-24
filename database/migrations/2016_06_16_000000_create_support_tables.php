@@ -1,7 +1,7 @@
 <?php
 /**
  * 2016_06_16_000000_create_support_tables.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class CreateSupportTables
+ * Class CreateSupportTables.
  */
 class CreateSupportTables extends Migration
 {
@@ -64,15 +64,12 @@ class CreateSupportTables extends Migration
         $this->createConfigurationTable();
     }
 
-    /**
-     *
-     */
     private function createAccountTypeTable(): void
     {
         if (!Schema::hasTable('account_types')) {
             Schema::create(
                 'account_types',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->string('type', 50);
@@ -89,7 +86,7 @@ class CreateSupportTables extends Migration
         if (!Schema::hasTable('configuration')) {
             Schema::create(
                 'configuration',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();
@@ -101,15 +98,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createCurrencyTable(): void
     {
         if (!Schema::hasTable('transaction_currencies')) {
             Schema::create(
                 'transaction_currencies',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();
@@ -124,15 +118,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createJobsTable(): void
     {
         if (!Schema::hasTable('jobs')) {
             Schema::create(
                 'jobs',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     // straight from Laravel
                     $table->bigIncrements('id');
                     $table->string('queue');
@@ -148,15 +139,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createPasswordTable(): void
     {
         if (!Schema::hasTable('password_resets')) {
             Schema::create(
                 'password_resets',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     // straight from laravel
                     $table->string('email')->index();
                     $table->string('token')->index();
@@ -166,15 +154,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createPermissionRoleTable(): void
     {
         if (!Schema::hasTable('permission_role')) {
             Schema::create(
                 'permission_role',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->integer('permission_id')->unsigned();
                     $table->integer('role_id')->unsigned();
 
@@ -187,15 +172,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createPermissionsTable(): void
     {
         if (!Schema::hasTable('permissions')) {
             Schema::create(
                 'permissions',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->string('name')->unique();
@@ -206,15 +188,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createRolesTable(): void
     {
         if (!Schema::hasTable('roles')) {
             Schema::create(
                 'roles',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->string('name')->unique();
@@ -225,15 +204,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createSessionsTable(): void
     {
         if (!Schema::hasTable('sessions')) {
             Schema::create(
                 'sessions',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->string('id')->unique();
                     $table->integer('user_id')->nullable();
                     $table->string('ip_address', 45)->nullable();
@@ -245,15 +221,12 @@ class CreateSupportTables extends Migration
         }
     }
 
-    /**
-     *
-     */
     private function createTransactionTypeTable(): void
     {
         if (!Schema::hasTable('transaction_types')) {
             Schema::create(
                 'transaction_types',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();

@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Waluta',
     'currency_id'               => 'Waluta',
     'transaction_currency_id'   => 'Waluta',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Zewnętrzny adres IP Twojego serwera',
     'attachments'               => 'Załączniki',
     'journal_amount'            => 'Kwota',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Jest zablokowany?',
     'blocked_code'          => 'Powód blokady',
     'login_name'            => 'Login',
+    'is_owner'              => 'Czy admin?',
 
     // import
     'apply_rules'           => 'Zastosuj reguły',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Konto źródłowe',
     'expected_on'               => 'Oczekiwany',
     'paid'                      => 'Zapłacone',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Zebrane',
+    'submitted' => 'Przesłane',
+    'key' => 'Klucz',
+    'value' => 'Zawartość rekordu'
+
 
 ];

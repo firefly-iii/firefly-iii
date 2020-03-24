@@ -34,38 +34,6 @@ use Log;
  */
 class RecurringCronjob extends AbstractCronjob
 {
-    /** @var bool */
-    private $force;
-
-    /** @var Carbon */
-    private $date;
-
-    /**
-     * RecurringCronjob constructor.
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        $this->force = false;
-        $this->date  = new Carbon;
-    }
-
-    /**
-     * @param bool $force
-     */
-    public function setForce(bool $force): void
-    {
-        $this->force = $force;
-    }
-
-    /**
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->date = $date;
-    }
-
     /**
      * @return bool
      * @throws FireflyException

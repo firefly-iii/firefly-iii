@@ -27,7 +27,10 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
+use Illuminate\View\View;
+use League\Csv\CannotInsertRecord;
 
 /**
  * Class IndexController
@@ -51,7 +54,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string)trans('firefly.export_data_title'));
+                app('view')->share('title', (string) trans('firefly.export_data_title'));
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -61,8 +64,8 @@ class IndexController extends Controller
     }
 
     /**
+     * @throws CannotInsertRecord
      * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
      */
     public function export(): LaravelResponse
     {
@@ -97,12 +100,13 @@ class IndexController extends Controller
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
             ->header('Content-Length', strlen($result['transactions']));
+
         // return CSV file made from 'transactions' array.
         return $response;
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -31,6 +30,8 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -45,6 +46,7 @@ class ShowController extends Controller
 
     /**
      * IndexController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -56,7 +58,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('title', (string) trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -71,8 +73,8 @@ class ShowController extends Controller
      *
      * @param Recurrence $recurrence
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
+     * @return Factory|View
      */
     public function show(Recurrence $recurrence)
     {
@@ -90,7 +92,7 @@ class ShowController extends Controller
             }
         }
 
-        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups'));
     }

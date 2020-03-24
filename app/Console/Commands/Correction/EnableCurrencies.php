@@ -62,28 +62,28 @@ class EnableCurrencies extends Command
         /** @var Collection $meta */
         $meta = AccountMeta::where('name', 'currency_id')->groupBy('data')->get(['data']);
         foreach ($meta as $entry) {
-            $found[] = (int)$entry->data;
+            $found[] = (int) $entry->data;
         }
 
         // get all from journals:
         /** @var Collection $journals */
         $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
         // get all from transactions
         /** @var Collection $transactions */
         $transactions = Transaction::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($transactions as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
         // get all from budget limits
         /** @var Collection $limits */
         $limits = BudgetLimit::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($limits as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
         $found = array_unique($found);
@@ -100,6 +100,8 @@ class EnableCurrencies extends Command
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified currencies in %s seconds.', $end));
+
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }

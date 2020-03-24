@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Ubetalt i :currency',
     'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
     'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Se etter oppdateringer',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Ny regelgruppe ":title" ble lagret!',
     'updated_rule_group'                         => 'Oppdaterte regelgruppen ":title".',
     'edit_rule_group'                            => 'Rediger regelgruppe ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Slett regelgruppe ":title"',
     'deleted_rule_group'                         => 'Slettet regelgruppe ":title"',
     'update_rule_group'                          => 'Oppdater regelgruppe',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Regning matcher transaksjoner mellom :low og :high.',
@@ -812,6 +829,7 @@ return [
     'skips_over'                                => 'hopper over',
     'bill_store_error'                          => 'Det oppsto en uventet feil mens du lagret den nye regningen. Vennligst sjekk loggfilene',
     'list_inactive_rule'                        => 'inaktiv regel',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1333,6 +1351,7 @@ return [
     'send_test_email_text'             => 'For å se om installasjonen er kapabel til å sende mail, vennligst trykk på denne knappen. Du vil ikke se en feilmelding her, (hvis det kommer en) <strong>kun logg filene som vil vise feilmeldinger</strong>. Du kan trykke på denne knappen så mange ganger du ønsker, det er ingen spam kontroll. Meldingen vil bli sent til <code>:email</code> og bør ankomme fort.',
     'send_message'                     => 'Send melding',
     'send_test_triggered'              => 'Test ble utløst. Sjekk innboksen din og loggfilene.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
@@ -1571,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetry',
     'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
     'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
     'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
     'telemetry_disabled_yes'             => 'Telemetry is enabled',
@@ -1581,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
     'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
     'telemetry_button_view'              => 'View telemetry',
-    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetry overview',
-    'telemetry_back_to_index'            => 'Back to telemetry'
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

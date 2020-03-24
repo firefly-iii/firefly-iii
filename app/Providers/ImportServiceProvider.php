@@ -30,6 +30,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * @codeCoverageIgnore
  * Class ImportServiceProvider.
+ * @deprecated
  */
 class ImportServiceProvider extends ServiceProvider
 {

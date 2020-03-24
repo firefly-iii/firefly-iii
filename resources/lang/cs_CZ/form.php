@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Měna',
     'currency_id'               => 'Měna',
     'transaction_currency_id'   => 'Měna',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Externí IP adresa vašeho serveru',
     'attachments'               => 'Přílohy',
     'journal_amount'            => 'Částka',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Je blokován?',
     'blocked_code'          => 'Důvod blokování',
     'login_name'            => 'Login',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Uplatnit pravidla',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Zdrojový účet',
     'expected_on'               => 'Očekáváno v',
     'paid'                      => 'Zaplaceno',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

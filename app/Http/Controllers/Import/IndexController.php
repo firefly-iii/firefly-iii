@@ -28,12 +28,19 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\ImportProvider;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as LaravelResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
  *
  * Class IndexController
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class IndexController extends Controller
 {
@@ -54,7 +61,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', (string)trans('firefly.import_index_title'));
+                app('view')->share('title', (string) trans('firefly.import_index_title'));
                 $this->repository     = app(ImportJobRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
                 $this->providers      = ImportProvider::getProviders();
@@ -69,14 +76,14 @@ class IndexController extends Controller
      *
      * @param string $importProvider
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      *
      */
     public function create(string $importProvider)
     {
-        $hasPreReq      = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
-        $hasConfig      = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
-        $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $importProvider));
+        $hasPreReq      = (bool) config(sprintf('import.has_prereq.%s', $importProvider));
+        $hasConfig      = (bool) config(sprintf('import.has_job_config.%s', $importProvider));
+        $allowedForDemo = (bool) config(sprintf('import.allowed_for_demo.%s', $importProvider));
         $isDemoUser     = $this->userRepository->hasRole(auth()->user(), 'demo');
 
         Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
@@ -109,7 +116,7 @@ class IndexController extends Controller
         // job has prerequisites:
         Log::debug('Job provider has prerequisites.');
         /** @var PrerequisitesInterface $providerPre */
-        $providerPre = app((string)config(sprintf('import.prerequisites.%s', $importProvider)));
+        $providerPre = app((string) config(sprintf('import.prerequisites.%s', $importProvider)));
         $providerPre->setUser($importJob->user);
 
         // and are not filled in:
@@ -177,12 +184,12 @@ class IndexController extends Controller
     /**
      * General import index.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
         $providers    = $this->providers;
-        $subTitle     = (string)trans('import.index_breadcrumb');
+        $subTitle     = (string) trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
         $isDemoUser   = $this->userRepository->hasRole(auth()->user(), 'demo');
 

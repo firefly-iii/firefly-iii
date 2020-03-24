@@ -37,6 +37,10 @@
             </td>
             <td>
                 <a href="{{ route('piggy-banks.show', piggy.id) }}" title="{{ piggy.account_name }}">{{ piggy.name }}</a>
+                {% if piggy.attachments.count > 0 %}
+                    <i class="fa fa-fw fa-paperclip"></i>
+                {% endif %}
+
             </td>
             <td style="text-align: right;" class="piggySaved">
                 <span title="Saved so far" style="text-align:right;">{{ formatAmountBySymbol(piggy.current_amount,piggy.currency_symbol,piggy.currency_decimal_places) }}</span>

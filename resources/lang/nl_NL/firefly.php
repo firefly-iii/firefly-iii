@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Nog niet betaald in :currency',
     'is_alpha_warning'                           => 'Je gebruikt een ALPHA versie. Let op bugs en fouten.',
     'is_beta_warning'                            => 'Je gebruikt een BETA versie. Let op bugs en fouten.',
+    'all_destination_accounts'                   => 'Doelrekeningen',
+    'all_source_accounts'                        => 'Bronrekeningen',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Nieuwe regelgroep ":title" opgeslagen!',
     'updated_rule_group'                         => 'Regelgroep ":title" geüpdatet.',
     'edit_rule_group'                            => 'Wijzig regelgroep ":title"',
+    'duplicate_rule'                             => 'Dupliceer regel ":title"',
+    'rule_copy_of'                               => 'Kopie van ":title"',
+    'duplicated_rule'                            => 'Regel ":title" gekopieerd naar ":newTitle"',
     'delete_rule_group'                          => 'Verwijder regelgroep ":title"',
     'deleted_rule_group'                         => 'Regelgroep ":title" verwijderd',
     'update_rule_group'                          => 'Wijzig regelgroep',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
+    'auto_budget_none'                          => 'Geen auto-budget',
+    'auto_budget_reset'                         => 'Vast bedrag elke periode',
+    'auto_budget_rollover'                      => 'Voeg elke periode een bedrag toe',
+    'auto_budget_period_daily'                  => 'Dagelijks',
+    'auto_budget_period_weekly'                 => 'Wekelijks',
+    'auto_budget_period_monthly'                => 'Maandelijks',
+    'auto_budget_period_quarterly'              => 'Elk kwartaal',
+    'auto_budget_period_half_year'              => 'Elk half jaar',
+    'auto_budget_period_yearly'                 => 'Jaarlijks',
+    'auto_budget_help'                          => 'Je kan meer lezen over deze functie in de hulppagina\'s. Klik op het (?) icoontje rechtsboven.',
+    'auto_budget_reset_icon'                    => 'Het budget wordt periodiek ingesteld',
+    'auto_budget_rollover_icon'                 => 'Het budget wordt periodiek aangevuld',
 
     // bills:
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
@@ -812,6 +829,7 @@ return [
     'skips_over'                                => 'slaat over',
     'bill_store_error'                          => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
     'list_inactive_rule'                        => 'inactieve regel',
+    'bill_edit_rules'                           => 'Firefly III gaat proberen de :count gerelateerde regel(s) ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -970,7 +988,7 @@ return [
     'no_budget'                                 => '(geen budget)',
     'account_per_budget'                        => 'Rekening per budget',
     'account_per_category'                      => 'Rekening per categorie',
-    'create_new_object'                         => 'Create',
+    'create_new_object'                         => 'Opslaan',
     'empty'                                     => '(leeg)',
     'all_other_budgets'                         => '(alle andere budgetten)',
     'all_other_accounts'                        => '(alle andere rekeningen)',
@@ -1333,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Druk op deze knop om te zien of je installatie mail kan versturen. Je ziet hier geen foutmeldingen (als ze er zijn), deze <strong>vind je in de logboeken</strong>. Je kan deze knop zo vaak indrukken als je wilt. Er is geen optie die spam voorkomt. Het testbericht wordt verstuurd naar <code>:email</code> en zou vrij vlot aan moeten komen.',
     'send_message'                     => 'Verstuur bericht',
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
+    'give_admin_careful'               => 'Gebruikers die je beheerdersrechten geeft kunnen die van jou afpakken. Wees voorzichtig.',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
     'split_transaction_title_help'          => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
@@ -1571,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetrie',
     'telemetry_intro'                    => 'Firefly III kan telemetrie verzamelen over je gebruik. Dat betekent dat Firefly III informatie probeert te verzamelen over hoe je Firefly III gebruikt, en deze zal verzenden naar de developer van Firefly III. Dit is altijd opt-in en staat standaard uit. Firefly III zal nooit financiele informatie verzamelen of verzenden. Firefly III zal ook nooit financiële meta-informatie verzamelen of verzenden (zoals sommen of totalen). De verstuurde informatie wordt nooit publiek beschikbaar gemaakt.',
-    'telemetry_what_collected'           => 'Wat Firefly III verzamelt en verzend is per versie anders. Je draait versie :version. Wat Firefly III verzamelt en verzend in versie :version lees je in de help-pagina\'s. Klik op het (?) icoontje rechtsboven <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">of kijk direct op GitHub</a>.',
+    'telemetry_what_collected'           => 'Wat Firefly III verzamelt en verstuurt is per versie anders. Je draait versie :version. Wat Firefly III verzamelt en verstuurt in versie :version lees je in de help-pagina\'s. Klik op het (?) icoontje rechtsboven <a href="https://docs.firefly-iii.org/support/telemetry">of kijk direct in de documentatie</a>.',
     'telemetry_is_enabled_yes_no'        => 'Zal Firefly III telemetrie verzenden?',
     'telemetry_disabled_no'              => 'Telemetrie staat UIT',
     'telemetry_disabled_yes'             => 'Telemetrie staat aan',
@@ -1581,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III heeft geen telemetrie verzameld.',
     'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record(s) verzameld.',
     'telemetry_button_view'              => 'Bekijk telemetrie',
-    'telemetry_button_delete'            => 'Verwijder telemetrie',
+    'telemetry_button_delete'            => 'Verwijder alle telemetrie',
     'telemetry_admin_overview'           => 'Telemetrie-overzicht',
-    'telemetry_back_to_index'            => 'Terug naar telemetrie'
+    'telemetry_back_to_index'            => 'Terug naar telemetrie-index',
+    'not_yet_submitted'                  => 'Nog niet verstuurd',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Verstuur records',
+    'telemetry_delete_submitted_records' => 'Verwijder verstuurde records',
+    'telemetry_submission_executed'      => 'Records zijn verstuurd. Check je log files voor meer info.',
+    'telemetry_all_deleted'              => 'Alle telemetrierecords zijn verwijderd.',
+    'telemetry_submitted_deleted'        => 'Alle verstuurde telemetrierecords zijn verwijderd.'
 ];

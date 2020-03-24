@@ -293,11 +293,16 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Remove any role the user has.
      *
-     * @param User $user
+     * @param User   $user
+     * @param string $role
      */
-    public function removeRole(User $user): void
+    public function removeRole(User $user, string $role): void
     {
-        $user->roles()->sync([]);
+        $roleObj = $this->getRole($role);
+        if (null === $roleObj) {
+            return;
+        }
+        $user->roles()->detach($roleObj->id);
     }
 
     /**
@@ -364,7 +369,8 @@ class UserRepository implements UserRepositoryInterface
             $user->blocked_code = $data['blocked_code'];
         }
         if (isset($data['role']) && '' === $data['role']) {
-            $this->removeRole($user);
+            $this->removeRole($user, 'owner');
+            $this->removeRole($user, 'demo');
         }
 
         $user->save();

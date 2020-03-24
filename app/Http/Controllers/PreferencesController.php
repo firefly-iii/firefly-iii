@@ -26,7 +26,11 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class PreferencesController.
@@ -35,6 +39,7 @@ class PreferencesController extends Controller
 {
     /**
      * PreferencesController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -43,7 +48,7 @@ class PreferencesController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.preferences'));
+                app('view')->share('title', (string) trans('firefly.preferences'));
                 app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
@@ -56,7 +61,7 @@ class PreferencesController extends Controller
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -70,13 +75,13 @@ class PreferencesController extends Controller
             $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
             if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
-                $role = sprintf('opt_group_l_%s',$type);
+                $role = sprintf('opt_group_l_%s', $type);
             }
 
             if ('' === $role || 'opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
-            $groupedAccounts[trans(sprintf('firefly.%s',$role))][$account->id] = $account->name;
+            $groupedAccounts[trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;
         }
         ksort($groupedAccounts);
 
@@ -86,11 +91,14 @@ class PreferencesController extends Controller
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
         $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $languages          = config('firefly.languages');
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+
+        ksort($languages);
 
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
@@ -104,6 +112,7 @@ class PreferencesController extends Controller
                 'language',
                 'groupedAccounts',
                 'frontPageAccounts',
+                'languages',
                 'tjOptionalFields',
                 'viewRange',
                 'customFiscalYear',
@@ -118,7 +127,7 @@ class PreferencesController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      *
      */
     public function postIndex(Request $request)
@@ -127,7 +136,7 @@ class PreferencesController extends Controller
         $frontPageAccounts = [];
         if (is_array($request->get('frontPageAccounts')) && count($request->get('frontPageAccounts')) > 0) {
             foreach ($request->get('frontPageAccounts') as $id) {
-                $frontPageAccounts[] = (int)$id;
+                $frontPageAccounts[] = (int) $id;
             }
             app('preferences')->set('frontPageAccounts', $frontPageAccounts);
         }
@@ -140,14 +149,14 @@ class PreferencesController extends Controller
         session()->forget('range');
 
         // custom fiscal year
-        $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
-        $fiscalYearStart  = date('m-d', strtotime((string)$request->get('fiscalYearStart')));
+        $customFiscalYear = 1 === (int) $request->get('customFiscalYear');
+        $fiscalYearStart  = date('m-d', strtotime((string) $request->get('fiscalYearStart')));
         app('preferences')->set('customFiscalYear', $customFiscalYear);
         app('preferences')->set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
         app('preferences')->set('listPageSize', 50);
-        $listPageSize = (int)$request->get('listPageSize');
+        $listPageSize = (int) $request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             app('preferences')->set('listPageSize', $listPageSize);
         }
@@ -178,7 +187,7 @@ class PreferencesController extends Controller
         ];
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 
-        session()->flash('success', (string)trans('firefly.saved_preferences'));
+        session()->flash('success', (string) trans('firefly.saved_preferences'));
         app('preferences')->mark();
 
         return redirect(route('preferences.index'));

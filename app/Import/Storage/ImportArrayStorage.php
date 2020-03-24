@@ -32,17 +32,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
-use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
@@ -51,6 +48,9 @@ use Log;
  * Creates new transactions based on arrays.
  *
  * Class ImportArrayStorage
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  *
  */
 class ImportArrayStorage
@@ -105,8 +105,8 @@ class ImportArrayStorage
      * - Link to tag
      * - Run rules (if set to)
      *
-     * @return Collection
      * @throws FireflyException
+     * @return Collection
      */
     public function store(): Collection
     {
@@ -131,7 +131,7 @@ class ImportArrayStorage
         app('preferences')->mark();
 
         // email about this:
-        event(new RequestedReportOnJournals((int)$this->importJob->user_id, $collection));
+        event(new RequestedReportOnJournals((int) $this->importJob->user_id, $collection));
 
         return $collection;
     }
@@ -216,7 +216,7 @@ class ImportArrayStorage
             $hash       = $this->getHash($transaction);
             $existingId = $this->hashExists($hash);
             if (null !== $existingId) {
-                $message = (string)trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
+                $message = (string) trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
                 $this->logDuplicateObject($transaction, $existingId);
                 $this->repository->addErrorMessage($this->importJob, $message);
 
@@ -225,7 +225,7 @@ class ImportArrayStorage
 
             // do transfer detection:
             if ($this->checkForTransfers && $this->transferExists($transaction)) {
-                $message = (string)trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
+                $message = (string) trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
                 $this->logDuplicateTransfer($transaction);
                 $this->repository->addErrorMessage($this->importJob, $message);
 
@@ -319,7 +319,7 @@ class ImportArrayStorage
         }
         Log::info(sprintf('Found a transaction journal with an existing hash: %s', $hash));
 
-        return (int)$entry->transaction_journal_id;
+        return (int) $entry->transaction_journal_id;
     }
 
     /**
@@ -336,7 +336,7 @@ class ImportArrayStorage
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->importJob->user);
         $data = [
-            'tag'         => (string)trans('import.import_with_key', ['key' => $this->importJob->key]),
+            'tag'         => (string) trans('import.import_with_key', ['key' => $this->importJob->key]),
             'date'        => new Carbon,
             'description' => null,
             'latitude'    => null,
@@ -473,9 +473,9 @@ class ImportArrayStorage
     /**
      * Store array as journals.
      *
-     * @return Collection
      * @throws FireflyException
      *
+     * @return Collection
      */
     private function storeGroupArray(): Collection
     {
@@ -529,21 +529,21 @@ class ImportArrayStorage
 
         // get the amount:
         /** @noinspection UnnecessaryCastingInspection */
-        $amount = (string)($transaction['amount'] ?? '0');
+        $amount = (string) ($transaction['amount'] ?? '0');
         if (bccomp($amount, '0') === -1) {
             $amount = bcmul($amount, '-1'); // @codeCoverageIgnore
         }
 
         // get the description:
         //$description = '' === (string)$transaction['description'] ? $transaction['description'] : $transaction['description'];
-        $description = (string)$transaction['description'];
+        $description = (string) $transaction['description'];
 
         // get the source and destination ID's:
-        $transactionSourceIDs = [(int)$transaction['source_id'], (int)$transaction['destination_id']];
+        $transactionSourceIDs = [(int) $transaction['source_id'], (int) $transaction['destination_id']];
         sort($transactionSourceIDs);
 
         // get the source and destination names:
-        $transactionSourceNames = [(string)$transaction['source_name'], (string)$transaction['destination_name']];
+        $transactionSourceNames = [(string) $transaction['source_name'], (string) $transaction['destination_name']];
         sort($transactionSourceNames);
 
         // then loop all transfers:
@@ -585,7 +585,7 @@ class ImportArrayStorage
             Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
 
             // compare source and destination id's
-            $transferSourceIDs = [(int)$transfer['source_account_id'], (int)$transfer['destination_account_id']];
+            $transferSourceIDs = [(int) $transfer['source_account_id'], (int) $transfer['destination_account_id']];
             sort($transferSourceIDs);
             /** @noinspection DisconnectedForeachInstructionInspection */
             Log::debug('Comparing current transaction source+dest IDs', $transactionSourceIDs);
@@ -600,7 +600,7 @@ class ImportArrayStorage
             unset($transferSourceIDs);
 
             // compare source and destination names
-            $transferSource = [(string)($transfer['source_account_name'] ?? ''), (string)($transfer['destination_account_name'] ?? '')];
+            $transferSource = [(string) ($transfer['source_account_name'] ?? ''), (string) ($transfer['destination_account_name'] ?? '')];
             sort($transferSource);
             /** @noinspection DisconnectedForeachInstructionInspection */
             Log::debug('Comparing current transaction source+dest names', $transactionSourceNames);

@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Devise',
     'currency_id'               => 'Devise',
     'transaction_currency_id'   => 'Devise',
+    'auto_budget_currency_id'   => 'Devise',
     'external_ip'               => 'L\'adresse IP externe de votre serveur',
     'attachments'               => 'Documents joints',
     'journal_amount'            => 'Montant',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Est bloqué ?',
     'blocked_code'          => 'Raison du blocage',
     'login_name'            => 'Identifiant',
+    'is_owner'              => 'Est administrateur ?',
 
     // import
     'apply_rules'           => 'Appliquer les règles',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Compte source',
     'expected_on'               => 'Prévu le',
     'paid'                      => 'Payé',
+
+    'auto_budget_type'            => 'Budget automatique',
+    'auto_budget_amount'            => 'Montant du budget automatique',
+    'auto_budget_period'            => 'Période du budget automatique',
+
+    'collected' => 'Collecté',
+    'submitted' => 'Envoyé',
+    'key' => 'Clé',
+    'value' => 'Contenu de l\'enregistrement'
+
 
 ];

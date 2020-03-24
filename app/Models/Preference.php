@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,17 +39,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $created_at
  * @property int    $id
  * @property User   user
- * @property int $user_id
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference whereUserId($value)
- * @mixin \Eloquent
+ * @property int    $user_id
+ * @method static Builder|Preference newModelQuery()
+ * @method static Builder|Preference newQuery()
+ * @method static Builder|Preference query()
+ * @method static Builder|Preference whereCreatedAt($value)
+ * @method static Builder|Preference whereData($value)
+ * @method static Builder|Preference whereId($value)
+ * @method static Builder|Preference whereName($value)
+ * @method static Builder|Preference whereUpdatedAt($value)
+ * @method static Builder|Preference whereUserId($value)
+ * @mixin Eloquent
  */
 class Preference extends Model
 {
@@ -71,8 +73,8 @@ class Preference extends Model
      *
      * @param string $value
      *
-     * @return Preference
      * @throws NotFoundHttpException
+     * @return Preference
      */
     public static function routeBinder(string $value): Preference
     {

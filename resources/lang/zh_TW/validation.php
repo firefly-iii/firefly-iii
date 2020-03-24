@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => '總金額不能為零。',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => '小豬撲滿的名稱必須是獨一無二的。',
+
     'secure_password'                => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => '定期重複交易的重複類型無效。',
     'valid_recurrence_rep_moment'    => '重複時刻在此重複類型無效。',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

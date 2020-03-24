@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class ImportableConverter
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ImportableConverter
 {

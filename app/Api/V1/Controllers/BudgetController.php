@@ -25,13 +25,15 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Exception;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
-use FireflyIII\Api\V1\Requests\BudgetRequest;
+use FireflyIII\Api\V1\Requests\BudgetStoreRequest;
+use FireflyIII\Api\V1\Requests\BudgetUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\Transformers\BudgetTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -89,7 +91,7 @@ class BudgetController extends Controller
     public function budgetLimits(Budget $budget): JsonResponse
     {
         $manager  = $this->getManager();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budget->id);
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
@@ -103,6 +105,35 @@ class BudgetController extends Controller
 
 
         $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function attachments(Budget $budget): JsonResponse
+    {
+        $manager    = $this->getManager();
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection = $this->repository->getAttachments($budget);
+
+        $count       = $collection->count();
+        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.budgets.attachments', [$budget->id]) . $this->buildParams());
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -134,7 +165,7 @@ class BudgetController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getBudgets();
@@ -179,13 +210,13 @@ class BudgetController extends Controller
     /**
      * Store a budget.
      *
-     * @param BudgetRequest $request
+     * @param BudgetStoreRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
      *
+     * @return JsonResponse
      */
-    public function store(BudgetRequest $request): JsonResponse
+    public function store(BudgetStoreRequest $request): JsonResponse
     {
         $budget  = $this->repository->store($request->getAll());
         $manager = $this->getManager();
@@ -205,8 +236,8 @@ class BudgetController extends Controller
      * @param BudgetLimitRequest $request
      * @param Budget             $budget
      *
-     * @return JsonResponse
      * @throws Exception
+     * @return JsonResponse
      */
     public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
     {
@@ -236,7 +267,7 @@ class BudgetController extends Controller
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');
@@ -291,12 +322,12 @@ class BudgetController extends Controller
     /**
      * Update a budget.
      *
-     * @param BudgetRequest $request
-     * @param Budget        $budget
+     * @param BudgetUpdateRequest $request
+     * @param Budget              $budget
      *
      * @return JsonResponse
      */
-    public function update(BudgetRequest $request, Budget $budget): JsonResponse
+    public function update(BudgetUpdateRequest $request, Budget $budget): JsonResponse
     {
         $data    = $request->getAll();
         $budget  = $this->repository->update($budget, $data);

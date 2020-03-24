@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\IsValidAttachmentModel;
 
 /**
@@ -69,14 +66,14 @@ class AttachmentStoreRequest extends Request
      */
     public function rules(): array
     {
-        $models = implode(
-            ',',
-            [
-                str_replace('FireflyIII\\Models\\', '', Bill::class),
-                str_replace('FireflyIII\\Models\\', '', ImportJob::class),
-                str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
-            ]
+        $models = config('firefly.valid_attachment_models');
+        $models = array_map(
+
+            static function (string $className) {
+                return str_replace('FireflyIII\\Models\\', '', $className);
+            }, $models
         );
+        $models = implode(',', $models);
         $model  = $this->string('attachable_type');
 
         return [

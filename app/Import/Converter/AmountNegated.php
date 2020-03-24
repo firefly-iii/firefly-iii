@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Class AmountNegated
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AmountNegated implements ConverterInterface
 {

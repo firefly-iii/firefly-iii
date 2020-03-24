@@ -76,7 +76,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
         // render!
         try {
             $result = view(
-                'reports.tag.month', compact('accountIds', 'reportType', 'tagIds')
+                'reports.tag.month',
+                compact('accountIds', 'reportType', 'tagIds')
             )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
@@ -177,6 +178,4 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         return $this;
     }
-
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * ldap_auth.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,9 +22,30 @@
 
 declare(strict_types=1);
 
+use Adldap\Laravel\Events\Authenticated;
+use Adldap\Laravel\Events\AuthenticatedModelTrashed;
+use Adldap\Laravel\Events\AuthenticatedWithWindows;
+use Adldap\Laravel\Events\Authenticating;
+use Adldap\Laravel\Events\AuthenticationFailed;
+use Adldap\Laravel\Events\AuthenticationRejected;
+use Adldap\Laravel\Events\AuthenticationSuccessful;
+use Adldap\Laravel\Events\DiscoveredWithCredentials;
+use Adldap\Laravel\Events\Importing;
+use Adldap\Laravel\Events\Synchronized;
+use Adldap\Laravel\Events\Synchronizing;
+use Adldap\Laravel\Listeners\LogAuthenticated;
+use Adldap\Laravel\Listeners\LogAuthentication;
+use Adldap\Laravel\Listeners\LogAuthenticationFailure;
+use Adldap\Laravel\Listeners\LogAuthenticationRejection;
+use Adldap\Laravel\Listeners\LogAuthenticationSuccess;
+use Adldap\Laravel\Listeners\LogDiscovery;
+use Adldap\Laravel\Listeners\LogImport;
+use Adldap\Laravel\Listeners\LogSynchronized;
+use Adldap\Laravel\Listeners\LogSynchronizing;
+use Adldap\Laravel\Listeners\LogTrashedModel;
+use Adldap\Laravel\Listeners\LogWindowsAuth;
 use Adldap\Laravel\Scopes\UidScope;
 use Adldap\Laravel\Scopes\UpnScope;
-
 
 // default OpenLDAP scopes.
 $scopes = [
@@ -39,9 +60,7 @@ if ('ActiveDirectory' === env('ADLDAP_CONNECTION_SCHEME')) {
     ];
 }
 
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Connection
@@ -77,7 +96,6 @@ return [
 
     'provider' => Adldap\Laravel\Auth\DatabaseUserProvider::class,
     //'provider' => Adldap\Laravel\Auth\NoDatabaseUserProvider::class,
-
 
     /*
     |--------------------------------------------------------------------------
@@ -173,8 +191,8 @@ return [
 
         'ldap' => [
 
-            'locate_users_by'     => envNonEmpty('ADLDAP_DISCOVER_FIELD', 'userprincipalname'),
-            'bind_users_by' => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
+            'locate_users_by' => envNonEmpty('ADLDAP_DISCOVER_FIELD', 'userprincipalname'),
+            'bind_users_by'   => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
 
         ],
 
@@ -334,17 +352,17 @@ return [
         'enabled' => true,
         'events'  => [
 
-            \Adldap\Laravel\Events\Importing::class                 => \Adldap\Laravel\Listeners\LogImport::class,
-            \Adldap\Laravel\Events\Synchronized::class              => \Adldap\Laravel\Listeners\LogSynchronized::class,
-            \Adldap\Laravel\Events\Synchronizing::class             => \Adldap\Laravel\Listeners\LogSynchronizing::class,
-            \Adldap\Laravel\Events\Authenticated::class             => \Adldap\Laravel\Listeners\LogAuthenticated::class,
-            \Adldap\Laravel\Events\Authenticating::class            => \Adldap\Laravel\Listeners\LogAuthentication::class,
-            \Adldap\Laravel\Events\AuthenticationFailed::class      => \Adldap\Laravel\Listeners\LogAuthenticationFailure::class,
-            \Adldap\Laravel\Events\AuthenticationRejected::class    => \Adldap\Laravel\Listeners\LogAuthenticationRejection::class,
-            \Adldap\Laravel\Events\AuthenticationSuccessful::class  => \Adldap\Laravel\Listeners\LogAuthenticationSuccess::class,
-            \Adldap\Laravel\Events\DiscoveredWithCredentials::class => \Adldap\Laravel\Listeners\LogDiscovery::class,
-            \Adldap\Laravel\Events\AuthenticatedWithWindows::class  => \Adldap\Laravel\Listeners\LogWindowsAuth::class,
-            \Adldap\Laravel\Events\AuthenticatedModelTrashed::class => \Adldap\Laravel\Listeners\LogTrashedModel::class,
+            Importing::class                 => LogImport::class,
+            Synchronized::class              => LogSynchronized::class,
+            Synchronizing::class             => LogSynchronizing::class,
+            Authenticated::class             => LogAuthenticated::class,
+            Authenticating::class            => LogAuthentication::class,
+            AuthenticationFailed::class      => LogAuthenticationFailure::class,
+            AuthenticationRejected::class    => LogAuthenticationRejection::class,
+            AuthenticationSuccessful::class  => LogAuthenticationSuccess::class,
+            DiscoveredWithCredentials::class => LogDiscovery::class,
+            AuthenticatedWithWindows::class  => LogWindowsAuth::class,
+            AuthenticatedModelTrashed::class => LogTrashedModel::class,
 
         ],
     ],

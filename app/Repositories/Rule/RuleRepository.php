@@ -475,4 +475,32 @@ class RuleRepository implements RuleRepositoryInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function duplicate(Rule $rule): Rule
+    {
+        $newRule = $rule->replicate();
+        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule->save();
+
+        // replicate all triggers
+        /** @var RuleTrigger $trigger */
+        foreach ($rule->ruleTriggers as $trigger) {
+            $newTrigger          = $trigger->replicate();
+            $newTrigger->rule_id = $newRule->id;
+            $newTrigger->save();
+        }
+
+        // replicate all actions
+        /** @var RuleAction $action */
+        foreach ($rule->ruleActions as $action) {
+            $newAction          = $action->replicate();
+            $newAction->rule_id = $newRule->id;
+            $newAction->save();
+        }
+
+        return $newRule;
+    }
 }

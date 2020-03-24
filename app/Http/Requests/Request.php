@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 use Log;
 
 /**
@@ -123,7 +124,7 @@ class Request extends FormRequest
             return null;
         }
 
-        return (float)$res;
+        return (float) $res;
     }
 
     /**
@@ -135,7 +136,7 @@ class Request extends FormRequest
      */
     public function integer(string $field): int
     {
-        return (int)$this->get($field);
+        return (int) $this->get($field);
     }
 
     /**
@@ -154,7 +155,37 @@ class Request extends FormRequest
             return null;
         }
 
-        return (int)$string;
+        return (int) $string;
+    }
+
+    /**
+     * Return string value, but keep newlines.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function nlString(string $field): string
+    {
+        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
+    }
+
+    /**
+     * Parse and clean a string, but keep the newlines.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function nlStringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->nlCleanString($string);
+
+        return '' === $result ? null : $result;
+
     }
 
     /**
@@ -170,12 +201,28 @@ class Request extends FormRequest
             return null;
         }
 
-        $value = (string)$this->get($field);
+        $value = (string) $this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int)$value;
+        return (int) $value;
+    }
+
+    /**
+     * Return string value, but keep newlines, or NULL if empty.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function nullableNlString(string $field): ?string
+    {
+        if (!$this->has($field)) {
+            return null;
+        }
+
+        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -190,7 +237,12 @@ class Request extends FormRequest
         if (!$this->has($field)) {
             return null;
         }
-        return app('steam')->cleanString((string)($this->get($field) ?? ''));
+        $res = trim(app('steam')->cleanString((string) ($this->get($field) ?? '')));
+        if ('' === $res) {
+            return null;
+        }
+
+        return $res;
     }
 
     /**
@@ -202,35 +254,7 @@ class Request extends FormRequest
      */
     public function string(string $field): string
     {
-        return app('steam')->cleanString((string)($this->get($field) ?? ''));
-    }
-
-    /**
-     * Return string value, but keep newlines.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function nlString(string $field): string
-    {
-        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
-    }
-
-
-    /**
-     * Return string value, but keep newlines, or NULL if empty.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function nullableNlString(string $field): ?string
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
-        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
+        return app('steam')->cleanString((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -252,21 +276,61 @@ class Request extends FormRequest
     }
 
     /**
-     * Parse and clean a string, but keep the newlines.
+     * Read the submitted Request data and add new or updated Location data to the array.
      *
-     * @param string|null $string
+     * @param array       $data
      *
-     * @return string|null
+     * @param string|null $prefix
+     *
+     * @return array
      */
-    public function nlStringFromValue(?string $string): ?string
+    protected function appendLocationData(array $data, ?string $prefix): array
     {
-        if (null === $string) {
-            return null;
+        Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
+        $data['store_location']  = false;
+        $data['update_location'] = false;
+        $data['longitude']       = null;
+        $data['latitude']        = null;
+        $data['zoom_level']      = null;
+
+        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
+        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
+
+        // for a POST (store, all fields must be present and accounted for:
+        if (
+            ('POST' === $this->method() && $this->routeIs('*.store'))
+            && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
+        ) {
+            Log::debug('Method is POST and all fields present.');
+            $data['store_location'] = $this->boolean($hasLocationKey);
+            $data['longitude']      = $this->nullableString($longitudeKey);
+            $data['latitude']       = $this->nullableString($latitudeKey);
+            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
         }
-        $result = app('steam')->nlCleanString($string);
+        if (
+            ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
+            && (
+                ('PUT' === $this->method() && $this->routeIs('*.update'))
+                || ('POST' === $this->method() && $this->routeIs('*.update'))
+            )
+        ) {
+            Log::debug('Method is PUT and all fields present.');
+            $data['update_location'] = true;
+            $data['longitude']       = $this->nullableString($longitudeKey);
+            $data['latitude']        = $this->nullableString($latitudeKey);
+            $data['zoom_level']      = $this->nullableString($zoomLevelKey);
+        }
+        if (null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
+            Log::debug('One of the fields is NULL, wont save.');
+            $data['store_location']  = false;
+            $data['update_location'] = false;
+        }
 
-        return '' === $result ? null : $result;
+        Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
 
+        return $data;
     }
 
     /**
@@ -300,7 +364,7 @@ class Request extends FormRequest
         if (null === $this->get($field)) {
             return null;
         }
-        $value = (string)$this->get($field);
+        $value = (string) $this->get($field);
         if (10 === strlen($value)) {
             // probably a date format.
             try {
@@ -326,63 +390,51 @@ class Request extends FormRequest
     }
 
     /**
-     * Read the submitted Request data and add new or updated Location data to the array.
-     *
-     * @param array       $data
-     *
-     * @param string|null $prefix
-     *
-     * @return array
+     * @param Validator $validator
      */
-    protected function appendLocationData(array $data, ?string $prefix): array
+    protected function validateAutoBudgetAmount(Validator $validator): void
     {
-        Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
-        $data['store_location']  = false;
-        $data['update_location'] = false;
-        $data['longitude']       = null;
-        $data['latitude']        = null;
-        $data['zoom_level']      = null;
-
-
-        $longitudeKey = null === $prefix ? 'longitude' : sprintf('%s_longitude', $prefix);
-        $latitudeKey  = null === $prefix ? 'latitude' : sprintf('%s_latitude', $prefix);
-        $zoomLevelKey = null === $prefix ? 'zoom_level' : sprintf('%s_zoom_level', $prefix);
-        $hasLocationKey = null === $prefix ? 'has_location' : sprintf('%s_has_location', $prefix);
-
-        // for a POST (store, all fields must be present and accounted for:
-        if (
-            ('POST' === $this->method() && $this->routeIs('*.store'))
-            && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-        ) {
-            Log::debug('Method is POST and all fields present.');
-
-            $data['store_location'] = $this->boolean($hasLocationKey);
-            $data['longitude']      = '' === $this->string($longitudeKey) ? null : $this->string($longitudeKey);
-            $data['latitude']       = '' === $this->string($latitudeKey) ? null : $this->string($latitudeKey);
-            $data['zoom_level']     = '' === $this->string($zoomLevelKey) ? null : $this->integer($zoomLevelKey);
+        $data         = $validator->getData();
+        $type         = $data['auto_budget_type'] ?? '';
+        $amount       = $data['auto_budget_amount'] ?? '';
+        $period       = (string) ($data['auto_budget_period'] ?? '');
+        $currencyId   = $data['auto_budget_currency_id'] ?? '';
+        $currencyCode = $data['auto_budget_currency_code'] ?? '';
+        if (is_numeric($type)) {
+            $type = (int) $type;
         }
-        if (
-            ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-            && (
-                ('PUT' === $this->method() && $this->routeIs('*.update'))
-                || ('POST' === $this->method() && $this->routeIs('*.update'))
-            )
-        ) {
-            Log::debug('Method is PUT and all fields present.');
-            $data['update_location'] = true;
-            $data['longitude']       = '' === $this->string($longitudeKey) ? null : $this->string($longitudeKey);
-            $data['latitude']        = '' === $this->string($latitudeKey) ? null : $this->string($latitudeKey);
-            $data['zoom_level']      = '' === $this->string($zoomLevelKey) ? null : $this->integer($zoomLevelKey);
+        if (0 === $type || 'none' === $type || '' === $type) {
+            return;
         }
-        if (null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
-            Log::debug('One of the fields is NULL, wont save.');
-            $data['store_location']  = false;
-            $data['update_location'] = false;
+        // basic float check:
+        if ('' === $amount) {
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
         }
-
-        Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
-
-        return $data;
+        if (1 !== bccomp((string) $amount, '0')) {
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.auto_budget_amount_positive'));
+        }
+        if ('' === $period) {
+            $validator->errors()->add('auto_budget_period', (string) trans('validation.auto_budget_period_mandatory'));
+        }
+        if ('' === $currencyCode && '' === $currencyId) {
+            $validator->errors()->add('auto_budget_amount', (string) trans('validation.require_currency_info'));
+        }
     }
+
+    /**
+     * @param string|null $prefix
+     * @param string      $key
+     *
+     * @return string
+     */
+    private function getLocationKey(?string $prefix, string $key): string
+    {
+        if (null === $prefix) {
+            return $key;
+        }
+
+        return sprintf('%s_%s', $prefix, $key);
+    }
+
 
 }

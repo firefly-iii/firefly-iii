@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => '货币',
     'currency_id'               => '货币',
     'transaction_currency_id'   => '货币',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => '您的服务器外部IP',
     'attachments'               => '附加档案',
     'journal_amount'            => '金额',
@@ -193,6 +194,7 @@ return [
     'blocked'               => '被封锁了？',
     'blocked_code'          => '封锁的原因',
     'login_name'            => '登入',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => '套用规则',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Source account',
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

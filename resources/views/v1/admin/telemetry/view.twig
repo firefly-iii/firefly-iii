@@ -11,17 +11,91 @@
                     <h3 class="box-title">{{ 'telemetry_admin_overview'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>
-                        <em>(this version does not yet support telemetry)</em>
-                    </p>
+                    <div class="btn-group" style="margin-bottom: 1em;">
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.index') }}"><i class="fa fa-fw fa-arrow-left"></i> {{ 'telemetry_back_to_index'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.submit') }}"><i class="fa fa-fw fa-upload"></i> {{ 'telemetry_submit_all'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.delete') }}"><i class="fa fa-fw fa-trash"></i> {{ 'telemetry_button_delete'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.delete-submitted') }}"><i class="fa fa-fw fa-trash"></i> {{ 'telemetry_delete_submitted_records'|_ }}</a>
+                    </div>
+                    <div>
+                        {{ records.links | raw }}
+                    </div>
+                    <table class="table table-striped table-condensed">
+                        <tr>
+                            <th>{{ trans('form.collected') }}</th>
+                            <th>{{ trans('form.submitted') }}</th>
+                            <th>{{ trans('form.type') }}</th>
+                            <th>{{ trans('form.key') }}</th>
+                            <th>{{ trans('form.value') }}</th>
+                        </tr>
+                        {% for record in records %}
+                            <tr>
+                                <td style="width:15%;">
+                                    <small>{{ record.created_at.formatLocalized(format) }}</small>
+                                </td>
+                                <td style="width:15%;">
+                                    <small>
+                                        {% if record.submitted %}
+                                            {{ record.submitted.formatLocalized(format) }}
+                                        {% else %}
+                                            <em>{{ 'not_yet_submitted'|_ }}</em>
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td style="width:15%;">
+                                    {{ trans('firefly.telemetry_type_'~record.type) }}
+                                </td>
+                                <td style="width:15%;">
+                                    <code>{{ record.key }}</code>
+                                </td>
+                                <td style="width:40%;">
+                                    {% if record.value|json_encode|length > 100 %}
+                                        <code data-state="partial" data-partial="{{ record.value|json_encode|slice(0, 30)|escape }}..."
+                                              data-full="{{ record.value|json_encode }}|escape" class="expando">
+                                            {{ record.value|json_encode|slice(0, 30) }}...
+                                        </code>
+                                    {% else %}
+                                        <code>{{ record.value|json_encode }}</code>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div>
+                        {{ records.links | raw }}
+                    </div>
                 </div>
                 <div class="box-footer">
-                    <a class="btn btn-default" href="{{ route('admin.telemetry.index') }}">{{ 'telemetry_back_to_index'|_ }}</a>
+                    <div class="btn-group">
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.index') }}"><i class="fa fa-fw fa-arrow-left"></i> {{ 'telemetry_back_to_index'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.submit') }}"><i class="fa fa-fw fa-upload"></i> {{ 'telemetry_submit_all'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.delete') }}"><i class="fa fa-fw fa-trash"></i> {{ 'telemetry_button_delete'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('admin.telemetry.delete-submitted') }}"><i class="fa fa-fw fa-trash"></i> {{ 'telemetry_delete_submitted_records'|_ }}</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 {% endblock %}
+{% block styles %}
+    <style type="text/css">
+        .expando {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
 {% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        $('.expando').click(function (e) {
+            var codeBlock = $(e.currentTarget);
+            if ('partial' === codeBlock.data('state')) {
+                codeBlock.text(codeBlock.data('full'));
+                codeBlock.data('state', 'full');
+            } else {
+                codeBlock.text(codeBlock.data('partial'));
+                codeBlock.data('state', 'partial');
+            }
+        });
+    </script>
 {% endblock %}

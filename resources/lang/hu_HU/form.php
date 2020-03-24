@@ -38,11 +38,12 @@ return [
     'match'                     => 'Találatok',
     'strict'                    => 'Szigorú mód',
     'repeat_freq'               => 'Ismétlődések',
-    'location'                  => 'Location',
-    'update_channel'            => 'Update channel',
+    'location'                  => 'Hely',
+    'update_channel'            => 'Frissítési csatorna',
     'journal_currency_id'       => 'Pénznem',
     'currency_id'               => 'Pénznem',
     'transaction_currency_id'   => 'Pénznem',
+    'auto_budget_currency_id'   => 'Pénznem',
     'external_ip'               => 'A szervered külső IP címe',
     'attachments'               => 'Mellékletek',
     'journal_amount'            => 'Összeg',
@@ -104,7 +105,7 @@ return [
     'convert_Transfer'            => 'Átvezetés konvertálása',
 
     'amount'                      => 'Összeg',
-    'foreign_amount'              => 'Foreign amount',
+    'foreign_amount'              => 'Külföldi összeg',
     'existing_attachments'        => 'Meglévő mellékletek',
     'date'                        => 'Dátum',
     'interest_date'               => 'Kamatfizetési időpont',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Letiltott?',
     'blocked_code'          => 'Letiltás oka',
     'login_name'            => 'Bejelentkezés',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Szabályok alkalmazása',
@@ -248,16 +250,26 @@ return [
     'repeat_until'            => 'Ismétlés eddig:',
     'recurring_description'   => 'Ismétlődő tranzakció leírása',
     'repetition_type'         => 'Ismétlődés típusa',
-    'foreign_currency_id'     => 'Foreign currency',
+    'foreign_currency_id'     => 'Külföldi pénznem',
     'repetition_end'          => 'Ismétlés vége',
     'repetitions'             => 'Ismétlések',
     'calendar'                => 'Naptár',
     'weekend'                 => 'Hétvége',
     'client_secret'           => 'Ügyfél titkos kódja',
 
-    'withdrawal_destination_id' => 'Destination account',
-    'deposit_source_id'         => 'Source account',
-    'expected_on'               => 'Expected on',
-    'paid'                      => 'Paid',
+    'withdrawal_destination_id' => 'Célszámla',
+    'deposit_source_id'         => 'Forrásszámla',
+    'expected_on'               => 'Várható dátum:',
+    'paid'                      => 'Fizetve',
+
+    'auto_budget_type'            => 'Auto-költségkeret',
+    'auto_budget_amount'            => 'Auto-költségkeret összege',
+    'auto_budget_period'            => 'Auto-költségkeret időszaka',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

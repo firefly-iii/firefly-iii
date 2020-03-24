@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Class AmountCredit
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AmountCredit implements ConverterInterface
 {

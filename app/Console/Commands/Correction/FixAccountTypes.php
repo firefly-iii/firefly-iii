@@ -49,20 +49,20 @@ class FixAccountTypes extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:fix-account-types';
+    /** @var int */
+    private $count;
     /** @var array */
     private $expected;
     /** @var AccountFactory */
     private $factory;
     /** @var array */
     private $fixable;
-    /** @var int */
-    private $count;
 
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
+     * @return int
      */
     public function handle(): int
     {
@@ -106,26 +106,16 @@ class FixAccountTypes extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verifying account types took %s seconds', $end));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-     * @codeCoverageIgnore
-     */
-    private function stupidLaravel(): void
-    {
-        $this->count = 0;
-    }
-
-    /**
      * @param TransactionJournal $journal
-     * @param string $type
-     * @param Transaction $source
-     * @param Transaction $dest
+     * @param string             $type
+     * @param Transaction        $source
+     * @param Transaction        $dest
+     *
      * @throws FireflyException
      */
     private function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
@@ -167,9 +157,12 @@ class FixAccountTypes extends Command
                 $dest->save();
                 $this->info(
                     sprintf(
-                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $oldDest->id, $oldDest->name,
-                        $result->id, $result->name
+                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+                        $journal->id,
+                        $oldDest->id,
+                        $oldDest->name,
+                        $result->id,
+                        $result->name
                     )
                 );
                 $this->inspectJournal($journal);
@@ -184,9 +177,12 @@ class FixAccountTypes extends Command
                 $source->save();
                 $this->info(
                     sprintf(
-                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $oldSource->id, $oldSource->name,
-                        $result->id, $result->name
+                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
+                        $journal->id,
+                        $oldSource->id,
+                        $oldSource->name,
+                        $result->id,
+                        $result->name
                     )
                 );
                 $this->inspectJournal($journal);
@@ -198,7 +194,6 @@ class FixAccountTypes extends Command
                 break;
 
         }
-
     }
 
     /**
@@ -274,4 +269,15 @@ class FixAccountTypes extends Command
         }
     }
 
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count = 0;
+    }
 }

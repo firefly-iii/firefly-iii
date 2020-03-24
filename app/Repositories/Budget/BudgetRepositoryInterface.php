@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
@@ -37,6 +38,25 @@ interface BudgetRepositoryInterface
      * Destroy all budgets.
      */
     public function destroyAll(): void;
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getAttachments(Budget $budget): Collection;
+
+    /**
+     * @param Budget $budget
+     *
+     * @return AutoBudget|null
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget;
+
+    /**
+     * @param Budget $budget
+     */
+    public function destroyAutoBudget(Budget $budget): void;
 
 
     /**

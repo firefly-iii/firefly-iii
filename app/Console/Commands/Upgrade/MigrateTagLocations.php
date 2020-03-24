@@ -64,6 +64,7 @@ class MigrateTagLocations extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated tag locations in %s seconds.', $end));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -84,7 +85,7 @@ class MigrateTagLocations extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore

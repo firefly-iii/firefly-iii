@@ -54,7 +54,7 @@ class RuleTestRequest extends Request
      */
     public function getTestParameters(): array
     {
-        $return = [
+        return [
             'page'          => $this->getPage(),
             'start_date'    => $this->getDate('start_date'),
             'end_date'      => $this->getDate('end_date'),
@@ -62,9 +62,6 @@ class RuleTestRequest extends Request
             'trigger_limit' => $this->getTriggerLimit(),
             'accounts'      => $this->getAccounts(),
         ];
-
-
-        return $return;
     }
 
     /**
@@ -80,7 +77,7 @@ class RuleTestRequest extends Request
      */
     private function getAccounts(): Collection
     {
-        $accountList = '' === (string)$this->query('accounts') ? [] : explode(',', $this->query('accounts'));
+        $accountList = '' === (string) $this->query('accounts') ? [] : explode(',', $this->query('accounts'));
         $accounts    = new Collection;
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -88,7 +85,7 @@ class RuleTestRequest extends Request
 
         foreach ($accountList as $accountId) {
             Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $accountRepository->findNull((int)$accountId);
+            $account = $accountRepository->findNull((int) $accountId);
             if ($this->validAccount($account)) {
                 /** @noinspection NullPointerExceptionInspection */
                 Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
@@ -117,7 +114,7 @@ class RuleTestRequest extends Request
      */
     private function getPage(): int
     {
-        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
 
     }
 
@@ -126,7 +123,7 @@ class RuleTestRequest extends Request
      */
     private function getSearchLimit(): int
     {
-        return 0 === (int)$this->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$this->query('search_limit');
+        return 0 === (int) $this->query('search_limit') ? (int) config('firefly.test-triggers.limit') : (int) $this->query('search_limit');
     }
 
     /**
@@ -134,7 +131,7 @@ class RuleTestRequest extends Request
      */
     private function getTriggerLimit(): int
     {
-        return 0 === (int)$this->query('triggered_limit') ? (int)config('firefly.test-triggers.range') : (int)$this->query('triggered_limit');
+        return 0 === (int) $this->query('triggered_limit') ? (int) config('firefly.test-triggers.range') : (int) $this->query('triggered_limit');
     }
 
     /**

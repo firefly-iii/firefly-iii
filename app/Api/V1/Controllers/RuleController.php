@@ -105,7 +105,7 @@ class RuleController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->ruleRepository->getAll();
@@ -214,12 +214,12 @@ class RuleController extends Controller
      * @param RuleTestRequest $request
      * @param Rule            $rule
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function testRule(RuleTestRequest $request, Rule $rule): JsonResponse
     {
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $parameters = $request->getTestParameters();
         /** @var Rule $rule */
         Log::debug(sprintf('Now testing rule #%d, "%s"', $rule->id, $rule->title));

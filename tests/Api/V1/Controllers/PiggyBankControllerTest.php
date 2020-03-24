@@ -51,6 +51,7 @@ class PiggyBankControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -161,6 +162,57 @@ class PiggyBankControllerTest extends TestCase
         $data = [
             'name'          => 'new pigy bank ' . $this->randomInt(),
             'account_id'    => 1,
+            'target_amount' => '100',
+        ];
+
+        // test API
+        $response = $this->put(route('api.v1.piggy_banks.update', [$piggy->id]), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['type' => 'piggy_banks', 'links' => true],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\PiggyBankController
+     * @throws Exception
+     */
+    public function testUpdateWithAmount(): void
+    {
+        // create stuff
+        $piggy = $this->getRandomPiggyBank();
+
+        // mock stuff:
+        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(PiggyBankTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+
+        $repository->shouldReceive('update')->once()->andReturn($piggy);
+        $repository->shouldReceive('setCurrentAmount')->once();
+        $repository->shouldReceive('getCurrentAmount')->andReturn('0');
+        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12');
+
+        //$accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+
+        $currencyRepos->shouldReceive('setUser');
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($this->getEuro());
+
+        $data = [
+            'name'          => 'new pigy bank ' . $this->randomInt(),
+            'account_id'    => 1,
+            'current_amount' => '5',
             'target_amount' => '100',
         ];
 

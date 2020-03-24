@@ -21,7 +21,6 @@
 
 namespace FireflyIII\Http\Controllers\Profile;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;

@@ -30,7 +30,8 @@ use Log;
 
 /**
  * Class CSVProcessor
- *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class CSVProcessor implements FileProcessorInterface
 {

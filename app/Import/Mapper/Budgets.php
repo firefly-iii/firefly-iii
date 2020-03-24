@@ -27,6 +27,9 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
  * Class Budgets.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Budgets implements MapperInterface
 {
@@ -44,11 +47,11 @@ class Budgets implements MapperInterface
 
         /** @var Budget $budget */
         foreach ($result as $budget) {
-            $budgetId        = (int)$budget->id;
+            $budgetId        = (int) $budget->id;
             $list[$budgetId] = $budget->name;
         }
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

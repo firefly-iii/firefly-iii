@@ -85,7 +85,7 @@ class BillController extends Controller
     public function attachments(Bill $bill): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($bill);
 
         $count       = $collection->count();
@@ -130,7 +130,7 @@ class BillController extends Controller
     {
         $bills     = $this->repository->getBills();
         $manager   = $this->getManager();
-        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize  = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $count     = $bills->count();
         $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
@@ -158,7 +158,7 @@ class BillController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getRulesForBill($bill);
@@ -206,8 +206,8 @@ class BillController extends Controller
      *
      * @param BillRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function store(BillRequest $request): JsonResponse
     {
@@ -235,7 +235,7 @@ class BillController extends Controller
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

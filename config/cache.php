@@ -1,7 +1,7 @@
 <?php
 /**
  * cache.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,9 +21,7 @@
 
 declare(strict_types=1);
 
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Cache Store
@@ -84,7 +82,7 @@ return [
             'servers'       => [
                 [
                     'host'   => env('MEMCACHED_HOST', '127.0.0.1'),
-                    'port'   => (int)env('MEMCACHED_PORT', 11211),
+                    'port'   => (int) env('MEMCACHED_PORT', 11211),
                     'weight' => 100,
                 ],
             ],

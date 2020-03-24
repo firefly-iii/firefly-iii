@@ -104,7 +104,7 @@ return [
     'warning_much_data'                          => ':days päivän tietojen lataus saattaa kestää jonkin aikaa.',
     'registered'                                 => 'Rekisteröitymisesi onnistui!',
     'Default asset account'                      => 'Oletusomaisuustili',
-    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
+    'no_budget_pointer'                          => 'Sinulla ei näyttäisi olevan vielä yhtään budjettia. Sinun kannattaisi luoda niitä <a href="/budgets">budjetit</a>-sivulla. Budjetit voivat auttaa sinua pitämään kirjaa kuluistasi.',
     'Savings account'                            => 'Säästötili',
     'Credit card'                                => 'Luottokortti',
     'source_accounts'                            => 'Lähdetili(t)',
@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Maksamatta valuutassa :currency',
     'is_alpha_warning'                           => 'Käytät ALPHA-versiota. Varaudu virheisiin ja ongelmiin.',
     'is_beta_warning'                            => 'Käytät BETA-versiota. Varaudu virheisiin ja ongelmiin.',
+    'all_destination_accounts'                   => 'Kohdetilit',
+    'all_source_accounts'                        => 'Lähdetilit',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Uusi sääntöryhmä ":title" tallennettiin!',
     'updated_rule_group'                         => 'Sääntöryhmän ":title" päivitys onnistui.',
     'edit_rule_group'                            => 'Muokkaa sääntöryhmää ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Poista sääntöryhmä ":title"',
     'deleted_rule_group'                         => 'Poistettiin sääntöryhmä ":title"',
     'update_rule_group'                          => 'Päivitä sääntöryhmä',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Yleensä budjetoit summan :amount päivälle. Tällä kerralla budjetoit :over_amount päivälle. Oletko varma?',
     'transferred_in'                            => 'Siirretty (sisään)',
     'transferred_away'                          => 'Siirretty (ulos)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Päivittäin',
+    'auto_budget_period_weekly'                 => 'Viikoittain',
+    'auto_budget_period_monthly'                => 'Kuukausittain',
+    'auto_budget_period_quarterly'              => 'Neljännesvuosittain',
+    'auto_budget_period_half_year'              => 'Puoli-vuosittain',
+    'auto_budget_period_yearly'                 => 'Vuosittain',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Lasku täsmää tapahtumiin välillä :low ja :high.',
@@ -812,6 +829,7 @@ return [
     'skips_over'                                => 'ohittaa',
     'bill_store_error'                          => 'Uuden laskusi tallentamisessa tapahtui odottamaton virhe. Virhe kirjattiin lokitiedostoon.',
     'list_inactive_rule'                        => 'käytöstä poistettu sääntö',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'Sinulla on :count käytöstä poistettua (arkistoitua) tiliä, joita voit tarkastella tällä erillisellä sivulla.',
@@ -970,7 +988,7 @@ return [
     'no_budget'                                 => '(ei budjettia)',
     'account_per_budget'                        => 'Tili per budjetti',
     'account_per_category'                      => 'Tili per kategoria',
-    'create_new_object'                         => 'Create',
+    'create_new_object'                         => 'Luo',
     'empty'                                     => '(tyhjä)',
     'all_other_budgets'                         => '(kaikki muut budjetit)',
     'all_other_accounts'                        => '(kaikki muut tilit)',
@@ -1333,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Nähdäksesi, ovatko asetuksesi määritelty oikein sähköpostin lähetystä varten, paina tätä nappia. Virheitä et näe täällä, <strong>vaan ne tallennetaan lokitiedostoon</strong>. Voit painaa tätä nappia kuinka monta kertaa tahansa - ohjelma ei rajoita lähetysten lukumäärää. Sähköpostiviesti lähetetään osoitteeseen <code>:email</code> ja sen pitäisi saapua pian.',
     'send_message'                     => 'Lähetä viesti',
     'send_test_triggered'              => 'Testiviesti lähetettiin. Tarkista sähköpostisi sekä lokitiedostot.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Jaetun tapahtuman kuvaus',
     'split_transaction_title_help'          => 'Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.',
@@ -1571,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetry',
     'telemetry_intro'                    => 'Firefly III tukee käytön telemetrian keräämistä ja lähettämistä. Tämä tarkoittaa, että Firefly III yrittää kerätä tietoja siitä, kuinka käytät Firefly III:a, ja lähettää sen Firefly III:n kehittäjälle. Tämä on aina vapaaehtoista ja oletuksena poissa käytöstä. Firefly III ei koskaan kerää tai lähetä taloudellisia tietoja. Firefly III ei myöskään koskaan kerää tai lähetä taloudellisia metatietoja, kuten summia tai laskelmia. Kerättyjä tietoja ei koskaan julkisteta.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">or visit the help page directly on GitHub</a>.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
     'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
     'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
     'telemetry_disabled_yes'             => 'Telemetry is enabled',
@@ -1581,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
     'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
     'telemetry_button_view'              => 'View telemetry',
-    'telemetry_button_delete'            => 'Delete telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetry overview',
-    'telemetry_back_to_index'            => 'Back to telemetry'
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

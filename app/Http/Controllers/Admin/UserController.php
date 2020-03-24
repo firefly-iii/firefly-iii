@@ -28,6 +28,8 @@ use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Log;
 
 /**
@@ -47,9 +49,10 @@ class UserController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.administration'));
+                app('view')->share('title', (string) trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
                 $this->repository = app(UserRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -66,7 +69,7 @@ class UserController extends Controller
      */
     public function delete(User $user)
     {
-        $subTitle = (string)trans('firefly.delete_user', ['email' => $user->email]);
+        $subTitle = (string) trans('firefly.delete_user', ['email' => $user->email]);
 
         return view('admin.users.delete', compact('user', 'subTitle'));
     }
@@ -74,14 +77,14 @@ class UserController extends Controller
     /**
      * Destroy a user.
      *
-     * @param User                    $user
+     * @param User $user
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function destroy(User $user)
     {
         $this->repository->destroy($user);
-        session()->flash('success', (string)trans('firefly.user_deleted'));
+        session()->flash('success', (string) trans('firefly.user_deleted'));
 
         return redirect(route('admin.users'));
     }
@@ -101,16 +104,18 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
+        $subTitle     = (string) trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon = 'fa-user-o';
+        $currentUser  = auth()->user();
+        $isAdmin      = $this->repository->hasRole($user, 'owner');
         $codes        = [
-            ''              => (string)trans('firefly.no_block_code'),
-            'bounced'       => (string)trans('firefly.block_code_bounced'),
-            'expired'       => (string)trans('firefly.block_code_expired'),
-            'email_changed' => (string)trans('firefly.block_code_email_changed'),
+            ''              => (string) trans('firefly.no_block_code'),
+            'bounced'       => (string) trans('firefly.block_code_bounced'),
+            'expired'       => (string) trans('firefly.block_code_expired'),
+            'email_changed' => (string) trans('firefly.block_code_email_changed'),
         ];
 
-        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
+        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes', 'currentUser','isAdmin'));
     }
 
     /**
@@ -120,7 +125,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $subTitle     = (string)trans('firefly.user_administration');
+        $subTitle     = (string) trans('firefly.user_administration');
         $subTitleIcon = 'fa-users';
         $users        = $this->repository->all();
 
@@ -138,32 +143,38 @@ class UserController extends Controller
     /**
      * Show single user.
      *
-     * @param User                    $user
+     * @param User $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(User $user)
     {
-        $title         = (string)trans('firefly.administration');
+        $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $subTitle      = (string)trans('firefly.single_user_administration', ['email' => $user->email]);
+        $subTitle      = (string) trans('firefly.single_user_administration', ['email' => $user->email]);
         $subTitleIcon  = 'fa-user';
         $information   = $this->repository->getUserData($user);
 
         return view(
-            'admin.users.show', compact(
-                                  'title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information', 'user'
-                              )
+            'admin.users.show',
+            compact(
+                'title',
+                'mainTitleIcon',
+                'subTitle',
+                'subTitleIcon',
+                'information',
+                'user'
+            )
         );
     }
 
     /**
      * Update single user.
      *
-     * @param UserFormRequest         $request
-     * @param User                    $user
+     * @param UserFormRequest $request
+     * @param User            $user
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|RedirectResponse|Redirector
      */
     public function update(UserFormRequest $request, User $user)
     {
@@ -174,14 +185,21 @@ class UserController extends Controller
         if ('' !== $data['password']) {
             $this->repository->changePassword($user, $data['password']);
         }
+        if (true === $data['is_owner']) {
+            $this->repository->attachRole($user, 'owner');
+            session()->flash('info', trans('firefly.give_admin_careful'));
+        }
+        if (false === $data['is_owner'] && $user->id !== auth()->user()->id) {
+            $this->repository->removeRole($user, 'owner');
+        }
 
         $this->repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
         $this->repository->updateEmail($user, $data['email']);
 
-        session()->flash('success', (string)trans('firefly.updated_user', ['email' => $user->email]));
+        session()->flash('success', (string) trans('firefly.updated_user', ['email' => $user->email]));
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('users.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('users.edit.fromUpdate', true);
 

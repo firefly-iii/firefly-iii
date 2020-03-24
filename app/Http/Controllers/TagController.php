@@ -24,13 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -43,6 +46,9 @@ class TagController extends Controller
     /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * TagController constructor.
      */
@@ -53,9 +59,11 @@ class TagController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(TagRepositoryInterface::class);
-                app('view')->share('title', (string)trans('firefly.tags'));
+                app('view')->share('title', (string) trans('firefly.tags'));
                 app('view')->share('mainTitleIcon', 'fa-tags');
+
+                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->repository = app(TagRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -63,38 +71,13 @@ class TagController extends Controller
     }
 
     /**
-     *
-     */
-    public function massDestroy(Request $request)
-    {
-        $tags = $request->get('tags');
-        if (null === $tags || !is_array($tags)) {
-            session()->flash('info', (string)trans('firefly.select_tags_to_delete'));
-
-            return redirect(route('tags.index'));
-        }
-        $count = 0;
-        foreach ($tags as $tagId) {
-            $tagId = (int)$tagId;
-            $tag   = $this->repository->findNull($tagId);
-            if (null !== $tag) {
-                $this->repository->destroy($tag);
-                $count++;
-            }
-        }
-        session()->flash('success', (string)trans('firefly.deleted_x_tags', ['count' => $count]));
-
-        return redirect(route('tags.index'));
-    }
-
-    /**
      * Create a new tag.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(Request $request)
     {
-        $subTitle     = (string)trans('firefly.new_tag');
+        $subTitle     = (string) trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
 
         // location info:
@@ -122,11 +105,11 @@ class TagController extends Controller
      *
      * @param Tag $tag
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function delete(Tag $tag)
     {
-        $subTitle = (string)trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
+        $subTitle = (string) trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
 
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
@@ -146,7 +129,7 @@ class TagController extends Controller
         $tagName = $tag->tag;
         $this->repository->destroy($tag);
 
-        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
+        session()->flash('success', (string) trans('firefly.deleted_tag', ['tag' => $tagName]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('tags.delete.uri'));
@@ -157,19 +140,19 @@ class TagController extends Controller
      *
      * @param Tag $tag
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Tag $tag)
     {
-        $subTitle     = (string)trans('firefly.edit_tag', ['tag' => $tag->tag]);
+        $subTitle     = (string) trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
-        $location       = $this->repository->getLocation($tag);
-        $latitude       = $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude      = $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel      = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
-        $hasLocation    = null !== $location;
-        $locations      = [
+        $location    = $this->repository->getLocation($tag);
+        $latitude    = $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude   = $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel   = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $hasLocation = null !== $location;
+        $locations   = [
             'location' => [
                 'latitude'     => old('location_latitude') ?? $latitude,
                 'longitude'    => old('location_longitude') ?? $longitude,
@@ -184,7 +167,7 @@ class TagController extends Controller
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon','locations'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'locations'));
     }
 
     /**
@@ -192,7 +175,7 @@ class TagController extends Controller
      *
      * @param TagRepositoryInterface $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(TagRepositoryInterface $repository)
     {
@@ -205,7 +188,7 @@ class TagController extends Controller
         $tags['no-date'] = $repository->getTagsInYear(null);
 
         while ($newestTagDate > $oldestTagDate) {
-            $year          = $newestTagDate->year;
+            $year        = $newestTagDate->year;
             $tags[$year] = $repository->getTagsInYear($year);
             $newestTagDate->subYear();
         }
@@ -215,35 +198,62 @@ class TagController extends Controller
     }
 
     /**
+     *
+     */
+    public function massDestroy(Request $request)
+    {
+        $tags = $request->get('tags');
+        if (null === $tags || !is_array($tags)) {
+            session()->flash('info', (string) trans('firefly.select_tags_to_delete'));
+
+            return redirect(route('tags.index'));
+        }
+        $count = 0;
+        foreach ($tags as $tagId) {
+            $tagId = (int) $tagId;
+            $tag   = $this->repository->findNull($tagId);
+            if (null !== $tag) {
+                $this->repository->destroy($tag);
+                $count++;
+            }
+        }
+        session()->flash('success', (string) trans('firefly.deleted_x_tags', ['count' => $count]));
+
+        return redirect(route('tags.index'));
+    }
+
+    /**
      * Show a single tag.
      *
-     * @param Request $request
-     * @param Tag $tag
+     * @param Request     $request
+     * @param Tag         $tag
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      *
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
         // default values:
         $subTitleIcon = 'fa-tag';
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $start        = $start ?? session('start');
         $end          = $end ?? session('end');
         $location     = $this->repository->getLocation($tag);
+        $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(
-            'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                                                   'end' => $end->formatLocalized($this->monthAndDayFormat),]
+            'firefly.journals_in_period_for_tag',
+            ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+             'end' => $end->formatLocalized($this->monthAndDayFormat),]
         );
 
         $startPeriod = $this->repository->firstUseDate($tag);
-        $startPeriod  = $startPeriod ?? new Carbon;
-        $endPeriod    = clone $end;
-        $periods      = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
-        $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $startPeriod = $startPeriod ?? new Carbon;
+        $endPeriod   = clone $end;
+        $periods     = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
+        $path        = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -254,28 +264,29 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
      * Show a single tag over all time.
      *
      * @param Request $request
-     * @param Tag $tag
+     * @param Tag     $tag
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      *
      */
     public function showAll(Request $request, Tag $tag)
     {
         // default values:
         $subTitleIcon = 'fa-tag';
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $periods      = [];
-        $subTitle     = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+        $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
         $end          = new Carbon;
+        $attachments  = $this->repository->getAttachments($tag);
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);
         /** @var GroupCollectorInterface $collector */
@@ -286,7 +297,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
@@ -304,11 +315,21 @@ class TagController extends Controller
         $result = $this->repository->store($data);
         Log::debug('Data after storage', $result->toArray());
 
-        session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
+        session()->flash('success', (string) trans('firefly.created_tag', ['tag' => $data['tag']]));
         app('preferences')->mark();
 
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($result, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
+
         $redirect = redirect($this->getPreviousUri('tags.create.uri'));
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             // @codeCoverageIgnoreStart
             session()->put('tags.create.fromStore', true);
 
@@ -317,27 +338,36 @@ class TagController extends Controller
         }
 
         return $redirect;
-
     }
 
     /**
      * Update a tag.
      *
      * @param TagFormRequest $request
-     * @param Tag $tag
+     * @param Tag            $tag
      *
      * @return RedirectResponse
      */
     public function update(TagFormRequest $request, Tag $tag): RedirectResponse
     {
         $data = $request->collectTagData();
-        $this->repository->update($tag, $data);
+        $tag  = $this->repository->update($tag, $data);
 
-        session()->flash('success', (string)trans('firefly.updated_tag', ['tag' => $data['tag']]));
+        session()->flash('success', (string) trans('firefly.updated_tag', ['tag' => $data['tag']]));
         app('preferences')->mark();
 
+        // store new attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($tag, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
+
         $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('tags.edit.fromUpdate', true);
 
@@ -348,6 +378,4 @@ class TagController extends Controller
         // redirect to previous URL.
         return $redirect;
     }
-
-
 }

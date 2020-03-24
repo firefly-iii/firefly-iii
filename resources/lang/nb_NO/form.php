@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Valuta',
     'currency_id'               => 'Valuta',
     'transaction_currency_id'   => 'Valuta',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Serverens eksterne IP',
     'attachments'               => 'Vedlegg',
     'journal_amount'            => 'Beløp',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Er sperret?',
     'blocked_code'          => 'Årsak til sperring',
     'login_name'            => 'Logg inn',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Bruk regler',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Source account',
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

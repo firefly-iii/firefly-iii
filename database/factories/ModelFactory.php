@@ -1,7 +1,7 @@
 <?php
 /**
  * ModelFactory.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,10 +23,9 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournal;
 
-
 $factory->define(
     FireflyIII\Models\Attachment::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'user_id'         => 1,
             'attachable_id'   => 1,
@@ -43,7 +42,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\CurrencyExchangeRate::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'user_id'          => 1,
             'from_currency_id' => 1,
@@ -57,7 +56,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\TransactionCurrency::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'name'   => $faker->words(1, true),
             'code'   => 'ABC',
@@ -68,7 +67,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\ImportJob::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'              => $faker->numberBetween(1, 100),
             'user_id'         => 1,
@@ -89,7 +88,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\TransactionJournal::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'                      => $faker->unique()->numberBetween(1000, 10000),
             'user_id'                 => 1,
@@ -111,7 +110,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\Bill::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'created_at'              => new Carbon,
             'updated_at'              => new Carbon,
@@ -131,7 +130,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\PiggyBankRepetition::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'            => $faker->unique()->numberBetween(100, 10000),
             'piggy_bank_id' => $faker->numberBetween(1, 10),
@@ -144,7 +143,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\PiggyBank::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'            => $faker->unique()->numberBetween(100, 10000),
             'created_at'    => new Carbon,
@@ -162,7 +161,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\Tag::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'      => $faker->unique()->numberBetween(200, 10000),
             'user_id' => 1,
@@ -174,7 +173,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\Category::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'   => $faker->numberBetween(1, 10),
             'name' => $faker->words(3, true),
@@ -184,7 +183,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\Budget::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'   => $faker->numberBetween(1, 10),
             'name' => $faker->words(3, true),
@@ -194,7 +193,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\PiggyBankEvent::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'                     => $faker->numberBetween(1, 10),
             'piggy_bank_id'          => $faker->numberBetween(1, 10),
@@ -207,7 +206,7 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\BudgetLimit::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
             'id'         => $faker->numberBetween(1, 10),
             'start_date' => '2017-01-01',
@@ -220,10 +219,10 @@ $factory->define(
 
 $factory->define(
     FireflyIII\Models\Transaction::class,
-    function (Faker\Generator $faker) {
+    static function (Faker\Generator $faker) {
         return [
-            'transaction_amount'          => (string)$faker->randomFloat(2, -100, 100),
-            'destination_amount'          => (string)$faker->randomFloat(2, -100, 100),
+            'transaction_amount'          => (string) $faker->randomFloat(2, -100, 100),
+            'destination_amount'          => (string) $faker->randomFloat(2, -100, 100),
             'opposing_account_id'         => $faker->numberBetween(1, 10),
             'source_id'                   => $faker->numberBetween(1, 10),
             'opposing_account_name'       => $faker->words(3, true),
@@ -232,7 +231,7 @@ $factory->define(
             'destination_id'              => $faker->numberBetween(1, 10),
             'date'                        => new Carbon,
             'destination_name'            => $faker->words(3, true),
-            'amount'                      => (string)$faker->randomFloat(2, -100, 100),
+            'amount'                      => (string) $faker->randomFloat(2, -100, 100),
             'budget_id'                   => 0,
             'category'                    => $faker->words(3, true),
             'transaction_journal_id'      => $faker->numberBetween(1, 10),

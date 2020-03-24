@@ -73,7 +73,7 @@ class ExchangeController extends Controller
         $return['amount'] = null;
         if (null !== $request->get('amount')) {
             // assume amount is in "from" currency:
-            $return['amount'] = bcmul($request->get('amount'), (string)$rate->rate, 12);
+            $return['amount'] = bcmul($request->get('amount'), (string) $rate->rate, 12);
             // round to toCurrency decimal places:
             $return['amount'] = round($return['amount'], $toCurrency->decimal_places);
         }

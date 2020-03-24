@@ -52,8 +52,8 @@ class TransactionCurrencyFactory
     /**
      * @param array $data
      *
-     * @return TransactionCurrency
      * @throws FireflyException
+     * @return TransactionCurrency
      */
     public function create(array $data): TransactionCurrency
     {
@@ -86,8 +86,8 @@ class TransactionCurrencyFactory
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = (string)$currencyCode;
-        $currencyId   = (int)$currencyId;
+        $currencyCode = (string) $currencyCode;
+        $currencyId   = (int) $currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {
             Log::debug('Cannot find anything on empty currency code and empty currency ID!');

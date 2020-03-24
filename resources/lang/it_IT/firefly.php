@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Non pagata in :currency',
     'is_alpha_warning'                           => 'Stai eseguendo una versione ALHPA. Fai attenzione a bug e problemi.',
     'is_beta_warning'                            => 'Stai eseguendo una versione BETA. Fai attenzione a bug e problemi.',
+    'all_destination_accounts'                   => 'Conti di destinazione',
+    'all_source_accounts'                        => 'Conti di origine',
 
     // check for updates:
     'update_check_title'                         => 'Controlla aggiornamenti',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Nuovo gruppo di regole ":title" memorizzate!',
     'updated_rule_group'                         => 'Gruppo di regole ":title" aggiornato con successo.',
     'edit_rule_group'                            => 'Modifica il gruppo di regole ":title"',
+    'duplicate_rule'                             => 'Duplica regola ":title"',
+    'rule_copy_of'                               => 'Copia di ":title"',
+    'duplicated_rule'                            => 'Regola ":title" duplicata come ":newTitle"',
     'delete_rule_group'                          => 'Elimina il gruppo di regole ":title"',
     'deleted_rule_group'                         => 'Gruppo regole eliminato ":title"',
     'update_rule_group'                          => 'Aggiorna gruppo di regole',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Di solito metti a budget circa :amount al giorno. Questa volta è :over_amount al giorno. Sei sicuro?',
     'transferred_in'                            => 'Trasferito (ingresso)',
     'transferred_away'                          => 'Trasferito (uscita)',
+    'auto_budget_none'                          => 'Nessun budget automatico',
+    'auto_budget_reset'                         => 'Imposta un importo fisso per ogni periodo',
+    'auto_budget_rollover'                      => 'Aggiungi un importo per ogni periodo',
+    'auto_budget_period_daily'                  => 'Giornaliero',
+    'auto_budget_period_weekly'                 => 'Settimanale',
+    'auto_budget_period_monthly'                => 'Mensile',
+    'auto_budget_period_quarterly'              => 'Trimestrale',
+    'auto_budget_period_half_year'              => 'Semestrale',
+    'auto_budget_period_yearly'                 => 'Annuale',
+    'auto_budget_help'                          => 'Puoi leggere di più su questa funzione nella guida. Clicca sull\'icona (?) in alto a destra.',
+    'auto_budget_reset_icon'                    => 'Questo budget sarà impostato periodicamente',
+    'auto_budget_rollover_icon'                 => 'L\'importo del budget aumenterà periodicamente',
 
     // bills:
     'match_between_amounts'                     => 'La bolletta abbina le transazioni tra :low e :high.',
@@ -812,6 +829,7 @@ return [
     'skips_over'                                => 'ogni',
     'bill_store_error'                          => 'Si è verificato un errore imprevisto durante la memorizzazione della nuova bolletta. Controlla i file di log',
     'list_inactive_rule'                        => 'regola inattiva',
+    'bill_edit_rules'                           => 'Firefly III cercherà di modificare anche le :count regole relative a questa bolletta. Tuttavia, se hai modificato queste regole, Firefly III non effettuerà alcun cambiamento.',
 
     // accounts:
     'inactive_account_link'                     => 'Hai :count conti inattivi (archiviati) che puoi visualizzare in questa pagina separata.',
@@ -944,7 +962,7 @@ return [
     'deleted_withdrawal'                        => 'Prelievo ":description" eliminato correttamente',
     'deleted_deposit'                           => 'Entrata ":description" eliminata correttamente',
     'deleted_transfer'                          => 'Trasferimento ":description" eliminato correttamente',
-    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
+    'deleted_reconciliation'                    => 'Transazione di riconciliazione ":description" elimina con successo',
     'stored_journal'                            => 'Nuova transazione ":description" creata correttamente',
     'stored_journal_no_descr'                   => 'Hai creato con successo la nuova transazione',
     'updated_journal_no_descr'                  => 'Transazione aggiornata con successo',
@@ -970,7 +988,7 @@ return [
     'no_budget'                                 => '(nessun budget)',
     'account_per_budget'                        => 'Conto per budget',
     'account_per_category'                      => 'Conto per categoria',
-    'create_new_object'                         => 'Create',
+    'create_new_object'                         => 'Crea',
     'empty'                                     => '(vuoto)',
     'all_other_budgets'                         => '(tutti gli altri budget)',
     'all_other_accounts'                        => '(tutti gli altri conti)',
@@ -1095,7 +1113,7 @@ return [
     'bill'                                      => 'Bolletta',
     'yes'                                       => 'Si',
     'no'                                        => 'No',
-    'amount'                                    => 'Conto',
+    'amount'                                    => 'Importo',
     'overview'                                  => 'Panoramica',
     'saveOnAccount'                             => 'Risparmio sul conto',
     'unknown'                                   => 'Sconosciuto',
@@ -1333,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Per vedere se la tua installazione è in grado di inviare e-mail, ti preghiamo di premere questo pulsante. Qui non vedrai un errore (se presente), <strong>i file di log rifletteranno eventuali errori</strong>. Puoi premere questo pulsante tutte le volte che vuoi. Non c\'è controllo dello spam. Il messaggio verrà inviato a <code>:email</code> e dovrebbe arrivare a breve.',
     'send_message'                     => 'Invia messaggio',
     'send_test_triggered'              => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
+    'give_admin_careful'               => 'Gli utenti con privilegi di amministratore posso rimuovere i tuoi privilegi. Fai attenzione.',
 
     'split_transaction_title'               => 'Descrizione della transazione suddivisa',
     'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
@@ -1571,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetria',
     'telemetry_intro'                    => 'Firefly III supporta la raccolta e l\'invio della telemetria d\'uso. Ciò significa che Firefly III proverà a raccogliere informazioni su come usi Firefly III e la invierà allo sviluppatore di Firefly III. Questa è sempre un\'opzione da abilitare esplicitamente, ed è disabilitata per impostazione predefinita. Firefly III non raccoglierà né invierà mai informazioni finanziarie. Firefly III non raccoglierà né invierà mai informazioni finanziarie come somme o calcoli. I dati raccolti non saranno mai resi accessibili al pubblico.',
-    'telemetry_what_collected'           => 'Ciò che Firefly III raccoglie e invia è diverso per ogni versione. Stai eseguendo la versione :version. Ciò che Firefly III raccoglie nella versione :version è qualcosa che puoi leggere nelle pagine d\'aiuto. Clicca sull\'icona (?) nell\'angolo in alto a destra <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">o visita la pagina di aiuto direttamente su GitHub</a>.',
+    'telemetry_what_collected'           => 'Ciò che Firefly III raccoglie e invia è diverso per ogni versione. Stai eseguendo la versione :version. Ciò che Firefly III raccoglie nella versione :version è qualcosa che puoi leggere nelle pagine d\'aiuto. Clicca sull\'icona (?) nell\'angolo in alto a destra <a href="https://docs.firefly-iii.org/support/telemetry">o visita la pagina della documentazione</a>.',
     'telemetry_is_enabled_yes_no'        => 'La telemetria è abilitata in Firefly III?',
     'telemetry_disabled_no'              => 'La telemetria NON è abilitata',
     'telemetry_disabled_yes'             => 'La telemetria è abilitata',
@@ -1581,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III non ha raccolto dati di telemetria.',
     'records_telemetry_present'          => 'Firefly III ha raccolto :count dati di telemetria.',
     'telemetry_button_view'              => 'Visualizza telemetria',
-    'telemetry_button_delete'            => 'Elimina telemetria',
+    'telemetry_button_delete'            => 'Elimina tutta la telemetria',
     'telemetry_admin_overview'           => 'Panoramica telemetria',
-    'telemetry_back_to_index'            => 'Torna alla telemetria'
+    'telemetry_back_to_index'            => 'Torna all\'indice della telemetria',
+    'not_yet_submitted'                  => 'Non ancora inviata',
+    'telemetry_type_feature'             => 'Indicatore funzionalità',
+    'telemetry_submit_all'               => 'Invia dati',
+    'telemetry_delete_submitted_records' => 'Elimina i dati inviati',
+    'telemetry_submission_executed'      => 'I dati sono stati inviati. Controlla i file di log per maggiori informazioni.',
+    'telemetry_all_deleted'              => 'Tutti i dati di telemetria sono stati cancellati.',
+    'telemetry_submitted_deleted'        => 'Tutti i dati di telemetria inviati sono stati cancellati.'
 ];

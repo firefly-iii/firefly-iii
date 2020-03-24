@@ -32,6 +32,9 @@ use Log;
 
 /**
  * Class BunqRoutine
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class BunqRoutine implements RoutineInterface
 {

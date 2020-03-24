@@ -30,7 +30,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <select class="form-control" id="lang_holder" name="language">
-                                                    {% for key, lang in Config.get('firefly.languages') %}
+                                                    {% for key, lang in languages %}
                                                     <option {% if language == key %}
                                                         selected
                                                     {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})</option>

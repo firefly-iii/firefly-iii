@@ -65,7 +65,7 @@ class RuleStoreRequest extends Request
             $stopProcessing = $this->boolean('stop_processing');
         }
 
-        $data = [
+        return [
             'title'            => $this->string('title'),
             'description'      => $this->string('description'),
             'rule_group_id'    => $this->integer('rule_group_id'),
@@ -77,8 +77,6 @@ class RuleStoreRequest extends Request
             'triggers'         => $this->getRuleTriggers(),
             'actions'          => $this->getRuleActions(),
         ];
-
-        return $data;
     }
 
     /**
@@ -94,7 +92,8 @@ class RuleStoreRequest extends Request
         // some triggers and actions require text:
         $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
-        $rules           = [
+
+        return [
             'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
             'description'                => 'between:1,5000|nullable',
             'rule_group_id'              => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
@@ -112,8 +111,6 @@ class RuleStoreRequest extends Request
             'stop_processing'            => [new IsBoolean],
             'active'                     => [new IsBoolean],
         ];
-
-        return $rules;
     }
 
     /**
@@ -144,7 +141,7 @@ class RuleStoreRequest extends Request
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (0 === count($actions)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
         }
     }
 
@@ -159,7 +156,7 @@ class RuleStoreRequest extends Request
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (0 === count($triggers)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -175,8 +172,8 @@ class RuleStoreRequest extends Request
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -196,8 +193,8 @@ class RuleStoreRequest extends Request
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }

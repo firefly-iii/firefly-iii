@@ -218,6 +218,8 @@ return [
     'unpaid_in_currency'                         => 'Non payé en :currency',
     'is_alpha_warning'                           => 'Vous utilisez une version ALPHA. Méfiez-vous des bogues et des problèmes.',
     'is_beta_warning'                            => 'Vous utilisez une version BETA. Méfiez-vous des bogues et des problèmes.',
+    'all_destination_accounts'                   => 'Comptes de destination',
+    'all_source_accounts'                        => 'Comptes source',
 
     // check for updates:
     'update_check_title'                         => 'Vérifier les mises à jour',
@@ -305,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Le nouveau groupe de règles ":title" est créé !',
     'updated_rule_group'                         => 'Groupe de règles ":title" mis à jour avec succès.',
     'edit_rule_group'                            => 'Modifier le groupe de règles ":title"',
+    'duplicate_rule'                             => 'Dupliquer la règle ":title"',
+    'rule_copy_of'                               => 'Copie de ":title"',
+    'duplicated_rule'                            => 'Règle ":title" dupliquée en ":newTitle"',
     'delete_rule_group'                          => 'Supprimer le groupe de règles ":title"',
     'deleted_rule_group'                         => 'Groupe de règles ":title" supprimé',
     'update_rule_group'                          => 'Mettre à jour le groupe de règles',
@@ -783,6 +788,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Généralement vous budgétez environ :amount par jour. Cette fois, c\'est :over_amount par jour. Êtes-vous sûr ?',
     'transferred_in'                            => 'Transféré (entrant)',
     'transferred_away'                          => 'Transféré (sortant)',
+    'auto_budget_none'                          => 'Pas de budget automatique',
+    'auto_budget_reset'                         => 'Définir un montant fixe à chaque période',
+    'auto_budget_rollover'                      => 'Ajouter un montant à chaque période',
+    'auto_budget_period_daily'                  => 'Quotidien',
+    'auto_budget_period_weekly'                 => 'Hebdomadaire',
+    'auto_budget_period_monthly'                => 'Mensuel',
+    'auto_budget_period_quarterly'              => 'Trimestriel',
+    'auto_budget_period_half_year'              => 'Semestriel',
+    'auto_budget_period_yearly'                 => 'Annuel',
+    'auto_budget_help'                          => 'Vous pouvez en savoir plus sur cette fonctionnalité dans l\'aide. Cliquez sur l\'icône (?) en haut à droite.',
+    'auto_budget_reset_icon'                    => 'Ce budget sera défini périodiquement',
+    'auto_budget_rollover_icon'                 => 'Le montant du budget augmentera périodiquement',
 
     // bills:
     'match_between_amounts'                     => 'La facture correspond à des opérations entre :low et :high.',
@@ -812,6 +829,7 @@ return [
     'skips_over'                                => 'saute',
     'bill_store_error'                          => 'Une erreur inattendue s\'est produite lors du stockage de votre nouvelle facture. Veuillez vérifier les fichiers journaux',
     'list_inactive_rule'                        => 'règle inactive',
+    'bill_edit_rules'                           => 'Firefly III tentera également de modifier les règles de :count relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count comptes inactifs (archivés), que vous pouvez voir sur cette autre page.',
@@ -970,7 +988,7 @@ return [
     'no_budget'                                 => '(pas de budget)',
     'account_per_budget'                        => 'Compte par budget',
     'account_per_category'                      => 'Compte par catégorie',
-    'create_new_object'                         => 'Create',
+    'create_new_object'                         => 'Créer',
     'empty'                                     => '(vide)',
     'all_other_budgets'                         => '(tous les autres budgets)',
     'all_other_accounts'                        => '(tous les autres comptes)',
@@ -1333,6 +1351,7 @@ return [
     'send_test_email_text'             => 'Pour vérifier que votre installation est capable d\'envoyer des emails, utilisez ce bouton. Vous ne verrez pas d\'erreur ici (s\'il y en a), <strong>elles seront enregistrées dans les logs</strong>. Utilisez ce bouton autant de fois que vous le voulez, il n\'y a pas de contrôle de spam. Le message sera envoyé à <code>:email</code> et devrait arriver sous peu.',
     'send_message'                     => 'Envoyer le message',
     'send_test_triggered'              => 'Le test a été initié. Vérifiez votre boîte de réception (et les logs si nécessaire).',
+    'give_admin_careful'               => 'Les utilisateurs disposant de droits d\'administration peuvent vous supprimer vos droits. Soyez prudent.',
 
     'split_transaction_title'               => 'Description de l\'opération ventilée',
     'split_transaction_title_help'          => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fraction de l\'opération.',
@@ -1571,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Télémétrie',
     'telemetry_intro'                    => 'Firefly III prend en charge la collecte et l\'envoi de télémétrie d\'utilisation. Cela signifie que Firefly III essaiera de collecter des informations sur la façon dont vous utilisez Firefly III, et de les envoyer au développeur de Firefly III. C\'est toujours optionnel, et est désactivé par défaut. Firefly III ne recueillera jamais ni n\'enverra de données financières. Firefly III ne recueillera ni n\'enverra jamais non plus de méta-informations financières, comme des sommes ou des calculs. Les données recueillies ne seront jamais rendues publiques.',
-    'telemetry_what_collected'           => 'Ce que Firefly III recueille et envoie exactement diffère suivant les versions. Vous exécutez la version :version. Ce que Firefly III collecte dans la version :version est quelque chose que vous pouvez lire dans les pages d\'aide. Cliquez sur l\'icône (?) en haut à droite <a href="https://github.com/firefly-iii/help/blob/master/en_US/admin.telemetry.index.md">ou visitez la page d\'aide directement sur GitHub</a>.',
+    'telemetry_what_collected'           => 'Ce que Firefly III collecte et envoie exactement diffère selon les versions. Vous exécutez actuellement la version :version. Tout ce qui est collecté par Firefly III dans la version :version est détaillé dans les pages d\'aide. Cliquez sur l\'icône (?) en haut à droite <a href="https://docs.firefly-iii.org/support/telemetry">ou visitez la documentation</a>.',
     'telemetry_is_enabled_yes_no'        => 'La télémétrie de Firefly III est-elle activée ?',
     'telemetry_disabled_no'              => 'La télémétrie n\'est PAS activée',
     'telemetry_disabled_yes'             => 'La télémétrie est activée',
@@ -1581,7 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III n\'a recueilli aucune donnée de télémétrie.',
     'records_telemetry_present'          => 'Firefly III a recueilli :count enregistrement(s) de télémétrie.',
     'telemetry_button_view'              => 'Voir la télémétrie',
-    'telemetry_button_delete'            => 'Supprimer la télémétrie',
+    'telemetry_button_delete'            => 'Supprimer toutes les télémétries',
     'telemetry_admin_overview'           => 'Aperçu de la télémétrie',
-    'telemetry_back_to_index'            => 'Retour à la télémétrie'
+    'telemetry_back_to_index'            => 'Retour à l\'index de la télémétrie',
+    'not_yet_submitted'                  => 'Pas encore soumis',
+    'telemetry_type_feature'             => 'Indicateur de fonctionnalité',
+    'telemetry_submit_all'               => 'Soumettre les enregistrements',
+    'telemetry_delete_submitted_records' => 'Supprimer les enregistrements envoyés',
+    'telemetry_submission_executed'      => 'Les enregistrements ont été soumis. Consultez vos fichiers journaux pour plus d\'informations.',
+    'telemetry_all_deleted'              => 'Tous les enregistrements télémétriques ont été supprimés.',
+    'telemetry_submitted_deleted'        => 'Tous les enregistrements télémétriques soumis ont été supprimés.'
 ];

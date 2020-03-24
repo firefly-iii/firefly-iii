@@ -179,7 +179,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getCategories(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
+        $set = $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
 
         return $set;
     }
@@ -372,5 +372,13 @@ class CategoryRepository implements CategoryRepositoryInterface
             RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
             $category->delete();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Category $category): Collection
+    {
+        return $category->attachments()->get();
     }
 }

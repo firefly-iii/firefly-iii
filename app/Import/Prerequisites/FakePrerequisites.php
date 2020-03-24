@@ -25,11 +25,15 @@ namespace FireflyIII\Import\Prerequisites;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
 use Log;
+use function request;
 
 /**
  * This class contains all the routines necessary for the fake import provider.
  *
  * Class FakePrerequisites
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class FakePrerequisites implements PrerequisitesInterface
 {
@@ -68,9 +72,9 @@ class FakePrerequisites implements PrerequisitesInterface
         if ($this->hasApiKey()) {
             $apiKey = app('preferences')->getForUser($this->user, 'fake_api_key', null)->data;
         }
-        $oldKey = (string)\request()->old('api_key');
+        $oldKey = (string) request()->old('api_key');
         if ('' !== $oldKey) {
-            $apiKey = \request()->old('api_key'); // @codeCoverageIgnore
+            $apiKey = request()->old('api_key'); // @codeCoverageIgnore
         }
 
         return ['api_key' => $apiKey];
@@ -133,7 +137,7 @@ class FakePrerequisites implements PrerequisitesInterface
         if (null === $apiKey->data) {
             return false;
         }
-        if (32 === strlen((string)$apiKey->data)) {
+        if (32 === strlen((string) $apiKey->data)) {
             return true;
         }
 

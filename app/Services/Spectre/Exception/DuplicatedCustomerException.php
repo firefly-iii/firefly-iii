@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Spectre\Exception;
 /**
  * @codeCoverageIgnore
  * Class DuplicatedCustomerException
+ * @deprecated
  */
 class DuplicatedCustomerException extends SpectreException
 {

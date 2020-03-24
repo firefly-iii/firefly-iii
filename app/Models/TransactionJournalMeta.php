@@ -22,39 +22,42 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class TransactionJournalMeta.
  *
- * @property string             $name
- * @property int                $transaction_journal_id
- * @property TransactionJournal $transactionJournal
- * @property string             $data
- * @property int                $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $hash
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string                          $name
+ * @property int                             $transaction_journal_id
+ * @property TransactionJournal              $transactionJournal
+ * @property string                          $data
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string                          $hash
+ * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newQuery()
+ * @method static Builder|TransactionJournalMeta onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereTransactionJournalId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalMeta whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournalMeta withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereUpdatedAt($value)
+ * @method static Builder|TransactionJournalMeta withTrashed()
+ * @method static Builder|TransactionJournalMeta withoutTrashed()
+ * @mixin Eloquent
  */
 class TransactionJournalMeta extends Model
 {

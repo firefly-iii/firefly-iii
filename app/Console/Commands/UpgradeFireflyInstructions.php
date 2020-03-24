@@ -50,13 +50,14 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle(): int
     {
-        if ('update' === (string)$this->argument('task')) {
+        if ('update' === (string) $this->argument('task')) {
             $this->updateInstructions();
         }
-        if ('install' === (string)$this->argument('task')) {
+        if ('install' === (string) $this->argument('task')) {
             $this->installInstructions();
         }
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -101,6 +102,8 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
+
+
         $this->showLine();
         $this->boxed('');
         if (null === $text) {
@@ -147,6 +150,7 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
+
         $this->showLine();
         $this->boxed('');
         if (null === $text) {

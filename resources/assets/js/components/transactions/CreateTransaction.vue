@@ -87,7 +87,7 @@
                                             v-on:select:account="selectedDestinationAccount(index, $event)"
                                             :error="transaction.errors.destination_account"
                                     ></account-select>
-                                    <standard-date
+                                    <standard-date v-if="0===index"
                                             v-model="transaction.date"
                                             :index="index"
                                             :error="transaction.errors.date"
@@ -263,10 +263,7 @@
                     'debt': 'Debt',
                     'mortgage': 'Mortgage'
                 };
-                let value = arr[searchType] ?? searchType;
-
-                // console.log('FULL account type: ' + value);
-                return value;
+                return arr[searchType] ?? searchType;
             },
             convertData: function () {
                 // console.log('Now in convertData()');
@@ -303,6 +300,12 @@
                         data.transactions.push(this.convertDataRow(this.transactions[key], key, transactionType));
                     }
                 }
+
+                // overrule group title in case its empty:
+                if(''===data.group_title && data.transactions.length > 1) {
+                    data.group_title = data.transactions[0].description;
+                }
+
                 return data;
             },
             convertDataRow(row, index, transactionType) {
@@ -375,6 +378,11 @@
                 }
                 if (0 === sourceId) {
                     sourceId = null;
+                }
+                // parse amount if has exactly one comma:
+                // solves issues with some locales.
+                if (1 === (row.amount.match(/\,/g) || []).length) {
+                    row.amount = row.amount.replace(',', '.');
                 }
 
                 currentArray =

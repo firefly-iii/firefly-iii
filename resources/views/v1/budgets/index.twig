@@ -65,7 +65,7 @@
                             {# info about the amount budgeted #}
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <small>{{ 'budgeted'|_ }} ({{ 'see_below'|_ }}):
-                                    <span class="budgeted_amount" data-value="{{ budgeted }}" data-id="0">
+                                    <span class="budgeted_amount" data-value="{{ budgeted }}" data-id="0" data-currency="{{ defaultCurrency.id }}">
                                         {{ formatAmountBySymbol(budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places) }}
                                     </span>
                                 </small>
@@ -75,7 +75,7 @@
                                 <small class="available_bar"
                                        data-id="0">{{ trans('firefly.available_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
                                     :
-                                    <span class="available_amount" data-id="0" data-value="0"
+                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
                                           data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
                                     <a href="#" data-id="0" class="update_ab btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
                                 </small>
@@ -124,7 +124,7 @@
                                 {# info about the amount budgeted #}
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <small>{{ 'budgeted'|_ }}:
-                                        <span class="text-success budgeted_amount" data-id="{{ budget.id }}">
+                                        <span class="text-success budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
                                         {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
                                     </span>
                                     </small>
@@ -146,7 +146,7 @@
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="progress budgeted_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
-                                         data-available="{{ budget.amount }}">
+                                         data-available="{{ budget.amount }}" data-currency="{{ budget.transaction_currency.id }}">
                                         <div class="progress-bar progress-bar-danger" data-id="{{ budget.id }}" role="progressbar" aria-valuenow="0"
                                              aria-valuemin="0"
                                              aria-valuemax="100" style="width: 0;"></div>
@@ -235,6 +235,17 @@
                                 </td>
                                 <td data-value="{{ budget.name }}">
                                     <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    {% if budget.auto_budget %}
+                                    {% if 1 == budget.auto_budget.auto_budget_type %}
+                                        <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>
+                                    {% endif %}
+                                    {% if 2 == budget.auto_budget.auto_budget_type %}
+                                        <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% if budget.attachments.count > 0 %}
+                                        <i class="fa fa-paperclip"></i>
+                                    {% endif %}
                                 </td>
                                 <td data-value="-1">
                                     {% if 0==budget.budgeted|length %}
@@ -418,7 +429,7 @@
         var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
-
+        var totalBudgetedUri = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         {#var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";#}
         {#var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}";#}
         var periodStart = "{{ start.format('Y-m-d') }}";

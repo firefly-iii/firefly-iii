@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Spectre\Object;
 /**
  * @codeCoverageIgnore
  * Class SpectreObject
+ * @deprecated
  */
 class SpectreObject
 {

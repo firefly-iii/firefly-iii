@@ -33,6 +33,8 @@ use RuntimeException;
 /**
  * Class PwndVerifierV3
  * @codeCoverageIgnore
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class PwndVerifierV3 implements Verifier
 {

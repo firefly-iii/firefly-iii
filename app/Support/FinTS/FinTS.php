@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Crypt;
 
 /**
  * @codeCoverageIgnore
+ * @deprecated
  * Class FinTS
  */
 class FinTS

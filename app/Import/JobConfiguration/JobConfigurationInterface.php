@@ -27,6 +27,9 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface JobConfigurationInterface.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface JobConfigurationInterface
 {

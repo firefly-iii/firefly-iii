@@ -26,6 +26,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 
 /**
  * Class TransactionCurrencies.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class TransactionCurrencies implements MapperInterface
 {
@@ -41,12 +44,12 @@ class TransactionCurrencies implements MapperInterface
         $currencies = $repository->get();
         $list       = [];
         foreach ($currencies as $currency) {
-            $currencyId        = (int)$currency->id;
+            $currencyId        = (int) $currency->id;
             $list[$currencyId] = $currency->name . ' (' . $currency->code . ')';
         }
         asort($list);
 
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

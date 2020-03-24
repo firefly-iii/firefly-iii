@@ -39,16 +39,16 @@ class Sandstorm
      * Detects if is using Sandstorm, and responds by logging the user
      * in and/or creating an account.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     * @param string|null              $guard
+     * @param Request     $request
+     * @param Closure     $next
+     * @param string|null $guard
      *
      * @return mixed
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
         // is in Sandstorm environment?
-        $sandstorm = 1 === (int)getenv('SANDSTORM');
+        $sandstorm = 1 === (int) getenv('SANDSTORM');
         app('view')->share('SANDSTORM', $sandstorm);
         if (!$sandstorm) {
             return $next($request);
@@ -58,7 +58,7 @@ class Sandstorm
         if (Auth::guard($guard)->guest()) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
-            $userId     = (string)$request->header('X-Sandstorm-User-Id');
+            $userId     = (string) $request->header('X-Sandstorm-User-Id');
 
             // catch anonymous:
             $userId = '' === $userId ? 'anonymous' : $userId;

@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Class AmountDebit
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AmountDebit implements ConverterInterface
 {

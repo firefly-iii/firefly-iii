@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Νόμισμα',
     'currency_id'               => 'Νόμισμα',
     'transaction_currency_id'   => 'Νόμισμα',
+    'auto_budget_currency_id'   => 'Νόμισμα',
     'external_ip'               => 'Η εξωτερική IP του εξυπηρετητή σας',
     'attachments'               => 'Συνημμένα',
     'journal_amount'            => 'Ποσό',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Έχει αποκλειστεί;',
     'blocked_code'          => 'Αιτία αποκλεισμού',
     'login_name'            => 'Είσοδος',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Εφαρμογή κανόνων',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Λογαριασμός προέλευσης',
     'expected_on'               => 'Αναμένεται στις',
     'paid'                      => 'Πληρώθηκε',
+
+    'auto_budget_type'            => 'Αυτόματος προϋπολογισμός',
+    'auto_budget_amount'            => 'Ποσό αυτόματου προϋπολογισμού',
+    'auto_budget_period'            => 'Περίοδος αυτόματου προϋπολογισμού',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

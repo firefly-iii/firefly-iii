@@ -34,6 +34,7 @@ use Log;
 /**
  * Class ImportTransaction
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ImportTransaction
 {

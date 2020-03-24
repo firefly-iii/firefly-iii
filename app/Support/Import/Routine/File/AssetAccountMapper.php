@@ -32,6 +32,7 @@ use Log;
 /**
  * Class AssetAccountMapper
  * Can also handle liability accounts.
+ * @deprecated
  */
 class AssetAccountMapper
 {

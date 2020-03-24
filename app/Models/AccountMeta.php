@@ -22,29 +22,32 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class AccountMeta.
  *
- * @property string $data
- * @property string $name
- * @property int    $account_id
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \FireflyIII\Models\Account $account
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereAccountId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountMeta whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property string                          $data
+ * @property string                          $name
+ * @property int                             $account_id
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Account                    $account
+ * @method static Builder|AccountMeta newModelQuery()
+ * @method static Builder|AccountMeta newQuery()
+ * @method static Builder|AccountMeta query()
+ * @method static Builder|AccountMeta whereAccountId($value)
+ * @method static Builder|AccountMeta whereCreatedAt($value)
+ * @method static Builder|AccountMeta whereData($value)
+ * @method static Builder|AccountMeta whereId($value)
+ * @method static Builder|AccountMeta whereName($value)
+ * @method static Builder|AccountMeta whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class AccountMeta extends Model
 {

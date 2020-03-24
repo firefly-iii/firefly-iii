@@ -36,6 +36,7 @@ class TransactionJournalMetaFactory
 {
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -71,7 +72,7 @@ class TransactionJournalMetaFactory
             Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
-        if ('' === (string)$value) {
+        if ('' === (string) $value) {
             Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {

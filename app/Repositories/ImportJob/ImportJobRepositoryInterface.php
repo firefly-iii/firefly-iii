@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Interface ImportJobRepositoryInterface.
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface ImportJobRepositoryInterface
 {

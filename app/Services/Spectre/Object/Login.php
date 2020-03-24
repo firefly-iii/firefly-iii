@@ -32,6 +32,7 @@ use Carbon\Carbon;
  * @codeCoverageIgnore
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @deprecated
  */
 class Login extends SpectreObject
 {

@@ -71,6 +71,8 @@ class MigrateRecurrenceMeta extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated recurrence meta data in %s seconds.', $end));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
+
         return 0;
     }
 
@@ -81,7 +83,7 @@ class MigrateRecurrenceMeta extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -103,7 +105,7 @@ class MigrateRecurrenceMeta extends Command
      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
-        $recurrence       = $meta->recurrence;
+        $recurrence = $meta->recurrence;
         if (null === $recurrence) {
             return 0;
         }
@@ -115,7 +117,7 @@ class MigrateRecurrenceMeta extends Command
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);
-            $value = json_encode($array);
+            $value = json_encode($array, JSON_THROW_ON_ERROR, 512);
         }
 
         RecurrenceTransactionMeta::create(

@@ -1,7 +1,7 @@
 <?php
 /**
  * filesystems.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -67,17 +66,17 @@ return [
     */
 
     'disks' => [
-        'local' => [
+        'local'    => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
 
         // local storage configuration for upload and export:
-        'upload' => [
+        'upload'   => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export' => [
+        'export'   => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
@@ -117,7 +116,7 @@ return [
     | registered when used.
     |
     */
-    /* 
+    /*
     // Disabled, pending "twistor/flysystem-stream-wrapper" dependency
     'autowrap' => [
         'local',

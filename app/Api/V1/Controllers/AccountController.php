@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -74,6 +75,35 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Account $account
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function attachments(Account $account): JsonResponse
+    {
+        $manager    = $this->getManager();
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection = $this->repository->getAttachments($account);
+
+        $count       = $collection->count();
+        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]) . $this->buildParams());
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Account $account
@@ -104,7 +134,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
@@ -142,7 +172,7 @@ class AccountController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks($account);
@@ -218,7 +248,7 @@ class AccountController extends Controller
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -227,10 +257,8 @@ class AccountController extends Controller
         if (null !== $limit && $limit > 0) {
             $pageSize = $limit;
         }
-
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = $this->getManager();
-
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -240,7 +268,6 @@ class AccountController extends Controller
         $collector->setUser($admin)->setAccounts(new Collection([$account]))
                   ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types);
 
-        // set range if necessary:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }

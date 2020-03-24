@@ -24,6 +24,9 @@ namespace FireflyIII\Import\Specifics;
 
 /**
  * Interface SpecificInterface.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface SpecificInterface
 {

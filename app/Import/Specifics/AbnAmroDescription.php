@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Specifics;
 /**
  * Class AbnAmroDescription.
  *
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Parses the description from txt files for ABN AMRO bank accounts.
  *
  * Based on the logic as described in the following Gist:
@@ -79,7 +82,7 @@ class AbnAmroDescription implements SpecificInterface
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
         if (!$parsed) {
-            $this->row[8] = (string)trans('firefly.unknown'); // opposing-account-name
+            $this->row[8] = (string) trans('firefly.unknown'); // opposing-account-name
         }
 
         return $this->row;

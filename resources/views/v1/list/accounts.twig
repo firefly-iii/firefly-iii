@@ -42,6 +42,9 @@
                 {% if account.location %}
                     <i class="fa fa-fw fa-map-marker"></i>
                 {% endif %}
+                {% if account.attachments.count > 0 %}
+                    <i class="fa fa-fw fa-paperclip"></i>
+                {% endif %}
             </td>
             {% if objectType == "asset" %}
                 <td class="hidden-sm hidden-xs hidden-md">

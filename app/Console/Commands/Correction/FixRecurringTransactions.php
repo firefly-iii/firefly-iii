@@ -52,16 +52,6 @@ class FixRecurringTransactions extends Command
     private $userRepos;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -76,6 +66,7 @@ class FixRecurringTransactions extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Corrected recurring transactions %s seconds.', $end));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

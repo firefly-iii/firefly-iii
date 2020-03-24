@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -39,21 +38,22 @@ use Log;
  */
 class TransactionFactory
 {
-    /** @var TransactionJournal */
-    private $journal;
     /** @var Account */
     private $account;
     /** @var TransactionCurrency */
     private $currency;
     /** @var TransactionCurrency */
     private $foreignCurrency;
-    /** @var User */
-    private $user;
+    /** @var TransactionJournal */
+    private $journal;
     /** @var bool */
     private $reconciled;
+    /** @var User */
+    private $user;
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -65,49 +65,13 @@ class TransactionFactory
     }
 
     /**
-     * @param bool $reconciled
-     * @codeCoverageIgnore
-     */
-    public function setReconciled(bool $reconciled): void
-    {
-        $this->reconciled = $reconciled;
-    }
-
-    /**
-     * @param Account $account
-     * @codeCoverageIgnore
-     */
-    public function setAccount(Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    /**
-     * @param TransactionCurrency $currency
-     * @codeCoverageIgnore
-     */
-    public function setCurrency(TransactionCurrency $currency): void
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @param TransactionCurrency $foreignCurrency |null
-     * @codeCoverageIgnore
-     */
-    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
-    {
-        $this->foreignCurrency = $foreignCurrency;
-    }
-
-    /**
      * Create transaction with negative amount (for source accounts).
      *
      * @param string      $amount
      * @param string|null $foreignAmount
      *
-     * @return Transaction
      * @throws FireflyException
+     * @return Transaction
      */
     public function createNegative(string $amount, ?string $foreignAmount): Transaction
     {
@@ -127,8 +91,8 @@ class TransactionFactory
      * @param string      $amount
      * @param string|null $foreignAmount
      *
-     * @return Transaction
      * @throws FireflyException
+     * @return Transaction
      */
     public function createPositive(string $amount, ?string $foreignAmount): Transaction
     {
@@ -138,12 +102,43 @@ class TransactionFactory
         if (null !== $foreignAmount) {
             $foreignAmount = app('steam')->positive($foreignAmount);
         }
+
         return $this->create(app('steam')->positive($amount), $foreignAmount);
     }
 
+    /**
+     * @param Account $account
+     *
+     * @codeCoverageIgnore
+     */
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @codeCoverageIgnore
+     */
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    /**
+     * @param TransactionCurrency $foreignCurrency |null
+     *
+     * @codeCoverageIgnore
+     */
+    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    {
+        $this->foreignCurrency = $foreignCurrency;
+    }
 
     /**
      * @param TransactionJournal $journal
+     *
      * @codeCoverageIgnore
      */
     public function setJournal(TransactionJournal $journal): void
@@ -152,7 +147,18 @@ class TransactionFactory
     }
 
     /**
+     * @param bool $reconciled
+     *
+     * @codeCoverageIgnore
+     */
+    public function setReconciled(bool $reconciled): void
+    {
+        $this->reconciled = $reconciled;
+    }
+
+    /**
      * @param User $user
+     *
      * @codeCoverageIgnore
      */
     public function setUser(User $user): void
@@ -164,8 +170,8 @@ class TransactionFactory
      * @param string      $amount
      * @param string|null $foreignAmount
      *
-     * @return Transaction
      * @throws FireflyException
+     * @return Transaction
      */
     private function create(string $amount, ?string $foreignAmount): Transaction
     {
@@ -200,7 +206,11 @@ class TransactionFactory
         if (null !== $result) {
             Log::debug(
                 sprintf(
-                    'Created transaction #%d (%s %s, account %s), part of journal #%d', $result->id, $this->currency->code, $amount, $this->account->name,
+                    'Created transaction #%d (%s %s, account %s), part of journal #%d',
+                    $result->id,
+                    $this->currency->code,
+                    $amount,
+                    $this->account->name,
                     $this->journal->id
                 )
             );
@@ -209,7 +219,6 @@ class TransactionFactory
             if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
                 $result->foreign_currency_id = $this->foreignCurrency->id;
                 $result->foreign_amount      = $foreignAmount;
-
             }
             $result->save();
         }

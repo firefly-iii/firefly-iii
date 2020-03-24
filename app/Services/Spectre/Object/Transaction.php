@@ -29,6 +29,7 @@ use Carbon\Carbon;
  * Class Transaction
  *
  * @codeCoverageIgnore
+ * @deprecated
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */

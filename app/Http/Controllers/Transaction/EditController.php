@@ -28,6 +28,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 /**
  * Class EditController
@@ -35,26 +37,21 @@ use FireflyIII\Support\Http\Controllers\UserNavigation;
 class EditController extends Controller
 {
     use UserNavigation;
+
     /**
      * EditController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
 
-        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
-
-
-        app('view')->share('uploadSize', $uploadSize);
-
         // some useful repositories:
         $this->middleware(
             static function ($request, $next) {
 
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -65,7 +62,8 @@ class EditController extends Controller
 
     /**
      * @param TransactionGroup $transactionGroup
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @return Factory|View
      */
     public function edit(TransactionGroup $transactionGroup)
     {

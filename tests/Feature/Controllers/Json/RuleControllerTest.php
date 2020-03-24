@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Feature\Controllers;
+namespace Tests\Feature\Controllers\Json;
 
 use Log;
 use Tests\TestCase;

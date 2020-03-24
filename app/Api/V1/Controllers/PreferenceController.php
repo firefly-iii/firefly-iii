@@ -147,10 +147,10 @@ class PreferenceController extends Controller
                 $newValue = explode(',', $data['data']);
                 break;
             case 'listPageSize':
-                $newValue = (int)$data['data'];
+                $newValue = (int) $data['data'];
                 break;
             case 'customFiscalYear':
-                $newValue = 1 === (int)$data['data'];
+                $newValue = 1 === (int) $data['data'];
                 break;
         }
         $result = app('preferences')->set($preference->name, $newValue);

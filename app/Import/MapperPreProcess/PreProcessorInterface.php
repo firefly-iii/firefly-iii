@@ -24,6 +24,9 @@ namespace FireflyIII\Import\MapperPreProcess;
 
 /**
  * Interface PreProcessorInterface.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface PreProcessorInterface
 {

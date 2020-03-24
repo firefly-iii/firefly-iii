@@ -23,13 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -39,11 +43,16 @@ use Log;
 class CreateController extends Controller
 {
     use ModelInformation;
+
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
      * CreateController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -54,9 +63,10 @@ class CreateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository = app(AccountRepositoryInterface::class);
+                $this->repository  = app(AccountRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -66,17 +76,17 @@ class CreateController extends Controller
     /**
      * Create a new account.
      *
-     * @param Request $request
+     * @param Request     $request
      * @param string|null $objectType
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(Request $request, string $objectType = null)
     {
         $objectType      = $objectType ?? 'asset';
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $subTitle        = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
+        $subTitle        = (string) trans(sprintf('firefly.make_new_%s_account', $objectType));
         $roles           = $this->getRoles();
         $liabilityTypes  = $this->getLiabilityTypes();
         $hasOldInput     = null !== $request->old('_token');
@@ -91,17 +101,18 @@ class CreateController extends Controller
 
         // interest calculation periods:
         $interestPeriods = [
-            'daily'   => (string)trans('firefly.interest_calc_daily'),
-            'monthly' => (string)trans('firefly.interest_calc_monthly'),
-            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
+            'daily'   => (string) trans('firefly.interest_calc_daily'),
+            'monthly' => (string) trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string) trans('firefly.interest_calc_yearly'),
         ];
 
         // pre fill some data
         $request->session()->flash(
-            'preFilled', [
-                           'currency_id'       => $defaultCurrency->id,
-                           'include_net_worth' => $hasOldInput ? (bool)$request->old('include_net_worth') : true,
-                       ]
+            'preFilled',
+            [
+                'currency_id'       => $defaultCurrency->id,
+                'include_net_worth' => $hasOldInput ? (bool) $request->old('include_net_worth') : true,
+            ]
         );
 
         // put previous url in session if not redirect from store (not "create another").
@@ -119,13 +130,13 @@ class CreateController extends Controller
      *
      * @param AccountFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function store(AccountFormRequest $request)
     {
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
-        $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
         app('preferences')->mark();
 
         Log::channel('audit')->info('Stored new account.', $data);
@@ -136,9 +147,19 @@ class CreateController extends Controller
             $frontPage[] = $account->id;
             app('preferences')->set('frontPageAccounts', $frontPage);
         }
+
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($account, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         // redirect to previous URL.
         $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 
@@ -147,7 +168,4 @@ class CreateController extends Controller
 
         return $redirect;
     }
-
-
-
 }

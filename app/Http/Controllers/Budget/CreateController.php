@@ -24,11 +24,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Http\Requests\BudgetFormRequest;
+use FireflyIII\Http\Requests\BudgetFormStoreRequest;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class CreateController
@@ -38,8 +42,12 @@ class CreateController extends Controller
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * CreateController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -49,9 +57,10 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -64,39 +73,74 @@ class CreateController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(Request $request)
     {
+        $hasOldInput = null !== $request->old('_token');
+
+        // auto budget types
+        $autoBudgetTypes   = [
+            0                                => (string) trans('firefly.auto_budget_none'),
+            AutoBudget::AUTO_BUDGET_RESET    => (string) trans('firefly.auto_budget_reset'),
+            AutoBudget::AUTO_BUDGET_ROLLOVER => (string) trans('firefly.auto_budget_rollover'),
+        ];
+        $autoBudgetPeriods = [
+            'daily'     => (string) trans('firefly.auto_budget_period_daily'),
+            'weekly'    => (string) trans('firefly.auto_budget_period_weekly'),
+            'monthly'   => (string) trans('firefly.auto_budget_period_monthly'),
+            'quarterly' => (string) trans('firefly.auto_budget_period_quarterly'),
+            'half_year' => (string) trans('firefly.auto_budget_period_half_year'),
+            'yearly'    => (string) trans('firefly.auto_budget_period_yearly'),
+        ];
+        $currency          = app('amount')->getDefaultCurrency();
+
+        $preFilled = [
+            'auto_budget_period'      => $hasOldInput ? (bool) $request->old('auto_budget_period') : 'monthly',
+            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $currency->id,
+        ];
+
+        $request->session()->flash('preFilled', $preFilled);
+
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('budgets.create.fromStore')) {
             $this->rememberPreviousUri('budgets.create.uri');
         }
         $request->session()->forget('budgets.create.fromStore');
-        $subTitle = (string)trans('firefly.create_new_budget');
+        $subTitle = (string) trans('firefly.create_new_budget');
 
-        return view('budgets.create', compact('subTitle'));
+        return view('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
     }
 
 
     /**
      * Stores a budget.
      *
-     * @param BudgetFormRequest $request
+     * @param BudgetFormStoreRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(BudgetFormRequest $request): RedirectResponse
+    public function store(BudgetFormStoreRequest $request): RedirectResponse
     {
-        $data   = $request->getBudgetData();
+        $data = $request->getBudgetData();
+
         $budget = $this->repository->store($data);
         $this->repository->cleanupBudgets();
-        $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_new_budget', ['name' => $budget->name]));
         app('preferences')->mark();
+
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($budget, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
 
         $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
 
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.create.fromStore', true);
 

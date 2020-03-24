@@ -10,7 +10,7 @@
         var locations = {{ locations|json_encode|raw }};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
-    <form method="POST" action="{{ route('tags.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('tags.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-5 col-md-5 col-sm-12">
@@ -34,9 +34,13 @@
                         {{ ExpandedForm.date('date') }}
                         {{ ExpandedForm.textarea('description') }}
                         {{ ExpandedForm.location('location', null, {locations: locations}) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}
                 <div class="box">
                     <div class="box-header with-border">

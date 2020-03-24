@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class MappedValuesValidator
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class MappedValuesValidator
 {

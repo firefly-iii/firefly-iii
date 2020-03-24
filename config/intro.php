@@ -1,7 +1,7 @@
 <?php
 /**
  * intro.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,52 +27,52 @@ declare(strict_types=1);
 
 return [
     // index
-    'index'                  => [
+    'index'                          => [
         'intro'          => [],
         'accounts-chart' => ['element' => '#accounts-chart'],
         'box_out_holder' => ['element' => '#box_out_holder'],
         'help'           => ['element' => '#help', 'position' => 'bottom'],
         'sidebar-toggle' => ['element' => '#sidebar-toggle', 'position' => 'bottom'],
-        'cash_account' => ['element' => '#all_transactions','position' => 'left'],
+        'cash_account'   => ['element' => '#all_transactions', 'position' => 'left'],
         'outro'          => [],
     ],
     // accounts: create
-    'accounts_create'        => [
+    'accounts_create'                => [
         'iban' => ['element' => '#ffInput_iban'],
     ],
     // transactions: create
-    'transactions_create_withdrawal'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
-        'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+    'transactions_create_withdrawal' => [
+        'source'      => ['element' => 'input[name="source[]"]'],
+        'destination' => ['element' => 'input[name="destination[]"]'],
+        'more_meta'   => ['element' => 'input[name="category[]"]'],
+        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
-    'transactions_create_deposit'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
-        'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+    'transactions_create_deposit' => [
+        'source'      => ['element' => 'input[name="source[]"]'],
+        'destination' => ['element' => 'input[name="destination[]"]'],
+        'more_meta'   => ['element' => 'input[name="category[]"]'],
+        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
-    'transactions_create_transfer'    => [
-        'source'           => ['element' => 'input[name="source[]"]'],
-        'destination'           => ['element' => 'input[name="destination[]"]'],
-        'more_meta'        => ['element' => 'input[name="category[]"]'],
-        'split_add'        => ['element' => '.split_add_btn'],
+    'transactions_create_transfer' => [
+        'source'      => ['element' => 'input[name="source[]"]'],
+        'destination' => ['element' => 'input[name="destination[]"]'],
+        'more_meta'   => ['element' => 'input[name="category[]"]'],
+        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
     // extra text for asset account creation.
-    'accounts_create_asset'  => [
+    'accounts_create_asset'        => [
         'opening_balance' => ['element' => '#ffInput_opening_balance'],
         'currency'        => ['element' => '#ffInput_currency_id'],
         'virtual'         => ['element' => '#ffInput_virtual_balance'],
     ],
 
     // budgets: index
-    'budgets_index'          => [
+    'budgets_index'                => [
         'intro'            => [],
-        'set_budget'       => ['element' => '#availableBar',],
+        'set_budget'       => ['element' => '#availableBar'],
         'see_expenses_bar' => ['element' => '#spentBar'],
         'navigate_periods' => ['element' => '#periodNavigator'],
         'new_budget'       => ['element' => '#createBudgetBox'],
@@ -81,61 +81,61 @@ return [
 
     ],
     // reports: index, default report, audit, budget, cat, tag
-    'reports_index'          => [
+    'reports_index'                => [
         'intro'               => [],
         'inputReportType'     => ['element' => '#inputReportType'],
         'inputAccountsSelect' => ['element' => '#inputAccountsSelect'],
         'inputDateRange'      => ['element' => '#inputDateRange'],
         'extra-options-box'   => ['element' => '#extra-options-box', 'position' => 'top'],
     ],
-    'reports_report_default' => [
+    'reports_report_default'       => [
         'intro' => [],
     ],
-    'reports_report_audit'   => [
+    'reports_report_audit'         => [
         'intro'      => [],
         'optionsBox' => ['element' => '#optionsBox'],
     ],
-    'reports_report_category'        => [
+    'reports_report_category'      => [
         'intro'                  => [],
         'pieCharts'              => ['element' => '#pieCharts'],
         'incomeAndExpensesChart' => ['element' => '#incomeAndExpensesChart', 'position' => 'top'],
 
     ],
-    'reports_report_tag'             => [
+    'reports_report_tag'           => [
         'intro'                  => [],
         'pieCharts'              => ['element' => '#pieCharts'],
         'incomeAndExpensesChart' => ['element' => '#incomeAndExpensesChart', 'position' => 'top'],
     ],
-    'reports_report_budget'          => [
+    'reports_report_budget'        => [
         'intro'                  => [],
         'pieCharts'              => ['element' => '#pieCharts'],
         'incomeAndExpensesChart' => ['element' => '#incomeAndExpensesChart', 'position' => 'top'],
     ],
 
     // piggies: index, create, show
-    'piggy-banks_index'              => [
+    'piggy-banks_index'            => [
         'saved'         => ['element' => '.piggySaved'],
-        'button'        => ['element' => '.piggyBar',],
+        'button'        => ['element' => '.piggyBar'],
         'accountStatus' => ['element' => '#accountStatus', 'position' => 'top'],
     ],
-    'piggy-banks_create'             => [
+    'piggy-banks_create'           => [
         'name' => ['element' => '#ffInput_name'],
         'date' => ['element' => '#ffInput_targetdate'],
 
     ],
-    'piggy-banks_show'               => [
+    'piggy-banks_show'             => [
         'piggyChart'   => ['element' => '#piggyChart'],
         'piggyDetails' => ['element' => '#piggyDetails'],
         'piggyEvents'  => ['element' => '#piggyEvents'],
     ],
 
     // bills: index, create, show
-    'bills_index'                    => [
+    'bills_index'                  => [
         'rules'              => ['element' => '.rules'],
         'paid_in_period'     => ['element' => '.paid_in_period'],
         'expected_in_period' => ['element' => '.expected_in_period'],
     ],
-    'bills_create'                   => [
+    'bills_create'                 => [
         'intro'              => [],
         'name'               => ['element' => '#name_holder'],
         //'match'              => ['element' => '#match_holder'],
@@ -143,14 +143,14 @@ return [
         'repeat_freq_holder' => ['element' => '#repeat_freq_holder'],
         'skip_holder'        => ['element' => '#skip_holder'],
     ],
-    'bills_show'                     => [
+    'bills_show'                   => [
         'billInfo'    => ['element' => '#billInfo'],
         'billButtons' => ['element' => '#billButtons'],
         'billChart'   => ['element' => '#billChart', 'position' => 'top'],
 
     ],
     // rules: index, create-rule, edit-rule
-    'rules_index'                    => [
+    'rules_index'                  => [
         'intro'          => [],
         'new_rule_group' => ['element' => '#new_rule_group'],
         'new_rule'       => ['element' => '.new_rule'],
@@ -159,23 +159,23 @@ return [
         'rule-triggers'  => ['element' => '.rule-triggers'],
         'outro'          => [],
     ],
-    'rules_create'                   => [
+    'rules_create'                 => [
         'mandatory'          => ['element' => '#mandatory'],
         'ruletriggerholder'  => ['element' => '.rule-trigger-box'],
         'test_rule_triggers' => ['element' => '.test_rule_triggers'],
         'actions'            => ['element' => '.rule-action-box', 'position' => 'top'],
     ],
     // preferences: index
-    'preferences_index'              => [
+    'preferences_index'            => [
         'tabs' => ['element' => '.nav-tabs'],
     ],
     // currencies: index, create
-    'currencies_index'               => [
+    'currencies_index'             => [
         'intro'   => [],
         'default' => ['element' => '#default-currency'],
-        'buttons' => ['element' => '.buttons',]
+        'buttons' => ['element' => '.buttons'],
     ],
-    'currencies_create'              => [
-        'code' => ['element' => '#ffInput_code',],
+    'currencies_create'            => [
+        'code' => ['element' => '#ffInput_code'],
     ],
 ];

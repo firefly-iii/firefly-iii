@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -32,41 +35,43 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class ImportJob.
  *
- * @property array  $transactions
- * @property array  $configuration
- * @property User   $user
- * @property int    $user_id
- * @property string $status
- * @property string $stage
- * @property string $key
- * @property string $provider
- * @property string $file_type
- * @property int    $tag_id
- * @property Tag    $tag
- * @property array  $errors
- * @property array  extended_status
- * @property int    id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereErrors($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereProvider($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTagId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereTransactions($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ImportJob whereUserId($value)
- * @mixin \Eloquent
+ * @codeCoverageIgnore
+ * @deprecated
+ * @property array                                                                         $transactions
+ * @property array                                                                         $configuration
+ * @property User                                                                          $user
+ * @property int                                                                           $user_id
+ * @property string                                                                        $status
+ * @property string                                                                        $stage
+ * @property string                                                     $key
+ * @property string                                                     $provider
+ * @property string                                                     $file_type
+ * @property int                                                        $tag_id
+ * @property Tag                                                        $tag
+ * @property array                                                      $errors
+ * @property array                                                      extended_status
+ * @property int                                                        id
+ * @property Carbon                                                     $created_at
+ * @property Carbon                                                     $updated_at
+ * @property-read Collection|Attachment[] $attachments
+ * @method static Builder|ImportJob newModelQuery()
+ * @method static Builder|ImportJob newQuery()
+ * @method static Builder|ImportJob query()
+ * @method static Builder|ImportJob whereConfiguration($value)
+ * @method static Builder|ImportJob whereCreatedAt($value)
+ * @method static Builder|ImportJob whereErrors($value)
+ * @method static Builder|ImportJob whereExtendedStatus($value)
+ * @method static Builder|ImportJob whereFileType($value)
+ * @method static Builder|ImportJob whereId($value)
+ * @method static Builder|ImportJob whereKey($value)
+ * @method static Builder|ImportJob whereProvider($value)
+ * @method static Builder|ImportJob whereStage($value)
+ * @method static Builder|ImportJob whereStatus($value)
+ * @method static Builder|ImportJob whereTagId($value)
+ * @method static Builder|ImportJob whereTransactions($value)
+ * @method static Builder|ImportJob whereUpdatedAt($value)
+ * @method static Builder|ImportJob whereUserId($value)
+ * @mixin Eloquent
  */
 class ImportJob extends Model
 {
@@ -94,9 +99,9 @@ class ImportJob extends Model
      *
      * @param $value
      *
+     * @throws NotFoundHttpException
      * @return mixed
      *
-     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): ImportJob
     {

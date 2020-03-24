@@ -20,6 +20,7 @@
  */
 
 namespace FireflyIII\Exceptions;
+
 use Exception;
 
 /**
@@ -27,5 +28,4 @@ use Exception;
  */
 class DuplicateTransactionException extends Exception
 {
-
 }

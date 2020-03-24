@@ -58,6 +58,7 @@ class DeleteEmptyJournals extends Command
         $this->deleteUnevenJournals();
         $this->deleteEmptyJournals();
 
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }
@@ -101,18 +102,18 @@ class DeleteEmptyJournals extends Command
             ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
         $total = 0;
         foreach ($set as $row) {
-            $count = (int)$row->the_count;
+            $count = (int) $row->the_count;
             if (1 === $count % 2) {
                 // uneven number, delete journal and transactions:
                 try {
-                    TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                    TransactionJournal::find((int) $row->transaction_journal_id)->delete();
                     // @codeCoverageIgnoreStart
                 } catch (Exception $e) {
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
                 // @codeCoverageIgnoreEnd
 
-                Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
+                Transaction::where('transaction_journal_id', (int) $row->transaction_journal_id)->delete();
                 $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
                 $total++;
             }

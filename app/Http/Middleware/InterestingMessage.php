@@ -38,8 +38,8 @@ class InterestingMessage
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.
      *
-     * @param Request  $request
-     * @param \Closure $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      *
@@ -85,7 +85,7 @@ class InterestingMessage
 
         // send message about newly created transaction group.
         /** @var TransactionGroup $group */
-        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
+        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int) $transactionGroupId);
 
         if (null === $group) {
             return;
@@ -101,12 +101,12 @@ class InterestingMessage
         $title = $count > 1 ? $group->title : $journal->description;
         if ('created' === $message) {
             session()->flash('success_uri', route('transactions.show', [$transactionGroupId]));
-            session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $title]));
+            session()->flash('success', (string) trans('firefly.stored_journal', ['description' => $title]));
         }
         if ('updated' === $message) {
             $type = strtolower($journal->transactionType->type);
             session()->flash('success_uri', route('transactions.show', [$transactionGroupId]));
-            session()->flash('success', (string)trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
+            session()->flash('success', (string) trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
     }
 

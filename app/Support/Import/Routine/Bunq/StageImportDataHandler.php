@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class StageImportDataHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageImportDataHandler
 {

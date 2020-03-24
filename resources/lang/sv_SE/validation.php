@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Totala värdet kan inte vara noll.',
     'current_target_amount'          => 'Det nuvarande beloppet måste vara mindre än målbeloppet.',
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
+
     'secure_password'                => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Ogiltig repetitionstyp får återkommande transaktioner.',
     'valid_recurrence_rep_moment'    => 'Ogiltig repetitionsmoment för denna typ av repetition.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
+
+    'amount_required_for_auto_budget' => 'The amount is required.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

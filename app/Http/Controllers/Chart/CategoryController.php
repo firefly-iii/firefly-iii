@@ -26,13 +26,12 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Chart\Category\FrontpageChartGenerator;
 use FireflyIII\Support\Chart\Category\WholePeriodChartGenerator;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -117,96 +116,11 @@ class CategoryController extends Controller
             // return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        // currency repos:
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
+        $frontPageGenerator = new FrontpageChartGenerator($start, $end);
 
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepository */
-        $noCatRepository = app(NoCategoryRepositoryInterface::class);
-
-        $chartData  = [];
-        $currencies = [];
-        $tempData   = [];
-        $categories = $repository->getCategories();
-        $accounts   = $accountRepository->getAccountsByType(
-            [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]
-        );
-
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $collection = new Collection([$category]);
-            $spent      = $opsRepository->sumExpenses($start, $end, $accounts, $collection);
-            //$spentArray = $opsRepository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
-            foreach ($spent as $currency) {
-                $currencyId              = $currency['currency_id'];
-                $currencies[$currencyId] = $currencies[$currencyId] ?? [
-                        'currency_id'             => $currencyId,
-                        'currency_name'           => $currency['currency_name'],
-                        'currency_symbol'         => $currency['currency_symbol'],
-                        'currency_code'           => $currency['currency_code'],
-                        'currency_decimal_places' => $currency['currency_decimal_places'],
-                    ];
-                $tempData[]              = [
-                    'name'        => $category->name,
-                    'sum'         => $currency['sum'],
-                    'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
-                    'currency_id' => $currencyId,
-                ];
-            }
-        }
-
-        // no category per currency:
-        $noCategory = $noCatRepository->sumExpenses($start, $end);
-        if (0 !== bccomp($noCategory[0]['sum'] ?? '0', '0')) {
-
-            foreach ($noCategory as $currency) {
-                $currencyId              = $currency['currency_id'];
-                $currencies[$currencyId] = $currencies[$currencyId] ?? [
-                        'currency_id'             => $currency['currency_id'],
-                        'currency_name'           => $currency['currency_name'],
-                        'currency_symbol'         => $currency['currency_symbol'],
-                        'currency_code'           => $currency['currency_code'],
-                        'currency_decimal_places' => $currency['currency_decimal_places'],
-                    ];
-                $tempData[]              = [
-                    'name'        => trans('firefly.no_category'),
-                    'sum'         => $currency['sum'],
-                    'sum_float'   => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
-                    'currency_id' => $currency['currency_id'],
-                ];
-            }
-        }
-
-        // sort temp array by amount.
-        $amounts = array_column($tempData, 'sum_float');
-        array_multisort($amounts, SORT_DESC, $tempData);
-
-        // loop all found currencies and build the data array for the chart.
-        /** @var array $currency */
-        foreach ($currencies as $currency) {
-            $dataSet                             = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currency['currency_name']),
-                'type'            => 'bar',
-                'currency_symbol' => $currency['currency_symbol'],
-                'entries'         => $this->expandNames($tempData),
-            ];
-            $chartData[$currency['currency_id']] = $dataSet;
-        }
-
-        // loop temp data and place data in correct array:
-        foreach ($tempData as $entry) {
-            $currencyId                               = $entry['currency_id'];
-            $name                                     = $entry['name'];
-            $chartData[$currencyId]['entries'][$name] = bcmul($entry['sum'], '-1');
-        }
-
-        $data = $this->generator->multiSet($chartData);
+        $chartData          = $frontPageGenerator->generate();
+        $data               = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -353,7 +267,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int)$category->id;
+            $categoryId    = (int) $category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
@@ -372,7 +286,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -380,7 +294,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                 = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

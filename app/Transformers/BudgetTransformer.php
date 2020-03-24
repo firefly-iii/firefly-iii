@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
@@ -37,6 +38,8 @@ class BudgetTransformer extends AbstractTransformer
 {
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
+    /** @var BudgetRepositoryInterface */
+    private $repository;
 
     /**
      * BudgetTransformer constructor.
@@ -46,6 +49,7 @@ class BudgetTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->repository    = app(BudgetRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
@@ -61,21 +65,46 @@ class BudgetTransformer extends AbstractTransformer
     public function transform(Budget $budget): array
     {
         $this->opsRepository->setUser($budget->user);
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
-        $spent = [];
+        $start      = $this->parameters->get('start');
+        $end        = $this->parameters->get('end');
+        $autoBudget = $this->repository->getAutoBudget($budget);
+        $spent      = [];
         if (null !== $start && null !== $end) {
             $spent = array_values($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
 
+        $abCurrencyId   = null;
+        $abCurrencyCode = null;
+        $abType         = null;
+        $abAmount       = null;
+        $abPeriod       = null;
+
+        $types = [
+            AutoBudget::AUTO_BUDGET_RESET    => 'reset',
+            AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
+        ];
+
+        if (null !== $autoBudget) {
+            $abCurrencyId   = $autoBudget->transactionCurrency->id;
+            $abCurrencyCode = $autoBudget->transactionCurrency->code;
+            $abType         = $types[$autoBudget->auto_budget_type];
+            $abAmount       = $autoBudget->amount;
+            $abPeriod       = $autoBudget->period;
+        }
+
         $data = [
-            'id'         => (int)$budget->id,
-            'created_at' => $budget->created_at->toAtomString(),
-            'updated_at' => $budget->updated_at->toAtomString(),
-            'active'     => $budget->active,
-            'name'       => $budget->name,
-            'spent'      => $spent,
-            'links'      => [
+            'id'                        => (int)$budget->id,
+            'created_at'                => $budget->created_at->toAtomString(),
+            'updated_at'                => $budget->updated_at->toAtomString(),
+            'active'                    => $budget->active,
+            'name'                      => $budget->name,
+            'auto_budget_type'          => $abType,
+            'auto_budget_period'        => $abPeriod,
+            'auto_budget_currency_id'   => $abCurrencyId,
+            'auto_budget_currency_code' => $abCurrencyCode,
+            'auto_budget_amount'        => $abAmount,
+            'spent'                     => $spent,
+            'links'                     => [
                 [
                     'rel' => 'self',
                     'uri' => '/budgets/' . $budget->id,

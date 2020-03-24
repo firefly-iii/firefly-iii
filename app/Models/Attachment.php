@@ -23,58 +23,61 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Attachment.
  *
- * @property int    $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property string $attachable_type
- * @property string $md5
- * @property string $filename
- * @property string $title
- * @property string $description
- * @property string $notes
- * @property string $mime
- * @property int    $size
- * @property User   $user
- * @property bool   $uploaded
- * @property bool   file_exists
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $attachable_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachable
+ * @property int                                                                           $id
+ * @property Carbon                                                                        $created_at
+ * @property Carbon                                                                        $updated_at
+ * @property string                                                                        $attachable_type
+ * @property string                                                                        $md5
+ * @property string                                                                        $filename
+ * @property string                                                                        $title
+ * @property string                                                     $description
+ * @property string                                                     $notes
+ * @property string                                                     $mime
+ * @property int                                                        $size
+ * @property User                                                       $user
+ * @property bool                                                       $uploaded
+ * @property bool                                                       file_exists
+ * @property \Illuminate\Support\Carbon|null                            $deleted_at
+ * @property int                                                        $user_id
+ * @property int                                                        $attachable_id
+ * @property-read Collection|Attachment[] $attachable
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment newQuery()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
+ * @method static Builder|Attachment onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereAttachableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereAttachableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereFilename($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereMd5($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereMime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUploaded($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Attachment whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Attachment withoutTrashed()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereMd5($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereMime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUploaded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
+ * @method static Builder|Attachment withTrashed()
+ * @method static Builder|Attachment withoutTrashed()
+ * @mixin Eloquent
  */
 class Attachment extends Model
 {
@@ -100,13 +103,13 @@ class Attachment extends Model
      *
      * @param string $value
      *
-     * @return Attachment
      * @throws NotFoundHttpException
+     * @return Attachment
      */
     public static function routeBinder(string $value): Attachment
     {
         if (auth()->check()) {
-            $attachmentId = (int)$value;
+            $attachmentId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Attachment $attachment */
@@ -138,7 +141,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string)$this->id);
+        return sprintf('at-%s.data', (string) $this->id);
     }
 
     /**

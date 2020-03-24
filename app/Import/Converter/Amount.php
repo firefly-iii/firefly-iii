@@ -26,6 +26,9 @@ use Log;
 
 /**
  * Class Amount.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Amount implements ConverterInterface
 {
@@ -44,7 +47,7 @@ class Amount implements ConverterInterface
         }
         Log::debug(sprintf('Start with amount "%s"', $value));
         $original = $value;
-        $value    = $this->stripAmount((string)$value);
+        $value    = $this->stripAmount((string) $value);
         $decimal  = null;
 
         if ($this->decimalIsDot($value)) {
@@ -217,7 +220,7 @@ class Amount implements ConverterInterface
             $value = substr($value, 2);
         }
         // have to strip the € because apparantly the Postbank (DE) thinks "1.000,00 €" is a normal way to format a number.
-        $value = trim((string)str_replace(['€'], '', $value));
+        $value = trim((string) str_replace(['€'], '', $value));
         $str   = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
         $len   = strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {

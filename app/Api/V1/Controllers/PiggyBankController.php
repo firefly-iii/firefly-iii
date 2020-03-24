@@ -27,6 +27,7 @@ use FireflyIII\Api\V1\Requests\PiggyBankRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
@@ -83,6 +84,36 @@ class PiggyBankController extends Controller
         return response()->json([], 204);
     }
 
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function attachments(PiggyBank $piggyBank): JsonResponse
+    {
+        $manager    = $this->getManager();
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection = $this->repository->getAttachments($piggyBank);
+
+        $count       = $collection->count();
+        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.piggy_banks.attachments', [$piggyBank->id]) . $this->buildParams());
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
     /**
      * List all of them.
      *
@@ -93,7 +124,7 @@ class PiggyBankController extends Controller
     {
         $manager = $this->getManager();
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks();
@@ -126,7 +157,7 @@ class PiggyBankController extends Controller
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
 
         $collection = $this->repository->getEvents($piggyBank);
@@ -175,13 +206,13 @@ class PiggyBankController extends Controller
      *
      * @param PiggyBankRequest $request
      *
-     * @return JsonResponse
      * @throws FireflyException
+     * @return JsonResponse
      */
     public function store(PiggyBankRequest $request): JsonResponse
     {
         $piggyBank = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
+        $manager   = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);

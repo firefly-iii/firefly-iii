@@ -34,6 +34,8 @@ use RuntimeException;
 
 /**
  * Class StageGetAccessHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class StageGetAccessHandler
 {

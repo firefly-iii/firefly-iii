@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn.',
     'current_target_amount'          => 'Het huidige bedrag moet minder zijn dan het doelbedrag.',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
+
     'secure_password'                => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties.',
     'valid_recurrence_rep_moment'    => 'Ongeldig herhaalmoment voor dit type herhaling.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => ':attribute moet groter of gelijk zijn aan :value kilobytes.',
     'gte.string'  => ':attribute moet :value karakters of meer bevatten.',
     'gte.array'   => ':attribute moet :value items of meer bevatten.',
+
+    'amount_required_for_auto_budget' => 'Bedrag is vereist.',
+    'auto_budget_amount_positive'     => 'Het bedrag moet meer zijn dan nul.',
+    'auto_budget_period_mandatory' => 'De auto-budgetperiode is verplicht.',
 ];

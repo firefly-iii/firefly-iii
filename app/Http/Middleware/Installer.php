@@ -29,6 +29,7 @@ use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Log;
 
 /**
@@ -42,12 +43,12 @@ class Installer
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     *
-     * @return mixed
+     * @param Request $request
+     * @param Closure                  $next
      *
      * @throws FireflyException
+     *
+     * @return mixed
      *
      */
     public function handle($request, Closure $next)
@@ -107,8 +108,8 @@ class Installer
     /**
      * Check if the tables are created and accounted for.
      *
-     * @return bool
      * @throws FireflyException
+     * @return bool
      */
     private function hasNoTables(): bool
     {
@@ -127,14 +128,12 @@ class Installer
                 Log::warning('There are no Firefly III tables present. Redirect to migrate routine.');
 
                 return true;
-
             }
             throw new FireflyException(sprintf('Could not access the database: %s', $message));
         }
         Log::debug('Everything seems OK with the tables.');
 
         return false;
-
     }
 
     /**
@@ -145,12 +144,14 @@ class Installer
     private function oldDBVersion(): bool
     {
         // older version in config than database?
-        $configVersion = (int)config('firefly.db_version');
-        $dbVersion     = (int)app('fireflyconfig')->getFresh('db_version', 1)->data;
+        $configVersion = (int) config('firefly.db_version');
+        $dbVersion     = (int) app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
             Log::warning(
                 sprintf(
-                    'The current configured version (%d) is older than the required version (%d). Redirect to migrate routine.', $dbVersion, $configVersion
+                    'The current configured version (%d) is older than the required version (%d). Redirect to migrate routine.',
+                    $dbVersion,
+                    $configVersion
                 )
             );
 
@@ -169,12 +170,14 @@ class Installer
     private function oldVersion(): bool
     {
         // version compare thing.
-        $configVersion = (string)config('firefly.version');
-        $dbVersion     = (string)app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
+        $configVersion = (string) config('firefly.version');
+        $dbVersion     = (string) app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
         if (1 === version_compare($configVersion, $dbVersion)) {
             Log::warning(
                 sprintf(
-                    'The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.', $dbVersion, $configVersion
+                    'The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.',
+                    $dbVersion,
+                    $configVersion
                 )
             );
 
@@ -184,5 +187,4 @@ class Installer
 
         return false;
     }
-
 }

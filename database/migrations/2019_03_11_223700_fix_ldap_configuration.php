@@ -1,7 +1,7 @@
 <?php
 /**
  * 2019_03_11_223700_fix_ldap_configuration.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,13 +21,12 @@
 
 declare(strict_types=1);
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class FixLdapConfiguration
+ * Class FixLdapConfiguration.
  */
 class FixLdapConfiguration extends Migration
 {
@@ -39,9 +38,9 @@ class FixLdapConfiguration extends Migration
     public function down(): void
     {
         Schema::table(
-            'users', function (Blueprint $table) {
-            $table->dropColumn(['objectguid']);
-        }
+            'users', static function (Blueprint $table) {
+                $table->dropColumn(['objectguid']);
+            }
         );
     }
 
@@ -58,9 +57,9 @@ class FixLdapConfiguration extends Migration
          * now. To support this, we add the column.
          */
         Schema::table(
-            'users', function (Blueprint $table) {
-            $table->uuid('objectguid')->nullable()->after('id');
-        }
+            'users', static function (Blueprint $table) {
+                $table->uuid('objectguid')->nullable()->after('id');
+            }
         );
     }
 }

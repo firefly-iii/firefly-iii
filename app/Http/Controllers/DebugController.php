@@ -30,7 +30,9 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
@@ -46,6 +48,7 @@ class DebugController extends Controller
 
     /**
      * DebugController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -77,7 +80,7 @@ class DebugController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function flush(Request $request)
     {
@@ -129,7 +132,7 @@ class DebugController extends Controller
         $userAgent      = $request->header('user-agent');
         $trustedProxies = config('firefly.trusted_proxies');
         $displayErrors  = ini_get('display_errors');
-        $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
+        $errorReporting = $this->errorReporting((int) ini_get('error_reporting'));
         $appEnv         = config('app.env');
         $appDebug       = var_export(config('app.debug'), true);
         $logChannel     = config('logging.default');
@@ -140,7 +143,7 @@ class DebugController extends Controller
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
         $localeAttempts = [];
-        $parts          = explode(',', (string)trans('config.locale'));
+        $parts          = explode(',', (string) trans('config.locale'));
         foreach ($parts as $code) {
             $code                  = trim($code);
             $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
@@ -172,11 +175,29 @@ class DebugController extends Controller
         }
 
         return view(
-            'debug', compact(
-                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers', 'currentDriver',
-                       'loginProvider',
-                       'userAgent', 'displayErrors', 'installationId', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'trustedProxies'
-                   )
+            'debug',
+            compact(
+                'phpVersion',
+                'extensions',
+                'localeAttempts',
+                'appEnv',
+                'appDebug',
+                'logChannel',
+                'appLogLevel',
+                'now',
+                'drivers',
+                'currentDriver',
+                'loginProvider',
+                'userAgent',
+                'displayErrors',
+                'installationId',
+                'errorReporting',
+                'phpOs',
+                'interface',
+                'logContent',
+                'cacheDriver',
+                'trustedProxies'
+            )
         );
     }
 
@@ -203,7 +224,7 @@ class DebugController extends Controller
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = (string)$route->getName();
+            $name = (string) $route->getName();
             if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
@@ -226,7 +247,7 @@ class DebugController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function testFlash(Request $request)
     {
@@ -237,6 +258,4 @@ class DebugController extends Controller
 
         return redirect(route('home'));
     }
-
-
 }

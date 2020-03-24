@@ -50,6 +50,7 @@ class BudgetControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
+        $this->mockDefaultConfiguration();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
@@ -86,7 +87,7 @@ class BudgetControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post(route('api.v1.budgets.store'), $data);
+        $response = $this->post(route('api.v1.budgets.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'budgets', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

@@ -91,6 +91,8 @@ class CCLiabilities extends Command
         $this->info(sprintf('Verified credit card liabilities in %s seconds', $end));
         $this->markAsExecuted();
 
+        // app('telemetry')->feature('executed-command', $this->signature);
+
         return 0;
     }
 
@@ -101,7 +103,7 @@ class CCLiabilities extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false; // @codeCoverageIgnore

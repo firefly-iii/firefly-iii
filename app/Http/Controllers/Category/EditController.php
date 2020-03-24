@@ -24,11 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class EditController
@@ -39,8 +44,12 @@ class EditController extends Controller
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
+
     /**
      * CategoryController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -49,9 +58,10 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
                 $this->repository = app(CategoryRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -65,11 +75,11 @@ class EditController extends Controller
      * @param Request  $request
      * @param Category $category
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, Category $category)
     {
-        $subTitle = (string)trans('firefly.edit_category', ['name' => $category->name]);
+        $subTitle = (string) trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {
@@ -83,22 +93,32 @@ class EditController extends Controller
     /**
      * Update category.
      *
-     * @param CategoryFormRequest         $request
-     * @param Category                    $category
+     * @param CategoryFormRequest $request
+     * @param Category            $category
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function update(CategoryFormRequest $request, Category $category)
     {
         $data = $request->getCategoryData();
         $this->repository->update($category, $data);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_category', ['name' => $category->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_category', ['name' => $category->name]));
         app('preferences')->mark();
+
+        // store new attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($category, $files);
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
 
         $redirect = redirect($this->getPreviousUri('categories.edit.uri'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.edit.fromUpdate', true);
 

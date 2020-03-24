@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -31,28 +34,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class TransactionJournalLink.
  *
- * @property int                $id
- * @property Carbon             $created_at
- * @property Carbon             $updated_at
- * @property string             $comment
- * @property TransactionJournal $source
- * @property TransactionJournal $destination
- * @property LinkType           $linkType
- * @property int                $link_type_id
- * @property int                $source_id
- * @property int                $destination_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereDestinationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereLinkTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereSourceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property int                                                  $id
+ * @property Carbon                                               $created_at
+ * @property Carbon                                               $updated_at
+ * @property string                                               $comment
+ * @property TransactionJournal                                   $source
+ * @property TransactionJournal                                   $destination
+ * @property LinkType                                             $linkType
+ * @property int                                                  $link_type_id
+ * @property int                                                  $source_id
+ * @property int                                                  $destination_id
+ * @property-read Collection|Note[] $notes
+ * @method static Builder|TransactionJournalLink newModelQuery()
+ * @method static Builder|TransactionJournalLink newQuery()
+ * @method static Builder|TransactionJournalLink query()
+ * @method static Builder|TransactionJournalLink whereComment($value)
+ * @method static Builder|TransactionJournalLink whereCreatedAt($value)
+ * @method static Builder|TransactionJournalLink whereDestinationId($value)
+ * @method static Builder|TransactionJournalLink whereId($value)
+ * @method static Builder|TransactionJournalLink whereLinkTypeId($value)
+ * @method static Builder|TransactionJournalLink whereSourceId($value)
+ * @method static Builder|TransactionJournalLink whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class TransactionJournalLink extends Model
 {
@@ -74,14 +77,14 @@ class TransactionJournalLink extends Model
      *
      * @param string $value
      *
+     * @throws NotFoundHttpException
      * @return mixed
      *
-     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournalLink
     {
         if (auth()->check()) {
-            $linkId = (int)$value;
+            $linkId = (int) $value;
             $link   = self::where('journal_links.id', $linkId)
                           ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
                           ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')

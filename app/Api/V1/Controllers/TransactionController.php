@@ -110,7 +110,6 @@ class TransactionController extends Controller
         $resource = new FractalCollection($attachments, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -153,7 +152,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -215,7 +214,6 @@ class TransactionController extends Controller
         $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -296,7 +294,7 @@ class TransactionController extends Controller
             ];
 
             return response()->json($response, 422);
-        } catch(FireflyException $e) {
+        } catch (FireflyException $e) {
             Log::warning('Caught an exception. Return error message.');
             Log::error($e->getMessage());
             // return bad validation message.
@@ -304,7 +302,7 @@ class TransactionController extends Controller
             $response = [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.description' => [sprintf('Internal exception: %s',$e->getMessage())],
+                    'transactions.0.description' => [sprintf('Internal exception: %s', $e->getMessage())],
                 ],
             ];
 
@@ -379,6 +377,5 @@ class TransactionController extends Controller
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 }

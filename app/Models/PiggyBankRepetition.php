@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,27 +31,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class PiggyBankRepetition.
  *
- * @property string $currentamount
- * @property Carbon $startdate
- * @property Carbon $targetdate
- * @property int $id
+ * @property string                          $currentamount
+ * @property Carbon                          $startdate
+ * @property Carbon                          $targetdate
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $piggy_bank_id
- * @property-read \FireflyIII\Models\PiggyBank $piggyBank
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition onDates(\Carbon\Carbon $start, \Carbon\Carbon $target)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition query()
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition relevantOnDate(\Carbon\Carbon $date)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereCurrentamount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition wherePiggyBankId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereTargetdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankRepetition whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property int                             $piggy_bank_id
+ * @property-read PiggyBank                  $piggyBank
+ * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
+ * @method static EloquentBuilder|PiggyBankRepetition newQuery()
+ * @method static EloquentBuilder|PiggyBankRepetition onDates(Carbon $start, Carbon $target)
+ * @method static EloquentBuilder|PiggyBankRepetition query()
+ * @method static EloquentBuilder|PiggyBankRepetition relevantOnDate(Carbon $date)
+ * @method static EloquentBuilder|PiggyBankRepetition whereCreatedAt($value)
+ * @method static EloquentBuilder|PiggyBankRepetition whereCurrentamount($value)
+ * @method static EloquentBuilder|PiggyBankRepetition whereId($value)
+ * @method static EloquentBuilder|PiggyBankRepetition wherePiggyBankId($value)
+ * @method static EloquentBuilder|PiggyBankRepetition whereStartdate($value)
+ * @method static EloquentBuilder|PiggyBankRepetition whereTargetdate($value)
+ * @method static EloquentBuilder|PiggyBankRepetition whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PiggyBankRepetition extends Model
 {
@@ -123,6 +124,6 @@ class PiggyBankRepetition extends Model
      */
     public function setCurrentamountAttribute($value): void
     {
-        $this->attributes['currentamount'] = (string)$value;
+        $this->attributes['currentamount'] = (string) $value;
     }
 }

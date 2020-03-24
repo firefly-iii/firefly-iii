@@ -55,7 +55,7 @@ class RequestedReportOnJournals
     public function __construct(int $userId, Collection $groups)
     {
         Log::debug('In event RequestedReportOnJournals.');
-        $this->userId   = $userId;
+        $this->userId = $userId;
         $this->groups = $groups;
     }
 

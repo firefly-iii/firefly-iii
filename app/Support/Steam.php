@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,7 +45,7 @@ class Steam
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date): string
+    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -59,22 +60,25 @@ class Steam
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
-
+        if (null === $currency) {
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        }
         // first part: get all balances in own currency:
-        $nativeBalance = (string)$account->transactions()
-                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                         ->where('transactions.transaction_currency_id', $currency->id)
-                                         ->sum('transactions.amount');
+        $transactions  = $account->transactions()
+                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                 ->where('transactions.transaction_currency_id', $currency->id)
+                                 ->get(['transactions.amount'])->toArray();
+        $nativeBalance = $this->sumTransactions($transactions, 'amount');
 
         // get all balances in foreign currency:
-        $foreignBalance = (string)$account->transactions()
-                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                                          ->where('transactions.foreign_currency_id', $currency->id)
-                                          ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                                          ->sum('transactions.foreign_amount');
+        $transactions   = $account->transactions()
+                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                  ->where('transactions.foreign_currency_id', $currency->id)
+                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
+                                  ->get(['transactions.foreign_amount'])->toArray();
+        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
 
         // check:
         Log::debug(sprintf('Steam::balance. Native balance is "%s"', $nativeBalance));
@@ -86,6 +90,7 @@ class Steam
         Log::debug(sprintf('Steam::balance. Virtual balance is "%s"', $virtual));
 
         $balance = bcadd($balance, $virtual);
+
         $cache->store($balance);
 
         return $balance;
@@ -114,25 +119,47 @@ class Steam
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
-        $nativeBalance = (string)$account->transactions()
-                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                                         ->where('transactions.transaction_currency_id', $currencyId)
-                                         ->sum('transactions.amount');
+        $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+
+
+        $transactions  = $account->transactions()
+                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                 ->where('transactions.transaction_currency_id', $currencyId)
+                                 ->get(['transactions.amount'])->toArray();
+        $nativeBalance = $this->sumTransactions($transactions, 'amount');
 
         // get all balances in foreign currency:
-        $foreignBalance = (string)$account->transactions()
-                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                                          ->where('transactions.foreign_currency_id', $currencyId)
-                                          ->where('transactions.transaction_currency_id', '!=', $currencyId)
-                                          ->sum('transactions.foreign_amount');
+        $transactions = $account->transactions()
+                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                ->where('transactions.foreign_currency_id', $currencyId)
+                                ->where('transactions.transaction_currency_id', '!=', $currencyId)
+                                ->get(['transactions.foreign_amount'])->toArray();
+
+        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
 
         $cache->store($balance);
 
         return $balance;
+    }
+
+    /**
+     * @param array  $transactions
+     * @param string $key
+     *
+     * @return string
+     */
+    public function sumTransactions(array $transactions, string $key): string
+    {
+        $sum = '0';
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $sum = bcadd($sum, $transaction[$key] ?? '0');
+        }
+
+        return $sum;
     }
 
     /**
@@ -143,10 +170,11 @@ class Steam
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $start
      * @param \Carbon\Carbon             $end
+     * @param TransactionCurrency|null   $currency
      *
      * @return array
      */
-    public function balanceInRange(Account $account, Carbon $start, Carbon $end): array
+    public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -155,6 +183,7 @@ class Steam
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
+        $cache->addProperty($currency ? $currency->id : 0);
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -168,17 +197,14 @@ class Steam
         $startBalance = $this->balance($account, $start);
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($account->user);
 
         $balances[$formatted] = $startBalance;
-        $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
-
-        // use system default currency:
-        if (0 === $currencyId) {
-            $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
-            $currencyId = $currency->id;
+        if (null === $currency) {
+            $repository = app(AccountRepositoryInterface::class);
+            $repository->setUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
+        $currencyId = $currency->id;
 
         $start->addDay();
 

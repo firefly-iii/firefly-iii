@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(budget, {'class' : 'form-horizontal','id' : 'update','url' : route('budgets.update',budget.id) } ) }}
+    {{ Form.model(budget, {'class' : 'form-horizontal','enctype': 'multipart/form-data','id' : 'update','url' : route('budgets.update',budget.id) } ) }}
     <input type="hidden" name="id" value="{{ budget.id }}"/>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -22,6 +22,23 @@
 
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            {# panel for auto-budget #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
+                    {{ CurrencyForm.currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
+                    {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
+                    {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             {# panel for options #}
             <div class="box">
                 <div class="box-header with-border">
@@ -37,7 +54,7 @@
         </div>
     </div>
 
-    {{ Form.close|raw }}
+    </form>
 
 {% endblock %}
 {% block scripts %}

@@ -29,7 +29,9 @@ use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -43,6 +45,7 @@ class BulkController extends Controller
 
     /**
      * BulkController constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -52,7 +55,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -67,11 +70,11 @@ class BulkController extends Controller
      *
      * @param Collection $journals
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(array $journals)
     {
-        $subTitle = (string)trans('firefly.mass_bulk_journals');
+        $subTitle = (string) trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUri('transactions.bulk-edit.uri');
 
@@ -97,13 +100,13 @@ class BulkController extends Controller
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int)$request->get('ignore_category');
-        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
-        $ignoreTags     = 1 === (int)$request->get('ignore_tags');
+        $ignoreCategory = 1 === (int) $request->get('ignore_category');
+        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
+        $ignoreTags     = 1 === (int) $request->get('ignore_tags');
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
-            $journalId = (int)$journalId;
+            $journalId = (int) $journalId;
             $journal   = $this->repository->findNull($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
@@ -115,7 +118,7 @@ class BulkController extends Controller
             }
         }
         app('preferences')->mark();
-        $request->session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        $request->session()->flash('success', (string) trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
@@ -123,26 +126,27 @@ class BulkController extends Controller
 
     /**
      * @param TransactionJournal $journal
-     * @param bool $ignoreUpdate
-     * @param array $tags
+     * @param bool               $ignoreUpdate
+     * @param int                $budgetId
+     *
      * @return bool
      */
-    private function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
+    private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
     {
-
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
-        $this->repository->updateTags($journal, $tags);
+        Log::debug(sprintf('Set budget to %d', $budgetId));
+        $this->repository->updateBudget($journal, $budgetId);
 
         return true;
     }
 
     /**
      * @param TransactionJournal $journal
-     * @param bool $ignoreUpdate
-     * @param string $category
+     * @param bool               $ignoreUpdate
+     * @param string             $category
+     *
      * @return bool
      */
     private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
@@ -158,17 +162,19 @@ class BulkController extends Controller
 
     /**
      * @param TransactionJournal $journal
-     * @param bool $ignoreUpdate
-     * @param int $budgetId
+     * @param bool               $ignoreUpdate
+     * @param array              $tags
+     *
      * @return bool
      */
-    private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
+    private function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
     {
+
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set budget to %d', $budgetId));
-        $this->repository->updateBudget($journal, $budgetId);
+        Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
+        $this->repository->updateTags($journal, $tags);
 
         return true;
     }

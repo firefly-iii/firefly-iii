@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class ImportJobTransformer
+ * @deprecated
  */
 class ImportJobTransformer extends AbstractTransformer
 {

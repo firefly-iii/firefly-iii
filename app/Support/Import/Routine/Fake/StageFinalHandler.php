@@ -30,7 +30,7 @@ use FireflyIII\Models\ImportJob;
 /**
  * @codeCoverageIgnore
  * Class StageFinalHandler
- *
+ * @deprecated
  */
 class StageFinalHandler
 {

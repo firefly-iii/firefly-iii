@@ -57,6 +57,6 @@ return [
     'edit_tag'               => 'Modyfikuj tag ":tag"',
     'delete_tag'             => 'Usuń tag ":tag"',
     'delete_journal_link'    => 'Usuń powiązanie między transakcjami',
-    'telemetry_index'        => 'Telemetry',
-    'telemetry_view'         => 'View telemetry',
+    'telemetry_index'        => 'Telemetria',
+    'telemetry_view'         => 'Zobacz telemetrię',
 ];

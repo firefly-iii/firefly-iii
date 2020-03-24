@@ -46,6 +46,13 @@ interface PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getAttachments(PiggyBank $piggyBank): Collection;
+
+    /**
+     * @param PiggyBank $piggyBank
      * @param string    $amount
      *
      * @return bool

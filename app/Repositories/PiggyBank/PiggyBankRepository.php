@@ -23,18 +23,14 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -44,6 +40,7 @@ use Log;
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
+    use ModifiesPiggyBanks;
     /** @var User */
     private $user;
 
@@ -57,147 +54,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
     }
 
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     *
-     * @return bool
-     */
-    public function addAmount(PiggyBank $piggyBank, string $amount): bool
-    {
-        $repetition = $this->getRepetition($piggyBank);
-        if (null === $repetition) {
-            return false;
-        }
-        $currentAmount             = $repetition->currentamount ?? '0';
-        $repetition->currentamount = bcadd($currentAmount, $amount);
-        $repetition->save();
-
-        // create event
-        $this->createEvent($piggyBank, $amount);
-
-        return true;
-    }
-
-    /**
-     * @param PiggyBankRepetition $repetition
-     * @param string $amount
-     *
-     * @return string
-     */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): string
-    {
-        $newAmount                 = bcadd($repetition->currentamount, $amount);
-        $repetition->currentamount = $newAmount;
-        $repetition->save();
-
-        return $newAmount;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     *
-     * @return bool
-     */
-    public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
-    {
-        $leftOnAccount = $this->leftOnAccount($piggyBank, new Carbon);
-        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
-        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = (string)min(round($leftOnAccount, 12), round($leftToSave, 12));
-        $compare       = bccomp($amount, $maxAmount);
-        $result        = $compare <= 0;
-        
-        Log::debug(sprintf('Left on account: %s', $leftOnAccount));
-        Log::debug(sprintf('Saved so far: %s', $savedSoFar));
-        Log::debug(sprintf('Left to save: %s', $leftToSave));
-        Log::debug(sprintf('Maximum amount: %s', $maxAmount));
-        Log::debug(sprintf('Compare <= 0? %d, so %s', $compare, var_export($result, true)));
-
-        return $result;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     *
-     * @return bool
-     */
-    public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool
-    {
-        $repetition = $this->getRepetition($piggyBank);
-        if (null === $repetition) {
-            return false;
-        }
-        $savedSoFar = $repetition->currentamount;
-
-        return bccomp($amount, $savedSoFar) <= 0;
-    }
-
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function correctOrder(): void
-    {
-        $set     = $this->user->piggyBanks()->orderBy('order', 'ASC')->get();
-        $current = 1;
-        foreach ($set as $piggyBank) {
-            if ((int)$piggyBank->order !== $current) {
-                $piggyBank->order = $current;
-                $piggyBank->save();
-            }
-            $current++;
-        }
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
-    {
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
-
-        return $event;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     * @param TransactionJournal $journal
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEventWithJournal(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): PiggyBankEvent
-    {
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(
-            [
-                'piggy_bank_id'          => $piggyBank->id,
-                'transaction_journal_id' => $journal->id,
-                'date'                   => $journal->date->format('Y-m-d'),
-                'amount'                 => $amount]
-        );
-
-        return $event;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    public function destroy(PiggyBank $piggyBank): bool
-    {
-        $piggyBank->delete();
-
-        return true;
-    }
 
     /**
      * Find by name or return NULL.
@@ -208,18 +64,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function findByName(string $name): ?PiggyBank
     {
-        $set = $this->user->piggyBanks()->get(['piggy_banks.*']);
-
-        // TODO no longer need to loop like this
-
-        /** @var PiggyBank $piggy */
-        foreach ($set as $piggy) {
-            if ($piggy->name === $name) {
-                return $piggy;
-            }
-        }
-
-        return null;
+        return $this->user->piggyBanks()->where('name', $name)->first(['piggy_banks.*']);
     }
 
     /**
@@ -516,40 +361,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
-     *
-     * @return bool
-     */
-    public function removeAmount(PiggyBank $piggyBank, string $amount): bool
-    {
-        $repetition                = $this->getRepetition($piggyBank);
-        $repetition->currentamount = bcsub($repetition->currentamount, $amount);
-        $repetition->save();
-
-        // create event
-        $this->createEvent($piggyBank, bcmul($amount, '-1'));
-
-        return true;
-    }
-
-    /**
-     * set id of piggy bank.
-     *
-     * @param PiggyBank $piggyBank
-     * @param int $order
-     *
-     * @return bool
-     */
-    public function setOrder(PiggyBank $piggyBank, int $order): bool
-    {
-        $piggyBank->order = $order;
-        $piggyBank->save();
-
-        return true;
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -557,127 +368,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $this->user = $user;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return PiggyBank
-     * @throws FireflyException
-     */
-    public function store(array $data): PiggyBank
-    {
-        $data['order'] = $this->getMaxOrder() + 1;
-        try {
-        /** @var PiggyBank $piggyBank */
-        $piggyBank = PiggyBank::create($data);
-        } catch(QueryException $e) {
-            Log::error(sprintf('Could not store piggy bank: %s',$e->getMessage()));
-            throw new FireflyException('400005: Could not store new piggy bank.');
-        }
-
-        $this->updateNote($piggyBank, $data['notes']);
-
-        // repetition is auto created.
-        $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && isset($data['current_amount'])) {
-            $repetition->currentamount = $data['current_amount'];
-            $repetition->save();
-        }
-
-        return $piggyBank;
-    }
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param array $data
-     *
-     * @return PiggyBank
+     * @inheritDoc
      */
-    public function update(PiggyBank $piggyBank, array $data): PiggyBank
+    public function getAttachments(PiggyBank $piggyBank): Collection
     {
-        if (isset($data['name']) && '' !== $data['name']) {
-            $piggyBank->name = $data['name'];
-        }
-        if (isset($data['account_id']) && 0 !== $data['account_id']) {
-            $piggyBank->account_id = (int)$data['account_id'];
-        }
-        if (isset($data['targetamount']) && '' !== $data['targetamount']) {
-            $piggyBank->targetamount = $data['targetamount'];
-        }
-        if (isset($data['targetdate']) && '' !== $data['targetdate']) {
-            $piggyBank->targetdate = $data['targetdate'];
-        }
-        $piggyBank->startdate    = $data['startdate'] ?? $piggyBank->startdate;
-        $piggyBank->save();
-
-        $this->updateNote($piggyBank, $data['notes'] ?? '');
-
-        // if the piggy bank is now smaller than the current relevant rep,
-        // remove money from the rep.
-        $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount) {
-            $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
-            $this->createEvent($piggyBank, $diff);
-
-            $repetition->currentamount = $piggyBank->targetamount;
-            $repetition->save();
-        }
-
-        return $piggyBank;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBank
-     */
-    public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
-    {
-        $repetition = $this->getRepetition($piggyBank);
-        if (null === $repetition) {
-            return $piggyBank;
-        }
-        $max = $piggyBank->targetamount;
-        if (1 === bccomp($amount, $max)) {
-            $amount = $max;
-        }
-        $repetition->currentamount = $amount;
-        $repetition->save();
-
-        // create event
-        $this->createEvent($piggyBank, $amount);
-
-        return $piggyBank;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string $note
-     *
-     * @return bool
-     */
-    private function updateNote(PiggyBank $piggyBank, string $note): bool
-    {
-        if ('' === $note) {
-            $dbNote = $piggyBank->notes()->first();
-            if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
-                }
-            }
-
-            return true;
-        }
-        $dbNote = $piggyBank->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note();
-            $dbNote->noteable()->associate($piggyBank);
-        }
-        $dbNote->text = trim($note);
-        $dbNote->save();
-
-        return true;
+        return $piggyBank->attachments()->get();
     }
 }

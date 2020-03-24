@@ -24,8 +24,9 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Routing\Redirector;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use Preferences;
 
@@ -44,14 +45,15 @@ class TwoFactorController extends Controller
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
-        $title     = (string)trans('firefly.two_factor_forgot_title');
+        $title     = (string) trans('firefly.two_factor_forgot_title');
+
         return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
 
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function submitMFA(Request $request)
     {

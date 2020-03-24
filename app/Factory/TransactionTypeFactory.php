@@ -35,6 +35,7 @@ class TransactionTypeFactory
 {
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()

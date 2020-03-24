@@ -25,7 +25,8 @@ namespace FireflyIII\Services\IP;
 
 /**
  * Interface IPRetrievalInterface
- *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface IPRetrievalInterface
 {

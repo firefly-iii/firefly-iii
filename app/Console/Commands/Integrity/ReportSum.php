@@ -54,6 +54,7 @@ class ReportSum extends Command
     {
         $this->reportSum();
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -69,7 +70,7 @@ class ReportSum extends Command
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum = (string)$user->transactions()->sum('amount');
+            $sum = (string) $user->transactions()->sum('amount');
             if (0 !== bccomp($sum, '0')) {
                 $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $sum);
                 $this->error($message);

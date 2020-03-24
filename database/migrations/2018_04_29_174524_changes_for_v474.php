@@ -2,7 +2,7 @@
 
 /**
  * 2018_04_29_174524_changes_for_v474.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,7 +26,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class ChangesForV474
+ * Class ChangesForV474.
  */
 class ChangesForV474 extends Migration
 {
@@ -54,7 +54,6 @@ class ChangesForV474 extends Migration
             'import_jobs',
             static function (Blueprint $table) {
                 $table->dropColumn('provider');
-
             }
         );
 
@@ -62,7 +61,6 @@ class ChangesForV474 extends Migration
             'import_jobs',
             static function (Blueprint $table) {
                 $table->dropColumn('stage');
-
             }
         );
 
@@ -70,7 +68,6 @@ class ChangesForV474 extends Migration
             'import_jobs',
             static function (Blueprint $table) {
                 $table->dropColumn('transactions');
-
             }
         );
 
@@ -78,7 +75,6 @@ class ChangesForV474 extends Migration
             'import_jobs',
             static function (Blueprint $table) {
                 $table->dropColumn('errors');
-
             }
         );
 
@@ -86,7 +82,6 @@ class ChangesForV474 extends Migration
             'import_jobs',
             static function (Blueprint $table) {
                 $table->dropColumn('tag_id');
-
             }
         );
     }

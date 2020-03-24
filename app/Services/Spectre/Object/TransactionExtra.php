@@ -31,6 +31,7 @@ use Carbon\Carbon;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @codeCoverageIgnore
+ * @deprecated
  */
 class TransactionExtra extends SpectreObject
 {

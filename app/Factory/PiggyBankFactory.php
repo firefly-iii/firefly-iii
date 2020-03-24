@@ -38,6 +38,7 @@ class PiggyBankFactory
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -56,8 +57,8 @@ class PiggyBankFactory
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
-        $piggyBankId   = (int)$piggyBankId;
-        $piggyBankName = (string)$piggyBankName;
+        $piggyBankId   = (int) $piggyBankId;
+        $piggyBankName = (string) $piggyBankName;
         if ('' === $piggyBankName && 0 === $piggyBankId) {
             return null;
         }

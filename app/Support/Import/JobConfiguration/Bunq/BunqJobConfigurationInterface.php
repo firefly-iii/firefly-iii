@@ -28,6 +28,8 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface BunqJobConfigurationInterface
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface BunqJobConfigurationInterface
 {

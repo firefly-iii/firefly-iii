@@ -50,8 +50,8 @@ class CreateAccessTokens extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws Exception
+     * @return int
      */
     public function handle(): int
     {
@@ -77,6 +77,8 @@ class CreateAccessTokens extends Command
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verify access tokens in %s seconds.', $end));
+
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }

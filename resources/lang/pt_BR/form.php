@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Moeda',
     'currency_id'               => 'Moeda',
     'transaction_currency_id'   => 'Moeda',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'O IP externo do seu servidor',
     'attachments'               => 'Anexos',
     'journal_amount'            => 'Quantia',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Está bloqueado?',
     'blocked_code'          => 'Razão para ser reportado',
     'login_name'            => 'Login',
+    'is_owner'              => 'É administrador(a)?',
 
     // import
     'apply_rules'           => 'Aplicar Regras',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Conta de origem',
     'expected_on'               => 'Esperado em',
     'paid'                      => 'Pago',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Coletado',
+    'submitted' => 'Enviado',
+    'key' => 'Chave',
+    'value' => 'Conteúdo do registro'
+
 
 ];

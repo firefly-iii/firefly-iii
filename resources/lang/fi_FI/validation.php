@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Summa yhteensä ei voi olla nolla.',
     'current_target_amount'          => 'Nykyisen summan täytyy olla tavoitesummaa pienempi.',
     'unique_piggy_bank_for_user'     => 'Säästöpossu tarvitsee yksilöllisen nimen.',
+
     'secure_password'                => 'Tämä ei ole turvallinen salasana. Yritäpä uudestaan. Lisätietoja löydät osoitteesta https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Virheellinen toiston tyyppi toistuville tapahtumille.',
     'valid_recurrence_rep_moment'    => 'Virheellinen arvo tämän tyyppiselle toistolle.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'Määritteen :attribute koon täytyy olla vähintään :value kilotavua.',
     'gte.string'  => 'Määritteen :attribute pituus täytyy olla vähintään :value merkkiä.',
     'gte.array'   => 'Määritteellä :attribute tulee olla vähintään :value alkiota.',
+
+    'amount_required_for_auto_budget' => 'Summa on pakollinen.',
+    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

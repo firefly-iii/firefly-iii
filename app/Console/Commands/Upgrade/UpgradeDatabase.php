@@ -30,6 +30,7 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeDatabase
+ *
  * @codeCoverageIgnore
  */
 class UpgradeDatabase extends Command
@@ -112,10 +113,11 @@ class UpgradeDatabase extends Command
             echo $result;
         }
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

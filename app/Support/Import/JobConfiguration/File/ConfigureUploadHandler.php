@@ -32,6 +32,8 @@ use Log;
 
 /**
  * Class ConfigureUploadHandler
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class ConfigureUploadHandler implements FileConfigurationInterface
 {

@@ -63,8 +63,8 @@ class FixUnevenAmount extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
-            if (0 !== bccomp((string)$entry->the_sum, '0')) {
-                $this->fixJournal((int)$entry->transaction_journal_id);
+            if (0 !== bccomp((string) $entry->the_sum, '0')) {
+                $this->fixJournal((int) $entry->transaction_journal_id);
                 $count++;
             }
         }
@@ -75,6 +75,7 @@ class FixUnevenAmount extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified amount integrity in %s seconds', $end));
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -94,7 +95,8 @@ class FixUnevenAmount extends Command
         if (null === $source) {
             $this->error(
                 sprintf(
-                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
                     $journal->description ?? ''
                 )
             );
@@ -104,7 +106,7 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', (string)$source->amount);
+        $amount = bcmul('-1', (string) $source->amount);
 
         // fix amount of destination:
         /** @var Transaction $destination */
@@ -113,7 +115,8 @@ class FixUnevenAmount extends Command
         if (null === $destination) {
             $this->error(
                 sprintf(
-                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0,
+                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
+                    $journal->id ?? 0,
                     $journal->description ?? ''
                 )
             );

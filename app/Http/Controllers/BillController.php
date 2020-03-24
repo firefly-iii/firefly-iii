@@ -34,14 +34,17 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Log;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BillController.
@@ -63,15 +66,11 @@ class BillController extends Controller
     {
         parent::__construct();
 
-        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
-        app('view')->share('uploadSize', $uploadSize);
         app('view')->share('showBudget', true);
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
+                app('view')->share('title', (string) trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
@@ -86,7 +85,7 @@ class BillController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create(Request $request)
     {
@@ -94,9 +93,9 @@ class BillController extends Controller
         /** @var array $billPeriods */
         $billPeriods = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
-            $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
+            $periods[$current] = strtolower((string) trans('firefly.repeat_freq_' . $current));
         }
-        $subTitle        = (string)trans('firefly.create_new_bill');
+        $subTitle        = (string) trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         // put previous url in session if not redirect from store (not "create another").
@@ -113,13 +112,13 @@ class BillController extends Controller
      *
      * @param Bill $bill
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function delete(Bill $bill)
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $subTitle = (string)trans('firefly.delete_bill', ['name' => $bill->name]);
+        $subTitle = (string) trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
     }
@@ -130,14 +129,14 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function destroy(Request $request, Bill $bill)
     {
         $name = $bill->name;
         $this->billRepository->destroy($bill);
 
-        $request->session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $name]));
+        $request->session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('bills.delete.uri'));
@@ -149,7 +148,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, Bill $bill)
     {
@@ -158,10 +157,10 @@ class BillController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.' . $current);
+            $periods[$current] = (string) trans('firefly.' . $current);
         }
 
-        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -169,8 +168,9 @@ class BillController extends Controller
         }
 
         $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = round((float)$bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = round((float)$bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = round((float) $bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = round((float) $bill->amount_max, $currency->decimal_places);
+        $rules            = $this->billRepository->getRulesForBill($bill);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
@@ -179,25 +179,26 @@ class BillController extends Controller
         $preFilled = [
             'notes'                   => $this->billRepository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
-            'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $bill->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'bill', 'defaultCurrency', 'preFilled'));
+        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'defaultCurrency', 'preFilled'));
     }
 
     /**
      * Show all bills.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
         $start           = session('start');
         $end             = session('end');
         $unfiltered      = $this->billRepository->getBills();
+
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $parameters      = new ParameterBag();
         $parameters->set('start', $start);
@@ -209,7 +210,7 @@ class BillController extends Controller
 
         /** @var Collection $bills */
         $bills = $unfiltered->map(
-            static function (Bill $bill) use ($transformer, $defaultCurrency) {
+            function (Bill $bill) use ($transformer, $defaultCurrency) {
                 $return                            = $transformer->transform($bill);
                 $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
                 $return['currency_id']             = $currency->id;
@@ -217,6 +218,7 @@ class BillController extends Controller
                 $return['currency_symbol']         = $currency->symbol;
                 $return['currency_code']           = $currency->code;
                 $return['currency_decimal_places'] = $currency->decimal_places;
+                $return['attachments']             = $this->billRepository->getAttachments($bill);
 
                 return $return;
             }
@@ -244,14 +246,14 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
+     * @return RedirectResponse|Redirector
      */
     public function rescan(Request $request, Bill $bill)
     {
         $total = 0;
         if (false === $bill->active) {
-            $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
+            $request->session()->flash('warning', (string) trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
@@ -261,7 +263,7 @@ class BillController extends Controller
             $total = 0;
         }
         if (0 === $set->count()) {
-            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
+            $request->session()->flash('error', (string) trans('firefly.no_rules_for_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
@@ -282,7 +284,7 @@ class BillController extends Controller
         }
 
 
-        $request->session()->flash('success', (string)trans('firefly.rescanned_bill', ['total' => $total]));
+        $request->session()->flash('success', (string) trans('firefly.rescanned_bill', ['total' => $total]));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));
@@ -294,7 +296,7 @@ class BillController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(Request $request, Bill $bill)
     {
@@ -306,8 +308,8 @@ class BillController extends Controller
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
-        $page           = (int)$request->get('page');
-        $pageSize       = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page           = (int) $request->get('page');
+        $pageSize       = (int) app('preferences')->get('listPageSize', 50)->data;
         $yearAverage    = $this->billRepository->getYearAverage($bill, $start);
         $overallAverage = $this->billRepository->getOverallAverage($bill);
         $manager        = new Manager();
@@ -372,11 +374,11 @@ class BillController extends Controller
             $bill = $this->billRepository->store($billData);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
-            $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
+            $request->session()->flash('error', (string) trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();
         }
-        $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var array $files */
@@ -403,7 +405,7 @@ class BillController extends Controller
         $billData = $request->getBillData();
         $bill     = $this->billRepository->update($bill, $billData);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var array $files */
@@ -416,7 +418,7 @@ class BillController extends Controller
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.edit.fromUpdate', true);
 
@@ -455,8 +457,8 @@ class BillController extends Controller
                     'avg'                     => '0',
                 ];
 
-            $avg                      = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
-            $avg                      = bcmul($avg, (string)count($bill['pay_dates']));
+            $avg                      = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+            $avg                      = bcmul($avg, (string) count($bill['pay_dates']));
             $sums[$currencyId]['avg'] = bcadd($sums[$currencyId]['avg'], $avg);
         }
 

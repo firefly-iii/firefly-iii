@@ -183,6 +183,7 @@ class Navigation
             'quarterly' => 'addMonths',
             '6M'        => 'addMonths',
             'half-year' => 'addMonths',
+            'half_year' => 'addMonths',
             'year'      => 'addYear',
             'yearly'    => 'addYear',
             '1Y'        => 'addYear',
@@ -192,10 +193,11 @@ class Navigation
             '3M'        => 3,
             'quarterly' => 3,
             'half-year' => 6,
+            'half_year' => 6,
             '6M'        => 6,
         ];
 
-        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', '1Y', 'year', 'yearly'];
+        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'half_year', '1Y', 'year', 'yearly'];
 
         // if the range is custom, the end of the period
         // is another X days (x is the difference between start)
