@@ -189,7 +189,7 @@ class UserController extends Controller
             $this->repository->attachRole($user, 'owner');
             session()->flash('info', trans('firefly.give_admin_careful'));
         }
-        if (false === $data['is_owner']) {
+        if (false === $data['is_owner'] && $user->id !== auth()->user()->id) {
             $this->repository->removeRole($user, 'owner');
         }
 
