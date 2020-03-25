@@ -66,6 +66,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
  * @mixin Eloquent
+ * @property-read Collection|Attachment[] $attachments
+ * @property-read int|null                $attachments_count
+ * @property-read int|null                $transaction_journals_count
+ * @property-read int|null                $transactions_count
  */
 class Category extends Model
 {

@@ -86,6 +86,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null $attachments_count
+ * @property-read int|null $notes_count
+ * @property-read int|null $transaction_journals_count
  */
 class Bill extends Model
 {

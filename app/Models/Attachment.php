@@ -78,6 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null $notes_count
  */
 class Attachment extends Model
 {

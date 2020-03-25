@@ -109,6 +109,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null                                                          $attachments_count
+ * @property-read int|null                                                          $budgets_count
+ * @property-read int|null                                                          $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournalLink[] $destJournalLinks
+ * @property-read int|null                                                          $dest_journal_links_count
+ * @property-read int|null                                                          $notes_count
+ * @property-read int|null                                                          $piggy_bank_events_count
+ * @property-read int|null                                                          $source_journal_links_count
+ * @property-read int|null                                                          $tags_count
+ * @property-read int|null                                                          $transaction_journal_meta_count
+ * @property-read int|null                                                          $transactions_count
+ * @method static EloquentBuilder|TransactionJournal whereTransactionGroupId($value)
  */
 class TransactionJournal extends Model
 {

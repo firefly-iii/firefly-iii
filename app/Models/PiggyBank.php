@@ -73,6 +73,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|PiggyBank withTrashed()
  * @method static Builder|PiggyBank withoutTrashed()
  * @mixin Eloquent
+ * @property-read Collection|Attachment[] $attachments
+ * @property-read int|null                $attachments_count
+ * @property-read int|null                $notes_count
+ * @property-read int|null                $piggy_bank_events_count
+ * @property-read int|null                $piggy_bank_repetitions_count
  */
 class PiggyBank extends Model
 {

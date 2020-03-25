@@ -54,6 +54,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionType withTrashed()
  * @method static Builder|TransactionType withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null                                                      $transaction_journals_count
  */
 class TransactionType extends Model
 {

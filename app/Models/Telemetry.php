@@ -22,10 +22,36 @@
 namespace FireflyIII\Models;
 
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Telemetry
+ *
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $submitted
+ * @property int|null                        $user_id
+ * @property string                          $installation_id
+ * @property string                          $type
+ * @property string                          $key
+ * @property array                           $value
+ * @method static Builder|Telemetry newModelQuery()
+ * @method static Builder|Telemetry newQuery()
+ * @method static Builder|Telemetry query()
+ * @method static Builder|Telemetry whereCreatedAt($value)
+ * @method static Builder|Telemetry whereId($value)
+ * @method static Builder|Telemetry whereInstallationId($value)
+ * @method static Builder|Telemetry whereKey($value)
+ * @method static Builder|Telemetry whereSubmitted($value)
+ * @method static Builder|Telemetry whereType($value)
+ * @method static Builder|Telemetry whereUpdatedAt($value)
+ * @method static Builder|Telemetry whereUserId($value)
+ * @method static Builder|Telemetry whereValue($value)
+ * @mixin Eloquent
  */
 class Telemetry extends Model
 {

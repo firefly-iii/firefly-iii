@@ -37,12 +37,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @codeCoverageIgnore
  * @deprecated
- * @property array                                                                         $transactions
- * @property array                                                                         $configuration
- * @property User                                                                          $user
- * @property int                                                                           $user_id
- * @property string                                                                        $status
- * @property string                                                                        $stage
+ * @property array                                                      $transactions
+ * @property array                                                      $configuration
+ * @property User                                                       $user
+ * @property int                                                        $user_id
+ * @property string                                                     $status
+ * @property string                                                     $stage
  * @property string                                                     $key
  * @property string                                                     $provider
  * @property string                                                     $file_type
@@ -72,6 +72,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|ImportJob whereUpdatedAt($value)
  * @method static Builder|ImportJob whereUserId($value)
  * @mixin Eloquent
+ * @property-read int|null                                              $attachments_count
  */
 class ImportJob extends Model
 {

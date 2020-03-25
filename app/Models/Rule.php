@@ -73,6 +73,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null $rule_actions_count
+ * @property-read int|null $rule_triggers_count
  */
 class Rule extends Model
 {

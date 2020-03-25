@@ -60,11 +60,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
  * @mixin Eloquent
- * @property string                                                                                amount
- * @property string                                                                                foreign_amount
- * @property int                                                                                   transaction_group_id
- * @property int                                                                                   transaction_journal_id
- * @property string                                                                                transaction_group_title
+ * @property string        amount
+ * @property string        foreign_amount
+ * @property int           transaction_group_id
+ * @property int           transaction_journal_id
+ * @property string        transaction_group_title
+ * @property-read int|null $transaction_journals_count
  */
 class TransactionGroup extends Model
 {
