@@ -68,7 +68,7 @@ class BulkController extends Controller
      *
      * TODO user wont be able to tell if journal is part of split.
      *
-     * @param Collection $journals
+     * @param array $journals
      *
      * @return Factory|View
      */

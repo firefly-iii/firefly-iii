@@ -87,7 +87,8 @@ class ConvertController extends Controller
      * @param TransactionGroup $group
      *
      * @throws Exception
-     * @return RedirectResponse|Redirector|View
+     *
+     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {

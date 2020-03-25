@@ -115,7 +115,7 @@ class InstallController extends Controller
     /**
      * Show index.
      *
-     * @return RedirectResponse|Redirector
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {

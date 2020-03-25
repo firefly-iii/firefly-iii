@@ -253,7 +253,7 @@ class Amount
     }
 
     /**
-     * @param User|Authenticatable $user
+     * @param User $user
      *
      * @return \FireflyIII\Models\TransactionCurrency
      */

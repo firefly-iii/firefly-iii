@@ -128,7 +128,7 @@ class FixerIOv2 implements ExchangeRateInterface
     /**
      * @param User $user
      *
-     * @return mixed|void
+     * @return void
      */
     public function setUser(User $user)
     {

@@ -50,7 +50,8 @@ class DeleteEmptyGroups extends Command
      * Execute the console command.
      *
      * @throws Exception;
-     * @return mixed
+     *
+     * @return int
      */
     public function handle(): int
     {

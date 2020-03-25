@@ -68,7 +68,8 @@ class ResetPasswordController extends Controller
      * @param Request $request
      *
      * @throws \Illuminate\Validation\ValidationException
-     * @return RedirectResponse|JsonResponse
+     *
+     * @return Factory|JsonResponse|RedirectResponse|View
      */
     public function reset(Request $request)
     {

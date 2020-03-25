@@ -36,7 +36,8 @@ class JournalList implements BinderInterface
      * @param string $value
      * @param Route  $route
      *
-     * @return mixed
+     * @return array
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): array

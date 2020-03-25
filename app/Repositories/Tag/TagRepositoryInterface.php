@@ -118,7 +118,7 @@ interface TagRepositoryInterface
     /**
      * @param int|null $year
      *
-     * @return Collection
+     * @return array
      */
     public function getTagsInYear(?int $year): array;
 

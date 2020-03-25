@@ -159,7 +159,7 @@ trait FormSupport
      * @param $name
      * @param $options
      *
-     * @return mixed
+     * @return string
      */
     protected function label(string $name, array $options = null): string
     {

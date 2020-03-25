@@ -41,8 +41,7 @@ class BankDebitCredit implements ConverterInterface
      *
      * @param $value
      *
-     * @return mixed
-     *
+     * @return int
      */
     public function convert($value): int
     {

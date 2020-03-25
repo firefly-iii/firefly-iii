@@ -75,7 +75,7 @@ class CurrencyController extends Controller
      *
      * @param Request $request
      *
-     * @return RedirectResponse|Redirector|View
+     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -128,7 +128,7 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return RedirectResponse|Redirector|View
+     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
      */
     public function delete(Request $request, TransactionCurrency $currency)
     {
@@ -266,7 +266,7 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return RedirectResponse|Redirector|View
+     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
      */
     public function edit(Request $request, TransactionCurrency $currency)
     {

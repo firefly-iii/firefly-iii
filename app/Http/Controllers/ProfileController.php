@@ -88,7 +88,7 @@ class ProfileController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function changeEmail(Request $request)
     {
@@ -114,7 +114,7 @@ class ProfileController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function changePassword(Request $request)
     {

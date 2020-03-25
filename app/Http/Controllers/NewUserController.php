@@ -58,7 +58,7 @@ class NewUserController extends Controller
     /**
      * Form the user gets when he has no data in the system.
      *
-     * @return RedirectResponse|Redirector|View
+     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {

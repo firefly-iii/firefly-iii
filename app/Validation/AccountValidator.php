@@ -196,8 +196,8 @@ class AccountValidator
 
     /**
      * @param array       $validTypes
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param int $accountId
+     * @param string $accountName
      *
      * @return Account|null
      */

@@ -96,7 +96,8 @@ class ImportProvider implements BinderInterface
      * @param string $value
      * @param Route  $route
      *
-     * @return Carbon
+     * @return string
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): string

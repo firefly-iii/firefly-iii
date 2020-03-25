@@ -206,7 +206,7 @@ class RuleEngine
     }
 
     /**
-     * @param User|Authenticatable $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

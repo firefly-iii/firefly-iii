@@ -55,7 +55,7 @@ class TelemetryController extends Controller
     }
 
     /**
-     * @return string
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function deleteSubmitted()
     {
@@ -67,7 +67,7 @@ class TelemetryController extends Controller
     }
 
     /**
-     * @return string
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function deleteAll()
     {
