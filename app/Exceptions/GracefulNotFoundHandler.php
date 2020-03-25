@@ -50,6 +50,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Exception $exception
      *
+     * @throws Exception
      * @return mixed
      */
     public function render($request, Exception $exception)
@@ -137,9 +138,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Exception $exception
      *
-     * @return \Illuminate\Http\Response|Response
+     * @throws Exception
+     * @return Redirector|Response
      */
-    private function handleAccount($request, Exception $exception)
+    private function handleAccount(Request $request, Exception $exception)
     {
         Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
@@ -160,6 +162,13 @@ class GracefulNotFoundHandler extends ExceptionHandler
         return redirect(route('accounts.index', [$shortType]));
     }
 
+    /**
+     * @param Request   $request
+     * @param Exception $exception
+     *
+     * @throws Exception
+     * @return RedirectResponse|Redirector|Response
+     */
     private function handleAttachment(Request $request, Exception $exception)
     {
         Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
@@ -199,12 +208,13 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param           $request
+     * @param Request   $request
      * @param Exception $exception
      *
+     * @throws Exception
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response
      */
-    private function handleGroup($request, Exception $exception)
+    private function handleGroup(Request $request, Exception $exception)
     {
         Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
         /** @var User $user */

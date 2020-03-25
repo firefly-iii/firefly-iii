@@ -18,6 +18,6 @@ I am running Firefly III version x.x.x.
 
 - [ ] I have read the FAQ at https://bit.ly/FF3-FAQ
 - [ ] I added a screenshot
-- [ ] I added log files (see https://bit.ly/FF3-get-logs)
+- [ ] I added log files <!-- (see https://bit.ly/FF3-get-debug-info) -->
 - [ ] I was able to replicate the issue on the demo site.
 <!-- - [ ] I donated money (this is a joke :wink:)-->
