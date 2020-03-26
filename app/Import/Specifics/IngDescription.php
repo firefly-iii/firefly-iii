@@ -150,16 +150,23 @@ class IngDescription implements SpecificInterface
     private function MoveSavingsAccount(): void
     {
         $matches = [];
-        if ('' === (string) $this->row[3]) {
-            if (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[8], $matches)) {
-                $matches[3]   = sprintf("%010d", $matches[3]);
-                $this->row[1] = $matches[2]; // Savings account name
-                $this->row[3] = $matches[3]; // Savings account number
-                $this->row[8] = preg_replace('/(Naar|Van) (.*rekening) ([0-9]+)/', '', $this->row[8]); // Remove the savings account content from description
-            } elseif (preg_match('/(Naar|Van) (.*rekening) ([0-9]+)/', $this->row[1], $matches)) {
-                $matches[3]   = sprintf("%010d", $matches[3]);
-                $this->row[1] = $matches[2]; // Savings account name
-                $this->row[3] = $matches[3]; // Savings account number
+
+        if (preg_match('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', $this->row[8], $matches)) { // Search for saving acount at 'Mededelingen' column
+            $this->row[1] = $this->row[1] . ' ' . $matches[2] . ' ' . $matches[3]; // Current name + Saving acount name + Acount number
+            if ('' === (string) $this->row[3]) { // if Saving account number does not yet exists
+                $this->row[3] = $matches[3]; // Copy savings account number
+            }
+            $this->row[8] = preg_replace('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', '', $this->row[8]); // Remove the savings account content from description
+        } elseif (preg_match('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', $this->row[1], $matches)) { // Search for saving acount at 'Naam / Omschrijving' column
+            $this->row[1] = $matches[2] . ' ' . $matches[3];  // Saving acount name + Acount number
+            if ('' === (string) $this->row[3]) { // if Saving account number does not yet exists
+                $this->row[3] = $matches[3]; // Copy savings account number
+            }
+        }
+
+        if ('' !== (string)$this->row[3]) { // if Saving account number exists
+            if (! preg_match('/[A-Za-z]/', $this->row[3])) { // if Saving account number has no characters 
+                $this->row[3] = sprintf("%010d", $this->row[3]); // Make the number 10 digits
             }
         }
     }
