@@ -112,9 +112,10 @@ class IngDescription implements SpecificInterface
     protected function moveValutadatumDescription(): void
     {
         $matches = [];
-        preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches);
-        $this->row[9] = date("Ymd", strtotime($matches[1]));
-        $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
+        if (preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches)) {
+            $this->row[9] = date("Ymd", strtotime($matches[1]));
+            $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
+        }
     }
 
     /**
@@ -140,11 +141,7 @@ class IngDescription implements SpecificInterface
      */
     protected function removeNameIngDescription(): void
     {
-        $matches = [];
-        if (preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches)) {
-            $this->row[9] = date("Ymd", strtotime($matches[1]));
-            $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
-        }
+        $this->row[8] = preg_replace('/Naam:.*?([a-zA-Z\/]+:)/', '$1', $this->row[8]);
     }
 
     /**
