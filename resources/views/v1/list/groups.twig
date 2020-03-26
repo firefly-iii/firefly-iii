@@ -186,7 +186,7 @@ TODO: hide and show columns
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
-                                <li><a href="{{ route('rules.create-from-journal', [group.id]) }}"><i
+                                <li><a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><i
                                                 class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}</a></li>
                             </ul>
                         </div>
