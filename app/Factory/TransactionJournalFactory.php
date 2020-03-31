@@ -275,6 +275,9 @@ class TransactionJournalFactory
 
             return null;
         }
+
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
         /** create or get source and destination accounts  */
         $sourceInfo = [
             'id'     => (int) $row['source_id'],
