@@ -25,11 +25,9 @@ namespace FireflyIII\Support;
 use Crypt;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences as Prefs;
 
 /**
  * Class Amount.
@@ -204,7 +202,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
         $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
         if ($currency) {
@@ -230,7 +228,7 @@ class Amount
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
 
         $cache->store($currency->symbol);
@@ -253,6 +251,18 @@ class Amount
     }
 
     /**
+     * @return \FireflyIII\Models\TransactionCurrency
+     */
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+        }
+
+            return TransactionCurrency::where('code', 'EUR')->first();
+    }
+
+    /**
      * @param User $user
      *
      * @return \FireflyIII\Models\TransactionCurrency
@@ -268,17 +278,18 @@ class Amount
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyPreference = Prefs::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
 
         // at this point the currency preference could be encrypted, if coming from an old version.
         Log::debug('Going to try to decrypt users currency preference.');
-        $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
+        $currencyCode = $this->tryDecrypt((string) $currencyPrefStr);
 
         // could still be json encoded:
         if (strlen($currencyCode) > 3) {
-            $currencyCode = json_decode($currencyCode, true) ?? 'EUR';
+            $currencyCode = json_decode($currencyCode, true, 512, JSON_THROW_ON_ERROR) ?? 'EUR';
         }
-
+        /** @var TransactionCurrency $currency */
         $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (null === $currency) {
             // get EUR

@@ -236,6 +236,7 @@ class IndexController extends Controller
                 $repository->setBudgetOrder($budget, $index + 1);
             }
         }
+        app('preferences')->mark();
 
         return response()->json(['OK']);
     }
