@@ -208,9 +208,9 @@ class ConvertController extends Controller
         $sourceId         = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
         $sourceName       = '' === $sourceName ? null : $sourceName;
         $destinationId    = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
-        $destinationName  = '' === $destinationName ? null : $destinationName;
-        $validSource      = $validator->validateSource($sourceId, $sourceName);
-        $validDestination = $validator->validateDestination($destinationId, $destinationName);
+        $destinationName  = (string)('' === $destinationName ? null : $destinationName);
+        $validSource      = $validator->validateSource($sourceId, $sourceName, null);
+        $validDestination = $validator->validateDestination($destinationId, $destinationName, null);
 
         if (false === $validSource) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));

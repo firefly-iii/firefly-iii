@@ -359,7 +359,7 @@ class JournalUpdateService
         $validator->source = $this->getValidSourceAccount();
 
 
-        $result = $validator->validateDestination($destId, $destName);
+        $result = $validator->validateDestination($destId, $destName, null);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // validate submitted info:
@@ -391,7 +391,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
 
-        $result = $validator->validateSource($sourceId, $sourceName);
+        $result = $validator->validateSource($sourceId, $sourceName, null);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
         // validate submitted info:

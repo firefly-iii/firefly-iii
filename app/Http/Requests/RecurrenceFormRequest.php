@@ -265,7 +265,7 @@ class RecurrenceFormRequest extends Request
 
 
         // validate source account.
-        $validSource = $accountValidator->validateSource($sourceId, null);
+        $validSource = $accountValidator->validateSource($sourceId, null, null);
 
         // do something with result:
         if (false === $validSource) {
@@ -277,7 +277,7 @@ class RecurrenceFormRequest extends Request
         }
 
         // validate destination account
-        $validDestination = $accountValidator->validateDestination($destinationId, null);
+        $validDestination = $accountValidator->validateDestination($destinationId, null, null);
         // do something with result:
         if (false === $validDestination) {
             $message = (string) trans('validation.generic_invalid_destination');

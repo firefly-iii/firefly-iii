@@ -72,9 +72,10 @@ trait TransactionValidation
         $accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
+        $sourceId    = isset($transaction['source_id']) ? (int) $transaction['source_id'] : null;
         $sourceName  = $transaction['source_name'] ?? null;
-        $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+        $sourceIban  = $transaction['source_iban'] ?? null;
+        $validSource = $accountValidator->validateSource($sourceId, $sourceName, $sourceIban);
 
         // do something with result:
         if (false === $validSource) {
@@ -84,9 +85,10 @@ trait TransactionValidation
             return;
         }
         // validate destination account
-        $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
+        $destinationId    = isset($transaction['destination_id']) ? (int) $transaction['destination_id'] : null;
         $destinationName  = $transaction['destination_name'] ?? null;
-        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+        $destinationIban  = $transaction['destination_iban'] ?? null;
+        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, $destinationIban);
         // do something with result:
         if (false === $validDestination) {
             $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
@@ -140,7 +142,7 @@ trait TransactionValidation
         // validate source account.
         $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
         $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
-        $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+        $validSource = $accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
         if (false === $validSource) {
@@ -152,7 +154,7 @@ trait TransactionValidation
         // validate destination account
         $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
         $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
-        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+        $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
             $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);

@@ -599,7 +599,7 @@ class TransactionJournalFactory
         // validate source account.
         $sourceId    = isset($data['source_id']) ? (int) $data['source_id'] : null;
         $sourceName  = $data['source_name'] ?? null;
-        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName);
+        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
         if (false === $validSource) {
@@ -608,8 +608,8 @@ class TransactionJournalFactory
         Log::debug('Source seems valid.');
         // validate destination account
         $destinationId    = isset($data['destination_id']) ? (int) $data['destination_id'] : null;
-        $destinationName  = $data['destination_name'] ?? null;
-        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName);
+        $destinationName  = (string)($data['destination_name'] ?? null);
+        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore

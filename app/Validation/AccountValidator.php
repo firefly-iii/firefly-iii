@@ -80,14 +80,15 @@ class AccountValidator
     }
 
     /**
-     * @param int|null $destinationId
-     * @param          $destinationName
+     * @param int|null    $accountId
+     * @param string|null $accountName
+     * @param string|null $accountIban
      *
      * @return bool
      */
-    public function validateDestination(?int $destinationId, $destinationName): bool
+    public function validateDestination(?int $accountId, ?string $accountName, ?string $accountIban): bool
     {
-        Log::debug(sprintf('Now in AccountValidator::validateDestination(%d, "%s")', $destinationId, $destinationName));
+        Log::debug(sprintf('Now in AccountValidator::validateDestination(%d, "%s", "%s")', $accountId, $accountName, $accountIban));
         if (null === $this->source) {
             Log::error('Source is NULL, always FALSE.');
             $this->destError = 'No source account validation has taken place yet. Please do this first or overrule the object.';
@@ -103,19 +104,19 @@ class AccountValidator
                 break;
 
             case TransactionType::WITHDRAWAL:
-                $result = $this->validateWithdrawalDestination($destinationId, $destinationName);
+                $result = $this->validateWithdrawalDestination($accountId, $accountName);
                 break;
             case TransactionType::DEPOSIT:
-                $result = $this->validateDepositDestination($destinationId, $destinationName);
+                $result = $this->validateDepositDestination($accountId, $accountName);
                 break;
             case TransactionType::TRANSFER:
-                $result = $this->validateTransferDestination($destinationId, $destinationName);
+                $result = $this->validateTransferDestination($accountId, $accountName);
                 break;
             case TransactionType::OPENING_BALANCE:
-                $result = $this->validateOBDestination($destinationId, $destinationName);
+                $result = $this->validateOBDestination($accountId, $accountName);
                 break;
             case TransactionType::RECONCILIATION:
-                $result = $this->validateReconciliationDestination($destinationId);
+                $result = $this->validateReconciliationDestination($accountId);
                 break;
         }
 
@@ -125,12 +126,13 @@ class AccountValidator
     /**
      * @param int|null    $accountId
      * @param string|null $accountName
+     * @param string|null $accountIban
      *
      * @return bool
      */
-    public function validateSource(?int $accountId, ?string $accountName): bool
+    public function validateSource(?int $accountId, ?string $accountName, ?string $accountIban): bool
     {
-        Log::debug(sprintf('Now in AccountValidator::validateSource(%d, "%s")', $accountId, $accountName));
+        Log::debug(sprintf('Now in AccountValidator::validateSource(%d, "%s", "%s")', $accountId, $accountName, $accountIban));
         switch ($this->transactionType) {
             default:
                 $result            = false;
