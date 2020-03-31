@@ -106,6 +106,8 @@ trait RecurringTransactionTrait
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
             }
 
+            // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
             $transaction = new RecurrenceTransaction(
                 [
                     'recurrence_id'           => $recurrence->id,
