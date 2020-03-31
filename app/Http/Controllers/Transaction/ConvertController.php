@@ -219,6 +219,8 @@ class ConvertController extends Controller
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
         }
 
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
         $update = [
             'source_id'        => $sourceId,
             'source_name'      => $sourceName,
