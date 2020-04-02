@@ -194,7 +194,7 @@ return [
     'blocked'               => 'On estetty?',
     'blocked_code'          => 'Eston syy',
     'login_name'            => 'Käyttäjätunnus',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'On ylläpitäjä?',
 
     // import
     'apply_rules'           => 'Aja säännöt',
@@ -262,14 +262,14 @@ return [
     'expected_on'               => 'Odotettavissa',
     'paid'                      => 'Maksettu',
 
-    'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_type'            => 'Automaattibudjetti',
+    'auto_budget_amount'            => 'Automaattisen budjetin summa',
+    'auto_budget_period'            => 'Automaattisen budjetin jakso',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Koottu',
+    'submitted' => 'Lähetetty',
+    'key' => 'Avain',
+    'value' => 'Tietueen sisältö'
 
 
 ];

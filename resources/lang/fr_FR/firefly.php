@@ -75,7 +75,7 @@ return [
     'new_budget'                                 => 'Nouveau budget',
     'new_bill'                                   => 'Nouvelle facture',
     'block_account_logout'                       => 'Vous avez été déconnecté. Les comptes bloqués ne peuvent pas utiliser ce site. Vous êtes-vous enregistré avec une adresse e-mail valide ?',
-    'flash_success'                              => 'Terminé avec succès !',
+    'flash_success'                              => 'Super !',
     'flash_info'                                 => 'Message',
     'flash_warning'                              => 'Attention !',
     'flash_error'                                => 'Erreur !',
@@ -232,7 +232,7 @@ return [
     'admin_update_check_now_title'               => 'Vérifier les mises à jour maintenant',
     'admin_update_check_now_explain'             => 'Si vous appuyez sur le bouton, Firefly III verra si votre version actuelle est la dernière.',
     'check_for_updates_button'                   => 'Vérifier maintenant !',
-    'update_new_version_alert'                   => 'Une nouvelle version de Firefly III est disponible. Vous utilisez v:your_version, la dernière version est v:new_version qui a été publiée le :date.',
+    'update_new_version_alert'                   => 'Une nouvelle version de Firefly III est disponible. Vous utilisez v:your_version. La dernière version v:new_version a été publiée le :date.',
     'update_version_beta'                        => 'Cette version est une version BETA. Vous pouvez rencontrer des problèmes.',
     'update_version_alpha'                       => 'Cette version est une version ALPHA. Vous pourriez rencontrer des problèmes.',
     'update_current_version_alert'               => 'Vous utilisez v:version, qui est la dernière version disponible.',
@@ -829,7 +829,7 @@ return [
     'skips_over'                                => 'saute',
     'bill_store_error'                          => 'Une erreur inattendue s\'est produite lors du stockage de votre nouvelle facture. Veuillez vérifier les fichiers journaux',
     'list_inactive_rule'                        => 'règle inactive',
-    'bill_edit_rules'                           => 'Firefly III tentera également de modifier les règles de :count relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
+    'bill_edit_rules'                           => 'Firefly III tentera également de modifier la (les) :count règle(s) relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count comptes inactifs (archivés), que vous pouvez voir sur cette autre page.',
@@ -1351,7 +1351,7 @@ return [
     'send_test_email_text'             => 'Pour vérifier que votre installation est capable d\'envoyer des emails, utilisez ce bouton. Vous ne verrez pas d\'erreur ici (s\'il y en a), <strong>elles seront enregistrées dans les logs</strong>. Utilisez ce bouton autant de fois que vous le voulez, il n\'y a pas de contrôle de spam. Le message sera envoyé à <code>:email</code> et devrait arriver sous peu.',
     'send_message'                     => 'Envoyer le message',
     'send_test_triggered'              => 'Le test a été initié. Vérifiez votre boîte de réception (et les logs si nécessaire).',
-    'give_admin_careful'               => 'Les utilisateurs disposant de droits d\'administration peuvent vous supprimer vos droits. Soyez prudent.',
+    'give_admin_careful'               => 'Les utilisateurs disposant de droits d\'administration peuvent révoquer les vôtres. Soyez prudent.',
 
     'split_transaction_title'               => 'Description de l\'opération ventilée',
     'split_transaction_title_help'          => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fraction de l\'opération.',

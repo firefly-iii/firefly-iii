@@ -203,6 +203,6 @@ return [
     'gte.array'   => 'Määritteellä :attribute tulee olla vähintään :value alkiota.',
 
     'amount_required_for_auto_budget' => 'Summa on pakollinen.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'auto_budget_amount_positive'     => 'Summan on oltava enemmän nollaa suurempi.',
+    'auto_budget_period_mandatory' => 'Automaattisen budjetin jakso on pakollinen kenttä.',
 ];

@@ -202,7 +202,7 @@ return [
     'gte.string'  => ':attribute debe tener :value caracteres o más.',
     'gte.array'   => ':attribute debe tener :value objetos o más.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'amount_required_for_auto_budget' => 'Se requiere la cantidad.',
+    'auto_budget_amount_positive'     => 'La cantidad debe ser mayor a cero.',
+    'auto_budget_period_mandatory' => 'El período del autopresupuesto es un campo obligatorio.',
 ];
