@@ -505,8 +505,8 @@ return [
     'new_rule_for_bill_title'         => '供帐单 ":name" 的规则',
     'new_rule_for_bill_description'   => '此规则标记给帐单 ":name" 的交易。',
 
-    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
-    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+    'new_rule_for_journal_title'         => '基于交易":description"的规则',
+    'new_rule_for_journal_description'   => '此规则基于交易":description"。它将匹配完全相同的交易。',
 
     // tags
     'store_new_tag'                   => '储存新标签',
@@ -518,10 +518,10 @@ return [
     'result'                          => '结果',
     'sums_apply_to_range'             => '所有总和均套用至所选范围',
     'mapbox_api_key'                  => '若要使用地图，请自 <a href="https://www.mapbox.com/">Mapbox</a> 获得一组 API 金钥。开启您的 <code>.env</code> 档案并于 <code>MAPBOX_API_KEY=</code> 句后输入金钥代码。',
-    'press_object_location'              => 'Right click or long press to set the object\'s location.',
+    'press_object_location'              => '右键单击或长按设置对象的位置。',
     'clear_location'                  => '清除位置',
-    'delete_all_selected_tags'        => 'Delete all selected tags',
-    'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
+    'delete_all_selected_tags'        => '删除所有选中的标签',
+    'select_tags_to_delete'           => '别忘了选择一些标签。',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
     'create_rule_from_transaction'    => '基于交易创建规则',
 
@@ -791,7 +791,7 @@ return [
     'auto_budget_none'                          => 'No auto-budget',
     'auto_budget_reset'                         => 'Set a fixed amount every period',
     'auto_budget_rollover'                      => 'Add an amount every period',
-    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_daily'                  => '每日',
     'auto_budget_period_weekly'                 => 'Weekly',
     'auto_budget_period_monthly'                => 'Monthly',
     'auto_budget_period_quarterly'              => 'Quarterly',
@@ -829,7 +829,7 @@ return [
     'skips_over'                                => '略过',
     'bill_store_error'                          => '储存您的新帐单时发生错误，请检查日志档',
     'list_inactive_rule'                        => '未启用的规则',
-    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
+    'bill_edit_rules'                           => 'Fifly III 将尝试同时编辑与本账单相关的 :count 条规则。 然而，如果您已经编辑了这些规则，Firefly III不会改变任何东西。',
 
     // accounts:
     'inactive_account_link'                     => '您有 :count 个未激活账户 (存档) 帐户，您可以在此单独页面查看。',
@@ -1351,7 +1351,7 @@ return [
     'send_test_email_text'             => '要检查您的安装是否有能力发送电子邮件，请按此按钮。您不会在此看到错误 (如果有的话)，<strong>日志档才会反应一切错误</strong>。您可依照自己意愿点选此按钮，程式无管控垃圾邮件，测试讯息将会被寄发至 <code>:email</code> 并在短时间内送达。',
     'send_message'                     => '发送消息',
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
-    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'give_admin_careful'               => '被授予管理员权限的用户可以收回您的权限。请千万注意这点。',
 
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => '如果您创建了一个分割交易，交易的所有分割项都必须有全局描述。',
@@ -1590,7 +1590,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Telemetry',
     'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_what_collected'           => 'Fifly III 收集和发送的每个版本完全不同。您正在运行 :version 版本。 你可以在帮助页面中了解Fifly III 在版本 :version 中收集的数据。 点击右上角的的 (?) 图标或<a href="https://docs.firefly-iii.org/support/telemetry">访问文档页面</a>。',
     'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
     'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
     'telemetry_disabled_yes'             => 'Telemetry is enabled',
@@ -1600,14 +1600,14 @@ return [
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
     'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
     'telemetry_button_view'              => 'View telemetry',
-    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_button_delete'            => '删除所有遥测数据',
     'telemetry_admin_overview'           => 'Telemetry overview',
-    'telemetry_back_to_index'            => 'Back to telemetry index',
-    'not_yet_submitted'                  => 'Not yet submitted',
-    'telemetry_type_feature'             => 'Feature flag',
-    'telemetry_submit_all'               => 'Submit records',
-    'telemetry_delete_submitted_records' => 'Delete submitted records',
-    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
-    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
-    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
+    'telemetry_back_to_index'            => '返回到遥测索引',
+    'not_yet_submitted'                  => '尚未提交',
+    'telemetry_type_feature'             => '功能标志',
+    'telemetry_submit_all'               => '提交记录',
+    'telemetry_delete_submitted_records' => '删除提交的记录',
+    'telemetry_submission_executed'      => '记录已提交。请检查您的日志文件获取更多信息。',
+    'telemetry_all_deleted'              => '所有遥测记录已被删除。',
+    'telemetry_submitted_deleted'        => '所有提交的遥测记录已被删除。'
 ];

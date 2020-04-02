@@ -115,7 +115,7 @@ class TriggerFactory
      *
      * @param string $triggerType
      *
-     * @return TriggerInterface|string
+     * @return string
      *
      * @throws FireflyException
      */

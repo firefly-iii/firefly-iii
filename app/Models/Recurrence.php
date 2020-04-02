@@ -87,6 +87,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null $notes_count
+ * @property-read int|null $recurrence_meta_count
+ * @property-read int|null $recurrence_repetitions_count
+ * @property-read int|null $recurrence_transactions_count
  */
 class Recurrence extends Model
 {

@@ -71,7 +71,7 @@ class DeleteController extends Controller
      *
      * @param Account $account
      *
-     * @return Factory|View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function delete(Account $account)
     {

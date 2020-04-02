@@ -238,11 +238,12 @@ class ExportData extends Command
 
     /**
      * @throws FireflyException
+     *
      * @return string
      */
     private function getExportDirectory(): string
     {
-        $directory = $this->option('export_directory');
+        $directory = (string) $this->option('export_directory');
         if (null === $directory) {
             $directory = './';
         }

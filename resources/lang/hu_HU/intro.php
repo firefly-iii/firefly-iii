@@ -30,7 +30,7 @@ return [
     'index_help'                                      => 'Ezt a gombot megnyomva lehet segítséget kérni egy oldal vagy egy űrlap használatához.',
     'index_outro'                                     => 'A Firefly III legtöbb oldala egy ilyen rövid bemutatóval kezdődik. Kérdés vagy észrevét esetén szívesen állok rendelkezésre. Kellemes használatot!',
     'index_sidebar-toggle'                            => 'Az ez alatt az ikon alatt megnyíló menü használható új tranzakciók, bankszámlák vagy egyéb dolgok létrehozásához.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Ezek az eddig létrehozott számlák. A készpénzszámla használható a készpénzes költések követésére, de ez természetesen nem kötelező.',
 
     // transactions (withdrawal)
     'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',

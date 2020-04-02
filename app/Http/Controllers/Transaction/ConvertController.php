@@ -87,7 +87,8 @@ class ConvertController extends Controller
      * @param TransactionGroup $group
      *
      * @throws Exception
-     * @return RedirectResponse|Redirector|View
+     *
+     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
@@ -207,9 +208,9 @@ class ConvertController extends Controller
         $sourceId         = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
         $sourceName       = '' === $sourceName ? null : $sourceName;
         $destinationId    = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
-        $destinationName  = '' === $destinationName ? null : $destinationName;
-        $validSource      = $validator->validateSource($sourceId, $sourceName);
-        $validDestination = $validator->validateDestination($destinationId, $destinationName);
+        $destinationName  = (string)('' === $destinationName ? null : $destinationName);
+        $validSource      = $validator->validateSource($sourceId, $sourceName, null);
+        $validDestination = $validator->validateDestination($destinationId, $destinationName, null);
 
         if (false === $validSource) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
@@ -217,6 +218,8 @@ class ConvertController extends Controller
         if (false === $validDestination) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
         }
+
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
         $update = [
             'source_id'        => $sourceId,

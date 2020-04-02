@@ -136,7 +136,8 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param        $value
+     * @param $value
+     * @param int|string|true $value
      *
      * @return Configuration
      */

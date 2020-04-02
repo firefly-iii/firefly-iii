@@ -86,7 +86,8 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @throws Exception
-     * @return RedirectResponse|Redirector|View
+     *
+     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -158,7 +159,8 @@ class ShowController extends Controller
      * @param Account $account
      *
      * @throws Exception
-     * @return RedirectResponse|Redirector|View
+     *
+     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showAll(Request $request, Account $account)
     {

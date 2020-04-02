@@ -85,6 +85,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null                                              $account_meta_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
+ * @property-read int|null                                              $attachments_count
+ * @property-read string                                                $account_number
+ * @property-read \Illuminate\Database\Eloquent\Collection|Location[]   $locations
+ * @property-read int|null                                              $locations_count
+ * @property-read int|null                                              $notes_count
+ * @property-read int|null                                              $piggy_banks_count
+ * @property-read int|null                                              $transactions_count
  */
 class Account extends Model
 {

@@ -70,6 +70,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
+ * @property-read int|null                                              $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|AutoBudget[] $autoBudgets
+ * @property-read int|null                                              $auto_budgets_count
+ * @property-read int|null                                              $budgetlimits_count
+ * @property-read int|null                                              $transaction_journals_count
+ * @property-read int|null                                              $transactions_count
  */
 class Budget extends Model
 {

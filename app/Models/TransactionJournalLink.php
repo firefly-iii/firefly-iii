@@ -56,6 +56,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionJournalLink whereSourceId($value)
  * @method static Builder|TransactionJournalLink whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read int|null                                        $notes_count
  */
 class TransactionJournalLink extends Model
 {

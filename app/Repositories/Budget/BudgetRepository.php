@@ -189,7 +189,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
-                          ->orderBy('order', 'ASC')
+                          ->orderBy('order', 'DESC')
                           ->orderBy('name', 'ASC')
                           ->get();
 

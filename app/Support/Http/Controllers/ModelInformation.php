@@ -70,8 +70,11 @@ trait ModelInformation
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return array
+     * @codeCoverageIgnore 
+     *
+     * @return string[]
+     *
+     * @psalm-return array<int|null, string>
      */
     protected function getLiabilityTypes(): array
     {

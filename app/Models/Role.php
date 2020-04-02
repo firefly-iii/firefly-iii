@@ -50,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Role whereName($value)
  * @method static Builder|Role whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read int|null                                        $users_count
  */
 class Role extends Model
 {

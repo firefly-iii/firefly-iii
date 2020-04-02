@@ -216,7 +216,8 @@ class ReconcileController extends Controller
      * @param string  $difference
      *
      * @throws DuplicateTransactionException
-     * @return string
+     *
+     * @return RedirectResponse|Redirector|string
      */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
     {

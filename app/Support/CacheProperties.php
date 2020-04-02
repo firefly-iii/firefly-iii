@@ -50,6 +50,7 @@ class CacheProperties
 
     /**
      * @param $property
+     * @param Collection|\Carbon\Carbon|\FireflyIII\Models\Category|array|int|string $property
      */
     public function addProperty($property): void
     {
@@ -87,6 +88,7 @@ class CacheProperties
 
     /**
      * @param $data
+     * @param (array|mixed)[]|Collection|\Carbon\Carbon|string $data
      */
     public function store($data): void
     {

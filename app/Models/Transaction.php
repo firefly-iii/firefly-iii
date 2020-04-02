@@ -130,6 +130,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null $budgets_count
+ * @property-read int|null $categories_count
  */
 class Transaction extends Model
 {

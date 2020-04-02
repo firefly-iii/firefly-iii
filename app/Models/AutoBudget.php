@@ -21,12 +21,45 @@
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class AutoBudget
+ *
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int                             $budget_id
+ * @property int                             $transaction_currency_id
+ * @property int                             $auto_budget_type
+ * @property float                           $amount
+ * @property string                          $period
+ * @property-read Budget                     $budget
+ * @property-read TransactionCurrency        $transactionCurrency
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newQuery()
+ * @method static Builder|AutoBudget onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAutoBudgetType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereBudgetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget wherePeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereUpdatedAt($value)
+ * @method static Builder|AutoBudget withTrashed()
+ * @method static Builder|AutoBudget withoutTrashed()
+ * @mixin Eloquent
  */
 class AutoBudget extends Model
 {

@@ -320,7 +320,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param int|null    $currencyId
      * @param string|null $currencyCode
      *
-     * @return TransactionCurrency|null
+     * @return TransactionCurrency
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {

@@ -98,13 +98,15 @@ trait RecurringTransactionTrait
             $validator = app(AccountValidator::class);
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
-            if (!$validator->validateSource($source->id, null)) {
+            if (!$validator->validateSource($source->id, null, null)) {
                 throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
             }
 
-            if (!$validator->validateDestination($destination->id, null)) {
+            if (!$validator->validateDestination($destination->id, null, null)) {
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
             }
+
+            // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
             $transaction = new RecurrenceTransaction(
                 [

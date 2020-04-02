@@ -81,8 +81,7 @@ class EditController extends Controller
      * @param Account                    $account
      * @param AccountRepositoryInterface $repository
      *
-     * @return Factory|View
-     *
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {

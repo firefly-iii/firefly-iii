@@ -6,10 +6,23 @@ TODO: hide and show columns
     <thead>
     <tr>
         {% if showCategory or showBudget %}
-            <td colspan="8" class="no-margin-pagination">{{ groups.render|raw }}</td>
-        {% else %}
             <td colspan="7" class="no-margin-pagination">{{ groups.render|raw }}</td>
+        {% else %}
+            <td colspan="6" class="no-margin-pagination">{{ groups.render|raw }}</td>
         {% endif %}
+        <td colspan="1" class="hidden-xs">
+            <!-- Single button -->
+            <div class="btn-group btn-group-xs action-menu pull-right" style="display: none;">
+                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'actions'|_ }} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'mass_edit'|_ }}</span></a></li>
+                    <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i> <span>{{ 'bulk_edit'|_ }}</span></a></li>
+                    <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'mass_delete'|_ }}</span></a></li>
+                </ul>
+            </div>
+        </td>
         <td colspan="1" class="hidden-xs">
             <div class="pull-right">
                 <input id="list_ALL" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/>
@@ -186,7 +199,7 @@ TODO: hide and show columns
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
-                                <li><a href="{{ route('rules.create-from-journal', [group.id]) }}"><i
+                                <li><a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><i
                                                 class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}</a></li>
                             </ul>
                         </div>
@@ -214,11 +227,11 @@ TODO: hide and show columns
         <td colspan="8">
             <div class="pull-right">
                 <!-- Single button -->
-                <div class="btn-group action-menu" style="display:none;">
+                <div class="btn-group action-menu btn-group-xs pull-right" style="display:none;">
                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
+                    <ul class="dropdown-menu btn-group-xs dropdown-menu-right">
                         <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'mass_edit'|_ }}</span></a></li>
                         <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i> <span>{{ 'bulk_edit'|_ }}</span></a></li>
                         <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'mass_delete'|_ }}</span></a></li>

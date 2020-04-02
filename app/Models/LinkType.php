@@ -62,6 +62,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|LinkType withTrashed()
  * @method static Builder|LinkType withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null                                                          $transaction_journal_links_count
  */
 class LinkType extends Model
 {

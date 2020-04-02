@@ -63,7 +63,7 @@ class EditController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return Factory|View
+     * @return Factory|View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function edit(TransactionGroup $transactionGroup)
     {

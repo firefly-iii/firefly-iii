@@ -73,6 +73,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
  * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
+ * @property-read int|null                                              $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Location[]   $locations
+ * @property-read int|null                                              $locations_count
+ * @property-read int|null                                              $transaction_journals_count
  */
 class Tag extends Model
 {

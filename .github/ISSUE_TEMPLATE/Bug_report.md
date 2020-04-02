@@ -19,7 +19,7 @@ I am running Firefly III version x.x.x, and my problem is:
 <!-- Earn bonus points by checking the boxes -->
 
 - [ ] Nobody reported this bug before
-- [ ] I have added a stack trace from my log files.
+- [ ] I have added a stack trace from my log files <!-- (see https://bit.ly/FF3-get-debug-info) -->
 - [ ] I have added a screenshot.
 - [ ] I was able to replicate it on the demo site https://demo.firefly-iii.org/
 <!-- - [ ] I donated money (this is a joke :wink:)-->

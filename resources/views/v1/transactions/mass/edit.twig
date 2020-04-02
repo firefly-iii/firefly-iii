@@ -150,7 +150,7 @@
                                             <select class="form-control input-sm" name="budget_id[{{ journal.transaction_journal_id }}]">
                                                 <option value="0" label="({{ 'no_budget'|_ }})"
                                                         {% if journal.budget_id == 0 %}selected="selected"{% endif %}
-                                                >({{ 'no_budget'|_ }})
+                                                >{{ 'no_budget'|_ }}
                                                 </option>
                                                 {% for budget in budgets %}
                                                     <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"{% endif %}

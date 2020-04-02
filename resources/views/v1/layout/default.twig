@@ -46,7 +46,6 @@
     <![endif]-->
 
     {# this entry is in the header so it's loaded early #}
-    {# SHA256: C45493A8175B10AC47EEDFC7C20AC31FAE5C804FB6C4F75468DB0F95112664BF #}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">var forceDemoOff = false;</script>
 
     {# favicons #}
@@ -137,13 +136,13 @@
         </section>
     </div>
     <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
+        <div class="pull-right">
+            <b class="hidden-xs">{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
         <small class="text-muted">&copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
-        {% if FF_IS_ALPHA %}<small class="text-danger"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
-        {% if FF_IS_BETA %}<small class="text-warning"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
+        {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
+        {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
     </footer>
 
     {% include('partials.control-bar') %}

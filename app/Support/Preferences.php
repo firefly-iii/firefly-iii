@@ -142,7 +142,7 @@ class Preferences
     }
 
     /**
-     * @param \FireflyIII\User|Authenticatable $user
+     * @param User $user
      * @param string           $name
      * @param null|string      $default
      *

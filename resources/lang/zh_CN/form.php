@@ -194,7 +194,7 @@ return [
     'blocked'               => '被封锁了？',
     'blocked_code'          => '封锁的原因',
     'login_name'            => '登入',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => '是否是管理员？',
 
     // import
     'apply_rules'           => '套用规则',
@@ -266,10 +266,10 @@ return [
     'auto_budget_amount'            => 'Auto-budget amount',
     'auto_budget_period'            => 'Auto-budget period',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
+    'collected' => '已收藏',
+    'submitted' => '已提交',
     'key' => 'Key',
-    'value' => 'Content of record'
+    'value' => '记录内容'
 
 
 ];

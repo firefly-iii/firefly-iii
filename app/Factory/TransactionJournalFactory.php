@@ -275,6 +275,9 @@ class TransactionJournalFactory
 
             return null;
         }
+
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
         /** create or get source and destination accounts  */
         $sourceInfo = [
             'id'     => (int) $row['source_id'],
@@ -470,7 +473,7 @@ class TransactionJournalFactory
             // return user's default:
             return app('amount')->getDefaultCurrencyByUser($this->user);
         }
-        $result = $preference ?? $currency;
+        $result = ($preference ?? $currency) ?? app('amount')->getSystemCurrency();
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
         return $result;
@@ -599,7 +602,7 @@ class TransactionJournalFactory
         // validate source account.
         $sourceId    = isset($data['source_id']) ? (int) $data['source_id'] : null;
         $sourceName  = $data['source_name'] ?? null;
-        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName);
+        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
         if (false === $validSource) {
@@ -608,8 +611,8 @@ class TransactionJournalFactory
         Log::debug('Source seems valid.');
         // validate destination account
         $destinationId    = isset($data['destination_id']) ? (int) $data['destination_id'] : null;
-        $destinationName  = $data['destination_name'] ?? null;
-        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName);
+        $destinationName  = (string)($data['destination_name'] ?? null);
+        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore

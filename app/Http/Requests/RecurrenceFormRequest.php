@@ -246,6 +246,8 @@ class RecurrenceFormRequest extends Request
         $sourceId      = null;
         $destinationId = null;
 
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
         switch ($this->string('transaction_type')) {
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
@@ -265,7 +267,7 @@ class RecurrenceFormRequest extends Request
 
 
         // validate source account.
-        $validSource = $accountValidator->validateSource($sourceId, null);
+        $validSource = $accountValidator->validateSource($sourceId, null, null);
 
         // do something with result:
         if (false === $validSource) {
@@ -277,7 +279,7 @@ class RecurrenceFormRequest extends Request
         }
 
         // validate destination account
-        $validDestination = $accountValidator->validateDestination($destinationId, null);
+        $validDestination = $accountValidator->validateDestination($destinationId, null, null);
         // do something with result:
         if (false === $validDestination) {
             $message = (string) trans('validation.generic_invalid_destination');

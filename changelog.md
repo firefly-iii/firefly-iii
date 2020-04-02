@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This release was preceded by a number of test versions:
 
 - 5.2.0-alpha.1 on 2020-03-24
+- 5.2.0-beta.1 on 2020-04-02
 
 ### Added
 - [Issue 2578](https://github.com/firefly-iii/firefly-iii/issues/2578) Allows users to create automatic budget configurations to rollover or set periodic limits.
@@ -16,6 +17,7 @@ This release was preceded by a number of test versions:
 - [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) More objects now support attachments: accounts, bills, budgets, categories, piggy banks and tags.
 - [Issue 2938](https://github.com/firefly-iii/firefly-iii/issues/2938) Expense and revenue accounts show their balances better.
 - [Issue 2977](https://github.com/firefly-iii/firefly-iii/issues/2977) On the budget page, the bars and amounts auto update.
+- [Issue 3079](https://github.com/firefly-iii/firefly-iii/issues/3079) Version is now visible in the footer on mobile.
 - Support for Vietnamese 🇻🇳
 
 ### Changed
@@ -24,6 +26,7 @@ This release was preceded by a number of test versions:
 - [Issue 3048](https://github.com/firefly-iii/firefly-iii/issues/3048) Rules can now handle liabilities as source or destination.
 - [Issue 2999](https://github.com/firefly-iii/firefly-iii/issues/2999) The category chart on the frontpage now displays income.
 - [Issue 2997](https://github.com/firefly-iii/firefly-iii/issues/2997) The tag list has categories.
+- [Issue 3122](https://github.com/firefly-iii/firefly-iii/issues/3122) Buttons on the top of lists.
 - The Docker maximum file attachment size has been increased to 64M.
 
 ### Fixed
@@ -31,7 +34,9 @@ This release was preceded by a number of test versions:
 - [Issue 3193](https://github.com/firefly-iii/firefly-iii/issues/3193) Copying a reconciled transaction correctly removes the reconciliation status.
 - [Issue 3003](https://github.com/firefly-iii/firefly-iii/issues/3003) Tables will look less crowded on your phone.
 - [Issue 3202](https://github.com/firefly-iii/firefly-iii/issues/3202) A bug in the frontpage budget chart is fixed.
-- [Issue 3203](https://github.com/firefly-iii/firefly-iii/issues/3203) Firefly III won't complain when using a locale that uses comma's as decimal separators. 
+- [Issue 3203](https://github.com/firefly-iii/firefly-iii/issues/3203) Firefly III won't complain when using a locale that uses comma's as decimal separators.
+- [Issue 3212](https://github.com/firefly-iii/firefly-iii/issues/3212) Issue with ING imports.
+- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu. 
 
 ### API
 - [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) Appropriate endpoints for new transaction possibilities.

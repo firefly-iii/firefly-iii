@@ -32,11 +32,11 @@ use Illuminate\Support\Carbon;
 /**
  * Class AccountType.
  *
- * @property string                                                  $type
+ * @property string                    $type
  * @method whereType(string $type)
- * @property int                                                     $id
- * @property Carbon|null                         $created_at
- * @property Carbon|null                         $updated_at
+ * @property int                       $id
+ * @property Carbon|null               $created_at
+ * @property Carbon|null               $updated_at
  * @property-read Collection|Account[] $accounts
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
@@ -45,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AccountType whereId($value)
  * @method static Builder|AccountType whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read int|null             $accounts_count
  */
 class AccountType extends Model
 {

@@ -90,7 +90,7 @@ class LinkController extends Controller
      * @param Request  $request
      * @param LinkType $linkType
      *
-     * @return RedirectResponse|Redirector|View
+     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
      */
     public function delete(Request $request, LinkType $linkType)
     {

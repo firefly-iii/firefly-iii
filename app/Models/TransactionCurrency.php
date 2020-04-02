@@ -64,6 +64,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionCurrency withTrashed()
  * @method static Builder|TransactionCurrency withoutTrashed()
  * @mixin Eloquent
+ * @property-read int|null                        $budget_limits_count
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read int|null                        $transactions_count
  */
 class TransactionCurrency extends Model
 {

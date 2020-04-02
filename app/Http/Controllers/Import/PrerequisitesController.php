@@ -73,7 +73,7 @@ class PrerequisitesController extends Controller
      * @param string    $importProvider
      * @param ImportJob $importJob
      *
-     * @return Factory|View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
