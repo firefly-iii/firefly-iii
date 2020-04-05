@@ -42,7 +42,7 @@ This release was preceded by a number of test versions:
 - [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) Appropriate endpoints for new transaction possibilities.
 - [Issue 2958](https://github.com/firefly-iii/firefly-iii/issues/2958) A new default currency endpoint.
 
-## [5.1.1 (API 1.0.2)] - 2020-03-xx
+## [5.1.1 (API 1.0.2)] - 2020-03-13
 
 ### Added
 - [Issue 2672](https://github.com/firefly-iii/firefly-iii/issues/2672) Buttons to create transactions from the list of accounts is back.
