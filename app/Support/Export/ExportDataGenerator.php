@@ -659,7 +659,7 @@ class ExportDataGenerator
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()
-                  ->withBudgetInformation();
+                  ->withBudgetInformation()->withTagInformation();
         $journals = $collector->getExtractedJournals();
 
         $records = [];
@@ -689,8 +689,9 @@ class ExportDataGenerator
                 $journal['category_name'],
                 $journal['budget_name'],
                 $journal['bill_name'],
-                implode(',', $journal['tags']),
+                $this->mergeTags($journal['tags']),
             ];
+
         }
 
         //load the CSV document from a string
@@ -703,6 +704,24 @@ class ExportDataGenerator
         $csv->insertAll($records);
 
         return $csv->getContent(); //returns the CSV document as a string
+    }
+
+    /**
+     * @param array $tags
+     *
+     * @return string
+     */
+    private function mergeTags(array $tags): string
+    {
+        if (0 === count($tags)) {
+            return '';
+        }
+        $smol = [];
+        foreach ($tags as $tag) {
+            $smol[] = $tag['name'];
+        }
+
+        return implode(',', $smol);
     }
 
 }
