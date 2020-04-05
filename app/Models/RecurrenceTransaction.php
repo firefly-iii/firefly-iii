@@ -76,6 +76,7 @@ use Illuminate\Support\Collection;
  * @method static Builder|RecurrenceTransaction withoutTrashed()
  * @mixin Eloquent
  * @property-read int|null $recurrence_transaction_meta_count
+ * @property int $transaction_currency_id
  */
 class RecurrenceTransaction extends Model
 {

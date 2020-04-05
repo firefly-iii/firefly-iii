@@ -132,6 +132,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin Eloquent
  * @property-read int|null $budgets_count
  * @property-read int|null $categories_count
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property bool $reconciled
  */
 class Transaction extends Model
 {

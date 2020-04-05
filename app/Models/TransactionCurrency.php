@@ -67,6 +67,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                        $budget_limits_count
  * @property-read int|null                        $transaction_journals_count
  * @property-read int|null                        $transactions_count
+ * @property string $name
  */
 class TransactionCurrency extends Model
 {

@@ -70,6 +70,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                $attachments_count
  * @property-read int|null                $transaction_journals_count
  * @property-read int|null                $transactions_count
+ * @property bool $encrypted
  */
 class Category extends Model
 {

@@ -77,6 +77,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                              $budgetlimits_count
  * @property-read int|null                                              $transaction_journals_count
  * @property-read int|null                                              $transactions_count
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property bool $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetlimits
  */
 class Budget extends Model
 {

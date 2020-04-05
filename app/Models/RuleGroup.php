@@ -69,6 +69,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @mixin Eloquent
  * @property-read int|null                   $rules_count
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereStopProcessing($value)
+ * @property string|null $description
  */
 class RuleGroup extends Model
 {

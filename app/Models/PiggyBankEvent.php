@@ -51,6 +51,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|PiggyBankEvent whereTransactionJournalId($value)
  * @method static Builder|PiggyBankEvent whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $date
+ * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
  */
 class PiggyBankEvent extends Model
 {
