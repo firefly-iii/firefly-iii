@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Interface TransactionGroupRepositoryInterface
@@ -121,6 +122,15 @@ interface TransactionGroupRepositoryInterface
      * @return array
      */
     public function getTags(int $journalId): array;
+
+    /**
+     * Get the tags for a journal (by ID) as Tag objects.
+     *
+     * @param int $journalId
+     *
+     * @return Collection
+     */
+    public function getTagObjects(int $journalId): Collection;
 
     /**
      * Set the user.

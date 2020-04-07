@@ -108,6 +108,7 @@ class ShowController extends Controller
             if (!Str::contains($transaction['notes'], $search)) {
                 $groupArray['transactions'][$index]['notes'] = e($transaction['notes']);
             }
+            $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
         }
 
         $events      = $this->repository->getPiggyEvents($transactionGroup);
