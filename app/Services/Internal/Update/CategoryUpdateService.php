@@ -35,6 +35,9 @@ use Log;
  */
 class CategoryUpdateService
 {
+    private $user;
+
+
     /**
      * Constructor.
      */
@@ -42,6 +45,9 @@ class CategoryUpdateService
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+        if(auth()->check()) {
+            $this->user = auth()->user();
         }
     }
 
@@ -104,6 +110,14 @@ class CategoryUpdateService
             $trigger->save();
             Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
     }
 
 }
