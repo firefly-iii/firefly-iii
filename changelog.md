@@ -28,6 +28,7 @@ This release was preceded by a number of test versions:
 - [Issue 2997](https://github.com/firefly-iii/firefly-iii/issues/2997) The tag list has categories.
 - [Issue 3122](https://github.com/firefly-iii/firefly-iii/issues/3122) Buttons on the top of lists.
 - The Docker maximum file attachment size has been increased to 64M.
+- The CSV file importer has been disabled. Find the [new CSV importer on GitHub](https://github.com/firefly-iii/csv-importer).
 
 ### Fixed
 - [Issue 3154](https://github.com/firefly-iii/firefly-iii/issues/3154) `bcadd()` problems for users who were already running PHP7.4.
@@ -36,7 +37,8 @@ This release was preceded by a number of test versions:
 - [Issue 3202](https://github.com/firefly-iii/firefly-iii/issues/3202) A bug in the frontpage budget chart is fixed.
 - [Issue 3203](https://github.com/firefly-iii/firefly-iii/issues/3203) Firefly III won't complain when using a locale that uses comma's as decimal separators.
 - [Issue 3212](https://github.com/firefly-iii/firefly-iii/issues/3212) Issue with ING imports.
-- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu. 
+- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu.
+- [Issue 3234](https://github.com/firefly-iii/firefly-iii/issues/3234) Export didn't export tags. 
 
 ### API
 - [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) Appropriate endpoints for new transaction possibilities.

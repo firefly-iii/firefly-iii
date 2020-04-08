@@ -44,7 +44,7 @@ return [
     // these import providers are available:
     'enabled'          => [
         'fake'    => true,
-        'file'    => true,
+        'file'    => false,
         'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,

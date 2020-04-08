@@ -1604,7 +1604,7 @@ return [
     'telemetry_admin_overview'           => 'Telemetrieübersicht',
     'telemetry_back_to_index'            => 'Zurück zum Telemetrieindex',
     'not_yet_submitted'                  => 'Noch nicht übermittelt',
-    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_type_feature'             => 'Funktions-Flag',
     'telemetry_submit_all'               => 'Datensätze übermitteln',
     'telemetry_delete_submitted_records' => 'Übertragene Datensätze löschen',
     'telemetry_submission_executed'      => 'Datensätze wurden übermittelt. Überprüfen Sie Ihre Protokolldateien für weitere Informationen.',

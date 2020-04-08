@@ -520,10 +520,10 @@ return [
     'mapbox_api_key'                  => 'Para usar o mapa, obtenha uma chave API do <a href="https://www.mapbox.com/">Mapbox</a>. Abra seu arquivo <code>.env</code> e insira este código <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'              => 'Right click or long press to set the object\'s location.',
     'clear_location'                  => 'Limpar localização',
-    'delete_all_selected_tags'        => 'Delete all selected tags',
-    'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
-    'deleted_x_tags'                  => 'Deleted :count tag(s).',
-    'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'delete_all_selected_tags'        => 'Excluir todas as tags selecionadas',
+    'select_tags_to_delete'           => 'Não se esqueça de selecionar algumas tags.',
+    'deleted_x_tags'                  => 'Excluída(s) :count tag(s).',
+    'create_rule_from_transaction'    => 'Criar regra baseada na transação',
 
     // preferences
     'pref_home_screen_accounts'       => 'Conta da tela inicial',
@@ -589,7 +589,7 @@ return [
     'optional_field_meta_data'                  => 'Meta dados opcionais',
 
     // profile:
-    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'permanent_delete_stuff'                    => 'Tenha cuidado com estes botões. A exclusão de coisas é permanente.',
     'delete_all_budgets'                        => 'Excluir TODOS os seus orçamentos',
     'delete_all_categories'                     => 'Excluir TODAS as suas categorias',
     'delete_all_tags'                           => 'Excluir TODAS as suas tags',
@@ -633,11 +633,11 @@ return [
     'delete_local_info_only'        => 'Como você se autentica por meio de ":login_provider", isso irá apagar apenas informações locais do Firefly III.',
 
     // export data:
-    'import_and_export_menu'        => 'Import and export',
-    'export_data_title'             => 'Export data from Firefly III',
-    'export_data_menu'              => 'Export data',
-    'export_data_bc'                => 'Export data from Firefly III',
-    'export_data_main_title'        => 'Export data from Firefly III',
+    'import_and_export_menu'        => 'Importar e exportar',
+    'export_data_title'             => 'Exportar dados do Firefly III',
+    'export_data_menu'              => 'Exportar dados',
+    'export_data_bc'                => 'Exportar dados do Firefly III',
+    'export_data_main_title'        => 'Exportar dados do Firefly III',
     'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
     'export_data_all_transactions'  => 'Export all transactions',
     'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
