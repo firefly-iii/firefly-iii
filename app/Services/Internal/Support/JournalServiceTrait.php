@@ -367,13 +367,13 @@ trait JournalServiceTrait
             if (null !== $data['bic']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $result->id, 'name' => 'BIC', 'data' => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name' => 'BIC', 'data' => $data['bic']]);
             }
             // store account number
             if (null !== $data['number']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $result->id, 'name' => 'account_number', 'data' => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['bic']]);
             }
         }
 
