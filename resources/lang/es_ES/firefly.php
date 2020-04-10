@@ -1451,6 +1451,7 @@ return [
     'tools_index_intro'                     => 'Existen varias herramientas para importar datos en Firefly III. Reviselas a continuación. Para más información, consulte <a href="https://docs.firefly-iii.org/importing-data/introduction">esta página</a>.',
     'firefly_iii_csv_importer_name'         => 'Importador CSV de Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Importador de Firefly III bunq',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
     'ludo_revolut_importer_name'            => 'Importador Ludo444\'s Revolut',
     //
     // sandstorm.io errors and messages:

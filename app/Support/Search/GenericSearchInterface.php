@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * GenericSearchInterface.php
  * Copyright (c) 2019 james@firefly-iii.org

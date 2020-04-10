@@ -3,7 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [5.2.0 (API 1.1.0)] - 2020-xx-xx
+## [5.2.0 (API 1.1.0)] - 2020-04-11
+
+- ⚠️ This will be the last version to support PHP version 7.3. The next release will require PHP **7.4**
+- ⚠️ The bunq and CSV import routines have been disabled and replaced by their stand alone variants: [bunq](https://github.com/firefly-iii/bunq-importer), [CSV](https://github.com/firefly-iii/csv-importer).
 
 This release was preceded by a number of test versions:
 
@@ -28,6 +31,7 @@ This release was preceded by a number of test versions:
 - [Issue 2997](https://github.com/firefly-iii/firefly-iii/issues/2997) The tag list has categories.
 - [Issue 3122](https://github.com/firefly-iii/firefly-iii/issues/3122) Buttons on the top of lists.
 - The Docker maximum file attachment size has been increased to 64M.
+- The CSV file importer has been disabled. Find the [new CSV importer on GitHub](https://github.com/firefly-iii/csv-importer).
 
 ### Fixed
 - [Issue 3154](https://github.com/firefly-iii/firefly-iii/issues/3154) `bcadd()` problems for users who were already running PHP7.4.
@@ -36,13 +40,14 @@ This release was preceded by a number of test versions:
 - [Issue 3202](https://github.com/firefly-iii/firefly-iii/issues/3202) A bug in the frontpage budget chart is fixed.
 - [Issue 3203](https://github.com/firefly-iii/firefly-iii/issues/3203) Firefly III won't complain when using a locale that uses comma's as decimal separators.
 - [Issue 3212](https://github.com/firefly-iii/firefly-iii/issues/3212) Issue with ING imports.
-- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu. 
+- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu.
+- [Issue 3234](https://github.com/firefly-iii/firefly-iii/issues/3234) Export didn't export tags. 
 
 ### API
 - [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) Appropriate endpoints for new transaction possibilities.
 - [Issue 2958](https://github.com/firefly-iii/firefly-iii/issues/2958) A new default currency endpoint.
 
-## [5.1.1 (API 1.0.2)] - 2020-03-xx
+## [5.1.1 (API 1.0.2)] - 2020-03-13
 
 ### Added
 - [Issue 2672](https://github.com/firefly-iii/firefly-iii/issues/2672) Buttons to create transactions from the list of accounts is back.

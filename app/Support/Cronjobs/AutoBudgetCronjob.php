@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * AutoBudgetCronjob.php
  * Copyright (c) 2020 thegrumpydictator@gmail.com

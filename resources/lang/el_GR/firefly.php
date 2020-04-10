@@ -1451,6 +1451,7 @@ return [
     'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
     'firefly_iii_csv_importer_name'         => 'Εργαλείο εισαγωγής CSV στο Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Εργαλείο εισαγωγής bunq 🌈 στο Firefly III',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
     'ludo_revolut_importer_name'            => 'Εισαγωγέας δεδομένων Revolut του Ludo444',
     //
     // sandstorm.io errors and messages:

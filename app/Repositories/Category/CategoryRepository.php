@@ -267,6 +267,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var CategoryUpdateService $service */
         $service = app(CategoryUpdateService::class);
+        $service->setUser($this->user);
 
         return $service->update($category, $data);
     }

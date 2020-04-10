@@ -45,6 +45,7 @@ use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -467,5 +468,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTagObjects(int $journalId): Collection
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->tags()->get();
     }
 }

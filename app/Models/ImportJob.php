@@ -35,8 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class ImportJob.
  *
- * @codeCoverageIgnore
- * @deprecated
+ * @codeCoverageIgnore 
+ * @deprecated 
  * @property array                                                      $transactions
  * @property array                                                      $configuration
  * @property User                                                       $user
@@ -73,6 +73,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|ImportJob whereUserId($value)
  * @mixin Eloquent
  * @property-read int|null                                              $attachments_count
+ * @property int $id
+ * @property array|null $extended_status
  */
 class ImportJob extends Model
 {

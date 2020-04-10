@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * FixLongDescriptions.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -65,7 +66,7 @@ class FixLongDescriptions extends Command
         $groups = TransactionGroup::get(['id', 'title']);
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
-            if (strlen($group->title) > self::MAX_LENGTH) {
+            if (strlen((string)$group->title) > self::MAX_LENGTH) {
                 $group->title = substr($group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->line(sprintf('Truncated description of transaction group #%d', $group->id));

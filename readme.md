@@ -109,9 +109,12 @@ Many more features are listed in the [documentation](https://docs.firefly-iii.or
 Several users have built pretty awesome stuff around the Firefly III API. Check out these tools:
 
 * [An Android app by Mike Conway](https://play.google.com/store/apps/details?id=com.zerobyte.firefly)
-* [A Telegram bot by Igor Tsupko](https://github.com/may-cat/firefly-iii-telegram-bot)
+* [A Telegram bot by Valmik](https://github.com/vjFaLk/firefly-bot)
 * [An Android app by Daniel Quah](https://github.com/emansih/FireflyMobile)
 * [A tool to import from Plaid by George Hahn](https://gitlab.com/GeorgeHahn/firefly-plaid-connector)
+* [Firefly III CSV importer](http://github.com/firefly-iii/csv-importer)
+* [Firefly III bunq 🌈 importer](http://github.com/firefly-iii/bunq-importer)
+* [Firefly III YNAB importer](http://github.com/firefly-iii/ynab-importer)
 
 ## Getting Started
 

@@ -50,6 +50,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Preference whereUpdatedAt($value)
  * @method static Builder|Preference whereUserId($value)
  * @mixin Eloquent
+ * @property-read \FireflyIII\User $user
  */
 class Preference extends Model
 {

@@ -78,6 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                $notes_count
  * @property-read int|null                $piggy_bank_events_count
  * @property-read int|null                $piggy_bank_repetitions_count
+ * @property bool $encrypted
  */
 class PiggyBank extends Model
 {

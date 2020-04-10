@@ -12,7 +12,7 @@
   left: 20px;
   z-index: 3001;
   display: none;
-  font-family: arial;
+  font-family: sans-serif, Arial;
   font-size: 15px;
   line-height: 1em;
 }
@@ -155,7 +155,6 @@
   font-size: 12px;
   border-radius: 4px;
   border: 1px solid transparent;
-  white-space: nowrap;
   cursor: pointer;
 }
 

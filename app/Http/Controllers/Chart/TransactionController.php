@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TransactionController.php
  * Copyright (c) 2020 thegrumpydictator@gmail.com
@@ -204,6 +205,7 @@ class TransactionController extends Controller
                 $collector->setTypes([TransactionType::DEPOSIT]);
                 break;
             case 'transfers':
+            case 'transfer':
                 $collector->setTypes([TransactionType::TRANSFER]);
                 break;
         }
@@ -270,6 +272,7 @@ class TransactionController extends Controller
                 $collector->setTypes([TransactionType::DEPOSIT]);
                 break;
             case 'transfers':
+            case 'transfer':
                 $collector->setTypes([TransactionType::TRANSFER]);
                 break;
         }
