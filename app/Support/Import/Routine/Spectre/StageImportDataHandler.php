@@ -171,6 +171,9 @@ class StageImportDataHandler
                         $foreignCurrencyCode = $value;
                         Log::debug(sprintf('Foreign currency code is now %s', $value));
                         break;
+                    case 'time':
+                        // ignore time because it breaks the duplicate detector.
+                        break;
                     default:
                         $notes .= $key . ': ' . $value . '  ' . "\n"; // for newline in Markdown.
                 }
