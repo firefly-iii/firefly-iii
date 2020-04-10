@@ -1149,7 +1149,7 @@ return [
     'accountBalances'                           => 'Soldes du compte',
     'balanceStart'                              => 'Solde au début de la période',
     'balanceEnd'                                => 'Solde à la fin de la période',
-    'splitByAccount'                            => 'Ventiler par compte',
+    'splitByAccount'                            => 'Ventilé par compte',
     'coveredWithTags'                           => 'Recouvert de tags',
     'leftInBudget'                              => 'Budget restant',
     'sumOfSums'                                 => 'Somme des montants',
@@ -1451,6 +1451,7 @@ return [
     'tools_index_intro'                     => 'Plusieurs outils permettent d\'importer des données dans Firefly III. Vous les retrouverez ci-dessous. Pour plus d\'informations, consultez <a href="https://docs.firefly-iii.org/importing-data/introduction">cette page</a> (en anglais).',
     'firefly_iii_csv_importer_name'         => 'Importation CSV Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Importation Bunq Firefly III',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
     'ludo_revolut_importer_name'            => 'Importation Revolut (Ludo444)',
     //
     // sandstorm.io errors and messages:

@@ -1451,6 +1451,7 @@ return [
     'tools_index_intro'                     => 'Một số công cụ tồn tại để nhập dữ liệu vào Firefly III. Kiểm tra chúng dưới đây. Để biết thêm thông tin, hãy xem <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
     'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
     'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
     'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
     //
     // sandstorm.io errors and messages:

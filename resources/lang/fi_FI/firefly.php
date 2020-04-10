@@ -1451,6 +1451,7 @@ return [
     'tools_index_intro'                     => 'Tietojen tuomiseen Firefly III:een on olemassa useita työkaluja. Löydät ne alta. Lisätietoja on <a href="https://docs.firefly-iii.org/importing-data/introduction"> tällä sivulla </a>.',
     'firefly_iii_csv_importer_name'         => 'Firefly III CSV tuoja',
     'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 tuoja',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
     'ludo_revolut_importer_name'            => 'Ludo444:n Revolut-tuontityökalu',
     //
     // sandstorm.io errors and messages:
