@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * ExportDataGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org

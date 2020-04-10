@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * DataController.php
  * Copyright (c) 2019 james@firefly-iii.org
