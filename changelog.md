@@ -3,7 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [5.2.0 (API 1.1.0)] - 2020-xx-xx
+## [5.2.0 (API 1.1.0)] - 2020-04-11
+
+- ⚠️ This will be the last version to support PHP version 7.3. The next release will require PHP **7.4**
+- ⚠️ The bunq and CSV import routines have been disabled and replaced by their stand alone variants: [bunq](https://github.com/firefly-iii/bunq-importer), [CSV](https://github.com/firefly-iii/csv-importer).
 
 This release was preceded by a number of test versions:
 
