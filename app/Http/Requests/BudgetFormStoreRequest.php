@@ -68,7 +68,7 @@ class BudgetFormStoreRequest extends Request
             'name'                    => 'required|between:1,100|uniqueObjectForUser:budgets,name',
             'active'                  => 'numeric|between:0,1',
             'auto_budget_type'        => 'numeric|between:0,2',
-            'auto_budget_currency_id' => 'required|exists:transaction_currencies,id',
+            'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => 'min:0|max:1000000000',
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         ];

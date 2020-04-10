@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.1 (API 1.1.0)] - 2020-04-10
 
-## [5.2.0 (API 1.1.0)] - 2020-04-11
+Firefly III 5.2.1 fixes an issue with charts and allows users to store budgets again.
+
+## [5.2.0 (API 1.1.0)] - 2020-04-10
 
 - ⚠️ This will be the last version to support PHP version 7.3. The next release will require PHP **7.4**
 - ⚠️ The bunq and CSV import routines have been disabled and replaced by their stand alone variants: [bunq](https://github.com/firefly-iii/bunq-importer), [CSV](https://github.com/firefly-iii/csv-importer).

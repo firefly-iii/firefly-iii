@@ -138,6 +138,7 @@ class TransactionController extends Controller
                 $collector->setTypes([TransactionType::DEPOSIT]);
                 break;
             case 'transfers':
+            case 'transfer':
                 $collector->setTypes([TransactionType::TRANSFER]);
                 break;
         }
