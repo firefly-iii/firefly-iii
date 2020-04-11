@@ -555,7 +555,7 @@ class ProfileController extends Controller
         /** @var string $match */
         $match = null;
         foreach ($set as $entry) {
-            $hashed = hash('sha256', $entry->data);
+            $hashed = hash('sha256', sprintf('%s%s', (string) config('app.key'), $entry->data));
             if ($hashed === $hash) {
                 $match = $entry->data;
                 break;

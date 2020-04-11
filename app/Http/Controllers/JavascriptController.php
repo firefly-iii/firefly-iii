@@ -126,7 +126,7 @@ class JavascriptController extends Controller
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
         $dateRange = $this->getDateRangeConfig();
-        $uid       = substr(hash('sha256', auth()->user()->id . auth()->user()->email), 0, 12);
+        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
             'currencyCode'    => $currency->code,

@@ -26,7 +26,6 @@ use Cache;
 use Exception;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
@@ -200,7 +199,7 @@ class Preferences
             $lastActivity = implode(',', $lastActivity);
         }
 
-        return md5($lastActivity);
+        return hash('sha256', $lastActivity);
     }
 
     /**

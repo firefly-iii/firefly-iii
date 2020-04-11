@@ -384,7 +384,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment = new Attachment; // create Attachment object.
         $attachment->user()->associate($job->user);
         $attachment->attachable()->associate($job);
-        $attachment->md5      = md5($content);
+        $attachment->md5      = substr(hash('sha256', $content), 0, 32); // limit due to DB.
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
         $attachment->size     = strlen($content);

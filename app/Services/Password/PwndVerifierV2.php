@@ -58,8 +58,11 @@ class PwndVerifierV2 implements Verifier
         $rest   = substr($hash, 5);
         $uri    = sprintf('https://api.pwnedpasswords.com/range/%s', $prefix);
         $opt    = [
-            'headers' => ['User-Agent' => 'Firefly III v' . config('firefly.version')],
-            'timeout' => 5];
+            'headers' => [
+                'User-Agent' => 'Firefly III v' . config('firefly.version'),
+                'Add-Padding' => 'true',
+            ],
+            'timeout' => 3.1415];
 
         Log::debug(sprintf('hash prefix is %s', $prefix));
         Log::debug(sprintf('rest is %s', $rest));
@@ -87,7 +90,7 @@ class PwndVerifierV2 implements Verifier
 
             return true;
         }
-        Log::debug(sprintf('Could not find %s, return FALSE.', $rest));
+        Log::debug(sprintf('Found %s, return FALSE.', $rest));
 
         return false;
     }
