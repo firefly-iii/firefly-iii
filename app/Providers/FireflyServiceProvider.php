@@ -48,7 +48,7 @@ use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\IP\IpifyOrg;
 use FireflyIII\Services\IP\IPRetrievalInterface;
-use FireflyIII\Services\Password\PwndVerifierV3;
+use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
@@ -189,7 +189,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ExchangeRateInterface::class, $class);
 
         // password verifier thing
-        $this->app->bind(Verifier::class, PwndVerifierV3::class);
+        $this->app->bind(Verifier::class, PwndVerifierV2::class);
 
         // IP thing:
         $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
