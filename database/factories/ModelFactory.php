@@ -30,7 +30,7 @@ $factory->define(
             'user_id'         => 1,
             'attachable_id'   => 1,
             'attachable_type' => TransactionJournal::class,
-            'md5'             => md5($faker->words(6, true)),
+            'md5'             => substr(hash('sha256', $faker->words(6, true)), 0, 32),
             'mime'            => 'text/plain',
             'size'            => 1,
             'filename'        => 'ok',

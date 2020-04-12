@@ -438,7 +438,7 @@ class AccountController extends Controller
 
         // if the account is not expense or revenue, just use the account's default currency.
         if (!in_array($account->accountType->type, [AccountType::REVENUE, AccountType::EXPENSE], true)) {
-            $currencies= [$this->accountRepository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency()];
+            $currencies = [$this->accountRepository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency()];
         }
 
         /** @var TransactionCurrency $currency */

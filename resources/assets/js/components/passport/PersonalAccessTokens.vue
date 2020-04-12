@@ -45,10 +45,11 @@
 
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless m-b-none" v-if="tokens.length > 0">
+                        <caption>Personal Access Tokens</caption>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th></th>
+                                <th scope="col">Name</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
 
