@@ -538,15 +538,15 @@ class TransactionJournalFactory
         $dataRow = $row->getArrayCopy();
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json = json_encode($dataRow);
+        $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
         if (false === $json) {
             // @codeCoverageIgnoreStart
-            $json = json_encode((string) microtime());
+            $json = json_encode((string) microtime(), JSON_THROW_ON_ERROR, 512);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
             // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash));
+        Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
 
         return $hash;
     }

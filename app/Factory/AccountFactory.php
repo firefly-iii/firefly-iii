@@ -98,7 +98,7 @@ class AccountFactory
                 'user_id'         => $this->user->id,
                 'account_type_id' => $type->id,
                 'name'            => $data['name'],
-                'virtual_balance' => $data['virtual_balance'] ?? '0',
+                'virtual_balance' => $data['virtual_balance'] ?? null,
                 'active'          => true === $data['active'],
                 'iban'            => $data['iban'],
             ];
@@ -109,12 +109,12 @@ class AccountFactory
 
             // remove virtual balance when not an asset account or a liability
             if (!in_array($type->type, $this->canHaveVirtual, true)) {
-                $databaseData['virtual_balance'] = '0';
+                $databaseData['virtual_balance'] = null;
             }
 
             // fix virtual balance when it's empty
-            if ('' === $databaseData['virtual_balance']) {
-                $databaseData['virtual_balance'] = '0';
+            if ('' === (string)$databaseData['virtual_balance']) {
+                $databaseData['virtual_balance'] = null;
             }
 
             $return = Account::create($databaseData);

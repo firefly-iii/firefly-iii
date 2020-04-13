@@ -359,6 +359,7 @@ trait JournalServiceTrait
                     'account_type_id' => null,
                     'account_type'    => $preferredType,
                     'name'            => $data['name'],
+                    'virtual_balance' => null,
                     'active'          => true,
                     'iban'            => $data['iban'],
                 ]
