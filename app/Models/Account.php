@@ -94,12 +94,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                              $notes_count
  * @property-read int|null                                              $piggy_banks_count
  * @property-read int|null                                              $transactions_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $account_type_id
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
  */
 class Account extends Model
 {
@@ -258,7 +252,11 @@ class Account extends Model
      */
     public function setVirtualBalanceAttribute($value): void
     {
-        $this->attributes['virtual_balance'] = (string) $value;
+        $value = (string)$value;
+        if('' === $value) {
+            $value = null;
+        }
+        $this->attributes['virtual_balance'] = $value;
     }
 
     /**

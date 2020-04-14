@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Http\Requests\NewUserFormRequest;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
@@ -110,6 +111,12 @@ class NewUserController extends Controller
 
         // store currency preference:
         app('preferences')->set('currencyPreference', $currency->code);
+
+        // store frontpage preferences:
+        $accounts = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+        app('preferences')->set('frontPageAccounts', $accounts);
+
+        // mark.
         app('preferences')->mark();
 
         // set default optional fields:

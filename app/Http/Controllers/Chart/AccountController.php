@@ -432,9 +432,15 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $currencies = $this->accountRepository->getUsedCurrencies($account);
+
+        // if the account is not expense or revenue, just use the account's default currency.
+        if (!in_array($account->accountType->type, [AccountType::REVENUE, AccountType::EXPENSE], true)) {
+            $currencies = [$this->accountRepository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency()];
+        }
+
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $chartData[] = $this->periodByCurrency($start, $end, $account, $currency);

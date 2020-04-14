@@ -345,6 +345,7 @@ trait JournalServiceTrait
      */
     private function createAccount(?Account $account, array $data, string $preferredType): Account
     {
+        Log::debug('Now in createAccount()', $data);
         // return new account.
         if (null === $account) {
             $data['name'] = $data['name'] ?? '(no name)';
@@ -359,8 +360,10 @@ trait JournalServiceTrait
                     'account_type_id' => null,
                     'account_type'    => $preferredType,
                     'name'            => $data['name'],
+                    'virtual_balance' => null,
                     'active'          => true,
                     'iban'            => $data['iban'],
+                    'currency_id'     => $data['currency_id'] ?? null,
                 ]
             );
             // store BIC
@@ -375,6 +378,7 @@ trait JournalServiceTrait
                 $metaFactory = app(AccountMetaFactory::class);
                 $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['bic']]);
             }
+
         }
 
         return $account;

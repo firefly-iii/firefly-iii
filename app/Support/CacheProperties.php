@@ -101,8 +101,8 @@ class CacheProperties
     {
         $content = '';
         foreach ($this->properties as $property) {
-            $content .= json_encode($property);
+            $content .= json_encode($property, JSON_THROW_ON_ERROR, 512);
         }
-        $this->hash = substr(sha1($content), 0, 16);
+        $this->hash = substr(hash('sha256', $content), 0, 16);
     }
 }

@@ -280,25 +280,29 @@ class TransactionJournalFactory
 
         /** create or get source and destination accounts  */
         $sourceInfo = [
-            'id'     => (int) $row['source_id'],
-            'name'   => $row['source_name'],
-            'iban'   => $row['source_iban'],
-            'number' => $row['source_number'],
-            'bic'    => $row['source_bic'],
+            'id'          => (int) $row['source_id'],
+            'name'        => $row['source_name'],
+            'iban'        => $row['source_iban'],
+            'number'      => $row['source_number'],
+            'bic'         => $row['source_bic'],
+            'currency_id' => $currency->id,
         ];
 
         $destInfo = [
-            'id'     => (int) $row['destination_id'],
-            'name'   => $row['destination_name'],
-            'iban'   => $row['destination_iban'],
-            'number' => $row['destination_number'],
-            'bic'    => $row['destination_bic'],
+            'id'          => (int) $row['destination_id'],
+            'name'        => $row['destination_name'],
+            'iban'        => $row['destination_iban'],
+            'number'      => $row['destination_number'],
+            'bic'         => $row['destination_bic'],
+            'currency_id' => $currency->id,
         ];
         Log::debug('Source info:', $sourceInfo);
         Log::debug('Destination info:', $destInfo);
-
-        $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
+        Log::debug('Now calling getAccount for the source.');
+        $sourceAccount = $this->getAccount($type->type, 'source', $sourceInfo);
+        Log::debug('Now calling getAccount for the destination.');
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
+        Log::debug('Done with getAccount(2x)');
         $currency           = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
         $foreignCurrency    = $this->compareCurrencies($currency, $foreignCurrency);
         $foreignCurrency    = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
@@ -468,6 +472,7 @@ class TransactionJournalFactory
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
+        Log::debug('Now in getCurrency()');
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:
@@ -489,6 +494,7 @@ class TransactionJournalFactory
      */
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
+        Log::debug('Now ingetCurrencyByAccount()');
         switch ($type) {
             default:
             case TransactionType::WITHDRAWAL:
@@ -538,15 +544,15 @@ class TransactionJournalFactory
         $dataRow = $row->getArrayCopy();
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json = json_encode($dataRow);
+        $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
         if (false === $json) {
             // @codeCoverageIgnoreStart
-            $json = json_encode((string) microtime());
+            $json = json_encode((string) microtime(), JSON_THROW_ON_ERROR, 512);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
             // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash));
+        Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
 
         return $hash;
     }

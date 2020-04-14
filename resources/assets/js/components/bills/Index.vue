@@ -20,17 +20,18 @@
 <template>
     <div>
         <table class="table table-hover sortable">
+            <caption>Bills table</caption>
             <thead>
             <tr>
-                <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-                <th>{{ 'list.name' | trans }}</th>
-                <th data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">{{ 'list.matchesOn' | trans }}</th>
-                <th data-defaultsign="_19" colspan="2">{{ 'list.amount' | trans }}</th>
-                <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.paid_current_period' | trans }}</th>
-                <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.next_expected_match' | trans }}</th>
-                <th class="hidden-sm hidden-xs hidden-md">{{ 'list.active' | trans }}</th>
-                <th class="hidden-sm hidden-xs hidden-md">{{ 'list.automatch' | trans }}</th>
-                <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ 'list.repeat_freq' | trans }}</th>
+                <th scope="col" class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
+                <th scope="col">{{ 'list.name' | trans }}</th>
+                <th scope="col"data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">{{ 'list.matchesOn' | trans }}</th>
+                <th scope="col" data-defaultsign="_19" colspan="2">{{ 'list.amount' | trans }}</th>
+                <th scope="col" data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.paid_current_period' | trans }}</th>
+                <th scope="col" data-defaultsign="month" class="hidden-sm hidden-xs">{{ 'list.next_expected_match' | trans }}</th>
+                <th scope="col" class="hidden-sm hidden-xs hidden-md">{{ 'list.active' | trans }}</th>
+                <th scope="col" class="hidden-sm hidden-xs hidden-md">{{ 'list.automatch' | trans }}</th>
+                <th scope="col" data-defaultsign="az" class="hidden-sm hidden-xs">{{ 'list.repeat_freq' | trans }}</th>
             </tr>
             </thead>
             <tbody>

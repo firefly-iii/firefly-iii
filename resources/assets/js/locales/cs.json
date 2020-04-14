@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "What's playing?",
+        "welcome_back": "Jak to jde?",
         "flash_error": "Chyba!",
         "flash_success": "\u00dasp\u011b\u0161n\u011b dokon\u010deno!",
         "close": "Zav\u0159\u00edt",
@@ -8,7 +8,7 @@
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Rozd\u011blit",
         "transaction_journal_information": "Informace o transakci",
-        "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
+        "no_budget_pointer": "Zd\u00e1 se, \u017ee zat\u00edm nem\u00e1te \u017e\u00e1dn\u00e9 rozpo\u010dty. Na str\u00e1nce <a href=\":link\">rozpo\u010dty<\/a> byste n\u011bjak\u00e9 m\u011bli vytvo\u0159it. Rozpo\u010dty mohou pomoci udr\u017eet si p\u0159ehled ve v\u00fddaj\u00edch.",
         "source_account": "Zdrojov\u00fd \u00fa\u010det",
         "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"\/preferences\">settings<\/a>.",
         "destination_account": "C\u00edlov\u00fd \u00fa\u010det",
@@ -41,7 +41,7 @@
     },
     "form": {
         "interest_date": "\u00darokov\u00e9 datum",
-        "book_date": "Book date",
+        "book_date": "Datum rezervace",
         "process_date": "Datum zpracov\u00e1n\u00ed",
         "due_date": "Datum splatnosti",
         "foreign_amount": "\u010c\u00e1stka v ciz\u00ed m\u011bn\u011b",

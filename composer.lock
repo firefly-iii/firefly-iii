@@ -1400,16 +1400,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v6.18.6",
+            "version": "v6.18.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4ef5f9612c2694c915f53f0cec3e4081e9bfc778"
+                "reference": "9914b1d50e4395428ee95618354ffa7fc56e7968"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4ef5f9612c2694c915f53f0cec3e4081e9bfc778",
-                "reference": "4ef5f9612c2694c915f53f0cec3e4081e9bfc778",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/9914b1d50e4395428ee95618354ffa7fc56e7968",
+                "reference": "9914b1d50e4395428ee95618354ffa7fc56e7968",
                 "shasum": ""
             },
             "require": {
@@ -1542,7 +1542,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-04-08T15:51:23+00:00"
+            "time": "2020-04-14T14:12:01+00:00"
         },
         {
             "name": "laravel/passport",
@@ -1742,16 +1742,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "5a67afc2572ec6d430526cdc9c637ef124812389"
+                "reference": "dd3261eb9a322e009fa5d96d19b9ae19708ce04b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/5a67afc2572ec6d430526cdc9c637ef124812389",
-                "reference": "5a67afc2572ec6d430526cdc9c637ef124812389",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/dd3261eb9a322e009fa5d96d19b9ae19708ce04b",
+                "reference": "dd3261eb9a322e009fa5d96d19b9ae19708ce04b",
                 "shasum": ""
             },
             "require": {
@@ -1812,21 +1812,7 @@
                 "md",
                 "parser"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/colinodell",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/colinodell",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/league%2fcommonmark",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-04-05T16:01:48+00:00"
+            "time": "2020-04-13T20:52:18+00:00"
         },
         {
             "name": "league/csv",
@@ -5587,7 +5573,7 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v7.5.2",
+            "version": "v7.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
@@ -5751,16 +5737,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v3.6.2",
+            "version": "v3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "786a947e57086cf236cefdee80784634224b99fa"
+                "reference": "1b3103013797f04521c6cae5560f604649484066"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/786a947e57086cf236cefdee80784634224b99fa",
-                "reference": "786a947e57086cf236cefdee80784634224b99fa",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/1b3103013797f04521c6cae5560f604649484066",
+                "reference": "1b3103013797f04521c6cae5560f604649484066",
                 "shasum": ""
             },
             "require": {
@@ -5810,13 +5796,7 @@
                 "env",
                 "environment"
             ],
-            "funding": [
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/vlucas/phpdotenv",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-03-27T23:36:02+00:00"
+            "time": "2020-04-12T15:18:03+00:00"
         }
     ],
     "packages-dev": [
@@ -6932,16 +6912,16 @@
         },
         {
             "name": "netresearch/jsonmapper",
-            "version": "v1.6.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cweiske/jsonmapper.git",
-                "reference": "0d4d1b48d682a93b6bfedf60b88c7750e9cb0b06"
+                "reference": "e245890383c3ed38b6d202ee373c23ccfebc0f54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/0d4d1b48d682a93b6bfedf60b88c7750e9cb0b06",
-                "reference": "0d4d1b48d682a93b6bfedf60b88c7750e9cb0b06",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/e245890383c3ed38b6d202ee373c23ccfebc0f54",
+                "reference": "e245890383c3ed38b6d202ee373c23ccfebc0f54",
                 "shasum": ""
             },
             "require": {
@@ -6952,8 +6932,8 @@
                 "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8.35 || ~5.7 || ~6.4",
-                "squizlabs/php_codesniffer": "~1.5"
+                "phpunit/phpunit": "~4.8.35 || ~5.7 || ~6.4 || ~7.0",
+                "squizlabs/php_codesniffer": "~3.5"
             },
             "type": "library",
             "autoload": {
@@ -6974,7 +6954,7 @@
                 }
             ],
             "description": "Map nested JSON structures onto PHP classes",
-            "time": "2019-08-15T19:41:25+00:00"
+            "time": "2020-03-04T17:23:33+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -7190,16 +7170,16 @@
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v4.7.0",
+            "version": "v4.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "fad3769a7903021f5784d5d76aa6eb3a3904b215"
+                "reference": "c8e9ce9578fe13c075751d81f23dc2c3bb37a134"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/fad3769a7903021f5784d5d76aa6eb3a3904b215",
-                "reference": "fad3769a7903021f5784d5d76aa6eb3a3904b215",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/c8e9ce9578fe13c075751d81f23dc2c3bb37a134",
+                "reference": "c8e9ce9578fe13c075751d81f23dc2c3bb37a134",
                 "shasum": ""
             },
             "require": {
@@ -7251,17 +7231,7 @@
                 "orchestral",
                 "testing"
             ],
-            "funding": [
-                {
-                    "url": "https://paypal.me/crynobone",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/crynobone",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2020-03-06T23:07:37+00:00"
+            "time": "2020-04-11T10:37:21+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -8987,20 +8957,6 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
@@ -9045,16 +9001,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.10.1",
+            "version": "3.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "eeed5ecccc10131397f0eb7ee6da810c0be3a7fc"
+                "reference": "d470903722cfcbc1cd04744c5491d3e6d13ec3d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/eeed5ecccc10131397f0eb7ee6da810c0be3a7fc",
-                "reference": "eeed5ecccc10131397f0eb7ee6da810c0be3a7fc",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d470903722cfcbc1cd04744c5491d3e6d13ec3d9",
+                "reference": "d470903722cfcbc1cd04744c5491d3e6d13ec3d9",
                 "shasum": ""
             },
             "require": {
@@ -9069,7 +9025,7 @@
                 "ext-tokenizer": "*",
                 "felixfbecker/advanced-json-rpc": "^3.0.3",
                 "felixfbecker/language-server-protocol": "^1.4",
-                "netresearch/jsonmapper": "^1.0",
+                "netresearch/jsonmapper": "^1.0 || ^2.0",
                 "nikic/php-parser": "^4.3",
                 "ocramius/package-versions": "^1.2",
                 "openlss/lib-array2xml": "^1.0",
@@ -9083,13 +9039,15 @@
                 "psalm/psalm": "self.version"
             },
             "require-dev": {
+                "amphp/amp": "^2.4.2",
                 "bamarni/composer-bin-plugin": "^1.2",
                 "brianium/paratest": "^4.0.0",
                 "ext-curl": "*",
+                "php-coveralls/php-coveralls": "^2.2",
                 "phpmyadmin/sql-parser": "5.1.0",
                 "phpspec/prophecy": ">=1.9.0",
-                "phpunit/phpunit": "^7.5.16 || ^8.5",
-                "psalm/plugin-phpunit": "^0.9",
+                "phpunit/phpunit": "^7.5.16 || ^8.5 || ^9.0",
+                "psalm/plugin-phpunit": "^0.10",
                 "slevomat/coding-standard": "^5.0",
                 "squizlabs/php_codesniffer": "^3.5",
                 "symfony/process": "^4.3"
@@ -9137,7 +9095,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2020-03-23T11:40:30+00:00"
+            "time": "2020-04-13T12:47:11+00:00"
         },
         {
             "name": "webmozart/assert",

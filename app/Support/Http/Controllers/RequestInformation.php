@@ -300,7 +300,7 @@ trait RequestInformation
             $data,
             [
                 'email'    => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:6|secure_password|confirmed',
+                'password' => 'required|string|min:16|secure_password|confirmed',
             ]
         );
     }
