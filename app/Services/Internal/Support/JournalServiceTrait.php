@@ -379,13 +379,6 @@ trait JournalServiceTrait
                 $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['bic']]);
             }
 
-//            // store currency preference:
-//            if (isset($data['currency_id']) && null !== $data['currency_id']) {
-//                Log::debug(sprintf('Stored currency_id for account %d with value %d', $account->id, $data['currency_id']));
-//                /** @var AccountMetaFactory $metaFactory */
-//                $metaFactory = app(AccountMetaFactory::class);
-//                $metaFactory->create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $data['currency_id']]);
-//            }
         }
 
         return $account;

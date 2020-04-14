@@ -522,7 +522,7 @@ return [
     'clear_location'                  => 'Effacer la localisation',
     'delete_all_selected_tags'        => 'Supprimer tous les tags sélectionnés',
     'select_tags_to_delete'           => 'N\'oubliez pas de sélectionner des tags.',
-    'deleted_x_tags'                  => '{count} tag(s) supprimé(s).',
+    'deleted_x_tags'                  => ':count tag(s) supprimé(s).',
     'create_rule_from_transaction'    => 'Créer une règle basée sur une opération',
 
     // preferences
@@ -1451,7 +1451,7 @@ return [
     'tools_index_intro'                     => 'Plusieurs outils permettent d\'importer des données dans Firefly III. Vous les retrouverez ci-dessous. Pour plus d\'informations, consultez <a href="https://docs.firefly-iii.org/importing-data/introduction">cette page</a> (en anglais).',
     'firefly_iii_csv_importer_name'         => 'Importation CSV Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Importation Bunq Firefly III',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'firefly_iii_ynab_importer_name'        => 'Importation YNAB Firefly III',
     'ludo_revolut_importer_name'            => 'Importation Revolut (Ludo444)',
     //
     // sandstorm.io errors and messages:

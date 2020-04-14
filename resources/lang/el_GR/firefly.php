@@ -829,7 +829,7 @@ return [
     'skips_over'                                => 'παραλείπει',
     'bill_store_error'                          => 'Παρουσιάστηκε ένα μη αναμενόμενο σφάλμα κατά την αποθήκευση του νέου πάγιου έξοδου. Ελέγξτε τα αρχεία καταγραφής',
     'list_inactive_rule'                        => 'ανενεργός κανόνας',
-    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
+    'bill_edit_rules'                           => 'Το Firefly III θα επιχειρήσει να επεξεργαστεί τον κανόνα(ες) :count που σχετίζεται με αυτό το πάγιο έξοδο. Αν όμως έχετε κάνει περαιτέρω αλλαγές σε αυτό τον κανόνα(ες), το Firefly III δεν θα αλλάξει τίποτα.',
 
     // accounts:
     'inactive_account_link'                     => 'Έχετε :count ανενεργούς (σε αρχειοθέτηση) λογαριασμούς, τους οποίους μπορείτε να δείτε χωριστά σε αυτή τη σελίδα.',
@@ -1351,7 +1351,7 @@ return [
     'send_test_email_text'             => 'Για να δείτε αν η εγκατάσταση σας μπορεί να στείλει μηνύματα ηλεκτρονικού ταχυδρομείου, πατήστε αυτό το κουμπί. Δεν θα δείτε κάποιο σφάλμα εδώ (αν υπάρχει), <strong>μόνο τα αρχεία καταγραφής θα εμφανίσουν τυχόν σφάλματα </strong>. Μπορείτε να πατήσετε αυτό το κουμπί όσες φορές θέλετε. Δεν υπάρχει έλεγχος ανεπιθύμητης αλληλογραφίας. Το μήνυμα θα αποσταλεί στο <code>:email</code> και θα πρέπει να φτάσει σύντομα.',
     'send_message'                     => 'Αποστολή μηνύματος',
     'send_test_triggered'              => 'Η δοκιμή ενεργοποιήθηκε. Ελέγξτε τα εισερχόμενα μηνύματα στο Email σας και τα αρχεία καταγραφής.',
-    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'give_admin_careful'               => 'Οι χρήστες στους οποίους έχουν δοθεί δικαιώματα διαχειριστή μπορούν να καθαιρέσουν τη δική σας πρόσβαση. Ενεργήστε με προσοχή.',
 
     'split_transaction_title'               => 'Περιγραφή της συναλλαγής με διαχωρισμό',
     'split_transaction_title_help'          => 'Εάν δημιουργήσετε μια διαχωρισμένη συναλλαγή, πρέπει να υπάρχει μια καθολική περιγραφή για όλους τους διαχωρισμούς της συναλλαγής.',
@@ -1451,7 +1451,7 @@ return [
     'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
     'firefly_iii_csv_importer_name'         => 'Εργαλείο εισαγωγής CSV στο Firefly III',
     'firefly_iii_bunq_importer_name'        => 'Εργαλείο εισαγωγής bunq 🌈 στο Firefly III',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'firefly_iii_ynab_importer_name'        => 'Εργαλείο εισαγωγής YNAB στο Firefly III',
     'ludo_revolut_importer_name'            => 'Εισαγωγέας δεδομένων Revolut του Ludo444',
     //
     // sandstorm.io errors and messages:
@@ -1591,7 +1591,7 @@ return [
     // telemetry
     'telemetry_admin_index'              => 'Τηλεμετρία',
     'telemetry_intro'                    => 'Το Firefly III υποστηρίζει τη συλλογή και αποστολή τηλεμετρίας χρήσης. Αυτό σημαίνει ότι το Firefly III θα προσπαθήσει να συλλέξει πληροφορίες για το πώς χρησιμοποιείτε το Firefly III και να τις αποστείλει στον προγραμματιστή του Firefly III. Μπορείτε πάντα να επιλέξετε αν θέλετε να συμμετάσχετε και η επιλογή είναι κλειστή από προεπιλογή. Το Firefly III δεν θα συλλέξει ούτε θα αποστείλει ποτέ οικονομικές πληροφορίες. Το Firefly III επίσης ποτέ δεν θα συλλέξει ούτε θα αποστείλει οικονομικές πληροφορίες μεταδεδομένων, όπως ποσά ή υπολογισμούς. Τα συγκεντρωμένα δεδομένα δεν θα γίνουν ποτέ προσβάσιμα από το ευρύ κοινό.',
-    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_what_collected'           => 'Τα δεδομένα που συλλέγει και στέλνει το Firefly III είναι διαφορετικά για κάθε έκδοση. Εσείς εκτελείτε την έκδοση :version. Τα δεδομένα που συλλέγει το Firefly III στην έκδοση :version είναι κάτι που μπορείτε διαβάσετε στις σελίδες βοήθειας. Κάντε κλικ στο εικονίδιο (?) στην επάνω δεξιά γωνία <a href="https://docs.firefly-iii.org/support/telemetry">ή επισκεφτείτε την σελίδα βοήθειας απευθείας στο GitHub</a>.',
     'telemetry_is_enabled_yes_no'        => 'Είναι ενεργοποιημένη η τηλεμετρία του Firefly III;',
     'telemetry_disabled_no'              => 'Η τηλεμετρία ΔΕΝ είναι ενεργοποιημένη',
     'telemetry_disabled_yes'             => 'Η τηλεμετρία είναι ενεργοποιημένη',
@@ -1601,14 +1601,14 @@ return [
     'no_telemetry_present'               => 'Το Firefly III δεν έχει συγκεντρώσει αρχεία τηλεμετρίας.',
     'records_telemetry_present'          => 'Το Firefly III έχει συγκεντρώσει :count αρχείο(α) τηλεμετρίας.',
     'telemetry_button_view'              => 'Προβολή τηλεμετρίας',
-    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_button_delete'            => 'Διαγραφή όλης της τηλεμετρίας',
     'telemetry_admin_overview'           => 'Επισκόπηση τηλεμετρίας',
-    'telemetry_back_to_index'            => 'Back to telemetry index',
-    'not_yet_submitted'                  => 'Not yet submitted',
-    'telemetry_type_feature'             => 'Feature flag',
-    'telemetry_submit_all'               => 'Submit records',
-    'telemetry_delete_submitted_records' => 'Delete submitted records',
-    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
-    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
-    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
+    'telemetry_back_to_index'            => 'Επιστροφή στις ενδείξεις τηλεμετρίας',
+    'not_yet_submitted'                  => 'Δεν έχει υποβληθεί ακόμη',
+    'telemetry_type_feature'             => 'Επισήμανση λειτουργίας',
+    'telemetry_submit_all'               => 'Υποβολή εγγραφών',
+    'telemetry_delete_submitted_records' => 'Διαγραφή καταχωρισμένων εγγραφών',
+    'telemetry_submission_executed'      => 'Έχουν υποβληθεί εγγραφές. Ελέγξτε τα αρχεία καταγραφής για περισσότερες πληροφορίες.',
+    'telemetry_all_deleted'              => 'Όλες οι εγγραφές τηλεμετρίας έχουν διαγραφεί.',
+    'telemetry_submitted_deleted'        => 'Όλες οι υποβληθείσες εγγραφές τηλεμετρίας έχουν διαγραφεί.'
 ];

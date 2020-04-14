@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.2 (API 1.1.0)] - 2020-04-14
+
+### Fixed
+- [Issue 3529](https://github.com/firefly-iii/firefly-iii/issues/3529) Issue with rule execution.
+- [Issue 3263](https://github.com/firefly-iii/firefly-iii/issues/3263) Issue with new user account creation.
+
+## [5.2.2 (API 1.1.0)] - 2020-04-13
+
+### Fixed
+- Virtual balance would always be stored as "0.0" despite the field being nullable.
+- The rule action "set source account" was improperly configured.
+
 ## [5.2.1 (API 1.1.0)] - 2020-04-10
 
 Firefly III 5.2.1 fixes an issue with charts and allows users to store budgets again.
