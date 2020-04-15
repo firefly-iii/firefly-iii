@@ -557,7 +557,7 @@ class ExportDataGenerator
                 $recurrence->description,
                 $recurrence->first_date ? $recurrence->first_date->format('Y-m-d') : null,
                 $recurrence->repeat_until ? $recurrence->repeat_until->format('Y-m-d') : null,
-                $recurrence->latest_date ? $recurrence->repeat_until->format('Y-m-d') : null,
+                $recurrence->latest_date ? $recurrence->latest_date->format('Y-m-d') : null,
                 $recurrence->repetitions,
                 $recurrence->apply_rules,
                 $recurrence->active,
