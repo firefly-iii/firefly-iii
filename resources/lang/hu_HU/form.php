@@ -194,7 +194,7 @@ return [
     'blocked'               => 'Letiltott?',
     'blocked_code'          => 'Letiltás oka',
     'login_name'            => 'Bejelentkezés',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Adminisztrátor',
 
     // import
     'apply_rules'           => 'Szabályok alkalmazása',
@@ -266,10 +266,10 @@ return [
     'auto_budget_amount'            => 'Auto-költségkeret összege',
     'auto_budget_period'            => 'Auto-költségkeret időszaka',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Begyűjtött',
+    'submitted' => 'Elküldött',
+    'key' => 'Kulcs',
+    'value' => 'Bejegyzés tartalma'
 
 
 ];

@@ -37,8 +37,8 @@ return [
     'general_index_intro'                 => 'Üdvözli a Firefly III importáló eljárása. A Firefly III-ba adatokat több módon is lehet importálni, melyek gombként jelennek meg.',
 
     // notices about the CSV importer:
-    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
-    'final_csv_import'     => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that this is the last version of Firefly III that will feature a CSV importer. A separated tool is available that you should try for yourself: <a href="https://github.com/firefly-iii/csv-importer">the Firefly III CSV importer</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'deprecate_csv_import' => 'Ahogyan az a <a href="https://www.patreon.com/posts/future-updates-30012174">Patreon posztban</a> is ki lett fejtve, Firefly III adatimportáló modulja változni fog. Ez azt jelenti, hogy a CSV importáló egy független, új eszközbe fog átkerülni. Az új eszköz az alábbi <a href="https://github.com/firefly-iii/csv-importer">GitHub repóból</a> már elérhető tesztelésre. Örömmel venné ki magát, ha kipróbálná és megoszataná véleményét.',
+    'final_csv_import'     => 'Ahogyan az a <a href="https://www.patreon.com/posts/future-updates-30012174">Patreon posztban</a> is ki lett fejtve, a Firefly III adatimportáló modulja változni fog. Ez azt jelenti, hogy ez az utolsó olyan Firefly III verzió, amely még tartalmazza a CSV importálót. Az új eszköz az alábbi <a href="https://github.com/firefly-iii/csv-importer">GitHub repóból</a> már elérhető tesztelésre. Örömmel venné ki magát, ha kipróbálná és megoszataná véleményét.',
 
     // import provider strings (index):
     'button_fake'                         => 'Importálás imitálása',
@@ -76,7 +76,7 @@ return [
     'prereq_ynab_title'                   => 'Az YNAB használatával történő importálás előfeltételei',
     'prereq_ynab_text'                    => 'Ahhoz, hogy a YNAB-ből tranzakciókat lehessen letölteni egy új alkalmazást kell létrehozni a <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> oldalon, majd az ügyfél azonosítót és a titkos kódot fel kell venni ezen az oldalon.',
     'prereq_ynab_redirect'                => 'A beállítás befejezéséhez meg kell adni a következő URL-t a <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> oldalon a "Redirect URI(s)" alatt.',
-    'callback_not_tls'                    => 'Firefly III has detected the following callback URI. It seems your server is not set up to accept TLS-connections (https). YNAB will not accept this URI. You may continue with the import (because Firefly III could be wrong) but please keep this in mind.',
+    'callback_not_tls'                    => 'Firefly III a következő callback URI-t találta. Úgy tűnik, hogy a szerver nincs beálltva biztonságos kapcsolatokra (https). YNAB nem fogadja el ezt az URI-t. Az importálás ettől függetlenül folytatható, de vegye figyelembe, hogy nem biztonságos kapcsolatot használ.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'        => 'Hamis API kulcs sikeres eltárolva!',
     'prerequisites_saved_for_spectre'     => 'Alkalmazás azonosító és titkos kód eltárolva!',
@@ -150,7 +150,7 @@ return [
     'ynab_account_type_checking'           => 'fiók ellenőrzése',
     'ynab_account_type_cash'               => 'készpénzszámla',
     'ynab_account_type_creditCard'         => 'bankkártya',
-    'ynab_account_type_lineOfCredit'       => 'line of credit',
+    'ynab_account_type_lineOfCredit'       => 'hitelszámla',
     'ynab_account_type_otherAsset'         => 'egyéb eszközszámla',
     'ynab_account_type_otherLiability'     => 'egyéb kötelezettségek',
     'ynab_account_type_payPal'             => 'PayPal',
@@ -164,8 +164,8 @@ return [
     // job configuration for YNAB:
     'job_config_ynab_select_budgets'       => 'Költségkeret kiválasztása',
     'job_config_ynab_select_budgets_text'  => ':count költségkeret van tárolva a YNAB-ben. Ki kell választani, hogy a Firefly III melyikből importálja a tranzakciókat.',
-    'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
-    'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
+    'job_config_ynab_no_budgets'           => 'Nincs importálható költségvetés.',
+    'ynab_no_mapping'                      => 'Úgy tűnik, az importáláshoz nincs számla kiválasztva.',
     'job_config_ynab_bad_currency'         => 'Nem lehet importálni a következő költségkeretekből mert nincs olyan számla aminek a pénzneme egyezik ezekkel a költségkeretekkel.',
     'job_config_ynab_accounts_title'       => 'Számlák kiválasztása',
     'job_config_ynab_accounts_text'        => 'A következő számlák állnak rendelkezésre ebben a költségkeretben. Ki kell választani, hogy mely számlák legyenek importálva és, hogy a tranzakciók hol legyenek eltárolva.',
@@ -224,7 +224,7 @@ return [
     'job_config_roles_column_role'    => 'Oszlopadat jelentése',
     'job_config_roles_do_map_value'   => 'Értékek hozzárendelése',
     'job_config_roles_no_example'     => 'Nincs elérhető példaadat',
-    'job_config_roles_fa_warning'     => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+    'job_config_roles_fa_warning'     => 'Ha egy oszlop devizaösszegként van megjelölve, akkor meg kell adni a devizanemet is.',
     'job_config_roles_rwarning'       => 'Legalább egy oszlopot összeg oszlopként kell megjelölni. Javasolt továbbá kiválasztani egy oszlopot a leírásnak, a dátumnak és az ellenszámlának.',
     'job_config_roles_colum_count'    => 'Oszlop',
     // job config for the file provider (stage: mapping):
@@ -252,7 +252,7 @@ return [
     'status_finished_text'            => 'Az importálás befejeződött.',
     'finished_with_errors'            => 'Hibák történtek importálás közben. Alaposan át kell nézni őket.',
     'unknown_import_result'           => 'Ismeretlen import eredmény',
-    'result_no_transactions'          => 'No transactions have been imported. Perhaps they were all duplicates is simply no transactions where present to be imported. Perhaps the log files can tell you what happened. If you import data regularly, this is normal.',
+    'result_no_transactions'          => 'A tranzakciók nem lettek importálva. A naplófájlokban megtalálhatja az importálás részleteit. Ha rendszeresen importál adatokat, akkor ez normális.',
     'result_one_transaction'          => 'Pontosan egy tranzakció lett importálva. A <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> címke alatt lett eltárolva ahol később ellenőrizhető.',
     'result_many_transactions'        => 'A Firefly III :count tranzakciót importált. A <a href=":route" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> címke alatt lettek eltárolva ahol később ellenőrizhetőek.',
 
@@ -302,11 +302,11 @@ return [
     'column_sepa_ct_id'               => 'SEPA végpontok közti azonosító',
     'column_sepa_ct_op'               => 'SEPA ellenszámla azonosító',
     'column_sepa_db'                  => 'SEPA megbízás azonosító',
-    'column_sepa_cc'                  => 'SEPA Clearing Code',
+    'column_sepa_cc'                  => 'SEPA engedélykód',
     'column_sepa_ci'                  => 'SEPA hitelező azonosító',
-    'column_sepa_ep'                  => 'SEPA External Purpose',
+    'column_sepa_ep'                  => 'SEPA üzenetformátum',
     'column_sepa_country'             => 'SEPA országkód',
-    'column_sepa_batch_id'            => 'SEPA Batch ID',
+    'column_sepa_batch_id'            => 'SEPA Batch azonosító',
     'column_tags-comma'               => 'Címkék (vesszővel elválasztva)',
     'column_tags-space'               => 'Címkék (szóközzel elválasztva)',
     'column_account-number'           => 'Eszközszámla (számlaszám)',
