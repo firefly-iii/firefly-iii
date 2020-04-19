@@ -37,8 +37,8 @@ return [
     'general_index_intro'                 => 'Witamy w procedurze importu Firefly III. Istnieje kilka sposobów importowania danych do Firefly III.',
 
     // notices about the CSV importer:
-    'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
-    'final_csv_import'     => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that this is the last version of Firefly III that will feature a CSV importer. A separated tool is available that you should try for yourself: <a href="https://github.com/firefly-iii/csv-importer">the Firefly III CSV importer</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'deprecate_csv_import' => 'Zgodnie z <a href="https://www.patreon.com/posts/future-updates-30012174">tym wpisem na Patreon</a>, sposób, w jaki Firefly III zarządza importem danych zmieni się. Oznacza to, że importer CSV zostanie przeniesiony do nowego, oddzielnego narzędzia. Możesz już przetestować beta, jeśli odwiedzisz <a href="https://github.com/firefly-iii/csv-importer">repozytorium GitHub</a>. Byłbym wdzięczny, gdybyś przetestował nowego importera i dał mi znać, co myślisz.',
+    'final_csv_import'     => 'Zgodnie z <a href="https://www.patreon.com/posts/future-updates-30012174">tym wpisem na Patreon</a> sposób, w jaki Firefly III zarządza importem danych zmieni się. Oznacza to, że importer jest to ostatnia wersja z importerem CSV. Nowe oddzielne narzędzie będzie dostępne. Możesz je już przetestować, jeśli odwiedzisz <a href="https://github.com/firefly-iii/csv-importer">repozytorium GitHub</a>. Byłbym wdzięczny, gdybyś przetestował nowego importera i dał mi znać, co myślisz.',
 
     // import provider strings (index):
     'button_fake'                         => 'Fałszywy import',
@@ -66,22 +66,22 @@ return [
 
     // prerequisites:
     'prereq_fake_title'                   => 'Wymagania dla importu używającego fałszywego dostawcy importu',
-    'prereq_fake_text'                    => 'This fake provider requires a fake API key. It must be 32 characters long. You can use this one: 123456789012345678901234567890AA',
-    'prereq_spectre_title'                => 'Prerequisites for an import using the Spectre API',
-    'prereq_spectre_text'                 => 'In order to import data using the Spectre API (v4), you must provide Firefly III with two secret values. They can be found on the <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
-    'prereq_spectre_pub'                  => 'Likewise, the Spectre API needs to know the public key you see below. Without it, it will not recognize you. Please enter this public key on your <a href="https://www.saltedge.com/clients/profile/secrets">secrets page</a>.',
-    'prereq_bunq_title'                   => 'Prerequisites for an import from bunq',
-    'prereq_bunq_text'                    => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
-    'prereq_bunq_ip'                      => 'bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
-    'prereq_ynab_title'                   => 'Prerequisites for an import from YNAB',
-    'prereq_ynab_text'                    => 'In order to be able to download transactions from YNAB, please create a new application on your <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> and enter the client ID and secret on this page.',
-    'prereq_ynab_redirect'                => 'To complete the configuration, enter the following URL at the <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> under the "Redirect URI(s)".',
-    'callback_not_tls'                    => 'Firefly III has detected the following callback URI. It seems your server is not set up to accept TLS-connections (https). YNAB will not accept this URI. You may continue with the import (because Firefly III could be wrong) but please keep this in mind.',
+    'prereq_fake_text'                    => 'Ten fałszywy dostawca wymaga fałszywego klucza API. Musi on mieć 32 znaki. Możesz go użyć: 1234567890123456789012345901234567890AA',
+    'prereq_spectre_title'                => 'Wymagania wstępne do importowania za pomocą Spectre API',
+    'prereq_spectre_text'                 => 'Aby importować dane za pomocą interfejsu Spectre API (v4), musisz dostarczyć Firefly III dwie tajne wartości. Można je znaleźć na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
+    'prereq_spectre_pub'                  => 'API Spectre musi znać klucz publiczny, który widzisz poniżej. Bez niego nie będzie Cię rozpoznawał. Wprowadź ten klucz publiczny na <a href="https://www.saltedge.com/clients/profile/secrets">stronie sekretów</a>.',
+    'prereq_bunq_title'                   => 'Wymagania wstępne dla importu z bunq',
+    'prereq_bunq_text'                    => 'Aby importować z Bunq, musisz uzyskać klucz API. Możesz to zrobić za pomocą aplikacji. Zwróć uwagę, że funkcja importu z Bunq jest w wersji BETA. Została przetestowana tylko przy użyciu testowej wersji API.',
+    'prereq_bunq_ip'                      => 'bunq musi znać zewnętrzny adres IP Twojego serwera. Firefly III próbował ustalić go używając <a href="https://www.ipify.org/">usługi ipify</a>. Upewnij się, że ten adres IP jest poprawny albo import się nie powiedzie.',
+    'prereq_ynab_title'                   => 'Wymagania wstępne dla importu z YNAB',
+    'prereq_ynab_text'                    => 'Aby móc pobrać transakcje z YNAB, utwórz nową aplikację na stronie <a href="https://app.youneedabudget.com/settings/developer">Ustawienia deweloperów</a> i wprowadź ID klienta i sekret na tej stronie.',
+    'prereq_ynab_redirect'                => 'Aby zakończyć konfigurację, wprowadź następujący adres URL na stronie <a href="https://app.youneedabudget.com/settings/developer">Ustawienia deweloperów</a> pod "Przekieruj URI".',
+    'callback_not_tls'                    => 'Firefly III wykrył następujący URI wywołania zwrotnego. Wygląda na to, że Twój serwer nie jest skonfigurowany do akceptowania połączeń TLS (https). YNAB nie zaakceptuje tego URI. Możesz kontynuować import (ponieważ Firefly III może się mylić) ale miej to na uwadze.',
     // prerequisites success messages:
-    'prerequisites_saved_for_fake'        => 'Fake API key stored successfully!',
-    'prerequisites_saved_for_spectre'     => 'App ID and secret stored!',
+    'prerequisites_saved_for_fake'        => 'Fałszywy klucz API zapisany pomyślnie!',
+    'prerequisites_saved_for_spectre'     => 'Zapisano identyfikator aplikacji i sekret aplikacji!',
     'prerequisites_saved_for_bunq'        => 'Klucz API oraz IP zostały zapisane!',
-    'prerequisites_saved_for_ynab'        => 'YNAB client ID and secret stored!',
+    'prerequisites_saved_for_ynab'        => 'ID klienta YNAB i sekret zapisane!',
 
     // job configuration:
     'job_config_apply_rules_title'        => 'Konfiguracja zadania - zastosować twoje reguły?',
