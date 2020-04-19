@@ -78,13 +78,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|Location[]   $locations
  * @property-read int|null                                              $locations_count
  * @property-read int|null                                              $transaction_journals_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $tagMode
- * @property string|null $description
- * @property float|null $latitude
- * @property float|null $longitude
- * @property int|null $zoomLevel
  */
 class Tag extends Model
 {

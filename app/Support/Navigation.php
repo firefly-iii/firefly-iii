@@ -287,10 +287,11 @@ class Navigation
      */
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
+        $locale = app('steam')->getLocale();
         // define period to increment
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
-        $displayFormat = (string)trans('config.month_and_day');
+        $displayFormat = (string)trans('config.month_and_day', [], $locale);
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
             $increment     = 'addMonth';
@@ -391,13 +392,14 @@ class Navigation
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
-        $format = (string)trans('config.month_and_day');
+        $locale = app('steam')->getLocale();
+        $format = (string)trans('config.month_and_day', [], $locale);
         if ($start->diffInMonths($end) > 1) {
-            $format = (string)trans('config.month');
+            $format = (string)trans('config.month', [], $locale);
         }
 
         if ($start->diffInMonths($end) > 12) {
-            $format = (string)trans('config.year');
+            $format = (string)trans('config.year', [], $locale);
         }
 
         return $format;

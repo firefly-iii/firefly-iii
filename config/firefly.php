@@ -323,7 +323,8 @@ return [
      */
     'languages'                    => [
         // currently enabled languages
-        'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
+        'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
         'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
@@ -557,6 +558,7 @@ return [
     ],
     'default_currency' => 'EUR',
     'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
     'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
                            'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
                            'updated_on',],

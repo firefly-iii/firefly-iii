@@ -610,4 +610,17 @@ class Steam
         return $locale;
     }
 
+    /**
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getLocaleArray(string $locale): array {
+        return [
+            sprintf('%s', $locale),
+            sprintf('%s.utf8', $locale),
+            sprintf('%s.UTF-8', $locale),
+        ];
+    }
+
 }

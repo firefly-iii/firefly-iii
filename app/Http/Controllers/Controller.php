@@ -85,15 +85,16 @@ class Controller extends BaseController
 
         $this->middleware(
             function ($request, $next) {
+                $locale = app('steam')->getLocale();
                 // translations for specific strings:
-                $this->monthFormat       = (string) trans('config.month');
-                $this->monthAndDayFormat = (string) trans('config.month_and_day');
-                $this->dateTimeFormat    = (string) trans('config.date_time');
+                $this->monthFormat       = (string) trans('config.month', [], $locale);
+                $this->monthAndDayFormat = (string) trans('config.month_and_day', [], $locale);
+                $this->dateTimeFormat    = (string) trans('config.date_time', [], $locale);
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
                     $language  = app('steam')->getLanguage();
-                    $locale    = app('steam')->getLanguage();
+                    $locale    = app('steam')->getLocale();
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
                     app('view')->share('language', $language);

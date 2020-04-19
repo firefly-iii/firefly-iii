@@ -76,15 +76,14 @@ class Range
     {
         // get locale preference:
         $language = app('steam')->getLanguage();
-        //$locale = $this->getLocale();
+        $locale   = app('steam')->getLocale();
         App::setLocale($language);
-        Carbon::setLocale(substr($language, 0, 2));
+        Carbon::setLocale(substr($locale, 0, 2));
 
-        $locale = explode(',', (string) trans('config.locale'));
-        $locale = array_map('trim', $locale);
+        $localeArray = app('steam')->getLocaleArray($locale);
 
-        setlocale(LC_TIME, $locale);
-        $moneyResult = setlocale(LC_MONETARY, $locale);
+        setlocale(LC_TIME, $localeArray);
+        $moneyResult = setlocale(LC_MONETARY, $localeArray);
 
         // send error to view if could not set money format
         if (false === $moneyResult) {
@@ -92,12 +91,12 @@ class Range
         }
 
         // save some formats:
-        $monthAndDayFormat = (string) trans('config.month_and_day');
-        $dateTimeFormat    = (string) trans('config.date_time');
+        $monthAndDayFormat = (string) trans('config.month_and_day', [], $locale);
+        $dateTimeFormat    = (string) trans('config.date_time', [], $locale);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
         // also format for moment JS:
-        $madMomentJS = (string) trans('config.month_and_day_moment_js');
+        $madMomentJS = (string) trans('config.month_and_day_moment_js', [], $locale);
 
         app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);

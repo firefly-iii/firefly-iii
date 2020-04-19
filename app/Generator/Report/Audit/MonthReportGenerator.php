@@ -154,14 +154,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
 
         }
-
+        $locale = app('steam')->getLocale();
         $return = [
             'journals'         => $journals,
             'currency'         => $currency,
             'exists'           => count($journals) > 0,
-            'end'              => $this->end->formatLocalized((string) trans('config.month_and_day')),
+            'end'              => $this->end->formatLocalized((string) trans('config.month_and_day', [], $locale)),
             'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->formatLocalized((string) trans('config.month_and_day')),
+            'dayBefore'        => $date->formatLocalized((string) trans('config.month_and_day', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
 

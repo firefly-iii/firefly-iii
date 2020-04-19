@@ -179,14 +179,14 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
+        $locale = app('steam')->getLocale();
         $entries          = [];
         $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
         while ($start <= $end) {
             $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string)trans('config.month_and_day'));
+            $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
             $entries[$format] = $amount;
 
             $start->addDay();

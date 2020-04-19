@@ -571,6 +571,7 @@ class AccountController extends Controller
      */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
+        $locale = app('steam')->getLocale();
         $step    = $this->calculateStep($start, $end);
         $result  = [
             'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
@@ -582,7 +583,7 @@ class AccountController extends Controller
         switch ($step) {
             case '1D':
                 // per day the entire period, balance for every day.
-                $format   = (string) trans('config.month_and_day');
+                $format   = (string) trans('config.month_and_day', [], $locale);
                 $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
                 $previous = array_values($range)[0];
                 while ($end >= $current) {

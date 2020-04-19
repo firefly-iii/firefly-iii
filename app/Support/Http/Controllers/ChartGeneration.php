@@ -61,6 +61,7 @@ trait ChartGeneration
             return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
+        $locale = app('steam')->getLocale();
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
 
@@ -89,7 +90,7 @@ trait ChartGeneration
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day'));
+                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day', [], $locale));
                 $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
