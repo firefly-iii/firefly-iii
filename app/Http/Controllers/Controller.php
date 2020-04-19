@@ -92,10 +92,12 @@ class Controller extends BaseController
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $language  = $this->getLanguage();
+                    $language  = app('steam')->getLanguage();
+                    $locale    = app('steam')->getLanguage();
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
                     app('view')->share('language', $language);
+                    app('view')->share('locale', $locale);
                     app('view')->share('shownDemo', $shownDemo);
                     app('view')->share('current_route_name', $page);
                     app('view')->share('original_route_name', Route::currentRouteName());
