@@ -73,8 +73,8 @@ trait TransactionValidation
 
         // validate source account.
         $sourceId    = isset($transaction['source_id']) ? (int) $transaction['source_id'] : null;
-        $sourceName  = $transaction['source_name'] ?? null;
-        $sourceIban  = $transaction['source_iban'] ?? null;
+        $sourceName  = isset($transaction['source_name']) ? (string) $transaction['source_name'] : null;
+        $sourceIban  = isset($transaction['source_iban']) ? (string) $transaction['source_iban'] : null;
         $validSource = $accountValidator->validateSource($sourceId, $sourceName, $sourceIban);
 
         // do something with result:
@@ -86,8 +86,8 @@ trait TransactionValidation
         }
         // validate destination account
         $destinationId    = isset($transaction['destination_id']) ? (int) $transaction['destination_id'] : null;
-        $destinationName  = $transaction['destination_name'] ?? null;
-        $destinationIban  = $transaction['destination_iban'] ?? null;
+        $destinationName  = isset($transaction['destination_name']) ? (string) $transaction['destination_name'] : null;
+        $destinationIban  = isset($transaction['destination_iban']) ? (string) $transaction['destination_iban'] : null;
         $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, $destinationIban);
         // do something with result:
         if (false === $validDestination) {

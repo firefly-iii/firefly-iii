@@ -206,9 +206,9 @@ class ConvertController extends Controller
 
         // double check its not an empty string.
         $sourceId         = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
-        $sourceName       = '' === $sourceName ? null : $sourceName;
+        $sourceName       = '' === $sourceName ? null : (string) $sourceName;
         $destinationId    = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
-        $destinationName  = (string)('' === $destinationName ? null : $destinationName);
+        $destinationName  = '' === $destinationName ? null : (string) $destinationName;
         $validSource      = $validator->validateSource($sourceId, $sourceName, null);
         $validDestination = $validator->validateDestination($destinationId, $destinationName, null);
 
