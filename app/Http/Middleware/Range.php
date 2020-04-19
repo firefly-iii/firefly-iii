@@ -26,6 +26,7 @@ use App;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
 
 /**
@@ -33,6 +34,7 @@ use Illuminate\Http\Request;
  */
 class Range
 {
+    use RequestInformation;
     /**
      * Handle an incoming request.
      *
@@ -72,11 +74,12 @@ class Range
      */
     private function configureView(): void
     {
-        $pref = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
-        /** @noinspection NullPointerExceptionInspection */
-        $lang = $pref->data;
-        App::setLocale($lang);
-        Carbon::setLocale(substr($lang, 0, 2));
+        // get locale preference:
+        $language = app('steam')->getLanguage();
+        //$locale = $this->getLocale();
+        App::setLocale($language);
+        Carbon::setLocale(substr($language, 0, 2));
+
         $locale = explode(',', (string) trans('config.locale'));
         $locale = array_map('trim', $locale);
 
