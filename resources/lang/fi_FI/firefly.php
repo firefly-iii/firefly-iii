@@ -526,7 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Luo tapahtumaan perustuva sääntö',
 
     // preferences
-    'equal_to_language'               => '(equal to language)',
+    'equal_to_language'               => '(sama kuin kieli)',
     'pref_home_screen_accounts'       => 'Etusivun tilit',
     'pref_home_screen_accounts_help'  => 'Mitkä tilit näytetään etusivulla?',
     'pref_view_range'                 => 'Tarkasteltava jakso',
@@ -538,9 +538,9 @@ return [
     'pref_6M'                         => 'Kuusi kuukautta',
     'pref_1Y'                         => 'Yksi vuosi',
     'pref_languages'                  => 'Kielet',
-    'pref_locale'                     => 'Locale settings',
+    'pref_locale'                     => 'Alueasetukset',
     'pref_languages_help'             => 'Firefly III tukee useita kieliä. Mitä niistä haluat käyttää?',
-    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_help'                => 'Firefly III antaa sinun asettaa erikseen paikallisia asetuksia, kuten valuuttojen, numeroiden ja päivämäärien muotoilun. Järjestelmäsi ei ehkä tue kaikkia tämän luettelon alueasetuksia. Firefly III:lla ei ole oikeita päivämääräasetuksia jokaiselle alueelle; ota minuun yhteyttä saadaksesi parannuksia.',
     'pref_custom_fiscal_year'         => 'Tilikauden asetukset',
     'pref_custom_fiscal_year_label'   => 'Käytössä',
     'pref_custom_fiscal_year_help'    => 'Maissa joiden tilikausi on jokin muu kuin Tammikuun 1:stä Joulukuun 31:seen päivään, voit valita tämän ja määrittää tilikauden aloitus- ja lopetuspäivän',

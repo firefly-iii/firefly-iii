@@ -540,7 +540,7 @@ return [
     'pref_languages'                  => 'Sprachen',
     'pref_locale'                     => 'Lokale Einstellungen',
     'pref_languages_help'             => 'Firefly III unterstützt mehrere Sprachen. Welche möchten Sie nutzen?',
-    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_help'                => 'Mit Firefly III können Sie weitere lokale Einstellungen vornehmen, z.B. wie Währungen, Zahlen und Daten formatiert werden sollen. Einträge in dieser Liste werden von Ihrem System möglicherweise nicht unterstützt. Firefly III enthält nicht die korrekten Datumseinstellungen für jedes Gebietsschema. Kontaktieren Sie uns für Verbesserungen.',
     'pref_custom_fiscal_year'         => 'Einstellungen zum Geschäftsjahr',
     'pref_custom_fiscal_year_label'   => 'Aktiviert',
     'pref_custom_fiscal_year_help'    => 'In Ländern, in denen ein Geschäftsjahr nicht vom 1. Januar bis 31. Dezember dauert, können Sie diese Option ändern und Start / Ende des Geschäftsjahres angeben',
