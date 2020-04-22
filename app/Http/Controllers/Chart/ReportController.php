@@ -79,6 +79,7 @@ class ReportController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        $locale = app('steam')->getLocale();
         $current   = clone $start;
         $chartData = [];
         /** @var NetWorthInterface $helper */
@@ -110,7 +111,7 @@ class ReportController extends Controller
             /** @var array $netWorthItem */
             foreach ($result as $netWorthItem) {
                 $currencyId = $netWorthItem['currency']->id;
-                $label      = $current->formatLocalized((string) trans('config.month_and_day'));
+                $label      = $current->formatLocalized((string) trans('config.month_and_day', [], $locale));
                 if (!isset($chartData[$currencyId])) {
                     $chartData[$currencyId] = [
                         'label'           => 'Net worth in ' . $netWorthItem['currency']->name,

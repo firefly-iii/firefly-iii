@@ -584,4 +584,43 @@ class Steam
         return $amount;
     }
 
+    /**
+     * Get user's language.
+     *
+     * @return string
+     */
+    public function getLanguage(): string // get preference
+    {
+        return app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+    }
+
+    /**
+     * Get user's locale.
+     *
+     * @return string
+     */
+    public function getLocale(): string // get preference
+    {
+        /** @var string $language */
+        $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        if ('equal' === $locale) {
+            return $this->getLanguage();
+        }
+
+        return $locale;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getLocaleArray(string $locale): array {
+        return [
+            sprintf('%s', $locale),
+            sprintf('%s.utf8', $locale),
+            sprintf('%s.UTF-8', $locale),
+        ];
+    }
+
 }

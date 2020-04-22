@@ -325,9 +325,11 @@ class Amount
      */
     public function getLocaleInfo(): array
     {
-        $locale = explode(',', (string) trans('config.locale'));
-        $locale = array_map('trim', $locale);
-        setlocale(LC_MONETARY, $locale);
+        // get config from preference, not from translation:
+        $locale = app('steam')->getLocale();
+        $array  = app('steam')->getLocaleArray($locale);
+
+        setlocale(LC_MONETARY, $array);
         $info = localeconv();
         // correct variables
         $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');

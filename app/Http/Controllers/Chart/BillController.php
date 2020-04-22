@@ -111,6 +111,7 @@ class BillController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        $locale = app('steam')->getLocale();
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -131,7 +132,7 @@ class BillController extends Controller
         ];
 
         foreach ($journals as $journal) {
-            $date                           = $journal['date']->formatLocalized((string) trans('config.month_and_day'));
+            $date                           = $journal['date']->formatLocalized((string) trans('config.month_and_day', [], $locale));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
 

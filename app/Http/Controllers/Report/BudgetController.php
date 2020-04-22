@@ -301,7 +301,6 @@ class BudgetController extends Controller
                 $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }
         }
-
         return view('reports.budget.partials.budgets', compact('sums', 'report'));
     }
 
@@ -317,6 +316,7 @@ class BudgetController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
+
         $report          = [
             'budgets' => [],
             'sums'    => [],
@@ -488,6 +488,7 @@ class BudgetController extends Controller
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 $count = 0;
+                $total = '0';
                 foreach ($budget['transaction_journals'] as $journal) {
                     $count++;
                     $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
@@ -506,7 +507,7 @@ class BudgetController extends Controller
                     $report[$key]['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
                     $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
                     $report[$key]['sum'] = bcadd($report[$key] ['sum'], $journal['amount']);
-                    $report[$key]['avg'] = bcdiv($report[$key]['sum'], (string) $count);
+                    $report[$key]['avg'] = bcdiv($report[$key]['sum'], (string) count($periods));
                 }
             }
         }

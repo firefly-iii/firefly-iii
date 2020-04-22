@@ -607,7 +607,7 @@ class TransactionJournalFactory
 
         // validate source account.
         $sourceId    = isset($data['source_id']) ? (int) $data['source_id'] : null;
-        $sourceName  = $data['source_name'] ?? null;
+        $sourceName  = isset($data['source_name']) ? (string) $data['source_name'] : null;
         $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
@@ -617,7 +617,7 @@ class TransactionJournalFactory
         Log::debug('Source seems valid.');
         // validate destination account
         $destinationId    = isset($data['destination_id']) ? (int) $data['destination_id'] : null;
-        $destinationName  = (string)($data['destination_name'] ?? null);
+        $destinationName  = isset($data['destination_name']) ? (string) $data['destination_name'] : null;
         $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {

@@ -83,7 +83,7 @@ class AccountMeta extends Model
      */
     public function getDataAttribute($value)
     {
-        return json_decode($value);
+        return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

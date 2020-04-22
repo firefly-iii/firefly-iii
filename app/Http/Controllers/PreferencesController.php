@@ -31,6 +31,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use JsonException;
 
 /**
  * Class PreferencesController.
@@ -90,8 +91,9 @@ class PreferencesController extends Controller
 
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
-        $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $language           = app('steam')->getLanguage();
         $languages          = config('firefly.languages');
+        $locale             = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
@@ -100,6 +102,15 @@ class PreferencesController extends Controller
 
         ksort($languages);
 
+        // list of locales also has "equal" which makes it equal to whatever the language is.
+
+        try {
+            $locales = json_decode(file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            Log::error($e->getMessage());
+            $locales = [];
+        }
+        $locales = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
         if (0 === count($frontPageAccounts->data)) {
@@ -113,6 +124,8 @@ class PreferencesController extends Controller
                 'groupedAccounts',
                 'frontPageAccounts',
                 'languages',
+                'locales',
+                'locale',
                 'tjOptionalFields',
                 'viewRange',
                 'customFiscalYear',
@@ -171,6 +184,11 @@ class PreferencesController extends Controller
         if ($currentLang->data !== $lang) {
             session()->flash('info', 'All translations are supplied by volunteers. There might be errors and mistakes. I appreciate your feedback.');
         }
+
+        // same for locale:
+        /** @var Preference $currentLocale */
+        $locale = $request->get('locale');
+        app('preferences')->set('locale', $locale);
 
         // optional fields for transactions:
         $setOptions = $request->get('tj');

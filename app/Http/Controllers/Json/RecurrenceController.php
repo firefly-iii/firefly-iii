@@ -151,6 +151,7 @@ class RecurrenceController extends Controller
         $today       = Carbon::now()->startOfDay();
         $date        = Carbon::createFromFormat('Y-m-d', $string)->startOfDay();
         $preSelected = (string) $request->get('pre_select');
+        $locale = app('steam')->getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
         Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));
@@ -163,7 +164,7 @@ class RecurrenceController extends Controller
             $dayOfWeek  = (string) trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
             $ndom       = sprintf('ndom,%s,%s', $date->weekOfMonth, $date->dayOfWeekIso);
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
-            $yearlyDate = $date->formatLocalized((string) trans('config.month_and_day_no_year'));
+            $yearlyDate = $date->formatLocalized((string) trans('config.month_and_day_no_year', [], $locale));
             $result     = [
                 'daily'  => ['label' => (string) trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
                 $weekly  => ['label'    => (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),

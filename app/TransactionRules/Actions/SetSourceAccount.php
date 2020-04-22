@@ -73,7 +73,7 @@ class SetSourceAccount implements ActionInterface
         $type = $journal->transactionType->type;
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && !$this->findAssetAccount(AccountType::ASSET)) {
+        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && !$this->findAssetAccount($type)) {
             Log::error(
                 sprintf(
                     'Cannot change source account of journal #%d because no asset account with name "%s" exists.',
@@ -119,6 +119,10 @@ class SetSourceAccount implements ActionInterface
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
+        $allowed = is_array($allowed) ? $allowed : [];
+
+        Log::debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
+
         $account = $this->repository->findByName($this->action->action_value, $allowed);
 
         if (null === $account) {

@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.3 (API 1.1.0)] - 2020-04-22
+
+## [3.4.2] - 2015-05-25
+### Added
+- Support for British English! 🇬🇧
+- You can set your locale *and* your language now.
+
+### Changed
+- [Issue 3270](https://github.com/firefly-iii/firefly-iii/issues/3270) Wrong average in budget table.
+
+### Fixed
+- [Issue 3264](https://github.com/firefly-iii/firefly-iii/issues/3264) Error when exporting recurring transactions
+- [Issue 3272](https://github.com/firefly-iii/firefly-iii/issues/3272) Rule issue when using "set source account" action.
+- [Issue 3281](https://github.com/firefly-iii/firefly-iii/issues/3281) Bad markdown parsing in piggy banks.
+- [Issue 3284](https://github.com/firefly-iii/firefly-iii/issues/3284) Recurring transactions with bad info couldn't be rendered.
+
 ## [5.2.2 (API 1.1.0)] - 2020-04-14
 
 ### Fixed

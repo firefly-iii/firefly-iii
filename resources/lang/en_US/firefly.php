@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Home screen accounts',
     'pref_home_screen_accounts_help'  => 'Which accounts should be displayed on the home page?',
     'pref_view_range'                 => 'View range',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => 'Six months',
     'pref_1Y'                         => 'One year',
     'pref_languages'                  => 'Languages',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III supports several languages. Which one do you prefer?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Fiscal year settings',
     'pref_custom_fiscal_year_label'   => 'Enabled',
     'pref_custom_fiscal_year_help'    => 'In countries that use a financial year other than January 1 to December 31, you can switch this on and specify start / end days of the fiscal year',

@@ -120,19 +120,6 @@ trait RequestInformation
     }
 
     /**
-     * Get user's language.
-     *
-     * @return string
-     */
-    protected function getLanguage(): string // get preference
-    {
-        /** @var string $language */
-        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-
-        return $language;
-    }
-
-    /**
      * Get a list of triggers.
      *
      * @param TestRuleFormRequest $request

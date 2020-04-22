@@ -43,7 +43,7 @@ return [
     'journal_currency_id'       => 'Waluta',
     'currency_id'               => 'Waluta',
     'transaction_currency_id'   => 'Waluta',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Waluta',
     'external_ip'               => 'Zewnętrzny adres IP Twojego serwera',
     'attachments'               => 'Załączniki',
     'journal_amount'            => 'Kwota',
@@ -262,9 +262,9 @@ return [
     'expected_on'               => 'Oczekiwany',
     'paid'                      => 'Zapłacone',
 
-    'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_type'            => 'Auto-budżet',
+    'auto_budget_amount'            => 'Kwota automatycznego budżetu',
+    'auto_budget_period'            => 'Okres automatycznego budżetu',
 
     'collected' => 'Zebrane',
     'submitted' => 'Przesłane',

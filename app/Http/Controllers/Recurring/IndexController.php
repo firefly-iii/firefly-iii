@@ -110,8 +110,13 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
-            $array['occurrences']  = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
-            $recurring[]           = $array;
+            $array['occurrences']  = [];
+
+            if (0 !== $recurrence->recurrenceRepetitions->count()) {
+                $array['ocurrences'] = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
+            }
+
+            $recurring[] = $array;
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));

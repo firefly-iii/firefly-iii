@@ -48,6 +48,30 @@
                                         </p>
                                     </div>
 
+                                    {# locale #}
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_locale'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <select class="form-control" id="locale_holder" name="locale">
+                                                    {% for key, loc in locales %}
+                                                        <option {% if locale == key %}
+                                                            selected
+                                                        {% endif %} value="{{ key }}">
+                                                            {% if key == 'equal' %}
+                                                                {{ 'equal_to_language'|_ }}
+                                                            {% else %}
+                                                                {{ loc }}
+                                                            {% endif %}</option>
+
+                                                    {% endfor %}
+                                                </select>
+
+
+                                            </div></div>
+                                    </div>
+
                                     {# fiscal year #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_custom_fiscal_year'|_ }}</h3>

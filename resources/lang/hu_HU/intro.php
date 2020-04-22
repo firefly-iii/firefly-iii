@@ -33,25 +33,25 @@ return [
     'index_cash_account'                              => 'Ezek az eddig létrehozott számlák. A készpénzszámla használható a készpénzes költések követésére, de ez természetesen nem kötelező.',
 
     // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Select your favorite asset account or liability from this dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Select an expense account here. Leave it empty if you want to make a cash expense.',
-    'transactions_create_withdrawal_foreign_currency' => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_withdrawal_source'           => 'Válassza ki a kedvenc forrásszámlát a lenyíló listából.',
+    'transactions_create_withdrawal_destination'      => 'Válassza ki a célszámlát. Hagyja üresen, hogy készpénzkifizetésként legyen elkönyvelve.',
+    'transactions_create_withdrawal_foreign_currency' => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
+    'transactions_create_withdrawal_more_meta'        => 'További metaadatok megadhatók ebben a mezőben.',
+    'transactions_create_withdrawal_split_add'        => 'A tranzakció további szétválasztásához használja ezt a gombot',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Select an asset or liability account here.',
-    'transactions_create_deposit_foreign_currency'    => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_deposit_source'              => 'Válassza ki vagy kezdje begépelni a befizetőt ebbe a lenyíló menüben, amely egyben szövegdoboz is. Hagyja üresen, ha készpénzbefizetésként legyen elkönyvelve.',
+    'transactions_create_deposit_destination'         => 'Válasszon számlát.',
+    'transactions_create_deposit_foreign_currency'    => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
+    'transactions_create_deposit_more_meta'           => 'További metaadatok megadhatók ebben a mezőben.',
+    'transactions_create_deposit_split_add'           => 'A tranzakció további szétválasztásához használja ezt a gombot',
 
     // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Select the source asset account here.',
-    'transactions_create_transfer_destination'        => 'Select the destination asset account here.',
-    'transactions_create_transfer_foreign_currency'   => 'Use this field to set a foreign currency and amount.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_source'             => 'Válassza ki a forrásszámlát.',
+    'transactions_create_transfer_destination'        => 'Válassza ki a célszámlát.',
+    'transactions_create_transfer_foreign_currency'   => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
+    'transactions_create_transfer_more_meta'          => 'További metaadatok megadhatók ebben a mezőben.',
+    'transactions_create_transfer_split_add'          => 'A tranzakció további szétválasztásához használja ezt a gombot',
 
     // create account:
     'accounts_create_iban'                            => 'Érvényes IBAN hozzáadása a számlához. Ez a jövőben nagyon egyszerűvé teheti az adatok importálását.',

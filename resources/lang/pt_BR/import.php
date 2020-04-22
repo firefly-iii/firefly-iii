@@ -232,7 +232,7 @@ return [
     'job_config_map_text'             => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
     'job_config_map_nothing'          => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
     'job_config_field_value'          => 'Valor do campo',
-    'job_config_field_mapped'         => 'Mapped to',
+    'job_config_field_mapped'         => 'Mapeado para',
     'map_do_not_map'                  => '(não mapear)',
     'job_config_map_submit'           => 'Iniciar a importação',
 

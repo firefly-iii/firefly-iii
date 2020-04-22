@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Regel aanmaken op basis van een transactie',
 
     // preferences
+    'equal_to_language'               => '(zelfde als taal)',
     'pref_home_screen_accounts'       => 'Voorpaginarekeningen',
     'pref_home_screen_accounts_help'  => 'Welke betaalrekeningen wil je op de voorpagina zien?',
     'pref_view_range'                 => 'Bereik',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => 'Zes maanden',
     'pref_1Y'                         => 'Eén jaar',
     'pref_languages'                  => 'Talen',
+    'pref_locale'                     => 'Lokale instellingen',
     'pref_languages_help'             => 'Firefly III ondersteunt meerdere talen. Welke heeft jouw voorkeur?',
+    'pref_locale_help'                => 'Firefly III kan andere lokale instellingen gebruiken, die bepalen hoe valuta, nummers en datums worden weergegeven. De lijst hieronder is compleet maar niet alles wordt ondersteund door jouw systeem. Het kan zijn dat Firefly III bepaalde lokale instellingen niet lekker weergeeft; neem dan contact met me op.',
     'pref_custom_fiscal_year'         => 'Instellingen voor boekjaar',
     'pref_custom_fiscal_year_label'   => 'Ingeschakeld',
     'pref_custom_fiscal_year_help'    => 'Voor in landen die een boekjaar gebruiken anders dan 1 januari tot 31 december',

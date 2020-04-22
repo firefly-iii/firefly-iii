@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => '基于交易创建规则',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => '主画面帐户',
     'pref_home_screen_accounts_help'  => '哪些帐户应该显示在主页面上？',
     'pref_view_range'                 => '检视范围',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => '6个月',
     'pref_1Y'                         => '1年',
     'pref_languages'                  => '语言',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III 支援多种语言，您倾向使用何者？',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => '财政年度设定',
     'pref_custom_fiscal_year_label'   => '已启用',
     'pref_custom_fiscal_year_help'    => '在使用1月1日至12月31日以外作为会计年度的国家，您可开启此功能并指定财政年度的起迄日。',

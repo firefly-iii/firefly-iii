@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Akun layar utama',
     'pref_home_screen_accounts_help'  => 'Akun mana yang harus ditampilkan di beranda?',
     'pref_view_range'                 => 'Rentang tampilan',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => 'Enam bulan',
     'pref_1Y'                         => 'Satu tahun',
     'pref_languages'                  => 'Bahasa',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III mendukung beberapa bahasa. Mana yang kamu suka?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Pengaturan tahun fiskal',
     'pref_custom_fiscal_year_label'   => 'Diaktifkan',
     'pref_custom_fiscal_year_help'    => 'Di negara-negara yang menggunakan tahun keuangan selain 1 Januari sampai 31 Desember, Anda dapat mengaktifkannya dan menentukan hari-hari awal / akhir dari tahun fiskal',

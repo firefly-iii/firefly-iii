@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Создать правило на основе транзакции',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Счета, отображаемые в сводке',
     'pref_home_screen_accounts_help'  => 'Какие счета нужно отображать в сводке на главной странице?',
     'pref_view_range'                 => 'Диапазон просмотра',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => 'Шесть месяцев',
     'pref_1Y'                         => 'Один год',
     'pref_languages'                  => 'Языки',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III поддерживает несколько языков. Какой язык вы предпочитаете?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Параметры финансового года',
     'pref_custom_fiscal_year_label'   => 'Включить',
     'pref_custom_fiscal_year_help'    => 'Для стран, в которых финансовый год начинается не 1 января, а заканчивается не 31 декабря, вы должны указать даты начала и окончания финансового года',

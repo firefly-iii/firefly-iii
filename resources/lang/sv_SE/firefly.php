@@ -526,6 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Startskäm konton',
     'pref_home_screen_accounts_help'  => 'Vilka konton ska visas på startskärmen?',
     'pref_view_range'                 => 'Visa intervall',
@@ -537,7 +538,9 @@ return [
     'pref_6M'                         => 'Sex månader',
     'pref_1Y'                         => 'Ett år',
     'pref_languages'                  => 'Språk',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III stödjer flera språk. Vilket föredrar du?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Räkneskapsårs inställningar',
     'pref_custom_fiscal_year_label'   => 'Aktiverad',
     'pref_custom_fiscal_year_help'    => 'I länder som använder räkneskapsår annat än 1a Januari till 31a December, går det att ändra detta och välja start / slut dagar för räkneskapsåret',
