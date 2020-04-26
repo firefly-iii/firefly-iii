@@ -194,7 +194,7 @@ return [
     'blocked'               => 'Έχει αποκλειστεί;',
     'blocked_code'          => 'Αιτία αποκλεισμού',
     'login_name'            => 'Είσοδος',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Είναι διαχειριστής;',
 
     // import
     'apply_rules'           => 'Εφαρμογή κανόνων',
@@ -266,10 +266,10 @@ return [
     'auto_budget_amount'            => 'Ποσό αυτόματου προϋπολογισμού',
     'auto_budget_period'            => 'Περίοδος αυτόματου προϋπολογισμού',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Συλλέχθηκε',
+    'submitted' => 'Υποβλήθηκε',
+    'key' => 'Κλειδί',
+    'value' => 'Περιεχόμενο της εγγραφής'
 
 
 ];
