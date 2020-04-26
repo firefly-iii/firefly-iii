@@ -58,6 +58,11 @@ interface BudgetRepositoryInterface
      */
     public function destroyAutoBudget(Budget $budget): void;
 
+    /**
+     * @return int
+     */
+    public function getMaxOrder(): int;
+
 
     /**
      * @return bool

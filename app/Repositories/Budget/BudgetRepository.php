@@ -35,7 +35,6 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
-use http\Exception\RuntimeException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
@@ -80,6 +79,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $budget->order = $index + 1;
             $budget->save();
         }
+        // other budgets, set to 0.
+        $this->user->budgets()->where('active', 0)->update(['order' => 0]);
 
         return true;
     }
@@ -278,11 +279,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function store(array $data): Budget
     {
+        $order = $this->getMaxOrder();
         try {
             $newBudget = Budget::create(
                 [
                     'user_id' => $this->user->id,
                     'name'    => $data['name'],
+                    'order'   => $order + 1,
                 ]
             );
         } catch (QueryException $e) {
@@ -487,5 +490,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getAttachments(Budget $budget): Collection
     {
         return $budget->attachments()->get();
+    }
+
+    public function getMaxOrder(): int
+    {
+        return (int)$this->user->budgets()->max('order');
     }
 }
