@@ -2,9 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.4 (API 1.1.0)] - 2020-04-26
+
+### Fixed
+- [Issue 3287](https://github.com/firefly-iii/firefly-iii/issues/3287) Locale issue
+- [Issue 3251](https://github.com/firefly-iii/firefly-iii/issues/3251) Budget order
+
 ## [5.2.3 (API 1.1.0)] - 2020-04-22
 
-## [3.4.2] - 2015-05-25
 ### Added
 - Support for British English! 🇬🇧
 - You can set your locale *and* your language now.

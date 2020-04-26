@@ -79,6 +79,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $budget->order = $index + 1;
             $budget->save();
         }
+        // other budgets, set to 0.
+        $this->user->budgets()->where('active', 0)->update(['order' => 0]);
 
         return true;
     }
@@ -187,12 +189,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
+        //throw new \RuntimeException;
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
-
         return $set;
     }
 
@@ -202,7 +204,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->orderBy('order', 'DESC')
+        $set = $this->user->budgets()->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->get();
 
         return $set;
@@ -227,7 +229,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
 
         return $set;
@@ -277,11 +279,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function store(array $data): Budget
     {
+        $order = $this->getMaxOrder();
         try {
             $newBudget = Budget::create(
                 [
                     'user_id' => $this->user->id,
                     'name'    => $data['name'],
+                    'order'   => $order + 1,
                 ]
             );
         } catch (QueryException $e) {
@@ -486,5 +490,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getAttachments(Budget $budget): Collection
     {
         return $budget->attachments()->get();
+    }
+
+    public function getMaxOrder(): int
+    {
+        return (int)$this->user->budgets()->max('order');
     }
 }

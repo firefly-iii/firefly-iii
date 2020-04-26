@@ -307,7 +307,7 @@ return [
     'created_new_rule_group'                     => 'Nuevo grupo de reglas ":title" guardado!',
     'updated_rule_group'                         => 'Grupo de reglas actualizado exitosamente ":title".',
     'edit_rule_group'                            => 'Editar grupo de reglas ":title"',
-    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'duplicate_rule'                             => 'Duplicar regla ":title"',
     'rule_copy_of'                               => 'Copia de ":title"',
     'duplicated_rule'                            => 'Regla ":title" duplicada en ":newTitle"',
     'delete_rule_group'                          => 'Eliminar grupo de reglas ":title"',
@@ -526,7 +526,7 @@ return [
     'create_rule_from_transaction'    => 'Crear regla basada en la transacción',
 
     // preferences
-    'equal_to_language'               => '(equal to language)',
+    'equal_to_language'               => '(igual al idioma)',
     'pref_home_screen_accounts'       => 'Cuentas de la pantalla de inicio',
     'pref_home_screen_accounts_help'  => '¿Qué cuentas se deben mostrar en la página de inicio?',
     'pref_view_range'                 => 'Rango de vision',
@@ -538,7 +538,7 @@ return [
     'pref_6M'                         => 'Seis meses',
     'pref_1Y'                         => 'Un año',
     'pref_languages'                  => 'Idiomas',
-    'pref_locale'                     => 'Locale settings',
+    'pref_locale'                     => 'Configuración del idioma',
     'pref_languages_help'             => 'Firefly III apoya varios idiomas. cual usted prefiere?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Configuraciónes del año fiscal',

@@ -126,7 +126,6 @@ class DebugController extends Controller
         $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
         $now            = Carbon::now()->format('Y-m-d H:i:s e');
-        $extensions     = implode(', ', get_loaded_extensions());
         $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
@@ -143,7 +142,7 @@ class DebugController extends Controller
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
         $localeAttempts = [];
-        $parts          = explode(',', (string) trans('config.locale'));
+        $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
             $code                  = trim($code);
             $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
@@ -178,7 +177,6 @@ class DebugController extends Controller
             'debug',
             compact(
                 'phpVersion',
-                'extensions',
                 'localeAttempts',
                 'appEnv',
                 'appDebug',
