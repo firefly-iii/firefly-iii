@@ -1,8 +1,11 @@
 <ul class="sidebar-menu" data-widget="tree">
   <li class="{{ activeRouteStrict('index') }}">
-    <a href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i>
-      <span>{{ 'dashboard'|_ }}</span></a>
+    <a href="{{ route('index') }}">
+      <i class="fa fa-dashboard fa-fw"></i>
+      <span>{{ 'dashboard'|_ }}</span>
+    </a>
   </li>
+
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
       <i class="fa fa-credit-card fa-fw"></i>
