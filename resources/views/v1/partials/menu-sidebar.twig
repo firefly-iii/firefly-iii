@@ -8,6 +8,13 @@
 
   <li class="header">FINANCIAL CONTROL</li>
 
+  <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
+    <a href="{{ route('budgets.index') }}">
+      <i class="fa fa-pie-chart fa-fw"></i>
+      <span>{{ 'budgets'|_ }}</span>
+    </a>
+  </li>
+
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
       <i class="fa fa-credit-card fa-fw"></i>
@@ -38,12 +45,6 @@
         </a>
       </li>
     </ul>
-  </li>
-  <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
-    <a href="{{ route('budgets.index') }}">
-      <i class="fa fa-tasks fa-fw"></i>
-      <span>{{ 'budgets'|_ }}</span>
-    </a>
   </li>
   <li class="{{ activeRoutePartial('categories') }}">
     <a href="{{ route('categories.index') }}">
