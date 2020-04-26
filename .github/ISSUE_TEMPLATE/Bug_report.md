@@ -16,10 +16,10 @@ I am running Firefly III version x.x.x, and my problem is:
 <!-- Please add extra info here, such as OS, browser, and the output from the /debug page of your Firefly III installation (click the version at the bottom). -->
 
 **Bonus points**
-<!-- Earn bonus points by checking the boxes -->
+<!-- Before you submit, verify the following please: -->
 
-- [ ] Nobody reported this bug before
-- [ ] I have added a stack trace from my log files <!-- (see https://bit.ly/FF3-get-debug-info) -->
-- [ ] I have added a screenshot.
-- [ ] I was able to replicate it on the demo site https://demo.firefly-iii.org/
-<!-- - [ ] I donated money (this is a joke :wink:)-->
+- I searched and nobody reported this bug before
+- I have added a stack trace from my log files <!-- (see https://bit.ly/FF3-get-debug-info) -->
+- I have added a screenshot.
+- I was able to replicate it on the demo site https://demo.firefly-iii.org/
+<!-- - I donated money (this is a joke ;)-->
