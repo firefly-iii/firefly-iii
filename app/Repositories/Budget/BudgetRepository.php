@@ -35,6 +35,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
+use http\Exception\RuntimeException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
@@ -187,12 +188,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
+        //throw new \RuntimeException;
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
-
         return $set;
     }
 
@@ -202,7 +203,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->orderBy('order', 'DESC')
+        $set = $this->user->budgets()->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->get();
 
         return $set;
@@ -227,7 +228,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
 
         return $set;

@@ -86,7 +86,6 @@ class IndexController extends Controller
     }
 
     /**
-     * TODO the "budgeted" progress bar doesn't update.
      * Show all budgets.
      *
      * @param Request     $request
@@ -105,7 +104,6 @@ class IndexController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $budgeted        = '0';
         $spent           = '0';
-
 
         // new period stuff:
         $periodTitle = app('navigation')->periodShow($start, $range);
