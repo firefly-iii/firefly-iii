@@ -15,6 +15,13 @@
     </a>
   </li>
 
+  <li class="{{ activeRoutePartial('bills') }}">
+    <a href="{{ route('bills.index') }}">
+      <i class="fa fa-calendar fa-fw"></i>
+      <span>{{ 'bills'|_ }}</span>
+    </a>
+  </li>
+
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
       <i class="fa fa-credit-card fa-fw"></i>
@@ -120,7 +127,7 @@
 
   </li>
   <li
-    class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('recurring') }}  {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
+    class="{{ activeRoutePartial('recurring') }}  {{ activeRoutePartial('piggy-banks') }} {{ activeRoutePartial('rules') }} treeview">
     <a href="#">
       <i class="fa fa-euro fa-fw"></i>
       <span>{{ 'moneyManagement'|_ }}</span>
@@ -132,10 +139,6 @@
       <li class="{{ activeRoutePartial('piggy-banks') }}">
         <a href="{{ route('piggy-banks.index') }}">
           <i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'piggyBanks'|_ }}</a>
-      </li>
-      <li class="{{ activeRoutePartial('bills') }}">
-        <a href="{{ route('bills.index') }}">
-          <i class="fa fa-calendar-o fa-fw"></i> {{ 'bills'|_ }}</a>
       </li>
       <li class="{{ activeRoutePartial('rules') }}">
         <a href="{{ route('rules.index') }}">
