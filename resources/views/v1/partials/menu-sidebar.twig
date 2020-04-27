@@ -31,6 +31,34 @@
 
   <li class="header">ACCOUNTING</li>
 
+  <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
+    <a href="#">
+      <i class="fa fa-exchange fa-fw"></i>
+      <span>{{ 'transactions'|_ }}</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+
+    <ul class="treeview-menu">
+      <li class="{{ activeRoutePartialObjectType('transactions','withdrawal') }}">
+        <a href="{{ route('transactions.index','withdrawal') }}">
+          {{ 'expenses'|_ }}
+        </a>
+      </li>
+      <li class="{{ activeRoutePartialObjectType('transactions','deposit') }}">
+        <a href="{{ route('transactions.index','deposit') }}">
+          {{ 'income'|_ }}
+        </a>
+      </li>
+      <li class="{{ activeRoutePartialObjectType('transactions','transfers') }}">
+        <a href="{{ route('transactions.index','transfers') }}">
+          {{ 'transfers'|_ }}
+        </a>
+      </li>
+    </ul>
+  </li>
+
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
       <i class="fa fa-credit-card fa-fw"></i>
@@ -111,30 +139,6 @@
 
   </li>
 
-  <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
-    <a href="#">
-      <i class="fa fa-repeat fa-fw"></i>
-      <span>{{ 'transactions'|_ }}</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      <li class="{{ activeRoutePartialObjectType('transactions','withdrawal') }}">
-        <a href="{{ route('transactions.index','withdrawal') }}">
-          <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'expenses'|_ }}</a>
-      </li>
-      <li class="{{ activeRoutePartialObjectType('transactions','deposit') }}">
-        <a href="{{ route('transactions.index','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i>
-          {{ 'income'|_ }}</a>
-      </li>
-      <li class="{{ activeRoutePartialObjectType('transactions','transfers') }}">
-        <a href="{{ route('transactions.index','transfers') }}">
-          <i class="fa fa-fw fa-exchange"></i> {{ 'transfers'|_ }}</a>
-      </li>
-    </ul>
-
-  </li>
   <li
     class="{{ activeRoutePartial('recurring') }} {{ activeRoutePartial('rules') }} treeview">
     <a href="#">
