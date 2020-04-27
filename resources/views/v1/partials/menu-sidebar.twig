@@ -86,35 +86,37 @@
 
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
-      <i class="fa fa-credit-card fa-fw"></i>
+      <i class="fa fa-money fa-fw"></i>
       <span>{{ 'accounts'|_ }}</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
     </a>
+
     <ul class="treeview-menu">
       <li class="{{ activeRoutePartialObjectType('accounts', 'asset') }}">
-        <a href="{{ route('accounts.index','asset') }}">
-          <i class="fa fa-money fa-fw"></i> {{ 'asset_accounts'|_ }}
+        <a href="{{ route('accounts.index', 'asset') }}">
+          {{ 'asset_accounts'|_ }}
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'expense') }}">
-        <a href="{{ route('accounts.index','expense') }}">
-          <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expense_accounts'|_ }}
+        <a href="{{ route('accounts.index', 'expense') }}">
+          {{ 'expense_accounts'|_ }}
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'revenue') }}">
-        <a href="{{ route('accounts.index','revenue') }}">
-          <i class="fa fa-download fa-fw"></i> {{ 'revenue_accounts'|_ }}
+        <a href="{{ route('accounts.index', 'revenue') }}">
+          {{ 'revenue_accounts'|_ }}
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
-        <a href="{{ route('accounts.index','liabilities') }}">
-          <i class="fa fa-ticket fa-fw"></i> {{ 'liabilities_accounts'|_ }}
+        <a href="{{ route('accounts.index', 'liabilities') }}">
+          {{ 'liabilities_accounts'|_ }}
         </a>
       </li>
     </ul>
   </li>
+
   <li class="{{ activeRoutePartial('categories') }}">
     <a href="{{ route('categories.index') }}">
       <i class="fa fa-bar-chart fa-fw"></i>
