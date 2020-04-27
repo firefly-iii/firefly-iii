@@ -59,6 +59,29 @@
     </ul>
   </li>
 
+  <li class="{{ activeRoutePartial('recurring') }} {{ activeRoutePartial('rules') }} treeview">
+    <a href="#">
+      <i class="fa fa-microchip fa-fw"></i>
+      <span>Automation</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+
+    <ul class="treeview-menu">
+      <li class="{{ activeRoutePartial('rules') }}">
+        <a href="{{ route('rules.index') }}">
+          {{ 'rules'|_ }}
+        </a>
+      </li>
+      <li class="{{ activeRoutePartial('recurring') }}">
+        <a href="{{ route('recurring.index') }}">
+          {{ 'recurrences'|_ }}
+        </a>
+      </li>
+    </ul>
+  </li>
+
   <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
     <a href="#">
       <i class="fa fa-credit-card fa-fw"></i>
@@ -138,31 +161,6 @@
     </ul>
 
   </li>
-
-  <li
-    class="{{ activeRoutePartial('recurring') }} {{ activeRoutePartial('rules') }} treeview">
-    <a href="#">
-      <i class="fa fa-euro fa-fw"></i>
-      <span>{{ 'moneyManagement'|_ }}</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      <li class="{{ activeRoutePartial('rules') }}">
-        <a href="{{ route('rules.index') }}">
-          <i class="fa fa-random fa-fw"></i> {{ 'rules'|_ }}</a>
-      </li>
-      <li class="{{ activeRoutePartial('recurring') }}">
-        <a href="{{ route('recurring.index') }}">
-          <i class="fa fa-paint-brush fa-fw"></i> {{ 'recurrences'|_ }}</a>
-      </li>
-    </ul>
-
-  </li>
-
-
-
 
   <li id="option-menu"
     class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview">
