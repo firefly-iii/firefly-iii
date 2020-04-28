@@ -172,7 +172,7 @@
     </ul>
   </li>
 
-  <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview" id="option-menu">
+  <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview" id="option-menu">
     <a href="#">
       <i class="fa fa-bars fa-fw"></i>
       <span>{{ 'options'|_ }}</span>
@@ -182,6 +182,11 @@
     </a>
 
     <ul class="treeview-menu">
+      <li class="{{ activeRoutePartial('profile') }}">
+        <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}">
+          {{ 'profile'|_ }}
+        </a>
+      </li>
       <li class="{{ activeRoutePartial('preferences') }}">
         <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}">
           <span>{{ 'preferences'|_ }}</span>
@@ -201,4 +206,13 @@
       {% endif %}
     </ul>
   </li>
+
+  {% if not SANDSTORM %}
+    <li>
+      <a href="{{ route('logout') }}">
+        <i class="fa fa-sign-out fa-fw"></i>
+        <span>{{ 'logout'|_ }}</span>
+      </a>
+    </li>
+  {% endif %}
 </ul>

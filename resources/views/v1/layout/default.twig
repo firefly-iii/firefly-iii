@@ -86,27 +86,9 @@
 
                     {% if not SANDSTORM %}
                         <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="visible-xs">@</span>
-                                <span class="hidden-xs">{{ Auth.user.email }}</span>
-                            </a>
-
-                            <ul class="dropdown-menu" style="width: unset;">
-                                <li class="user-footer">
-                                    <div class="col-xs-6 text-center">
-                                        <a href="{{ route('profile.index') }}" class="btn btn-default btn-flat">
-                                            <span>{{ 'profile'|_ }}</span>
-                                        </a>
-                                    </div>
-                                    {% if not SANDSTORM %}
-                                        <div class="col-xs-6 text-center">
-                                            <a href="{{ route('logout') }}" class="btn btn-default btn-flat">
-                                                <span>{{ 'logout'|_ }}</span>
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                </li>
-                            </ul>
+                        <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
+                            <span class="hidden-xs">{{ Auth.user.email }}</span>
+                        </span>
                         </li>
                     {% endif %}
                     <li id="sidebar-toggle">
