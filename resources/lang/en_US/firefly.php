@@ -1133,6 +1133,7 @@ return [
     'financial_control'                         => 'Financial control',
     'accounting'                                => 'Accounting',
     'automation'                                => 'Automation',
+    'others'                                    => 'Others',
 
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
