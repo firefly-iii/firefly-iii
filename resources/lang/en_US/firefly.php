@@ -1132,6 +1132,7 @@ return [
     'edit_liabilities_account'                  => 'Edit liability ":name"',
     'financial_control'                         => 'Financial control',
     'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
 
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
