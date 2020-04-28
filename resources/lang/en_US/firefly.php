@@ -1134,6 +1134,7 @@ return [
     'accounting'                                => 'Accounting',
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
