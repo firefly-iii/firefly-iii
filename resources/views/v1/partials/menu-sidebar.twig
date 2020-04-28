@@ -172,10 +172,9 @@
     </ul>
   </li>
 
-  <li id="option-menu"
-    class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview">
+  <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview" id="option-menu">
     <a href="#">
-      <i class="fa fa-gears fa-fw"></i>
+      <i class="fa fa-bars fa-fw"></i>
       <span>{{ 'options'|_ }}</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
@@ -183,31 +182,31 @@
     </a>
 
     <ul class="treeview-menu">
-
       <li class="{{ activeRoutePartial('profile') }}">
-        <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i
-            class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
+        <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}">
+          {{ 'profile'|_ }}
         </a>
       </li>
       <li class="{{ activeRoutePartial('preferences') }}">
-        <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i
-            class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+        <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}">
+          {{ 'preferences'|_ }}
+        </a>
       </li>
       <li class="{{ activeRoutePartial('currencies') }}">
-        <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}"><i
-            class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}
+        <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}">
+          {{ 'currencies'|_ }}
         </a>
       </li>
       {% if hasRole('owner') %}
-      <li class="{{ activeRoutePartial('admin') }}">
-        <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}"><i
-            class="fa fa-hand-spock-o fa-fw"></i> {{ 'administration'|_ }}</a>
-      </li>
+        <li class="{{ activeRoutePartial('admin') }}">
+          <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
+            {{ 'administration'|_ }}
+          </a>
+        </li>
       {% endif %}
     </ul>
-
-
   </li>
+
   {% if not SANDSTORM %}
   <li>
     <a href="{{ route('logout') }}">
