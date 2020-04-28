@@ -117,18 +117,29 @@
     </ul>
   </li>
 
-  <li class="{{ activeRoutePartial('categories') }}">
-    <a href="{{ route('categories.index') }}">
-      <i class="fa fa-bar-chart fa-fw"></i>
-      <span>{{ 'categories'|_ }}</span>
-    </a>
-  </li>
-  <li class="{{ activeRoutePartial('tags') }}">
-    <a href="{{ route('tags.index') }}">
+  <li class="{{ activeRoutePartial('categories') }} {{ activeRoutePartial('tags') }} treeview">
+    <a href="#">
       <i class="fa fa-tags fa-fw"></i>
-      <span>{{ 'tags'|_ }}</span>
+      <span>Classification</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
     </a>
+
+    <ul class="treeview-menu">
+      <li class="{{ activeRoutePartial('categories') }}">
+        <a href="{{ route('categories.index') }}">
+          {{ 'categories'|_ }}
+        </a>
+      </li>
+      <li class="{{ activeRoutePartial('tags') }}">
+        <a href="{{ route('tags.index') }}">
+          {{ 'tags'|_ }}
+        </a>
+      </li>
+    </ul>
   </li>
+
   <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
     <a href="{{ route('reports.index') }}">
       <i class="fa fa-line-chart fa-fw"></i>
