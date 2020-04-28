@@ -43,17 +43,17 @@
     <ul class="treeview-menu">
       <li class="{{ activeRoutePartialObjectType('transactions', 'withdrawal') }}">
         <a href="{{ route('transactions.index', 'withdrawal') }}">
-          {{ 'expenses'|_ }}
+          <span>{{ 'expenses'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('transactions', 'deposit') }}">
         <a href="{{ route('transactions.index', 'deposit') }}">
-          {{ 'income'|_ }}
+          <span>{{ 'income'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('transactions', 'transfers') }}">
         <a href="{{ route('transactions.index', 'transfers') }}">
-          {{ 'transfers'|_ }}
+          <span>{{ 'transfers'|_ }}</span>
         </a>
       </li>
     </ul>
@@ -71,12 +71,12 @@
     <ul class="treeview-menu">
       <li class="{{ activeRoutePartial('rules') }}">
         <a href="{{ route('rules.index') }}">
-          {{ 'rules'|_ }}
+          <span>{{ 'rules'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartial('recurring') }}">
         <a href="{{ route('recurring.index') }}">
-          {{ 'recurrences'|_ }}
+          <span>{{ 'recurrences'|_ }}</span>
         </a>
       </li>
     </ul>
@@ -96,22 +96,22 @@
     <ul class="treeview-menu">
       <li class="{{ activeRoutePartialObjectType('accounts', 'asset') }}">
         <a href="{{ route('accounts.index', 'asset') }}">
-          {{ 'asset_accounts'|_ }}
+          <span>{{ 'asset_accounts'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'expense') }}">
         <a href="{{ route('accounts.index', 'expense') }}">
-          {{ 'expense_accounts'|_ }}
+          <span>{{ 'expense_accounts'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'revenue') }}">
         <a href="{{ route('accounts.index', 'revenue') }}">
-          {{ 'revenue_accounts'|_ }}
+          <span>{{ 'revenue_accounts'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
         <a href="{{ route('accounts.index', 'liabilities') }}">
-          {{ 'liabilities_accounts'|_ }}
+          <span>{{ 'liabilities_accounts'|_ }}</span>
         </a>
       </li>
     </ul>
@@ -129,12 +129,12 @@
     <ul class="treeview-menu">
       <li class="{{ activeRoutePartial('categories') }}">
         <a href="{{ route('categories.index') }}">
-          {{ 'categories'|_ }}
+          <span>{{ 'categories'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartial('tags') }}">
         <a href="{{ route('tags.index') }}">
-          {{ 'tags'|_ }}
+          <span>{{ 'tags'|_ }}</span>
         </a>
       </li>
     </ul>
@@ -189,18 +189,18 @@
       </li>
       <li class="{{ activeRoutePartial('preferences') }}">
         <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}">
-          {{ 'preferences'|_ }}
+          <span>{{ 'preferences'|_ }}</span>
         </a>
       </li>
       <li class="{{ activeRoutePartial('currencies') }}">
         <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}">
-          {{ 'currencies'|_ }}
+          <span>{{ 'currencies'|_ }}</span>
         </a>
       </li>
       {% if hasRole('owner') %}
         <li class="{{ activeRoutePartial('admin') }}">
           <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
-            {{ 'administration'|_ }}
+            <span>{{ 'administration'|_ }}</span>
           </a>
         </li>
       {% endif %}
