@@ -142,10 +142,11 @@
 
   <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
     <a href="{{ route('reports.index') }}">
-      <i class="fa fa-line-chart fa-fw"></i>
+      <i class="fa fa-bar-chart fa-fw"></i>
       <span>{{ 'reports'|_ }}</span>
     </a>
   </li>
+
   <li class="{{ activeRoutePartial('import') }} {{ activeRoutePartial('export') }} treeview" id="transaction-menu">
     <a href="#">
       <i class="fa fa-hdd-o fa-fw"></i>
