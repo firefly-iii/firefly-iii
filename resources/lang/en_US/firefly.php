@@ -1131,6 +1131,7 @@ return [
     'store_new_liabilities_account'             => 'Store new liability',
     'edit_liabilities_account'                  => 'Edit liability ":name"',
     'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
 
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
