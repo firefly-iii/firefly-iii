@@ -297,8 +297,9 @@ class Request extends FormRequest
         $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
         $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
+        $hasLocation    = $this->boolean($hasLocationKey);
 
-        // for a POST (store, all fields must be present and accounted for:
+        // for a POST (store), all fields must be present and accounted for:
         if (
             ('POST' === $this->method() && $this->routeIs('*.store'))
             && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
@@ -322,12 +323,14 @@ class Request extends FormRequest
             $data['latitude']        = $this->nullableString($latitudeKey);
             $data['zoom_level']      = $this->nullableString($zoomLevelKey);
         }
-        if (null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
-            Log::debug('One of the fields is NULL, wont save.');
+        if (false === $hasLocation || null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
+            Log::debug('One of the fields is NULL or hasLocation is false, wont save.');
             $data['store_location']  = false;
-            $data['update_location'] = false;
+            $data['update_location'] = true; // update is always true, but the values are null:
+            $data['longitude']       = null;
+            $data['latitude']        = null;
+            $data['zoom_level']      = null;
         }
-
         Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
 
         return $data;
