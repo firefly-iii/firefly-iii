@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Menu reordering by @lguima
+
+
 ## [5.2.4 (API 1.1.0)] - 2020-04-26
 
 ### Fixed
