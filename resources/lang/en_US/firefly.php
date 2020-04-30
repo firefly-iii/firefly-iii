@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III supports several languages. Which one do you prefer?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Fiscal year settings',
     'pref_custom_fiscal_year_label'   => 'Enabled',
     'pref_custom_fiscal_year_help'    => 'In countries that use a financial year other than January 1 to December 31, you can switch this on and specify start / end days of the fiscal year',
