@@ -71,7 +71,7 @@ class PiggyBankController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-sort-amount-asc');
+                app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
