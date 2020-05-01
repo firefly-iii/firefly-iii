@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Lokale instellingen',
     'pref_languages_help'             => 'Firefly III ondersteunt meerdere talen. Welke heeft jouw voorkeur?',
     'pref_locale_help'                => 'Firefly III kan andere lokale instellingen gebruiken, die bepalen hoe valuta, nummers en datums worden weergegeven. De lijst hieronder is compleet maar niet alles wordt ondersteund door jouw systeem. Het kan zijn dat Firefly III bepaalde lokale instellingen niet lekker weergeeft; neem dan contact met me op.',
+    'pref_locale_no_windows'          => 'Deze functie werkt mogelijk niet op Windows.',
+    'pref_locale_no_docker'           => 'Het Docker image heeft maar een paar geïnstalleerde locales.',
     'pref_custom_fiscal_year'         => 'Instellingen voor boekjaar',
     'pref_custom_fiscal_year_label'   => 'Ingeschakeld',
     'pref_custom_fiscal_year_help'    => 'Voor in landen die een boekjaar gebruiken anders dan 1 januari tot 31 december',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Dit veld doet verder niks. Firefly III gaat dit niet voor je uitrekenen. Banken pakken dit toch altijd net anders aan.',
     'store_new_liabilities_account'             => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                  => 'Passiva ":name" wijzigen',
+    'financial_control'                         => 'Financieel overzicht',
+    'accounting'                                => 'Boekhouden',
+    'automation'                                => 'Automatisering',
+    'others'                                    => 'Overige',
+    'classification'                            => 'Indeling',
 
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',

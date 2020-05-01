@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Ρυθμίσεις τοποθεσίας',
     'pref_languages_help'             => 'Το Firefly III υποστηρίζει διάφορες γλώσσες. Ποιά προτιμάτε;',
     'pref_locale_help'                => 'Το Firefly III σας επιτρέπει να ορίσετε ορισμένες ρυθμίσεις τοποθεσίας, όπως τον τρόπο μορφοποίησης νομισμάτων, αριθμών και ημερομηνιών. Οι καταχωρήσεις σε αυτήν τη λίστα ενδέχεται να μην υποστηρίζονται από το σύστημά σας. Το Firefly III δεν έχει τις σωστές ρυθμίσεις ημερομηνίας για κάθε τοποθεσία. επικοινωνήστε μαζί μου για βελτιώσεις.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Ρυθμίσεις οικονομικού έτους',
     'pref_custom_fiscal_year_label'   => 'Ενεργοποιημένο',
     'pref_custom_fiscal_year_help'    => 'Σε χώρες που χρησιμοποιούν οικονομικό έτος διαφορετικό από 1 Ιανουαρίου εώς 31 Δεκεμβρίου, μπορείτε να ενεργοποιήσετε αυτή την επιλογή και να ορίσετε την αρχή και το τέλος του οικονομικού έτους',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Αυτό το πεδίο είναι διακοσμητικό και δεν θα υπολογιστεί για εσάς. Όπως φαίνεται, οι τράπεζες είναι αρκετά πονηρές οπότε το Firefly III δεν το βρίσκει ποτέ σωστά.',
     'store_new_liabilities_account'             => 'Αποθήκευση νέας υποχρέωσης',
     'edit_liabilities_account'                  => 'Επεξεργασία υποχρέωσης ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Προεπιλεγμένη οικονομική αναφορά μεταξύ :start και :end',

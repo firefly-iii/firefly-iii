@@ -540,7 +540,9 @@ return [
     'pref_languages'                  => 'Języki',
     'pref_locale'                     => 'Ustawienia regionalne',
     'pref_languages_help'             => 'Firefly III obsługuje kilka języków. Który wolisz?',
-    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_help'                => 'Firefly III pozwala na ustawienie innych ustawień lokalnych, takich jak formatowanie walut, liczb i dat. Wpisy na tej liście mogą nie być obsługiwane przez Twój system. Firefly III nie ma poprawnych ustawień daty dla każdego miejsca; skontaktuj się ze mną, abym mógł to ulepszyć.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Ustawienia roku podatkowego',
     'pref_custom_fiscal_year_label'   => 'Włączone',
     'pref_custom_fiscal_year_help'    => 'W krajach, w których rok podatkowy nie zaczyna się 1 stycznia i nie kończy 31 grudnia, możesz włączyć tą opcję oraz podać początek / koniec roku podatkowego',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'To pole jest czysto kosmetyczne i nie zostanie obliczone automatycznie. Jak się okazuje, banki są bardzo podstępne, więc Firefly III nigdy nie oblicza tego prawidłowo.',
     'store_new_liabilities_account'             => 'Zapisz nowe zobowiązanie',
     'edit_liabilities_account'                  => 'Modyfikuj zobowiązanie ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Domyślny raport finansowy między :start i :end',

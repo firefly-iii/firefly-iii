@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III 支援多种语言，您倾向使用何者？',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => '财政年度设定',
     'pref_custom_fiscal_year_label'   => '已启用',
     'pref_custom_fiscal_year_help'    => '在使用1月1日至12月31日以外作为会计年度的国家，您可开启此功能并指定财政年度的起迄日。',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => '储存新债务',
     'edit_liabilities_account'                  => '编辑债务 “:name”',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => '自 :start 至 :end 的预设财务报表',

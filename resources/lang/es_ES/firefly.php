@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Configuración del idioma',
     'pref_languages_help'             => 'Firefly III apoya varios idiomas. cual usted prefiere?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Configuraciónes del año fiscal',
     'pref_custom_fiscal_year_label'   => 'Habilitado',
     'pref_custom_fiscal_year_help'    => 'En países que utilizan año fiscal diferente del 1 al 31 de diciembre, usted puede cambiarlo y especificar los días de inicio / y termino del año fiscal',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Este campo es meramente cosmético y no se calculará para usted. Como resulta que los bancos son muy estrepitosos, por lo que Firefly III nunca lo hace bien.',
     'store_new_liabilities_account'             => 'Crear nuevo pasivo',
     'edit_liabilities_account'                  => 'Editar pasivo ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Reporte financiero por defecto entre :start y :end',

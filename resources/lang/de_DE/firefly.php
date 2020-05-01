@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Lokale Einstellungen',
     'pref_languages_help'             => 'Firefly III unterstützt mehrere Sprachen. Welche möchten Sie nutzen?',
     'pref_locale_help'                => 'Mit Firefly III können Sie weitere lokale Einstellungen vornehmen, z.B. wie Währungen, Zahlen und Daten formatiert werden sollen. Einträge in dieser Liste werden von Ihrem System möglicherweise nicht unterstützt. Firefly III enthält nicht die korrekten Datumseinstellungen für jedes Gebietsschema. Kontaktieren Sie uns für Verbesserungen.',
+    'pref_locale_no_windows'          => 'Diese Funktion funktioniert unter Windows möglicherweise nicht.',
+    'pref_locale_no_docker'           => 'Das Docker-Abbild enthält nur einen kleinen Satz installierter Gebietsschemata.',
     'pref_custom_fiscal_year'         => 'Einstellungen zum Geschäftsjahr',
     'pref_custom_fiscal_year_label'   => 'Aktiviert',
     'pref_custom_fiscal_year_help'    => 'In Ländern, in denen ein Geschäftsjahr nicht vom 1. Januar bis 31. Dezember dauert, können Sie diese Option ändern und Start / Ende des Geschäftsjahres angeben',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Dieses Feld ist rein kosmetisch und wird für Sie nicht berechnet. Wie sich herausstellt, sind Banken sehr hinterhältig, so dass Firefly III es nie richtig macht.',
     'store_new_liabilities_account'             => 'Neue Verbindlichkeit speichern',
     'edit_liabilities_account'                  => 'Verbindlichkeit „:name” bearbeiten',
+    'financial_control'                         => 'Finanzkontrolle',
+    'accounting'                                => 'Buchhaltung',
+    'automation'                                => 'Automatisierungen',
+    'others'                                    => 'Weitere',
+    'classification'                            => 'Klassifizierung',
 
     // reports:
     'report_default'                            => 'Standardfinanzbericht zwischen :start und :end',

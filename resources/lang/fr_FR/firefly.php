@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Paramètres régionaux',
     'pref_languages_help'             => 'Firefly III prend en charge plusieurs langues. Laquelle préférez-vous ?',
     'pref_locale_help'                => 'Firefly III vous permet de définir d\'autres paramètres locaux, comme la façon dont les devises, les nombres et les dates sont formatées. Les entrées dans cette liste peuvent ne pas être prises en charge par votre système. Firefly III n\'est pas paramétré correctement pour toutes les langues ; contactez-moi pour les améliorer.',
+    'pref_locale_no_windows'          => 'Cette fonctionnalité peut ne pas fonctionner sous Windows.',
+    'pref_locale_no_docker'           => 'L\'image Docker ne dispose que d\'un petit nombre de paramètres régionaux installés.',
     'pref_custom_fiscal_year'         => 'Paramètres fiscaux de l\'année',
     'pref_custom_fiscal_year_label'   => 'Activé',
     'pref_custom_fiscal_year_help'    => 'Dans les pays qui utilisent une année financière autre que du 1er janvier au 31 décembre, vous pouvez la changer en spécifiant le jour de début et de fin de l\'année fiscale',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Ce champ est purement cosmétique et ne sera pas calculé pour vous. Il se trouve que les banques ont chacune leur façon de faire et Firefly III ne fournira pas de bonne solution.',
     'store_new_liabilities_account'             => 'Enregistrer un nouveau passif',
     'edit_liabilities_account'                  => 'Modifier le passif ":name"',
+    'financial_control'                         => 'Contrôle financier',
+    'accounting'                                => 'Comptabilité',
+    'automation'                                => 'Automatisation',
+    'others'                                    => 'Autres',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Rapport financier par défaut entre le :start et le :end',

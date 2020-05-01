@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III acceptă mai multe limbi. Pe care o preferați?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Setări an fiscal',
     'pref_custom_fiscal_year_label'   => 'Activat',
     'pref_custom_fiscal_year_help'    => 'În țările care utilizează un exercițiu financiar, altul decât 1 ianuarie până la 31 decembrie, puteți să le activați și să specificați zilele de începere / sfârșit ale anului fiscal',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Salvați provizion nou',
     'edit_liabilities_account'                  => 'Editați provizion ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Raportul financiar prestabilit între :start și :end',

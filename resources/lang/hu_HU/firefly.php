@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Területi beállítások',
     'pref_languages_help'             => 'A Firefly III több nyelven is elérhető. Melyiket szeretné használni?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Költségvetési év beállításai',
     'pref_custom_fiscal_year_label'   => 'Engedélyezett',
     'pref_custom_fiscal_year_help'    => 'Azokban az országokban ahol a pénzügyi év nem Január 1 és December 31 közé esik, be lehet ezt kapcsolni és meg lehet adni a pénzügyi év kezdő- és végdátumát',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Ez kizárólag kozmetikázásra használt mező, nem fog a számláláshoz hozzáadódni. Mint kiderült, a bankok néha sunyik és Firefly III tévedhet.',
     'store_new_liabilities_account'             => 'Új kötelezettség eltárolása',
     'edit_liabilities_account'                  => '":name" kötelezettség szerkesztése',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Alapértelmezett pénzügyi jelentés :start és :end között',

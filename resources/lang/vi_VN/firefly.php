@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III hỗ trợ một số ngôn ngữ. Bạn thích cái nào hơn?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Cài đặt năm tài chính',
     'pref_custom_fiscal_year_label'   => 'Đã bật',
     'pref_custom_fiscal_year_help'    => 'Ở các quốc gia sử dụng năm tài chính khác từ ngày 1 tháng 1 đến ngày 31 tháng 12, bạn có thể bật tính năng này và chỉ định ngày bắt đầu / ngày kết thúc của năm tài chính',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Lưu trữ nợ mới',
     'edit_liabilities_account'                  => 'Sửa nợ ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Báo cáo tài chính mặc định giữa: start và: end',

@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Alueasetukset',
     'pref_languages_help'             => 'Firefly III tukee useita kieliä. Mitä niistä haluat käyttää?',
     'pref_locale_help'                => 'Firefly III antaa sinun asettaa erikseen paikallisia asetuksia, kuten valuuttojen, numeroiden ja päivämäärien muotoilun. Järjestelmäsi ei ehkä tue kaikkia tämän luettelon alueasetuksia. Firefly III:lla ei ole oikeita päivämääräasetuksia jokaiselle alueelle; ota minuun yhteyttä saadaksesi parannuksia.',
+    'pref_locale_no_windows'          => 'Tämä ominaisuus ei välttämättä toimi Windowsissa.',
+    'pref_locale_no_docker'           => 'Docker imagessa on vain pieni määrä asennettuja lokalisaatioita.',
     'pref_custom_fiscal_year'         => 'Tilikauden asetukset',
     'pref_custom_fiscal_year_label'   => 'Käytössä',
     'pref_custom_fiscal_year_help'    => 'Maissa joiden tilikausi on jokin muu kuin Tammikuun 1:stä Joulukuun 31:seen päivään, voit valita tämän ja määrittää tilikauden aloitus- ja lopetuspäivän',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'Tämä kenttä on puhtaasti kosmeettinen, eikä sitä lasketa sinulle. Kuten huomaat, pankit ovat erittäin salaperäisiä, joten Firefly III ei koskaan osaa tehdä näitä oikein.',
     'store_new_liabilities_account'             => 'Tallenna uusi vastuu',
     'edit_liabilities_account'                  => 'Muokkaa vastuuta ":name"',
+    'financial_control'                         => 'Talouden hallinta',
+    'accounting'                                => 'Kirjanpito',
+    'automation'                                => 'Automaatio',
+    'others'                                    => 'Muut',
+    'classification'                            => 'Luokitus',
 
     // reports:
     'report_default'                            => 'Talousraportti välillä :start ja :end',
