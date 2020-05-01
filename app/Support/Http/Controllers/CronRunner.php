@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 
 /**
@@ -48,6 +49,25 @@ trait CronRunner
         }
 
         return 'The recurring transaction cron job fired successfully.';
+    }
+
+    /**
+     * @return string
+     */
+    protected function runAutoBudget(): string
+    {
+        /** @var AutoBudgetCronjob $autoBudget */
+        $autoBudget = app(AutoBudgetCronjob::class);
+        try {
+            $result = $autoBudget->fire();
+        } catch (FireflyException $e) {
+            return $e->getMessage();
+        }
+        if (false === $result) {
+            return 'The auto budget cron job did not fire.';
+        }
+
+        return 'The auto budget cron job fired successfully.';
     }
 
 }
