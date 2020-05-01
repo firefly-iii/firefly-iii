@@ -56,7 +56,7 @@ class BulkController extends Controller
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
                 app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
             }

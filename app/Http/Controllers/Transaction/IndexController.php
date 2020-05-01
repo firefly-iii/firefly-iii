@@ -56,8 +56,8 @@ class IndexController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('mainTitleIcon', 'fa-exchange');
+                app('view')->share('title', (string) trans('firefly.transactions'));
 
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -88,7 +88,9 @@ class IndexController extends Controller
             $end   = session('end');
         }
         if (null === $end) {
-            $end = session('end'); // @codeCoverageIgnore
+            // get last transaction ever?
+            $last = $this->repository->getLast();
+            $end  = $last ? $last->date : session('end');
         }
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
@@ -134,14 +136,15 @@ class IndexController extends Controller
         $repository = app(JournalRepositoryInterface::class);
 
 
-        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $objectType);
-        $types        = config('firefly.transactionTypesByWhat.' . $objectType);
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int) $request->get('page');
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
-        $end          = new Carbon;
+        $last         = $this->repository->getLast();
+        $end          = $last ? $last->date : new Carbon;
         $subTitle     = (string) trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */

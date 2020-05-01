@@ -407,4 +407,19 @@ class JournalRepository implements JournalRepositoryInterface
 
         return $transaction->account;
     }
+
+    /**
+     * @return TransactionJournal|null
+     */
+    public function getLast(): ?TransactionJournal
+    {
+        /** @var TransactionJournal $entry */
+        $entry  = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
+        $result = null;
+        if (null !== $entry) {
+            $result = $entry;
+        }
+
+        return $result;
+    }
 }
