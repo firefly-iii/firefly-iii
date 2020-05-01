@@ -46,8 +46,10 @@
                     <canvas id="categories-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('categories.index') }}" class="btn btn-default button-sm"><i
-                                class="fa fa-bar-chart"></i> {{ 'go_to_categories'|_ }}</a>
+                    <a href="{{ route('categories.index') }}" class="btn btn-default button-sm">
+                        <i class="fa fa-bookmark"></i>
+                        <span>{{ 'go_to_categories'|_ }}</span>
+                    </a>
                 </div>
             </div>
         </div>
