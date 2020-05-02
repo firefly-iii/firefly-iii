@@ -60,7 +60,7 @@ class TagController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.tags'));
-                app('view')->share('mainTitleIcon', 'fa-tags');
+                app('view')->share('mainTitleIcon', 'fa-tag');
 
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository = app(TagRepositoryInterface::class);
