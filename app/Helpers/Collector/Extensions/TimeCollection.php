@@ -91,8 +91,9 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $startStr = $start->format('Y-m-d H:i:s');
-        $endStr   = $end->format('Y-m-d H:i:s');
+        // always got to end of day / start of day for ranges.
+        $startStr = $start->format('Y-m-d 00:00:00');
+        $endStr   = $end->format('Y-m-d 23:59:59');
 
         $this->query->where('transaction_journals.date', '>=', $startStr);
         $this->query->where('transaction_journals.date', '<=', $endStr);
