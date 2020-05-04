@@ -1519,6 +1519,7 @@ return [
 
     // recurring transactions
     'recurrences'                           => 'Recurring transactions',
+    'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',
     'no_recurring_title_default'            => 'Let\'s create a recurring transaction!',
     'no_recurring_intro_default'            => 'You have no recurring transactions yet. You can use these to make Firefly III automatically create transactions for you.',

@@ -85,6 +85,11 @@
                                         </ol>
                                     </td>
                                     <td>
+                                        {% if null != rt.repeat_until and today > rt.repeat_until %}
+                                        <span class="text-danger">
+                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                                        {% endif %}
                                         <ul>
                                             {% for rep in rt.repetitions %}
                                                 <li>{{ rep.description }}

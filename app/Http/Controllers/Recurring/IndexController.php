@@ -85,6 +85,8 @@ class IndexController extends Controller
         $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
+        $today      = new Carbon;
+        $year       = new Carbon;
 
         // split collection
         $total = $collection->count();
@@ -98,8 +100,7 @@ class IndexController extends Controller
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
-            $today = new Carbon;
-            $year  = new Carbon;
+
             $year->addYear();
             if ($recurrence->first_date > $today) {
                 $today = clone $recurrence->first_date;
@@ -123,7 +124,7 @@ class IndexController extends Controller
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
+        return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
     }
 
 }
