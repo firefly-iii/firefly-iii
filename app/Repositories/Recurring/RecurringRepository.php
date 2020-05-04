@@ -535,6 +535,31 @@ class RecurringRepository implements RecurringRepositoryInterface
         // filter out all the weekend days:
         $occurrences = $this->filterWeekends($repetition, $occurrences);
 
+        // filter out everything if "repeat_until" is set.
+        $repeatUntil = $repetition->recurrence->repeat_until;
+        $occurrences = $this->filterMaxDate($repeatUntil, $occurrences);
+
         return $occurrences;
+    }
+
+    /**
+     * @param Carbon|null $max
+     * @param array       $occurrences
+     *
+     * @return array
+     */
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
+    {
+        if (null === $max) {
+            return $occurrences;
+        }
+        $filtered = [];
+        foreach ($occurrences as $date) {
+            if ($date->lte($max)) {
+                $filtered[] = $date;
+            }
+        }
+
+        return $filtered;
     }
 }

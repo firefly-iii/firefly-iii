@@ -52,7 +52,11 @@
                 </h3>
             </div>
             <div class="box-body">
-
+                {% if null != array.repeat_until and today > array.repeat_until %}
+                    <span class="text-danger">
+                                            {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                {% endif %}
                 <ul>
                     {% for rep in array.repetitions %}
                         <li>
