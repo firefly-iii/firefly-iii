@@ -58,7 +58,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.categories'));
-                app('view')->share('mainTitleIcon', 'fa-bar-chart');
+                app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
                 return $next($request);
@@ -84,7 +84,7 @@ class ShowController extends Controller
         $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
-        $subTitleIcon = 'fa-bar-chart';
+        $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
         $attachments  = $this->repository->getAttachments($category);
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
@@ -122,7 +122,7 @@ class ShowController extends Controller
     public function showAll(Request $request, Category $category)
     {
         // default values:
-        $subTitleIcon = 'fa-bar-chart';
+        $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $start        = null;

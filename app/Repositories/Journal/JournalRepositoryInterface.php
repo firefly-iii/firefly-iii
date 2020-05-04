@@ -37,6 +37,10 @@ use Illuminate\Support\Collection;
  */
 interface JournalRepositoryInterface
 {
+    /**
+     * @return TransactionJournal|null
+     */
+    public function getLast(): ?TransactionJournal;
 
     /**
      * TODO maybe create JSON repository?
@@ -44,6 +48,7 @@ interface JournalRepositoryInterface
      * Search in journal descriptions.
      *
      * @param string $search
+     *
      * @return Collection
      */
     public function searchJournalDescriptions(string $search): Collection;

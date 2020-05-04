@@ -57,7 +57,7 @@ class LinkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->repository        = app(LinkTypeRepositoryInterface::class);

@@ -157,7 +157,7 @@ return [
     'ynab_account_type_merchantAccount'    => 'konto handlowe',
     'ynab_account_type_investmentAccount'  => 'konto inwestycyjne',
     'ynab_account_type_mortgage'           => 'mortgage',
-    'ynab_do_not_import'                   => '(do not import)',
+    'ynab_do_not_import'                   => '(nie importuj)',
     'job_config_ynab_apply_rules'          => 'Zastosuj reguły',
     'job_config_ynab_apply_rules_text'     => 'By default, your rules will be applied to the transactions created during this import routine. If you do not want this to happen, deselect this checkbox.',
 
@@ -167,7 +167,7 @@ return [
     'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
     'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
     'job_config_ynab_bad_currency'         => 'You cannot import from the following budget(s), because you do not have accounts with the same currency as these budgets.',
-    'job_config_ynab_accounts_title'       => 'Select accounts',
+    'job_config_ynab_accounts_title'       => 'Wybierz konta',
     'job_config_ynab_accounts_text'        => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
 
 
@@ -202,29 +202,29 @@ return [
     'job_config_local_account_help'   => 'Wybierz konto Firefly III odpowiadające wybranemu powyżej kontu bankowemu.',
     // specifics:
     'specific_ing_name'               => 'ING NL',
-    'specific_ing_descr'              => 'Create better descriptions in ING exports',
+    'specific_ing_descr'              => 'Tworzenie lepszych opisów w eksporcie z ING',
     'specific_sns_name'               => 'SNS / Volksbank NL',
     'specific_sns_descr'              => 'Usuwa cudzysłowy z plików eksportów SNS / Volksbank',
     'specific_abn_name'               => 'ABN AMRO NL',
     'specific_abn_descr'              => 'Napraw potencjalne problemy z plikami ABN AMRO',
     'specific_rabo_name'              => 'Rabobank NL',
-    'specific_rabo_descr'             => 'Fixes potential problems with Rabobank files',
+    'specific_rabo_descr'             => 'Napraw potencjalne problemy z plikami Rabobank',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
-    'specific_pres_descr'             => 'Fixes potential problems with PC files',
+    'specific_pres_descr'             => 'Napraw potencjalne problemy z plikami PC',
     'specific_belfius_name'           => 'Belfius BE',
-    'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
+    'specific_belfius_descr'          => 'Napraw potencjalne problemy z plikami Belfius',
     'specific_ingbelgium_name'        => 'ING BE',
-    'specific_ingbelgium_descr'       => 'Fixes potential problems with ING Belgium files',
+    'specific_ingbelgium_descr'       => 'Napraw potencjalne problemy z plikami ING Belgium',
     // job configuration for file provider (stage: roles)
-    'job_config_roles_title'          => 'Import setup (3/4) - Define each column\'s role',
-    'job_config_roles_text'           => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'job_config_roles_title'          => 'Konfiguracja importu (3/4) - Zdefiniuj rolę każdej kolumny',
+    'job_config_roles_text'           => 'Każda kolumna w pliku CSV zawiera pewne dane. Proszę podać, jakich danych importer powinien oczekiwać. Opcja "mapowania" oznacza powiązanie każdego wpisu znalezionego w kolumnie z wartością w bazie danych. Często mapowaną kolumną jest kolumna, która zawiera IBAN przeciwnego konta. Można to łatwo dopasować do obecnego w bazie danych IBAN.',
     'job_config_roles_submit'         => 'Kontynuuj',
     'job_config_roles_column_name'    => 'Nazwa kolumny',
-    'job_config_roles_column_example' => 'Column example data',
-    'job_config_roles_column_role'    => 'Column data meaning',
-    'job_config_roles_do_map_value'   => 'Map these values',
-    'job_config_roles_no_example'     => 'No example data available',
-    'job_config_roles_fa_warning'     => 'If you mark a column as containing an amount in a foreign currency, you must also set the column that contains which currency it is.',
+    'job_config_roles_column_example' => 'Przykładowe dane w kolumnie',
+    'job_config_roles_column_role'    => 'Znaczenie danych w kolumnie',
+    'job_config_roles_do_map_value'   => 'Zmapuj te wartości',
+    'job_config_roles_no_example'     => 'Brak przykładowych danych',
+    'job_config_roles_fa_warning'     => 'Jeśli zaznaczysz kolumnę jako zawierającą kwotę w obcej walucie, musisz także ustawić kolumnę, która zawiera kod tej waluty.',
     'job_config_roles_rwarning'       => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
     'job_config_roles_colum_count'    => 'Kolumna',
     // job config for the file provider (stage: mapping):
@@ -312,9 +312,9 @@ return [
     'column_account-number'           => 'Konto aktywów (numer konta)',
     'column_opposing-number'          => 'Konto przeciwne (numer konta)',
     'column_note'                     => 'Notatki',
-    'column_internal-reference'       => 'Internal reference',
+    'column_internal-reference'       => 'Wewnętrzny numer',
 
     // error message
-    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
+    'duplicate_row'                   => 'Wiersz #:row (":description") nie mógł zostać zaimportowany. Już istnieje.',
 
 ];

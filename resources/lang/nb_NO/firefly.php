@@ -541,6 +541,8 @@ return [
     'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III støtter flere språk. Hvilket foretrekker du?',
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Innstillinger for regnskapsår',
     'pref_custom_fiscal_year_label'   => 'Aktivert',
     'pref_custom_fiscal_year_help'    => 'I land som bruker et annet regnskapsår enn 1. januar til 31. desember, kan du slå på dette og angi start- og sluttdager for regnskapsåret',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Lagre ny gjeld',
     'edit_liabilities_account'                  => 'Rediger gjeld ":name"',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Standard finansiell rapport mellom :start og :end',

@@ -64,7 +64,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-tasks');
+                app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->journalRepos = app(JournalRepositoryInterface::class);
                 $this->repository = app(BudgetRepositoryInterface::class);
 

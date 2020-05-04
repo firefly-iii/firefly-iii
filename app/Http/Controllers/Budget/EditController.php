@@ -59,7 +59,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-tasks');
+                app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository = app(BudgetRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
 

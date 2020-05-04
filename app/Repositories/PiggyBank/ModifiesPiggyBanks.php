@@ -142,6 +142,9 @@ trait ModifiesPiggyBanks
      */
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
     {
+        if (0 === bccomp('0', $amount)) {
+            return new PiggyBankEvent;
+        }
         /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
 
@@ -219,11 +222,12 @@ trait ModifiesPiggyBanks
         if (1 === bccomp($amount, $max)) {
             $amount = $max;
         }
+        $difference                = bcsub($amount, $repetition->currentamount);
         $repetition->currentamount = $amount;
         $repetition->save();
 
         // create event
-        $this->createEvent($piggyBank, $amount);
+        $this->createEvent($piggyBank, $difference);
 
         return $piggyBank;
     }

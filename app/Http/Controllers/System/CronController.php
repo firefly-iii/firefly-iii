@@ -41,6 +41,7 @@ class CronController
     {
         $results   = [];
         $results[] = $this->runRecurring();
+        $results[] = $this->runAutoBudget();
 
         return implode("<br>\n", $results);
     }

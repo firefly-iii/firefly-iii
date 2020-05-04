@@ -540,7 +540,9 @@ return [
     'pref_languages'                  => 'Jazyky',
     'pref_locale'                     => 'Místní nastavení',
     'pref_languages_help'             => 'Firefly III podporuje několik jazyků – ve kterém ho chcete používat?',
-    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
+    'pref_locale_help'                => 'Firefly III vám umožňuje nastavit další lokální nastavení, jako je formátování měn, čísel a dat. Položky v tomto seznamu nemusí být podporovány vaším systémem. Firefly III nemá správné nastavení data pro každé lokální místo. Pro vylepšení mě kontaktujte.',
+    'pref_locale_no_windows'          => 'This feature may not work on Windows.',
+    'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
     'pref_custom_fiscal_year'         => 'Nastavení fiskálního roku',
     'pref_custom_fiscal_year_label'   => 'Zapnuto',
     'pref_custom_fiscal_year_help'    => 'Pro země, ve kterých finanční rok nezačíná 1. ledna a tedy ani nekončí 31. prosince, je možné zapnutím tohoto určit den začátku a konce fiskálního roku',
@@ -1130,6 +1132,11 @@ return [
     'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Uložit nový závazek',
     'edit_liabilities_account'                  => 'Upravit závazek „:name“',
+    'financial_control'                         => 'Financial control',
+    'accounting'                                => 'Accounting',
+    'automation'                                => 'Automation',
+    'others'                                    => 'Others',
+    'classification'                            => 'Classification',
 
     // reports:
     'report_default'                            => 'Výchozí finanční výkaz v období :start a :end',

@@ -27,6 +27,6 @@ return [
     'personal_access_tokens' => 'Persönliche Zugangs-Authentifizierungsschlüssel',
 
     // bills:
-    'not_expected_period'    => 'Unerwarteter Zeitraum',
+    'not_expected_period'    => 'In diesem Zeitraum nicht erwartet',
     'not_or_not_yet'         => '(Noch) nicht',
 ];

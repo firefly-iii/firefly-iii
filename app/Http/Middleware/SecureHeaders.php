@@ -58,7 +58,7 @@ class SecureHeaders
             "base-uri 'self'",
             "font-src 'self' data:",
             "connect-src 'self'",
-            sprintf("img-src 'self' data: https://api.tiles.mapbox.com %s", $trackingScriptSrc),
+            sprintf("img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s", $trackingScriptSrc),
             "manifest-src 'self'",
         ];
 

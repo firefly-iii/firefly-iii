@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.5 (API 1.1.0)] - 2020-05-04
+
+### Added
+- Some warnings that custom locales may not work on Windows or in Docker images.
+
+### Changed
+- [Issue 3305](https://github.com/firefly-iii/firefly-iii/issues/3305) User [@lguima](https://github.com/lguima) revamped the left side menu and associated icons.
+
+### Fixed
+- [Issue 3307](https://github.com/firefly-iii/firefly-iii/issues/3307) Editing or creating accounts would automatically give them a location.
+- [Issue 3314](https://github.com/firefly-iii/firefly-iii/issues/3314) Future transactions would not always be visible, even when the daterange should include them.
+- [Issue 3318](https://github.com/firefly-iii/firefly-iii/issues/3318) Cron called over URL would skip auto-budgets.
+- [Issue 3321](https://github.com/firefly-iii/firefly-iii/issues/3321) API for piggy bank funds would create events with the wrong amount.
+- [Issue 3330](https://github.com/firefly-iii/firefly-iii/issues/3330) Transactions not stored at 00:00 would be excluded from some views.
+
 ## [5.2.4 (API 1.1.0)] - 2020-04-26
 
 ### Fixed
