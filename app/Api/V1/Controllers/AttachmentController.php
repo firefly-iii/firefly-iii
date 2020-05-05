@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Middleware\ApiDemoUser;
 use FireflyIII\Api\V1\Requests\AttachmentStoreRequest;
 use FireflyIII\Api\V1\Requests\AttachmentUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -58,12 +60,14 @@ class AttachmentController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware(ApiDemoUser::class)->except(['delete', 'download', 'show', 'index']);
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
                 $user             = auth()->user();
                 $this->repository = app(AttachmentRepositoryInterface::class);
                 $this->repository->setUser($user);
+
 
                 return $next($request);
             }
