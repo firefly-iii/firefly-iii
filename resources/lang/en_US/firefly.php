@@ -205,7 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => 'average per bill',
     'expected_total'                             => 'expected total',
-    'reconciliation_account_name'                => ':name reconciliation',
+    'reconciliation_account_name'                => ':name reconciliation (:currency)',
     // API access
     'authorization_request'                      => 'Firefly III v:version Authorization Request',
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',

@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
@@ -473,25 +474,34 @@ class AccountRepository implements AccountRepositoryInterface
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-
-        $name = trans('firefly.reconciliation_account_name', ['name' => $account->name]);
+        $currency = $this->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $name = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
-        $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
-
-        // TODO no longer need to loop like this
+        $type    = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $current = $this->user->accounts()->where('account_type_id', $type->id)
+                                          ->where('name', $name)
+                                          ->first();
 
         /** @var Account $current */
-        foreach ($accounts as $current) {
-            if ($current->name === $name) {
-                return $current;
-            }
+        if (null !== $current) {
+            return $current;
         }
+
+        $data = [
+            'account_type_id' => null,
+            'account_type'    => AccountType::RECONCILIATION,
+            'active'          => true,
+            'name'            => $name,
+            'currency_id'     => $currency->id,
+            'currency_code'   => $currency->code,
+        ];
+
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($account->user);
-        $account = $factory->findOrCreate($name, $type->type);
+
+        $account = $factory->create($data);
 
         return $account;
     }
