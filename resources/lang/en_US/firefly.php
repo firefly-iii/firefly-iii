@@ -199,6 +199,7 @@ return [
     'forgot_pw_page_title'                       => 'Forgot your password for Firefly III',
     'reset_pw_page_title'                        => 'Reset your password for Firefly III',
     'cannot_reset_demo_user'                     => 'You cannot reset the password of the demo user.',
+    'no_att_demo_user'                           => 'The demo user can\'t upload attachments.',
     'button_register'                            => 'Register',
     'authorization'                              => 'Authorization',
     'active_bills_only'                          => 'active bills only',

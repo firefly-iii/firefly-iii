@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -38,6 +39,7 @@ use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class BudgetRepository.
@@ -489,7 +491,22 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getAttachments(Budget $budget): Collection
     {
-        return $budget->attachments()->get();
+        $set = $budget->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
     }
 
     public function getMaxOrder(): int

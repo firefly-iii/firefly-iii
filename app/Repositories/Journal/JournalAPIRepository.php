@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class JournalAPIRepository
@@ -74,7 +76,22 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      */
     public function getAttachments(TransactionJournal $journal): Collection
     {
-        return $journal->attachments;
+        $set = $journal->attachments;
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
     }
 
     /**
