@@ -274,6 +274,11 @@ function updateActionInput(selectList) {
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/bills');
             break;
+        case 'update_piggy':
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
+            createAutoComplete(inputResult, 'json/piggy-banks');
+            break;
+            break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
             inputResult.typeahead('destroy');

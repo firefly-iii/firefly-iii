@@ -72,6 +72,7 @@ use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use FireflyIII\TransactionRules\Actions\RemoveTag;
 use FireflyIII\TransactionRules\Actions\SetBudget;
+use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
@@ -506,6 +507,7 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'update_piggy'            => UpdatePiggybank::class,
     ],
     'context-rule-actions'         => [
         'set_category',
