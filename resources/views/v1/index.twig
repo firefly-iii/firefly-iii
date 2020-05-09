@@ -80,16 +80,25 @@
                         <div class="box-footer clearfix">
                             <!-- Single button -->
                             <div class="btn-group">
-                                <a class="btn btn-default"
-                                   href="{{ route('accounts.show', [data[1].id]) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>
-                                <a type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ 'sidebar_frontpage_options'|_ }} <span class="caret"></span>
+                                <a type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ 'sidebar_frontpage_create'|_ }} <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ data[1].id }}">{{ 'create_new_withdrawal'|_ }}</a></li>
                                     <li><a href="{{ route('transactions.create', ['deposit']) }}?destination={{ data[1].id }}">{{ 'create_new_deposit'|_ }}</a></li>
                                     <li><a href="{{ route('transactions.create', ['transfer']) }}?source={{ data[1].id }}">{{ 'create_new_transfer'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.reconcile', [data[1].id]) }}">{{ 'reconcile_this_account'|_ }}</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                   href="{{ route('accounts.show', [data[1].id]) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('accounts.show', [data[1].id]) }}">{{ 'show'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.reconcile', [data[1].id]) }}">{{ 'reconcile'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.edit', [data[1].id]) }}">{{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.delete', [data[1].id]) }}">{{ 'delete'|_ }}</a></li>
                                 </ul>
 
                             </div>
