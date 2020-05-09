@@ -112,8 +112,8 @@ trait JournalServiceTrait
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
-        $result = $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
+        $result = $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
 
         return $result;
     }
@@ -301,7 +301,7 @@ trait JournalServiceTrait
     {
         // third attempt, find by IBAN
         if (null === $account && null !== $data['iban']) {
-            Log::debug('Found nothing by account name.');
+            Log::debug(sprintf('Found nothing by account iban "%s".', $data['iban']));
             // find by preferred type.
             $source = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
             // or any expected type.
@@ -347,13 +347,28 @@ trait JournalServiceTrait
     {
         Log::debug('Now in createAccount()', $data);
         // return new account.
+        if (null !== $account) {
+            Log::debug(
+                sprintf(
+                    'Was also given %s account #%d ("%s") so will simply return that.',
+                    $account->accountType->type, $account->id, $account->name
+
+                )
+            );
+        }
         if (null === $account) {
-            $data['name'] = $data['name'] ?? '(no name)';
 
             // final attempt, create it.
             if (AccountType::ASSET === $preferredType) {
                 throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
             }
+            // fix name of account if only IBAN is given:
+            if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
+                Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
+                $data['name'] = $data['iban'];
+            }
+
+            $data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(
                 [
