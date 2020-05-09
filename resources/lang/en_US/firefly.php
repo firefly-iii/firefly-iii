@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Create new stuff',
     'new_withdrawal'                             => 'New withdrawal',
     'create_new_transaction'                     => 'Create new transaction',
-    'create_new_transaction_sidebar'             => 'Create new transaction',
+    'sidebar_frontpage_options'                  => 'Options',
     'new_transaction'                            => 'New transaction',
     'no_rules_for_bill'                          => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                       => 'View your asset accounts',
