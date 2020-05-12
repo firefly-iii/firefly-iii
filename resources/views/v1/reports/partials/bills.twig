@@ -21,7 +21,7 @@
                         <td style="text-align:right;">
                             {{ formatAmountBySymbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
                         </td>
-                        <td>
+                        <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
                             {% for date in bill.expected_dates %}
                                 {{ date.formatLocalized(monthAndDayFormat) }}<br/>
                             {% endfor %}
