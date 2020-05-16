@@ -283,7 +283,7 @@ class TransactionController extends Controller
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
-            Log::warning('Caught a duplicate. Return error message.');
+            Log::warning('Caught a duplicate transaction. Return error message.');
             // return bad validation message.
             // TODO use Laravel's internal validation thing to do this.
             $response = [
