@@ -475,7 +475,7 @@
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
                     // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + ' ("' + this.escapeHTML(title) + '")</a> has been stored.';
+                    this.success_message = this.$t('firefly.transaction_stored_link', { ID: groupId });
                     this.error_message = '';
                     if (this.resetFormAfter) {
                         // also clear form.
