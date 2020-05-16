@@ -449,6 +449,7 @@
                 }).catch(error => {
                     // give user errors things back.
                     // something something render errors.
+
                     console.error('Error in transaction submission.');
                     console.error(error);
                     this.parseErrors(error.response.data);
@@ -651,10 +652,10 @@
             parseErrors: function (errors) {
                 this.setDefaultErrors();
                 this.error_message = "";
-                if (errors.message.length > 0) {
-                    this.error_message = this.$t('firefly.errors_submission');
+                if (typeof errors.errors === 'undefined') {
+                    this.error_message = errors.message;
                 } else {
-                    this.error_message = '';
+                    this.error_message = this.$t('firefly.errors_submission');
                 }
                 let transactionIndex;
                 let fieldName;
