@@ -157,6 +157,7 @@ class AvailableBudgetController extends Controller
      */
     public function edit(AvailableBudget $availableBudget, Carbon $start, Carbon $end)
     {
+        $availableBudget->amount = round($availableBudget->amount, $availableBudget->transactionCurrency->decimal_places);
         return view('budgets.available-budgets.edit', compact('availableBudget', 'start', 'end'));
     }
 

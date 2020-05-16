@@ -47,11 +47,11 @@ return [
         'file'    => false,
         'bunq'    => false,
         'spectre' => true,
-        'ynab'    => true,
+        'ynab'    => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
-        'fints'   => true,
+        'fints'   => false,
         'bad'     => false, // always disabled
     ],
     // demo user can use these import providers (when enabled):

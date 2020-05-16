@@ -598,7 +598,18 @@
                                     // console.log('Upload complete!');
                                     return false;
                                 });
-                            });
+                            }).catch(error => {
+                            console.error('Could not create upload.');
+                            console.error(error);
+                            uploads++;
+                            if (uploads === count) {
+                                // finally we can redirect the user onwards.
+                                // console.log('FINAL UPLOAD');
+                                this.redirectUser(groupId, transactionData);
+                            }
+                            // console.log('Upload complete!');
+                            return false;
+                        });
                     }
                 }
 

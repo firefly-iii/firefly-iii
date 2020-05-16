@@ -82,21 +82,11 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $budget = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
             $title  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
-            // key => [value => x, 'currency_symbol' => 'x']
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
-
-            if (null !== $journal['foreign_amount']) {
-                $title                  = sprintf('%s (%s)', $budget, $journal['foreign_currency_symbol']);
-                $data[$title]           = $data[$title] ?? [
-                        'amount'          => $journal['foreign_amount'],
-                        'currency_symbol' => $journal['currency_symbol'],
-                    ];
-                $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['foreign_amount']);
-            }
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -150,21 +140,12 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $category = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $title    = sprintf('%s (%s)', $category, $journal['currency_symbol']);
-            // key => [value => x, 'currency_symbol' => 'x']
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
 
-            if (null !== $journal['foreign_amount']) {
-                $title                  = sprintf('%s (%s)', $category, $journal['foreign_currency_symbol']);
-                $data[$title]           = $data[$title] ?? [
-                        'amount'          => $journal['foreign_amount'],
-                        'currency_symbol' => $journal['currency_symbol'],
-                    ];
-                $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['foreign_amount']);
-            }
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -223,15 +204,6 @@ class TransactionController extends Controller
                     'currency_symbol' => $journal['currency_symbol'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
-
-            if (null !== $journal['foreign_amount']) {
-                $title                  = sprintf('%s (%s)', $name, $journal['foreign_currency_symbol']);
-                $data[$title]           = $data[$title] ?? [
-                        'amount'          => $journal['foreign_amount'],
-                        'currency_symbol' => $journal['currency_symbol'],
-                    ];
-                $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['foreign_amount']);
-            }
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -291,14 +263,6 @@ class TransactionController extends Controller
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
 
-            if (null !== $journal['foreign_amount']) {
-                $title                  = sprintf('%s (%s)', $name, $journal['foreign_currency_symbol']);
-                $data[$title]           = $data[$title] ?? [
-                        'amount'          => $journal['foreign_amount'],
-                        'currency_symbol' => $journal['currency_symbol'],
-                    ];
-                $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['foreign_amount']);
-            }
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);

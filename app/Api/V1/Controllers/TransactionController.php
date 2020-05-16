@@ -269,6 +269,7 @@ class TransactionController extends Controller
      *
      * @param TransactionStoreRequest $request
      *
+     * @throws FireflyException
      * @return JsonResponse
      */
     public function store(TransactionStoreRequest $request): JsonResponse
@@ -283,7 +284,7 @@ class TransactionController extends Controller
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
-            Log::warning('Caught a duplicate. Return error message.');
+            Log::warning('Caught a duplicate transaction. Return error message.');
             // return bad validation message.
             // TODO use Laravel's internal validation thing to do this.
             $response = [
@@ -326,7 +327,7 @@ class TransactionController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException(); // @codeCoverageIgnore
+            throw new FireflyException('Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);

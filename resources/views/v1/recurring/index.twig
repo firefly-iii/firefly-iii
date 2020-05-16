@@ -85,6 +85,11 @@
                                         </ol>
                                     </td>
                                     <td>
+                                        {% if null != rt.repeat_until and today > rt.repeat_until %}
+                                        <span class="text-danger">
+                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                                        {% endif %}
                                         <ul>
                                             {% for rep in rt.repetitions %}
                                                 <li>{{ rep.description }}
@@ -95,13 +100,13 @@
                                                         ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }}).
                                                     {% endif %}
                                                     {% if rep.weekend == 3 %}
-                                                        {{ 'will_jump_friday'|_ }}
+                                                        <br>{{ 'will_jump_friday'|_ }}
                                                     {% endif %}
                                                     {% if rep.weekend == 4 %}
-                                                        {{ 'will_jump_monday'|_ }}
+                                                        <br>{{ 'will_jump_monday'|_ }}
                                                     {% endif %}
                                                     {% if rep.weekend == 2 %}
-                                                        {{ 'except_weekends'|_ }}
+                                                        <br>{{ 'except_weekends'|_ }}
                                                     {% endif %}
                                                 </li>
                                             {% endfor %}
@@ -118,11 +123,15 @@
                                             {% endif %}
                                         </p>
                                     </td>
-                                    {% if rt.occurrences|length == 0 %}
-                                        <td>&nbsp;</td>
-                                    {% else %}
-                                        <td>{{ rt.occurrences[0].formatLocalized(monthAndDayFormat) }}</td>
-                                    {% endif %}
+                                    <td>
+                                        <ul>
+                                            {% for rep in rt.repetitions %}
+                                                {% for occ in rep.occurrences %}
+                                                    <li>{{ occ.formatLocalized(monthAndDayFormat) }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

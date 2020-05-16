@@ -383,7 +383,12 @@ class BillController extends Controller
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
-        $this->attachments->saveAttachmentsForModel($bill, $files);
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($bill, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+        }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
@@ -410,7 +415,12 @@ class BillController extends Controller
 
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
-        $this->attachments->saveAttachmentsForModel($bill, $files);
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($bill, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+        }
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {

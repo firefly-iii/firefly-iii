@@ -66,6 +66,7 @@ use FireflyIII\TransactionRules\Actions\ClearNotes;
 use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
 use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
+use FireflyIII\TransactionRules\Actions\DeleteTransaction;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
@@ -77,12 +78,16 @@ use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\TransactionRules\Triggers\AmountExactly;
 use FireflyIII\TransactionRules\Triggers\AmountLess;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
+use FireflyIII\TransactionRules\Triggers\DateIs;
+use FireflyIII\TransactionRules\Triggers\DateBefore;
+use FireflyIII\TransactionRules\Triggers\DateAfter;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -466,6 +471,9 @@ return [
         'description_ends'         => DescriptionEnds::class,
         'description_contains'     => DescriptionContains::class,
         'description_is'           => DescriptionIs::class,
+        'date_is'                  => DateIs::class,
+        'date_before'              => DateBefore::class,
+        'date_after'               => DateAfter::class,
         'transaction_type'         => TransactionType::class,
         'category_is'              => CategoryIs::class,
         'budget_is'                => BudgetIs::class,
@@ -506,6 +514,8 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'update_piggy'            => UpdatePiggybank::class,
+        'delete_transaction'      => DeleteTransaction::class,
     ],
     'context-rule-actions'         => [
         'set_category',
@@ -550,6 +560,9 @@ return [
         'notes_start',
         'notes_end',
         'notes_are',
+        'date_is',
+        'date_before',
+        'date_after',
     ],
 
     'test-triggers'    => [
