@@ -73,18 +73,19 @@ use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use FireflyIII\TransactionRules\Actions\RemoveTag;
 use FireflyIII\TransactionRules\Actions\SetBudget;
-use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\TransactionRules\Triggers\AmountExactly;
 use FireflyIII\TransactionRules\Triggers\AmountLess;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
+use FireflyIII\TransactionRules\Triggers\DateIs;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -468,6 +469,7 @@ return [
         'description_ends'         => DescriptionEnds::class,
         'description_contains'     => DescriptionContains::class,
         'description_is'           => DescriptionIs::class,
+        'date_is'                  => DateIs::class,
         'transaction_type'         => TransactionType::class,
         'category_is'              => CategoryIs::class,
         'budget_is'                => BudgetIs::class,
@@ -554,6 +556,7 @@ return [
         'notes_start',
         'notes_end',
         'notes_are',
+        'date_is',
     ],
 
     'test-triggers'    => [
