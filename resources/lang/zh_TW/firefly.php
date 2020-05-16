@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => '描述包含 ":trigger_value"',
     'rule_trigger_description_is_choice'         => '描述是…',
     'rule_trigger_description_is'                => '描述為 ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => '預算為…',
     'rule_trigger_budget_is'                     => '預算為 ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(一個) 標籤為…',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => '註釋開頭為 ":trigger_value"',
     'rule_trigger_notes_end_choice'              => '註釋結尾為…',
     'rule_trigger_notes_end'                     => '註釋結尾為 ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => '設定分類為 ":action_value"',
     'rule_action_clear_category'                 => '清空分類',
     'rule_action_set_budget'                     => '設定預算為 ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => '無法儲存交易，請檢視日誌檔。',
     'attachment_not_found'                      => '此附加檔案無法被找到。',
     'journal_link_bill'                         => '此交易已與帳單 <a href=":route">:name</a> 鏈結。如要移除鏈結，取消核選方塊，使用規則將它與其他帳單鏈結。',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => '歡迎使用 Firefly III！',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

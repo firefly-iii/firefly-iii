@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Deskripsi berisi ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Deskripsi adalah..',
     'rule_trigger_description_is'                => 'Deskripsi adalah ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Anggaran adalah..',
     'rule_trigger_budget_is'                     => 'Anggaran adalah ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(A) tag adalah..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Catatan dimulai dengan ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Catatan diakhiri dengan..',
     'rule_trigger_notes_end'                     => 'Catatan diakhiri dengan ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Tetapkan kategori ke ":action_value"',
     'rule_action_clear_category'                 => 'Kategori yang jelas',
     'rule_action_set_budget'                     => 'Tetapkan anggaran ke ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Could not store the transaction. Please check the log files.',
     'attachment_not_found'                      => 'This attachment could not be found.',
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

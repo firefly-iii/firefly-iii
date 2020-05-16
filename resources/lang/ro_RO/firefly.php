@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Descrierea conține ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Descrierea este..',
     'rule_trigger_description_is'                => 'Descrierea este ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Bugetul este..',
     'rule_trigger_budget_is'                     => 'Bugetul este ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'O etichetă este..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Notele încep cu ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Notele se termină cu..',
     'rule_trigger_notes_end'                     => 'Notele se termină cu ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Setați categoria la ":action_value"',
     'rule_action_clear_category'                 => 'Șterge categorie',
     'rule_action_set_budget'                     => 'Setați bugetul la ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Nu a putut fi stocată tranzacția. Te rog verifică log-urile.',
     'attachment_not_found'                      => 'Acest atașament nu a putut fi găsit.',
     'journal_link_bill'                         => 'Această tranzacție este legată de factura <a href=":route">:nume </a>. Pentru a elimina conexiunea, debifați caseta de selectare. Utilizați regulile pentru conectarea la o altă factură.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Bine ați venit!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

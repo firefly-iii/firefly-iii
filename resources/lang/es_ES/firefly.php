@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'La descripción contiene ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Descripción es..',
     'rule_trigger_description_is'                => 'La descripción es ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Presupuesto es..',
     'rule_trigger_budget_is'                     => 'Presupuesto es ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(una) etiqueta es..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Las notas comienzan con ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Las notas terminan con..',
     'rule_trigger_notes_end'                     => 'Las notas terminan con ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Establecer categoría en ":action_value"',
     'rule_action_clear_category'                 => 'Borrar categoría',
     'rule_action_set_budget'                     => 'Establecer presupuesto en ":action_value "',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'No se pudo guardar la transacción. Por favor, revise los archivos de registro.',
     'attachment_not_found'                      => 'No se pudo encontrar este adjunto.',
     'journal_link_bill'                         => 'Esta transacción está vinculada a la factura <a href=":route">:name</a>. Para eliminar la conexión, desmarca la casilla de verificación. Usa reglas para conectarla a otra factura.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Bienvenido a Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'No enviada',
     'telemetry_type_feature'             => 'Marca de características',
     'telemetry_submit_all'               => 'Enviar registros',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Eliminar los registros enviados',
     'telemetry_submission_executed'      => 'Los registros han sido enviados. Revise sus archivos de registro para más información.',
     'telemetry_all_deleted'              => 'Se han eliminado todos los registros de telemetría.',

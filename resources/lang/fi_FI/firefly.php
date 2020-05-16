@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Kuvaus sisältää tekstin ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Kuvaus on ...',
     'rule_trigger_description_is'                => 'Kuvaus on ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Budjetti on ...',
     'rule_trigger_budget_is'                     => 'Budjetti on ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'Tägi on ...',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Muistiinpano alkaa tekstillä ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Muistiinpano loppuu tekstiin ...',
     'rule_trigger_notes_end'                     => 'Muistiinpano loppuu tekstiin ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Aseta kategoriaksi ":action_value"',
     'rule_action_clear_category'                 => 'Tyhjennä kategoria',
     'rule_action_set_budget'                     => 'Aseta budjetiksi ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Tapahtuman tallennus epäonnistui. Syy tallentui lokitiedostoon.',
     'attachment_not_found'                      => 'Tätä liitettä ei löydy.',
     'journal_link_bill'                         => 'Tämä tapahtuma liittyy laskuun <a href=":route">:name</a>. Jos haluat poistaa yhteyden, poista valinta liitos-valintaruudusta. Käytä sääntöjä yhdistääksesi tapahtuma toiseen laskuun.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Tervetuloa Firefly III:een!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Ei vielä lähetetty',
     'telemetry_type_feature'             => 'Ominaisuusasetus',
     'telemetry_submit_all'               => 'Lähetä tiedot',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Poista lähetetyt tiedot',
     'telemetry_submission_executed'      => 'Tiedot on lähetetty. Lokitiedostoistasi löydät lisätietoja.',
     'telemetry_all_deleted'              => 'Kaikki käyttötiedot poistettu.',

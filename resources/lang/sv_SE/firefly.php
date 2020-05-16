@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Beskrivning innehåller ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Beskrivning är..',
     'rule_trigger_description_is'                => 'Beskrivning är ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Budget är..',
     'rule_trigger_budget_is'                     => 'Budget är ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(En) etikett är..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Anteckningar börjar med ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Anteckningar slutar med..',
     'rule_trigger_notes_end'                     => 'Anteckningar slutar med ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Sätt kategori till ":action_value"',
     'rule_action_clear_category'                 => 'Rensa kategori',
     'rule_action_set_budget'                     => 'Sätt budget till ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Transaktion kunde inte lagras. Vänligen se loggfiler.',
     'attachment_not_found'                      => 'Denna bilaga kunde inte hittas.',
     'journal_link_bill'                         => 'Transaktion länkad till nota <a href=":route">:name</a>. För att ta bort koppling, avmarkera kryssrutan. Använd regler för att koppla den till en annan nota.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Välkommen till Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

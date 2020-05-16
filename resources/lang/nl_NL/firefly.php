@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Omschrijving bevat ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Omschrijving is..',
     'rule_trigger_description_is'                => 'Omschrijving is ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Budget is..',
     'rule_trigger_budget_is'                     => 'Budget is ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(Een) tag is..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Notitie begint met ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Notitie eindigt op..',
     'rule_trigger_notes_end'                     => 'Notitie eindigt op ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Verander categorie naar ":action_value"',
     'rule_action_clear_category'                 => 'Maak categorie-veld leeg',
     'rule_action_set_budget'                     => 'Sla op onder budget ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Kon de transactie niet opslaan. Kijk in de logbestanden.',
     'attachment_not_found'                      => 'Deze bijlage kon niet gevonden worden.',
     'journal_link_bill'                         => 'Deze transactie is gekoppeld aan contract <a href=":route">:name</a>. Om de verbinding te verwijderen haal je het vinkje weg. Gebruik regels om een ander contract te koppelen.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Nog niet verstuurd',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Verstuur records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Verwijder verstuurde records',
     'telemetry_submission_executed'      => 'Records zijn verstuurd. Check je log files voor meer info.',
     'telemetry_all_deleted'              => 'Alle telemetrierecords zijn verwijderd.',

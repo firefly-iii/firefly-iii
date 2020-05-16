@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Leírás tartalmazza: ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'A leírás pontosan..',
     'rule_trigger_description_is'                => 'Leírás: ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'A költségkeret..',
     'rule_trigger_budget_is'                     => 'Költségkeret: ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'A címke..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Megjegyzések kezdetén ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Megjegyzések a végén..',
     'rule_trigger_notes_end'                     => 'Megjegyzések végén ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Kategória beállítása ":action_value"',
     'rule_action_clear_category'                 => 'Kategória törlése',
     'rule_action_set_budget'                     => 'Költségvetés beállítása: ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Nem lehet letárolni a tranzakciót. Ellenőrizni kell a naplófájlokat.',
     'attachment_not_found'                      => 'Ez a melléklet nem található.',
     'journal_link_bill'                         => 'Ez a tranzakció <a href=":route">:name</a> számlához van csatolva. A kapcsolat eltávolításához ki kell venni a jelölést a jelölőnégyzetből. Szabályok használatával másik számlához lehet csatolni.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Üdvözöli a Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Nem beküldött',
     'telemetry_type_feature'             => 'Funkciókapcsoló',
     'telemetry_submit_all'               => 'Bejegyzések beküldése',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Beküldött bejegyzések törlése',
     'telemetry_submission_executed'      => 'A bejegyzések beküldve. További információ a naplófájlokban található.',
     'telemetry_all_deleted'              => 'Minden telemetria bejegyzés törölve.',

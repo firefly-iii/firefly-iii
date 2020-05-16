@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Popis obsahuje „:trigger_value“',
     'rule_trigger_description_is_choice'         => 'Popis je…',
     'rule_trigger_description_is'                => 'Popis je „:trigger_value“',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Rozpočet je…',
     'rule_trigger_budget_is'                     => 'Rozpočet je „:trigger_value“',
     'rule_trigger_tag_is_choice'                 => 'Štítek je…',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Poznámky začínají na „:trigger_value“',
     'rule_trigger_notes_end_choice'              => 'Poznámky končí na…',
     'rule_trigger_notes_end'                     => 'Poznámky končí na „:trigger_value“',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Nastavit kategorii na „:action_value“',
     'rule_action_clear_category'                 => 'Vyčistit kategorii',
     'rule_action_set_budget'                     => 'Nastavit rozpočet na „:action_value“',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Transakci se nedaří uložit. Podívejte se do souborů se záznamy událostí.',
     'attachment_not_found'                      => 'Tuto přílohu se nepodařilo najít.',
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Vítejte ve Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

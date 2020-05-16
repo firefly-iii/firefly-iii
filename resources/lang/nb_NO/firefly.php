@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Beskrivelse inneholder ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Beskrivelse er..',
     'rule_trigger_description_is'                => 'Beskrivelse er ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Budsjett er..',
     'rule_trigger_budget_is'                     => 'Budsjett er ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(En) tagg er..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Notat som starter med ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Notat som slutter med..',
     'rule_trigger_notes_end'                     => 'Notat som slutter med ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Sett kategori til ":action_value"',
     'rule_action_clear_category'                 => 'Tøm kategori',
     'rule_action_set_budget'                     => 'Sett budsjett til ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Kunne ikke lagre transaksjonen. Vennligst sjekk loggfilene.',
     'attachment_not_found'                      => 'Finner ikke dette vedlegget.',
     'journal_link_bill'                         => 'Denne transaksjonen er knyttet til regning <a href=":route">:name</a>. Hvis du vil fjerne knytningen, fjerner du avmerkingen. Bruke regler for å koble den til en annen regning.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Velkommen til Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',

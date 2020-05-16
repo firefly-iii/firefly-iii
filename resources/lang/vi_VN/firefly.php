@@ -421,6 +421,14 @@ return [
     'rule_trigger_description_contains'          => 'Mô tả có chứa ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Mô tả là..',
     'rule_trigger_description_is'                => 'Mô tả là ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Ngân sách là..',
     'rule_trigger_budget_is'                     => 'Ngân sách là ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'Thẻ là..',
@@ -455,6 +463,8 @@ return [
     'rule_trigger_notes_start'                   => 'Ghi chú bắt đầu bằng ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Ghi chú kết thúc bằng..',
     'rule_trigger_notes_end'                     => 'Ghi chú kết thúc bằng ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Đặt danh mục thành ":action_value"',
     'rule_action_clear_category'                 => 'Xóa danh mục',
     'rule_action_set_budget'                     => 'Đặt ngân sách thành ":action_value"',
@@ -1042,6 +1052,8 @@ return [
     'unknown_journal_error'                     => 'Không thể lưu trữ giao dịch. Vui lòng kiểm tra các tệp nhật ký.',
     'attachment_not_found'                      => 'Không thể tìm thấy tệp đính kèm này.',
     'journal_link_bill'                         => 'Giao dịch này được liên kết với hóa đơn <a href=":route">:name</a>. Để xóa kết nối, bỏ chọn hộp kiểm. Sử dụng quy tắc để kết nối nó với hóa đơn khác.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Chào mừng đến với Firefly III!',
@@ -1624,6 +1636,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
