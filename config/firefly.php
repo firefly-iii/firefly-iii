@@ -86,6 +86,8 @@ use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
 use FireflyIII\TransactionRules\Triggers\DateIs;
+use FireflyIII\TransactionRules\Triggers\DateBefore;
+use FireflyIII\TransactionRules\Triggers\DateAfter;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -470,6 +472,8 @@ return [
         'description_contains'     => DescriptionContains::class,
         'description_is'           => DescriptionIs::class,
         'date_is'                  => DateIs::class,
+        'date_before'              => DateBefore::class,
+        'date_after'               => DateAfter::class,
         'transaction_type'         => TransactionType::class,
         'category_is'              => CategoryIs::class,
         'budget_is'                => BudgetIs::class,
@@ -557,6 +561,8 @@ return [
         'notes_end',
         'notes_are',
         'date_is',
+        'date_before',
+        'date_after',
     ],
 
     'test-triggers'    => [

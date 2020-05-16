@@ -423,7 +423,11 @@ return [
     'rule_trigger_description_is'                => 'Description is ":trigger_value"',
 
     'rule_trigger_date_is_choice'                => 'Transaction date is..',
-    'rule_trigger_date_is'                => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
 
     'rule_trigger_budget_is_choice'              => 'Budget is..',
     'rule_trigger_budget_is'                     => 'Budget is ":trigger_value"',
