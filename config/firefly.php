@@ -66,6 +66,7 @@ use FireflyIII\TransactionRules\Actions\ClearNotes;
 use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
 use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
+use FireflyIII\TransactionRules\Actions\DeleteTransaction;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
@@ -508,6 +509,7 @@ return [
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
         'update_piggy'            => UpdatePiggybank::class,
+        'delete_transaction'      => DeleteTransaction::class,
     ],
     'context-rule-actions'         => [
         'set_category',

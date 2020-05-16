@@ -455,6 +455,8 @@ return [
     'rule_trigger_notes_start'                   => 'Notes start with ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Notes end with..',
     'rule_trigger_notes_end'                     => 'Notes end with ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Set category to ":action_value"',
     'rule_action_clear_category'                 => 'Clear category',
     'rule_action_set_budget'                     => 'Set budget to ":action_value"',
