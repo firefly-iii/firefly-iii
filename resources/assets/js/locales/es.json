@@ -7,6 +7,8 @@
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
         "errors_submission": "Hubo algo malo con su env\u00edo. Por favor, revise los errores de abajo.",
         "split": "Separar",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_journal_information": "Informaci\u00f3n de transacci\u00f3n",
         "no_budget_pointer": "Parece que a\u00fan no tiene presupuestos. Debe crear algunos en la p\u00e1gina <a href=\"\/budgets\">presupuestos<\/a>. Los presupuestos pueden ayudarle a realizar un seguimiento de los gastos.",
         "source_account": "Cuenta origen",

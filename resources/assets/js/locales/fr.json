@@ -7,6 +7,8 @@
         "split_transaction_title": "Description de l'op\u00e9ration ventil\u00e9e",
         "errors_submission": "Certaines informations ne sont pas correctes dans votre formulaire. Veuillez v\u00e9rifier les erreurs ci-dessous.",
         "split": "Ventiler",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_journal_information": "Informations sur les op\u00e9rations",
         "no_budget_pointer": "Vous semblez n\u2019avoir encore aucun budget. Vous devriez en cr\u00e9er un sur la page des <a href=\"\/budgets\">budgets<\/a>. Les budgets peuvent vous aider \u00e0 garder une trace des d\u00e9penses.",
         "source_account": "Compte source",

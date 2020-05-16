@@ -7,6 +7,8 @@
         "split_transaction_title": "Felosztott tranzakci\u00f3 le\u00edr\u00e1sa",
         "errors_submission": "Hiba t\u00f6rt\u00e9nt a bek\u00fcld\u00e9s sor\u00e1n. K\u00e9rem, jav\u00edtsa az al\u00e1bbi hib\u00e1kat.",
         "split": "Feloszt\u00e1s",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_journal_information": "Tranzakci\u00f3s inform\u00e1ci\u00f3k",
         "no_budget_pointer": "\u00dagy t\u0171nik, m\u00e9g nincsenek k\u00f6lts\u00e9gkeretek. K\u00f6lts\u00e9gkereteket a <a href=\"\/budgets\">k\u00f6lts\u00e9gkeretek<\/a> oldalon lehet l\u00e9trehozni. A k\u00f6lts\u00e9gkeretek seg\u00edtenek nyomon k\u00f6vetni a k\u00f6lts\u00e9geket.",
         "source_account": "Forr\u00e1s sz\u00e1mla",
