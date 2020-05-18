@@ -656,7 +656,7 @@
                     this.setDefaultErrors();
                     // do message if update or new:
                     if (this.storeAsNew) {
-                        this.success_message = this.$t('firefly.transaction_stored_link', { ID: groupId });
+                        this.success_message = this.$t('firefly.transaction_new_stored_link', { ID: groupId });
                         this.error_message = '';
                     } else {
                         this.success_message = this.$t('firefly.transaction_updated_link', { ID: groupId });

@@ -9,6 +9,7 @@
         "split": "\u5206\u5272",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
+        "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "\u4ea4\u6613\u8d44\u8baf",
         "no_budget_pointer": "\u60a8\u4f3c\u4e4e\u8fd8\u6ca1\u6709\u4efb\u4f55\u9884\u7b97\u3002\u60a8\u5e94\u8be5\u5728 <a href=\"\/budgets\">\u9884\u7b97<\/a>\u9875\u9762\u4e0a\u521b\u5efa\u4ed6\u4eec\u3002\u9884\u7b97\u53ef\u4ee5\u5e2e\u52a9\u60a8\u8ddf\u8e2a\u8d39\u7528\u3002",
         "source_account": "\u6765\u6e90\u5e10\u6237",
