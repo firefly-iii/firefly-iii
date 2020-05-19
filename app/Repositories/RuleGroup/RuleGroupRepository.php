@@ -92,7 +92,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
 
-        $set   = $this->user->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
+        $set   = $this->user
+            ->ruleGroups()
+            ->orderBy('order', 'ASC')->get();
         $count = 1;
         /** @var RuleGroup $entry */
         foreach ($set as $entry) {
@@ -118,7 +120,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
 
         $set   = $ruleGroup->rules()
-                           ->orderBy('active','DESC')
                            ->orderBy('order', 'ASC')
                            ->orderBy('updated_at', 'DESC')
                            ->get();
@@ -214,18 +215,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function getRuleGroupsWithRules(User $user): Collection
     {
         return $user->ruleGroups()
-                    ->orderBy('active', 'DESC')
                     ->orderBy('order', 'ASC')
                     ->with(
                         [
-                            'rules'              => function (HasMany $query) {
-                                $query->orderBy('active', 'DESC');
+                            'rules'              => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
-                            'rules.ruleTriggers' => function (HasMany $query) {
+                            'rules.ruleTriggers' => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
-                            'rules.ruleActions'  => function (HasMany $query) {
+                            'rules.ruleActions'  => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
                         ]
