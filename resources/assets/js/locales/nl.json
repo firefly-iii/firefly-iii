@@ -9,6 +9,7 @@
         "split": "Splitsen",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
+        "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Transactieinformatie",
         "no_budget_pointer": "Je hebt nog geen budgetten. Maak er een aantal op de <a href=\"\/budgets\">budgetten<\/a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.",
         "source_account": "Bronrekening",

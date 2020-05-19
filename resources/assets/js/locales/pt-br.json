@@ -9,6 +9,7 @@
         "split": "Dividir",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
+        "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Informa\u00e7\u00e3o da transa\u00e7\u00e3o",
         "no_budget_pointer": "Parece que voc\u00ea ainda n\u00e3o tem or\u00e7amentos. Voc\u00ea deve criar alguns na p\u00e1gina de <a href=\"\/budgets\">or\u00e7amentos<\/a>. Or\u00e7amentos podem ajud\u00e1-lo a manter o controle das despesas.",
         "source_account": "Conta origem",

@@ -557,6 +557,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Fiscal year settings',
     'pref_custom_fiscal_year_label'   => 'Enabled',
     'pref_custom_fiscal_year_help'    => 'In countries that use a financial year other than January 1 to December 31, you can switch this on and specify start / end days of the fiscal year',
@@ -1052,7 +1053,8 @@ return [
     'unknown_journal_error'                     => 'Could not store the transaction. Please check the log files.',
     'attachment_not_found'                      => 'This attachment could not be found.',
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
