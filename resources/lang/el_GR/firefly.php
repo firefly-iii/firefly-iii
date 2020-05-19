@@ -1151,9 +1151,9 @@ return [
     'store_new_liabilities_account'             => 'Αποθήκευση νέας υποχρέωσης',
     'edit_liabilities_account'                  => 'Επεξεργασία υποχρέωσης ":name"',
     'financial_control'                         => 'Οικονομικός έλεγχος',
-    'accounting'                                => 'ΛΟΓΙΣΤΙΚΗ',
+    'accounting'                                => 'Λογιστική',
     'automation'                                => 'Αυτοματοποίηση',
-    'others'                                    => 'ΛΟΙΠΑ',
+    'others'                                    => 'Λοιπά',
     'classification'                            => 'Ταξινόμηση',
 
     // reports:
