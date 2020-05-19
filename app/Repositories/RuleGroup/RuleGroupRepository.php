@@ -56,7 +56,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup      $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool
@@ -98,6 +98,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         foreach ($set as $entry) {
             $entry->order = $count;
             $entry->save();
+
+            // also update rules in group.
+            $this->resetRulesInGroupOrder($entry);
+
             ++$count;
         }
 
@@ -114,6 +118,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
 
         $set   = $ruleGroup->rules()
+                           ->orderBy('active','DESC')
                            ->orderBy('order', 'ASC')
                            ->orderBy('updated_at', 'DESC')
                            ->get();
@@ -328,7 +333,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array $data
+     * @param array     $data
      *
      * @return RuleGroup
      */
@@ -353,4 +358,5 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
+
 }
