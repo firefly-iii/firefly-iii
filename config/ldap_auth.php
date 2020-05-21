@@ -217,6 +217,12 @@ return [
         | Windows Authentication Middleware (SSO)
         |--------------------------------------------------------------------------
         |
+        | Enabled:
+        |
+        |   The middleware will be registered only if enabled is set to true.
+        |   If you update this file, beware, this is not a standard
+        |   AdLdap2-Laravel configuration key.
+        |
         | Locate Users By:
         |
         |   This value is the users attribute you would like to locate LDAP
@@ -239,6 +245,7 @@ return [
         */
 
         'windows' => [
+            'enabled'         => envNonEmpty('WINDOWS_SSO_ENABLED', false),
             'locate_users_by' => envNonEmpty('WINDOWS_SSO_DISCOVER', 'samaccountname'),
             'server_key'      => envNonEmpty('WINDOWS_SSO_KEY', 'AUTH_USER'),
         ],
