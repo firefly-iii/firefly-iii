@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Hiba történt a frissítések ellenőrzése közben: :error',
     'unknown_error'                              => 'Ismeretlen hiba. Elnézést kérünk.',
     'just_new_release'                           => 'Új verzió érhető el! :version verzió ekkor került kiadásra: :date. Ez a verzió nagyon friss. Érdemes néhány napot várni amíg az új kiadás stabilizálódik.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Frissítési csatorna',
     'admin_update_channel_explain'               => 'A Firefly III-hoz három frissítési csatorna létezik, melyek meghatározzák, hogy a felhasználók mennyivel járnak előbbre a funkciók, fejlesztések és hibák szempontjából. A kalandvágyók használhatják a "beta" csatornát, míg azok akik szeretnek veszélyesen élni az "alpha"-t.',
     'update_channel_stable'                      => 'Stabil. Mindennek az elvártnak megfelelően kell működnie.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'Lehet, hogy ez a szolgáltatás nem működik Windows rendszeren.',
     'pref_locale_no_docker'           => 'A Docker-képfájlnak kevés előretelepített regionális beállítása van.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Költségvetési év beállításai',
     'pref_custom_fiscal_year_label'   => 'Engedélyezett',
     'pref_custom_fiscal_year_help'    => 'Azokban az országokban ahol a pénzügyi év nem Január 1 és December 31 közé esik, be lehet ezt kapcsolni és meg lehet adni a pénzügyi év kezdő- és végdátumát',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Beállítások',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Teljes elérhető költségkeret (:start és :end között)',
     'total_available_budget_in_currency'        => 'Teljes elérhető költségkeret :currency pénznemben',
     'see_below'                                 => 'lásd lentebb',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Nem lehet letárolni a tranzakciót. Ellenőrizni kell a naplófájlokat.',
     'attachment_not_found'                      => 'Ez a melléklet nem található.',
     'journal_link_bill'                         => 'Ez a tranzakció <a href=":route">:name</a> számlához van csatolva. A kapcsolat eltávolításához ki kell venni a jelölést a jelölőnégyzetből. Szabályok használatával másik számlához lehet csatolni.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

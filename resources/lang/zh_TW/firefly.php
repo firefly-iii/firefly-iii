@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'An error occurred while checking for updates: :error',
     'unknown_error'                              => 'Unknown error. Sorry about that.',
     'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => '財政年度設定',
     'pref_custom_fiscal_year_label'   => '已啟用',
     'pref_custom_fiscal_year_help'    => '有些國家/地區採用的會計年度有別於每年 1 月 1 日至 12 月 31 日，您可開啟此功能並指定財政年度的起迄日。',
@@ -767,6 +769,7 @@ return [
     'options'                                   => '選項',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
     'see_below'                                 => 'see below',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => '無法儲存交易，請檢視日誌檔。',
     'attachment_not_found'                      => '此附加檔案無法被找到。',
     'journal_link_bill'                         => '此交易已與帳單 <a href=":route">:name</a> 鏈結。如要移除鏈結，取消核選方塊，使用規則將它與其他帳單鏈結。',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

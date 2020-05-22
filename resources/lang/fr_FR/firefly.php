@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Une erreur est survenue lors de la vérification d\'une mise à jour : :error',
     'unknown_error'                              => 'Erreur inconnue. Désolé.',
     'just_new_release'                           => 'Une nouvelle version est disponible ! La version :version a été publiée :date. Cette version est très récente. Attendez quelques jours pour que la nouvelle version se stabilise.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Canal de mise à jour',
     'admin_update_channel_explain'               => 'Firefly III dispose de trois canaux de mise à jour qui déterminent ce que vous êtes prêt à accepter en termes de fonctionnalités, d\'améliorations et de bogues. Utilisez le canal « bêta » si vous êtes aventurier et le « alpha » lorsque vous aimez vivre dangereusement.',
     'update_channel_stable'                      => 'Stable. Tout devrait fonctionner comme prévu.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III vous permet de définir d\'autres paramètres locaux, comme la façon dont les devises, les nombres et les dates sont formatées. Les entrées dans cette liste peuvent ne pas être prises en charge par votre système. Firefly III n\'est pas paramétré correctement pour toutes les langues ; contactez-moi pour les améliorer.',
     'pref_locale_no_windows'          => 'Cette fonctionnalité peut ne pas fonctionner sous Windows.',
     'pref_locale_no_docker'           => 'L\'image Docker ne dispose que d\'un petit nombre de paramètres régionaux installés.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Paramètres fiscaux de l\'année',
     'pref_custom_fiscal_year_label'   => 'Activé',
     'pref_custom_fiscal_year_help'    => 'Dans les pays qui utilisent une année financière autre que du 1er janvier au 31 décembre, vous pouvez la changer en spécifiant le jour de début et de fin de l\'année fiscale',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Options',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Budget total disponible (entre :start et :end)',
     'total_available_budget_in_currency'        => 'Budget total disponible en :currency',
     'see_below'                                 => 'voir ci-dessous',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Impossible de stocker l\'opération. Veuillez vérifier les fichiers journaux.',
     'attachment_not_found'                      => 'Cette pièce jointe est introuvable.',
     'journal_link_bill'                         => 'Cette opération est liée à la facture <a href=":route">:name</a>. Pour supprimer l\'association, décocher la case. Utilisez les règles pour la connecter à une autre facture.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été enregistrée.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été mise à jour.',
 
     // new user:

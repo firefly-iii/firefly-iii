@@ -7,7 +7,7 @@
         "split_transaction_title": "Description of the split transaction",
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "B\u00f6l",
-        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "\u0130\u015flem Bilgileri",

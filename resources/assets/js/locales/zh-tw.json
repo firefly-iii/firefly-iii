@@ -7,7 +7,7 @@
         "split_transaction_title": "\u62c6\u5206\u4ea4\u6613\u7684\u63cf\u8ff0",
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "\u5206\u5272",
-        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "\u4ea4\u6613\u8cc7\u8a0a",

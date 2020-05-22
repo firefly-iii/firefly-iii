@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates: :error',
     'unknown_error'                              => 'Onbekende fout. Sorry.',
     'just_new_release'                           => 'Er is een nieuwe versie beschikbaar! Versie :version werd uitgebracht :date. Deze is pas net uit. Wacht een paar dagen om er zeker van te zijn dat de versie stabiel is.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Updatekanaal',
     'admin_update_channel_explain'               => 'Firefly III heeft drie "kanalen" die bepalen of en hoever je voorloopt als het gaat om features, wijzigingen en bugs. Gebruik het "beta"-kanaal als je een avontuurlijke bui hebt en gebruik het "alpha" kanaal als je ook graag met krokodillen zwemt.',
     'update_channel_stable'                      => 'Stabiel. Zou allemaal goed moeten gaan.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III kan andere lokale instellingen gebruiken, die bepalen hoe valuta, nummers en datums worden weergegeven. De lijst hieronder is compleet maar niet alles wordt ondersteund door jouw systeem. Het kan zijn dat Firefly III bepaalde lokale instellingen niet lekker weergeeft; neem dan contact met me op.',
     'pref_locale_no_windows'          => 'Deze functie werkt mogelijk niet op Windows.',
     'pref_locale_no_docker'           => 'Het Docker image heeft maar een paar geïnstalleerde locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Instellingen voor boekjaar',
     'pref_custom_fiscal_year_label'   => 'Ingeschakeld',
     'pref_custom_fiscal_year_help'    => 'Voor in landen die een boekjaar gebruiken anders dan 1 januari tot 31 december',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Opties',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Totaal beschikbare budget (tussen :start en :end)',
     'total_available_budget_in_currency'        => 'Totaal beschikbare budget in :currency',
     'see_below'                                 => 'zie onder',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Kon de transactie niet opslaan. Kijk in de logbestanden.',
     'attachment_not_found'                      => 'Deze bijlage kon niet gevonden worden.',
     'journal_link_bill'                         => 'Deze transactie is gekoppeld aan contract <a href=":route">:name</a>. Om de verbinding te verwijderen haal je het vinkje weg. Gebruik regels om een ander contract te koppelen.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is opgeslagen.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is geüpdatet.',
 
     // new user:

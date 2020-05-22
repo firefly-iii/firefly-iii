@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'An error occurred while checking for updates: :error',
     'unknown_error'                              => 'Unknown error. Sorry about that.',
     'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III vám umožňuje nastavit další lokální nastavení, jako je formátování měn, čísel a dat. Položky v tomto seznamu nemusí být podporovány vaším systémem. Firefly III nemá správné nastavení data pro každé lokální místo. Pro vylepšení mě kontaktujte.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Nastavení fiskálního roku',
     'pref_custom_fiscal_year_label'   => 'Zapnuto',
     'pref_custom_fiscal_year_help'    => 'Pro země, ve kterých finanční rok nezačíná 1. ledna a tedy ani nekončí 31. prosince, je možné zapnutím tohoto určit den začátku a konce fiskálního roku',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Možnosti',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Celkový rozpočet k dispozici v :currency',
     'see_below'                                 => 'viz níže',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Transakci se nedaří uložit. Podívejte se do souborů se záznamy událostí.',
     'attachment_not_found'                      => 'Tuto přílohu se nepodařilo najít.',
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Päivityksiä tarkistettaessa tapahtui virhe: :error',
     'unknown_error'                              => 'Tuntematon virhe. Pahoittelut siitä.',
     'just_new_release'                           => 'Uusi versio on saatavilla! Versio :version on julkaistu :date. Tämä julkaisu on aivan tuore, kannattaa vielä odottaa muutama päivä julkaisun vakiintumista.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Päivityskanava',
     'admin_update_channel_explain'               => 'Firefly III:lla on kolme päivitys-"kanavaa" jotka määrittävät kuinka kehityksen huipulla olet ominaisuuksissa, parannuksissa ja ohjelmavirheissä. Käytä "beta"-kanavaa jos olet seikkailija ja "alpha"-kanavaa jos haluat elää vaarallisesti.',
     'update_channel_stable'                      => 'Vakaa. Kaiken pitäisi toimia kuten oletat.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III antaa sinun asettaa erikseen paikallisia asetuksia, kuten valuuttojen, numeroiden ja päivämäärien muotoilun. Järjestelmäsi ei ehkä tue kaikkia tämän luettelon alueasetuksia. Firefly III:lla ei ole oikeita päivämääräasetuksia jokaiselle alueelle; ota minuun yhteyttä saadaksesi parannuksia.',
     'pref_locale_no_windows'          => 'Tämä ominaisuus ei välttämättä toimi Windowsissa.',
     'pref_locale_no_docker'           => 'Docker imagessa on vain pieni määrä asennettuja lokalisaatioita.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Tilikauden asetukset',
     'pref_custom_fiscal_year_label'   => 'Käytössä',
     'pref_custom_fiscal_year_help'    => 'Maissa joiden tilikausi on jokin muu kuin Tammikuun 1:stä Joulukuun 31:seen päivään, voit valita tämän ja määrittää tilikauden aloitus- ja lopetuspäivän',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Valinnat',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Budjetissa jäljellä (välillä :start ja :end)',
     'total_available_budget_in_currency'        => 'Budjetissa jäljellä valuutassa :currency',
     'see_below'                                 => 'katso alla',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Tapahtuman tallennus epäonnistui. Syy tallentui lokitiedostoon.',
     'attachment_not_found'                      => 'Tätä liitettä ei löydy.',
     'journal_link_bill'                         => 'Tämä tapahtuma liittyy laskuun <a href=":route">:name</a>. Jos haluat poistaa yhteyden, poista valinta liitos-valintaruudusta. Käytä sääntöjä yhdistääksesi tapahtuma toiseen laskuun.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

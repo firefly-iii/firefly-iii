@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'An error occurred while checking for updates: :error',
     'unknown_error'                              => 'Unknown error. Sorry about that.',
     'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Actualizare canal',
     'admin_update_channel_explain'               => 'Firefly III are trei "canale" de actualizare, care determină cât de avansați sunteți în termeni de caracteristici, îmbunătățiri și bug-uri. Folosiți canalul „beta” dacă sunteți aventuroși și „alfa” atunci când vă place să trăiți periculos viața.',
     'update_channel_stable'                      => 'Stabil. Totul ar trebui să funcționeze așa cum este de așteptat.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Setări an fiscal',
     'pref_custom_fiscal_year_label'   => 'Activat',
     'pref_custom_fiscal_year_help'    => 'În țările care utilizează un exercițiu financiar, altul decât 1 ianuarie până la 31 decembrie, puteți să le activați și să specificați zilele de începere / sfârșit ale anului fiscal',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Opțiuni',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Buget total disponibil (între :start și :end)',
     'total_available_budget_in_currency'        => 'Buget total disponibil în :currency',
     'see_below'                                 => 'vezi mai jos',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Nu a putut fi stocată tranzacția. Te rog verifică log-urile.',
     'attachment_not_found'                      => 'Acest atașament nu a putut fi găsit.',
     'journal_link_bill'                         => 'Această tranzacție este legată de factura <a href=":route">:nume </a>. Pentru a elimina conexiunea, debifați caseta de selectare. Utilizați regulile pentru conectarea la o altă factură.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

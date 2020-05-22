@@ -7,7 +7,7 @@
         "split_transaction_title": "Descrierea tranzac\u021biei divizate",
         "errors_submission": "A fost ceva \u00een neregul\u0103 cu transmiterea dvs. V\u0103 rug\u0103m s\u0103 consulta\u021bi erorile de mai jos.",
         "split": "\u00cemparte",
-        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Informa\u021bii despre tranzac\u021bii",

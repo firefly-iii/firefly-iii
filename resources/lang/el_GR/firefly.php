@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Παρουσιάστηκε σφάλμα κατά τον έλεγχο για ενημερώσεις: :error',
     'unknown_error'                              => 'Άγνωστο σφάλμα. Μας συγχωρείτε γι αυτό.',
     'just_new_release'                           => 'Μια νέα έκδοση είναι διαθέσιμη! Η εκδοσή :version κυκλοφόρησε :date. Όταν μια έκδοση είναι πολύ νέα είναι καλύτερο να περιμένετε λίγες μέρες για να είμαστε σίγουροι για τη νέα έκδοση.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Κανάλι ενημερώσεων',
     'admin_update_channel_explain'               => 'Το Firefly III έχει τρία "κανάλια" ενημερώσεων που καθορίζουν πόσο μπροστά είστε σε θέματα χαρακτηριστικών, βελτιστοποιήσεων και σφαλμάτων. Χρησιμοποιήστε το "beta" κανάλι εάν είστε τολμηροί και το "alpha" εάν είστε ριψοκίνδυνοι.',
     'update_channel_stable'                      => 'Σταθερή. Όλα λειτουργούν όπως προβλέπονται.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Το Firefly III σας επιτρέπει να ορίσετε ορισμένες ρυθμίσεις τοποθεσίας, όπως τον τρόπο μορφοποίησης νομισμάτων, αριθμών και ημερομηνιών. Οι καταχωρήσεις σε αυτήν τη λίστα ενδέχεται να μην υποστηρίζονται από το σύστημά σας. Το Firefly III δεν έχει τις σωστές ρυθμίσεις ημερομηνίας για κάθε τοποθεσία. επικοινωνήστε μαζί μου για βελτιώσεις.',
     'pref_locale_no_windows'          => 'Αυτή η δυνατότητα ενδέχεται να μην λειτουργεί στα Windows.',
     'pref_locale_no_docker'           => 'Η εικόνα Docker έχει μόνο ένα μικρό σύνολο εγκατεστημένων τοπικών ρυθμίσεων.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Ρυθμίσεις οικονομικού έτους',
     'pref_custom_fiscal_year_label'   => 'Ενεργοποιημένο',
     'pref_custom_fiscal_year_help'    => 'Σε χώρες που χρησιμοποιούν οικονομικό έτος διαφορετικό από 1 Ιανουαρίου εώς 31 Δεκεμβρίου, μπορείτε να ενεργοποιήσετε αυτή την επιλογή και να ορίσετε την αρχή και το τέλος του οικονομικού έτους',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Επιλογές',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Συνολικός διαθέσιμος προϋπολογισμός (μεταξύ :start και :end)',
     'total_available_budget_in_currency'        => 'Συνολικός διαθέσιμος προϋπολογισμός σε :currency',
     'see_below'                                 => 'δες παρακάτω',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Δεν ήταν δυνατή η αποθήκευση της συναλλαγής. Ελέγξτε τα αρχεία καταγραφής.',
     'attachment_not_found'                      => 'Αυτό το συνημμένο δεν βρέθηκε.',
     'journal_link_bill'                         => 'Αυτή η συναλλαγή συνδέεται με το πάγιο έξοδο <a href=":route">:name</a>. Για να καταργήσετε τη σύνδεση, καταργήστε την επιλογή στο κουτάκι. Χρησιμοποιήστε κανόνες για να το συνδέσετε με ένα άλλο πάγιο έξοδο.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

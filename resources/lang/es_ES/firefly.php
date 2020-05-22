@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Se ha producido un error al buscar actualizaciones: :error',
     'unknown_error'                              => 'Error desconocido. Lo sentimos.',
     'just_new_release'                           => '¡Una nueva versión está disponible! La versión :version ha sido liberada :date. Esta versión es muy fresca. Espere unos días a que la nueva versión se estabilice.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Canal de actualizaciones',
     'admin_update_channel_explain'               => 'Firefly III tiene tres "canales" de actualización que determinan cuán por delante está en términos de características, mejoras y errores. Use el canal "beta" si es aventurero y el "alfa" cuando quiera vivir la vida peligrosamente.',
     'update_channel_stable'                      => 'Estable. Todo debería funcionar como se espera.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III le permite configurar otros ajustes locales, como cómo se da formato a las monedas, números y fechas. Las entradas en esta lista pueden no ser soportadas por su sistema. Firefly III no tiene los ajustes de fecha correctos para cada local; póngase en contacto conmigo para obtener mejoras.',
     'pref_locale_no_windows'          => 'Esta característica puede no funcionar en Windows.',
     'pref_locale_no_docker'           => 'La imagen de Docker sólo tiene un pequeño conjunto de locales instalados.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Configuraciónes del año fiscal',
     'pref_custom_fiscal_year_label'   => 'Habilitado',
     'pref_custom_fiscal_year_help'    => 'En países que utilizan año fiscal diferente del 1 al 31 de diciembre, usted puede cambiarlo y especificar los días de inicio / y termino del año fiscal',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Opciones',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Presupuesto total disponible (entre :start y :end)',
     'total_available_budget_in_currency'        => 'Presupuesto total disponible en :currency',
     'see_below'                                 => 'ver abajo',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'No se pudo guardar la transacción. Por favor, revise los archivos de registro.',
     'attachment_not_found'                      => 'No se pudo encontrar este adjunto.',
     'journal_link_bill'                         => 'Esta transacción está vinculada a la factura <a href=":route">:name</a>. Para eliminar la conexión, desmarca la casilla de verificación. Usa reglas para conectarla a otra factura.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

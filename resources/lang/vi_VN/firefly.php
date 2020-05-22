@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Đã xảy ra lỗi trong khi kiểm tra cập nhật. Vui lòng xem các tập tin nhật ký.',
     'unknown_error'                              => 'Không xác định được lỗi. Xin lỗi vì điều này.',
     'just_new_release'                           => 'Đã có phiên bản mới!',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Cập nhật kênh',
     'admin_update_channel_explain'               => 'Firefly III có ba "kênh" cập nhật xác định mức độ vượt trội của bạn về các tính năng, cải tiến và lỗi. Sử dụng kênh "beta" nếu bạn thích phiêu lưu và "alpha" khi bạn muốn sống một cách nguy hiểm.',
     'update_channel_stable'                      => 'Ổn định. Mọi thứ hoạt động như mong đợi.',
@@ -557,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Cài đặt năm tài chính',
     'pref_custom_fiscal_year_label'   => 'Đã bật',
     'pref_custom_fiscal_year_help'    => 'Ở các quốc gia sử dụng năm tài chính khác từ ngày 1 tháng 1 đến ngày 31 tháng 12, bạn có thể bật tính năng này và chỉ định ngày bắt đầu / ngày kết thúc của năm tài chính',
@@ -767,6 +769,7 @@ return [
     'options'                                   => 'Tùy chọn',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'TTổng ngân sách có sẵn (giữa: bắt đầu và: kết thúc)',
     'total_available_budget_in_currency'        => 'Tổng ngân sách có sẵn bằng: tiền tệ',
     'see_below'                                 => 'xem bên dưới',
@@ -1052,7 +1055,8 @@ return [
     'unknown_journal_error'                     => 'Không thể lưu trữ giao dịch. Vui lòng kiểm tra các tệp nhật ký.',
     'attachment_not_found'                      => 'Không thể tìm thấy tệp đính kèm này.',
     'journal_link_bill'                         => 'Giao dịch này được liên kết với hóa đơn <a href=":route">:name</a>. Để xóa kết nối, bỏ chọn hộp kiểm. Sử dụng quy tắc để kết nối nó với hóa đơn khác.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:

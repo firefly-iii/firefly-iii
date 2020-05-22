@@ -7,7 +7,7 @@
         "split_transaction_title": "Jaetun tapahtuman kuvaus",
         "errors_submission": "Lomakkeen tiedoissa oli puutteita - alta l\u00f6yd\u00e4t listan puutteista.",
         "split": "Jaa",
-        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Tapahtumatiedot",
