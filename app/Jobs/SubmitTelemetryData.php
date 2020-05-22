@@ -156,6 +156,7 @@ class SubmitTelemetryData implements ShouldQueue
         foreach ($telemetry as $entry) {
             $array[] = [
                 'installation_id' => $entry->installation_id,
+                'collected_at'    => $entry->created_at->format('r'),
                 'type'            => $entry->type,
                 'key'             => $entry->key,
                 'value'           => $entry->value,

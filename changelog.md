@@ -4,8 +4,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.2.6 (API 1.1.0)] - 2020-05-22
 
-
-## [3.4.2] - 2015-05-25
 ### Added
 - [Issue 3049](https://github.com/firefly-iii/firefly-iii/issues/3049) New transaction triggers for dates.
 - Warning if recurring transactions no longer run.

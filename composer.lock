@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63d96a26ef4c9c9e29552e9c45abde06",
+    "content-hash": "5af5d9774ef0e82cd34d08c63020e85d",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -2099,94 +2099,6 @@
             "time": "2020-05-18T15:13:39+00:00"
         },
         {
-            "name": "league/flysystem-replicate-adapter",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/flysystem-replicate-adapter.git",
-                "reference": "864e80409c0918b0ed6921c3941247017d9db77c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-replicate-adapter/zipball/864e80409c0918b0ed6921c3941247017d9db77c",
-                "reference": "864e80409c0918b0ed6921c3941247017d9db77c",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Flysystem\\Replicate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Frank de Jonge",
-                    "email": "info@frenky.net"
-                }
-            ],
-            "description": "Flysystem adapter for Replica's",
-            "time": "2015-08-18T21:07:17+00:00"
-        },
-        {
-            "name": "league/flysystem-sftp",
-            "version": "1.0.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/flysystem-sftp.git",
-                "reference": "cab59dd2277e02fe46f5f23195672a02ed49774d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/cab59dd2277e02fe46f5f23195672a02ed49774d",
-                "reference": "cab59dd2277e02fe46f5f23195672a02ed49774d",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.6.0",
-                "phpseclib/phpseclib": "~2.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "^5.7.25"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "League\\Flysystem\\Sftp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Frank de Jonge",
-                    "email": "info@frenky.net"
-                }
-            ],
-            "description": "Flysystem adapter for SFTP",
-            "time": "2019-10-16T20:05:49+00:00"
-        },
-        {
             "name": "league/fractal",
             "version": "0.19.2",
             "source": {
@@ -2334,47 +2246,6 @@
             "time": "2020-04-29T22:14:38+00:00"
         },
         {
-            "name": "litipk/flysystem-fallback-adapter",
-            "version": "0.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Litipk/flysystem-fallback-adapter.git",
-                "reference": "1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Litipk/flysystem-fallback-adapter/zipball/1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b",
-                "reference": "1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Litipk\\Flysystem\\Fallback\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andrés Correa Casablanca",
-                    "email": "castarco@litipk.com"
-                }
-            ],
-            "description": "Flysystem adapter for fallback filesystems",
-            "time": "2016-06-23T00:18:01+00:00"
-        },
-        {
             "name": "monolog/monolog",
             "version": "2.1.0",
             "source": {
@@ -2464,41 +2335,6 @@
                 }
             ],
             "time": "2020-05-22T08:12:19+00:00"
-        },
-        {
-            "name": "mschindler83/fints-hbci-php",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mschindler83/fints-hbci-php.git",
-                "reference": "e58cb825c178d4c39a8974a9dd93abbc8094551f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mschindler83/fints-hbci-php/zipball/e58cb825c178d4c39a8974a9dd93abbc8094551f",
-                "reference": "e58cb825c178d4c39a8974a9dd93abbc8094551f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2",
-                "psr/log": "~1.0"
-            },
-            "suggest": {
-                "monolog/monolog": "Allow sending log messages to a variety of different handlers"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Fhp": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP Library for the protocols fints and hbci",
-            "homepage": "http://fints-hbci-php.markus-schindler.de",
-            "time": "2017-02-15T13:48:21+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -7921,16 +7757,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.4",
+            "version": "8.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8474e22d7d642f665084ba5ec780626cbd1efd23"
+                "reference": "63dda3b212a0025d380a745f91bdb4d8c985adb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8474e22d7d642f665084ba5ec780626cbd1efd23",
-                "reference": "8474e22d7d642f665084ba5ec780626cbd1efd23",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/63dda3b212a0025d380a745f91bdb4d8c985adb7",
+                "reference": "63dda3b212a0025d380a745f91bdb4d8c985adb7",
                 "shasum": ""
             },
             "require": {
@@ -8010,7 +7846,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-04-23T04:39:42+00:00"
+            "time": "2020-05-22T13:51:52+00:00"
         },
         {
             "name": "psalm/plugin-laravel",
