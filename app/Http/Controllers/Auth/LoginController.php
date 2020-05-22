@@ -82,14 +82,8 @@ class LoginController extends Controller
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         Log::info(sprintf('User is trying to login.'));
         if ('ldap' === config('auth.providers.users.driver')) {
-            /**
-             * Temporary bug fix for something that doesn't seem to work in
-             * AdLdap.
-             */
-            $schema = config('ldap.connections.default.schema');
-
             /** @var Adldap\Connections\Provider $provider */
-            Adldap::getProvider('default')->setSchema(new $schema);
+            Adldap::getProvider('default');
         }
 
         $this->validateLogin($request);

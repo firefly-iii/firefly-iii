@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -33,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class PiggyBankRepository.
@@ -374,6 +376,21 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
-        return $piggyBank->attachments()->get();
+        $set = $piggyBank->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
     }
 }

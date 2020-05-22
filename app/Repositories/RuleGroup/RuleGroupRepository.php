@@ -56,7 +56,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup      $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool
@@ -92,12 +92,18 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
 
-        $set   = $this->user->ruleGroups()->where('active', 1)->orderBy('order', 'ASC')->get();
+        $set   = $this->user
+            ->ruleGroups()
+            ->orderBy('order', 'ASC')->get();
         $count = 1;
         /** @var RuleGroup $entry */
         foreach ($set as $entry) {
             $entry->order = $count;
             $entry->save();
+
+            // also update rules in group.
+            $this->resetRulesInGroupOrder($entry);
+
             ++$count;
         }
 
@@ -209,18 +215,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function getRuleGroupsWithRules(User $user): Collection
     {
         return $user->ruleGroups()
-                    ->orderBy('active', 'DESC')
                     ->orderBy('order', 'ASC')
                     ->with(
                         [
-                            'rules'              => function (HasMany $query) {
-                                $query->orderBy('active', 'DESC');
+                            'rules'              => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
-                            'rules.ruleTriggers' => function (HasMany $query) {
+                            'rules.ruleTriggers' => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
-                            'rules.ruleActions'  => function (HasMany $query) {
+                            'rules.ruleActions'  => static function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
                             },
                         ]
@@ -328,7 +332,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array $data
+     * @param array     $data
      *
      * @return RuleGroup
      */
@@ -353,4 +357,5 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
+
 }

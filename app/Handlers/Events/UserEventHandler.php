@@ -118,6 +118,7 @@ class UserEventHandler
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
             app('preferences')->setForUser($user, 'language', 'en_US');
+            app('preferences')->setForUser($user, 'locale', 'equal');
             app('preferences')->mark();
         }
 

@@ -82,8 +82,10 @@ class ShowController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        $array  = $transformer->transform($recurrence);
-        $groups = $this->recurring->getTransactions($recurrence);
+        $array                 = $transformer->transform($recurrence);
+        $groups                = $this->recurring->getTransactions($recurrence);
+        $today                 = new Carbon;
+        $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
 
         // transform dates back to Carbon objects:
         foreach ($array['repetitions'] as $index => $repetition) {
@@ -94,6 +96,6 @@ class ShowController extends Controller
 
         $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups'));
+        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups','today'));
     }
 }

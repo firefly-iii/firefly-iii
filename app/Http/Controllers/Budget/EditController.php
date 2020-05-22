@@ -137,9 +137,13 @@ class EditController extends Controller
         $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
 
         // store new attachment(s):
-        /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
-        $this->attachments->saveAttachmentsForModel($budget, $files);
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($budget, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+        }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore

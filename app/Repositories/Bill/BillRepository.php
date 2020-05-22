@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\BillFactory;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -39,6 +40,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class BillRepository.
@@ -164,7 +166,22 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getAttachments(Bill $bill): Collection
     {
-        return $bill->attachments()->get();
+        $set = $bill->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
     }
 
     /**

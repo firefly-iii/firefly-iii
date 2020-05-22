@@ -656,10 +656,10 @@
                     this.setDefaultErrors();
                     // do message if update or new:
                     if (this.storeAsNew) {
-                        this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + '</a> has been created.';
+                        this.success_message = this.$t('firefly.transaction_new_stored_link', { ID: groupId });
                         this.error_message = '';
                     } else {
-                        this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been updated.';
+                        this.success_message = this.$t('firefly.transaction_updated_link', { ID: groupId });
                         this.error_message = '';
                     }
                 } else {
@@ -773,7 +773,18 @@
                                     // console.error(error);
                                     return false;
                                 });
-                            });
+                            }).catch(error => {
+                            console.error('Could not create upload.');
+                            console.error(error);
+                            uploads++;
+                            if (uploads === count) {
+                                // finally we can redirect the user onwards.
+                                // console.log('FINAL UPLOAD');
+                                this.redirectUser(groupId, null);
+                            }
+                            // console.log('Upload complete!');
+                            return false;
+                        });
                     }
                 }
 

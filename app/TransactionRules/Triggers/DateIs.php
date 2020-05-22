@@ -1,6 +1,6 @@
 <?php
 /**
- * CategoryIs.php
+ * DateIs.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,13 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
+use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\ParseDateString;
 use Log;
 
 /**
- * Class CategoryIs.
+ * Class DateIs.
  */
-final class CategoryIs extends AbstractTrigger implements TriggerInterface
+final class DateIs extends AbstractTrigger implements TriggerInterface
 {
     /**
      * A trigger is said to "match anything", or match any given transaction,
@@ -65,17 +68,39 @@ final class CategoryIs extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $category = $journal->categories()->first();
-        if (null !== $category) {
-            $name = strtolower($category->name);
-            // match on journal:
-            if ($name === strtolower($this->triggerValue)) {
-                Log::debug(sprintf('RuleTrigger CategoryIs for journal #%d: "%s" is "%s", return true.', $journal->id, $name, $this->triggerValue));
+        /** @var Carbon $date */
+        $date = $journal->date;
+        Log::debug(sprintf('Found date on journal: %s', $date->format('Y-m-d')));
+        $dateParser = new ParseDateString();
 
-                return true;
-            }
+
+        try {
+            $ruleDate = $dateParser->parseDate($this->triggerValue);
+        } catch (FireflyException $e) {
+            Log::error('Cannot execute rule trigger.');
+            Log::error($e->getMessage());
+
+            return false;
         }
-        Log::debug(sprintf('RuleTrigger CategoryIs for journal #%d: does not have category "%s", return false.', $journal->id, $this->triggerValue));
+        if ($ruleDate->isSameDay($date)) {
+            Log::debug(
+                sprintf(
+                    '%s is on the same day as %s, so return true.',
+                    $date->format('Y-m-d H:i:s'),
+                    $ruleDate->format('Y-m-d H:i:s'),
+                )
+            );
+
+            return true;
+        }
+
+        Log::debug(
+            sprintf(
+                '%s is NOT on the same day as %s, so return true.',
+                $date->format('Y-m-d H:i:s'),
+                $ruleDate->format('Y-m-d H:i:s'),
+            )
+        );
 
         return false;
     }

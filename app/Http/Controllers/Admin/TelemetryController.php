@@ -101,7 +101,8 @@ class TelemetryController extends Controller
         app('view')->share('subTitleIcon', 'fa-eye');
         app('view')->share('subTitle', (string) trans('firefly.telemetry_admin_index'));
         $version = config('firefly.version');
-        $enabled = config('firefly.telemetry', false);
+        $enabled = config('firefly.send_telemetry', false) && config('firefly.feature_flags.telemetry');
+
         $count   = $this->repository->count();
 
         return view('admin.telemetry.index', compact('version', 'enabled', 'count'));

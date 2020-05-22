@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -34,6 +35,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class TagRepository.
@@ -549,7 +551,21 @@ class TagRepository implements TagRepositoryInterface
      */
     public function getAttachments(Tag $tag): Collection
     {
-        return $tag->attachments()->get();
+        $set= $tag->attachments()->get();
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
     }
 
     /**

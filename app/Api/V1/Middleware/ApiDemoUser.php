@@ -1,6 +1,6 @@
 <?php
 /**
- * AppServiceProvider.php
+ * ApiDemoUser.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,43 +20,42 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Providers;
+namespace FireflyIII\Api\V1\Middleware;
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
-use Laravel\Passport\Passport;
-use URL;
-use Adldap\Laravel\Middleware\WindowsAuthenticate;
+use Closure;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Http\Request;
 
 /**
- * @codeCoverageIgnore
- * Class AppServiceProvider
+ * Class ApiDemoUser.
  */
-class AppServiceProvider extends ServiceProvider
+class ApiDemoUser
 {
     /**
-     * Bootstrap any application services.
+     * Handle an incoming request.
      *
-     * @return void
+     * @param Request $request
+     * @param Closure $next
+     *
+     * @return mixed
      */
-    public function boot(): void
+    public function handle(Request $request, Closure $next)
     {
-        Schema::defaultStringLength(191);
-        if ('heroku' === config('app.env')) {
-            URL::forceScheme('https');
-        }
-        if (config('ldap_auth.identifiers.windows.enabled', false)) {
-            $this->app['router']->pushMiddlewareToGroup('web', WindowsAuthenticate::class);
-        }
-    }
+        /** @var User $user */
+        $user = $request->user();
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        Passport::ignoreMigrations();
+        if (null === $user) {
+            return $next($request);
+        }
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        if ($repository->hasRole($user, 'demo')) {
+            return response('', 403);
+        }
+
+        return $next($request);
     }
 }

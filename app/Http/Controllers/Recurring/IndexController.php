@@ -85,6 +85,8 @@ class IndexController extends Controller
         $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
+        $today      = new Carbon;
+        $year       = new Carbon;
 
         // split collection
         $total = $collection->count();
@@ -98,8 +100,7 @@ class IndexController extends Controller
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
-            $today = new Carbon;
-            $year  = new Carbon;
+
             $year->addYear();
             if ($recurrence->first_date > $today) {
                 $today = clone $recurrence->first_date;
@@ -110,11 +111,17 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
-            $array['occurrences']  = [];
 
-            if (0 !== $recurrence->recurrenceRepetitions->count()) {
-                $array['ocurrences'] = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
+            // make carbon objects out of occurrences
+            foreach ($array['repetitions'] as $repIndex => $repetition) {
+                foreach ($repetition['occurrences'] as $occIndex => $occurrence) {
+                    $array['repetitions'][$repIndex]['occurrences'][$occIndex] = new Carbon($occurrence);
+                }
             }
+
+            //if (0 !== $recurrence->recurrenceRepetitions->count()) {
+            //$array['ocurrences'] = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
+            //}
 
             $recurring[] = $array;
         }
@@ -123,7 +130,7 @@ class IndexController extends Controller
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
+        return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
     }
 
 }

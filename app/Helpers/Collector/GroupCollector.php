@@ -31,16 +31,11 @@ use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
 use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
 use FireflyIII\Helpers\Collector\Extensions\MetaCollection;
 use FireflyIII\Helpers\Collector\Extensions\TimeCollection;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -526,7 +521,7 @@ class GroupCollector implements GroupCollectorInterface
             }
             // or parse the rest.
             $journalId = (int) $augumentedJournal->transaction_journal_id;
-            $groups[$groupId]['count']++;
+
 
             if (isset($groups[$groupId]['transactions'][$journalId])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
@@ -536,6 +531,7 @@ class GroupCollector implements GroupCollectorInterface
 
             if (!isset($groups[$groupId]['transactions'][$journalId])) {
                 // create second, third, fourth split:
+                $groups[$groupId]['count']++;
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
             }
         }

@@ -24,6 +24,7 @@ namespace FireflyIII\Validation;
 
 use Config;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -34,11 +35,13 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
+use FireflyIII\Support\ParseDateString;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
+use Log;
 
 /**
  * Class FireflyValidator.
@@ -331,6 +334,20 @@ class FireflyValidator extends Validator
             $count = TransactionType::where('type', ucfirst($value))->count();
 
             return 1 === $count;
+        }
+
+        // if the type is date, the simply try to parse it and throw error when it's bad.
+        if (in_array($triggerType, ['date_is'], true)) {
+            /** @var ParseDateString $parser */
+            $parser = app(ParseDateString::class);
+            try {
+                $parser->parseDate($value);
+            } catch (FireflyException $e) {
+
+                Log::error($e->getMessage());
+
+                return false;
+            }
         }
 
         // and finally a "will match everything check":

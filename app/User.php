@@ -138,10 +138,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
- * @property string $password
- * @property bool $blocked
- * @property string|null $blocked_code
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  */
 class User extends Authenticatable
 {
@@ -215,6 +211,16 @@ class User extends Authenticatable
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->count() === 1;
     }
 
     /**
