@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use URL;
+use Adldap\Laravel\Middleware\WindowsAuthenticate;
 
 /**
  * @codeCoverageIgnore
@@ -43,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         if ('heroku' === config('app.env')) {
             URL::forceScheme('https');
+        }
+        if (config('ldap_auth.identifiers.windows.enabled', false)) {
+            $this->app['router']->pushMiddlewareToGroup('web', WindowsAuthenticate::class);
         }
     }
 
