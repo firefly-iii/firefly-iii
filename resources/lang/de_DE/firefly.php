@@ -242,7 +242,7 @@ return [
     'update_check_error'                         => 'Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten: :error',
     'unknown_error'                              => 'Leider ist ein unbekannter Fehler aufgetreten.',
     'just_new_release'                           => 'Eine neue Version ist verfügbar! Version :version wurde veröffentlicht :date. Diese Version ist sehr jung. Warten Sie ein paar Tage, bis sich die neue Version etabliert hat.',
-    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
+    'disabled_but_check'                         => 'Die Aktualisierungsprüfung ist deaktiviert. Vergessen Sie also nicht, von Zeit zu Zeit selbst nach Aktualisierungen zu suchen. Vielen Dank!',
     'admin_update_channel_title'                 => 'Aktualisierungskanal',
     'admin_update_channel_explain'               => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
     'update_channel_stable'                      => 'Stabil — Alles sollte wie erwartet funktionieren.',
@@ -558,7 +558,7 @@ return [
     'pref_locale_help'                => 'Mit Firefly III können Sie weitere lokale Einstellungen vornehmen, z.B. wie Währungen, Zahlen und Daten formatiert werden sollen. Einträge in dieser Liste werden von Ihrem System möglicherweise nicht unterstützt. Firefly III enthält nicht die korrekten Datumseinstellungen für jedes Gebietsschema. Kontaktieren Sie uns für Verbesserungen.',
     'pref_locale_no_windows'          => 'Diese Funktion funktioniert unter Windows möglicherweise nicht.',
     'pref_locale_no_docker'           => 'Das Docker-Abbild enthält nur einen kleinen Satz installierter Gebietsschemata.',
-    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
+    'pref_locale_no_demo'             => 'Diese Funktion kann von Demo-Nutzern nicht genutzt werden.',
     'pref_custom_fiscal_year'         => 'Einstellungen zum Geschäftsjahr',
     'pref_custom_fiscal_year_label'   => 'Aktiviert',
     'pref_custom_fiscal_year_help'    => 'In Ländern, in denen ein Geschäftsjahr nicht vom 1. Januar bis 31. Dezember dauert, können Sie diese Option ändern und Start / Ende des Geschäftsjahres angeben',
@@ -769,7 +769,7 @@ return [
     'options'                                   => 'Einstellungen',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'Dieser Betrag gilt von :start bis :end.',
     'total_available_budget'                    => 'Verfügbares Gesamtbudget (zwischen :start und :end)',
     'total_available_budget_in_currency'        => 'Verfügbares Gesamtbudget in :currency',
     'see_below'                                 => 'Siehe unten',
@@ -1055,7 +1055,7 @@ return [
     'unknown_journal_error'                     => 'Die Buchung konnte nicht gespeichert werden. Bitte überprüfen Sie die Protokolldateien.',
     'attachment_not_found'                      => 'Der Anhang konnte nicht gefunden werden.',
     'journal_link_bill'                         => 'Diese Buchung ist mit der Rechnung <a href=":route">:name</a> verknüpft. Um diese Verbindung aufzuheben, deaktivieren Sie das Kontrollkästchen. Verwenden Sie Regeln, um es mit einer anderen Rechnung zu verbinden.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Buchung #{ID} ("{title}")</a> wurde gespeichert.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Buchung#{ID}</a> wurde aktualisiert.',
 
