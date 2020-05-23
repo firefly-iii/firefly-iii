@@ -38,6 +38,24 @@ if ('ActiveDirectory' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
     $schema = ActiveDirectory::class;
 }
 
+/*
+ * Get SSL parameters from .env file.
+ */
+$ssl_ca_dir =  envNonEmpty('ADLDAP_SSL_CACERTDIR', null);
+$ssl_ca_file = envNonEmpty('ADLDAP_SSL_CACERTFILE', null);
+$ssl_cert =    envNonEmpty('ADLDAP_SSL_CERTFILE', null);
+$ssl_key =     envNonEmpty('ADLDAP_SSL_KEYFILE', null);
+$ssl_ciphers = envNonEmpty('ADLDAP_SSL_CIPHER_SUITE', null);
+$ssl_require = envNonEmpty('ADLDAP_SSL_REQUIRE_CERT', null);
+
+$ssl_options = [];
+if ($ssl_ca_dir  !== null) $ssl_options[LDAP_OPT_X_TLS_CACERTDIR   ] = $ssl_ca_dir;
+if ($ssl_ca_file !== null) $ssl_options[LDAP_OPT_X_TLS_CACERTFILE  ] = $ssl_ca_file;
+if ($ssl_cert    !== null) $ssl_options[LDAP_OPT_X_TLS_CERTFILE    ] = $ssl_cert;
+if ($ssl_key     !== null) $ssl_options[LDAP_OPT_X_TLS_KEYFILE     ] = $ssl_key;
+if ($ssl_ciphers !== null) $ssl_options[LDAP_OPT_X_TLS_CIPHER_SUITE] = $ssl_ciphers;
+if ($ssl_require !== null) $ssl_options[LDAP_OPT_X_TLS_REQUIRE_CERT] = $ssl_require;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -254,6 +272,7 @@ return [
                 'use_ssl' => env('ADLDAP_USE_SSL', false),
                 'use_tls' => env('ADLDAP_USE_TLS', false),
 
+                'custom_options' => $ssl_options,
             ],
 
         ],
