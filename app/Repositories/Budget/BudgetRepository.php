@@ -330,7 +330,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         // create initial budget limit.
         $today = new Carbon;
         $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
-        $end   = app('navigation')->startOfPeriod($start, $autoBudget->period);
+        $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
 
         $limitRepos = app(BudgetLimitRepositoryInterface::class);
         $limitRepos->setUser($this->user);
