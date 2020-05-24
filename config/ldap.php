@@ -89,29 +89,6 @@ return [
 
             /*
             |--------------------------------------------------------------------------
-            | Schema
-            |--------------------------------------------------------------------------
-            |
-            | The schema class to use for retrieving attributes and generating models.
-            |
-            | You can also set this option to `null` to use the default schema class.
-            |
-            | For OpenLDAP, you must use the schema:
-            |
-            |   Adldap\Schemas\OpenLDAP::class
-            |
-            | For FreeIPA, you must use the schema:
-            |
-            |   Adldap\Schemas\FreeIPA::class
-            |
-            | Custom schema classes must implement Adldap\Schemas\SchemaInterface
-            |
-            */
-
-            'schema' => $schema,
-
-            /*
-            |--------------------------------------------------------------------------
             | Connection Settings
             |--------------------------------------------------------------------------
             |
@@ -122,6 +99,29 @@ return [
             */
 
             'settings' => [
+
+                /*
+                |--------------------------------------------------------------------------
+                | Schema
+                |--------------------------------------------------------------------------
+                |
+                | The schema class to use for retrieving attributes and generating models.
+                |
+                | You can also set this option to `null` to use the default schema class.
+                |
+                | For OpenLDAP, you must use the schema:
+                |
+                |   Adldap\Schemas\OpenLDAP::class
+                |
+                | For FreeIPA, you must use the schema:
+                |
+                |   Adldap\Schemas\FreeIPA::class
+                |
+                | Custom schema classes must implement Adldap\Schemas\SchemaInterface
+                |
+                */
+
+                'schema' => $schema,
 
                 /*
                 |--------------------------------------------------------------------------

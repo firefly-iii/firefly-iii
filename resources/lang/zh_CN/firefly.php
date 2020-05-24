@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => '检查更新时发生错误：:error',
     'unknown_error'                              => '未知错误。抱歉。',
     'just_new_release'                           => '有一个新版本可用！版本 :version 在 :date 发布。这个版本非常新。等待几天后新版本才能稳定。',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => '更新通道',
     'admin_update_channel_explain'               => 'Firefly III具有三个更新“通道”，这些通道确定您在功能，增强功能和错误方面都处于最新。 如果您喜欢冒险，请使用“ beta”频道；如果您不惧危险，请使用“ alpha”频道。',
     'update_channel_stable'                      => '稳定版。一切应该都如预期的那样运行。',
@@ -421,6 +422,14 @@ return [
     'rule_trigger_description_contains'          => '描述包含 ":trigger_value"',
     'rule_trigger_description_is_choice'         => '描述是…',
     'rule_trigger_description_is'                => '描述为 ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => '预算为…',
     'rule_trigger_budget_is'                     => '预算为 ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(一个) 标签为…',
@@ -455,6 +464,8 @@ return [
     'rule_trigger_notes_start'                   => '注释开头为 ":trigger_value"',
     'rule_trigger_notes_end_choice'              => '注释结尾为…',
     'rule_trigger_notes_end'                     => '注释结尾为 ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => '设定分类为 ":action_value"',
     'rule_action_clear_category'                 => '清空分类',
     'rule_action_set_budget'                     => '设定预算为 ":action_value"',
@@ -547,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => '财政年度设定',
     'pref_custom_fiscal_year_label'   => '已启用',
     'pref_custom_fiscal_year_help'    => '在使用1月1日至12月31日以外作为会计年度的国家，您可开启此功能并指定财政年度的起迄日。',
@@ -757,6 +769,7 @@ return [
     'options'                                   => '选项',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => '可用预算总额 (:start 和 :end之间)',
     'total_available_budget_in_currency'        => '可用预算总额 以:currency为单位',
     'see_below'                                 => '请在下方查看',
@@ -1042,6 +1055,9 @@ return [
     'unknown_journal_error'                     => '无法储存交易，请检视日志档。',
     'attachment_not_found'                      => '此附加档案无法被找到。',
     'journal_link_bill'                         => '此交易已与帐单 <a href=":route">:name</a> 链结。如要移除链结，取消核选方块，使用规则将它与其他帐单链结。',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => '欢迎使用 Firefly III！',
@@ -1624,6 +1640,7 @@ return [
     'not_yet_submitted'                  => '尚未提交',
     'telemetry_type_feature'             => '功能标志',
     'telemetry_submit_all'               => '提交记录',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => '删除提交的记录',
     'telemetry_submission_executed'      => '记录已提交。请检查您的日志文件获取更多信息。',
     'telemetry_all_deleted'              => '所有遥测记录已被删除。',

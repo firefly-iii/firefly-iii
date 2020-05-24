@@ -186,9 +186,11 @@ class PreferencesController extends Controller
         }
 
         // same for locale:
-        /** @var Preference $currentLocale */
-        $locale = $request->get('locale');
-        app('preferences')->set('locale', $locale);
+        if (!auth()->user()->hasRole('demo')) {
+            /** @var Preference $currentLocale */
+            $locale = $request->get('locale');
+            app('preferences')->set('locale', $locale);
+        }
 
         // optional fields for transactions:
         $setOptions = $request->get('tj');

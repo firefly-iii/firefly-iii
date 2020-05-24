@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'Произошла ошибка при проверке обновлений: :error',
     'unknown_error'                              => 'Неизвестная ошибка. Извините за это.',
     'just_new_release'                           => 'Доступна новая версия! Версия :version была выпущена :date. Этот релиз очень свежий. Подождите несколько дней, пока этот релиз стабилизируется.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Канал обновлений',
     'admin_update_channel_explain'               => 'Firefly III может использовать три "канала" обновлений, которые различаются наборами новых функций и ошибок. Используйте "бета"-канал, если вы любите приключения и "альфа", если вам нравится жить с чувством постоянной опасности.',
     'update_channel_stable'                      => 'Стабильный. Всё должно работать, как вы ожидаете.',
@@ -421,6 +422,14 @@ return [
     'rule_trigger_description_contains'          => 'Описание содержит ":trigger_value"',
     'rule_trigger_description_is_choice'         => 'Описание =',
     'rule_trigger_description_is'                => 'Описание = ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => 'Бюджет =',
     'rule_trigger_budget_is'                     => 'Бюджет = ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => 'Метка =',
@@ -455,6 +464,8 @@ return [
     'rule_trigger_notes_start'                   => 'Заметки начинаются с ":trigger_value"',
     'rule_trigger_notes_end_choice'              => 'Заметки заканчиваются на...',
     'rule_trigger_notes_end'                     => 'Заметки заканчиваются на ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => 'Назначить категорию ":action_value"',
     'rule_action_clear_category'                 => 'Очистить поле "Категория"',
     'rule_action_set_budget'                     => 'Назначить бюджет ":action_value"',
@@ -547,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => 'Параметры финансового года',
     'pref_custom_fiscal_year_label'   => 'Включить',
     'pref_custom_fiscal_year_help'    => 'Для стран, в которых финансовый год начинается не 1 января, а заканчивается не 31 декабря, вы должны указать даты начала и окончания финансового года',
@@ -757,6 +769,7 @@ return [
     'options'                                   => 'Параметры',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Общий доступный бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Всего доступно в бюджете (:currency)',
     'see_below'                                 => 'см. ниже',
@@ -1042,6 +1055,9 @@ return [
     'unknown_journal_error'                     => 'Не удалось сохранить транзакцию. Пожалуйста, проверьте log-файлы.',
     'attachment_not_found'                      => 'Вложение не найдено.',
     'journal_link_bill'                         => 'Эта транзакция связана со счётом на оплату <a href=":route">:name</a>. Чтобы удалить эту связь, снимите галочку. Используйте правила для связи с другим счётом на оплату.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => 'Добро пожаловать в Firefly III!',
@@ -1624,6 +1640,7 @@ return [
     'not_yet_submitted'                  => 'Ещё не отправлено',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Отправить записи',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'Все записи телеметрии были удалены.',

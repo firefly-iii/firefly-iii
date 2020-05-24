@@ -242,6 +242,7 @@ return [
     'update_check_error'                         => 'An error occurred while checking for updates: :error',
     'unknown_error'                              => 'Unknown error. Sorry about that.',
     'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
+    'disabled_but_check'                         => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -421,6 +422,14 @@ return [
     'rule_trigger_description_contains'          => '描述包含 ":trigger_value"',
     'rule_trigger_description_is_choice'         => '描述是…',
     'rule_trigger_description_is'                => '描述為 ":trigger_value"',
+
+    'rule_trigger_date_is_choice'                => 'Transaction date is..',
+    'rule_trigger_date_is'                       => 'Transaction date is ":trigger_value"',
+    'rule_trigger_date_before_choice'            => 'Transaction date is before..',
+    'rule_trigger_date_before'                   => 'Transaction date is before ":trigger_value"',
+    'rule_trigger_date_after_choice'             => 'Transaction date is after..',
+    'rule_trigger_date_after'                    => 'Transaction date is after ":trigger_value"',
+
     'rule_trigger_budget_is_choice'              => '預算為…',
     'rule_trigger_budget_is'                     => '預算為 ":trigger_value"',
     'rule_trigger_tag_is_choice'                 => '(一個) 標籤為…',
@@ -455,6 +464,8 @@ return [
     'rule_trigger_notes_start'                   => '註釋開頭為 ":trigger_value"',
     'rule_trigger_notes_end_choice'              => '註釋結尾為…',
     'rule_trigger_notes_end'                     => '註釋結尾為 ":trigger_value"',
+    'rule_action_delete_transaction_choice'      => 'DELETE transaction (!)',
+    'rule_action_delete_transaction'             => 'DELETE transaction (!)',
     'rule_action_set_category'                   => '設定分類為 ":action_value"',
     'rule_action_clear_category'                 => '清空分類',
     'rule_action_set_budget'                     => '設定預算為 ":action_value"',
@@ -547,6 +558,7 @@ return [
     'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'          => 'This feature may not work on Windows.',
     'pref_locale_no_docker'           => 'The Docker image only has a small set of installed locales.',
+    'pref_locale_no_demo'             => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'         => '財政年度設定',
     'pref_custom_fiscal_year_label'   => '已啟用',
     'pref_custom_fiscal_year_help'    => '有些國家/地區採用的會計年度有別於每年 1 月 1 日至 12 月 31 日，您可開啟此功能並指定財政年度的起迄日。',
@@ -757,6 +769,7 @@ return [
     'options'                                   => '選項',
 
     // budgets:
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
     'see_below'                                 => 'see below',
@@ -1042,6 +1055,9 @@ return [
     'unknown_journal_error'                     => '無法儲存交易，請檢視日誌檔。',
     'attachment_not_found'                      => '此附加檔案無法被找到。',
     'journal_link_bill'                         => '此交易已與帳單 <a href=":route">:name</a> 鏈結。如要移除鏈結，取消核選方塊，使用規則將它與其他帳單鏈結。',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
     'welcome'                                   => '歡迎使用 Firefly III！',
@@ -1624,6 +1640,7 @@ return [
     'not_yet_submitted'                  => 'Not yet submitted',
     'telemetry_type_feature'             => 'Feature flag',
     'telemetry_submit_all'               => 'Submit records',
+    'telemetry_type_recurring'           => 'Recurring',
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
