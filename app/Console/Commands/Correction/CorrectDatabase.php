@@ -83,7 +83,7 @@ class CorrectDatabase extends Command
             echo $result;
         }
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }

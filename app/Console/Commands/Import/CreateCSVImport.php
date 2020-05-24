@@ -148,7 +148,7 @@ class CreateCSVImport extends Command
         // clear cache for user:
         app('preferences')->setForUser($user, 'lastActivity', microtime());
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

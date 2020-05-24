@@ -167,7 +167,7 @@ class ApplyRules extends Command
         $this->line('');
         $this->line('Done!');
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

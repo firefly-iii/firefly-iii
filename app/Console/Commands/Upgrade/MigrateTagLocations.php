@@ -65,7 +65,7 @@ class MigrateTagLocations extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated tag locations in %s seconds.', $end));
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

@@ -78,7 +78,7 @@ class BackToJournals extends Command
         $this->info(sprintf('Updated category and budget info for all transaction journals in %s seconds.', $end));
         $this->markAsExecuted();
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }

@@ -78,7 +78,7 @@ class CreateAccessTokens extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verify access tokens in %s seconds.', $end));
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }

@@ -99,7 +99,7 @@ class MigrateToRules extends Command
         $this->info(sprintf('Verified and fixed bills in %s seconds.', $end));
         $this->markAsExecuted();
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

@@ -141,7 +141,7 @@ class ExportData extends Command
             return 1;
         }
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

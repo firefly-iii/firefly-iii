@@ -124,6 +124,11 @@ class NewUserController extends Controller
                           'invoice_date'  => false, 'internal_reference' => false, 'notes' => true, 'attachments' => true,];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
+        // telemetry: user language preference + default language.
+        //app('telemetry')->feature('config.firefly.default_language', config('firefly.default_language', 'en_US'));
+        //app('telemetry')->feature('user.preferences.language', app('steam')->getLanguage());
+        //app('telemetry')->feature('user.preferences.locale', app('steam')->getLocale());
+
         session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();
 

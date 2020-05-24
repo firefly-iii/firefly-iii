@@ -57,7 +57,10 @@ class UpgradeFireflyInstructions extends Command
             $this->installInstructions();
         }
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // collect system telemetry
+//        app('telemetry')->feature('system.php.version', PHP_VERSION);
+//        app('telemetry')->feature('system.os.version', PHP_OS);
+//        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

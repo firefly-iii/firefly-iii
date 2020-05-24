@@ -59,7 +59,7 @@ class SetLatestVersion extends Command
         app('fireflyconfig')->set('ff3_version', config('firefly.version'));
         $this->line('Updated version.');
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }
