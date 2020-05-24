@@ -139,7 +139,7 @@ return [
     ],
     'feature_flags' => [
         'export'    => true,
-        'telemetry' => false,
+        'telemetry' => true,
     ],
 
     'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),

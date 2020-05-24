@@ -94,10 +94,10 @@ class Cron extends Command
         }
 
         /*
-         * Fire telemetry cron job (disabled):
+         * Fire telemetry cron job
          */
         try {
-            //$this->telemetryCronJob($force, $date);
+            $this->telemetryCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
