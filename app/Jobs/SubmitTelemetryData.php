@@ -79,10 +79,10 @@ class SubmitTelemetryData implements ShouldQueue
             return;
         }
 
-        $body = '[]';
+        $body = '{}';
         $json = $this->parseJson($telemetry);
         try {
-            json_encode($json, JSON_THROW_ON_ERROR, 512);
+            $body = json_encode($json, JSON_THROW_ON_ERROR, 512);
         } catch (JsonException $e) {
             Log::error($e->getMessage());
             Log::error('Could not parse JSON.');
