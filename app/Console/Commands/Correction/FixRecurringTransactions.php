@@ -67,7 +67,6 @@ class FixRecurringTransactions extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Corrected recurring transactions %s seconds.', $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

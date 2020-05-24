@@ -100,8 +100,6 @@ class MigrateJournalNotes extends Command
         $this->info(sprintf('Migrated notes in %s seconds.', $end));
         $this->markAsExecuted();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 

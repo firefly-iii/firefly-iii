@@ -92,8 +92,6 @@ class BudgetLimitCurrency extends Command
 
         $this->markAsExecuted();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 

@@ -98,7 +98,6 @@ class FixPiggies extends Command
         $end = round(microtime(true) - $start, 2);
         $this->line(sprintf('Verified the content of %d piggy bank events in %s seconds.', $set->count(), $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 }

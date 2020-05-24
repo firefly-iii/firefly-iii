@@ -91,8 +91,6 @@ class CCLiabilities extends Command
         $this->info(sprintf('Verified credit card liabilities in %s seconds', $end));
         $this->markAsExecuted();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 

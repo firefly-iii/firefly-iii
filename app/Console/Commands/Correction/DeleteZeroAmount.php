@@ -78,8 +78,6 @@ class DeleteZeroAmount extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified zero-amount integrity in %s seconds', $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 }

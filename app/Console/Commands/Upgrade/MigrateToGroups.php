@@ -112,8 +112,6 @@ class MigrateToGroups extends Command
 
         $this->markAsMigrated();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 

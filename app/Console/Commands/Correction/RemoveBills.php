@@ -71,7 +71,6 @@ class RemoveBills extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified bills / journals in %s seconds', $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 }

@@ -111,7 +111,6 @@ class TransferCurrenciesCorrections extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed currency information for transfers in %s seconds.', $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

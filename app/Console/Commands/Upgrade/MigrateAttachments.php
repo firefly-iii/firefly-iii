@@ -101,8 +101,6 @@ class MigrateAttachments extends Command
         $this->info(sprintf('Migrated attachment notes in %s seconds.', $end));
         $this->markAsExecuted();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 
