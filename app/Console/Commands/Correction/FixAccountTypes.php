@@ -106,7 +106,7 @@ class FixAccountTypes extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verifying account types took %s seconds', $end));
 
-        // app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

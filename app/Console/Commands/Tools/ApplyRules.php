@@ -112,7 +112,7 @@ class ApplyRules extends Command
 
         $result = $this->verifyInput();
         if (false === $result) {
-            // app('telemetry')->feature('executed-command-with-error', $this->signature);
+            app('telemetry')->feature('system.command.errored', $this->signature);
             return 1;
         }
 
@@ -131,7 +131,7 @@ class ApplyRules extends Command
             $this->warn('    --rule_groups=1,2,...');
             $this->warn('    --all_rules');
 
-            // app('telemetry')->feature('executed-command-with-error', $this->signature);
+            app('telemetry')->feature('system.command.errored', $this->signature);
             return 1;
         }
 
@@ -167,7 +167,7 @@ class ApplyRules extends Command
         $this->line('');
         $this->line('Done!');
 
-        // app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

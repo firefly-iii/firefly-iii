@@ -77,7 +77,7 @@ class CorrectOpeningBalanceCurrencies extends Command
             $this->info('There was nothing to fix in the opening balance transactions.');
         }
 
-        // app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }

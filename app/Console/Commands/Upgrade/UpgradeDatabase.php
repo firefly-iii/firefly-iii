@@ -117,7 +117,7 @@ class UpgradeDatabase extends Command
         // index will set FF3 version.
         app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
 
-        // app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

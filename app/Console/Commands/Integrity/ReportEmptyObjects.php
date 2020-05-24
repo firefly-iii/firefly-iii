@@ -64,7 +64,7 @@ class ReportEmptyObjects extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Report on empty objects finished in %s seconds', $end));
 
-        // app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 
