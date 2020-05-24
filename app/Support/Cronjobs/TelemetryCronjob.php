@@ -93,6 +93,9 @@ class TelemetryCronjob extends AbstractCronjob
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
+
+        // TODO remove old, submitted telemetry data.
+
         app('fireflyconfig')->set('last_tm_job', (int) $this->date->format('U'));
         Log::info('Done with telemetry cron job task.');
     }
