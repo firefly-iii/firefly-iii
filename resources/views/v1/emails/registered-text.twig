@@ -1,19 +1,19 @@
 {% include 'emails.header-text' %}
-Welcome to Firefly III. Your registration has made it, and this email is here to confirm it. Yay!
+{{ trans('email.registered_welcome_text')}}
 
-* If you have forgotten your password already, please reset it using the password reset tool.
-* There is a help-icon in the top right corner of each page. If you need help, click it!
-* If you haven't already, please read the first use guide and the full description.
+* {{ trans('email.registered_pw_text')}}
+* {{ trans('email.registered_help')}}
+* {{ trans('email.registered_doc_text')}}
 
-Enjoy!
+{{ trans('email.registered_closing')}}
 
-Firefly III:
+{{ trans('email.registered_firefly_iii_link')}}
 {{ address }}
 
-Password reset:
+{{ trans('email.registered_pw_reset_link')}}
 {{ address }}/password/reset
 
-Documentation:
+{{ trans('email.registered_doc_link')}}
 https://github.com/firefly-iii/firefly-iii
 https://firefly-iii.org/
 
