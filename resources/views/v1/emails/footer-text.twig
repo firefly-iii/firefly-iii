@@ -1,6 +1,6 @@
 
-Beep boop,
+{{ trans('firefly.email_closing') }}
 
-The Firefly III Mail Robot
+{{ trans('firefly.email_signature') }}
 
-PS: This message was sent because a request from IP {{ ip }}{{ userIp }}{{ ipAddress }} triggered it.
+{{ trans('firefly.email_footer_ps', {ip: ip, userIp: userIp, ipAddress: ipAddress}) }}

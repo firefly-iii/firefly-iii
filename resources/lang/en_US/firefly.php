@@ -1621,6 +1621,15 @@ return [
     'box_net_worth_in_currency'          => 'Net worth (:currency)',
     'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
+    // emails
+    'email_greeting' => 'Hi there,',
+    'email_closing' => 'Beep boop,',
+    'email_signature' => 'The Firefly III Mail Robot',
+    'email_footer_ps' => 'PS: This message was sent because a request from IP :ip:userIp:ipAddress triggered it.',
+
+    'email_admin_test_subject' => 'A test message from your Firefly III installation',
+    'email_admin_test_body' => 'This is a test message from your Firefly III instance. It was sent to :email.',
+
     // telemetry
     'telemetry_admin_index'              => 'Telemetry',
     'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',

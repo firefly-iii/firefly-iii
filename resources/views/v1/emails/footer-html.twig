@@ -1,12 +1,12 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Beep boop,
+    {{ trans('firefly.email_closing') }}
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    The Firefly III Mail Robot
+    {{ trans('firefly.email_signature') }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
-    PS: This message was sent because a request from IP {{ ip }}{{ userIp }}{{ ipAddress }} triggered it.
+    {{ trans('firefly.email_footer_ps', {ip: ip, userIp: userIp, ipAddress: ipAddress}) }}
 </p>
 
 </body>

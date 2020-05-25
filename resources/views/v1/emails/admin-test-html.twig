@@ -1,5 +1,5 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    This is a test message from your Firefly III instance. It was sent to {{ email }}.
+    {{ trans('firefly.email_admin_test_body', {email: email })}}
 </p>
 {% include 'emails.footer-html' %}
