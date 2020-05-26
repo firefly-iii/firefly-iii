@@ -35,10 +35,10 @@ return [
 
     // access token created
     'access_token_created_subject' => 'A new access token was created',
-    'access_token_created_body_1' => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
-    'access_token_created_body_2_html' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_body_2_text' => 'With this token, they can access *all* of your financial records through the Firefly III API.',
-    'access_token_created_body_3' => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_body' => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
+    'access_token_created_explanation_html' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
+    'access_token_created_explanation_text' => 'With this token, they can access *all* of your financial records through the Firefly III API.',
+    'access_token_created_revoke' => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
 
     // registered
     'registered_subject' => 'Welcome to Firefly III!',
@@ -59,8 +59,7 @@ return [
     'email_change_body_to_new' => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old_html' => 'You or somebody with access to your Firefly III account has changed your email address.
     If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
-    'email_change_body_to_old_text' => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen,
-    you must follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old_text' => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you *must* follow the "undo"-link below to protect your account!',
     'email_change_ignore' => 'If you initiated this change, you may safely ignore this message.',
     'email_change_old' => 'The old email address was:',
     'email_change_new' => 'The new email address is:',
@@ -69,8 +68,7 @@ return [
 
     // OAuth token created
     'oauth_created_subject' => 'A new OAuth client has been created',
-    'oauth_created_body_html' => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
-    'oauth_created_body_text' => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL:',
+    'oauth_created_body' => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL :url.',
     'oauth_created_explanation_html' => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'oauth_created_explanation_text' => 'With this client, they can access *all* of your financial records through the Firefly III API.',
     'oauth_created_undo' => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
@@ -83,16 +81,20 @@ return [
 
     // error
     'error_subject' => 'Caught an error in Firefly III',
-    'error_intro_html' => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>',
+    'error_intro' => 'Firefly III v:version ran into an error:',
     'error_type' => 'The error was of type ":class".',
     'error_timestamp' => 'The error occurred on/at: :time.',
-    'error_location_html' => 'This error occurred in file <span style="font-family: monospace;">:file</span> on line :line with code :code.',
-    'error_user_html' => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
+    'error_location' => 'This error occurred in file ":file" on line :line with code :code.',
+    'error_user' => 'The error was encountered by user #:id, :email.',
     'error_no_user' => 'There was no user logged in for this error or no user was detected.',
     'error_ip' => 'The IP address related to this error is:',
     'error_url' => 'URL is:',
     'error_user_agent' => 'User agent:',
-    'error_stacktrace' => 'The full stacktrace is below. If you think this is a bug in Firefly III, you  can forward this message to :email. This can help fix the bug you just encountered.',
+    'error_stacktrace' => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to :email. This can help fix the bug you just encountered.',
     'error_github' => 'If you prefer, you can also open a new issue on :link.',
-    'error_stacktrace_below' => 'The full stacktrace is below:'
+    'error_stacktrace_below' => 'The full stacktrace is below:',
+
+    // report new journals
+    'new_journals_subject' => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
+    'new_journals_header' => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:'
 ];

@@ -1,6 +1,6 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.error_intro_html', { version: version, errorMessage: errorMessage })|raw }}
+    {{ trans('email.error_intro', { version: version }) }} <span style="font-family: monospace;">{{ errorMessage }}</span>.
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
@@ -13,12 +13,12 @@
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.error_location_html', { file: file, line: line, code: code })|raw }}
+    {{ trans('email.error_location', { file: "<span style=\"font-family: monospace;\">#{ file }</span>", line: line, code: code })|raw }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {% if loggedIn %}
-        {{ trans('email.error_user_html', { id: user.id, email: user.email })|raw }}
+        {{ trans('email.error_user', { id: user.id, email: "<a href=\"mailto::email\">#{ user.email }</a>" })|raw }}
     {% else %}
         {{ trans('email.error_no_user') }}
     {% endif %}
@@ -26,7 +26,7 @@
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.error_ip') }} {{ ip }}<br />
-    {{ trans('email.error_url') }} {{ url }}<br>
+    {{ trans('email.error_url') }} {{ url }}<br />
     {{ trans('email.error_user_agent') }} {{ userAgent }}
 </p>
 

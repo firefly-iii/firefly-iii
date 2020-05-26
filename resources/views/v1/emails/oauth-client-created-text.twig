@@ -1,9 +1,7 @@
 {% include 'emails.header-text' %}
-{{ trans('email.oauth_created_body_text', {name:  client.name }) }}
+{{ trans('email.oauth_created_body', {name:  client.name, url: client.redirect })|raw }}
 
-{{ client.redirect }}
+{{ trans('email.oauth_created_explanation_text')|raw }}
 
-{{ trans('email.oauth_created_explanation_text') }}
-
-{{ trans('email.oauth_created_undo') }}
+{{ trans('email.oauth_created_undo', { url:route('profile.index')})|raw }}
 {% include 'emails.footer-text' %}

@@ -1,7 +1,7 @@
 {% include 'emails.header-text' %}
-{{ trans('email.access_token_created_body_1')}}
+{{ trans('email.access_token_created_body')|raw  }}
 
-{{ trans('email.access_token_created_body_2_text')}}
+{{ trans('email.access_token_created_explanation_text')|raw }}
 
-{{ trans('email.access_token_created_body_3', {url: route('profile.index') })}}
+{{ trans('email.access_token_created_revoke', {url: route('profile.index') })|raw }}
 {% include 'emails.footer-text' %}

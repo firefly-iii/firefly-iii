@@ -1,10 +1,10 @@
 {% include 'emails.header-text' %}
-{{ trans('email.email_change_body_to_new')}}
+{{ trans('email.email_change_body_to_new')|raw }}
 
-{{trans('email.email_change_old')}} {{ oldEmail }}
+{{trans('email.email_change_old')|raw }} {{ oldEmail }}
 
-{{trans('email.email_change_new')}} {{ newEmail }}
+{{trans('email.email_change_new')|raw }} {{ newEmail }}
 
-{{ trans('email.email_change_instructions')}}
+{{ trans('email.email_change_instructions')|raw }}
 {{ uri }}
 {% include 'emails.footer-text' %}

@@ -1,11 +1,11 @@
 {% include 'emails.header-text' %}
-{{ trans('email.email_change_body_to_old_text')}}
+{{ trans('email.email_change_body_to_old_text')|raw }}
 
-{{ trans('email.email_change_ignore')}}
+{{ trans('email.email_change_ignore')|raw }}
 
-{{trans('email.email_change_old')}} {{ oldEmail }}
+{{trans('email.email_change_old')|raw }} {{ oldEmail }}
 
-{{trans('email.email_change_new')}} {{ newEmail }}
+{{trans('email.email_change_new')|raw }} {{ newEmail }}
 
-{{ trans('email.email_change_undo_link')}} {{ uri }}
+{{ trans('email.email_change_undo_link')|raw }} {{ uri }}
 {% include 'emails.footer-text' %}

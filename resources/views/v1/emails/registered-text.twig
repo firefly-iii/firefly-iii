@@ -1,16 +1,17 @@
 {% include 'emails.header-text' %}
-{{ trans('email.registered_welcome_text')}}
 
-* {{ trans('email.registered_pw_text')}}
-* {{ trans('email.registered_help')}}
-* {{ trans('email.registered_doc_text')}}
+{{ trans('email.registered_welcome_text')|raw }}
 
-{{ trans('email.registered_closing')}}
+* {{ trans('email.registered_pw_text')|raw }}
+* {{ trans('email.registered_help')|raw }}
+* {{ trans('email.registered_doc_text')|raw }}
 
-{{ trans('email.registered_firefly_iii_link')}}
+{{ trans('email.registered_closing')|raw }}
+
+{{ trans('email.registered_firefly_iii_link')|raw }}
 {{ address }}
 
-{{ trans('email.registered_pw_reset_link')}}
+{{ trans('email.registered_pw_reset_link')|raw }}
 {{ address }}/password/reset
 
 {{ trans('email.registered_doc_link')}}
