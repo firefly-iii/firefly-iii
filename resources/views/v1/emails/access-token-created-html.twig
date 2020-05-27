@@ -1,13 +1,13 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.access_token_created_body')}}
+    {{ trans('email.access_token_created_body') }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.access_token_created_explanation_html')|raw }}
+    {{ trans('email.access_token_created_explanation')|raw }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.access_token_created_revoke', {url: route('profile.index') })}}
+    {{ trans('email.access_token_created_revoke', {url: route('profile.index') }) }}
 </p>
 {% include 'emails.footer-html' %}

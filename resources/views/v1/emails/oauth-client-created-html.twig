@@ -1,10 +1,10 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.oauth_created_body', { name:client.name, url: "<span style=\"font-family: monospace;\">" ~ client.redirect ~ "</span>"})|raw }}
+    {{ trans('email.oauth_created_body', { name:client.name, url: client.redirect })|raw }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.oauth_created_explanation_html')|raw }}
+    {{ trans('email.oauth_created_explanation')|raw }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">

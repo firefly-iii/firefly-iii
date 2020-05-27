@@ -1,11 +1,11 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.registered_welcome_html', {address: address})|raw }}
+    {{ trans('email.registered_welcome', {address: address})|raw }}
 </p>
 
 <ul>
     <li style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-        {{ trans('email.registered_pw_html', {address: address})|raw }}
+        {{ trans('email.registered_pw', {address: address})|raw }}
     </li>
     <li style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
         {{ trans('email.registered_help')}}

@@ -1,8 +1,8 @@
 {% include 'emails.header-text' %}
 
-{{ trans('email.registered_welcome_text')|raw }}
+{{ trans('email.registered_welcome')|striptags|raw }}
 
-* {{ trans('email.registered_pw_text')|raw }}
+* {{ trans('email.registered_pw')|striptags|raw }}
 * {{ trans('email.registered_help')|raw }}
 * {{ trans('email.registered_doc_text')|raw }}
 
