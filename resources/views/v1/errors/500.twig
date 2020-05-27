@@ -48,10 +48,8 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">Whoops</div>
-        <code class="text">There was a fatal error. Please check the log files in "storage/logs" or use "docker logs -f [container]"
-        to see what's going on.
-        </code>
+        <div class="title">{{ trans('errors.whoops') }}</div>
+        <code class="text">{{ trans('errors.fatal_error') }}</code>
 
     </div>
     </div>
