@@ -79,7 +79,7 @@ class ReportNewJournalsMail extends Mailable
         $this->transform();
 
         return $this->view('emails.report-new-journals-html')->text('emails.report-new-journals-text')
-                    ->subject($subject);
+                    ->subject(trans_choice('email.new_journals_subject', $this->groups->count() ));
     }
 
     private function transform(): void
