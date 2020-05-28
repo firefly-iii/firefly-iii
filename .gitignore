@@ -2,7 +2,6 @@
 /frontend/node_modules
 /public/hot
 /public/storage
-/public/v1/js
 /storage/*.key
 /vendor
 /.vagrant
