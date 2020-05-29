@@ -202,7 +202,7 @@ return [
     'gte.string'  => ':attribute trebuie să fie mai mare sau egal cu :value caractere.',
     'gte.array'   => ':attribute trebuie sa aiba :value valori sau mai multe.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'amount_required_for_auto_budget' => 'Suma este necesară.',
+    'auto_budget_amount_positive'     => 'Suma trebuie să fie mai mare decât zero.',
+    'auto_budget_period_mandatory' => 'Perioada de autobuget este un câmp obligatoriu.',
 ];

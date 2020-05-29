@@ -94,10 +94,10 @@ class Cron extends Command
         }
 
         /*
-         * Fire telemetry cron job (disabled):
+         * Fire telemetry cron job
          */
         try {
-            //$this->telemetryCronJob($force, $date);
+            $this->telemetryCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -106,7 +106,7 @@ class Cron extends Command
 
         $this->info('More feedback on the cron jobs can be found in the log files.');
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

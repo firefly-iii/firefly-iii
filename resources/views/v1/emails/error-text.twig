@@ -1,31 +1,27 @@
 {% include 'emails.header-text' %}
-Firefly III v{{ version }} ran into an error: {{ errorMessage }}.
+{{ trans('email.error_intro', { version: version, errorMessage: errorMessage })|striptags|raw }}
 
-The error was of type "{{ class }}".
+{{ trans('email.error_type', {class: class })|raw }}
 
-The error occured on/at: {{ time }}.
+{{ trans('email.error_timestamp', {time: time })|raw }}
 
-This error occured in file "{{ file }}" on line {{ line }} with code {{ code }}.
+{{ trans('email.error_location', { file: file , line: line, code: code })|striptags|raw }}
 
 {% if loggedIn %}
-    The error was encountered by user #{{ user.id }}, {{ user.email }}.
+{{     trans('email.error_user', { id: user.id, email: user.email })|striptags|raw }}
 {% else %}
-    There was no user logged in for this error or no user was detected.
+{{     trans('email.error_no_user')|raw }}
 {% endif %}
 
-The IP address related to this error is: {{ ip }}
-URL is: {{ url }}
-User agent: {{ userAgent }}
+{{ trans('email.error_ip', { ip: ip }) }}
+{{ trans('email.error_url', {url :url}) }}
+{{ trans('email.error_user_agent', {userAgent: userAgent } ) }}
 
-The full stacktrace is below. If you think this is a bug in Firefly III, you
-can forward this message to james@firefly-iii.org. This can help fix
-the bug you just encountered.
+{{ trans('email.error_stacktrace')|striptags|raw }}
 
-If you prefer, you can also open a new issue here:
+{{ trans('email.error_github_text' )|raw }}
 
-https://github.com/firefly-iii/firefly-iii/issues
+{{ trans('email.error_stacktrace_below')|raw }}
 
-The full stacktrace is below:
-
-{{ stackTrace }}
+{{ stackTrace|raw }}
 {% include 'emails.footer-text' %}

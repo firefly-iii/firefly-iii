@@ -37,8 +37,11 @@ Vue.component('passport-personal-access-tokens', PersonalAccessTokens);
 
 Vue.component('profile-options', ProfileOptions);
 
+const i18n = require('./i18n');
+
 let props = {};
 new Vue({
+            i18n,
             el: "#passport_clients",
             render: (createElement) => {
                 return createElement(ProfileOptions, { props: props })

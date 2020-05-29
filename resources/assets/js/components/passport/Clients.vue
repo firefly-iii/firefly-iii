@@ -34,23 +34,23 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                        OAuth Clients
+                        {{ $t('firefly.profile_oauth_clients') }}
                 </h3>
             </div>
 
             <div class="box-body">
                 <!-- Current Clients -->
                 <p class="m-b-none" v-if="clients.length === 0">
-                    You have not created any OAuth clients.
+                    {{ $t('firefly.profile_oauth_no_clients') }}
                 </p>
 
                 <table class="table table-borderless m-b-none" v-if="clients.length > 0">
-                    <caption>Clients</caption>
+                    <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Client ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Secret</th>
+                            <th scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
+                            <th scope="col">{{ $t('firefly.name') }}</th>
+                            <th scope="col">{{ $t('firefly.profile_oauth_client_secret') }}</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -76,14 +76,14 @@
                             <!-- Edit Button -->
                             <td style="vertical-align: middle;">
                                 <a class="action-link btn btn-default btn-xs" @click="edit(client)">
-                                    Edit
+                                    {{ $t('firefly.edit') }}
                                 </a>
                             </td>
 
                             <!-- Delete Button -->
                             <td style="vertical-align: middle;">
                                 <a class="action-link btn btn-danger btn-xs" @click="destroy(client)">
-                                    Delete
+                                    {{ $t('firefly.delete') }}
                                 </a>
                             </td>
                         </tr>
@@ -92,7 +92,7 @@
             </div>
             <div class="box-footer">
                 <a class="action-link btn btn-success" @click="showCreateClientForm">
-                    Create New Client
+                    {{ $t('firefly.profile_oauth_create_new_client') }}
                 </a>
             </div>
         </div>
@@ -105,14 +105,14 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Create Client
+                            {{ $t('firefly.profile_oauth_create_client') }}
                         </h4>
                     </div>
 
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="createForm.errors.length > 0">
-                            <p><strong>Whoops!</strong> Something went wrong!</p>
+                            <p><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in createForm.errors">
@@ -125,28 +125,28 @@
                         <form class="form-horizontal" role="form">
                             <!-- Name -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Name</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.name') }}</label>
 
                                 <div class="col-md-7">
                                     <input id="create-client-name" type="text" class="form-control"
                                                                 @keyup.enter="store" v-model="createForm.name">
 
                                     <span class="help-block">
-                                        Something your users will recognize and trust.
+                                        {{ $t('firefly.profile_oauth_name_help') }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Redirect URL</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
                                                     @keyup.enter="store" v-model="createForm.redirect">
 
                                     <span class="help-block">
-                                        Your application's authorization callback URL.
+                                        {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
                                 </div>
                             </div>
@@ -155,10 +155,10 @@
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
 
                         <button type="button" class="btn btn-primary" @click="store">
-                            Create
+                            {{ $t('firefly.profile_create') }}
                         </button>
                     </div>
                 </div>
@@ -173,14 +173,14 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Edit Client
+                            {{ $t('firefly.profile_oauth_edit_client') }}
                         </h4>
                     </div>
 
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="editForm.errors.length > 0">
-                            <p><strong>Whoops!</strong> Something went wrong!</p>
+                            <p><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in editForm.errors">
@@ -193,28 +193,28 @@
                         <form class="form-horizontal" role="form">
                             <!-- Name -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Name</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.name') }}</label>
 
                                 <div class="col-md-7">
                                     <input id="edit-client-name" type="text" class="form-control"
                                                                 @keyup.enter="update" v-model="editForm.name">
 
                                     <span class="help-block">
-                                        Something your users will recognize and trust.
+                                        {{ $t('firefly.profile_oauth_name_help') }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Redirect URL</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
                                                     @keyup.enter="update" v-model="editForm.redirect">
 
                                     <span class="help-block">
-                                        Your application's authorization callback URL.
+                                        {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
                                 </div>
                             </div>
@@ -223,10 +223,10 @@
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
 
                         <button type="button" class="btn btn-primary" @click="update">
-                            Save Changes
+                            {{ $t('firefly.profile_save_changes') }}
                         </button>
                     </div>
                 </div>
@@ -356,7 +356,7 @@
                         if (typeof error.response.data === 'object') {
                             form.errors = _.flatten(_.toArray(error.response.data));
                         } else {
-                            form.errors = ['Something went wrong. Please try again.'];
+                            form.errors = [$t('firefly.profile_try_again')];
                         }
                     });
             },

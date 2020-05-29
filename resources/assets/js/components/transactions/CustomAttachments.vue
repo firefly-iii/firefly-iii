@@ -26,11 +26,20 @@
             {{ title }}
         </div>
         <div class="col-sm-12">
-            <input multiple="multiple"
-                   autocomplete="off"
-                   :placeholder="title"
-                   :title="title"
-                   :name="name" type="file" class="form-control">
+            <div class="input-group">
+                <input multiple="multiple"
+                       autocomplete="off"
+                       :placeholder="title"
+                       :title="title"
+                       ref="input"
+                       :name="name" type="file" class="form-control">
+                <span class="input-group-btn">
+            <button
+                    v-on:click="clearAtt"
+                    class="btn btn-default"
+                    type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+            </div>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -47,6 +56,9 @@
             error: Array
         },
         methods: {
+            clearAtt: function() {
+                this.$refs.input.value = '';
+            },
             hasError: function () {
                 return this.error.length > 0;
             },

@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.7 (API 1.1.0) - 2020-06-01
+
+Firefly III v5.2.7 is the first version of Firefly III with the ability to opt-in to usage telemetry. This entirely optional of course.
+
+## [5.2.6 (API 1.1.0)] - 2020-05-22
+
+### Added
+- [Issue 3049](https://github.com/firefly-iii/firefly-iii/issues/3049) New transaction triggers for dates.
+- Warning if recurring transactions no longer run.
+- View fixed for recurring transactions.
+- A new rule action that will DELETE transactions.
+- Four-week reminder to check for updates if you disabled updates.
+
+### Changed
+- [Issue 3011](https://github.com/firefly-iii/firefly-iii/issues/3011) Reconciliation page has "select all"-button and remembers checkboxes even when you refresh the page.
+- [Issue 3348](https://github.com/firefly-iii/firefly-iii/issues/3348) Smarter menu for accounts on the dashboard
+- Demo user can't upload attachments.
+- Demo user can't set locale.
+
+### Fixed
+- [Issue 3339](https://github.com/firefly-iii/firefly-iii/issues/3339) Could not mass-delete reconciliation transactions.
+- [Issue 3344](https://github.com/firefly-iii/firefly-iii/issues/3344) Could not attach files to accounts.
+- [Issue 3335](https://github.com/firefly-iii/firefly-iii/issues/3335) Fix reconciliation currency account, thanks to @maksimkurb
+- [Issue 3350](https://github.com/firefly-iii/firefly-iii/issues/3350) Better charts in account overview
+- [Issue 3355](https://github.com/firefly-iii/firefly-iii/issues/3355) Better sorting for bills in reports.
+- [Issue 3363](https://github.com/firefly-iii/firefly-iii/issues/3363) New strings translated, thanks to @sephrat
+- [Issue 3367](https://github.com/firefly-iii/firefly-iii/issues/3367) Error in views when uploading > 1 attachments
+- [Issue 3368](https://github.com/firefly-iii/firefly-iii/issues/3368) Wrong hover-text
+- [Issue 3374](https://github.com/firefly-iii/firefly-iii/issues/3374) Inconsistent net worth calculation. You may seem to lose money.
+- [Issue 3376](https://github.com/firefly-iii/firefly-iii/issues/3376) Better rule ordering when cloning rules.
+- [Issue 3381](https://github.com/firefly-iii/firefly-iii/issues/3381) Fix for LDAP
+- Better rounding for budget amounts.
+
 ## [5.2.5 (API 1.1.0)] - 2020-05-04
 
 ### Added

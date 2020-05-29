@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\SubmitTelemetryData;
 use FireflyIII\Models\Configuration;
 use Log;
@@ -35,9 +36,17 @@ class TelemetryCronjob extends AbstractCronjob
 
     /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function fire(): bool
     {
+        // do not fire if telemetry is disabled.
+        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
+            Log::warning('Telemetry is disabled. The cron job will do nothing.');
+            return false;
+        }
+
+
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_tm_job', 0);
         $lastTime      = (int) $config->data;
@@ -46,8 +55,8 @@ class TelemetryCronjob extends AbstractCronjob
         if (0 === $lastTime) {
             Log::info('Telemetry cron-job has never fired before.');
         }
-        // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43200) {
+        // less than a week ago:
+        if ($lastTime > 0 && $diff <= 604800) {
             Log::info(sprintf('It has been %s since the telemetry cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
@@ -60,8 +69,8 @@ class TelemetryCronjob extends AbstractCronjob
                 Log::info('Execution of the telemetry cron-job has been FORCED.');
             }
         }
-
-        if ($lastTime > 0 && $diff > 43200) {
+        // more than a week ago.
+        if ($lastTime > 0 && $diff > 604799) {
             Log::info(sprintf('It has been %s since the telemetry cron-job has fired. It will fire now!', $diffForHumans));
         }
 
@@ -74,7 +83,7 @@ class TelemetryCronjob extends AbstractCronjob
 
 
     /**
-     *
+     * @throws FireflyException
      */
     private function fireTelemetry(): void
     {
@@ -84,6 +93,9 @@ class TelemetryCronjob extends AbstractCronjob
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
+
+        // TODO remove old, submitted telemetry data.
+
         app('fireflyconfig')->set('last_tm_job', (int) $this->date->format('U'));
         Log::info('Done with telemetry cron job task.');
     }

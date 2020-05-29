@@ -109,15 +109,13 @@ class NetWorth implements NetWorthInterface
 
             Log::debug(sprintf('Balance is %s', $balance));
 
-            // if the account is a credit card, subtract the virtual balance from the balance,
-            // to better reflect that this is not money that is actually "yours".
-            $role           = (string) $this->accountRepository->getMetaValue($account, 'account_role');
+            // always subtract virtual balance.
             $virtualBalance = (string) $account->virtual_balance;
-            if ('ccAsset' === $role && '' !== $virtualBalance && (float) $virtualBalance > 0) {
+            if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            Log::debug(sprintf('Balance corrected to %s', $balance));
+            Log::debug(sprintf('Balance corrected to %s because of virtual balance (%s)', $balance, $virtualBalance));
 
             if (!isset($netWorth[$currencyId])) {
                 $netWorth[$currencyId] = '0';

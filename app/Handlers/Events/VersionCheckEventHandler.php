@@ -54,6 +54,7 @@ class VersionCheckEventHandler
         $value      = (int) $permission->data;
         if (1 !== $value) {
             Log::info('Update check is not enabled.');
+            $this->warnToCheckForUpdates($event);
 
             return;
         }
@@ -84,5 +85,37 @@ class VersionCheckEventHandler
 
         session()->flash($release['level'], $release['message']);
         app('fireflyconfig')->set('last_update_check', time());
+    }
+
+    /**
+     * @param RequestedVersionCheckStatus $event
+     */
+    protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        /** @var User $user */
+        $user = $event->user;
+        if (!$repository->hasRole($user, 'owner')) {
+            Log::debug('User is not admin, done.');
+
+            return;
+        }
+
+        /** @var Configuration $lastCheckTime */
+        $lastCheckTime = app('fireflyconfig')->get('last_update_warning', time());
+        $now           = time();
+        $diff          = $now - $lastCheckTime->data;
+        Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
+        if ($diff < 604800 * 4) {
+            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
+
+            return;
+        }
+        // last check time was more than a week ago.
+        Log::debug('Have warned about a new version in four weeks!');
+
+        session()->flash('info', (string) trans('firefly.disabled_but_check'));
+        app('fireflyconfig')->set('last_update_warning', time());
     }
 }

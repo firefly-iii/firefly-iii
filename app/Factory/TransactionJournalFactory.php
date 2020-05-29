@@ -428,7 +428,7 @@ class TransactionJournalFactory
                                             ->first();
         }
         if (null !== $result) {
-            Log::warning('Found a duplicate!');
+            Log::warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $result->transactionJournal->transaction_group_id));
         }
     }
