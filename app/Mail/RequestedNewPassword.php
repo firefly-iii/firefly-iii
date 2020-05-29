@@ -60,6 +60,6 @@ class RequestedNewPassword extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.password-html')->text('emails.password-text')->subject(trans('email.reset_pw_subject'));
+        return $this->view('emails.password-html')->text('emails.password-text')->subject((string) trans('email.reset_pw_subject'));
     }
 }

@@ -67,6 +67,6 @@ class OAuthTokenCreatedMail extends Mailable
     public function build(): self
     {
         return $this->view('emails.oauth-client-created-html')->text('emails.oauth-client-created-text')
-                    ->subject(trans('email.oauth_created_subject'));
+                    ->subject((string) trans('email.oauth_created_subject'));
     }
 }

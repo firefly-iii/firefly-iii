@@ -70,6 +70,6 @@ class ConfirmEmailChangeMail extends Mailable
     public function build(): self
     {
         return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject(trans('email.email_change_subject'));
+                    ->subject((string) trans('email.email_change_subject'));
     }
 }

@@ -61,6 +61,6 @@ class RegisteredUser extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.registered-html')->text('emails.registered-text')->subject(trans('email.registered_subject'));
+        return $this->view('emails.registered-html')->text('emails.registered-text')->subject((string) trans('email.registered_subject'));
     }
 }
