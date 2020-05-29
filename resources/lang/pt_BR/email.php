@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hi there,',
+    'greeting'                         => 'Olá,',
     'closing'                          => 'Beep boop,',
     'signature'                        => 'The Firefly III Mail Robot',
     'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
@@ -40,16 +40,16 @@ return [
     'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
 
     // registered
-    'registered_subject'               => 'Welcome to Firefly III!',
+    'registered_subject'               => 'Bem-vindo(a) ao Firefly III!',
     'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
     'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
     'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">grand theory</a>.',
     'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
-    'registered_closing'               => 'Enjoy!',
+    'registered_closing'               => 'Aproveite!',
     'registered_firefly_iii_link'      => 'Firefly III:',
-    'registered_pw_reset_link'         => 'Password reset:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_pw_reset_link'         => 'Redefinição de senha:',
+    'registered_doc_link'              => 'Documentação:',
 
     // email change
     'email_change_subject'             => 'Your Firefly III email address has changed',
