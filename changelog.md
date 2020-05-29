@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.7 (API 1.1.0) - 2020-06-01
+
+Firefly III v5.2.7 is the first version of Firefly III with the ability to opt-in to usage telemetry. This entirely optional of course.
+
 ## [5.2.6 (API 1.1.0)] - 2020-05-22
 
 ### Added
