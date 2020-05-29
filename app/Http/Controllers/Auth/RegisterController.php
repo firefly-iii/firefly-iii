@@ -104,6 +104,9 @@ class RegisterController extends Controller
 
         $this->registered($request, $user);
 
+        // telemetry
+        \Telemetry::feature('system.users.count', User::count());
+
         return redirect($this->redirectPath());
     }
 

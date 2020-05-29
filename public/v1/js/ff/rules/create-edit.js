@@ -233,6 +233,7 @@ function updateActionInput(selectList) {
         case 'clear_category':
         case 'clear_budget':
         case 'clear_notes':
+        case 'delete_transaction':
         case 'remove_all_tags':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.attr('disabled', 'disabled');
@@ -277,7 +278,6 @@ function updateActionInput(selectList) {
         case 'update_piggy':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/piggy-banks');
-            break;
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');

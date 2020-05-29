@@ -69,7 +69,6 @@ class ReportIntegrity extends Command
             echo $result;
         }
 
-        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 }

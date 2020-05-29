@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Telemetry as TelemetryModel;
+use JsonException;
 use Log;
 
 /**
@@ -66,6 +68,25 @@ class Telemetry
     }
 
     /**
+     * @param string $key
+     * @param string $value
+     * @param int    $days
+     */
+    public function recurring(string $key, string $value, int $days): void
+    {
+        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
+            // hard stop if not allowed to do telemetry.
+            // do nothing!
+            return;
+        }
+
+        $cutoffDate = Carbon::today()->subDays($days);
+        if (!$this->hasRecentEntry('recurring', $key, $value, $cutoffDate)) {
+            $this->storeEntry('recurring', $key, $value);
+        }
+    }
+
+    /**
      * String telemetry stores a string value as a telemetry entry. Values could include:
      *
      * - "php-version", "php7.3"
@@ -85,7 +106,6 @@ class Telemetry
         }
         Log::info(sprintf('Logged telemetry string "%s" with value "%s".', $name, $value));
 
-        // no storage backend yet, do nothing.
         $this->storeEntry('string', $name, $value);
     }
 
@@ -98,16 +118,49 @@ class Telemetry
      */
     private function hasEntry(string $type, string $key, string $value): bool
     {
+        try {
+            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR, 512);
+        } catch (JsonException $e) {
+            Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
+            $jsonEncoded = [];
+        }
+
         return TelemetryModel
                    ::where('type', $type)
                    ->where('key', $key)
-                   ->where('value', json_encode($value, JSON_THROW_ON_ERROR, 512))
+                   ->where('value', $jsonEncoded)
+                   ->count() > 0;
+    }
+
+    /**
+     * @param string $type
+     * @param string $key
+     * @param string $value
+     * @param Carbon $date
+     *
+     * @return bool
+     */
+    private function hasRecentEntry(string $type, string $key, string $value, Carbon $date): bool
+    {
+        try {
+            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR, 512);
+        } catch (JsonException $e) {
+            Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
+            $jsonEncoded = [];
+        }
+
+        return TelemetryModel
+                   ::where('type', $type)
+                   ->where('key', $key)
+                   ->where('created_at', '>=', $date->format('Y-m-d H:i:s'))
+                   ->where('value', $jsonEncoded)
                    ->count() > 0;
     }
 
     /**
      * Store new entry in DB.
      *
+     * @param string $type
      * @param string $name
      * @param string $value
      */

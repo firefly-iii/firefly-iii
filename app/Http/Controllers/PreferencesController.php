@@ -186,9 +186,11 @@ class PreferencesController extends Controller
         }
 
         // same for locale:
-        /** @var Preference $currentLocale */
-        $locale = $request->get('locale');
-        app('preferences')->set('locale', $locale);
+        if (!auth()->user()->hasRole('demo')) {
+            /** @var Preference $currentLocale */
+            $locale = $request->get('locale');
+            app('preferences')->set('locale', $locale);
+        }
 
         // optional fields for transactions:
         $setOptions = $request->get('tj');
@@ -207,6 +209,11 @@ class PreferencesController extends Controller
 
         session()->flash('success', (string) trans('firefly.saved_preferences'));
         app('preferences')->mark();
+
+        // telemetry: user language preference + default language.
+        app('telemetry')->feature('config.firefly.default_language', config('firefly.default_language', 'en_US'));
+        app('telemetry')->feature('user.preferences.language', app('steam')->getLanguage());
+        app('telemetry')->feature('user.preferences.locale', app('steam')->getLocale());
 
         return redirect(route('preferences.index'));
     }

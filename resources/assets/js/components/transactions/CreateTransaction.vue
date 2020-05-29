@@ -449,6 +449,7 @@
                 }).catch(error => {
                     // give user errors things back.
                     // something something render errors.
+
                     console.error('Error in transaction submission.');
                     console.error(error);
                     this.parseErrors(error.response.data);
@@ -475,7 +476,7 @@
                 // if count is 0, send user onwards.
                 if (this.createAnother) {
                     // do message:
-                    this.success_message = '<a href="transactions/show/' + groupId + '">Transaction #' + groupId + ' ("' + this.escapeHTML(title) + '")</a> has been stored.';
+                    this.success_message = this.$t('firefly.transaction_stored_link', { ID: groupId, title: title });
                     this.error_message = '';
                     if (this.resetFormAfter) {
                         // also clear form.
@@ -651,10 +652,10 @@
             parseErrors: function (errors) {
                 this.setDefaultErrors();
                 this.error_message = "";
-                if (errors.message.length > 0) {
-                    this.error_message = this.$t('firefly.errors_submission');
+                if (typeof errors.errors === 'undefined') {
+                    this.error_message = errors.message;
                 } else {
-                    this.error_message = '';
+                    this.error_message = this.$t('firefly.errors_submission');
                 }
                 let transactionIndex;
                 let fieldName;
