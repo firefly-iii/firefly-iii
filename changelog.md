@@ -4,7 +4,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.2.7 (API 1.1.0) - 2020-06-01
 
-Firefly III v5.2.7 is the first version of Firefly III with the ability to opt-in to usage telemetry. This entirely optional of course.
+- Firefly III v5.2.7 is the first version of Firefly III with the ability to opt-in to usage telemetry. This entirely optional of course.
+- New translations have been added for the emails that Firefly III can send. Despite your preferences, these emails may still be in English. See the bottom of this changelog.
+- New translations have been added for error screens that Firefly III may display. Despite your preferences, these error pages may still be in English. See the bottom of this changelog.
+
+About translating errors and email messages.
+
+The translated text is generated outside of what's called the user's "session". When Firefly
+ III operates outside of your session, it can't access your preferences or your data. So it may not be possible for 
+ Firefly III to know which language you would have preferred. You can set the `DEFAULT_LANGUAGE`-environment variable
+ if you want. But user specific preferences may be ignored. 
+
+
+Translation of email and errors. May not be perfect. (1) error does not read user pref. 2: email does not read user pref. 3: stringsnot translated yet.
 
 ## [5.2.6 (API 1.1.0)] - 2020-05-22
 
