@@ -35,17 +35,17 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        {{ $t('profile.authorized_apps') }}
+                        {{ $t('firefly.profile_authorized_apps') }}
                     </h3>
                 </div>
                 <div class="box-body">
                     <!-- Authorized Tokens -->
                     <table class="table table-borderless m-b-none">
-                        <caption>{{ $t('profile.authorized_clients') }}</caption>
+                        <caption>{{ $t('firefly.profile_authorized_clients') }}</caption>
                         <thead>
                         <tr>
                             <th scope="col">{{ $t('firefly.name') }}</th>
-                            <th scope="col">{{ $t('profile.scopes') }}</th>
+                            <th scope="col">{{ $t('firefly.profile_scopes') }}</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -67,7 +67,7 @@
                             <!-- Revoke Button -->
                             <td style="vertical-align: middle;">
                                 <a class="action-link btn btn-danger btn-xs" @click="revoke(token)">
-                                    {{ $t('profile.revoke') }}
+                                    {{ $t('firefly.profile_revoke') }}
                                 </a>
                             </td>
                         </tr>
