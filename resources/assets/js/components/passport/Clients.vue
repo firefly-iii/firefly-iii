@@ -112,7 +112,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="createForm.errors.length > 0">
-                            <p><strong>{{ $t('firefly.whoops') }}</strong> {{ $t('firefly.something_wrong') }}</p>
+                            <p><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in createForm.errors">
@@ -180,7 +180,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="editForm.errors.length > 0">
-                            <p><strong>{{ $t('firefly.whoops') }}</strong> {{ $t('firefly.something_wrong') }}</p>
+                            <p><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in editForm.errors">
@@ -226,7 +226,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
 
                         <button type="button" class="btn btn-primary" @click="update">
-                            {{ $t('firefly.save_changes') }}
+                            {{ $t('firefly.profile_save_changes') }}
                         </button>
                     </div>
                 </div>
@@ -356,7 +356,7 @@
                         if (typeof error.response.data === 'object') {
                             form.errors = _.flatten(_.toArray(error.response.data));
                         } else {
-                            form.errors = [$t('firefly.try_again')];
+                            form.errors = [$t('firefly.profile_try_again')];
                         }
                     });
             },

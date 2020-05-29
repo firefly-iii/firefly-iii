@@ -93,7 +93,7 @@
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p><strong>{{ $t('firefly.whoops') }}</strong> {{ $t('firefly.something_wrong') }}</p>
+                            <p><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -271,7 +271,7 @@
                             if (typeof error.response.data === 'object') {
                                 this.form.errors = _.flatten(_.toArray(error.response.data));
                             } else {
-                                this.form.errors = [ $t('firefly.try_again') ];
+                                this.form.errors = [ $t('firefly.profile_try_again') ];
                             }
                         });
             },
