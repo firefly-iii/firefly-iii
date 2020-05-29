@@ -42,21 +42,33 @@ if (!(false === $databaseUrl)) {
 /*
  * Get SSL parameters from .env file.
  */
-$mysql_ssl_ca_dir =  envNonEmpty('MYSQL_SSL_CAPATH',             null);
-$mysql_ssl_ca_file = envNonEmpty('MYSQL_SSL_CA',                 null);
-$mysql_ssl_cert =    envNonEmpty('MYSQL_SSL_CERT',               null);
-$mysql_ssl_key =     envNonEmpty('MYSQL_SSL_KEY',                null);
-$mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER',             null);
+$mysql_ssl_ca_dir  = envNonEmpty('MYSQL_SSL_CAPATH', null);
+$mysql_ssl_ca_file = envNonEmpty('MYSQL_SSL_CA', null);
+$mysql_ssl_cert    = envNonEmpty('MYSQL_SSL_CERT', null);
+$mysql_ssl_key     = envNonEmpty('MYSQL_SSL_KEY', null);
+$mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER', null);
 $mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
 
-$mysql_ssl_options = [];
-if (!(false === envNonEmpty('MYSQL_USE_SSL', false))) {
-    if ($mysql_ssl_ca_dir  !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_CAPATH            ] = $mysql_ssl_ca_dir;
-    if ($mysql_ssl_ca_file !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_CA                ] = $mysql_ssl_ca_file;
-    if ($mysql_ssl_cert    !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_CERT              ] = $mysql_ssl_cert;
-    if ($mysql_ssl_key     !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_KEY               ] = $mysql_ssl_key;
-    if ($mysql_ssl_ciphers !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_CIPHER            ] = $mysql_ssl_ciphers;
-    if ($mysql_ssl_verify  !== null) $mysql_ssl_options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
+$mySqlSSLOptions = [];
+if (false !== envNonEmpty('MYSQL_USE_SSL', false)) {
+    if (null !== $mysql_ssl_ca_dir) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
+    }
+    if (null !== $mysql_ssl_ca_file) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ssl_ca_file;
+    }
+    if (null !== $mysql_ssl_cert) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CERT] = $mysql_ssl_cert;
+    }
+    if (null !== $mysql_ssl_key) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_KEY] = $mysql_ssl_key;
+    }
+    if (null !== $mysql_ssl_ciphers) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CIPHER] = $mysql_ssl_ciphers;
+    }
+    if (null !== $mysql_ssl_verify) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
+    }
 }
 
 return [
@@ -80,7 +92,7 @@ return [
             'prefix'      => '',
             'strict'      => true,
             'engine'      => 'InnoDB',
-            'options'     => $mysql_ssl_options,
+            'options'     => $mySqlSSLOptions,
         ],
         'pgsql'  => [
             'driver'      => 'pgsql',
