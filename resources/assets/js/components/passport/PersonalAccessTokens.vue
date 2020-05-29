@@ -34,21 +34,21 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                            Personal Access Tokens
+                            {{ $t('profile.personal_access_tokens') }}
                     </h3>
                 </div>
                 <div class="box-body">
                     <!-- No Tokens Notice -->
                     <p class="m-b-none" v-if="tokens.length === 0">
-                        You have not created any personal access tokens.
+                        {{ $t('profile.no_personal_access_token') }}
                     </p>
 
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless m-b-none" v-if="tokens.length > 0">
-                        <caption>Personal Access Tokens</caption>
+                        <caption>{{ $t('profile.personal_access_tokens') }}</caption>
                         <thead>
                             <tr>
-                                <th scope="col">Name</th>
+                                <th scope="col">{{ $t('firefly.name') }}</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -63,7 +63,7 @@
                                 <!-- Delete Button -->
                                 <td style="vertical-align: middle;">
                                     <a class="action-link text-danger" @click="revoke(token)">
-                                        Delete
+                                        {{ $t('firefly.delete') }}
                                     </a>
                                 </td>
                             </tr>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="box-footer">
                     <a class="action-link btn btn-success" @click="showCreateTokenForm">
-                        Create New Token
+                        {{ $t('profile.create_new_token') }}
                     </a>
                 </div>
             </div>
@@ -86,14 +86,14 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Create Token
+                            {{ $t('profile.create_token') }}
                         </h4>
                     </div>
 
                     <div class="modal-body">
                         <!-- Form Errors -->
                         <div class="alert alert-danger" v-if="form.errors.length > 0">
-                            <p><strong>Whoops!</strong> Something went wrong!</p>
+                            <p><strong>{{ $t('firefly.whoops') }}</strong> {{ $t('firefly.something_wrong') }}</p>
                             <br>
                             <ul>
                                 <li v-for="error in form.errors">
@@ -106,7 +106,7 @@
                         <form class="form-horizontal" role="form" @submit.prevent="store">
                             <!-- Name -->
                             <div class="form-group">
-                                <label class="col-md-4 control-label">Name</label>
+                                <label class="col-md-4 control-label">{{ $t('firefly.name') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="create-token-name" type="text" class="form-control" name="name" v-model="form.name">
@@ -115,7 +115,7 @@
 
                             <!-- Scopes -->
                             <div class="form-group" v-if="scopes.length > 0">
-                                <label class="col-md-4 control-label">Scopes</label>
+                                <label class="col-md-4 control-label">{{ $t('profile.scopes') }}</label>
 
                                 <div class="col-md-6">
                                     <div v-for="scope in scopes">
@@ -136,10 +136,10 @@
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
 
                         <button type="button" class="btn btn-primary" @click="store">
-                            Create
+                            {{ $t('firefly.create') }}
                         </button>
                     </div>
                 </div>
@@ -154,21 +154,20 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Personal Access Token
+                            {{ $t('profile.personal_access_token') }}
                         </h4>
                     </div>
 
                     <div class="modal-body">
                         <p>
-                            Here is your new personal access token. This is the only time it will be shown so don't lose it!
-                            You may now use this token to make API requests.
+                            {{ $t('profile.personal_access_token_explanation') }}                            
                         </p>
                         <pre><textarea id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
                     </div>
                 </div>
             </div>
@@ -272,7 +271,7 @@
                             if (typeof error.response.data === 'object') {
                                 this.form.errors = _.flatten(_.toArray(error.response.data));
                             } else {
-                                this.form.errors = ['Something went wrong. Please try again.'];
+                                this.form.errors = [ $t('firefly.try_again') ];
                             }
                         });
             },
