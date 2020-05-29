@@ -82,14 +82,8 @@ class LoginController extends Controller
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         Log::info(sprintf('User is trying to login.'));
         if ('ldap' === config('auth.providers.users.driver')) {
-            /**
-             * Temporary bug fix for something that doesn't seem to work in
-             * AdLdap.
-             */
-            $schema = config('ldap.connections.default.schema');
-
             /** @var Adldap\Connections\Provider $provider */
-            Adldap::getProvider('default')->setSchema(new $schema);
+            Adldap::getProvider('default');
         }
 
         $this->validateLogin($request);
@@ -137,6 +131,7 @@ class LoginController extends Controller
             return redirect(route('register')); // @codeCoverageIgnore
         }
 
+
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
@@ -153,6 +148,9 @@ class LoginController extends Controller
 
         $email    = $request->old('email');
         $remember = $request->old('remember');
+
+        // todo must forget 2FA if user ends up here.
+
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }

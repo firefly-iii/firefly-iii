@@ -63,6 +63,6 @@ class AccessTokenCreatedMail extends Mailable
     public function build(): self
     {
         return $this->view('emails.access-token-created-html')->text('emails.access-token-created-text')
-                    ->subject('A new access token was created');
+                    ->subject((string) trans('email.access_token_created_subject'));
     }
 }

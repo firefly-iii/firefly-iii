@@ -68,7 +68,7 @@ return [
     'budget_id'                   => 'Budget',
     'opening_balance'             => 'Solde initial',
     'tagMode'                     => 'Mode du tag',
-    'tag_position'                => 'Localisation du tag',
+    'tag_position'                => 'Emplacement du tag',
     'virtual_balance'             => 'Solde virtuel',
     'targetamount'                => 'Montant cible',
     'account_role'                => 'Rôle du compte',

@@ -54,7 +54,6 @@ class ReportSum extends Command
     {
         $this->reportSum();
 
-        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

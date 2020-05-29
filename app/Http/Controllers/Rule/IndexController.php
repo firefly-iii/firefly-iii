@@ -91,6 +91,7 @@ class IndexController extends Controller
         $user = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
+        $this->ruleGroupRepos->resetRuleGroupOrder();
         $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
 
         return view('rules.index', compact('ruleGroups'));

@@ -95,8 +95,6 @@ class JournalDestroyService
             // update events
             $journal->piggyBankEvents()->update(['transaction_journal_id' => null]);
 
-
-
             $journal->delete();
         } catch (Exception $e) {
             Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore

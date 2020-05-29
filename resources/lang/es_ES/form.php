@@ -266,9 +266,9 @@ return [
     'auto_budget_amount'            => 'Monto del autopresupuesto',
     'auto_budget_period'            => 'Período del autopresupuesto',
 
-    'collected' => 'Collected',
+    'collected' => 'Cobrado',
     'submitted' => 'Enviado',
-    'key' => 'Key',
+    'key' => 'Clave',
     'value' => 'Contenido del registro'
 
 

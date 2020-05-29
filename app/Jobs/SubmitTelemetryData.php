@@ -24,6 +24,7 @@ namespace FireflyIII\Jobs;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Telemetry;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -33,7 +34,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
+use Exception;
 
 /**
  * Class SubmitTelemetryData
@@ -61,7 +64,7 @@ class SubmitTelemetryData implements ShouldQueue
     }
 
     /**
-     *
+     * @throws FireflyException
      */
     public function handle(): void
     {
@@ -77,9 +80,17 @@ class SubmitTelemetryData implements ShouldQueue
         }
 
         $json = $this->parseJson($telemetry);
+        try {
+            $body = json_encode($json, JSON_THROW_ON_ERROR, 512);
+        } catch (JsonException $e) {
+            Log::error($e->getMessage());
+            Log::error('Could not parse JSON.');
+            throw new FireflyException(sprintf('Could not parse telemetry JSON: %s', $e->getMessage()));
+        }
+
         $client  = new Client;
         $options = [
-            'body'    => json_encode($json, JSON_THROW_ON_ERROR, 512),
+            'body'    => $body,
             'headers' => [
                 'Content-Type'    => 'application/json',
                 'Accept'          => 'application/json',
@@ -89,11 +100,11 @@ class SubmitTelemetryData implements ShouldQueue
         ];
         try {
             $result = $client->post($url, $options);
-        } catch (GuzzleException $e) {
+        } catch (GuzzleException|Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             Log::error('Could not submit telemetry.');
-            return;
+            throw new FireflyException(sprintf('Could not submit telemetry: %s', $e->getMessage()));
         }
         $body       = (string) $result->getBody();
         $statusCode = $result->getStatusCode();
@@ -156,6 +167,7 @@ class SubmitTelemetryData implements ShouldQueue
         foreach ($telemetry as $entry) {
             $array[] = [
                 'installation_id' => $entry->installation_id,
+                'collected_at'    => $entry->created_at->format('r'),
                 'type'            => $entry->type,
                 'key'             => $entry->key,
                 'value'           => $entry->value,

@@ -131,6 +131,13 @@
                                         <span class="text-info">
                                         {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
+                                    {% elseif first.transactiontype.type == 'Opening balance' %}
+                                        {# Opening balance stored amount is always negative: find out which way the money goes #}
+                                        {% if groupArray.transactions[0].source_type == 'Initial balance account' %}
+                                            {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}
+                                        {% else %}
+                                            {{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </td>
