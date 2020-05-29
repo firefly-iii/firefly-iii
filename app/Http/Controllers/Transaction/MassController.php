@@ -114,7 +114,7 @@ class MassController extends Controller
 
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -188,7 +188,7 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count ));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));

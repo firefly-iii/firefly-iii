@@ -103,8 +103,8 @@
                         </tr>
                         <tr>
                             <td>{{ trans('list.budget_count') }}</td>
-                            <td>{{ information.budgets }} {{ trans('firefly.budget_or_budgets') }},
-                                {{ information.budgets_with_limits }} {{ trans('firefly.budgets_with_limits') }}</td>
+                            <td>{{ trans_choice('firefly.budget_or_budgets', information.budgets ) }},
+                                {{ trans_choice('firefly.budgets_with_limits', information.budgets_with_limits ) }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.rule_and_groups_count') }}</td>
@@ -114,7 +114,7 @@
                         </tr>
                         <tr>
                             <td>{{ trans('list.tags_count') }}</td>
-                            <td>{{ information.tags }} {{ 'tag_or_tags'|_ }}</td>
+                            <td>{{ trans_choice('firefly.tag_or_tags', information.tags ) }}</td>
                         </tr>
 
                     </table>
