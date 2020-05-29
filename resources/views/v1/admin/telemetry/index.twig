@@ -49,7 +49,7 @@
                     </p>
                     {% else %}
                     <p>
-                        {{ trans('firefly.records_telemetry_present', {count: count}) }}
+                        {{ trans_choice('firefly.records_telemetry_present', count) }}
                     </p>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-default" href="{{ route('admin.telemetry.view') }}" title="{{ 'telemetry_button_view'|_ }}">

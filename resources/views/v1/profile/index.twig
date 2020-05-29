@@ -102,7 +102,7 @@
                         <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
                         {% if enabled2FA == true %}
                             <p class="text-info">
-                                {{ trans('firefly.pref_two_factor_backup_code_count', {count: mfaBackupCount}) }}
+                                {{ trans_choice('firefly.pref_two_factor_backup_code_count', mfaBackupCount) }}
                             </p>
 
                             <div class="btn-group">

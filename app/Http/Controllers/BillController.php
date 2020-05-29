@@ -284,7 +284,7 @@ class BillController extends Controller
         }
 
 
-        $request->session()->flash('success', (string) trans('firefly.rescanned_bill', ['total' => $total]));
+        $request->session()->flash('success', (string) trans_choice('firefly.rescanned_bill', $total));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));

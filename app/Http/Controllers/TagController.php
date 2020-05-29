@@ -217,7 +217,7 @@ class TagController extends Controller
                 $count++;
             }
         }
-        session()->flash('success', (string) trans('firefly.deleted_x_tags', ['count' => $count]));
+        session()->flash('success', (string) trans_choice('firefly.deleted_x_tags', $count));
 
         return redirect(route('tags.index'));
     }
