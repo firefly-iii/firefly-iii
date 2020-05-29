@@ -34,18 +34,18 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                            {{ $t('profile.personal_access_tokens') }}
+                            {{ $t('firefly.profile_personal_access_tokens') }}
                     </h3>
                 </div>
                 <div class="box-body">
                     <!-- No Tokens Notice -->
                     <p class="m-b-none" v-if="tokens.length === 0">
-                        {{ $t('profile.no_personal_access_token') }}
+                        {{ $t('firefly.profile_no_personal_access_token') }}
                     </p>
 
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless m-b-none" v-if="tokens.length > 0">
-                        <caption>{{ $t('profile.personal_access_tokens') }}</caption>
+                        <caption>{{ $t('firefly.profile_personal_access_tokens') }}</caption>
                         <thead>
                             <tr>
                                 <th scope="col">{{ $t('firefly.name') }}</th>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="box-footer">
                     <a class="action-link btn btn-success" @click="showCreateTokenForm">
-                        {{ $t('profile.create_new_token') }}
+                        {{ $t('firefly.profile_create_new_token') }}
                     </a>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            {{ $t('profile.create_token') }}
+                            {{ $t('firefly.profile_create_token') }}
                         </h4>
                     </div>
 
@@ -115,7 +115,7 @@
 
                             <!-- Scopes -->
                             <div class="form-group" v-if="scopes.length > 0">
-                                <label class="col-md-4 control-label">{{ $t('profile.scopes') }}</label>
+                                <label class="col-md-4 control-label">{{ $t('firefly.profile_scopes') }}</label>
 
                                 <div class="col-md-6">
                                     <div v-for="scope in scopes">
@@ -154,13 +154,13 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            {{ $t('profile.personal_access_token') }}
+                            {{ $t('firefly.profile_personal_access_token') }}
                         </h4>
                     </div>
 
                     <div class="modal-body">
                         <p>
-                            {{ $t('profile.personal_access_token_explanation') }}                            
+                            {{ $t('firefly.profile_personal_access_token_explanation') }}
                         </p>
                         <pre><textarea id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
