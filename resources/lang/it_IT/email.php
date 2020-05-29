@@ -76,7 +76,7 @@ return [
 
     // error
     'error_subject'                    => 'Incontrato un errore in Firefly III',
-    'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
+    'error_intro'                      => 'Firefly III v:version ha riscontrato un errore: <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'L\'errore era di tipo ":class".',
     'error_timestamp'                  => 'L\'errore si è verificato il: :time.',
     'error_location'                   => 'Questo errore si è verificato nel file <span style="font-family: monospace;">:file</span> alla riga :line con codice :code.',
