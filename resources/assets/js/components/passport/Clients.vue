@@ -34,23 +34,23 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                        {{ $t('profile.oauth_clients') }}
+                        {{ $t('firefly.profile_oauth_clients') }}
                 </h3>
             </div>
 
             <div class="box-body">
                 <!-- Current Clients -->
                 <p class="m-b-none" v-if="clients.length === 0">
-                    {{ $t('profile.oauth_no_clients') }}
+                    {{ $t('firefly.profile_oauth_no_clients') }}
                 </p>
 
                 <table class="table table-borderless m-b-none" v-if="clients.length > 0">
-                    <caption>{{ $t('profile.oauth_clients_header') }}</caption>
+                    <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
                     <thead>
                         <tr>
-                            <th scope="col">{{ $t('profile.oauth_client_id') }}</th>
+                            <th scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
                             <th scope="col">{{ $t('firefly.name') }}</th>
-                            <th scope="col">{{ $t('profile.oauth_client_secret') }}</th>
+                            <th scope="col">{{ $t('firefly.profile_oauth_client_secret') }}</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -92,7 +92,7 @@
             </div>
             <div class="box-footer">
                 <a class="action-link btn btn-success" @click="showCreateClientForm">
-                    {{ $t('profile.oauth_create_new_client') }}
+                    {{ $t('firefly.profile_oauth_create_new_client') }}
                 </a>
             </div>
         </div>
@@ -105,7 +105,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            {{ $t('profile.oauth_create_client') }}
+                            {{ $t('firefly.profile_oauth_create_client') }}
                         </h4>
                     </div>
 
@@ -132,21 +132,21 @@
                                                                 @keyup.enter="store" v-model="createForm.name">
 
                                     <span class="help-block">
-                                        {{ $t('profile.oauth_name_help') }}
+                                        {{ $t('firefly.profile_oauth_name_help') }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">{{ $t('profile.oauth_redirect_url') }}</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
                                                     @keyup.enter="store" v-model="createForm.redirect">
 
                                     <span class="help-block">
-                                        {{ $t('profile.oauth_redirect_url_help') }}
+                                        {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            {{ $t('profile.oauth_edit_client') }}
+                            {{ $t('firefly.profile_oauth_edit_client') }}
                         </h4>
                     </div>
 
@@ -200,21 +200,21 @@
                                                                 @keyup.enter="update" v-model="editForm.name">
 
                                     <span class="help-block">
-                                        {{ $t('profile.oauth_name_help') }}
+                                        {{ $t('firefly.profile_oauth_name_help') }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Redirect URL -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">{{ $t('profile.oauth_redirect_url') }}</label>
+                                <label class="col-md-3 control-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
                                                     @keyup.enter="update" v-model="editForm.redirect">
 
                                     <span class="help-block">
-                                        {{ $t('profile.oauth_redirect_url_help') }}
+                                        {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
                                 </div>
                             </div>
