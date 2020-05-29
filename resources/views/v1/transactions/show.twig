@@ -82,7 +82,7 @@
                         {% if first.transactiontype.type != 'Withdrawal' or splits == 1 %}
                             <tr>
                                 <td>
-                                    {{ 'source_accounts'|_ }}
+                                    {{ trans_choice('firefly.source_accounts', groupArray.transactions|length ) }}
                                 </td>
                                 <td>
                                     {% for journal in groupArray.transactions %}
@@ -103,7 +103,7 @@
                         {% if first.transactiontype.type != 'Deposit' or splits == 1 %}
                             <tr>
                                 <td>
-                                    {{ 'destination_accounts'|_ }}
+                                    {{ trans_choice('firefly.destination_accounts', groupArray.transactions|length ) }}
 
                                 </td>
                                 <td>
