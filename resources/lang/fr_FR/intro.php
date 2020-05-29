@@ -72,7 +72,7 @@ return [
     'reports_index_intro'                             => 'Utilisez ces rapports pour obtenir des informations détaillées sur vos finances.',
     'reports_index_inputReportType'                   => 'Choisissez un type de rapport. Consultez les pages d\'aide pour voir ce que vous présente chaque rapport.',
     'reports_index_inputAccountsSelect'               => 'Vous pouvez exclure ou inclure les comptes d\'actifs comme bon vous semble.',
-    'reports_index_inputDateRange'                    => 'La plage de dates sélectionnée est entièrement libre : de un jour à 10 ans.',
+    'reports_index_inputDateRange'                    => 'L\'intervalle de dates sélectionné est entièrement libre : de un jour à 10 ans.',
     'reports_index_extra-options-box'                 => 'Selon le rapport que vous avez sélectionné, vous pouvez sélectionner des filtres et options supplémentaires ici. Regardez cette case lorsque vous modifiez les types de rapport.',
 
     // reports (reports)
