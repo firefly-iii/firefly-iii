@@ -131,6 +131,7 @@ class LoginController extends Controller
             return redirect(route('register')); // @codeCoverageIgnore
         }
 
+
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
@@ -147,6 +148,9 @@ class LoginController extends Controller
 
         $email    = $request->old('email');
         $remember = $request->old('remember');
+
+        // todo must forget 2FA if user ends up here.
+
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
