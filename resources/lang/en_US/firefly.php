@@ -674,7 +674,7 @@ return [
     'profile_no_personal_access_token'          => 'You have not created any personal access tokens.',
     'profile_create_new_token'                  => 'Create New Token',
     'profile_create_token'                      => 'Create Token',
-
+    'profile_create'                            => 'Create',
 
     // export data:
     'import_and_export_menu'                    => 'Import and export',

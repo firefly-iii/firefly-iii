@@ -158,7 +158,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
 
                         <button type="button" class="btn btn-primary" @click="store">
-                            {{ $t('firefly.create') }}
+                            {{ $t('firefly.profile_create') }}
                         </button>
                     </div>
                 </div>
