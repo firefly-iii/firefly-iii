@@ -43,7 +43,7 @@ return [
     'journal_currency_id'       => 'Monedă',
     'currency_id'               => 'Monedă',
     'transaction_currency_id'   => 'Monedă',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Monedă',
     'external_ip'               => 'IP-ul extern al serverului dvs.',
     'attachments'               => 'Fișiere atașate',
     'journal_amount'            => 'Suma',
@@ -194,7 +194,7 @@ return [
     'blocked'               => 'Este blocat?',
     'blocked_code'          => 'Motiv pentru blocare',
     'login_name'            => 'Logare',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Este administrator?',
 
     // import
     'apply_rules'           => 'Aplică reguli',
@@ -262,14 +262,14 @@ return [
     'expected_on'               => 'Așteptat pe',
     'paid'                      => 'Plătit',
 
-    'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_type'            => 'Auto-buget',
+    'auto_budget_amount'            => 'Suma auto-bugetului',
+    'auto_budget_period'            => 'Perioadă auto-buget',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Colectat',
+    'submitted' => 'Trimis',
+    'key' => 'Cheie',
+    'value' => 'Conținutul înregistrării'
 
 
 ];

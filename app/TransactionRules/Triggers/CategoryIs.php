@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -76,31 +75,6 @@ final class CategoryIs extends AbstractTrigger implements TriggerInterface
                 return true;
             }
         }
-
-        if (null === $category) {
-            // perhaps transactions have this category?
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                $category = $transaction->categories()->first();
-                if (null !== $category) {
-                    $name = strtolower($category->name);
-                    if ($name === strtolower($this->triggerValue)) {
-                        Log::debug(
-                            sprintf(
-                                'RuleTrigger CategoryIs for journal #%d (transaction #%d): "%s" is "%s", return true.',
-                                $journal->id,
-                                $transaction->id,
-                                $name,
-                                $this->triggerValue
-                            )
-                        );
-
-                        return true;
-                    }
-                }
-            }
-        }
-
         Log::debug(sprintf('RuleTrigger CategoryIs for journal #%d: does not have category "%s", return false.', $journal->id, $this->triggerValue));
 
         return false;

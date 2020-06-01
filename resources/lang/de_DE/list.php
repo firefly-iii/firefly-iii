@@ -77,7 +77,7 @@ return [
     'type'                    => 'Typ',
     'completed'               => 'Abgeschlossen',
     'iban'                    => 'IBAN',
-    'paid_current_period'     => 'Diese Periode bezahlt',
+    'paid_current_period'     => 'Diesen Zeitraum bezahlt',
     'email'                   => 'E-Mail',
     'registered_at'           => 'Registriert am',
     'is_blocked'              => 'Ist blockiert',

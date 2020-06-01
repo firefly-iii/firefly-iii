@@ -217,10 +217,16 @@ return [
         | Windows Authentication Middleware (SSO)
         |--------------------------------------------------------------------------
         |
-        | Discover:
+        | Enabled:
         |
-        |   The 'discover' value is the users attribute you would
-        |   like to locate LDAP users by in your directory.
+        |   The middleware will be registered only if enabled is set to true.
+        |   If you update this file, beware, this is not a standard
+        |   AdLdap2-Laravel configuration key.
+        |
+        | Locate Users By:
+        |
+        |   This value is the users attribute you would like to locate LDAP
+        |   users by in your directory.
         |
         |   For example, if 'samaccountname' is the value, then your LDAP server is
         |   queried for a user with the 'samaccountname' equal to the value of
@@ -229,9 +235,9 @@ return [
         |   If a user is found, they are imported (if using the DatabaseUserProvider)
         |   into your local database, then logged in.
         |
-        | Key:
+        | Server Key:
         |
-        |    The 'key' value represents the 'key' of the $_SERVER
+        |    This value represents the 'key' of the $_SERVER
         |    array to pull the users account name from.
         |
         |    For example, $_SERVER['AUTH_USER'].
@@ -239,8 +245,9 @@ return [
         */
 
         'windows' => [
-            'discover' => envNonEmpty('WINDOWS_SSO_DISCOVER', 'samaccountname'),
-            'key'      => envNonEmpty('WINDOWS_SSO_KEY', 'AUTH_USER'),
+            'enabled'         => envNonEmpty('WINDOWS_SSO_ENABLED', false),
+            'locate_users_by' => envNonEmpty('WINDOWS_SSO_DISCOVER', 'samaccountname'),
+            'server_key'      => envNonEmpty('WINDOWS_SSO_KEY', 'AUTH_USER'),
         ],
     ],
 

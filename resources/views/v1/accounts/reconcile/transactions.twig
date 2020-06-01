@@ -20,8 +20,11 @@
         {# start marker #}
         {% if journal.date < start and startSet == false %}
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     &nbsp;
+                </td>
+                <td>
+                    <input type="checkbox" class="check_all_btn">
                 </td>
                 <td colspan="3">
                     <span class="label label-default">
@@ -38,8 +41,11 @@
         {# end marker #}
         {% if journal.date <= end and endSet == false %}
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     &nbsp;
+                </td>
+                <td>
+                    <input type="checkbox" class="check_all_btn">
                 </td>
                 <td colspan="3">
                     <span class="label label-default">

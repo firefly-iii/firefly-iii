@@ -282,10 +282,10 @@ function reportOnErrors(data) {
 
     if (data.errors.length === 1) {
         $('#import-status-error-intro').text(langImportSingleError);
-        //'An error has occured during the import. The import can continue, however.'
+        //'An error has occurred during the import. The import can continue, however.'
     }
     if (data.errors.length > 1) {
-        // 'Errors have occured during the import. The import can continue, however.'
+        // 'Errors have occurred during the import. The import can continue, however.'
         $('#import-status-error-intro').text(langImportMultiError);
     }
     $('.info_errors').show();

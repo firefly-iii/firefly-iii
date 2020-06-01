@@ -1,7 +1,7 @@
 <html>
 <head>
     <base href="{{ route('index') }}/"/>
-    <title>Firefly III is in maintenance mode.</title>
+    <title>{{ trans('errors.maintenance_mode') }}</title>
     <style>
 
         /* latin */
@@ -48,9 +48,9 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">Be right back!</div>
+        <div class="title">{{ trans('errors.be_right_back') }}</div>
         <p>
-            Firefly III is down for some necessary maintenance. Please check back in a second.
+            {{ trans('errors.check_back') }}
         </p>
     </div>
 </div>

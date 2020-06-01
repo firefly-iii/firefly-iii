@@ -87,7 +87,7 @@ class Handler extends ExceptionHandler
                 );
             }
 
-            return response()->json(['message' => 'Internal Firefly III Exception. See log files.', 'exception' => get_class($exception)], 500);
+            return response()->json(['message' => sprintf('Internal Firefly III Exception: %s', $exception->getMessage()), 'exception' => get_class($exception)], 500);
         }
 
         if ($exception instanceof NotFoundHttpException) {
