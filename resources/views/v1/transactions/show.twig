@@ -82,19 +82,19 @@
                         {% if first.transactiontype.type != 'Withdrawal' or splits == 1 %}
                             <tr>
                                 <td>
-                                    {{ trans_choice('firefly.source_accounts', groupArray.transactions|length ) }}
+                                    {{ trans_choice('firefly.source_accounts', accounts['source']|length ) }}
                                 </td>
                                 <td>
-                                    {% for journal in groupArray.transactions %}
-                                        {% if 'Cash account' == journal.source_type %}
+                                    {% for account in accounts['source'] %}
+                                        {% if 'Cash account' == account.type %}
                                             <span class="text-success">({{ 'cash'|_ }})</span>
                                         {% else %}
-                                            <a href="{{ route('accounts.show',journal.source_id) }}"
-                                               title="{{ journal.source_iban|default(journal.source_name) }}">
-                                                {{ journal.source_name }}
+                                            <a href="{{ route('accounts.show',account.id) }}"
+                                               title="{{ account.iban|default(account.name) }}">
+                                                {{ account.name }}
                                             </a>
                                         {% endif %}
-                                        {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
+                                        {% if loop.index0 != accounts['source']|length -1 %}, {% endif %}
                                     {% endfor %}
                                 </td>
                             </tr>
@@ -103,20 +103,20 @@
                         {% if first.transactiontype.type != 'Deposit' or splits == 1 %}
                             <tr>
                                 <td>
-                                    {{ trans_choice('firefly.destination_accounts', groupArray.transactions|length ) }}
+                                    {{ trans_choice('firefly.destination_accounts', accounts['destination']|length ) }}
 
                                 </td>
                                 <td>
-                                    {% for journal in groupArray.transactions %}
-                                        {% if 'Cash account' == journal.destination_type %}
+                                    {% for account in accounts['destination'] %}
+                                        {% if 'Cash account' == account.type %}
                                             <span class="text-success">({{ 'cash'|_ }})</span>
                                         {% else %}
-                                            <a href="{{ route('accounts.show',journal.destination_id) }}"
-                                               title="{{ journal.destination_iban|default(journal.destination_name) }}">
-                                                {{ journal.destination_name }}
+                                            <a href="{{ route('accounts.show',account.id) }}"
+                                               title="{{ account.iban|default(account.name) }}">
+                                                {{ account.name }}
                                             </a>
                                         {% endif %}
-                                        {% if loop.index0 != groupArray.transactions|length -1 %}, {% endif %}
+                                        {% if loop.index0 != accounts['destination']|length -1 %}, {% endif %}
                                     {% endfor %}
                                 </td>
                             </tr>
