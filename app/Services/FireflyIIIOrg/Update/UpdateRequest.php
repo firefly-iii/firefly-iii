@@ -172,6 +172,7 @@ class UpdateRequest implements UpdateRequestInterface
                 'headers' => [
                     'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
                 ],
+                'timeout' => 3.1415
             ];
             $res     = $client->request('GET', $uri, $options);
         } catch (GuzzleException|Exception $e) {
