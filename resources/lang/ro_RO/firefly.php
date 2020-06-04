@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Utilizați acest formular pentru a indica cât de mult doriți să bugeți (în total, în :currency) în perioada indicată.',
     'createBudget'                              => 'Buget nou',
     'invalid_currency'                          => 'Aceasta este o monedă nevalidă',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Suma disponibilă a bugetului a fost stabilită',
     'updated_ab'                                => 'Suma disponibilă a bugetului a fost actualizată',
     'deleted_ab'                                => 'Suma disponibilă a bugetului a fost ștearsă',

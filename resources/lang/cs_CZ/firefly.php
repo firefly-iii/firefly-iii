@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Use this form to indicate how much you expect to be able to budget (in total, in :currency) in the indicated period.',
     'createBudget'                              => 'Nový rozpočet',
     'invalid_currency'                          => 'Toto není platná měna',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'The available budget amount has been set',
     'updated_ab'                                => 'The available budget amount has been updated',
     'deleted_ab'                                => 'The available budget amount has been deleted',

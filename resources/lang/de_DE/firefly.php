@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Verwenden Sie dieses Formular, um anzugeben, wie viel Sie erwarten, dass Sie im angegebenen Zeitraum vorsehen (insgesamt, in :currency) können.',
     'createBudget'                              => 'Neues Budget',
     'invalid_currency'                          => 'Ungültige Währung angegeben',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Der verfügbare Budgetbetrag wurde festgelegt',
     'updated_ab'                                => 'Der verfügbare Budgetbetrag wurde aktualisiert',
     'deleted_ab'                                => 'Der verfügbare Budgetbetrag wurde gelöscht',

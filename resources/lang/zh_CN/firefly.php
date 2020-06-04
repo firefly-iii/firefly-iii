@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => '使用此表单来显示您期望在指定时间内花费多少预算(总共，以:currency为单位)。',
     'createBudget'                              => '新预算',
     'invalid_currency'                          => '这是一个无效的货币',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => '可用预算金额已设置',
     'updated_ab'                                => '可用预算金额已更新',
     'deleted_ab'                                => '可用预算金额已删除',

@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Usa questo modulo per indicare quanto ti aspetti di mettere a budget (in totale, in :currency) nel periodo indicato.',
     'createBudget'                              => 'Nuovo budget',
     'invalid_currency'                          => 'Questa non è una valuta valida',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'L\'importo del budget disponibile è stato impostato',
     'updated_ab'                                => 'L\'importo del budget disponibile è stato aggiornato',
     'deleted_ab'                                => 'L\'importo del budget disponibile è stato eliminato',

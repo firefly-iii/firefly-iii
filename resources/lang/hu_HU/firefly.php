@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Használja ezt az űrlapot a költségvetés beállításához (összesen, :currency devizában) a feltüntetett időszakban.',
     'createBudget'                              => 'Új költségkeret',
     'invalid_currency'                          => 'Ez egy érvénytelen pénznem',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'A rendelkezésre álló költségkeret összeg beéllítva',
     'updated_ab'                                => 'A rendelkezésre álló költségkeret összeg frissítve',
     'deleted_ab'                                => 'A rendelkezésre álló költségkeret összeg törölve',

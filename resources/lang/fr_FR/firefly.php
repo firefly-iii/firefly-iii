@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Utilisez ce formulaire pour indiquer combien vous vous attendez à pouvoir budgéter (au total, en :currency) dans la période indiquée.',
     'createBudget'                              => 'Nouveau budget',
     'invalid_currency'                          => 'Ceci est une devise invalide',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Le montant du budget disponible a été fixé',
     'updated_ab'                                => 'Le montant du budget disponible a été mis à jour',
     'deleted_ab'                                => 'Le montant du budget disponible a été supprimé',

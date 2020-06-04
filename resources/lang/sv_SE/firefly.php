@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Detta formulär används för hur mycket du förväntas kunna budgetera (totalt i :currency) under angiven period.',
     'createBudget'                              => 'Ny budget',
     'invalid_currency'                          => 'Detta är en ogiltig valuta',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Summan på tillgänlig budget har satts',
     'updated_ab'                                => 'Summan på tillgänlig budget har uppdaterats',
     'deleted_ab'                                => 'Summan på tillgänglig budget har tagits bort',

@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Użyj tego formularza aby wskazać, ile jesteś w stanie zabudżetować (w sumie, w :currency) we skazanym okresie.',
     'createBudget'                              => 'Nowy budżet',
     'invalid_currency'                          => 'To jest niewłaściwa waluta',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Dostępna kwota budżetu została ustalona',
     'updated_ab'                                => 'Dostępna kwota budżetu została zaktualizowana',
     'deleted_ab'                                => 'The available budget amount has been deleted',

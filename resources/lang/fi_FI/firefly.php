@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Käytä tätä lomaketta arvioidessasi kuinka paljon uskot pystyväsi budjetoimaan (kokonaisuudessaan, valuutassa :currency) valitulla jaksolla.',
     'createBudget'                              => 'Uusi budjetti',
     'invalid_currency'                          => 'Tämä ei kelpaa valuutaksi',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Käytettävissä oleva budjetti on asetettu',
     'updated_ab'                                => 'Käytettävissä oleva budjetti on päivitetty',
     'deleted_ab'                                => 'Käytettävissä oleva budjetti on poistettu',

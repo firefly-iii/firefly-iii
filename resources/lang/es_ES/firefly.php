@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Utilice este formulario para indicar cuánto espera poder presupuestar (en total, en :currency) en el período indicado.',
     'createBudget'                              => 'Nuevo presupuesto',
     'invalid_currency'                          => 'Esta es una divisa no válida',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Se ha establecido el presupuesto disponible',
     'updated_ab'                                => 'El presupuesto disponible ha sido actualizado',
     'deleted_ab'                                => 'El presupuesto disponible ha sido eliminado',

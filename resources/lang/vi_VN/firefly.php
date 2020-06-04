@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Sử dụng biểu mẫu này để cho biết số tiền bạn mong đợi có thể dự trù ngân sách (tổng cộng, bằng :currency) trong khoảng thời gian được chỉ định.',
     'createBudget'                              => 'Ngân sách mới',
     'invalid_currency'                          => 'Đây là một loại tiền tệ không hợp lệ',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Số tiền ngân sách có sẵn đã được đặt',
     'updated_ab'                                => 'Số tiền ngân sách có sẵn đã được cập nhật',
     'deleted_ab'                                => 'Số tiền ngân sách có sẵn đã bị xóa',

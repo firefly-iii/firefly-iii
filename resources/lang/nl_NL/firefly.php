@@ -815,6 +815,7 @@ return [
     'ab_basic_modal_explain'                    => 'Gebruik dit formulier om aan te geven hoeveel je verwacht in de aangegeven periode (in totaal, in :currency) te kunnen begroten.',
     'createBudget'                              => 'Maak nieuw budget',
     'invalid_currency'                          => 'Dit is een ongeldige valuta',
+    'invalid_amount'                            => 'Please enter an amount',
     'set_ab'                                    => 'Het beschikbare budgetbedrag is ingesteld',
     'updated_ab'                                => 'Het beschikbare budgetbedrag is bijgewerkt',
     'deleted_ab'                                => 'Het beschikbare budgetbedrag is verwijderd',
