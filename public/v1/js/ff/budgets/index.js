@@ -35,6 +35,8 @@ $(function () {
     $('.budget_amount').on('change', updateBudgetedAmount);
     $('.create_bl').on('click', createBudgetLimit);
 
+    $('.set_last_period').on('click', setBudgetLimitFromLastPeriod);
+
 
     /*
      When the input changes, update the percentages for the budgeted bar:
@@ -122,6 +124,18 @@ function updateBudgetedAmount(e) {
             alert('I failed :(');
         });
     }
+}
+
+function setBudgetLimitFromLastPeriod(e) {
+       
+    var button = $(e.currentTarget);
+    var budgetLimitId = button.data('id');
+    var targetAmount = button.data('value');
+
+    $('.budget_amount[data-limit="' + budgetLimitId + '"]').val(targetAmount);
+    $('.budget_amount[data-limit="' + budgetLimitId + '"]').change();
+    
+    return false;
 }
 
 function updateTotalBudgetedAmount(currencyId) {

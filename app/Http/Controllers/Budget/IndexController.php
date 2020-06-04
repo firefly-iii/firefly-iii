@@ -107,11 +107,15 @@ class IndexController extends Controller
         $spent           = '0';
         Log::debug(sprintf('1) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
-        // new period stuff:
+        // new period stuff: 
         $periodTitle = app('navigation')->periodShow($start, $range);
         $prevLoop    = $this->getPreviousPeriods($start, $range);
         $nextLoop    = $this->getNextPeriods($start, $range);
         Log::debug(sprintf('2) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+
+        // last period stuff:
+        $prevPeriodStart = $prevLoop[0]['start'];
+        $prevPeriodEnd = $prevLoop[0]['end'];
 
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);
@@ -169,9 +173,16 @@ class IndexController extends Controller
             $array['auto_budget'] = $this->repository->getAutoBudget($current);
             $budgetLimits         = $this->blRepository->getBudgetLimits($current, $start, $end);
             Log::debug(sprintf('8) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+ 
+            // budget limit from last period
+            $lastBudgetLimits     = $this->blRepository->getBudgetLimits($current, $prevPeriodStart, $prevPeriodEnd);
+            $lastBudgetLimit      = $lastBudgetLimits->where('transactionCurrency', $defaultCurrency)->first() ?? null; 
+            $array['last_limit']  = $lastBudgetLimit !== null ? round($lastBudgetLimit->amount, $defaultCurrency->decimal_places) :  null;
+
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
+                $lastBudgetLimit = $lastBudgetLimits->where('transactionCurrency', $currency)->first() ?? null; 
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => round($limit->amount, $currency->decimal_places),
@@ -182,6 +193,7 @@ class IndexController extends Controller
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
                     'currency_decimal_places' => $currency->decimal_places,
+                    'last_period_amount'      => $lastBudgetLimit !== null ? round($lastBudgetLimit->amount, $currency->decimal_places) : null,
                 ];
                 Log::debug(sprintf('9) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
             }

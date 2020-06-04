@@ -255,6 +255,18 @@
                                             <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
                                                    data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
                                                    type="number">
+                                            {% if budget.last_limit > 0 %}
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false"><span class="caret"></span></button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="#" class="set_last_period" data-id="{{ budget.id }}"  data-value="{{ budget.last_limit }}">>
+                                                                <i class="fa fa-history" aria-hidden="true"></i>{{ trans('firefly.set_budget_from_last_period', {amount: formatAmountBySymbol(budget.last_limit, defaultCurrency.symbol, defaultCurrency.decimal_places, false )} )  }}
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                         <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
                                               style="display:none;"></span>
@@ -271,9 +283,16 @@
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false"><span class="caret"></span></button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">Remove budgeted amount
+                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}"><i class="fa fa-trash" aria-hidden="true"></i>Remove budgeted amount
                                                                 in {{ budgetLimit.currency_name }}</a></li>
+                                                        {% if budgetLimit.last_period_amount > 0 %}
+                                                            <li><a href="#" class="set_last_period" data-id="{{ budgetLimit.id }}" data-value="{{ budgetLimit.last_period_amount }}">
+                                                                    <i class="fa fa-history" aria-hidden="true"></i>{{ trans('firefly.set_budget_from_last_period', {amount: formatAmountBySymbol(budgetLimit.last_period_amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places, false )} )  }}
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
                                                     </ul>
+                                                    
                                                 </div>
                                             </div>
                                             {% if not budgetLimit.in_range %}

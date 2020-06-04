@@ -822,6 +822,7 @@ return [
     'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
     'auto_budget_reset_icon'                    => 'This budget will be set periodically',
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
+    'set_budget_from_last_period'               => 'Set budgeted amount from last period (:amount)',
 
     // bills:
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
