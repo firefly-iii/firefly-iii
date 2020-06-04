@@ -123,7 +123,7 @@ class Steam
 
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                                  ->where('transactions.transaction_currency_id', $currencyId)
                                  ->get(['transactions.amount'])->toArray();
         $nativeBalance = $this->sumTransactions($transactions, 'amount');
@@ -131,7 +131,7 @@ class Steam
         // get all balances in foreign currency:
         $transactions = $account->transactions()
                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                                 ->where('transactions.foreign_currency_id', $currencyId)
                                 ->where('transactions.transaction_currency_id', '!=', $currencyId)
                                 ->get(['transactions.foreign_amount'])->toArray();
