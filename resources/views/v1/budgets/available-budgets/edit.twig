@@ -20,7 +20,7 @@
 
                 <div class="input-group">
                     <div class="input-group-addon">{{ availableBudget.transactionCurrency.symbol|raw }}</div>
-                    <input step="any" class="form-control" id="amount" value="{{ availableBudget.amount }}" autocomplete="off" name="amount" type="number"/>
+                    <input step="any" required class="form-control" id="amount" value="{{ availableBudget.amount }}" autocomplete="off" name="amount" type="number"/>
                 </div>
             </div>
             <div class="modal-footer">

@@ -177,12 +177,26 @@ class AvailableBudgetController extends Controller
             $end   = session()->get('end');
             Log::info($e->getMessage());
         }
+
+        // validate amount
+        $amount = (string) $request->get('amount');
+        if ('' === $amount) {
+            session()->flash('error', trans('firefly.invalid_amount'));
+
+            return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+        }
+        if (0 === bccomp('0', $amount)) {
+            session()->flash('error', trans('firefly.invalid_amount'));
+
+            return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+        }
+
         // find currency
         $currency = $this->currencyRepos->find((int) $request->get('currency_id'));
         if (null === $currency) {
             session()->flash('error', trans('firefly.invalid_currency'));
 
-            return redirect(route('budgets.index'));
+            return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
         }
 
         // find existing AB
@@ -190,7 +204,7 @@ class AvailableBudgetController extends Controller
         if (null === $existing) {
             $this->abRepository->store(
                 [
-                    'amount'   => $request->get('amount'),
+                    'amount'   => $amount,
                     'currency' => $currency,
                     'start'    => $start,
                     'end'      => $end,
@@ -199,7 +213,7 @@ class AvailableBudgetController extends Controller
         }
         if (null !== $existing) {
             // update amount:
-            $this->abRepository->update($existing, ['amount' => $request->get('amount')]);
+            $this->abRepository->update($existing, ['amount' => $amount]);
         }
         session()->flash('success', trans('firefly.set_ab'));
 
@@ -217,7 +231,21 @@ class AvailableBudgetController extends Controller
      */
     public function update(Request $request, AvailableBudget $availableBudget, Carbon $start, Carbon $end)
     {
-        $this->abRepository->update($availableBudget, ['amount' => $request->get('amount')]);
+        // validate amount
+        $amount = (string) $request->get('amount');
+        if ('' === $amount) {
+            session()->flash('error', trans('firefly.invalid_amount'));
+
+            return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+        }
+        if (0 === bccomp('0', $amount)) {
+            session()->flash('error', trans('firefly.invalid_amount'));
+
+            return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+        }
+
+
+        $this->abRepository->update($availableBudget, ['amount' => $amount]);
         session()->flash('success', trans('firefly.updated_ab'));
 
         return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
