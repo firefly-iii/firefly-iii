@@ -60,6 +60,7 @@ return [
     'due_date'                => 'Due date',
     'payment_date'            => 'Payment date',
     'invoice_date'            => 'Invoice date',
+    'internal_reference'      => 'Internal reference',
     'notes'                   => 'Notes',
     'from'                    => 'From',
     'piggy_bank'              => 'Piggy bank',

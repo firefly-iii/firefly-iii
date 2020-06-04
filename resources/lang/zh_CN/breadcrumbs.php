@@ -28,7 +28,7 @@ return [
     'delete_currency'        => '删除货币 ":name"',
     'newPiggyBank'           => '创建一个新的存钱罐',
     'edit_piggyBank'         => '编辑存钱罐 ":name"',
-    'preferences'            => '偏好设定',
+    'preferences'            => '设置',
     'profile'                => '个人档案',
     'changePassword'         => '更改您的密码',
     'change_email'           => '更改您的电子邮件地址',

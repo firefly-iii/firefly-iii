@@ -32,7 +32,6 @@ return [
     'clone'                                      => 'Clonar',
     'last_seven_days'                            => 'Últimos sete dias',
     'last_thirty_days'                           => 'Últimos 30 dias',
-    'welcomeBack'                                => 'O que está acontecendo?',
     'welcome_back'                               => 'O que está acontecendo?',
     'everything'                                 => 'Tudo',
     'today'                                      => 'hoje',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => 'Por favor, escolha a conta de ativo, de onde virá o dinheiro.',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => 'Resumo',
     'average'                                   => 'Média',
     'balanceFor'                                => 'Saldo para ":name"',
-    'no_tags_for_cloud'                         => 'Sem tags para gerar nuvem',
     'no_tags'                                   => '(no tags)',
-    'tag_cloud'                                 => 'Nuvem de Tags',
 
     // piggy banks:
     'add_money_to_piggy'                        => 'Adicionar dinheiro ao cofrinho ":name"',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => 'Descrição da transação dividida',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'Se você criar uma transação dividida, é necessário haver uma descrição global para todas as partes da transação.',
-    'transaction_information'               => 'Informação de transação',
     'you_create_transfer'                   => 'You\'re creating a transfer.',
     'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
     'you_create_deposit'                    => 'You\'re creating a deposit.',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => 'Divide-se',
     'add_another_split'                     => 'Adicionar outra divisão',
-    'split-transactions'                    => 'Dividir transações',
-    'do_split'                              => 'Fazer uma divisão',
-    'split_this_withdrawal'                 => 'Dividir esta retirada',
-    'split_this_deposit'                    => 'Dividir este depósito',
-    'split_this_transfer'                   => 'Dividir essa transferência',
     'cannot_edit_opening_balance'           => 'Não é possível editar o saldo de abertura de uma conta.',
     'no_edit_multiple_left'                 => 'Você não selecionou nenhuma transação válida para editar.',
     'breadcrumb_convert_group'              => 'Converter transação',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => 'Importar transações para o Firefly III',
-    'import_data'                           => 'Importar dados',
     'import_transactions'                   => 'Importar transações',
     'import_tools_title'                    => 'Ferramentas de importação',
     'tools_index_intro'                     => 'Existem várias ferramentas para importar dados para o Firefly III. Confira-as abaixo. Para obter mais informações, acesse <a href="https://docs.firefly-iii.org/importing-data/introduction">esta página</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => 'Parece que o cron job necessário para dar suporte a transações recorrentes nunca foi executado. Isso é normal quando você acabou de instalar o Firefly III, mas deve ser configurado o quanto antes. Por favor, veja as páginas de ajuda usando o ícone (?) no canto superior direito da página.',
     'recurring_cron_long_ago'               => 'Faz mais de 36 horas que o cron job que dá suporte a transações recorrentes foi acionado pela última vez. Tem certeza de que foi configurado corretamente? Por favor, veja as páginas de ajuda usando o ícone (?) no canto superior direito da página.',
 
-    'recurring_meta_field_tags'          => 'Etiquetas',
-    'recurring_meta_field_notes'         => 'Notas',
-    'recurring_meta_field_bill_id'       => 'Fatura',
-    'recurring_meta_field_piggy_bank_id' => 'Cofrinho',
     'create_new_recurrence'              => 'Criar nova transação recorrente',
     'help_first_date'                    => 'Indique a primeira recorrência esperada. Isso deve ser no futuro.',
     'help_first_date_no_past'            => 'Indique a primeira recorrência esperada. Firefly III não irá criar transações no passado.',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => 'Gasto (:currency)',
     'box_earned_in_currency'             => 'Ganho (:currency)',
     'box_budgeted_in_currency'           => 'Budgeted (:currency)',
-    'box_sum_in_currency'                => 'Sum (:currency)',
     'box_bill_paid_in_currency'          => 'Faturas pagas (:currency)',
     'box_bill_unpaid_in_currency'        => 'Faturas não pagas (:currency)',
     'box_left_to_spend_in_currency'      => 'Valor para gastar (:currency)',

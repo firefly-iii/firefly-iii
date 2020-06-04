@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Persönliche Zugangs-Authentifizierungsschlüssel',
 
     // bills:
-    'not_expected_period'    => 'In diesem Zeitraum nicht erwartet',
-    'not_or_not_yet'         => '(Noch) nicht',
 ];

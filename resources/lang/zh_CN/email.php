@@ -24,36 +24,36 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hi there,',
-    'closing'                          => 'Beep boop,',
-    'signature'                        => 'The Firefly III Mail Robot',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'greeting'                         => '你好，',
+    'closing'                          => '哔——啵——',
+    'signature'                        => 'Firefly III 邮件机器人',
+    'footer_ps'                        => 'PS: 此消息是由于来自IP:ipAddress的请求触发而发送的。',
 
     // admin test
-    'admin_test_subject'               => 'A test message from your Firefly III installation',
-    'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_subject'               => 'Firefly III 安装的测试消息',
+    'admin_test_body'                  => '这是来自 Firefly III 实例的测试消息。它已被发送到 :email。',
 
     // access token created
-    'access_token_created_subject'     => 'A new access token was created',
-    'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
-    'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_subject'     => '创建了一个新的访问令牌',
+    'access_token_created_body'        => '某人(希望是你) 刚刚为你的用户帐户创建了一个新的 Firefly III API 访问令牌。',
+    'access_token_created_explanation' => '通过这个令牌，您的<strong>所有</strong>个人信息都可以通过Firefly III的API来访问。',
+    'access_token_created_revoke'      => '如果不是您，请尽快在:url撤销此令牌。',
 
     // registered
-    'registered_subject'               => 'Welcome to Firefly III!',
-    'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
-    'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">grand theory</a>.',
-    'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
-    'registered_closing'               => 'Enjoy!',
+    'registered_subject'               => '欢迎使用 Firefly III！',
+    'registered_welcome'               => '欢迎来到 <a style="color:#337ab7" href=":address">Firefly III</a>。您的注册已经成功完成，此电子邮件即为确认信息。恭喜！',
+    'registered_pw'                    => '如果您忘记了您的密码，请使用 <a style="color:#337ab7" href=":address/password/reset">重置密码工具</a> 重置密码。',
+    'registered_help'                  => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
+    'registered_doc_html'              => '如果您尚未阅读过，请阅读 <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">大统一理论</a>。',
+    'registered_doc_text'              => '如果您尚未阅读，请阅读第一个使用指南和完整说明。',
+    'registered_closing'               => '祝您使用愉快！',
     'registered_firefly_iii_link'      => 'Firefly III:',
-    'registered_pw_reset_link'         => 'Password reset:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_pw_reset_link'         => '密码已重置',
+    'registered_doc_link'              => '文档',
 
     // email change
-    'email_change_subject'             => 'Your Firefly III email address has changed',
-    'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
+    'email_change_subject'             => '您的 Firefly III 电子邮件地址已更改',
+    'email_change_body_to_new'         => '您或有人访问您的 Firefly III 帐户已更改您的电子邮件地址。 如果不是您操作的，请忽略并删除。',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
     'email_change_old'                 => 'The old email address was: :email',
@@ -83,11 +83,11 @@ return [
     'error_user'                       => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
     'error_no_user'                    => 'There was no user logged in for this error or no user was detected.',
     'error_ip'                         => 'The IP address related to this error is: :ip',
-    'error_url'                        => 'URL is: :url',
-    'error_user_agent'                 => 'User agent: :userAgent',
-    'error_stacktrace'                 => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
-    'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
-    'error_github_text'                => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
+    'error_url'                        => '网址为：:url',
+    'error_user_agent'                 => '用户代理: :userAgent',
+    'error_stacktrace'                 => '完整的堆栈跟踪如下。如果您认为这是Fifly III中的错误，您可以将此消息转发到 <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefresy-iii。 rg</a>。这可以帮助修复您刚刚遇到的错误。',
+    'error_github_html'                => '如果你喜欢，你也可以在 <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> 上打开一个新问题。',
+    'error_github_text'                => '如果您喜欢，您也可以在 https://github.com/firefrechy-iii/firefrechy-iii/issues上打开一个新问题。',
     'error_stacktrace_below'           => 'The full stacktrace is below:',
 
     // report new journals

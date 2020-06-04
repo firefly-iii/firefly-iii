@@ -32,7 +32,6 @@ return [
     'clone'                                      => '复製',
     'last_seven_days'                            => '最近7天',
     'last_thirty_days'                           => '最近30天',
-    'welcomeBack'                                => '今天理财了吗？',
     'welcome_back'                               => '今天理财了吗？',
     'everything'                                 => '所有',
     'today'                                      => '今天',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => '请选择金钱来源的资产帐户',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => '概要',
     'average'                                   => '平均',
     'balanceFor'                                => ':name 的余额',
-    'no_tags_for_cloud'                         => '没有生成标签云的标签',
     'no_tags'                                   => '(无标签)',
-    'tag_cloud'                                 => '标签云',
 
     // piggy banks:
     'add_money_to_piggy'                        => '存入存钱罐 “:name”',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => '如果您创建了一个分割交易，交易的所有分割项都必须有全局描述。',
     'split_title_help'                      => '如果您创建一个拆分交易，必须有一个全局的交易描述。',
-    'transaction_information'               => '交易信息',
     'you_create_transfer'                   => '您正在创建一个转账',
     'you_create_withdrawal'                 => '您正在创建一个提款',
     'you_create_deposit'                    => '您正在创建一个存款',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => '拆分',
     'add_another_split'                     => '增加拆分',
-    'split-transactions'                    => '拆分交易',
-    'do_split'                              => '进行拆分',
-    'split_this_withdrawal'                 => '拆分这笔提款',
-    'split_this_deposit'                    => '拆分此存款',
-    'split_this_transfer'                   => '拆分此转帐',
     'cannot_edit_opening_balance'           => '您无法编辑一个帐户的开户余额。',
     'no_edit_multiple_left'                 => '您没有选择有效的交易纪录以供编辑。',
     'breadcrumb_convert_group'              => '变更交易',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => '将交易记录导入',
-    'import_data'                           => '导入资料',
     'import_transactions'                   => '导入交易',
     'import_tools_title'                    => 'Import tools',
     'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => '用来支援定期重复交易的 cron job 似乎没有运行过，这在您刚安装 Firefly III 没多久时是非常正常的，但能越快处理越好。请使用本页右上角的 (?)-图示查阅说明页面。',
     'recurring_cron_long_ago'               => '用来支援定期重复交易的 cron job 自上次运行已超过了 36 小时，您确定您已正确设定了吗？请使用本页右上角的 (?)-图示查阅说明页面。',
 
-    'recurring_meta_field_tags'          => '标签',
-    'recurring_meta_field_notes'         => '备注',
-    'recurring_meta_field_bill_id'       => '帐单',
-    'recurring_meta_field_piggy_bank_id' => '存钱罐',
     'create_new_recurrence'              => '建立新的周期性交易',
     'help_first_date'                    => '表示第一笔预期的周期性交易，应于未来发生。',
     'help_first_date_no_past'            => '表示第一笔预期的周期交易，Firefly III 不会建立过去的交易。',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => '支出 (:currency)',
     'box_earned_in_currency'             => '收入 (:currency)',
     'box_budgeted_in_currency'           => '预算 (:currency)',
-    'box_sum_in_currency'                => '合计 (:currency)',
     'box_bill_paid_in_currency'          => '已付账单 (:currency)',
     'box_bill_unpaid_in_currency'        => '未付账单 (:currency)',
     'box_left_to_spend_in_currency'      => '可供花费 (:currency)',

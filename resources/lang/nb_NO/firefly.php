@@ -32,7 +32,6 @@ return [
     'clone'                                      => 'Klon',
     'last_seven_days'                            => 'Syv siste dager',
     'last_thirty_days'                           => 'Tredve siste dager',
-    'welcomeBack'                                => 'What\'s playing?',
     'welcome_back'                               => 'What\'s playing?',
     'everything'                                 => 'Alt',
     'today'                                      => 'i dag',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => 'Vennligst velg aktivakontoen pengene kommer fra.',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => 'Oppsummering',
     'average'                                   => 'Gjennomsnitt',
     'balanceFor'                                => 'Saldo for :name',
-    'no_tags_for_cloud'                         => 'Ingen tags for å generere sky',
     'no_tags'                                   => '(no tags)',
-    'tag_cloud'                                 => 'Tag sky',
 
     // piggy banks:
     'add_money_to_piggy'                        => 'Legg til penger i sparegris ":name"',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
     'you_create_transfer'                   => 'You\'re creating a transfer.',
     'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
     'you_create_deposit'                    => 'You\'re creating a deposit.',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => 'Deler opp',
     'add_another_split'                     => 'Legg til en oppdeling til',
-    'split-transactions'                    => 'Del transaksjoner',
-    'do_split'                              => 'Gjør en oppdeling',
-    'split_this_withdrawal'                 => 'Del dette uttaket',
-    'split_this_deposit'                    => 'Del dette innskuddet',
-    'split_this_transfer'                   => 'Del denne overføringen',
     'cannot_edit_opening_balance'           => 'Du kan ikke redigere åpningssaldoen til en konto.',
     'no_edit_multiple_left'                 => 'Du har ikke valgt en tillatt transaksjon for redigering.',
     'breadcrumb_convert_group'              => 'Convert transaction',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => 'Importer transaksjoner til Firefly III',
-    'import_data'                           => 'Importer data',
     'import_transactions'                   => 'Importer transaksjoner',
     'import_tools_title'                    => 'Import tools',
     'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => 'Det synes at cron jobben som er nødvendig for å støtte gjentakende transaksjoner har aldri kjørt. Dette er selvfølgelig normalt når du nettopp har installert Firefly III, men dette bør settes opp så snart som mulig. Sjekk ut hjelp-sidene ved å bruke (?) -ikonet i øverste høyre hjørne på siden.',
     'recurring_cron_long_ago'               => 'Det ser ut som det har gått mer enn 36 timer siden cron job\'en for å støtte gjentakende transaksjoner har kjørt. Er du sikker på at den er satt opp riktig? Sjekk ut hjelpe-sidene ved å bruke (?) -ikonet i øverste høyre hjørne på siden.',
 
-    'recurring_meta_field_tags'          => 'Tags',
-    'recurring_meta_field_notes'         => 'Notater',
-    'recurring_meta_field_bill_id'       => 'Regning',
-    'recurring_meta_field_piggy_bank_id' => 'Sparegris',
     'create_new_recurrence'              => 'Lag ny gjentakende transaksjon',
     'help_first_date'                    => 'Spesifiser den første forventede gjentakelse, det må være i fremtiden.',
     'help_first_date_no_past'            => 'Spesifiser den første forventede gjentakelse. Firefly III vil ikke opprette transaksjoner i fortiden.',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => 'Spent (:currency)',
     'box_earned_in_currency'             => 'Earned (:currency)',
     'box_budgeted_in_currency'           => 'Budgeted (:currency)',
-    'box_sum_in_currency'                => 'Sum (:currency)',
     'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
     'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
     'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',

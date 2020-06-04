@@ -32,7 +32,6 @@ return [
     'clone'                                      => 'Másolás',
     'last_seven_days'                            => 'Utolsó hét nap',
     'last_thirty_days'                           => 'Elmúlt harminc nap',
-    'welcomeBack'                                => 'Mi a helyzet?',
     'welcome_back'                               => 'Mi a helyzet?',
     'everything'                                 => 'Minden',
     'today'                                      => 'ma',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => 'Kérem válasszon ki egy eszközszámlát, ahonnan a pénz fog érkezni.',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => 'Összefoglaló',
     'average'                                   => 'Átlag',
     'balanceFor'                                => 'Egyenleg: :name',
-    'no_tags_for_cloud'                         => 'Nincs címke felhő létrehozásához',
     'no_tags'                                   => '(nincsenek címkék)',
-    'tag_cloud'                                 => 'Címkefelhő',
 
     // piggy banks:
     'add_money_to_piggy'                        => 'Pénz hozzáadása ":name" malacperselyhez',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => 'Felosztott tranzakció leírása',
     'split_transaction_title_help'          => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
     'split_title_help'                      => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
-    'transaction_information'               => 'Tranzakció információ',
     'you_create_transfer'                   => 'Egy átutalás létrehozása.',
     'you_create_withdrawal'                 => 'Egy költség létrehozása.',
     'you_create_deposit'                    => 'Egy bevétel létrehozása.',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => 'Felosztások',
     'add_another_split'                     => 'Másik felosztás hozzáadása',
-    'split-transactions'                    => 'Tranzakciók felosztása',
-    'do_split'                              => 'Felosztás',
-    'split_this_withdrawal'                 => 'Költség felosztása',
-    'split_this_deposit'                    => 'Bevétel felosztása',
-    'split_this_transfer'                   => 'Átvezetés felosztása',
     'cannot_edit_opening_balance'           => 'Nem lehet szerkeszteni egy bankszámla nyitóegyenlegét.',
     'no_edit_multiple_left'                 => 'Nincs kiválasztva érvényes tranzakció a szerkesztéshez.',
     'breadcrumb_convert_group'              => 'Tranzakció konvertálása',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => 'Tranzakciók importálása a Firefly III-ba',
-    'import_data'                           => 'Adatimport',
     'import_transactions'                   => 'Tranzakciók importálása',
     'import_tools_title'                    => 'Importálási eszközök',
     'tools_index_intro'                     => 'Rengeteg eszköz létezik alább, amellyel adatok importálhatók a Firefly III-ba. További információkért látogasson el <a href="https://docs.firefly-iii.org/importing-data/introduction">ide</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => 'Az ismétlődő tranzakció funkcióhoz tartozó ütemezett feladat sosem futott még le. Ez normális jelenség, ha most Firefly III frissen lett telepítve, de ennek rövid időn belül változnia kellene. Ellenőrizd a súgóban a hibaelháítási lehetőségeket, a (?) gombra kattintva a jobb felső sarokban.',
     'recurring_cron_long_ago'               => 'Úgy látszik, hogy több, mint 36 óra telt el a legutolsó ismétlődő tranzakciókat végrehajtó ütemezett feladat elindítása óta. Biztos vagy abban, hogy helyesen lett beállítva minden? Ellenőrizd a súgóban a hibaelháítási lehetőségeket, a (?) gombra kattintva a jobb felső sarokban.',
 
-    'recurring_meta_field_tags'          => 'Címkék',
-    'recurring_meta_field_notes'         => 'Megjegyzések',
-    'recurring_meta_field_bill_id'       => 'Számla',
-    'recurring_meta_field_piggy_bank_id' => 'Malacpersely',
     'create_new_recurrence'              => 'Új ismétlődő tranzakció létrehozása',
     'help_first_date'                    => 'Az első várható ismétlést jelöli. A jövőben kell lennie.',
     'help_first_date_no_past'            => 'Az első várható ismétlést jelöli. A Firefly III nem fog tranzakciókat létrehozni a múltban.',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => 'Költés (:currency)',
     'box_earned_in_currency'             => 'Megkeresett (:currency)',
     'box_budgeted_in_currency'           => 'Megkeresett (:currency)',
-    'box_sum_in_currency'                => 'Összeg (:currency)',
     'box_bill_paid_in_currency'          => 'Fizetett számlák (:currency)',
     'box_bill_unpaid_in_currency'        => 'Fizetetlen számlák (:currency)',
     'box_left_to_spend_in_currency'      => 'Elkölthető (:currency)',

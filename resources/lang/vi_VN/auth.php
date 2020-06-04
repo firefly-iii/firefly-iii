@@ -24,5 +24,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => 'Thông tin đăng nhập không đúng.',
-    'throttle' => 'Đăng nhập thất bại nhiều lần. Vui lòng thử lại sau : giây.',
+    'throttle' => 'Đăng nhập thất bại nhiều lần. Vui lòng thử lại sau :seconds.',
 ];

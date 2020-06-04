@@ -32,7 +32,6 @@ return [
     'clone'                                      => '複製',
     'last_seven_days'                            => '最近7天',
     'last_thirty_days'                           => '最近30天',
-    'welcomeBack'                                => 'What\'s playing?',
     'welcome_back'                               => 'What\'s playing?',
     'everything'                                 => '所有',
     'today'                                      => '今天',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => '請選擇金錢來源的資產帳戶',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => '概要',
     'average'                                   => '平均',
     'balanceFor'                                => ':name 的餘額',
-    'no_tags_for_cloud'                         => '沒有產生雲的標籤',
     'no_tags'                                   => '(no tags)',
-    'tag_cloud'                                 => '標籤雲',
 
     // piggy banks:
     'add_money_to_piggy'                        => '新增金錢至小豬撲滿 “:name”',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
-    'transaction_information'               => '交易資訊',
     'you_create_transfer'                   => 'You\'re creating a transfer.',
     'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
     'you_create_deposit'                    => 'You\'re creating a deposit.',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => '拆分',
     'add_another_split'                     => '增加拆分',
-    'split-transactions'                    => '拆分交易',
-    'do_split'                              => '進行拆分',
-    'split_this_withdrawal'                 => '拆分這筆提款',
-    'split_this_deposit'                    => '拆分這筆存款',
-    'split_this_transfer'                   => '拆分這筆轉帳',
     'cannot_edit_opening_balance'           => '您無法編輯一個帳戶的開戶餘額。',
     'no_edit_multiple_left'                 => '您沒有選擇有效的交易紀錄以供編輯。',
     'breadcrumb_convert_group'              => 'Convert transaction',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => '將交易記錄導入',
-    'import_data'                           => '匯入資料',
     'import_transactions'                   => '匯入交易',
     'import_tools_title'                    => 'Import tools',
     'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => '用來支援週期性交易的 cron job 似乎沒有運行過，這在您剛安裝 Firefly III 沒多久時是非常正常的，但能越快處理越好。請使用本頁右上角的 (?)-圖示查閱說明頁面。',
     'recurring_cron_long_ago'               => '用來支援週期性交易的 cron job 自上次運行已超過了 36 小時，您確定您已正確設定了嗎？請使用本頁右上角的 (?)-圖示查閱說明頁面。',
 
-    'recurring_meta_field_tags'          => '標籤',
-    'recurring_meta_field_notes'         => '備註',
-    'recurring_meta_field_bill_id'       => '帳單',
-    'recurring_meta_field_piggy_bank_id' => '小豬撲滿',
     'create_new_recurrence'              => '建立新週期性交易',
     'help_first_date'                    => '表示第一筆預期的週期性交易，應於未來發生。',
     'help_first_date_no_past'            => '表示第一筆預期的週期交易，Firefly III 不會建立過去的交易。',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => '已花費 (:currency)',
     'box_earned_in_currency'             => '盈利 (:currency)',
     'box_budgeted_in_currency'           => 'Budgeted (:currency)',
-    'box_sum_in_currency'                => 'Sum (:currency)',
     'box_bill_paid_in_currency'          => '已付帳單 (:currency)',
     'box_bill_unpaid_in_currency'        => '未付帳單 (:currency)',
     'box_left_to_spend_in_currency'      => '可供花費 (:currency)',

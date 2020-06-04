@@ -85,8 +85,8 @@ return [
     'reports_report_category_incomeAndExpensesChart' => 'Biểu đồ này cho thấy chi phí và thu nhập của bạn trên mỗi danh mục.',
 
     'reports_report_tag_intro'                  => 'Báo cáo này sẽ cung cấp cho bạn cái nhìn sâu sắc trong một hoặc nhiều thẻ.',
-    'reports_report_tag_pieCharts'              => 'Những biểu đồ này sẽ cung cấp cho bạn cái nhìn sâu sắc về chi phí và thu nhập trên mỗi thẻ, tài khoản, danh mục hoặc ngân sách.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Biểu đồ này cho thấy chi phí và thu nhập của bạn trên mỗi thẻ.',
+    'reports_report_tag_pieCharts'              => 'Những biểu đồ này sẽ cung cấp cho bạn cái nhìn sâu sắc về chi phí và thu nhập trên mỗi nhãn, tài khoản, danh mục hoặc ngân sách.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Biểu đồ này cho thấy chi phí và thu nhập của bạn trên mỗi nhãn.',
 
     'reports_report_budget_intro'                             => 'Báo cáo này sẽ cung cấp cho bạn cái nhìn sâu sắc về một hoặc nhiều ngân sách.',
     'reports_report_budget_pieCharts'                         => 'Những biểu đồ này sẽ cung cấp cho bạn cái nhìn sâu sắc về chi phí cho mỗi ngân sách hoặc mỗi tài khoản.',

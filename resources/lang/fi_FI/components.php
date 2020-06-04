@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Henkilökohtaiset käyttöoikeuskoodit',
 
     // bills:
-    'not_expected_period'    => 'Ei odotettavissa tässä jaksossa',
-    'not_or_not_yet'         => 'Ei (vielä)',
 ];

@@ -51,8 +51,8 @@
         "profile_oauth_no_clients": "You have not created any OAuth clients.",
         "profile_oauth_clients_header": "Clients",
         "profile_oauth_client_id": "Client ID",
-        "profile_oauth_client_name": "Name",
-        "profile_oauth_client_secret": "Secret",
+        "profile_oauth_client_name": "Nimi",
+        "profile_oauth_client_secret": "Salaisuus",
         "profile_oauth_create_new_client": "Create New Client",
         "profile_oauth_create_client": "Create Client",
         "profile_oauth_edit_client": "Edit Client",
@@ -69,7 +69,7 @@
         "profile_no_personal_access_token": "You have not created any personal access tokens.",
         "profile_create_new_token": "Create new token",
         "profile_create_token": "Create token",
-        "profile_create": "Create",
+        "profile_create": "Luo",
         "profile_save_changes": "Save changes"
     },
     "form": {

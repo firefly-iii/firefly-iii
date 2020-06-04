@@ -75,7 +75,7 @@ return [
     'reset_pw_warning'                 => '<strong>VEUILLEZ VÉRIFIER</strong> que le lien va vers le bon site Firefly III !',
 
     // error
-    'error_subject'                    => 'Erreur détectée dans Firefly III',
+    'error_subject'                    => 'Une erreur s\'est produite dans Firefly III',
     'error_intro'                      => 'Firefly III v:version a rencontré une erreur : <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'L\'erreur était de type ":class".',
     'error_timestamp'                  => 'L\'erreur s\'est produite le/à: :time.',

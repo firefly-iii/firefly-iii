@@ -32,7 +32,6 @@ return [
     'clone'                                      => 'Κλωνοποίηση',
     'last_seven_days'                            => 'Τελευταίες επτά ημέρες',
     'last_thirty_days'                           => 'Τελευταίες τριάντα ημέρες',
-    'welcomeBack'                                => 'Τι παίζει;',
     'welcome_back'                               => 'Τι παίζει;',
     'everything'                                 => 'Όλα',
     'today'                                      => 'σήμερα',
@@ -737,7 +736,7 @@ return [
     'convert_please_set_asset_source'           => 'Παρακαλώ επιλέξτε τον κεφαλαιακό λογαριασμό από τον οποίο θα προέλθουν τα χρήματα.',
     'convert_expl_w_d'                          => 'When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination account, instead of being withdrawn from it.|When converting from a withdrawal to a deposit, the money will be deposited into the displayed destination accounts, instead of being withdrawn from them.',
     'convert_expl_w_t'                          => 'When converting a withdrawal into a transfer, the money will be transferred away from the source account into other asset or liability account instead of being spent on the original expense account.|When converting a withdrawal into a transfer, the money will be transferred away from the source accounts into other asset or liability accounts instead of being spent on the original expense accounts.',
-    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them. To complete the conversion, please select new destination accounts.',
+    'convert_expl_d_w'                          => 'When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source account, instead of being deposited into it.|When converting a deposit into a withdrawal, the money will be withdrawn from the displayed source accounts, instead of being deposited into them.',
     'convert_expl_d_t'                          => 'When you convert a deposit into a transfer, the money will be deposited into the listed destination account from any of your asset or liability account.|When you convert a deposit into a transfer, the money will be deposited into the listed destination accounts from any of your asset or liability accounts.',
     'convert_expl_t_w'                          => 'When you convert a transfer into a withdrawal, the money will be spent on the destination account you set here, instead of being transferred away.|When you convert a transfer into a withdrawal, the money will be spent on the destination accounts you set here, instead of being transferred away.',
     'convert_expl_t_d'                          => 'When you convert a transfer into a deposit, the money will be deposited into the destination account you see here, instead of being transferred into it.|When you convert a transfer into a deposit, the money will be deposited into the destination accounts you see here, instead of being transferred into them.',
@@ -1319,9 +1318,7 @@ return [
     'summary'                                   => 'Σύνοψη',
     'average'                                   => 'Μέσος όρος',
     'balanceFor'                                => 'Υπόλοιπο για :name',
-    'no_tags_for_cloud'                         => 'Χωρίς ετικέτες δεν παράγεται σύννεφο',
     'no_tags'                                   => '(χωρίς ετικέτες)',
-    'tag_cloud'                                 => 'Σύννεφο ετικετών',
 
     // piggy banks:
     'add_money_to_piggy'                        => 'Δέσμευση χρημάτων για τον κουμπαρά ":name"',
@@ -1419,7 +1416,6 @@ return [
     'split_transaction_title'               => 'Περιγραφή της συναλλαγής με διαχωρισμό',
     'split_transaction_title_help'          => 'Εάν δημιουργήσετε μια διαχωρισμένη συναλλαγή, πρέπει να υπάρχει μια καθολική περιγραφή για όλους τους διαχωρισμούς της συναλλαγής.',
     'split_title_help'                      => 'Εάν δημιουργήσετε μια διαχωρισμένη συναλλαγή, πρέπει να υπάρχει μια καθολική περιγραφή για όλους τους διαχωρισμούς της συναλλαγής.',
-    'transaction_information'               => 'Πληροφορίες συναλλαγής',
     'you_create_transfer'                   => 'Δημιουργείτε μια μεταφορά.',
     'you_create_withdrawal'                 => 'Δημιουργείτε μια ανάληψη.',
     'you_create_deposit'                    => 'Δημιουργείτε μια κατάθεση.',
@@ -1490,11 +1486,6 @@ return [
     // split a transaction:
     'splits'                                => 'Διαχωρισμός',
     'add_another_split'                     => 'Προσθήκη ενός ακόμα διαχωρισμού',
-    'split-transactions'                    => 'Συναλλαγές με διαχωρισμό',
-    'do_split'                              => 'Κάνε διαχωρισμό',
-    'split_this_withdrawal'                 => 'Διαχωρισμός αυτής της ανάληψης',
-    'split_this_deposit'                    => 'Διαχωρίστε αυτή την κατάθεση',
-    'split_this_transfer'                   => 'Διαχωρισμός αυτής της μεταφοράς',
     'cannot_edit_opening_balance'           => 'Δεν μπορείτε να επεξεργαστείτε το υπόλοιπο έναρξης ενός λογαριασμού.',
     'no_edit_multiple_left'                 => 'Δεν έχετε επιλέξει έγκυρες συναλλαγές για επεξεργασία.',
     'breadcrumb_convert_group'              => 'Μετατροπή συναλλαγής',
@@ -1508,7 +1499,6 @@ return [
 
     // Import page (general strings only)
     'import_index_title'                    => 'Εισαγωγή συναλλαγών στο Firefly III',
-    'import_data'                           => 'Εισαγωγή δεδομένων',
     'import_transactions'                   => 'Εισαγωγή συναλλαγών',
     'import_tools_title'                    => 'Εργαλεία εισαγωγής',
     'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
@@ -1599,10 +1589,6 @@ return [
     'recurring_never_cron'                  => 'Φαίνεται ότι το cron job που είναι απαραίτητο για την υποστήριξη των επαναλαμβανόμενων συναλλαγών δεν έχει τρέξει ποτέ. Αυτό είναι φυσιολογικό εάν έχετε μόλις εγκαταστήσει το Firefly III, αλλά αυτό θα πρέπει να ρυθμιστεί το συντομότερο δυνατό. Ελέγξτε τις σελίδες βοήθειας χρησιμοποιώντας το εικονίδιο (?) στην επάνω δεξιά γωνία της σελίδας.',
     'recurring_cron_long_ago'               => 'Φαίνεται ότι έχουν περάσει περισσότερες από 36 ώρες από τότε που το cron job για την υποστήριξη επαναλαμβανόμενων συναλλαγών έχει τρέξει για τελευταία φορά. Είστε βέβαιοι ότι έχει ρυθμιστεί σωστά; Ελέγξτε τις σελίδες βοήθειας χρησιμοποιώντας το εικονίδιο (?) στην επάνω δεξιά γωνία της σελίδας.',
 
-    'recurring_meta_field_tags'          => 'Ετικέτες',
-    'recurring_meta_field_notes'         => 'Σημειώσεις',
-    'recurring_meta_field_bill_id'       => 'Πάγιο έξοδο',
-    'recurring_meta_field_piggy_bank_id' => 'Κουμπαράς',
     'create_new_recurrence'              => 'Δημιουργία νέας επαναλαμβανόμενης συναλλαγής',
     'help_first_date'                    => 'Αναφέρετε την πρώτη αναμενόμενη επανάληψη. Αυτό πρέπει να γίνει σε μελλοντικό χρόνο.',
     'help_first_date_no_past'            => 'Αναφέρετε την πρώτη αναμενόμενη επανάληψη. Το Firefly III δεν θα δημιουργήσει συναλλαγές στο παρελθόν.',
@@ -1645,7 +1631,6 @@ return [
     'box_spent_in_currency'              => 'Δαπάνες (:currency)',
     'box_earned_in_currency'             => 'Κερδήθηκαν (:currency)',
     'box_budgeted_in_currency'           => 'Προϋπολογισμένο (:currency)',
-    'box_sum_in_currency'                => 'Σύνολο (:currency)',
     'box_bill_paid_in_currency'          => 'Πληρωμένα πάγια έξοδα (:currency)',
     'box_bill_unpaid_in_currency'        => 'Απλήρωτα πάγια έξοδα (:currency)',
     'box_left_to_spend_in_currency'      => 'Διαθέσιμα προϋπολογισμών (:currency)',

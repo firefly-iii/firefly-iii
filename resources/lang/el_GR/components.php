@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Τεκμήρια προσωπικής πρόσβασης',
 
     // bills:
-    'not_expected_period'    => 'Δεν αναμένεται αυτή την περίοδο',
-    'not_or_not_yet'         => 'Όχι (ακόμη)',
 ];

@@ -36,22 +36,22 @@ return [
     'transactions_create_withdrawal_source'           => '从这个下拉选择您最喜欢的资产帐户或负债。',
     'transactions_create_withdrawal_destination'      => '在此选择一个费用帐户。留空即表示现金支出。',
     'transactions_create_withdrawal_foreign_currency' => '使用此字段设置外汇和数额。',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_withdrawal_more_meta'        => '您在这些字段中设置了很多其它元数据。',
     'transactions_create_withdrawal_split_add'        => '如果您想要拆分交易，按此按钮添加一笔拆分',
 
     // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
+    'transactions_create_deposit_source'              => '在这个自动完成下拉/文本框中选择或输入收款人。如果您想要存入现金，请留空。',
     'transactions_create_deposit_destination'         => '在此选择一个资产或负债帐户。',
     'transactions_create_deposit_foreign_currency'    => '使用此字段设置外汇和数额。',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
+    'transactions_create_deposit_more_meta'           => '您在这些字段中设置了很多其它元数据。',
     'transactions_create_deposit_split_add'           => '如果您想要拆分交易，按此按钮添加一笔拆分',
 
     // transactions (transfer)
     'transactions_create_transfer_source'             => '在此选择来源资产帐户。',
     'transactions_create_transfer_destination'        => '在此选择目标资产帐户。',
     'transactions_create_transfer_foreign_currency'   => '使用此字段设置外汇和数额。',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_transfer_more_meta'          => '您在这些字段中设置了很多其它元数据。',
+    'transactions_create_transfer_split_add'          => '如果您想要拆分交易，按此按钮添加一笔拆分',
 
     // create account:
     'accounts_create_iban'                            => '给您的帐户一个有效的 IBAN，可使未来资料导入变得更容易。',
