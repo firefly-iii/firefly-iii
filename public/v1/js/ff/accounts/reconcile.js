@@ -90,6 +90,10 @@ function selectAllReconcile(e) {
         var identifier = 'checked_' + journalId;
         console.log('in selectAllReconcile(' + journalId + ') with amount ' + amount + ' and selected amount ' + selectedAmount);
 
+        // do nothing if line is already in target state
+        if (check.prop('checked') === doCheck )
+        return;
+    
         check.prop('checked', doCheck);
         // if checked, add to selected amount
         if (doCheck === true && check.data('younger') === false) {
