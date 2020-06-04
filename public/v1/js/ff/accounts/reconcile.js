@@ -92,7 +92,7 @@ function selectAllReconcile(e) {
 
         // do nothing if line is already in target state
         if (check.prop('checked') === doCheck )
-        return;
+            return;
     
         check.prop('checked', doCheck);
         // if checked, add to selected amount
