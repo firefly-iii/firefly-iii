@@ -85,6 +85,7 @@ use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
+use FireflyIII\TransactionRules\Triggers\ForeignCurrencyIs;
 use FireflyIII\TransactionRules\Triggers\DateIs;
 use FireflyIII\TransactionRules\Triggers\DateBefore;
 use FireflyIII\TransactionRules\Triggers\DateAfter;
@@ -479,6 +480,7 @@ return [
         'budget_is'                => BudgetIs::class,
         'tag_is'                   => TagIs::class,
         'currency_is'              => CurrencyIs::class,
+        'foreign_currency_is'      => ForeignCurrencyIs::class,
         'has_attachments'          => HasAttachment::class,
         'has_no_category'          => HasNoCategory::class,
         'has_any_category'         => HasAnyCategory::class,
