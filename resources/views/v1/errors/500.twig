@@ -1,59 +1,97 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <base href="{{ route('index') }}/"/>
-    <style>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <title>Firefly III 500 :(</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
 
-        /* latin */
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 100;
-            src: local('Lato Hairline'), local('Lato-Hairline'), url('v1/fonts/lato-100.woff2') format('woff2'), url('v1/fonts/lato-100.woff') format('woff');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-        }
+    {# CSS things #}
 
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            color: #B0BEC5;
-            display: table;
-            font-weight: 100;
-            font-family: 'Lato', sans-serif;
-        }
+    {# libraries #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        .container {
-            text-align: center;
-            display: table-cell;
-            vertical-align: middle;
-        }
+    {# the theme #}
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        .content {
-            text-align: center;
-            display: inline-block;
-        }
+    {# Firefly III customisations #}
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        .title {
-            font-size: 72px;
-            margin-bottom: 40px;
-        }
+    {# favicons #}
+    {% include('partials.favicons') %}
 
-        .text {
-            font-size: 30px;
-            margin-bottom: 40px;
-        }
-    </style>
 </head>
-<body>
-<div class="container">
-    <div class="content">
-        <div class="title">{{ trans('errors.whoops') }}</div>
-        <code class="text">{{ trans('errors.fatal_error') }}</code>
-
-    </div>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><a href="{{ route('index') }}"><b>Firefly</b>III</a></h1>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">{{ trans('errors.error_occurred') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            {{ trans('errors.error_not_recoverable') }}
+        </p>
+        <p class="text-danger">
+            {{ exception.getMessage |default('General unknown errror') }}
+
+        </p>
+    </div>
+</div>
+{% if not debug %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+            <h4>
+                {{ trans('errors.more_info') }}
+            </h4>
+            <p>
+                {{ trans('errors.collect_info')|raw }}
+                {{ trans('errors.collect_info_more')|raw }}
+            </p>
+            <h4>
+                {{ trans('errors.github_help') }}
+            </h4>
+            <p>
+                {{ trans('errors.github_instructions')|raw }}
+            </p>
+            <ol>
+                <li>{{ trans('errors.use_search') }}</li>
+                <li>{{ trans('errors.include_info', { link: route('debug') })|raw }}</li>
+                <li>{{ trans('errors.tell_more') }}</li>
+                <li>{{ trans('errors.include_logs') }}</li>
+                <li>{{ trans('errors.what_did_you_do') }}</li>
+            </ol>
+        </div>
+    </div>
+{% endif %}
+
+{% if debug %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+            <h4></h4>
+            <p>
+                {{ trans('errors.error_location', {file: exception.getFile, line: exception.getLine, code: exception.getCode })|raw }}
+            </p>
+            <h4>
+                {{ trans('errors.stacktrace') }}
+            </h4>
+            <div style="font-family: monospace;font-size:11px;">
+                {{ exception.getTraceAsString|nl2br }}
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 </body>
 </html>
+

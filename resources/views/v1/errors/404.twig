@@ -3,54 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
-    <title>404</title>
+    <title>Firefly III 404 :(</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
 
+    {# CSS things #}
+
     {# libraries #}
     <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     {# the theme #}
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     {# Firefly III customisations #}
-    <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
+    {# favicons #}
     {% include('partials.favicons') %}
+
 </head>
-<body class="ff-error-page">
-<div class="ff-error-box">
-    <div class="login-logo">
-        <a href="{{ route('index') }}"><s><b>Firefly</b>III</s> <span class="text-danger">404</span></a>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3 class="text-info">404 &mdash; {{ trans('errors.404_header') }}</h3>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <p class="text-danger">
-                {{ trans('errors.404_page_does_not_exist') }}
-            </p>
-            <p>
-                {{ trans('errors.404_send_error') }}
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <p>
-                {{ trans('errors.404_github_link')|raw }}
-            </p>
-        </div>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><s><b>Firefly</b>III</s> 404 Not Found :(</h1>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">404 &mdash; {{ trans('errors.404_header') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            {{ trans('errors.404_page_does_not_exist') }}
+        </p>
+        <p>
+            {{ trans('errors.404_send_error') }}
+        </p>
+        <p>
+            {{ trans('errors.404_github_link')|raw }}
+        </p>
+    </div>
+</div>
+
 
 </body>
 </html>
