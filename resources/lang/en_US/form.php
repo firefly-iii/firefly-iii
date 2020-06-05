@@ -38,6 +38,7 @@ return [
     'match'                     => 'Matches on',
     'strict'                    => 'Strict mode',
     'repeat_freq'               => 'Repeats',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Update channel',
     'currency_id'               => 'Currency',
