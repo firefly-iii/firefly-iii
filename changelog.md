@@ -18,12 +18,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 3404](https://github.com/firefly-iii/firefly-iii/issues/3404) The profile page has been translated. See the note at the bottom. Thanks to @sephrat
 - [Issue 3405](https://github.com/firefly-iii/firefly-iii/issues/3405) All error pages have been translated. See the note at the bottom. Thanks to @sephrat
 
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - [Issue 3309](https://github.com/firefly-iii/firefly-iii/issues/3309) New budgets would create bad budget limits.
 - [Issue 3390](https://github.com/firefly-iii/firefly-iii/issues/3390) Typos and minor text inconsistencies fixed by @sephrat
