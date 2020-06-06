@@ -26,8 +26,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
-use Log;
-use Ramsey\Uuid\Uuid;
+use FireflyIII\Support\System\GeneratesInstallationId;
 
 /**
  *
@@ -35,6 +34,7 @@ use Ramsey\Uuid\Uuid;
  */
 class InstallationId
 {
+    use GeneratesInstallationId;
     /**
      * Handle an incoming request.
      *
@@ -48,13 +48,7 @@ class InstallationId
      */
     public function handle($request, Closure $next)
     {
-        $config = app('fireflyconfig')->get('installation_id', null);
-        if (null === $config) {
-            $uuid5    = Uuid::uuid5(Uuid::NAMESPACE_URL, 'firefly-iii.org');
-            $uniqueId = (string) $uuid5;
-            Log::info(sprintf('Created Firefly III installation ID %s', $uniqueId));
-            app('fireflyconfig')->set('installation_id', $uniqueId);
-        }
+        $this->generateInstallationId();
 
         return $next($request);
     }
