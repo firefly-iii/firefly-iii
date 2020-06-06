@@ -4,19 +4,40 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.2.7 (API 1.1.0) - 2020-06-01
 
-- Firefly III v5.2.7 is the first version of Firefly III with the ability to opt-in to usage telemetry. This entirely optional of course.
-- New translations have been added for the emails that Firefly III can send. Despite your preferences, these emails may still be in English. See the bottom of this changelog.
-- New translations have been added for error screens that Firefly III may display. Despite your preferences, these error pages may still be in English. See the bottom of this changelog.
+### Added
+- Firefly III **optional + opt-in** telemetry can now be enabled, if you want to. Read more about it [here](https://docs.firefly-iii.org/support/telemetry).
+- [Issue 3133](https://github.com/firefly-iii/firefly-iii/issues/3133) You can remove attachments before you create a transaction.
+- [Issue 3395](https://github.com/firefly-iii/firefly-iii/issues/3395) Emails sent by Firefly III have been translated. See the note at the bottom. Thanks to @sephrat
+- [Issue 3393](https://github.com/firefly-iii/firefly-iii/issues/3393) New SSL options for LDAP and MySQL. Thanks to @sephrat
+- [Issue 3413](https://github.com/firefly-iii/firefly-iii/issues/3413) Better string pluralization. Thanks to @sephrat
+- [Issue 3297](https://github.com/firefly-iii/firefly-iii/issues/3297) Rule trigger for foreign currency ID
 
-About translating errors and email messages.
+### Changed
+- The default Docker Compose configuration and documentation switched from PostgreSQL to MariaDB. This will NOT affect existing installations unless you
+ change your docker compose file.
+- [Issue 3404](https://github.com/firefly-iii/firefly-iii/issues/3404) The profile page has been translated. See the note at the bottom. Thanks to @sephrat
+- [Issue 3405](https://github.com/firefly-iii/firefly-iii/issues/3405) All error pages have been translated. See the note at the bottom. Thanks to @sephrat
 
-The translated text is generated outside of what's called the user's "session". When Firefly
- III operates outside of your session, it can't access your preferences or your data. So it may not be possible for 
- Firefly III to know which language you would have preferred. You can set the `DEFAULT_LANGUAGE`-environment variable
- if you want. But user specific preferences may be ignored. 
+### Deprecated
+- Initial release.
 
+### Removed
+- Initial release.
 
-Translation of email and errors. May not be perfect. (1) error does not read user pref. 2: email does not read user pref. 3: stringsnot translated yet.
+### Fixed
+- [Issue 3309](https://github.com/firefly-iii/firefly-iii/issues/3309) New budgets would create bad budget limits.
+- [Issue 3390](https://github.com/firefly-iii/firefly-iii/issues/3390) Typos and minor text inconsistencies fixed by @sephrat
+- [Issue 3407](https://github.com/firefly-iii/firefly-iii/issues/3407) [issue 3408](https://github.com/firefly-iii/firefly-iii/issues/3408) The total transaction amount displayed is no longer empty for opening balances by @sephrat
+- [Issue 3409](https://github.com/firefly-iii/firefly-iii/issues/3409) [issue 3420](https://github.com/firefly-iii/firefly-iii/issues/3420) Double accounts no longer listed by @sephrat
+- [Issue 3427](https://github.com/firefly-iii/firefly-iii/issues/3427) Add a time-out to version update check. More improvements are coming.
+- [Issue 3419](https://github.com/firefly-iii/firefly-iii/issues/3419) Error fixed which would prevent you from adding money to a piggy bank, by @sephrat
+- [Issue 3425](https://github.com/firefly-iii/firefly-iii/issues/3425) Budget amount had no validation.
+- [Issue 3428](https://github.com/firefly-iii/firefly-iii/issues/3428) Reconciliation "select all"-button would miscalculate.
+- [Issue 3415](https://github.com/firefly-iii/firefly-iii/issues/3415) New error views
+
+A note about new translations: text you see in errors and emails may still be in English. This is not a bug. Translated text is sometimes generated outside of
+ what's called the user's "session". When Firefly III operates outside of your session, it can't access your preferences or your data. It doesn't know what
+  language to pick. You can set the `DEFAULT_LANGUAGE`-environment variable. But user specific preferences may be ignored. 
 
 ## [5.2.6 (API 1.1.0)] - 2020-05-22
 
