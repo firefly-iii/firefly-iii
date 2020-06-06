@@ -61,6 +61,7 @@ class UpgradeFireflyInstructions extends Command
         $isDocker = true === env('IS_DOCKER', false) ? 'true' : 'false';
         app('telemetry')->feature('system.php.version', PHP_VERSION);
         app('telemetry')->feature('system.os.version', PHP_OS);
+        app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
         app('telemetry')->feature('system.os.is_docker', $isDocker);
         app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
