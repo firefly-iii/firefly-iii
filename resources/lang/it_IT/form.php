@@ -38,6 +38,7 @@ return [
     'match'                     => 'Abbina con',
     'strict'                    => 'Modalità severa',
     'repeat_freq'               => 'Si ripete',
+    'object_group'              => 'Group',
     'location'                  => 'Posizione',
     'update_channel'            => 'Canale di aggiornamento',
     'currency_id'               => 'Valuta',

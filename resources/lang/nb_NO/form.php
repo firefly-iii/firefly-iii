@@ -38,6 +38,7 @@ return [
     'match'                     => 'Treff på',
     'strict'                    => 'Streng modus',
     'repeat_freq'               => 'Gjentas',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Update channel',
     'currency_id'               => 'Valuta',

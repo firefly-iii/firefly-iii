@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'Μία ετικέτα είναι ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Το νόμισμα της συναλλαγής είναι..',
     'rule_trigger_currency_is'                   => 'Το νόμισμα της συναλλαγής είναι ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Έχει τουλάχιστον τόσα συνημμένα',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => 'Όταν δημιουργείται μια συναλλαγή',

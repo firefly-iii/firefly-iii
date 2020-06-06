@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'Een tag is ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Transactievaluta is..',
     'rule_trigger_currency_is'                   => 'Transactievaluta is ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Heeft minstens zoveel bijlagen',
     'rule_trigger_has_attachments'               => 'Heeft minstens :count bijlage|Heeft minstens :count bijlagen',
     'rule_trigger_store_journal'                 => 'Als een transactie wordt gemaakt',

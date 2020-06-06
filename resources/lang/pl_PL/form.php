@@ -38,6 +38,7 @@ return [
     'match'                     => 'Dopasowanie',
     'strict'                    => 'Tryb ścisły',
     'repeat_freq'               => 'Powtarza się',
+    'object_group'              => 'Group',
     'location'                  => 'Lokalizacja',
     'update_channel'            => 'Kanał aktualizacji',
     'currency_id'               => 'Waluta',

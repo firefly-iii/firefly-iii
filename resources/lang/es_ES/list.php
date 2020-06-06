@@ -60,7 +60,7 @@ return [
     'due_date'                => 'Fecha de vencimiento',
     'payment_date'            => 'Fecha de pago',
     'invoice_date'            => 'Fecha de facturación',
-    'internal_reference'      => 'Internal reference',
+    'internal_reference'      => 'Referencia interna',
     'notes'                   => 'Notas',
     'from'                    => 'Desde',
     'piggy_bank'              => 'Alcancilla',

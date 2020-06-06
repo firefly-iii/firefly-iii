@@ -38,6 +38,7 @@ return [
     'match'                     => 'Täsmää',
     'strict'                    => 'Tarkka vertailu',
     'repeat_freq'               => 'Toistot',
+    'object_group'              => 'Group',
     'location'                  => 'Sijainti',
     'update_channel'            => 'Päivityskanava',
     'currency_id'               => 'Valuutta',

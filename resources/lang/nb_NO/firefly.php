@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'En tagg er ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Transaksjonsvaluta er..',
     'rule_trigger_currency_is'                   => 'Transaksjonsvaluta er ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Har minst så mange vedlegg',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => 'Når en transaksjon er opprettet',

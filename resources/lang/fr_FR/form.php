@@ -38,6 +38,7 @@ return [
     'match'                     => 'Correspondre à',
     'strict'                    => 'Mode strict',
     'repeat_freq'               => 'Répétitions',
+    'object_group'              => 'Group',
     'location'                  => 'Emplacement',
     'update_channel'            => 'Canal de mise à jour',
     'currency_id'               => 'Devise',

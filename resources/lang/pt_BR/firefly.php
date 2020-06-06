@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'A tag é ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'A moeda da transação é..',
     'rule_trigger_currency_is'                   => 'A moeda da transação é ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Tem pelo menos essa quantidade de anexos',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => 'Quando uma transação é criada',

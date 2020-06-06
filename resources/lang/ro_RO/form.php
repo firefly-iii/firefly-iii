@@ -38,6 +38,7 @@ return [
     'match'                     => 'Se potrivește',
     'strict'                    => 'Modul strict',
     'repeat_freq'               => 'Repetă',
+    'object_group'              => 'Group',
     'location'                  => 'Locație',
     'update_channel'            => 'Actualizare canal',
     'currency_id'               => 'Monedă',

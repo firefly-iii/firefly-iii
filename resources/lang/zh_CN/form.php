@@ -38,6 +38,7 @@ return [
     'match'                     => '配对于',
     'strict'                    => '精确模式',
     'repeat_freq'               => '重复',
+    'object_group'              => 'Group',
     'location'                  => '位置',
     'update_channel'            => '更新频道',
     'currency_id'               => '货币',

@@ -38,6 +38,7 @@ return [
     'match'                     => 'Träffar på',
     'strict'                    => 'Strikt läge',
     'repeat_freq'               => 'Upprepningar',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Uppdateringskanal',
     'currency_id'               => 'Valuta',

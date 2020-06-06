@@ -38,6 +38,7 @@ return [
     'match'                     => 'Cocok di',
     'strict'                    => 'Strict mode',
     'repeat_freq'               => 'Berulang',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Update channel',
     'currency_id'               => 'Mata uang',

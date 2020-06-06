@@ -38,6 +38,7 @@ return [
     'match'                     => 'Giống',
     'strict'                    => 'Chế độ nghiêm ngặt',
     'repeat_freq'               => 'Lặp lại',
+    'object_group'              => 'Group',
     'location'                  => 'Vị trí',
     'update_channel'            => 'Cập nhật kênh',
     'currency_id'               => 'Tiền tệ',

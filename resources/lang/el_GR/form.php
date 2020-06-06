@@ -38,6 +38,7 @@ return [
     'match'                     => 'Αντιστοιχίες στις',
     'strict'                    => 'Αυστηρή λειτουργία',
     'repeat_freq'               => 'Επαναλήψεις',
+    'object_group'              => 'Group',
     'location'                  => 'Τοποθεσία',
     'update_channel'            => 'Κανάλι ενημερώσεων',
     'currency_id'               => 'Νόμισμα',

@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'Tag adalah ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Transaction currency is..',
     'rule_trigger_currency_is'                   => 'Transaction currency is ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Paling tidak banyak keterikatan ini',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => 'Saat transaksi dibuat',

@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'Címke: ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'A tranzakció pénzneme..',
     'rule_trigger_currency_is'                   => 'A tranzakció pénzneme: ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Legalább ennyi melléklete van',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => 'Tranzakció létrehozásakor',

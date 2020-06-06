@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'O etichetă este ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Moneda tranzacției este..',
     'rule_trigger_currency_is'                   => 'Moneda tranzacției este ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Are cel puțin atâtea atașamente',
     'rule_trigger_has_attachments'               => 'Are cel puțin :count atașamente | Are cel puțin :count atașamente',
     'rule_trigger_store_journal'                 => 'Când este o tranzacție creată',

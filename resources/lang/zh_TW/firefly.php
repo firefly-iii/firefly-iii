@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => '一個標籤為 ":trigger_value"',
     'rule_trigger_currency_is_choice'            => '轉帳貨幣為…',
     'rule_trigger_currency_is'                   => '轉帳貨幣為 ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => '至少有這麼多附加檔案',
     'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
     'rule_trigger_store_journal'                 => '當建立一筆交易',

@@ -38,6 +38,7 @@ return [
     'match'                     => 'Találatok',
     'strict'                    => 'Szigorú mód',
     'repeat_freq'               => 'Ismétlődések',
+    'object_group'              => 'Group',
     'location'                  => 'Hely',
     'update_channel'            => 'Frissítési csatorna',
     'currency_id'               => 'Pénznem',

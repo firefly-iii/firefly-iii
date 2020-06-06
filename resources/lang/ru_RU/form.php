@@ -38,6 +38,7 @@ return [
     'match'                     => 'Ключи для связи',
     'strict'                    => 'Строгий режим',
     'repeat_freq'               => 'Повторы',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Канал обновлений',
     'currency_id'               => 'Валюта',

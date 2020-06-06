@@ -38,6 +38,7 @@ return [
     'match'                     => 'Shody',
     'strict'                    => 'Striktní režim',
     'repeat_freq'               => 'Opakuje se',
+    'object_group'              => 'Group',
     'location'                  => 'Údaje o poloze',
     'update_channel'            => 'Update channel',
     'currency_id'               => 'Měna',

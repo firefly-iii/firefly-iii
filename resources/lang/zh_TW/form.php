@@ -38,6 +38,7 @@ return [
     'match'                     => '配對於',
     'strict'                    => '嚴謹模式',
     'repeat_freq'               => '重複',
+    'object_group'              => 'Group',
     'location'                  => 'Location',
     'update_channel'            => 'Update channel',
     'currency_id'               => '貨幣',

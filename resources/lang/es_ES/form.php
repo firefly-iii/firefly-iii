@@ -38,6 +38,7 @@ return [
     'match'                     => 'Encuentros en',
     'strict'                    => 'Modo estricto',
     'repeat_freq'               => 'Repetición',
+    'object_group'              => 'Group',
     'location'                  => 'Ubicación',
     'update_channel'            => 'Canal de actualizaciones',
     'currency_id'               => 'Divisa',

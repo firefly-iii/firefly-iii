@@ -436,6 +436,8 @@ return [
     'rule_trigger_tag_is'                        => 'Nhãn là ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Tiền tệ giao dịch là..',
     'rule_trigger_currency_is'                   => 'Tiền tệ giao dịch là ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
+    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Có ít nhất nhiều tệp đính kèm này',
     'rule_trigger_has_attachments'               => 'Có ít nhất: :count tệp đính kèm | Có ít nhất: :count tệp đính kèm',
     'rule_trigger_store_journal'                 => 'Khi một giao dịch được tạo',
