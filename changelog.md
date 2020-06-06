@@ -2,13 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.2.7 (API 1.1.0) - 2020-06-01
+## [5.2.8 (API 1.1.0)] - 2020-06-02
+
+### Fixed
+- [Issue 3443](https://github.com/firefly-iii/firefly-iii/issues/3443) Fixed issue with composer installation.
+
+## [5.2.7 (API 1.1.0)] - 2020-06-01
 
 ### Added
 - Firefly III **optional + opt-in** telemetry can now be enabled, if you want to. Read more about it [here](https://docs.firefly-iii.org/support/telemetry).
 - [Issue 3133](https://github.com/firefly-iii/firefly-iii/issues/3133) You can remove attachments before you create a transaction.
 - [Issue 3395](https://github.com/firefly-iii/firefly-iii/issues/3395) Emails sent by Firefly III have been translated. See the note at the bottom. Thanks to @sephrat
-- [Issue 3393](https://github.com/firefly-iii/firefly-iii/issues/3393) New SSL options for LDAP and MySQL. Thanks to @sephrat
+- [Issue 3393](https://github.com/firefly-iii/firefly-iii/issues/3393) New SSL options for LDAP and MySQL. Thanks to @bpatath.
 - [Issue 3413](https://github.com/firefly-iii/firefly-iii/issues/3413) Better string pluralization. Thanks to @sephrat
 - [Issue 3297](https://github.com/firefly-iii/firefly-iii/issues/3297) Rule trigger for foreign currency ID
 
