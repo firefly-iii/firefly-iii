@@ -30,7 +30,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
@@ -53,7 +52,6 @@ use FireflyIII\Support\Binder\CLIToken;
 use FireflyIII\Support\Binder\ConfigurationName;
 use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
-use FireflyIII\Support\Binder\ImportProvider;
 use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
@@ -180,7 +178,6 @@ return [
         Bill::class,
         Budget::class,
         Category::class,
-        ImportJob::class,
         PiggyBank::class,
         Tag::class,
         Transaction::class,
@@ -248,7 +245,6 @@ return [
         'application/vnd.oasis.opendocument.image',
     ],
     'list_length'                  => 10,
-    'default_import_format'        => 'csv',
     'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'ccTypes'                      => [
@@ -418,12 +414,10 @@ return [
         'recurrence'       => Recurrence::class,
         'rule'             => Rule::class,
         'ruleGroup'        => RuleGroup::class,
-        'importJob'        => ImportJob::class,
         'transactionGroup' => TransactionGroup::class,
         'user'             => User::class,
 
         // strings
-        'import_provider'  => ImportProvider::class,
         'currency_code'    => CurrencyCode::class,
 
         // dates

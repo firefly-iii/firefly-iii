@@ -60,7 +60,7 @@ class ApplyRules extends Command
      */
     protected $signature
         = 'firefly-iii:apply-rules
-                            {--user=1 : The user ID that the import should import for.}
+                            {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
                             {--accounts= : A comma-separated list of asset accounts or liabilities to apply your rules to.}
                             {--rule_groups= : A comma-separated list of rule groups to apply. Take the ID\'s of these rule groups from the Firefly III interface.}

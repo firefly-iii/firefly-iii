@@ -99,32 +99,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Find a journal by its hash.
-     *
-     * @param string $hash
-     *
-     * @return TransactionJournalMeta|null
-     */
-    public function findByHash(string $hash): ?TransactionJournalMeta
-    {
-        $jsonEncode = json_encode($hash);
-        $hashOfHash = hash('sha256', $jsonEncode);
-        Log::debug(sprintf('JSON encoded hash is: %s', $jsonEncode));
-        Log::debug(sprintf('Hash of hash is: %s', $hashOfHash));
-
-        $result = TransactionJournalMeta::withTrashed()
-                                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                        ->where('hash', $hashOfHash)
-                                        ->where('name', 'import_hash_v2')
-                                        ->first(['journal_meta.*']);
-        if (null === $result) {
-            Log::debug('Result is null');
-        }
-
-        return $result;
-    }
-
-    /**
      * Find a specific journal.
      *
      * @param int $journalId

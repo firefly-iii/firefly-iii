@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Providers\ImportServiceProvider;
 use FireflyIII\Support\Facades\Telemetry;
 
 return [
@@ -97,7 +96,6 @@ return [
         FireflyIII\Providers\TagServiceProvider::class,
         FireflyIII\Providers\AdminServiceProvider::class,
         FireflyIII\Providers\RecurringServiceProvider::class,
-        ImportServiceProvider::class,
     ],
     'aliases'         => [
         'App'           => Illuminate\Support\Facades\App::class,

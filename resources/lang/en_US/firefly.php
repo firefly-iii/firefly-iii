@@ -645,7 +645,7 @@ return [
     'secure_pw_should'                          => 'Should I check the box?',
     'secure_pw_long_password'                   => 'Yes. Always verify your password is safe.',
     'command_line_token'                        => 'Command line token',
-    'explain_command_line_token'                => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Regenerate command line token',
     'token_regenerated'                         => 'A new command line token was generated',
     'change_your_email'                         => 'Change your email address',
@@ -684,7 +684,6 @@ return [
     'profile_try_again'                         => 'Something went wrong. Please try again.',
 
     // export data:
-    'import_and_export_menu'                    => 'Import and export',
     'export_data_title'                         => 'Export data from Firefly III',
     'export_data_menu'                          => 'Export data',
     'export_data_bc'                            => 'Export data from Firefly III',
@@ -1500,16 +1499,6 @@ return [
     'reset_after'                           => 'Reset form after submission',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Import transactions into Firefly III',
-    'import_transactions'                   => 'Import transactions',
-    'import_tools_title'                    => 'Import tools',
-    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
-    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 

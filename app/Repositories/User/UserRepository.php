@@ -261,8 +261,6 @@ class UserRepository implements UserRepositoryInterface
                                                     ->where('amount', '>', 0)
                                                     ->whereNull('budgets.deleted_at')
                                                     ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
-        $return['import_jobs']         = $user->importJobs()->count();
-        $return['import_jobs_success'] = $user->importJobs()->where('status', 'finished')->count();
         $return['rule_groups']         = $user->ruleGroups()->count();
         $return['rules']               = $user->rules()->count();
         $return['tags']                = $user->tags()->count();

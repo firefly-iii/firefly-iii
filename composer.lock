@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5af5d9774ef0e82cd34d08c63020e85d",
+    "content-hash": "f298bbfe499e6d187eddfd75734dce42",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -164,70 +164,6 @@
             "description": "BaconQrCode is a QR code generator for PHP.",
             "homepage": "https://github.com/Bacon/BaconQrCode",
             "time": "2017-10-17T09:59:25+00:00"
-        },
-        {
-            "name": "bunq/sdk_php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bunq/sdk_php.git",
-                "reference": "d97d2a710038d183b711825864584e2d31e30e35"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bunq/sdk_php/zipball/d97d2a710038d183b711825864584e2d31e30e35",
-                "reference": "d97d2a710038d183b711825864584e2d31e30e35",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "guzzlehttp/guzzle": "~6",
-                "php": "^7.0.13"
-            },
-            "require-dev": {
-                "brianium/paratest": "^1.1",
-                "friendsofphp/php-cs-fixer": "^2.4",
-                "jakub-onderka/php-parallel-lint": "^0.9.2",
-                "phpro/grumphp": "^0.11.6",
-                "phpstan/phpstan": "^0.8",
-                "phpunit/phpunit": "^6.0.13",
-                "sebastian/phpcpd": "^3.0",
-                "sensiolabs/security-checker": "^5.0"
-            },
-            "bin": [
-                "bin/bunq-install"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "bunq\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "bunq",
-                    "email": "sdk@bunq.com",
-                    "homepage": "https://www.bunq.com",
-                    "role": "Owner"
-                }
-            ],
-            "description": "bunq PHP SDK",
-            "homepage": "https://bunq.com/",
-            "keywords": [
-                "api",
-                "bunq",
-                "finance",
-                "open-banking",
-                "payment",
-                "sepa"
-            ],
-            "time": "2020-04-03T15:48:46+00:00"
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -1914,77 +1850,6 @@
                 }
             ],
             "time": "2020-05-04T22:15:21+00:00"
-        },
-        {
-            "name": "league/csv",
-            "version": "9.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/csv.git",
-                "reference": "7351a74625601914409b42b32cabb91a93773b7b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/7351a74625601914409b42b32cabb91a93773b7b",
-                "reference": "7351a74625601914409b42b32cabb91a93773b7b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": "^7.2.5"
-            },
-            "require-dev": {
-                "ext-curl": "*",
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "phpstan/phpstan": "^0.12.0",
-                "phpstan/phpstan-phpunit": "^0.12.0",
-                "phpstan/phpstan-strict-rules": "^0.12.0",
-                "phpunit/phpunit": "^8.0"
-            },
-            "suggest": {
-                "ext-dom": "Required to use the XMLConverter and or the HTMLConverter classes",
-                "ext-iconv": "Needed to ease transcoding CSV using iconv stream filters"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "9.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Csv\\": "src"
-                },
-                "files": [
-                    "src/functions_include.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ignace Nyamagana Butera",
-                    "email": "nyamsprod@gmail.com",
-                    "homepage": "https://github.com/nyamsprod/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "CSV data manipulation made easy in PHP",
-            "homepage": "http://csv.thephpleague.com",
-            "keywords": [
-                "convert",
-                "csv",
-                "export",
-                "filter",
-                "import",
-                "read",
-                "transform",
-                "write"
-            ],
-            "time": "2020-03-17T15:15:35+00:00"
         },
         {
             "name": "league/event",
@@ -9428,7 +9293,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bunq/sdk_php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

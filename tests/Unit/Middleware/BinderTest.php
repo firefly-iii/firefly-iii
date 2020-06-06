@@ -28,11 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Http\Middleware\Binder;
-use FireflyIII\Import\Prerequisites\BunqPrerequisites;
-use FireflyIII\Import\Prerequisites\FakePrerequisites;
-use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
-use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
-use FireflyIII\Import\Prerequisites\YnabPrerequisites;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Preference;
@@ -947,59 +942,6 @@ class BinderTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/fakedate');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\ImportJob
-     */
-    public function testImportJob(): void
-    {
-        Log::info(sprintf('Now in test %s.', __METHOD__));
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{importJob}', function () {
-            return 'OK';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/testImport');
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\ImportJob
-     */
-    public function testImportJobNotFound(): void
-    {
-        Log::info(sprintf('Now in test %s.', __METHOD__));
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{importJob}', function () {
-            return 'OK';
-        }
-        );
-
-        $this->be($this->user());
-        $response = $this->get('/_test/binder/0');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Middleware\Binder
-     * @covers \FireflyIII\Models\ImportJob
-     */
-    public function testImportJobNotLoggedIn(): void
-    {
-        Log::info(sprintf('Now in test %s.', __METHOD__));
-        Route::middleware(Binder::class)->any(
-            '/_test/binder/{importJob}', function () {
-            return 'OK';
-        }
-        );
-
-        $response = $this->get('/_test/binder/testImport');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 

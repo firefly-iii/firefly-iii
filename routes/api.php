@@ -213,17 +213,6 @@ Route::group(
 );
 
 Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'import',
-     'as'        => 'api.v1.import.',],
-    static function () {
-
-        // Transaction Links API routes:
-        Route::get('list', ['uses' => 'ImportController@listAll', 'as' => 'list']);
-        Route::get('{importJob}', ['uses' => 'ImportController@show', 'as' => 'show']);
-        Route::get('{importJob}/transactions', ['uses' => 'ImportController@transactions', 'as' => 'transactions']);
-    }
-);
-Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
      'as'        => 'api.v1.link_types.',],
     static function () {

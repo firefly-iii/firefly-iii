@@ -113,26 +113,6 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * Get the rules for a user tailored to the import process.
-     *
-     * @return Collection
-     */
-    public function getForImport(): Collection
-    {
-        return Rule::distinct()
-                   ->where('rules.user_id', $this->user->id)
-                   ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-                   ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                   ->where('rule_groups.active', 1)
-                   ->where('rule_triggers.trigger_type', 'user_action')
-                   ->where('rule_triggers.trigger_value', 'store-journal')
-                   ->where('rules.active', 1)
-                   ->orderBy('rule_groups.order', 'ASC')
-                   ->orderBy('rules.order', 'ASC')
-                   ->get(['rules.*', 'rule_groups.order']);
-    }
-
-    /**
      * @param RuleGroup $ruleGroup
      *
      * @return int

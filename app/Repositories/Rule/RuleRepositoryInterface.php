@@ -73,13 +73,6 @@ interface RuleRepositoryInterface
     public function getFirstRuleGroup(): RuleGroup;
 
     /**
-     * Get the rules for a user tailored to the import process.
-     *
-     * @return Collection
-     */
-    public function getForImport(): Collection;
-
-    /**
      * @param RuleGroup $ruleGroup
      *
      * @return int

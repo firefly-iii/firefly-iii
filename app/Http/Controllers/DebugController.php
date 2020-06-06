@@ -224,15 +224,14 @@ class DebugController extends Controller
     {
         $set    = RouteFacade::getRoutes();
         $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.', 'attachments.download', 'attachments.preview',
-                   'bills.rescan', 'budgets.income', 'currencies.def', 'error', 'flush', 'help.show', 'import.file',
+                   'bills.rescan', 'budgets.income', 'currencies.def', 'error', 'flush', 'help.show',
                    'login', 'logout', 'password.reset', 'profile.confirm-email-change', 'profile.undo-email-change',
                    'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
-                   'two-factor.lost', 'reports.options', 'debug', 'import.create-job', 'import.download', 'import.start', 'import.status.json',
+                   'two-factor.lost', 'reports.options', 'debug',
                    'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
                    'accounts.reconcile.transactions', 'accounts.reconcile.overview',
-                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.', 'attachments.view', 'import.create',
-                   'import.job.download', 'import.job.start', 'import.job.status.json', 'import.job.store', 'recurring.events',
+                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.', 'attachments.view', 'recurring.events',
                    'recurring.suggest',
         ];
         $return = '&nbsp;';

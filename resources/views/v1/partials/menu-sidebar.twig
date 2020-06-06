@@ -158,32 +158,15 @@
     </a>
   </li>
 
-  <li class="{{ activeRoutePartial('import') }} {{ activeRoutePartial('export') }} treeview">
-    <a href="#">
-      <i class="fa fa-cogs fa-fw"></i>
-      <span>{{ 'tools'|_ }}</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
 
-    <ul class="treeview-menu">
-      <li class="{{ activeRoutePartial('import') }}">
-        <a href="{{ route('import.index') }}">
-          <i class="fa fa-angle-right fa-fw"></i>
-          <span>{{ 'import_transactions'|_ }}</span>
-        </a>
-      </li>
-      {% if config('firefly.feature_flags.export') %}
-        <li class="{{ activeRoutePartial('export') }}">
-          <a href="{{ route('export.index') }}">
-            <i class="fa fa-angle-right fa-fw"></i>
-            <span>{{ 'export_data_menu'|_ }}</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </li>
+  {% if config('firefly.feature_flags.export') %}
+    <li class="{{ activeRoutePartial('export') }}" id="report-menu">
+      <a href="{{ route('export.index') }}">
+        <i class="fa fa-upload fa-fw"></i>
+        <span>{{ 'export_data_menu'|_ }}</span>
+      </a>
+    </li>
+  {% endif %}
 
   <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview" id="option-menu">
     <a href="#">

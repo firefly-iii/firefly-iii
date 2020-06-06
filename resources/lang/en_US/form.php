@@ -184,14 +184,11 @@ return [
     'is_demo_site'          => 'Is demo site',
 
     // import
-    'import_file'           => 'Import file',
     'configuration_file'    => 'Configuration file',
-    'import_file_type'      => 'Import file type',
     'csv_comma'             => 'A comma (,)',
     'csv_semicolon'         => 'A semicolon (;)',
     'csv_tab'               => 'A tab (invisible)',
     'csv_delimiter'         => 'CSV field delimiter',
-    'csv_import_account'    => 'Default import account',
     'client_id'             => 'Client ID',
     'app_id'                => 'App ID',
     'secret'                => 'Secret',
