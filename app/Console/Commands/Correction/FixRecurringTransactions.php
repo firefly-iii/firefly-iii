@@ -55,9 +55,9 @@ class FixRecurringTransactions extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $start = microtime(true);
         $this->stupidLaravel();

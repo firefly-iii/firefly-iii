@@ -39,13 +39,13 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, UserNavigation, RequestInformation;
 
     /** @var string Format for date and time. */
-    protected $dateTimeFormat;
+    protected string $dateTimeFormat;
     /** @var string Format for "23 Feb, 2016". */
-    protected $monthAndDayFormat;
+    protected string $monthAndDayFormat;
     /** @var string Format for "March 2018" */
-    protected $monthFormat;
+    protected string $monthFormat;
     /** @var string Redirect user */
-    protected $redirectUri = '/';
+    protected string $redirectUri = '/';
 
     /**
      * Controller constructor.

@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Log;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class GracefulNotFoundHandler
@@ -53,7 +54,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @throws Exception
      * @return mixed
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         $route = $request->route();
         if (null === $route) {
@@ -136,12 +137,12 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
     /**
      * @param Request   $request
-     * @param Exception $exception
+     * @param Throwable $exception
      *
      * @throws Exception
      * @return Redirector|Response
      */
-    private function handleAccount(Request $request, Exception $exception)
+    private function handleAccount(Request $request, Throwable $exception)
     {
         Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
@@ -164,12 +165,12 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
     /**
      * @param Request   $request
-     * @param Exception $exception
+     * @param Throwable $exception
      *
      * @throws Exception
      * @return RedirectResponse|Redirector|Response
      */
-    private function handleAttachment(Request $request, Exception $exception)
+    private function handleAttachment(Request $request, Throwable $exception)
     {
         Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
         /** @var User $user */
@@ -208,13 +209,13 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request   $request
+     * @param Throwable   $request
      * @param Exception $exception
      *
      * @throws Exception
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response
      */
-    private function handleGroup(Request $request, Exception $exception)
+    private function handleGroup(Request $request, Throwable $exception)
     {
         Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
         /** @var User $user */

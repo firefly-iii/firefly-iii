@@ -147,6 +147,24 @@ return [
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
         'Twig'          => TwigBridge\Facade\Twig::class,
 
+        'Arr' => Illuminate\Support\Arr::class,
+        'Http' => Illuminate\Support\Facades\Http::class,
+        'Str' => Illuminate\Support\Str::class,
     ],
+
+    'asset_url' => env('ASSET_URL', null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Faker Locale
+    |--------------------------------------------------------------------------
+    |
+    | This locale will be used by the Faker PHP library when generating fake
+    | data for your database seeds. For example, this will be used to get
+    | localized telephone numbers, street address information and more.
+    |
+    */
+
+    'faker_locale' => 'en_US',
 
 ];

@@ -34,7 +34,7 @@ return [
     */
 
     'paths' => [
-        realpath(base_path('resources/views/v1')),
+        realpath(base_path(sprintf('resources/views/%s', env('FIREFLY_III_LAYOUT', 'v1')))),
     ],
 
     /*
