@@ -38,7 +38,7 @@ return [
     'match'                     => 'Reagiert auf',
     'strict'                    => 'Strenger Modus',
     'repeat_freq'               => 'Wiederholungen',
-    'object_group'              => 'Group',
+    'object_group'              => 'Gruppe',
     'location'                  => 'Herkunft',
     'update_channel'            => 'Aktualisierungskanal',
     'currency_id'               => 'Währung',

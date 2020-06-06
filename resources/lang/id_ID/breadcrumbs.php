@@ -43,7 +43,7 @@ return [
     'deposit_list'           => 'Pendapatan, pemasukan, dan deposit',
     'transfer_list'          => 'Transfer',
     'transfers_list'         => 'Transfer',
-    'reconciliation_list'    => 'Rekonsiliasi',
+    'reconciliation_list'    => 'Penyesuaian',
     'create_withdrawal'      => 'Buat penarikan baru',
     'create_deposit'         => 'Buat deposit baru',
     'create_transfer'        => 'Buat transfer baru',
