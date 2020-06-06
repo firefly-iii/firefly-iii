@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Jeton d\'accès personnel',
 
     // bills:
-    'not_expected_period'    => 'Cette période n\'est pas prévue',
-    'not_or_not_yet'         => 'Non (pas encore)',
 ];

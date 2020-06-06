@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Персональные токены доступа',
 
     // bills:
-    'not_expected_period'    => 'Не ожидается в данном периоде',
-    'not_or_not_yet'         => 'Нет (пока)',
 ];

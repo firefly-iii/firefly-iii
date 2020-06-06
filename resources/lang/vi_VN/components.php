@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Mã thông báo truy cập cá nhân(token)',
 
     // bills:
-    'not_expected_period'    => 'Không mong đợi ở giai đoạn này',
-    'not_or_not_yet'         => 'Không (chưa)',
 ];

@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Http\Controllers;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Support\Cronjobs\TelemetryCronjob;
 
 /**
  * Trait CronRunner
@@ -49,6 +50,24 @@ trait CronRunner
         }
 
         return 'The recurring transaction cron job fired successfully.';
+    }
+
+    /**
+     * @return string
+     */
+    protected function runTelemetry(): string {
+        /** @var TelemetryCronjob $telemetry */
+        $telemetry = app(TelemetryCronjob::class);
+        try {
+            $result = $telemetry->fire();
+        } catch (FireflyException $e) {
+            return $e->getMessage();
+        }
+        if (false === $result) {
+            return 'The telemetry cron job did not fire.';
+        }
+
+        return 'The telemetry cron job fired successfully.';
     }
 
     /**

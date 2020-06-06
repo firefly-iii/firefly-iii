@@ -108,26 +108,6 @@ body.waiting * {
     padding: 0;
 }
 
-.ff-error-page {
-    width: 1000px;
-    margin: 20px auto 0 auto;
-}
-
-.ff-error-page > .error-content {
-    margin-left: 190px;
-    display: block;
-}
-
-.ff-error-page > .error-content > h3 {
-    font-weight: 300;
-    font-size: 25px;
-}
-
-.ff-error-box {
-    width: 460px;
-    margin: 7% auto;
-}
-
 /* cursors */
 .rule-triggers {
     cursor: move;
@@ -152,7 +132,7 @@ body.waiting * {
 }
 
 .loading {
-    background: url('/images/loading-small.gif') no-repeat center center;
+    background: url('/v1/images/loading-small.gif') no-repeat center center;
     min-height: 30px;
 }
 

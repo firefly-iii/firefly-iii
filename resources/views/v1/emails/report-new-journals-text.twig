@@ -1,6 +1,5 @@
 {% include 'emails.header-text' %}
-{% if transformed|length == 1 %}Firefly III has created a transaction for you. You can find it in your Firefly III installation:{% endif %}
-{% if transformed|length > 1 %}Firefly III has created {{ groups.count }} transactions for you. You can find them in your Firefly III installation:{% endif %}
+{{ trans_choice('email.new_journals_header', transformed|length )|raw }}
 
 
 {% for group in transformed %}

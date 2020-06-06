@@ -99,8 +99,9 @@ class ShowController extends Controller
         $transformer->setParameters(new ParameterBag);
         $groupArray = $transformer->transformObject($transactionGroup);
 
-        // do some amount calculations:
+        // do some calculations:
         $amounts = $this->getAmounts($groupArray);
+        $accounts = $this->getAccounts($groupArray);
 
         // make sure notes are escaped but not double escaped.
         foreach ($groupArray['transactions'] as $index => $transaction) {
@@ -127,7 +128,8 @@ class ShowController extends Controller
                 'groupArray',
                 'events',
                 'attachments',
-                'links'
+                'links',
+                'accounts',
             )
         );
     }
@@ -165,5 +167,32 @@ class ShowController extends Controller
         }
 
         return $amounts;
+    }
+    
+    /**
+     * @param array $group
+     *
+     * @return array
+     */
+    private function getAccounts(array $group): array
+    {
+        $accounts = [];
+        
+        foreach ($group['transactions'] as $index => $transaction) {
+            $accounts['source'][] = [ 
+                'type' => $transaction['source_type'],
+                'id' => $transaction['source_id'],
+                'name' => $transaction['source_name'],
+                'iban' => $transaction['source_iban'] ];
+            $accounts['destination'][] = [ 
+                'type' => $transaction['destination_type'],
+                'id' => $transaction['destination_id'],
+                'name' => $transaction['destination_name'],
+                'iban' => $transaction['destination_iban'] ];
+        }
+
+        $accounts['source'] = array_unique($accounts['source'], SORT_REGULAR);
+        $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
+        return $accounts;
     }
 }

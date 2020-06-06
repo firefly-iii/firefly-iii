@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Token akses pribadi',
 
     // bills:
-    'not_expected_period'    => 'Tidak diharapkan pada periode ini',
-    'not_or_not_yet'         => 'Tidak (belum)',
 ];

@@ -43,7 +43,7 @@
                             <p><small>
                                     <em>
                                         <a href="{{ route('accounts.inactive.index', objectType) }}" class="text-muted">
-                                            {{ trans('firefly.inactive_account_link', {count: inactiveCount}) }}
+                                            {{ trans_choice('firefly.inactive_account_link', inactiveCount) }}
                                         </a>
                                     </em>
                                 </small>

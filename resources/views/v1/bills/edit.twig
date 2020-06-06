@@ -18,7 +18,7 @@
                 </div>
                 <div class="box-body">
                     {% if rules.count > 0 %}
-                        {{ ExpandedForm.text('name',null, {helpText: trans('firefly.bill_edit_rules', {count: rules.count})}) }}
+                        {{ ExpandedForm.text('name',null, {helpText: trans_choice('firefly.bill_edit_rules', rules.count)}) }}
                     {% else %}
                         {{ ExpandedForm.text('name') }}
                     {% endif %}

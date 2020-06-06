@@ -119,7 +119,7 @@
                                                 {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}.
                                             {% endif %}
                                             {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
-                                                {{ trans('firefly.recurring_repeats_x_times', {count: rt.nr_of_repetitions}) }}.
+                                                {{ trans_choice('firefly.recurring_repeats_x_times', rt.nr_of_repetitions) }}.
                                             {% endif %}
                                         </p>
                                     </td>

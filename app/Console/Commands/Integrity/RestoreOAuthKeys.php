@@ -24,6 +24,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Class RestoreOAuthKeys
@@ -52,7 +53,6 @@ class RestoreOAuthKeys extends Command
     {
         $this->restoreOAuthKeys();
 
-        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -93,7 +93,9 @@ class RestoreOAuthKeys extends Command
      */
     private function restoreOAuthKeys(): void
     {
+        Log::debug('Going to restoreOAuthKeys()');
         if (!$this->keysInDatabase() && !$this->keysOnDrive()) {
+            Log::debug('Keys are not in DB and keys are not on the drive.');
             $this->generateKeys();
             $this->storeKeysInDB();
             $this->line('Generated and stored new keys.');
@@ -101,12 +103,14 @@ class RestoreOAuthKeys extends Command
             return;
         }
         if ($this->keysInDatabase() && !$this->keysOnDrive()) {
+            Log::debug('Keys are in DB and keys are not on the drive. Restore.');
             $this->restoreKeysFromDB();
             $this->line('Restored OAuth keys from database.');
 
             return;
         }
         if (!$this->keysInDatabase() && $this->keysOnDrive()) {
+            Log::debug('Keys are not in DB and keys are on the drive. Save in DB.');
             $this->storeKeysInDB();
             $this->line('Stored OAuth keys in database.');
 

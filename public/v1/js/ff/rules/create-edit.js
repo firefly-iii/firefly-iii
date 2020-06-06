@@ -350,6 +350,7 @@ function updateTriggerInput(selectList) {
             inputResult.typeahead('destroy');
             break;
         case 'currency_is':
+        case 'foreign_currency_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/currency-names');
             break;

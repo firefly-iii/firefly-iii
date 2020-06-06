@@ -25,9 +25,9 @@ declare(strict_types=1);
 return [
     'html_language'           => 'vi',
     'locale'                  => 'vi, Vietnamese, vi_VN.utf8, vi_VN.UTF-8',
-    'month'                   => '%B %Y',
+    'month'                   => '%B %Y (Automatic Translation)',
     'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_moment_js' => 'MMM YYYY',
     'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_day_no_year'   => '%B %e',
     'date_time'               => '%B %e, %Y, @ %T',

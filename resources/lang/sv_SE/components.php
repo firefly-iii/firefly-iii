@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Personliga behörighetstokens',
 
     // bills:
-    'not_expected_period'    => 'Ej förväntat denna period',
-    'not_or_not_yet'         => 'Inte (ännu)',
 ];

@@ -436,4 +436,33 @@ class ExpandedForm
 
         return $html;
     }
+
+    /**
+     * @param null       $value
+     * @param array|null $options
+     *
+     * @return string
+     */
+    public function objectGroup($value = null, array $options = null): string
+    {
+        $name            = 'object_group';
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['rows'] = 4;
+
+        if (null === $value) {
+            $value = '';
+        }
+
+        try {
+            $html = view('form.object_group', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
+            $html = 'Could not render objectGroup.';
+        }
+
+        return $html;
+    }
 }

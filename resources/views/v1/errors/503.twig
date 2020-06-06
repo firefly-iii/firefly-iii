@@ -1,56 +1,45 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <base href="{{ route('index') }}/"/>
-    <title>Firefly III is in maintenance mode.</title>
-    <style>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <title>Firefly III Maintenance Mode</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
 
-        /* latin */
-        @font-face {
-            font-family: 'Roboto';
-            font-style: normal;
-            font-weight: 300;
-            src: local('Roboto Light'), local('Roboto-Light'), url('fonts/roboto-light-300.woff2') format('woff2'), url('fonts/roboto-light-300.woff') format('woff');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-        }
+    {# libraries #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            color: #B0BEC5;
-            display: table;
-            font-family: 'Roboto', sans-serif;
-        }
+    {# the theme #}
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        p {
-            color: #575e62;
-            font-size: 1.5em;
-        }
+    {# Firefly III customisations #}
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
-        .container {
-            text-align: center;
-            display: table-cell;
-            vertical-align: middle;
-        }
+    {# favicons #}
+    {% include('partials.favicons') %}
 
-        .content {
-            text-align: center;
-            display: inline-block;
-        }
-
-        .title {
-            font-size: 4em;
-            margin-bottom: 40px;
-        }
-    </style>
 </head>
-<body>
-<div class="container">
-    <div class="content">
-        <div class="title">Be right back!</div>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><a href="{{ route('index') }}"><b>Firefly</b>III</a></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">{{ trans('errors.maintenance_mode') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
         <p>
-            Firefly III is down for some necessary maintenance. Please check back in a second.
+            {{ trans('errors.be_right_back') }}
+        </p>
+        <p class="text-danger">
+            {{ trans('errors.check_back') }}
         </p>
     </div>
 </div>

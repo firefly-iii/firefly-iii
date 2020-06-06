@@ -19,32 +19,38 @@
                         <p>
                             {# ONE: WITHDRAWAL TO DEPOSIT #}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                                {{ 'convert_expl_w_d'|_ }}
+                                {{ trans_choice('firefly.convert_expl_w_d', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
                             {% endif %}
 
                             {# TWO: WITHDRAWAL TO TRANSFER #}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
-                                {{ 'convert_expl_w_t'|_ }}
+                                {{ trans_choice('firefly.convert_expl_w_t', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             {% endif %}
 
                             {# THREE: DEPOSIT TO WITHDRAWAL #}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
-                                {{ 'convert_expl_d_w'|_ }}
+                                {{ trans_choice('firefly.convert_expl_d_w', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             {% endif %}
 
                             {# FOUR: DEPOSIT TO TRANSFER#}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
-                                {{ 'convert_expl_d_t'|_ }}
+                                {{ trans_choice('firefly.convert_expl_d_t', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
                             {% endif %}
 
                             {# FIVE: TRANSFER TO WITHDRAWAL #}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
-                                {{ 'convert_expl_t_w'|_ }}
+                                {{ trans_choice('firefly.convert_expl_t_w', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             {% endif %}
 
                             {# SIX: TRANSFER TO DEPOSIT #}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
-                                {{ 'convert_expl_t_d'|_ }}
+                                {{ trans_choice('firefly.convert_expl_t_d', groupArray.transactions|length) }}
+                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
                             {% endif %}
                         </p>
 

@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Telemetry as TelemetryModel;
+use FireflyIII\Support\System\GeneratesInstallationId;
 use JsonException;
 use Log;
 
@@ -32,6 +33,7 @@ use Log;
  */
 class Telemetry
 {
+    use GeneratesInstallationId;
     /**
      * Feature telemetry stores a $value for the given $feature.
      * Will only store the given $feature / $value combination once.
@@ -166,9 +168,12 @@ class Telemetry
      */
     private function storeEntry(string $type, string $name, string $value): void
     {
+        $this->generateInstallationId();
+        $config         = app('fireflyconfig')->get('installation_id', null);
+        $installationId = null !== $config ? $config->data : 'empty';
         TelemetryModel::create(
             [
-                'installation_id' => \FireflyConfig::get('installation_id', '')->data,
+                'installation_id' => $installationId,
                 'key'             => $name,
                 'type'            => $type,
                 'value'           => $value,

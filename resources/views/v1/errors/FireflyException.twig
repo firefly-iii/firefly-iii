@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
-    <title>Firefly III</title>
+    <title>Firefly III Exception :(</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
@@ -20,67 +20,73 @@
     <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     {# Firefly III customisations #}
-    <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     {# favicons #}
     {% include('partials.favicons') %}
 
 </head>
-<body class="ff-error-page">
-<div class="ff-error-box">
-    <div class="login-logo">
-        <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><a href="{{ route('index') }}"><b>Firefly</b>III</a></h1>
     </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3 class="text-info">Whoops! An error occurred.</h3>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <p>
-                Unfortunately, this error was not recoverable :(. Firefly III broke. The error is:
-            </p>
-            <p class="text-danger">
-                {{ exception.getMessage |default('General unknown errror') }}
-            </p>
-        </div>
-    </div>
-    {% if not debug %}
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <p>
-                    <strong>More information</strong><br />
-                    Please collect more information in the <code>storage/logs</code> directory where you will find
-                    log files. If you're running Docker, use <code>docker logs -f [container]</code>.
-                    You can read more about collecting error information in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.
-                </p>
-                <p>
-                    <strong>Get help on GitHub</strong><br />
-                    You're more than welcome to open a new issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.
-                </p>
-                <ol>
-                    <li>Use the search!</li>
-                    <li>Include the information <a href="{{ route('debug') }}">from this debug page</a>.</li>
-                    <li>Tell us more than "it says Whoops!"</li>
-                    <li>Include error logs (see above).</li>
-                    <li>Tell us what you were doing.</li>
-                </ol>
-            </div>
-        </div>
-    {% endif %}
 </div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">{{ trans('errors.error_occurred') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            {{ trans('errors.error_not_recoverable') }}
+        </p>
+        <p class="text-danger">
+            {{ exception.getMessage |default('General unknown errror') }}
+        </p>
+    </div>
+</div>
+{% if not debug %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+            <h4>
+                {{ trans('errors.more_info') }}
+            </h4>
+            <p>
+                {{ trans('errors.collect_info')|raw }}
+                {{ trans('errors.collect_info_more')|raw }}
+            </p>
+            <h4>
+                {{ trans('errors.github_help') }}
+            </h4>
+            <p>
+                {{ trans('errors.github_instructions')|raw }}
+            </p>
+            <ol>
+                <li>{{ trans('errors.use_search') }}</li>
+                <li>{{ trans('errors.include_info', { link: route('debug') })|raw }}</li>
+                <li>{{ trans('errors.tell_more') }}</li>
+                <li>{{ trans('errors.include_logs') }}</li>
+                <li>{{ trans('errors.what_did_you_do') }}</li>
+            </ol>
+        </div>
+    </div>
+{% endif %}
 
 {% if debug %}
-    <div class="error-stack">
-        <h4>Error</h4>
-        <p>This error occured in file <span style="font-family: monospace;">{{ exception.getFile }}</span> on line {{ exception.getLine }} with
-            code {{ exception.getCode }}.</p>
-        <h4>Stack trace</h4>
-        <div style="font-family: monospace;font-size:11px;">
-            {{ exception.getTraceAsString|nl2br }}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+            <h4>{{ trans('errors.error') }}</h4>
+            <p>
+                {{ trans('errors.error_location', {file: exception.getFile, line: exception.getLine, code: exception.getCode })|raw }}
+            </p>
+            <h4>
+                {{ trans('errors.stacktrace') }}
+            </h4>
+            <div style="font-family: monospace;font-size:11px;">
+                {{ exception.getTraceAsString|nl2br }}
+            </div>
         </div>
     </div>
 {% endif %}

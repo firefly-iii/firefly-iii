@@ -23,15 +23,14 @@
                             {{ trans('form.ruleGroup_areYouSure', {'title': ruleGroup.title}) }}
                         </p>
 
-                        <p class="text-danger">
-                            {% if ruleGroup.rules|length > 0 %}
-                                {{ Lang.choice('form.also_delete_rules', ruleGroup.rules|length, {count: ruleGroup.rules|length}) }}
-                            {% endif %}
-                        </p>
 
                         {% if ruleGroup.rules|length > 0 %}
+                            <p class="text-danger">
+                                {{ trans_choice('form.also_delete_rules', ruleGroup.rules|length) }}
+                            </p>
+
                             <p class="text-success">
-                                {{ 'save_rules_by_moving'|_ }}
+                                {{ trans_choice('firefly.save_rules_by_moving', ruleGroup.rules|length) }}
                             </p>
 
                             <p>

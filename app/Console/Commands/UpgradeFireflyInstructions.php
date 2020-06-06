@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
+use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 
 /**
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class UpgradeFireflyInstructions extends Command
 {
+    use GeneratesInstallationId;
+
     /**
      * The console command description.
      *
@@ -50,6 +53,7 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle(): int
     {
+        $this->generateInstallationId();
         if ('update' === (string) $this->argument('task')) {
             $this->updateInstructions();
         }
@@ -57,7 +61,14 @@ class UpgradeFireflyInstructions extends Command
             $this->installInstructions();
         }
 
-        // app('telemetry')->feature('executed-command', $this->signature);
+        // collect system telemetry
+        $isDocker = true === env('IS_DOCKER', false) ? 'true' : 'false';
+        app('telemetry')->feature('system.php.version', PHP_VERSION);
+        app('telemetry')->feature('system.os.version', PHP_OS);
+        app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
+        app('telemetry')->feature('system.os.is_docker', $isDocker);
+        app('telemetry')->feature('system.command.executed', $this->signature);
+
         return 0;
     }
 

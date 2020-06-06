@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Személyes hozzáférési token',
 
     // bills:
-    'not_expected_period'    => 'Nem várható, ebben az időszakban',
-    'not_or_not_yet'         => 'Nincs (még)',
 ];

@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Osobní přístupový token',
 
     // bills:
-    'not_expected_period'    => 'Neočekáváno v tomto období',
-    'not_or_not_yet'         => 'Zatím ne',
 ];
