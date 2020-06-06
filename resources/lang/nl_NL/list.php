@@ -60,7 +60,7 @@ return [
     'due_date'                => 'Vervaldatum',
     'payment_date'            => 'Betalingsdatum',
     'invoice_date'            => 'Factuurdatum',
-    'internal_reference'      => 'Internal reference',
+    'internal_reference'      => 'Interne referentie',
     'notes'                   => 'Notities',
     'from'                    => 'Van',
     'piggy_bank'              => 'Spaarpotje',

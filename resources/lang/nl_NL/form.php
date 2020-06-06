@@ -38,7 +38,7 @@ return [
     'match'                     => 'Reageert op',
     'strict'                    => 'Strikte modus',
     'repeat_freq'               => 'Herhaling',
-    'object_group'              => 'Group',
+    'object_group'              => 'Groep',
     'location'                  => 'Locatie',
     'update_channel'            => 'Updatekanaal',
     'currency_id'               => 'Valuta',
