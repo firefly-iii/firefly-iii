@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\Telemetry as TelemetryModel;
 use FireflyIII\Support\System\GeneratesInstallationId;
+use Illuminate\Database\QueryException;
 use JsonException;
 use Log;
 
@@ -126,12 +128,17 @@ class Telemetry
             Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
             $jsonEncoded = [];
         }
+        try {
+            $count = TelemetryModel
+                ::where('type', $type)
+                ->where('key', $key)
+                ->where('value', $jsonEncoded)
+                ->count();
+        } catch (QueryException|Exception $e) {
+            $count = 0;
+        }
 
-        return TelemetryModel
-                   ::where('type', $type)
-                   ->where('key', $key)
-                   ->where('value', $jsonEncoded)
-                   ->count() > 0;
+        return $count > 0;
     }
 
     /**
@@ -171,14 +178,17 @@ class Telemetry
         $this->generateInstallationId();
         $config         = app('fireflyconfig')->get('installation_id', null);
         $installationId = null !== $config ? $config->data : 'empty';
-        TelemetryModel::create(
-            [
-                'installation_id' => $installationId,
-                'key'             => $name,
-                'type'            => $type,
-                'value'           => $value,
-            ]
-        );
+        try {
+            TelemetryModel::create(
+                [
+                    'installation_id' => $installationId,
+                    'key'             => $name,
+                    'type'            => $type,
+                    'value'           => $value,
+                ]
+            );
+        } catch (QueryException|Exception $e) {
+            // ignore.
+        }
     }
-
 }

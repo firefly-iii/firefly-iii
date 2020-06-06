@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 use Cache;
 use Exception;
 use FireflyIII\Models\Configuration;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -80,7 +81,11 @@ class FireflyConfig
             return Cache::get($fullName);
         }
 
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        try {
+            $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        } catch (QueryException|Exception $e) {
+            return null;
+        }
 
         if ($config) {
             Cache::forever($fullName, $config);
@@ -148,7 +153,15 @@ class FireflyConfig
         }
         Log::debug('Set new value for ', ['name' => $name]);
         /** @var Configuration $config */
-        $config = Configuration::whereName($name)->first();
+        try {
+            $config = Configuration::whereName($name)->first();
+        } catch (QueryException|Exception $e) {
+            $item       = new Configuration;
+            $item->name = $name;
+            $item->data = $value;
+
+            return $item;
+        }
         if (null === $config) {
             Log::debug('Does not exist yet ', ['name' => $name]);
             /** @var Configuration $item */
