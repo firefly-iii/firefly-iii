@@ -1502,6 +1502,9 @@ return [
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
+
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',

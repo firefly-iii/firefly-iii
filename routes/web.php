@@ -582,6 +582,7 @@ Route::group(
         Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'autocomplete.expense-accounts']);
         Route::get('asset-accounts', ['uses' => 'Json\AutoCompleteController@assetAccounts', 'as' => 'autocomplete.asset-accounts']);
         Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'autocomplete.budgets']);
+        Route::get('object-groups', ['uses' => 'Json\AutoCompleteController@objectGroups', 'as' => 'autocomplete.object-groups']);
         Route::get('bills', ['uses' => 'Json\AutoCompleteController@bills', 'as' => 'autocomplete.bills']);
         Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'autocomplete.categories']);
         Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
@@ -636,22 +637,23 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'piggy-banks', 'as' => 'piggy-banks.'],
     static function () {
-        Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
-        Route::get('add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'add-money']);
-        Route::get('remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'remove-money']);
-        Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'add-money-mobile']);
-        Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'remove-money-mobile']);
-        Route::get('create', ['uses' => 'PiggyBankController@create', 'as' => 'create']);
-        Route::get('edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'edit']);
-        Route::get('delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
-        Route::get('show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
-        Route::post('store', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
-        Route::post('update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
-        Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'destroy']);
-        Route::post('add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'add']);
-        Route::post('remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'remove']);
 
-        Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBankController@setOrder', 'as' => 'set-order']);
+        Route::get('', ['uses' => 'PiggyBank\IndexController@index', 'as' => 'index']);
+        Route::get('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@add', 'as' => 'add-money']);
+        Route::get('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@remove', 'as' => 'remove-money']);
+        Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBank\AmountController@addMobile', 'as' => 'add-money-mobile']);
+        Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBank\AmountController@removeMobile', 'as' => 'remove-money-mobile']);
+        Route::get('create', ['uses' => 'PiggyBank\CreateController@create', 'as' => 'create']);
+        Route::get('edit/{piggyBank}', ['uses' => 'PiggyBank\EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@delete', 'as' => 'delete']);
+        Route::get('show/{piggyBank}', ['uses' => 'PiggyBank\ShowController@show', 'as' => 'show']);
+        Route::post('store', ['uses' => 'PiggyBank\CreateController@store', 'as' => 'store']);
+        Route::post('update/{piggyBank}', ['uses' => 'PiggyBank\EditController@update', 'as' => 'update']);
+        Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@destroy', 'as' => 'destroy']);
+        Route::post('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postAdd', 'as' => 'add']);
+        Route::post('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postRemove', 'as' => 'remove']);
+
+        Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBank\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
 

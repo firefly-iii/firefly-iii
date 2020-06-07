@@ -33,7 +33,7 @@
                         {{ ExpandedForm.date('targetdate') }}
                         {{ ExpandedForm.textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
-                        {#{{ ExpandedForm.objectGroup('object_group') }}#}
+                        {{ ExpandedForm.objectGroup() }}
                     </div>
                 </div>
             </div>
@@ -63,6 +63,10 @@
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+
+    {# auto complete for object groups #}
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}

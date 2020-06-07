@@ -37,6 +37,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\Telemetry\TelemetryRepository;
 use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
@@ -172,6 +174,7 @@ class FireflyServiceProvider extends ServiceProvider
         // other generators
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
+        $this->app->bind(ObjectGroupRepositoryInterface::class,ObjectGroupRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         // more generators:

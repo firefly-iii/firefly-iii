@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -83,6 +84,17 @@ class PiggyBankTransformer extends AbstractTransformer
         $notes = $this->piggyRepos->getNoteText($piggyBank);
         $notes = '' === $notes ? null : $notes;
 
+        $objectGroupId    = null;
+        $objectGroupOrder = 0;
+        $objectGroupTitle = null;
+        /** @var ObjectGroup $objectGroup */
+        $objectGroup = $piggyBank->objectGroups->first();
+        if (null !== $objectGroup) {
+            $objectGroupId    = (int) $objectGroup->id;
+            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupTitle = $objectGroup->title;
+        }
+
         // get currently saved amount:
         $currentAmountStr = $this->piggyRepos->getCurrentAmount($piggyBank);
         $currentAmount    = round($currentAmountStr, $currency->decimal_places);
@@ -114,9 +126,12 @@ class PiggyBankTransformer extends AbstractTransformer
             'save_per_month'          => round($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places),
             'start_date'              => $startDate,
             'target_date'             => $targetDate,
-            'order'                   => (int)$piggyBank->order,
+            'order'                   => (int) $piggyBank->order,
             'active'                  => true,
             'notes'                   => $notes,
+            'object_group_id'         => $objectGroupId,
+            'object_group_order'      => $objectGroupOrder,
+            'object_group_title'      => $objectGroupTitle,
             'links'                   => [
                 [
                     'rel' => 'self',

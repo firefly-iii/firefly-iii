@@ -38,6 +38,7 @@ $(function () {
         {
             helper: fixHelper,
             stop: stopSorting,
+            items: 'tr.sortable',
             handle: '.handle',
             start: function (event, ui) {
                 // Build a placeholder cell that spans all the cells in the row
@@ -84,7 +85,7 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
 
-    $.each($('#sortable-piggy>tbody>tr'), function (i, v) {
+    $.each($('#sortable-piggy>tbody>tr.sortable'), function (i, v) {
         var holder = $(v);
         var position = parseInt(holder.data('position'));
         var originalOrder = parseInt(holder.data('order'));

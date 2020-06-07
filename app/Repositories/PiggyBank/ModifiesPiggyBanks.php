@@ -31,6 +31,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Log;
 
@@ -39,7 +40,7 @@ use Log;
  */
 trait ModifiesPiggyBanks
 {
-
+    use CreatesObjectGroups;
     /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
@@ -274,6 +275,15 @@ trait ModifiesPiggyBanks
             $repetition->save();
         }
 
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
+        }
+
         return $piggyBank;
     }
 
@@ -311,6 +321,15 @@ trait ModifiesPiggyBanks
 
             $repetition->currentamount = $piggyBank->targetamount;
             $repetition->save();
+        }
+
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
         }
 
         return $piggyBank;

@@ -139,6 +139,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool $blocked
  * @property string|null $blocked_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
+ * @property string|null $provider
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
  */
 class User extends Authenticatable
 {
