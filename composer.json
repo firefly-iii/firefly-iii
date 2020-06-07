@@ -90,6 +90,7 @@
     "jc5/google2fa-laravel": "2.0.4",
     "laravel/framework": "^7.0",
     "laravel/passport": "8.*",
+    "laravel/ui": "^2.0",
     "laravelcollective/html": "6.*",
     "league/commonmark": "1.*",
     "league/fractal": "0.*",

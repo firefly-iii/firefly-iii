@@ -7,6 +7,7 @@ namespace FireflyIII\Http\Controllers\PiggyBank;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
@@ -21,6 +22,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class IndexController extends Controller
 {
+    use OrganisesObjectGroups;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -46,6 +48,7 @@ class IndexController extends Controller
 
     /**
      * Show overview of all piggy banks.
+     * TODO complicated
      *
      * @param Request $request
      *
@@ -53,6 +56,7 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
+        $this->cleanupObjectGroups();
         $this->piggyRepos->correctOrder();
         $collection = $this->piggyRepos->getPiggyBanks();
         $accounts   = [];

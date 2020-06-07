@@ -22,4 +22,14 @@ interface ObjectGroupRepositoryInterface
      */
     public function search(string $query): Collection;
 
+    /**
+     * Delete empty ones.
+     */
+    public function deleteEmpty(): void;
+
+    /**
+     * Sort
+     */
+    public function sort(): void;
+
 }

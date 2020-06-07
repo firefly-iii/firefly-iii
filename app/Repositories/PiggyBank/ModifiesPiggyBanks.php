@@ -181,6 +181,7 @@ trait ModifiesPiggyBanks
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
+        $piggyBank->objectGroups()->sync([]);
         $piggyBank->delete();
 
         return true;
