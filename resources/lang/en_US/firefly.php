@@ -856,6 +856,8 @@ return [
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
     'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Rules related to this bill',
