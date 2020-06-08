@@ -46,7 +46,7 @@ trait CreatesObjectGroups
      */
     protected function getObjectGroupMaxOrder(): int
     {
-        return ObjectGroup::max('order');
+        return (int) ObjectGroup::max('order');
     }
 
     /**
