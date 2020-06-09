@@ -117,6 +117,8 @@ class IndexController extends Controller
             $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
         }
 
+        ksort($piggyBanks);
+
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
