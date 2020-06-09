@@ -854,6 +854,7 @@ return [
     'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
     'auto_budget_reset_icon'                    => 'This budget will be set periodically',
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
     'not_expected_period'                       => 'Not expected this period',
@@ -1645,7 +1646,7 @@ return [
     'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
     'telemetry_collected_info'           => 'Collected information',
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
-    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'View telemetry',
     'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetry overview',
