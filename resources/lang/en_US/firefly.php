@@ -854,6 +854,7 @@ return [
     'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
     'auto_budget_reset_icon'                    => 'This budget will be set periodically',
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
     'not_expected_period'                       => 'Not expected this period',
