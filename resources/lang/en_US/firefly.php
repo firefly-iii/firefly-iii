@@ -1645,7 +1645,7 @@ return [
     'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
     'telemetry_collected_info'           => 'Collected information',
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
-    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'View telemetry',
     'telemetry_button_delete'            => 'Delete all telemetry',
     'telemetry_admin_overview'           => 'Telemetry overview',
