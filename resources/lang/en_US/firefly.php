@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
     'all_destination_accounts'                   => 'Destination accounts',
     'all_source_accounts'                        => 'Source accounts',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -1658,5 +1659,13 @@ return [
     'telemetry_delete_submitted_records' => 'Delete submitted records',
     'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
     'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
-    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+    
+
 ];
