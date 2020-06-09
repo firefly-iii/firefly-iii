@@ -399,6 +399,13 @@ interface GroupCollectorInterface
     public function withCategoryInformation(): GroupCollectorInterface;
 
     /**
+     * Will include notes.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withNotes(): GroupCollectorInterface;
+
+    /**
      * Add tag info.
      *
      * @return GroupCollectorInterface
