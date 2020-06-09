@@ -1,16 +1,14 @@
 <html>
 <head>
-    <title>Debug page</title>
+    <title>{{ trans('firefly.debug_page') }}</title>
 </head>
 <body>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
-    If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new
-    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can
-    be used to quickly diagnose your problem.
+    {{ trans('firefly.debug_submit_instructions')|raw }}
 </p>
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
-    <strong>If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.</strong>
+    <strong>{{ trans('firefly.debug_pretty_table') }}</strong>
 </p>
 <textarea rows="30" cols="100" name="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
 Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
@@ -56,13 +54,11 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 </textarea>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
-    <a href="{{ route('index') }}">Back to the index</a>
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
 </p>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
-    You may also share the content of the box below. You can also copy-and-paste this into a new
-    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this
-    box may contain private information such as account names, transaction details or email addresses.
+    {{ trans('firefly.debug_additional_data')|raw }}
 </p>
 
 <textarea rows="30" cols="100" name="log_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:7pt;">
@@ -72,7 +68,7 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 </textarea>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
-    <a href="{{ route('index') }}">Back to the index</a>
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
 </p>
 
 </body>
