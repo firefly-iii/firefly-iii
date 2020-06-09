@@ -64,6 +64,17 @@ trait ModifiesPiggyBanks
     }
 
     /**
+     * @inheritDoc
+     */
+    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
+    {
+        $piggyBank->objectGroups()->sync([]);
+
+        return $piggyBank;
+    }
+
+
+    /**
      * @param PiggyBankRepetition $repetition
      * @param string              $amount
      *
@@ -249,6 +260,22 @@ trait ModifiesPiggyBanks
 
         return true;
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank
+    {
+        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+        if (null !== $objectGroup) {
+            $piggyBank->objectGroups()->sync([$objectGroup->id]);
+        }
+
+        return $piggyBank;
+
+    }
+
 
     /**
      * @param array $data

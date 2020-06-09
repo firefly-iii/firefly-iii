@@ -1,4 +1,4 @@
-<table class="table table-hover table-condensed" id="sortable-piggy">
+<table class="table table-hover table-condensed" id="piggy-sortable">
     <thead>
     <tr>
         <th colspan="2">&nbsp;</th>
@@ -13,12 +13,13 @@
 
     {% for objectGroupOrder, objectGroup in piggyBanks %}
         {% if objectGroup.piggy_banks|length > 0 %}
-            <tbody>
+            <tbody class="piggy-connected-list" {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}"{% else %}data-title=""{% endif %}>
             <tr>
-                <td colspan="10"><small>{{ objectGroup.object_group_title }}</small></td>
+                <td colspan="2">{% if objectGroupOrder != 0 %}<i class="fa fa-fw fa-bars group-handle"></i>{% endif %}</td>
+                <td colspan="8"><small>{{ objectGroup.object_group_title }}</small></td>
             </tr>
             {% for piggy in objectGroup.piggy_banks %}
-                <tr class="sortable" data-id="{{ piggy.id }}" data-name="{{ piggy.name }}" data-order="{{ piggy.order }}" data-position="{{ loop.index0 }}">
+                <tr class="piggy-sortable" data-id="{{ piggy.id }}" data-name="{{ piggy.name }}" data-order="{{ piggy.order }}" data-position="{{ loop.index0 }}">
                     <td class="visible-xs visible-sm hidden-md hidden-lg">
                         &nbsp;
                     </td>
@@ -29,7 +30,7 @@
                         </div>
                     </td>
                     <td style="width:60px;" class="hidden-sm hidden-xs">
-                        <i class="fa fa-fw fa-bars handle"></i>
+                        <i class="fa fa-fw fa-bars piggy-handle"></i>
                         <i class="loadSpin"></i>
                     </td>
                     <td style="width:100px;" class="hidden-sm hidden-xs">
@@ -98,6 +99,4 @@
             </tbody>
         {% endif %}
     {% endfor %}
-
-
 </table>

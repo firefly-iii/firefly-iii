@@ -132,8 +132,15 @@ class IndexController extends Controller
      */
     public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
     {
-        $newOrder = (int) $request->get('order');
+        $objectGroupTitle = $request->get('objectGroupTitle');
+        $newOrder         = (int) $request->get('order');
         $this->piggyRepos->setOrder($piggyBank, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->piggyRepos->removeObjectGroup($piggyBank);
+        }
 
         return response()->json(['data' => 'OK']);
     }

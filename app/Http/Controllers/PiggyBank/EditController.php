@@ -71,6 +71,7 @@ class EditController extends Controller
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
                       'startdate'    => $startDate,
+                      'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
                       'notes'        => null === $note ? '' : $note->text,
         ];
         session()->flash('preFilled', $preFilled);
