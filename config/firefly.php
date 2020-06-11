@@ -83,14 +83,14 @@ use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
-use FireflyIII\TransactionRules\Triggers\ForeignCurrencyIs;
-use FireflyIII\TransactionRules\Triggers\DateIs;
-use FireflyIII\TransactionRules\Triggers\DateBefore;
 use FireflyIII\TransactionRules\Triggers\DateAfter;
+use FireflyIII\TransactionRules\Triggers\DateBefore;
+use FireflyIII\TransactionRules\Triggers\DateIs;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
 use FireflyIII\TransactionRules\Triggers\DescriptionStarts;
+use FireflyIII\TransactionRules\Triggers\ForeignCurrencyIs;
 use FireflyIII\TransactionRules\Triggers\FromAccountContains;
 use FireflyIII\TransactionRules\Triggers\FromAccountEnds;
 use FireflyIII\TransactionRules\Triggers\FromAccountIs;
@@ -142,10 +142,10 @@ return [
     ],
 
     'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                      => '5.3.0',
-    'api_version'                  => '1.1.0',
-    'db_version'                   => 14,
-    'maxUploadSize'                => 15242880,
+    'version'                 => '5.3.0',
+    'api_version'             => '1.1.0',
+    'db_version'              => 14,
+    'maxUploadSize'           => 15242880,
     'send_error_message'      => env('SEND_ERROR_MESSAGE', true),
     'site_owner'              => env('SITE_OWNER', ''),
     'send_registration_mail'  => env('SEND_REGISTRATION_MAIL', true),
@@ -162,6 +162,8 @@ return [
     'disable_frame_header'    => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'      => env('DISABLE_CSP_HEADER', false),
     'login_provider'          => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'authentication_guard'    => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'custom_logout_uri'       => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
     'cer_provider'            => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'         => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'          => env('SEND_TELEMETRY', false),
