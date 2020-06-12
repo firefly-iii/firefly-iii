@@ -82,7 +82,9 @@ final class DateBefore extends AbstractTrigger implements TriggerInterface
 
             return false;
         }
-        if ($date->isBefore($ruleDate)) {
+        $isDateRange = $dateParser->isDateRange($this->triggerValue);
+
+        if (false === $isDateRange && $date->isBefore($ruleDate)) {
             Log::debug(
                 sprintf(
                     '%s is before %s, so return true.',
@@ -93,6 +95,35 @@ final class DateBefore extends AbstractTrigger implements TriggerInterface
 
             return true;
         }
+
+        // could be a date range.
+        if ($isDateRange) {
+            Log::debug(sprintf('Date value is "%s", representing a range.', $this->triggerValue));
+            $range = $dateParser->parseRange($this->triggerValue, $date);
+            if ($date->isBefore($range['start'])) {
+                Log::debug(
+                    sprintf(
+                        '%s is before [%s/%s], so return true.',
+                        $date->format('Y-m-d H:i:s'),
+                        $range['start']->format('Y-m-d H:i:s'),
+                        $range['end']->format('Y-m-d H:i:s'),
+                    )
+                );
+
+                return true;
+            }
+            Log::debug(
+                sprintf(
+                    '%s is NOT before [%s/%s], so return false.',
+                    $date->format('Y-m-d H:i:s'),
+                    $range['start']->format('Y-m-d H:i:s'),
+                    $range['end']->format('Y-m-d H:i:s'),
+                )
+            );
+            return false;
+        }
+
+
 
         Log::debug(
             sprintf(

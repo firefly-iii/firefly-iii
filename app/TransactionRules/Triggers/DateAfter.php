@@ -82,7 +82,8 @@ final class DateAfter extends AbstractTrigger implements TriggerInterface
 
             return false;
         }
-        if ($date->isAfter($ruleDate)) {
+        $isDateRange = $dateParser->isDateRange($this->triggerValue);
+        if (false === $isDateRange && $date->isAfter($ruleDate)) {
             Log::debug(
                 sprintf(
                     '%s is after %s, so return true.',
@@ -92,6 +93,32 @@ final class DateAfter extends AbstractTrigger implements TriggerInterface
             );
 
             return true;
+        }
+        // could be a date range.
+        if ($isDateRange) {
+            Log::debug(sprintf('Date value is "%s", representing a range.', $this->triggerValue));
+            $range = $dateParser->parseRange($this->triggerValue, $date);
+            if ($date->isAfter($range['end'])) {
+                Log::debug(
+                    sprintf(
+                        '%s is after [%s/%s], so return true.',
+                        $date->format('Y-m-d H:i:s'),
+                        $range['start']->format('Y-m-d H:i:s'),
+                        $range['end']->format('Y-m-d H:i:s'),
+                    )
+                );
+
+                return true;
+            }
+            Log::debug(
+                sprintf(
+                    '%s is NOT after [%s/%s], so return false.',
+                    $date->format('Y-m-d H:i:s'),
+                    $range['start']->format('Y-m-d H:i:s'),
+                    $range['end']->format('Y-m-d H:i:s'),
+                )
+            );
+            return false;
         }
 
         Log::debug(
