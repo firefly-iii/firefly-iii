@@ -56,6 +56,9 @@
                                         </div>
                                     </td>
                                     <td data-value="{{ rt.title }}">
+                                        {% if rt.attachments > 0 %}
+                                            <i class="fa fa-fw fa-paperclip"></i>
+                                        {% endif %}
                                         {% if rt.active == false %}<s>{% endif %}
                                             {{ rt.type|_ }}:
                                             <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>

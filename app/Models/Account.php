@@ -94,12 +94,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                              $notes_count
  * @property-read int|null                                              $piggy_banks_count
  * @property-read int|null                                              $transactions_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $account_type_id
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
  */
 class Account extends Model
 {
