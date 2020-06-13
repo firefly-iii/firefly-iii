@@ -298,6 +298,7 @@ return [
     'yearly'                                     => 'yearly',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Rules',
     'rule_name'                                  => 'Name of rule',
     'rule_triggers'                              => 'Rule triggers when',
