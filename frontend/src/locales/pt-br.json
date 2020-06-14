@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Faturas a pagar",
+        "left_to_spend": "Restante para gastar",
+        "net_worth": "Valor L\u00edquido"
+    },
+    "config": {
+        "html_language": "pt-br"
+    }
+}

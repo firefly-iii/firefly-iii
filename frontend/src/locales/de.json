@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Kontostand",
+        "bills_to_pay": "Unbezahlte Rechnungen",
+        "left_to_spend": "Verbleibend zum Ausgeben",
+        "net_worth": "Eigenkapital"
+    },
+    "config": {
+        "html_language": "de"
+    }
+}

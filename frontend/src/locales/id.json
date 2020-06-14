@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Keseimbangan",
+        "bills_to_pay": "Bills untuk membayar",
+        "left_to_spend": "Kiri untuk dibelanjakan",
+        "net_worth": "Nilai bersih"
+    },
+    "config": {
+        "html_language": "id"
+    }
+}

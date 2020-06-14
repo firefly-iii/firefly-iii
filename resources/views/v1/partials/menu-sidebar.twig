@@ -196,7 +196,7 @@
           <span>{{ 'currencies'|_ }}</span>
         </a>
       </li>
-      {% if hasRole('owner') %}
+        {% if hasRole('owner') %}
         <li class="{{ activeRoutePartial('admin') }}">
           <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
             <i class="fa fa-angle-right fa-fw"></i>

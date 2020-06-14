@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Ti\u1ec1n c\u00f2n l\u1ea1i",
+        "bills_to_pay": "H\u00f3a \u0111\u01a1n ph\u1ea3i tr\u1ea3",
+        "left_to_spend": "C\u00f2n l\u1ea1i \u0111\u1ec3 chi ti\u00eau",
+        "net_worth": "T\u00e0i s\u1ea3n th\u1ef1c"
+    },
+    "config": {
+        "html_language": "vi"
+    }
+}

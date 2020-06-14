@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Regninger \u00e5 betale",
+        "left_to_spend": "Igjen \u00e5 bruke",
+        "net_worth": "Formue"
+    },
+    "config": {
+        "html_language": "nb"
+    }
+}

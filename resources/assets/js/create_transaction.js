@@ -42,7 +42,7 @@ import Budget from "./components/transactions/Budget";
  * vue, uiv and vuei18n are in app_vue.js
  */
 
- require('./bootstrap');
+require('./bootstrap');
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
@@ -64,7 +64,7 @@ Vue.component('account-select', AccountSelect);
 
 Vue.component('create-transaction', CreateTransaction);
 
-const i18n = require('./i18n'); 
+const i18n = require('./i18n');
 
 let props = {};
 new Vue({

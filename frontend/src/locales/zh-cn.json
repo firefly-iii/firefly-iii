@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "\u4f59\u989d",
+        "bills_to_pay": "\u5f85\u4ed8\u5e10\u5355",
+        "left_to_spend": "\u5269\u4f59\u53ef\u82b1\u8d39",
+        "net_worth": "\u51c0\u503c"
+    },
+    "config": {
+        "html_language": "zh-cn"
+    }
+}

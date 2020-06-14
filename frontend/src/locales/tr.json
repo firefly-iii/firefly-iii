@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Denge",
+        "bills_to_pay": "\u00d6denecek fatura",
+        "left_to_spend": "Harcama i\u00e7in b\u0131rak\u0131ld\u0131",
+        "net_worth": "Net de\u011fer"
+    },
+    "config": {
+        "html_language": "tr"
+    }
+}

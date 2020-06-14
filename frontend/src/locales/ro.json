@@ -1,0 +1,11 @@
+{
+    "firefly": {
+        "balance": "Balant\u0103",
+        "bills_to_pay": "Facturile de plat\u0103",
+        "left_to_spend": "Ramas de cheltuit",
+        "net_worth": "Valoarea net\u0103"
+    },
+    "config": {
+        "html_language": "ro"
+    }
+}

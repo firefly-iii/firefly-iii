@@ -1,0 +1,101 @@
+{% extends "./layout/auth" %}
+{% block content %}
+    {# error when logging in #}
+    {% if errors.has('email') %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> {{ 'flash_error'|_ }}</h5>
+                {{ errors.get('email')[0] }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# error when logout force #}
+    {% if session('logoutMessage') %}
+        <div class="row">
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-info"></i>
+                    {{ session('logoutMessage') }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# default header #}
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="v2/images/logo-small.png" alt="Firefly III" width="40"/>
+            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+        </div>
+
+        {# demo site info #}
+        {% if IS_DEMO_SITE %}
+            <div class="callout callout-success">
+                <h5><i class="fas fa-info"></i> Firefly III demonistration website</h5>
+                To log in, please use email address <code>{{ DEMO_USERNAME }}</code> and password <code>{{ DEMO_PASSWORD }}</code>
+            </div>
+        {% endif %}
+
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">{{ 'sign_in_to_start'|_ }}</p>
+
+                <form action="{{ route('login') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                    <div class="input-group mb-3">
+                        {% if config('firefly.login_provider') == 'eloquent' %}
+                            <input type="email" required autocomplete="email" name="email" value="{{ email }}" class="form-control"
+                                   placeholder="{{ trans('form.email') }}"/>
+                        {% else %}
+                            <input type="text" required autocomplete="username" name="email" value="{{ email }}" class="form-control"
+                                   placeholder="{{ trans('form.login_name') }}"/>
+                        {% endif %}
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" required autocomplete="current-password" class="form-control"
+                               placeholder="{{ trans('form.password') }}"/>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input id="remember" type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1">
+                                <label for="remember">
+                                    {{ trans('form.remember_me') }}
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">{{ 'sign_in'|_ }}</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+                {% if  allowReset %}
+                    <p class="mb-1">
+                        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+                    </p>
+                {% endif %}
+                {% if  allowRegistration %}
+                    <p class="mb-0">
+                        <a href="{{ URL.to('/register') }}">{{ 'register_new_account'|_ }}</a><br>
+                    </p>
+                {% endif %}
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+{% endblock %}
