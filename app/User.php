@@ -44,6 +44,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -135,10 +136,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
- * @property string $password
- * @property bool $blocked
- * @property string|null $blocked_code
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  * @property string|null $provider
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
  */

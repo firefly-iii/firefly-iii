@@ -25,7 +25,7 @@
     {# default header #}
     <div class="login-box">
         <div class="login-logo">
-            <img src="v2/images/logo-small.png" alt="Firefly III" width="40"/>
+            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
             <a href="{{ route('index') }}"><b>Firefly</b>III</a>
         </div>
 
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
-                                <input id="remember" type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1">
+                                <input id="remember" checked type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1">
                                 <label for="remember">
                                     {{ trans('form.remember_me') }}
                                 </label>
@@ -83,18 +83,23 @@
                         <!-- /.col -->
                     </div>
                 </form>
-                {% if  allowReset %}
-                    <p class="mb-1">
-                        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
-                    </p>
-                {% endif %}
-                {% if  allowRegistration %}
-                    <p class="mb-0">
-                        <a href="{{ URL.to('/register') }}">{{ 'register_new_account'|_ }}</a><br>
-                    </p>
-                {% endif %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <ul class="list-unstyled small">
+                            {% if  allowReset %}
+                                <li>
+                                    <a href="{{ route('password.reset.request') }}">{{ 'forgot_my_password'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            {% if  allowRegistration %}
+                                <li>
+                                    <a href="{{ route('register') }}">{{ 'register_new_account'|_ }}</a><br>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <!-- /.login-card-body -->
         </div>
     </div>
     <!-- /.login-box -->

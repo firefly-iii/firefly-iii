@@ -34,6 +34,9 @@ mix
     // dashboard component (frontpage):
     .js('src/pages/dashboard.js', 'public/js')
 
+    // register page
+    .js('src/pages/register.js', 'public/js')
+
 
 
     .extract().sourceMaps()
