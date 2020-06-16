@@ -212,6 +212,8 @@ class BillController extends Controller
         $bills = $unfiltered->map(
             function (Bill $bill) use ($transformer, $defaultCurrency) {
                 $return                            = $transformer->transform($bill);
+                $nextExpectedMatch = new Carbon($return['next_expected_match']);
+                $return['next_expected_match_diff'] = $nextExpectedMatch->isToday() ? trans('firefly.today') : $nextExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
                 $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
                 $return['currency_id']             = $currency->id;
                 $return['currency_name']           = $currency->name;

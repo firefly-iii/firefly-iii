@@ -83,8 +83,7 @@ class BillTransformer extends AbstractTransformer
             'skip'                    => (int)$bill->skip,
             'active'                  => $bill->active,
             'notes'                   => $notes,
-            'next_expected_match'     => $paidData['next_expected_match']->format('Y-m-d'),
-            'next_expected_match_diff'=> $paidData['next_expected_match']->isToday() ?  trans('firefly.today') : $paidData['next_expected_match']->diffForHumans(Carbon::today(), Carbon::DIFF_RELATIVE_TO_NOW),
+            'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
             'paid_dates'              => $paidData['paid_dates'],
             'links'                   => [
@@ -217,7 +216,7 @@ class BillTransformer extends AbstractTransformer
         }
         $result = [
             'paid_dates'          => $result,
-            'next_expected_match' => $nextMatch,
+            'next_expected_match' => $nextMatch->format('Y-m-d'),
         ];
         Log::debug('Result', $result);
 
