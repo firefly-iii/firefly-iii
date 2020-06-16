@@ -886,7 +886,8 @@ return [
     'bill_store_error'                          => 'An unexpected error occurred while storing your new bill. Please check the log files',
     'list_inactive_rule'                        => 'inactive rule',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
-
+    'bill_expected_date'                        => 'Expected :date',
+    
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
