@@ -138,6 +138,8 @@ class DebugController extends Controller
         $appLogLevel    = config('logging.level');
         $cacheDriver    = config('cache.default');
         $loginProvider  = config('auth.providers.users.driver');
+        $bcscale        = bcscale();
+        $layout         = env('FIREFLY_III_LAYOUT');
 
         // some new vars.
         $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
@@ -195,6 +197,8 @@ class DebugController extends Controller
                 'drivers',
                 'currentDriver',
                 'loginProvider',
+                'bcscale',
+                'layout',
                 'userAgent',
                 'displayErrors',
                 'installationId',

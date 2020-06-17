@@ -25,6 +25,7 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Installation ID | {{ installationId }} |
 | Using docker? | {% if isDocker %}true{% else %}false{% endif %} |
 | Telemetry | {% if telemetry %}true{% else%}false{% endif%} |
+| Layout | {{ layout }} |
 | App environment | {{ appEnv }} |
 | App debug mode | {{ appDebug }} |
 | App cache driver | {{ cacheDriver }} |
@@ -34,6 +35,7 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Interface | {{ interface }} |
 | Default language | {{ defaultLanguage }} |
 | Default locale | {{ defaultLocale }} |
+| BCscale | {{ bcscale }} |
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
 | Login provider | {{ loginProvider }}  |
