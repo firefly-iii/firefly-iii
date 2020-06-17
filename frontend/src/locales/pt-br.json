@@ -3,7 +3,10 @@
         "balance": "Saldo",
         "bills_to_pay": "Faturas a pagar",
         "left_to_spend": "Restante para gastar",
-        "net_worth": "Valor L\u00edquido"
+        "net_worth": "Valor L\u00edquido",
+        "paid": "Pago",
+        "yourAccounts": "Suas contas",
+        "go_to_asset_accounts": "Veja suas contas ativas"
     },
     "config": {
         "html_language": "pt-br"

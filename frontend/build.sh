@@ -13,8 +13,8 @@ rm -rf ../public/v2/css
 npm run prod
 
 # move to right directory
-mv public/js ../public/v2
-mv public/css ../public/v2
+# mv public/js ../public/v2
+# mv public/css ../public/v2
 
 # also copy fonts
 cp -r fonts ../public

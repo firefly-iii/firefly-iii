@@ -3,7 +3,10 @@
         "balance": "Balant\u0103",
         "bills_to_pay": "Facturile de plat\u0103",
         "left_to_spend": "Ramas de cheltuit",
-        "net_worth": "Valoarea net\u0103"
+        "net_worth": "Valoarea net\u0103",
+        "paid": "Pl\u0103tit",
+        "yourAccounts": "Conturile dvs.",
+        "go_to_asset_accounts": "Vizualiza\u021bi conturile de active"
     },
     "config": {
         "html_language": "ro"

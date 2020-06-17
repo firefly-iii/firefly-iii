@@ -3,7 +3,10 @@
         "balance": "Saldo",
         "bills_to_pay": "Bollette da pagare",
         "left_to_spend": "Altro da spendere",
-        "net_worth": "Patrimonio"
+        "net_worth": "Patrimonio",
+        "paid": "Pagati",
+        "yourAccounts": "I tuoi conti",
+        "go_to_asset_accounts": "Visualizza i tuoi conti attivit\u00e0"
     },
     "config": {
         "html_language": "it"

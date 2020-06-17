@@ -3,7 +3,10 @@
         "balance": "Keseimbangan",
         "bills_to_pay": "Bills untuk membayar",
         "left_to_spend": "Kiri untuk dibelanjakan",
-        "net_worth": "Nilai bersih"
+        "net_worth": "Nilai bersih",
+        "paid": "Dibayar",
+        "yourAccounts": "Akun anda",
+        "go_to_asset_accounts": "Menampilkan rekening aset"
     },
     "config": {
         "html_language": "id"

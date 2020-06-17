@@ -1,70 +1,162 @@
 <template>
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
+        <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
 
                 <div class="info-box-content">
                     <span class="info-box-text">{{ $t("firefly.balance") }}</span>
-                    <span class="info-box-number">
-                  xxxxxxx
-                  <small>xx</small>
-                </span>
+                    <!-- dont take the first, take default currency OR first -->
+                    <span class="info-box-number" v-if="balances.length > 0">{{ balances[0].value_parsed }}</span>
+
+                    <div class="progress bg-info">
+                        <div class="progress-bar" style="width: 0"></div>
+                    </div>
+                    <span class="progress-description">
+                        <span v-for="balance in balances">{{ balance.sub_title }}<br></span>
+                    </span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
+
         <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
-                    <span class="info-box-number">xxxxxx</span>
-                </div>
-                <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
+                    <span class="info-box-text"><span>{{ $t('firefly.bills_to_pay') }}</span></span>
+                    <!-- dont take the first, take default currency OR first -->
+                    <span class="info-box-number" v-if="1 === billsUnpaid.length && billsPaid.length > 0">{{ billsUnpaid[0].value_parsed }}</span>
 
+                    <div class="progress bg-teal">
+                        <div class="progress-bar" style="width: 0"></div>
+                    </div>
+                    <span class="progress-description">
+                        <!-- dont take the first, take default currency OR first -->
+                        <span v-if="1 === billsUnpaid.length && 1 === billsPaid.length">{{ $t('firefly.paid') }}: {{ billsPaid[0].value_parsed }}</span>
+                        <span v-if="billsUnpaid.length > 1">
+                            <span v-for="(bill, index) in billsUnpaid" :key="bill.key">
+                                {{ bill.value_parsed }}<span v-if="index+1 !== billsUnpaid.length">, </span>
+                            </span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- altijd iets in bold -->
+        <!-- subtitle verschilt -->
         <!-- fix for small devices only -->
         <div class="clearfix hidden-md-up"></div>
 
+        <!-- left to spend -->
         <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
-                    <span class="info-box-number">xxxxx</span>
+                    <span class="info-box-text"><span>{{ $t('firefly.left_to_spend') }}</span></span>
+                    <!-- dont take the first, take default currency OR first -->
+                    <!-- change color if negative -->
+                    <span class="info-box-number" v-if="leftToSpend.length > 0">{{ leftToSpend[0].value_parsed }}</span>
+
+                    <div class="progress bg-success">
+                        <div class="progress-bar" style="width: 0"></div>
+                    </div>
+                    <span class="progress-description">
+                        <!-- list all EXCEPT default currency -->
+                           <span v-for="(spent, index) in leftToSpend" :key="spent.key">
+                                {{ spent.value_parsed }}<span v-if="index+1 !== leftToSpend.length">, </span>
+                            </span>
+                    </span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
+
+        <!-- net worth -->
         <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ $t('firefly.net_worth') }}</span>
-                    <span class="info-box-number">xxxxx</span>
+                    <span class="info-box-text"><span>{{ $t('firefly.net_worth') }}</span></span>
+                    <!-- dont take the first, take default currency OR first -->
+                    <span class="info-box-number" v-if="netWorth.length > 0">{{ netWorth[0].value_parsed }}</span>
+
+                    <div class="progress bg-success">
+                        <div class="progress-bar" style="width: 0"></div>
+                    </div>
+                    <span class="progress-description">
+                        <!-- list all EXCEPT default currency -->
+                           <span v-for="(net, index) in netWorth" :key="net.key">
+                                {{ net.value_parsed }}<span v-if="index+1 !== net.length">, </span>
+                            </span>
+                    </span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
+
     </div>
 </template>
 
 <script>
     export default {
-        name: "TopBoxes"
+        name: "TopBoxes",
+        data() {
+            return {
+                summary: [],
+                balances: [],
+                billsPaid: [],
+                billsUnpaid: [],
+                leftToSpend: [],
+                netWorth: [],
+            }
+        },
+        mounted() {
+            this.prepareComponent();
+        },
+        methods: {
+            /**
+             * Prepare the component.
+             */
+            prepareComponent() {
+                axios.get('./api/v1/summary/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+                    .then(response => {
+                        this.summary = response.data;
+                        this.buildComponent();
+                    });
+            },
+            buildComponent() {
+                this.getBalanceEntries();
+                this.getBillsEntries();
+                this.getLeftToSpend();
+                this.getNetWorth();
+            },
+            getBalanceEntries() {
+                this.balances = this.getKeyedEntries('balance-in-');
+            },
+            getNetWorth() {
+                this.netWorth = this.getKeyedEntries('net-worth-in-');
+            },
+            getLeftToSpend() {
+                this.leftToSpend = this.getKeyedEntries('left-to-spend-in-');
+            },
+            getBillsEntries() {
+                this.billsPaid = this.getKeyedEntries('bills-paid-in-');
+                this.billsUnpaid = this.getKeyedEntries('bills-unpaid-in-');
+            },
+            getKeyedEntries(expected) {
+                let result = [];
+                for (const key in this.summary) {
+                    if (this.summary.hasOwnProperty(key)) {
+                        if (expected === key.substr(0, expected.length)) {
+                            result.push(this.summary[key]);
+                        }
+                    }
+                }
+                return result;
+            }
+        }
     }
 </script>
 

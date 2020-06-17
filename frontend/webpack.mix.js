@@ -37,11 +37,12 @@ mix
     // register page
     .js('src/pages/register.js', 'public/js')
 
-
-
     .extract().sourceMaps()
-    .sass('src/app.scss', 'public/css');
+    .sass('src/app.scss', 'public/css')
 
-if (!mix.inProduction()) {
-    mix.bundleAnalyzer();
-}
+    // move to right dir
+    .copy('public/js','../public/v2/js')
+    .copy('fonts','../public/fonts')
+    .copy('public/css','../public/v2/css')
+;
+

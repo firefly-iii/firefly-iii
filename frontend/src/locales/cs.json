@@ -3,7 +3,10 @@
         "balance": "Z\u016fstatek",
         "bills_to_pay": "Faktury k zaplacen\u00ed",
         "left_to_spend": "Zb\u00fdv\u00e1 k utracen\u00ed",
-        "net_worth": "\u010cist\u00e9 jm\u011bn\u00ed"
+        "net_worth": "\u010cist\u00e9 jm\u011bn\u00ed",
+        "paid": "Zaplaceno",
+        "yourAccounts": "Va\u0161e \u00fa\u010dty",
+        "go_to_asset_accounts": "Zobrazit \u00fa\u010dty s aktivy"
     },
     "config": {
         "html_language": "cs"

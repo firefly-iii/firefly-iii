@@ -3,7 +3,10 @@
         "balance": "Kontostand",
         "bills_to_pay": "Unbezahlte Rechnungen",
         "left_to_spend": "Verbleibend zum Ausgeben",
-        "net_worth": "Eigenkapital"
+        "net_worth": "Eigenkapital",
+        "paid": "Bezahlt",
+        "yourAccounts": "Deine Konten",
+        "go_to_asset_accounts": "Bestandskonten anzeigen"
     },
     "config": {
         "html_language": "de"

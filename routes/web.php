@@ -558,7 +558,7 @@ Route::group(
 );
 
 /**
- * Budget Controller.
+ * JScript Controller.
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v1/jscript', 'as' => 'javascript.'],
@@ -566,6 +566,16 @@ Route::group(
         Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
         Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
         Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
+    }
+);
+
+/**
+ * JScript Controller.
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v2/jscript', 'as' => 'javascript.v2.'],
+    static function () {
+        Route::get('variables', ['uses' => 'JavascriptController@variablesV2', 'as' => 'variables']);
     }
 );
 
