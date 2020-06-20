@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\ObjectGroup;
 
 use DB;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -123,6 +124,12 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function destroy(ObjectGroup $objectGroup): void
     {
+        $list = $objectGroup->piggyBanks;
+        /** @var PiggyBank $piggy */
+        foreach($list as $piggy) {
+            $piggy->objectGroups()->sync([]);
+            $piggy->save();
+        }
         $objectGroup->delete();
     }
 

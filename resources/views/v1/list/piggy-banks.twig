@@ -96,6 +96,36 @@
                     </td>
                 </tr>
             {% endfor %}
+            <tr>
+                <td class="visible-xs visible-sm hidden-md hidden-lg">&nbsp;</td>
+                <td class="visible-xs visible-sm hidden-md hidden-lg">&nbsp;</td>
+                <td>&nbsp;</td> {# handle #}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {# buttons #}
+                <td>&nbsp;</td>
+                <td style="text-align: right;">
+                    {% for sum in objectGroup.sums %}
+                        {{ formatAmountBySymbol(sum.saved, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+                    {% endfor %}
+                    </td>
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {# remove money #}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {# progress#}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {# add money #}
+                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                    {% for sum in objectGroup.sums %}
+                        {{ formatAmountBySymbol(sum.target, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+                    {% endfor %}
+                </td>
+                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                    {% for sum in objectGroup.sums %}
+                        {{ formatAmountBySymbol(sum.left_to_save, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+                    {% endfor %}
+                </td>
+                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                    {% for sum in objectGroup.sums %}
+                        {{ formatAmountBySymbol(sum.save_per_month, sum.currency_symbol, sum.currency_decimal_places) }}<br />
+                    {% endfor %}
+                </td>
+            </tr>
             </tbody>
         {% endif %}
     {% endfor %}
