@@ -1684,5 +1684,6 @@ return [
     'update_object_group'                => 'Update group',
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
 
 ];

@@ -107,6 +107,12 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
         $objectGroup->title = $data['title'];
+
+        if (isset($data['order'])) {
+            $order              = 0 === $data['order'] ? 1 : $data['order'];
+            $objectGroup->order = $order;
+        }
+
         $objectGroup->save();
 
         return $objectGroup;
@@ -128,4 +134,11 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         $this->user = $user;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getPiggyBanks(ObjectGroup $objectGroup): Collection
+    {
+        return $objectGroup->piggyBanks;
+    }
 }

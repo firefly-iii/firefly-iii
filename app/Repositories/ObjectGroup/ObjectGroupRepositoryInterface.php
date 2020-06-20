@@ -29,6 +29,13 @@ interface ObjectGroupRepositoryInterface
     public function deleteEmpty(): void;
 
     /**
+     * @param ObjectGroup $objectGroup
+     *
+     * @return Collection
+     */
+    public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
+
+    /**
      * Sort
      */
     public function sort(): void;

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -34,6 +36,19 @@ class ObjectGroup extends Model
     protected $fillable = ['title', 'order', 'user_id'];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'user_id'    => 'integer',
+            'deleted_at' => 'datetime',
+        ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function piggyBanks()
@@ -60,5 +75,14 @@ class ObjectGroup extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @return BelongsTo
+     * @codeCoverageIgnore
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
