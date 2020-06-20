@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ObjectGroup extends Model
 {
-    protected $fillable = ['title', 'order'];
+    protected $fillable = ['title', 'order', 'user_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
