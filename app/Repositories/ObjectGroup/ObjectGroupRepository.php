@@ -6,14 +6,13 @@ namespace FireflyIII\Repositories\ObjectGroup;
 use DB;
 use FireflyIII\Models\ObjectGroup;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class ObjectGroupRepository
  */
 class ObjectGroupRepository implements ObjectGroupRepositoryInterface
 {
-
-
     /**
      * @inheritDoc
      */
@@ -72,5 +71,38 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
             $group->order = $index + 1;
             $group->save();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(ObjectGroup $objectGroup, int $order): ObjectGroup
+    {
+        $order              = 0 === $order ? 1 : $order;
+        $objectGroup->order = $order;
+        $objectGroup->save();
+
+        Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $order));
+
+        return $objectGroup;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
+    {
+        $objectGroup->title = $data['title'];
+        $objectGroup->save();
+
+        return $objectGroup;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroy(ObjectGroup $objectGroup): void
+    {
+        $objectGroup->delete();
     }
 }

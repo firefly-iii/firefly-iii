@@ -15,7 +15,7 @@
         {% if objectGroup.piggy_banks|length > 0 %}
             <tbody class="piggy-connected-list" {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}"{% else %}data-title=""{% endif %}>
             <tr>
-                <td colspan="2">{% if objectGroupOrder != 0 %}<i class="fa fa-fw fa-bars group-handle"></i>{% endif %}</td>
+                <td colspan="2">&nbsp;</td>
                 <td colspan="8"><small>{{ objectGroup.object_group_title }}</small></td>
             </tr>
             {% for piggy in objectGroup.piggy_banks %}

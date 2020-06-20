@@ -891,7 +891,7 @@ return [
     'list_inactive_rule'                        => 'inactive rule',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
-    
+
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
@@ -1671,5 +1671,18 @@ return [
     'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
     'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
 
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
 
 ];

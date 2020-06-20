@@ -547,6 +547,28 @@ Route::group(
     }
 );
 
+
+/**
+ * Object group controller.
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'groups', 'as' => 'object-groups.'],
+    static function () {
+
+        // index
+        Route::get('', ['uses' => 'ObjectGroup\IndexController@index', 'as' => 'index']);
+        Route::post('set-order/{objectGroup}', ['uses' => 'ObjectGroup\IndexController@setOrder', 'as' => 'set-order']);
+
+        // edit
+        Route::get('edit/{objectGroup}', ['uses' => 'ObjectGroup\EditController@edit', 'as' => 'edit']);
+        Route::post('update/{objectGroup}', ['uses' => 'ObjectGroup\EditController@update', 'as' => 'update']);
+
+        // delete
+        Route::get('delete/{objectGroup}', ['uses' => 'ObjectGroup\DeleteController@delete', 'as' => 'delete']);
+        Route::post('destroy/{objectGroup}', ['uses' => 'ObjectGroup\DeleteController@destroy', 'as' => 'destroy']);
+    }
+);
+
 /**
  * Help Controller.
  */

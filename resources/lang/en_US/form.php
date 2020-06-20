@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Are you sure you want to delete the account named ":name"?',
     'bill_areYouSure'             => 'Are you sure you want to delete the bill named ":name"?',
     'rule_areYouSure'             => 'Are you sure you want to delete the rule titled ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Are you sure you want to delete the rule group titled ":title"?',
     'budget_areYouSure'           => 'Are you sure you want to delete the budget named ":name"?',
     'category_areYouSure'         => 'Are you sure you want to delete the category named ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'The only transaction linked with this link type will lose this connection.|All :count transactions linked with this link type will lose their connection.',
     'also_delete_rules'           => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'      => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will be spared deletion.',
     'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will be spared deletion.',
     'category_keep_transactions'  => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will be spared deletion.',
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Email address',
     'password'              => 'Password',

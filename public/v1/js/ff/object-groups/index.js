@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** global: token */
-var fixPiggyHelper = function (e, tr) {
+var fixGroupHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
     var $helper = tr.clone();
@@ -31,16 +31,13 @@ var fixPiggyHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    $('.addMoney').on('click', addMoney);
-    $('.removeMoney').on('click', removeMoney);
 
-    $('#piggy-sortable').find('tbody').sortable(
+    $('#sortable').find('tbody').sortable(
         {
-            helper: fixPiggyHelper,
+            helper: fixGroupHelper,
             stop: stopSorting,
-            connectWith: '.piggy-connected-list',
-            items: 'tr.piggy-sortable',
-            handle: '.piggy-handle',
+            items: 'tr.group-sortable',
+            handle: '.group-handle',
             start: function (event, ui) {
                 // Build a placeholder cell that spans all the cells in the row
                 var cellCount = 0;
@@ -62,56 +59,25 @@ $(function () {
 });
 
 
-function addMoney(e) {
-    "use strict";
-    var pigID = parseInt($(e.target).data('id'));
-    $('#defaultModal').empty().load('piggy-banks/add/' + pigID, function () {
-        $('#defaultModal').modal('show');
-    });
-
-    return false;
-}
-
-function removeMoney(e) {
-    "use strict";
-    var pigID = parseInt($(e.target).data('id'));
-    $('#defaultModal').empty().load('piggy-banks/remove/' + pigID, function () {
-        $('#defaultModal').modal('show');
-    });
-
-    return false;
-}
 
 function stopSorting() {
     "use strict";
-    $('.loadSpin').addClass('fa fa-refresh fa-spin');
 
-    $.each($('#piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
+    $.each($('#sortable>tbody>tr.group-sortable'), function (i, v) {
         var holder = $(v);
-        var parentBody = holder.parent();
-        var objectGroupTitle = parentBody.data('title');
-        var position = parseInt(holder.data('position'));
+        var index = i+1;
         var originalOrder = parseInt(holder.data('order'));
-        var name = holder.data('name');
         var id = holder.data('id');
-        var newOrder;
-        if (position === i) {
+        var name = holder.data('name');
+
+        if (index === originalOrder) {
             // not changed, position is what it should be.
             return;
         }
-        if (position < i) {
-            // position is less.
-            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved down from position ' + originalOrder + ' to ' + (i + 1));
-        }
-        if (position > i) {
-            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved up from position ' + originalOrder + ' to ' + (i + 1));
-        }
+        console.log('Group "'+name+'" has moved from position ' + originalOrder + ' to ' + index);
+
         // update position:
-        holder.data('position', i);
-        newOrder = i+1;
-
-        $.post('piggy-banks/set-order/' + id, {order: newOrder, objectGroupTitle: objectGroupTitle, _token: token})
+        holder.data('order', index);
+        $.post('groups/set-order/' + id, {order: index, _token: token});
     });
-    $('.loadSpin').removeClass('fa fa-refresh fa-spin');
-
 }

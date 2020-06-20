@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -409,6 +410,7 @@ return [
         'transactionType'  => TransactionTypeModel::class,
         'journalLink'      => TransactionJournalLink::class,
         'currency'         => TransactionCurrency::class,
+        'objectGroup'      => ObjectGroup::class,
         'piggyBank'        => PiggyBank::class,
         'preference'       => Preference::class,
         'tj'               => TransactionJournal::class,

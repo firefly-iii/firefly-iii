@@ -14,7 +14,7 @@ class ChangesForV530 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('object_groupables');
         Schema::dropIfExists('object_groups');
@@ -25,16 +25,18 @@ class ChangesForV530 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('object_groups')) {
             Schema::create(
                 'object_groups', static function (Blueprint $table) {
                 $table->increments('id');
+                $table->integer('user_id', false, true);
                 $table->timestamps();
                 $table->softDeletes();
                 $table->string('title', 255);
                 $table->mediumInteger('order', false, true)->default(0);
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
             );
         }

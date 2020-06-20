@@ -5,6 +5,7 @@ namespace FireflyIII\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ObjectGroup
@@ -31,11 +32,33 @@ use Illuminate\Database\Eloquent\Model;
 class ObjectGroup extends Model
 {
     protected $fillable = ['title', 'order'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function piggyBanks()
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
+    }
+
+    /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
+     * @param string $value
+     *
+     * @throws NotFoundHttpException
+     * @return ObjectGroup
+     */
+    public static function routeBinder(string $value): ObjectGroup
+    {
+        if (auth()->check()) {
+            $objectGroupId = (int) $value;
+            $objectGroup   = self::where('object_groups.id', $objectGroupId)
+                                 ->where('object_groups.user_id', auth()->user()->id)->first();
+            if (null !== $objectGroup) {
+                return $objectGroup;
+            }
+        }
+        throw new NotFoundHttpException;
     }
 }
