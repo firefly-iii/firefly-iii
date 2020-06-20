@@ -305,7 +305,7 @@ trait ModifiesPiggyBanks
 
         $objectGroupTitle = $data['object_group'] ?? '';
         if ('' !== $objectGroupTitle) {
-            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            $objectGroup = $this->findOrCreateObjectGroup($this->user, $objectGroupTitle);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();

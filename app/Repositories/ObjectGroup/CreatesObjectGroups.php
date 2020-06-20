@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\ObjectGroup;
 
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\User;
 
 /**
  * Trait CreatesObjectGroups
@@ -17,10 +18,12 @@ trait CreatesObjectGroups
      */
     protected function findObjectGroup(string $title): ?ObjectGroup
     {
-        return ObjectGroup::where('title', $title)->first();
+        return $this->user->objectGroups()->where('title', $title)->first();
     }
 
+
     /**
+     * @param User   $user
      * @param string $title
      *
      * @return ObjectGroup|null
@@ -32,8 +35,9 @@ trait CreatesObjectGroups
         if (!$this->hasObjectGroup($title)) {
             return ObjectGroup::create(
                 [
-                    'title' => $title,
-                    'order' => $maxOrder + 1,
+                    'user_id' => $this->user->id,
+                    'title'   => $title,
+                    'order'   => $maxOrder + 1,
                 ]
             );
         }
@@ -46,7 +50,7 @@ trait CreatesObjectGroups
      */
     protected function getObjectGroupMaxOrder(): int
     {
-        return (int) ObjectGroup::max('order');
+        return (int) $this->user->objectGroups()->max('order');
     }
 
     /**
@@ -56,6 +60,6 @@ trait CreatesObjectGroups
      */
     protected function hasObjectGroup(string $title): bool
     {
-        return 1 === ObjectGroup::where('title', $title)->count();
+        return 1 === $this->user->objectGroups()->where('title', $title)->count();
     }
 }

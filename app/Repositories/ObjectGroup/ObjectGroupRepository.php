@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\ObjectGroup;
 
 use DB;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -13,12 +14,25 @@ use Log;
  */
 class ObjectGroupRepository implements ObjectGroupRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
+    }
+
     /**
      * @inheritDoc
      */
     public function get(): Collection
     {
-        return ObjectGroup::orderBy('order', 'ASC')->orderBy('title', 'ASC')->get();
+        return $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC')->get();
     }
 
     /**
@@ -28,7 +42,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function search(string $query): Collection
     {
-        $dbQuery = ObjectGroup::orderBy('order', 'ASC')->orderBy('title', 'ASC');
+        $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -105,4 +119,13 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     {
         $objectGroup->delete();
     }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
 }
