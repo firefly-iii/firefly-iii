@@ -5,7 +5,7 @@
         </div>
         <div class="card-body">
             <div class="main-account-chart">
-                <main-account-chart :styles="myStyles" :options="datacollection.options" :chart-data="datacollection"></main-account-chart>
+                <main-account-chart v-if="loaded" :styles="myStyles" :options="chartOptions" :chart-data="chartData"></main-account-chart>
             </div>
         </div>
         <div class="card-footer">
@@ -16,6 +16,7 @@
 
 <script>
     import MainAccountChart from "./MainAccountChart";
+    import DataConverter from "../charts/DataConverter";
 
     export default {
         components: {
@@ -23,36 +24,27 @@
         },
         data() {
             return {
-                datacollection: null
+                chartData: null,
+                loaded: false,
+                chartOptions: null,
             }
         },
         mounted() {
-            this.fillData()
+            this.chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false
+            };
+
+            this.loaded = false;
+            axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+                .then(response => {
+                    this.chartData = DataConverter.methods.convertChart(response.data);
+                    console.log(this.chartData);
+                    this.loaded = true
+                });
         },
         methods: {
-            fillData() {
-                this.datacollection = {
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    },
-                    labels: [this.getRandomInt(), this.getRandomInt()],
-                    datasets: [
-                        {
-                            label: 'Data One',
-                            backgroundColor: '#f87979',
-                            data: [this.getRandomInt(), this.getRandomInt()]
-                        }, {
-                            label: 'Data One',
-                            backgroundColor: '#f87979',
-                            data: [this.getRandomInt(), this.getRandomInt()]
-                        }
-                    ]
-                }
-            },
-            getRandomInt() {
-                return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-            }
+
         },
         computed: {
             myStyles() {
