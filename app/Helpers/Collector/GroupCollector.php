@@ -553,9 +553,14 @@ class GroupCollector implements GroupCollectorInterface
         $result['tags']        = [];
         $result['attachments'] = [];
         try {
-            $result['date']       = new Carbon($result['date']);
-            $result['created_at'] = new Carbon($result['created_at']);
-            $result['updated_at'] = new Carbon($result['updated_at']);
+            $result['date']       = new Carbon($result['date'], 'UTC');
+            $result['created_at'] = new Carbon($result['created_at'], 'UTC');
+            $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
+
+            // this is going to happen a lot:
+            $result['date']->setTimezone(env('TZ'));
+            $result['created_at']->setTimezone(env('TZ'));
+            $result['updated_at']->setTimezone(env('TZ'));
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
