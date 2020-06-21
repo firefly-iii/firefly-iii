@@ -17,6 +17,7 @@
 <script>
     import MainAccountChart from "./MainAccountChart";
     import DataConverter from "../charts/DataConverter";
+    import DefaultLineOptions from "../charts/DefaultLineOptions";
 
     export default {
         components: {
@@ -30,15 +31,15 @@
             }
         },
         mounted() {
-            this.chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false
-            };
+            this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
+
 
             this.loaded = false;
             axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
                     this.chartData = DataConverter.methods.convertChart(response.data);
+                    this.chartData = DataConverter.methods.colorizeData(this.chartData);
+                    this.chartData = DataConverter.methods.convertLabelsToDate(this.chartData);
                     console.log(this.chartData);
                     this.loaded = true
                 });

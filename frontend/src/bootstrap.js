@@ -19,6 +19,15 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
+// locale
+let localeToken = document.head.querySelector('meta[name="locale"]');
+
+if (localeToken) {
+    window.localeValue = localeToken.content;
+} else {
+    window.localeValue = 'en_US';
+}
+
 // admin stuff
 require('jquery-ui');
 require('bootstrap');

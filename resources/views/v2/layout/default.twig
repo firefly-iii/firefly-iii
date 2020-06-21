@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ trans('config.html_language') }}">
 <head>
     <base href="{{ route('index') }}/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="locale" content="{{ locale|replace({'_':'-'}) }}">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>
