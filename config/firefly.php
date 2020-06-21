@@ -142,8 +142,8 @@ return [
         'telemetry' => true,
     ],
 
-    'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.0',
+    //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
+    'version'                 => '5.3.0-alpha.1',
     'api_version'             => '1.2.0',
     'db_version'              => 14,
     'maxUploadSize'           => 15242880,

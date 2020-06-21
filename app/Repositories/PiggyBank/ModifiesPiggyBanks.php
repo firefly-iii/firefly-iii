@@ -298,14 +298,23 @@ trait ModifiesPiggyBanks
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && isset($data['current_amount'])) {
+        if (null !== $repetition && isset($data['current_amount']) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
         }
 
         $objectGroupTitle = $data['object_group'] ?? '';
         if ('' !== $objectGroupTitle) {
-            $objectGroup = $this->findOrCreateObjectGroup($this->user, $objectGroupTitle);
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();

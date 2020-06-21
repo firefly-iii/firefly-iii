@@ -21,6 +21,15 @@ trait CreatesObjectGroups
         return $this->user->objectGroups()->where('title', $title)->first();
     }
 
+    /**
+     * @param int $groupId
+     *
+     * @return ObjectGroup|null
+     */
+    protected function findObjectGroupById(int $groupId): ?ObjectGroup
+    {
+        return $this->user->objectGroups()->where('id', $groupId)->first();
+    }
 
     /**
      * @param User   $user
