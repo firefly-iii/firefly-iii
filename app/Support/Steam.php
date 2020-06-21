@@ -244,7 +244,8 @@ class Steam
             }
 
             $currentBalance  = bcadd($currentBalance, $amount);
-            $carbon          = new Carbon($entry->date);
+            $carbon          = new Carbon($entry->date, 'UTC');
+            $carbon->setTimezone(env('TZ'));
             $date            = $carbon->format('Y-m-d');
             $balances[$date] = $currentBalance;
         }
@@ -502,7 +503,9 @@ class Steam
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
-            $list[(int)$entry->account_id] = new Carbon($entry->max_date);
+            $date = new Carbon($entry->max_date,'UTC');
+            $date->setTimezone(env('TZ'));
+            $list[(int)$entry->account_id] = $date;
         }
 
         return $list;

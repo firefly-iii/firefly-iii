@@ -208,7 +208,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = new Carbon(json_decode($row->data));
+            $return[$row->name] = new Carbon(json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
         }
 
         return new NullArrayObject($return);
