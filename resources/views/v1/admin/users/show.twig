@@ -98,10 +98,6 @@
                             <td>{{ information.categories }}</td>
                         </tr>
                         <tr>
-                            <td>{{ trans('list.import_jobs_count') }}</td>
-                            <td>{{ information.import_jobs }}, {{ trans('firefly.successful_count', {count: information.import_jobs_success}) }}</td>
-                        </tr>
-                        <tr>
                             <td>{{ trans('list.budget_count') }}</td>
                             <td>{{ trans_choice('firefly.budget_or_budgets', information.budgets ) }},
                                 {{ trans_choice('firefly.budgets_with_limits', information.budgets_with_limits ) }}</td>

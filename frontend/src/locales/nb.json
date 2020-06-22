@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Regninger \u00e5 betale",
+        "left_to_spend": "Igjen \u00e5 bruke",
+        "net_worth": "Formue",
+        "paid": "Betalt",
+        "yourAccounts": "Dine kontoer",
+        "go_to_asset_accounts": "Se aktivakontoene dine"
+    },
+    "config": {
+        "html_language": "nb"
+    }
+}

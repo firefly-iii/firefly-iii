@@ -82,7 +82,9 @@ final class DateIs extends AbstractTrigger implements TriggerInterface
 
             return false;
         }
-        if ($ruleDate->isSameDay($date)) {
+        $isDateRange = $dateParser->isDateRange($this->triggerValue);
+
+        if (false === $isDateRange && $ruleDate->isSameDay($date)) {
             Log::debug(
                 sprintf(
                     '%s is on the same day as %s, so return true.',
@@ -92,6 +94,34 @@ final class DateIs extends AbstractTrigger implements TriggerInterface
             );
 
             return true;
+        }
+
+        // could be a date range.
+        if ($isDateRange) {
+            Log::debug(sprintf('Date value is "%s", representing a range.', $this->triggerValue));
+            $range = $dateParser->parseRange($this->triggerValue, $date);
+            if ($date->isAfter($range['start']) && $date->isBefore($range['end'])) {
+                Log::debug(
+                    sprintf(
+                        '%s is between [%s/%s], so return true.',
+                        $date->format('Y-m-d H:i:s'),
+                        $range['start']->format('Y-m-d H:i:s'),
+                        $range['end']->format('Y-m-d H:i:s'),
+                    )
+                );
+
+                return true;
+            }
+            Log::debug(
+                sprintf(
+                    '%s is NOT between [%s/%s], so return false.',
+                    $date->format('Y-m-d H:i:s'),
+                    $range['start']->format('Y-m-d H:i:s'),
+                    $range['end']->format('Y-m-d H:i:s'),
+                )
+            );
+
+            return false;
         }
 
         Log::debug(

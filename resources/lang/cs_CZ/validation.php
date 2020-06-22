@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Celková částka nemůže být nula.',
     'current_target_amount'          => 'Aktuální částka musí být menší než cílová částka.',
     'unique_piggy_bank_for_user'     => 'Je třeba, aby se názvy pokladniček neopakovaly.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Neplatný typ opakování pro opakované transakce.',

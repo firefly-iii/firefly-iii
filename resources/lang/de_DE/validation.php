@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein.',
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
+    'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
 
     'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',

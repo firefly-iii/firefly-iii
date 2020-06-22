@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -47,6 +48,8 @@ class CreateController extends Controller
     /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
+    private AttachmentHelperInterface $attachments;
+
     /**
      * CreateController constructor.
      *
@@ -63,8 +66,9 @@ class CreateController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.create_new_recurrence'));
 
-                $this->recurring = app(RecurringRepositoryInterface::class);
-                $this->budgets   = app(BudgetRepositoryInterface::class);
+                $this->recurring   = app(RecurringRepositoryInterface::class);
+                $this->budgets     = app(BudgetRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -140,6 +144,21 @@ class CreateController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();
+
+        // store attachment(s):
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($recurrence, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+        }
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
         $redirect = redirect($this->getPreviousUri('recurring.create.uri'));
         if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:

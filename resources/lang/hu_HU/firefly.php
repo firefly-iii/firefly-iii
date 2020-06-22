@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Jelenleg egy BETA verzió fut. Felléphetnek programhibák és problémák.',
     'all_destination_accounts'                   => 'Célszámlák',
     'all_source_accounts'                        => 'Forrásszámlák',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Frissítések ellenőrzése',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'éves',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Szabályok',
     'rule_name'                                  => 'Szabály neve',
     'rule_triggers'                              => 'A szabály életbe lép amikor',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Kipipáljam a négyzetet?',
     'secure_pw_long_password'                   => 'Igen. Mindig ellenőrizze, hogy a jelszavam biztonságos-e.',
     'command_line_token'                        => 'Parancssori token',
-    'explain_command_line_token'                => 'Erre a vezérjelre parancssori lehetőségek végrehajtásához van szükség, mint például adatok importálása vagy exportálása. Enélkül néhány érzékeny parancs nem fog működni. Ezt a vezérjelet senki sem fogja kérni tőled, még én sem. Ha félsz, hogy elveszted vagy paranoid vagy, a gombbal újra lehet generálni a vezérjelet.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Parancssori token újragenerálása',
     'token_regenerated'                         => 'Az új parancssori token generálódott',
     'change_your_email'                         => 'Email cím módosítása',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Most már bejelentkezhet az új email címével.',
     'login_with_old_email'                      => 'Most már bejelentkezhet újra a régi email címével.',
     'login_provider_local_only'                 => 'Ez a művelet nem érhető el ":login_provider" általi hitelesítésekor.',
-    'delete_local_info_only'                    => "Because you authenticate through ':login_provider', this will only delete local Firefly III information.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Something went wrong. Please try again.',
 
     // export data:
-    'import_and_export_menu'                    => 'Importálás és exportálás',
     'export_data_title'                         => 'Adatok exportálása a Firefly III-ból',
     'export_data_menu'                          => 'Adat exportálása',
     'export_data_bc'                            => 'Adatok exportálása a Firefly III-ból',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Erről a funkcióról további információ a súgóban található. A súgó a jobb felső (?) ikonra kattintva érhető el.',
     'auto_budget_reset_icon'                    => 'A költségvetés periodikusan újraszámlálódik',
     'auto_budget_rollover_icon'                 => 'A költségvetési összeg periodikusan növekszik',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Tranzakciókkal egyező számlák :low és :high között.',
     'running_again_loss'                        => 'A számlával korábban összekötött tranzakciók összeköttetése törlődhet, ha többé nem felelnek meg egyetlen szabálynak sem.',
     'bill_related_rules'                        => 'Erre a számlára vonatkozó szabályok',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Nem várt hiba történt az új számla tárolása közben. Ellenőrizd a naplófájlokat',
     'list_inactive_rule'                        => 'inaktív szabály',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Űrlap törlése a beküldés után',
     'errors_submission'                     => 'Hiba történt a beküldés során. Kérem, javítsa az alábbi hibákat.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Tranzakciók importálása a Firefly III-ba',
-    'import_transactions'                   => 'Tranzakciók importálása',
-    'import_tools_title'                    => 'Importálási eszközök',
-    'tools_index_intro'                     => 'Rengeteg eszköz létezik alább, amellyel adatok importálhatók a Firefly III-ba. További információkért látogasson el <a href="https://docs.firefly-iii.org/importing-data/introduction">ide</a>.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importáló',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importáló',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importálás',
-    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importáló',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ez a funkció nem elérhető ha a Firefly III Sandstorm.io környezetben van használva.',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Ideje létrehozni egy eszközszámlát!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'A telemtria szükség szerint engedélyezhető a .env fájlban vagy a Docker beállításokban.',
     'telemetry_collected_info'           => 'Összegyűjtött információ',
     'no_telemetry_present'               => 'A Firefly III nulla telemetria bejegyzést gyűjtött össze.',
-    'records_telemetry_present'          => 'A Firefly III :count telemetria bejegyzést gyűjtött össze.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'Telemetria megtekintése',
     'telemetry_button_delete'            => 'Összes telemetria törlése',
     'telemetry_admin_overview'           => 'Telemetria áttekintés',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Beküldött bejegyzések törlése',
     'telemetry_submission_executed'      => 'A bejegyzések beküldve. További információ a naplófájlokban található.',
     'telemetry_all_deleted'              => 'Minden telemetria bejegyzés törölve.',
-    'telemetry_submitted_deleted'        => 'Minden beküldött telemetria bejegyzés törölve.'
+    'telemetry_submitted_deleted'        => 'Minden beküldött telemetria bejegyzés törölve.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];

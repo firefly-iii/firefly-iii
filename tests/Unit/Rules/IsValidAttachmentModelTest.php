@@ -25,11 +25,9 @@ namespace Tests\Unit\Rules;
 
 
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Rules\IsValidAttachmentModel;
@@ -68,24 +66,6 @@ class IsValidAttachmentModelTest extends TestCase
         $attribute = 'not-important';
         $this->be($this->user());
         $engine    = new IsValidAttachmentModel(Bill::class);
-        $this->assertTrue($engine->passes($attribute, $value));
-    }
-
-    /**
-     * @covers \FireflyIII\Rules\IsValidAttachmentModel
-     */
-    public function testImportJob(): void
-    {
-        $job      = $this->getRandomImportJob();
-        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
-
-        $jobRepos->shouldReceive('setUser')->atLeast()->once();
-        $jobRepos->shouldReceive('find')->atLeast()->once()->withArgs([$job->id])->andReturn($job);
-
-        $value     = $job->id;
-        $attribute = 'not-important';
-        $this->be($this->user());
-        $engine    = new IsValidAttachmentModel(ImportJob::class);
         $this->assertTrue($engine->passes($attribute, $value));
     }
 

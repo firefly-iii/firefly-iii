@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -92,6 +93,30 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.currencies', $data)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
+     * Bit of a hack but OK.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function variablesV2(Request $request): Response
+    {
+        /** @var Carbon $start */
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end = clone session('end', Carbon::now()->endOfMonth());
+
+        $data = [
+            'start' => $start->format('Y-m-d'),
+            'end'   => $end->format('Y-m-d'),
+        ];
+
+        return response()
+            ->view('javascript.variables', $data)
             ->header('Content-Type', 'text/javascript');
     }
 

@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => 'Eliminar enlace entre transacciones',
     'telemetry_index'        => 'Telemetría',
     'telemetry_view'         => 'Ver telemetría',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

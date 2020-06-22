@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Suma totală nu poate fi zero.',
     'current_target_amount'          => 'Suma curentă trebuie să fie mai mică decât suma vizată.',
     'unique_piggy_bank_for_user'     => 'Numele pușculiței trebuie să fie unic.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tip de repetare nevalid pentru tranzacțiile recurente.',

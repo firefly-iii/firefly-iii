@@ -2,6 +2,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [5.3.0 (API 1.2.0) - 2020-08-01
+
+Several alpha and beta releases preceded this release.
+
+- 5.3.0-alpha.1 on 2020-06-22
+
+### Added
+- Piggy banks can be divided over groups. Groups can be sorted on a separate page. This may prove to be useful to organize piggy banks. The feature will
+ expand to other objects in the future.
+- [Issue 3392](https://github.com/firefly-iii/firefly-iii/issues/3392) Notes will be included in the export.
+- [Issue 3184](https://github.com/firefly-iii/firefly-iii/issues/3184) You can now use the `REMOTE_USER` field to authenticate. Read [the documentation](https://docs.firefly-iii.org/advanced-installation/authentication#remote-user) carefully.
+- [Issue 3403](https://github.com/firefly-iii/firefly-iii/issues/3403) More triggers have been added that respond to the date of a transaction. Read [the documentation](https://docs.firefly-iii.org/advanced-concepts/rules)
+- You can now add an attachments to recurring transactions.
+
+### Changed
+- Firefly III now requires **PHP 7.4**
+- The Docker image is running on **port 8080**
+- Firefly III has been upgraded to Laravel 7.
+- [Issue 3455](https://github.com/firefly-iii/firefly-iii/issues/3455) Translations for the debug page.
+- [Issue 3461](https://github.com/firefly-iii/firefly-iii/issues/3461) Inactive rules are no longer applied.
+
+### Removed
+- All import routines have been removed. Use the separate importers. Read [the documentation](https://docs.firefly-iii.org/importing-data/introduction).
+
+### Fixed
+- [Issue 3450](https://github.com/firefly-iii/firefly-iii/issues/3450) Missing translations.
+- [Issue 3454](https://github.com/firefly-iii/firefly-iii/issues/3454) Fixed translations.
+- [Issue 3437](https://github.com/firefly-iii/firefly-iii/issues/3437) Better "days left" counter.
+- Fixed bad UUID generation.
+- Fixed a null pointer in session date.
+
+### API
+- New API for object groups.
+- Expanded API for piggy banks to support object groups.
+
+### Known issues
+- You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know. 
+
 ## [5.2.8 (API 1.1.0)] - 2020-06-02
 
 ### Fixed

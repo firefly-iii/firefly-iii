@@ -263,7 +263,7 @@ class ReportController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         /** @var Carbon $start */
-        $start            = clone session('first');
+        $start            = clone session('first', new Carbon);
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType(

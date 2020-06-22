@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\PiggyBankRequest;
+use FireflyIII\Api\V1\Requests\PiggyBankStoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -204,12 +205,12 @@ class PiggyBankController extends Controller
     /**
      * Store new object.
      *
-     * @param PiggyBankRequest $request
+     * @param PiggyBankStoreRequest $request
      *
      * @throws FireflyException
      * @return JsonResponse
      */
-    public function store(PiggyBankRequest $request): JsonResponse
+    public function store(PiggyBankStoreRequest $request): JsonResponse
     {
         $piggyBank = $this->repository->store($request->getAll());
         $manager   = $this->getManager();

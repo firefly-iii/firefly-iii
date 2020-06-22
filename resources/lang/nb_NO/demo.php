@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly III støtter flere valutaer. Selv om Euro er standard, kan det settes til norske kroner, eller en av mange andre valutaer. Som du kan se, så er et lite utvalg valutaer allerede lagt inn, men du kan legge til flere hvis du vil. Hvis du endrer standardvalutaen, endres ikke valutaen for eksisterende transaksjoner, men Firefly III støtter bruken av flere valutaer samtidig.',
     'transactions-index'     => 'Disse utgiftene, innskuddene og overføringene er ikke særlig fantasifulle. De har blitt generert automatisk.',
     'piggy-banks-index'      => 'Som du kan se, finnes det tre spargriser. Bruk pluss- og minus-knappene til å påvirke mengden penger i hver sparegris. Klikk på navnet til spargrisen for å administrere hver spargris.',
-    'import-index'           => 'Alle CSV-filer kan importeres til Firefly III. Den støtter også import av data fra bunq og Spectre. Andre banker og finansielle aggregatorer vil bli implementert i fremtiden. Men som en demo-bruker kan du bare se en "falsk"-leverandør i aksjon. Den vil generere noen tilfeldige transaksjoner for å vise hvordan prosessen fungerer.',
     'profile-index'          => 'Vær oppmerksom at demoen tilbakestilles hver fjerde time. Din tilgang kan trekkes tilbake når som helst. Dette skjer automatisk og er ikke en feil.',
 ];

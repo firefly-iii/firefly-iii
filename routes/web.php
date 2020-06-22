@@ -55,7 +55,7 @@ Route::group(
         // Password Reset Routes...
         Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
         Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
-        Route::post('password/reset', ['uses' => 'Auth\ResetPasswordController@reset']);
+        Route::post('password/reset', ['uses' => 'Auth\ResetPasswordController@reset', 'as' => 'password.reset.post']);
         Route::get('password/reset', ['uses' => 'Auth\ForgotPasswordController@showLinkRequestForm', 'as' => 'password.reset.request']);
 
         // Change email routes:
@@ -546,40 +546,26 @@ Route::group(
         Route::get('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
     }
 );
+
+
 /**
- * Import Controller.
+ * Object group controller.
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'import', 'as' => 'import.'],
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'groups', 'as' => 'object-groups.'],
     static function () {
 
-    // index
-        Route::get('', ['uses' => 'Import\IndexController@index', 'as' => 'index']);
+        // index
+        Route::get('', ['uses' => 'ObjectGroup\IndexController@index', 'as' => 'index']);
+        Route::post('set-order/{objectGroup}', ['uses' => 'ObjectGroup\IndexController@setOrder', 'as' => 'set-order']);
 
-        // create new job
-        Route::get('create/{import_provider}', ['uses' => 'Import\IndexController@create', 'as' => 'create']);
+        // edit
+        Route::get('edit/{objectGroup}', ['uses' => 'ObjectGroup\EditController@edit', 'as' => 'edit']);
+        Route::post('update/{objectGroup}', ['uses' => 'ObjectGroup\EditController@update', 'as' => 'update']);
 
-        // set global prerequisites for an import source, possible with a job already attached.
-        Route::get('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@index', 'as' => 'prerequisites.index']);
-        Route::post('prerequisites/{import_provider}/{importJob?}', ['uses' => 'Import\PrerequisitesController@post', 'as' => 'prerequisites.post']);
-
-        // configure a job:
-        Route::get('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@index', 'as' => 'job.configuration.index']);
-        Route::post('job/configuration/{importJob}', ['uses' => 'Import\JobConfigurationController@post', 'as' => 'job.configuration.post']);
-
-        // get status of a job. This is also the landing page of a job after job config is complete.
-        Route::get('job/status/{importJob}', ['uses' => 'Import\JobStatusController@index', 'as' => 'job.status.index']);
-        Route::get('job/json/{importJob}', ['uses' => 'Import\JobStatusController@json', 'as' => 'job.status.json']);
-
-        // start the job!
-        Route::any('job/start/{importJob}', ['uses' => 'Import\JobStatusController@start', 'as' => 'job.start']);
-        Route::any('job/store/{importJob}', ['uses' => 'Import\JobStatusController@store', 'as' => 'job.store']);
-
-        // download config:
-        Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
-
-        // callback URI for YNAB OAuth. Sadly, needs a custom solution.
-        Route::get('ynab-callback', ['uses' => 'Import\CallbackController@ynab', 'as' => 'callback.ynab']);
+        // delete
+        Route::get('delete/{objectGroup}', ['uses' => 'ObjectGroup\DeleteController@delete', 'as' => 'delete']);
+        Route::post('destroy/{objectGroup}', ['uses' => 'ObjectGroup\DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 
@@ -594,7 +580,7 @@ Route::group(
 );
 
 /**
- * Budget Controller.
+ * JScript Controller.
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v1/jscript', 'as' => 'javascript.'],
@@ -602,6 +588,16 @@ Route::group(
         Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
         Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
         Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
+    }
+);
+
+/**
+ * JScript Controller.
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v2/jscript', 'as' => 'javascript.v2.'],
+    static function () {
+        Route::get('variables', ['uses' => 'JavascriptController@variablesV2', 'as' => 'variables']);
     }
 );
 
@@ -618,6 +614,7 @@ Route::group(
         Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'autocomplete.expense-accounts']);
         Route::get('asset-accounts', ['uses' => 'Json\AutoCompleteController@assetAccounts', 'as' => 'autocomplete.asset-accounts']);
         Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'autocomplete.budgets']);
+        Route::get('object-groups', ['uses' => 'Json\AutoCompleteController@objectGroups', 'as' => 'autocomplete.object-groups']);
         Route::get('bills', ['uses' => 'Json\AutoCompleteController@bills', 'as' => 'autocomplete.bills']);
         Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'autocomplete.categories']);
         Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
@@ -672,22 +669,23 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'piggy-banks', 'as' => 'piggy-banks.'],
     static function () {
-        Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
-        Route::get('add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'add-money']);
-        Route::get('remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'remove-money']);
-        Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'add-money-mobile']);
-        Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'remove-money-mobile']);
-        Route::get('create', ['uses' => 'PiggyBankController@create', 'as' => 'create']);
-        Route::get('edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'edit']);
-        Route::get('delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
-        Route::get('show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
-        Route::post('store', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
-        Route::post('update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
-        Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'destroy']);
-        Route::post('add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'add']);
-        Route::post('remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'remove']);
 
-        Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBankController@setOrder', 'as' => 'set-order']);
+        Route::get('', ['uses' => 'PiggyBank\IndexController@index', 'as' => 'index']);
+        Route::get('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@add', 'as' => 'add-money']);
+        Route::get('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@remove', 'as' => 'remove-money']);
+        Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBank\AmountController@addMobile', 'as' => 'add-money-mobile']);
+        Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBank\AmountController@removeMobile', 'as' => 'remove-money-mobile']);
+        Route::get('create', ['uses' => 'PiggyBank\CreateController@create', 'as' => 'create']);
+        Route::get('edit/{piggyBank}', ['uses' => 'PiggyBank\EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@delete', 'as' => 'delete']);
+        Route::get('show/{piggyBank}', ['uses' => 'PiggyBank\ShowController@show', 'as' => 'show']);
+        Route::post('store', ['uses' => 'PiggyBank\CreateController@store', 'as' => 'store']);
+        Route::post('update/{piggyBank}', ['uses' => 'PiggyBank\EditController@update', 'as' => 'update']);
+        Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBank\DeleteController@destroy', 'as' => 'destroy']);
+        Route::post('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postAdd', 'as' => 'add']);
+        Route::post('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@postRemove', 'as' => 'remove']);
+
+        Route::post('set-order/{piggyBank}', ['uses' => 'PiggyBank\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
 

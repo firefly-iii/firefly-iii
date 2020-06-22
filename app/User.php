@@ -34,7 +34,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -45,6 +45,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -89,7 +90,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|Category[]        $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|Client[]                     $clients
  * @property-read \Illuminate\Database\Eloquent\Collection|CurrencyExchangeRate[]          $currencyExchangeRates
- * @property-read \Illuminate\Database\Eloquent\Collection|ImportJob[]                          $importJobs
  * @property-read DatabaseNotificationCollection|DatabaseNotification[]                         $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBank[]                          $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|Preference[]                         $preferences
@@ -123,7 +123,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $categories_count
  * @property-read int|null $clients_count
  * @property-read int|null $currency_exchange_rates_count
- * @property-read int|null $import_jobs_count
  * @property-read int|null $notifications_count
  * @property-read int|null $piggy_banks_count
  * @property-read int|null $preferences_count
@@ -138,6 +137,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
+ * @property string|null $provider
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
  */
 class User extends Authenticatable
 {
@@ -258,6 +259,17 @@ class User extends Authenticatable
 
     /**
      * @codeCoverageIgnore
+     * Link to object groups.
+     *
+     * @return HasMany
+     */
+    public function objectGroups(): HasMany
+    {
+        return $this->hasMany(ObjectGroup::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
      * Link to categories
      *
      * @return HasMany
@@ -290,17 +302,6 @@ class User extends Authenticatable
         $bytes = random_bytes(16);
 
         return bin2hex($bytes);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Link to import jobs.
-     *
-     * @return HasMany
-     */
-    public function importJobs(): HasMany
-    {
-        return $this->hasMany(ImportJob::class);
     }
 
     /**

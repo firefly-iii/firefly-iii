@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn.',
     'current_target_amount'          => 'Het huidige bedrag moet minder zijn dan het doelbedrag.',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
+    'unique_object_group'            => 'De groepsnaam moet uniek zijn',
 
     'secure_password'                => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties.',

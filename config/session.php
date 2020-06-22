@@ -34,7 +34,7 @@ return [
     'cookie'          => 'firefly_session',
     'path'            => env('COOKIE_PATH', '/'),
     'domain'          => env('COOKIE_DOMAIN', null),
-    'secure'          => env('COOKIE_SECURE', false),
+    'secure'          => env('COOKIE_SECURE', null),
     'http_only'       => true,
     'same_site'       => null,
 ];

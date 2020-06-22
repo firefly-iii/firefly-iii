@@ -46,10 +46,8 @@ class ShowController extends Controller
 {
     use UserNavigation, PeriodOverview;
 
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepos;
-    /** @var AccountRepositoryInterface The account repository */
-    private $repository;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private AccountRepositoryInterface $repository;
 
     /**
      * ShowController constructor.

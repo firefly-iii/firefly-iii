@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Openstaande contracten",
+        "left_to_spend": "Over om uit te geven",
+        "net_worth": "Kapitaal",
+        "paid": "Betaald",
+        "yourAccounts": "Je betaalrekeningen",
+        "go_to_asset_accounts": "Bekijk je betaalrekeningen"
+    },
+    "config": {
+        "html_language": "nl"
+    }
+}

@@ -128,7 +128,6 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('getUserData')->andReturn(
             [
                 'export_jobs_success' => 0,
-                'import_jobs_success' => 0,
                 'attachments_size'    => 0,
             ]
         );

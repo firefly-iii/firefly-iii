@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -336,6 +338,34 @@ class AutoCompleteController extends Controller
                 'id'   => $account->id,
                 'name' => $account->name,
                 'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
+     * An auto-complete specifically for expense accounts, used when mass updating mostly.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function objectGroups(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+
+        /** @var ObjectGroupRepositoryInterface $repository */
+        $repository = app(ObjectGroupRepositoryInterface::class);
+
+        $return = [];
+        $result = $repository->search((string) $search);
+
+        /** @var ObjectGroup $account */
+        foreach ($result as $objectGroup) {
+            $return[] = [
+                'id'    => $objectGroup->id,
+                'title' => $objectGroup->title,
             ];
         }
 

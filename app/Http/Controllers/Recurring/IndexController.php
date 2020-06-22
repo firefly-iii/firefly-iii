@@ -111,6 +111,8 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            // lazy but OK
+            $array['attachments'] = $recurrence->attachments()->count();
 
             // make carbon objects out of occurrences
             foreach ($array['repetitions'] as $repIndex => $repetition) {

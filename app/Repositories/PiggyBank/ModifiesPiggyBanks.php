@@ -31,6 +31,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Log;
 
@@ -39,7 +40,7 @@ use Log;
  */
 trait ModifiesPiggyBanks
 {
-
+    use CreatesObjectGroups;
     /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
@@ -61,6 +62,17 @@ trait ModifiesPiggyBanks
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
+    {
+        $piggyBank->objectGroups()->sync([]);
+
+        return $piggyBank;
+    }
+
 
     /**
      * @param PiggyBankRepetition $repetition
@@ -180,6 +192,7 @@ trait ModifiesPiggyBanks
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
+        $piggyBank->objectGroups()->sync([]);
         $piggyBank->delete();
 
         return true;
@@ -248,6 +261,22 @@ trait ModifiesPiggyBanks
         return true;
     }
 
+
+    /**
+     * @inheritDoc
+     */
+    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank
+    {
+        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+        if (null !== $objectGroup) {
+            $piggyBank->objectGroups()->sync([$objectGroup->id]);
+        }
+
+        return $piggyBank;
+
+    }
+
+
     /**
      * @param array $data
      *
@@ -269,9 +298,27 @@ trait ModifiesPiggyBanks
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && isset($data['current_amount'])) {
+        if (null !== $repetition && isset($data['current_amount']) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
+        }
+
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
         }
 
         return $piggyBank;
@@ -311,6 +358,15 @@ trait ModifiesPiggyBanks
 
             $repetition->currentamount = $piggyBank->targetamount;
             $repetition->save();
+        }
+
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
         }
 
         return $piggyBank;

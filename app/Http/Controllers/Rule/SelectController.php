@@ -128,6 +128,10 @@ class SelectController extends Controller
      */
     public function selectTransactions(Rule $rule)
     {
+        if(false===$rule->active) {
+            session()->flash('warning',trans('firefly.cannot_fire_inactive_rules'));
+            return redirect(route('rules.index'));
+        }
         // does the user have shared accounts?
         $first    = session('first', Carbon::now()->subYear())->format('Y-m-d');
         $today    = Carbon::now()->format('Y-m-d');

@@ -39,7 +39,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Preference;
@@ -52,7 +51,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
@@ -72,21 +70,6 @@ use RuntimeException;
 abstract class TestCase extends BaseTestCase
 {
 
-    /**
-     * @return ImportJob
-     */
-    public function getRandomPiggyBankEvent(): PiggyBankEvent
-    {
-        return PiggyBankEvent::inRandomOrder()->first();
-    }
-
-    /**
-     * @return ImportJob
-     */
-    public function getRandomImportJob(): ImportJob
-    {
-        return $this->user()->importJobs()->inRandomOrder()->first();
-    }
     /**
      * @return Recurrence
      */

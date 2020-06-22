@@ -45,7 +45,6 @@ class Telemetry
      * - execute-cli-command [value]
      * - use-help-pages
      * - has-created-bill
-     * - do-big-import
      * - first-time-install
      * - more
      *

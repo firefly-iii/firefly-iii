@@ -271,8 +271,7 @@
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false"><span class="caret"></span></button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">Remove budgeted amount
-                                                                in {{ budgetLimit.currency_name }}</a></li>
+                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a></li>
                                                     </ul>
                                                 </div>
                                             </div>

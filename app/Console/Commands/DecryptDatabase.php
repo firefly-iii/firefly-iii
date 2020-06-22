@@ -159,7 +159,7 @@ class DecryptDatabase extends Command
             if ('The MAC is invalid.' === $e->getMessage()) {
                 throw new FireflyException($e->getMessage()); // @codeCoverageIgnore
             }
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+            //Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
         return $value;

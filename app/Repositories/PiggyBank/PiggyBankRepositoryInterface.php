@@ -38,6 +38,21 @@ interface PiggyBankRepositoryInterface
 {
     /**
      * @param PiggyBank $piggyBank
+     * @param string    $objectGroupTitle
+     *
+     * @return PiggyBank
+     */
+    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBank
+     */
+    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
      * @param string    $amount
      *
      * @return PiggyBank

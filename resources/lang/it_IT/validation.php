@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'L\'importo totale non può essere zero.',
     'current_target_amount'          => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
+    'unique_object_group'            => 'Il nome del gruppo deve essere unico',
 
     'secure_password'                => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Il tipo di ripetizione della transazione ricorrente non è valido.',

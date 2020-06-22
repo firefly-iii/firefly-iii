@@ -49,8 +49,7 @@ class EditController extends Controller
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
+    private AttachmentHelperInterface $attachments;
 
     /**
      * EditController constructor.
@@ -67,7 +66,7 @@ class EditController extends Controller
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->attachments   = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }

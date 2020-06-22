@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Bạn có chắc chắn muốn xóa tài khoản có tên ":name"?',
     'bill_areYouSure'             => 'Bạn có chắc chắn muốn xóa hóa đơn có tên ":name"?',
     'rule_areYouSure'             => 'Bạn có chắc chắn muốn xóa quy tắc có tiêu đề ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Bạn có chắc chắn muốn xóa nhóm quy tắc có tiêu đề ":title"?',
     'budget_areYouSure'           => 'Bạn có chắc chắn muốn xóa ngân sách có tên ":name"?',
     'category_areYouSure'         => 'Bạn có chắc chắn muốn xóa danh mục có tên ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Giao dịch duy nhất được liên kết với loại liên kết này sẽ mất kết nối. Số giao dịch được liên kết với loại liên kết này sẽ mất kết nối.',
     'also_delete_rules'           => 'Quy tắc duy nhất được kết nối với nhóm quy tắc này cũng sẽ bị xóa. Quy tắc đếm được kết nối với nhóm quy tắc này cũng sẽ bị xóa.',
     'also_delete_piggyBanks'      => 'Heo đất duy nhất được kết nối với tài khoản này cũng sẽ bị xóa. Heo đất được kết nối với tài khoản này cũng sẽ bị xóa.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Giao dịch duy nhất được kết nối với hóa đơn này sẽ không bị xóa. Số giao dịch được kết nối với hóa đơn này sẽ bị xóa.',
     'budget_keep_transactions'    => 'Giao dịch duy nhất được kết nối với ngân sách này sẽ không bị xóa. Các giao dịch được kết nối với ngân sách này sẽ không bị xóa.',
     'category_keep_transactions'  => 'Giao dịch duy nhất được kết nối với danh mục này sẽ không bị xóa. Số giao dịch được kết nối với danh mục này sẽ bị xóa.',
     'recurring_keep_transactions' => 'Giao dịch duy nhất được tạo bởi giao dịch định kỳ này sẽ không bị xóa. Các giao dịch được tạo bởi giao dịch định kỳ này sẽ được xóa bỏ.',
     'tag_keep_transactions'       => 'Giao dịch duy nhất được kết nối với thẻ này sẽ không bị xóa. :count các giao dịch được kết nối với thẻ này sẽ không bị xóa.',
     'check_for_updates'           => 'Kiểm tra cập nhật',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Địa chỉ email',
     'password'              => 'Mật khẩu',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Là trang demo',
 
     // import
-    'import_file'           => 'Nhập file',
     'configuration_file'    => 'Cấu hình file',
-    'import_file_type'      => 'Nhập loại file',
     'csv_comma'             => 'Dấu phẩy (,)',
     'csv_semicolon'         => 'Dấu chấm phẩy (;)',
     'csv_tab'               => 'Dấu tab',
     'csv_delimiter'         => 'Dấu phân cách ô',
-    'csv_import_account'    => 'Mặc định tài khoản nhập',
     'client_id'             => 'ID Máy khách',
     'app_id'                => 'ID ứng dụng',
     'secret'                => 'Mã bí mật',

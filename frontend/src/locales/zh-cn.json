@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "\u4f59\u989d",
+        "bills_to_pay": "\u5f85\u4ed8\u5e10\u5355",
+        "left_to_spend": "\u5269\u4f59\u53ef\u82b1\u8d39",
+        "net_worth": "\u51c0\u503c",
+        "paid": "\u5df2\u4ed8\u6b3e",
+        "yourAccounts": "\u60a8\u7684\u5e10\u6237",
+        "go_to_asset_accounts": "\u68c0\u89c6\u60a8\u7684\u8d44\u4ea7\u5e10\u6237"
+    },
+    "config": {
+        "html_language": "zh-cn"
+    }
+}

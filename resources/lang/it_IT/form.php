@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Sei sicuro di voler eliminare il conto ":name"?',
     'bill_areYouSure'             => 'Sei sicuro di voler eliminare il conto ":name"?',
     'rule_areYouSure'             => 'Sei sicuro di voler eliminare la regola ":title"?',
+    'object_group_areYouSure'     => 'Sei sicuro di voler eliminare il gruppo ":title"?',
     'ruleGroup_areYouSure'        => 'Sei sicuro di voler eliminare il gruppo regole ":title"?',
     'budget_areYouSure'           => 'Sei sicuro di voler eliminare il budget ":name"?',
     'category_areYouSure'         => 'Sei sicuro di voler eliminare categoria ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'L\'unica transazione collegata a questo tipo di collegamento perderà questa connessione. | Tutto :count le transazioni di conteggio collegate a questo tipo di collegamento perderanno la connessione.',
     'also_delete_rules'           => 'Anche l\'unica regola collegata a questo gruppo di regole verrà eliminata. | Tutto :count verranno eliminate anche le regole di conteggio collegate a questo gruppo di regole.',
     'also_delete_piggyBanks'      => 'Verrà eliminato anche l\'unico salvadanaio collegato a questo conto. | Tutti :count il conteggio del salvadanaio collegato a questo conto verrà eliminato.',
+    'not_delete_piggy_banks'      => 'Il salvadanaio collegato a questo gruppo non verrà eliminato.|I :count salvadanai collegati a questo gruppo non verranno eliminati.',
     'bill_keep_transactions'      => 'L\'unica transazione connessa a questa bolletta non verrà eliminata.|Tutte le :count transazioni del conto collegate a questa bolletta non verranno cancellate.',
     'budget_keep_transactions'    => 'L\'unica transazione collegata a questo budget non verrà eliminata.|Tutte le :count transazioni del conto collegate a questo budget non verranno cancellate.',
     'category_keep_transactions'  => 'L\'unica transazione collegata a questa categoria non verrà eliminata.|Tutte le :count transazioni del conto collegate a questa categoria non verranno cancellate.',
     'recurring_keep_transactions' => 'L\'unica transazione creata da questa transazione ricorrente non verrà eliminata.|Tutte le :count transazioni create da questa transazione ricorrente non verranno eliminate.',
     'tag_keep_transactions'       => 'L\'unica transazione connessa a questa etichetta non verrà eliminata.|Tutte le :count transazioni del conto collegate a questa etichetta non verranno eliminate.',
     'check_for_updates'           => 'Controlla gli aggiornamenti',
+
+    'delete_object_group' => 'Elimina gruppo ":title"',
 
     'email'                 => 'Indirizzo email',
     'password'              => 'Password',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'È un sito demo',
 
     // import
-    'import_file'           => 'Importa file',
     'configuration_file'    => 'Configurazione file',
-    'import_file_type'      => 'Importa tipo file',
     'csv_comma'             => 'Una virgola (,)',
     'csv_semicolon'         => 'Un punto e virgola (;)',
     'csv_tab'               => 'Una tabulazione (invisibile)',
     'csv_delimiter'         => 'Delimitatore campi CSV',
-    'csv_import_account'    => 'Conto di importazione predefinito',
     'client_id'             => 'Client ID',
     'app_id'                => 'ID dell\'app',
     'secret'                => 'Segreto',

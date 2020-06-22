@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Το συνολικό ποσό δεν μπορεί να είναι μηδέν.',
     'current_target_amount'          => 'Το τρέχων ποσό πρέπει να είναι μικρότερο από το ποσό προορισμού.',
     'unique_piggy_bank_for_user'     => 'Το όνομα του κουμπαρά πρέπει να είναι μοναδικό.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Αυτό δεν είναι ασφαλές συνθηματικό. Παρακαλώ δοκιμάστε ξανά. Για περισσότερες πληροφορίες επισκεφτείτε https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Μη έγκυρος τύπος επανάληψης για επαναλαμβανόμενες συναλλαγές.',

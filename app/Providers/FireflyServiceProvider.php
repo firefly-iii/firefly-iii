@@ -37,6 +37,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\Telemetry\TelemetryRepository;
 use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
@@ -62,6 +64,7 @@ use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Telemetry;
 use FireflyIII\Validation\FireflyValidator;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Validator;
 
@@ -172,7 +175,22 @@ class FireflyServiceProvider extends ServiceProvider
         // other generators
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
+
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
+
+
+        $this->app->bind(
+            ObjectGroupRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var ObjectGroupRepository $repository */
+                $repository = app(ObjectGroupRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
 
         // more generators:
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
@@ -182,7 +200,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
         $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
-        $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
+        $class = (string) config(sprintf('firefly.cer_providers.%s', (string) config('firefly.cer_provider')));
         if ('' === $class) {
             throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');
         }

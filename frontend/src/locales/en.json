@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "Balance",
+        "bills_to_pay": "Bills to pay",
+        "left_to_spend": "Left to spend",
+        "net_worth": "Net worth",
+        "paid": "Paid",
+        "yourAccounts": "Your accounts",
+        "go_to_asset_accounts": "View your asset accounts"
+    },
+    "config": {
+        "html_language": "en"
+    }
+}

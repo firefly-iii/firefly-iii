@@ -29,8 +29,8 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
@@ -645,39 +645,6 @@ try {
         }
     );
 
-    // IMPORT
-    Breadcrumbs::register(
-        'import.index',
-        static function (BreadcrumbsGenerator $breadcrumbs) {
-            $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('firefly.import_index_title'), route('import.index'));
-        }
-    );
-
-    Breadcrumbs::register(
-        'import.prerequisites.index',
-        static function (BreadcrumbsGenerator $breadcrumbs, string $importProvider) {
-            $breadcrumbs->parent('import.index');
-            $breadcrumbs->push(trans('import.prerequisites_breadcrumb_' . $importProvider), route('import.prerequisites.index', [$importProvider]));
-        }
-    );
-
-    Breadcrumbs::register(
-        'import.job.configuration.index',
-        static function (BreadcrumbsGenerator $breadcrumbs, ImportJob $job) {
-            $breadcrumbs->parent('import.index');
-            $breadcrumbs->push(trans('import.job_configuration_breadcrumb', ['key' => $job->key]), route('import.job.configuration.index', [$job->key]));
-        }
-    );
-
-    Breadcrumbs::register(
-        'import.job.status.index',
-        static function (BreadcrumbsGenerator $breadcrumbs, ImportJob $job) {
-            $breadcrumbs->parent('import.index');
-            $breadcrumbs->push(trans('import.job_status_breadcrumb', ['key' => $job->key]), route('import.job.status.index', [$job->key]));
-        }
-    );
-
     // PREFERENCES
     Breadcrumbs::register(
         'preferences.index',
@@ -1197,13 +1164,30 @@ try {
         }
     );
 
-    // SPLIT
+    // object groups
     Breadcrumbs::register(
-        'transactions.split.edit',
-        static function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.split.edit', [$journal->id]));
+        'object-groups.index',
+        static function (BreadcrumbsGenerator $breadcrumbs): void {
+            $breadcrumbs->parent('index');
+            $breadcrumbs->push(trans('firefly.object_groups_breadcrumb'), route('object-groups.index'));
         }
     );
+
+    Breadcrumbs::register(
+        'object-groups.edit',
+        static function (BreadcrumbsGenerator $breadcrumbs, ObjectGroup $objectGroup) {
+            $breadcrumbs->parent('object-groups.index');
+            $breadcrumbs->push(trans('breadcrumbs.edit_object_group', ['title' => $objectGroup->title]), route('object-groups.edit', [$objectGroup->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'object-groups.delete',
+        static function (BreadcrumbsGenerator $breadcrumbs, ObjectGroup $objectGroup) {
+            $breadcrumbs->parent('object-groups.index');
+            $breadcrumbs->push(trans('breadcrumbs.delete_object_group', ['title' => $objectGroup->title]), route('object-groups.delete', [$objectGroup->id]));
+        }
+    );
+
 } catch (DuplicateBreadcrumbException $e) {
 }

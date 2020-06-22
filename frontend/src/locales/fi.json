@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Laskuja maksettavana",
+        "left_to_spend": "K\u00e4ytett\u00e4viss\u00e4",
+        "net_worth": "Varallisuus",
+        "paid": "Maksettu",
+        "yourAccounts": "Omat tilisi",
+        "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si"
+    },
+    "config": {
+        "html_language": "fi"
+    }
+}

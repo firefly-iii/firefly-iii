@@ -27,9 +27,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\NewUserFormRequest;
-use FireflyIII\Import\JobConfiguration\JobConfigurationInterface;
-use FireflyIII\Import\Storage\ImportArrayStorage;
-use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -174,46 +171,4 @@ trait CreateStuff
         );
     }
 
-    /**
-     * Make a configurator object.
-     *
-     * @param ImportJob $importJob
-     *
-     * @return JobConfigurationInterface
-     *
-     * @throws FireflyException
-     */
-    protected function makeConfigurator(ImportJob $importJob): JobConfigurationInterface // make object
-    {
-        $key       = sprintf('import.configuration.%s', $importJob->provider);
-        $className = (string)config($key);
-        if (null === $className || !class_exists($className)) {
-            throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $importJob->provider)); // @codeCoverageIgnore
-        }
-        Log::debug(sprintf('Going to create class "%s"', $className));
-        /** @var JobConfigurationInterface $configurator */
-        $configurator = app($className);
-        $configurator->setImportJob($importJob);
-
-        return $configurator;
-    }
-
-    /**
-     * Store the transactions.
-     *
-     * @param ImportJob $importJob
-     *
-     * @throws FireflyException
-     */
-    protected function storeTransactions(ImportJob $importJob): void // make object + execute
-    {
-        /** @var ImportArrayStorage $storage */
-        $storage = app(ImportArrayStorage::class);
-        $storage->setImportJob($importJob);
-        try {
-            $storage->store();
-        } catch (FireflyException|Exception $e) {
-            throw new FireflyException($e->getMessage());
-        }
-    }
 }

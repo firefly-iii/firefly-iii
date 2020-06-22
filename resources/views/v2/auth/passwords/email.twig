@@ -1,0 +1,83 @@
+{% extends "./layout/auth" %}
+{% block content %}
+
+
+    {% if errors|length > 0 %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> {{ 'flash_error'|_ }}</h5>
+                <p>
+                    {{ 'problems_with_input'|_ }}
+                </p>
+                <ul class="list-unstyled">
+                    {% for error in errors.all %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {# default header #}
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
+            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+        </div>
+
+
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">{{ 'reset_password'|_ }}</p>
+
+                {% if session('status') %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="text-success">
+                                {{ session('status') }}
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <form action="{{ route('password.email') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <div class="input-group mb-3">
+                            <input type="email" required autocomplete="email" class="form-control" name="email" placeholder="{{ trans('form.email') }}"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary btn-block">{{ 'reset_button'|_ }}</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <ul class="list-unstyled small">
+
+                                <li>
+                                    <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a>
+                                </li>
+
+                                {% if  allowRegistration %}
+                                    <li>
+                                        <a href="{{ route('register') }}">{{ 'register_new_account'|_ }}</a><br>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+{% endblock %}

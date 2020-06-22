@@ -36,6 +36,8 @@ trait CollectorProperties
     private $hasAccountInfo;
     /** @var bool Will be true if query result includes bill information. */
     private $hasBillInformation;
+    /** @var bool */
+    private $hasNotesInformation;
     /** @var bool Will be true if query result contains budget info. */
     private $hasBudgetInformation;
     /** @var bool Will be true if query result contains category info. */

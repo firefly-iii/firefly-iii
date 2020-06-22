@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => '您正在运行 BETA 版本。请注意错误和问题。',
     'all_destination_accounts'                   => '目标帐户',
     'all_source_accounts'                        => '源账户',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => '检查更新',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => '每年',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => '规则',
     'rule_name'                                  => '规则名称',
     'rule_triggers'                              => '规则触发于',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => '我应该勾选这个方块吗？',
     'secure_pw_long_password'                   => '是，永远验证您的密码是安全的。',
     'command_line_token'                        => '指令列权杖',
-    'explain_command_line_token'                => '您需要此权杖以执行指令列选项，如导入或导出资料。若无Token，部分机敏指令则无法运行。请勿分享您的指令列Token，包括我，没有人会问你Token 是多少。如果您担心遗失或惊慌时，请使用按钮重新生成 Token。',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => '重新产生指令列权杖',
     'token_regenerated'                         => '产生了新的指令列权杖',
     'change_your_email'                         => '更改您的电子邮件地址',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => '现在，您可以使用新的电子邮件地址登入。',
     'login_with_old_email'                      => '现在，您可以再次使用旧的电子邮件地址登入。',
     'login_provider_local_only'                 => '当藉由 ":login_provider" 验证时，此动作不可用。',
-    'delete_local_info_only'                    => "Because you authenticate through ':login_provider', this will only delete local Firefly III information.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Something went wrong. Please try again.',
 
     // export data:
-    'import_and_export_menu'                    => '导入和导出',
     'export_data_title'                         => '从 Fifly III 导出数据',
     'export_data_menu'                          => '导出数据',
     'export_data_bc'                            => '从 Fifly III 导出数据',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
     'auto_budget_reset_icon'                    => 'This budget will be set periodically',
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => '帐单配合自 :low 至 :high 的交易。',
     'running_again_loss'                        => '以前与该账单有关联的交易，如果（不再）与规则相符，则可能失去联系。',
     'bill_related_rules'                        => '与此帐单相关的规则',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => '储存您的新帐单时发生错误，请检查日志档',
     'list_inactive_rule'                        => '未启用的规则',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => '提交后重置表单',
     'errors_submission'                     => '您的提交有误，请查看下面输出的错误信息。',
 
-    // Import page (general strings only)
-    'import_index_title'                    => '将交易记录导入',
-    'import_transactions'                   => '导入交易',
-    'import_tools_title'                    => 'Import tools',
-    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
-    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => '当您在 Sandstorm.io 环境使用 Firefly III 时，此功能不可用。',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => '建立新资产帐户',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
     'telemetry_collected_info'           => 'Collected information',
     'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
-    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'View telemetry',
     'telemetry_button_delete'            => '删除所有遥测数据',
     'telemetry_admin_overview'           => 'Telemetry overview',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => '删除提交的记录',
     'telemetry_submission_executed'      => '记录已提交。请检查您的日志文件获取更多信息。',
     'telemetry_all_deleted'              => '所有遥测记录已被删除。',
-    'telemetry_submitted_deleted'        => '所有提交的遥测记录已被删除。'
+    'telemetry_submitted_deleted'        => '所有提交的遥测记录已被删除。',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];

@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => '總金額不能為零。',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => '小豬撲滿的名稱必須是獨一無二的。',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => '定期重複交易的重複類型無效。',

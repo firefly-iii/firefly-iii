@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => '刪除交易記錄之間的連結',
     'telemetry_index'        => 'Telemetry',
     'telemetry_view'         => 'View telemetry',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

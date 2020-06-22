@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'O montante total não pode ser zero.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
+    'unique_object_group'            => 'O nome do grupo deve ser único',
 
     'secure_password'                => 'Esta não é uma senha segura. Por favor, tente novamente. Para mais informações, visite https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetição inválido para transações recorrentes.',

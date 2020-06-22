@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Jumlah total tidak boleh nol.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'Nama celengan harus unik.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipe pengulangan yang tidak valid untuk transaksi berkala.',

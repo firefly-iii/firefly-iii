@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Totala värdet kan inte vara noll.',
     'current_target_amount'          => 'Det nuvarande beloppet måste vara mindre än målbeloppet.',
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Ogiltig repetitionstyp får återkommande transaktioner.',

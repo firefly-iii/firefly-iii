@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly ondersteunt meerdere valuta\'s. Hoewel het standaard de Euro is kan je ook kiezen voor de US dollar of een van de vele anderen. Er is een kleine selectie valuta meegeleverd maar je kan je eigen valuta toevoegen. Het veranderen van de standaardvaluta verandert de bestaande transacties niet: Firefly III ondersteunt het gebruik van meerdere valuta op hetzelfde moment.',
     'transactions-index'     => 'Deze uitgaven, inkomsten en overschrijvingen zijn niet heel fantasierijk. Ze zijn automatisch gegenereerd.',
     'piggy-banks-index'      => 'Zoals je kan zien zijn er drie spaarpotjes. Gebruik de plus- en minknoppen om het bedrag in de spaarpotjes te veranderen. Klik op de naam van het spaarpotje om er de geschiedenis van te zien.',
-    'import-index'           => 'Je kan elk CSV bestand importeren met Firefly III. Het is ook mogelijk om transacties te importeren van bunq en Spectre. Andere verzamelbedrijven worden ook geïntegreerd. De demo-gebruiker mag alleen de "nep"-importhulp gebruiken. Deze genereert een paar willekeurige transacties om te laten zien hoe het werkt.',
     'profile-index'          => 'Houd in gedachten dat de demosite elke vier uur reset. Je toegang kan dus te allen tijde worden herroepen. Dit gebeurt automatisch en is niet een bug.',
 ];

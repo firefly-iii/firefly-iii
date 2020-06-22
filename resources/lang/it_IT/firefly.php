@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Stai eseguendo una versione BETA. Fai attenzione a bug e problemi.',
     'all_destination_accounts'                   => 'Conti di destinazione',
     'all_source_accounts'                        => 'Conti di origine',
+    'back_to_index'                              => 'Torna all\'indice',
 
     // check for updates:
     'update_check_title'                         => 'Controlla aggiornamenti',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'annuale',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'Non puoi eseguire regole inattive.',
     'rules'                                      => 'Regole',
     'rule_name'                                  => 'Nome regola',
     'rule_triggers'                              => 'La regola si innesca quando',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Devo controllare la scatola?',
     'secure_pw_long_password'                   => 'Sì. Verifica sempre che la tua password sia sicura.',
     'command_line_token'                        => 'Token della riga di comando',
-    'explain_command_line_token'                => 'È necessario questo token per eseguire le opzioni dalla riga di comando, come l\'importazione o l\'esportazione di dati. Senza di esso tali comandi sensibili non funzioneranno. Non condividere il token della riga di comando. Nessuno ti chiederà questo token, nemmeno io. Se temi di averlo perso, o se sei paranoico, rigenera questo token usando il pulsante.',
+    'explain_command_line_token'                => 'È necessario questo token per eseguire le opzioni dalla riga di comando, come l\'esportazione di dati. Senza di esso tale comando sensibile non funzionerà. Non condividere il token della riga di comando. Nessuno ti chiederà questo token, nemmeno io. Se temi di averlo perso, o se sei paranoico, rigenera questo token usando il pulsante.',
     'regenerate_command_line_token'             => 'Rigenera il token della riga di comando',
     'token_regenerated'                         => 'È stato generato un nuovo token della riga di comando',
     'change_your_email'                         => 'Cambia il tuo indirizzo email',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Ora puoi accedere con il tuo nuovo indirizzo email.',
     'login_with_old_email'                      => 'Ora puoi accedere nuovamente con il tuo vecchio indirizzo email.',
     'login_provider_local_only'                 => 'Questa azione non è disponibile quando ci si è autenticati con ":login_provider".',
-    'delete_local_info_only'                    => "Poiché ti sei autenticato tramite \":login_provider\", questo eliminerà solamente le informazioni locali di Firefly III.",
+    'external_user_mgt_disabled'                => 'Questa azione non è disponibile quando Firefly III non è responsabile della gestione utente o dell\'autenticazione.',
+    'delete_local_info_only'                    => "Poiché Firefly III non è responsabile della gestione utente o dell'autenticazione, questa funzione eliminerà solo le informazioni locali di Firefly III.",
     'profile_oauth_clients'                     => 'Client OAuth',
     'profile_oauth_no_clients'                  => 'Non hai creato nessun client OAuth.',
     'profile_oauth_clients_header'              => 'Client',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Qualcosa non ha funzionato. Riprova.',
 
     // export data:
-    'import_and_export_menu'                    => 'Importa e esporta',
     'export_data_title'                         => 'Esporta dati da Firefly III',
     'export_data_menu'                          => 'Esporta dati',
     'export_data_bc'                            => 'Esporta dati da Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Puoi leggere di più su questa funzione nella guida. Clicca sull\'icona (?) in alto a destra.',
     'auto_budget_reset_icon'                    => 'Questo budget sarà impostato periodicamente',
     'auto_budget_rollover_icon'                 => 'L\'importo del budget aumenterà periodicamente',
+    'remove_budgeted_amount'                    => 'Rimuovi l\'import a budget in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Non prevista per questo periodo',
+    'not_or_not_yet'                            => 'No (per ora)',
     'match_between_amounts'                     => 'La bolletta abbina le transazioni tra :low e :high.',
     'running_again_loss'                        => 'Le transazioni precedentemente collegate a questa bolletta potrebbero perdere la loro connessione se (non) corrispondono (più) alla regola.',
     'bill_related_rules'                        => 'Regole relative a questa bolletta',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Si è verificato un errore imprevisto durante la memorizzazione della nuova bolletta. Controlla i file di log',
     'list_inactive_rule'                        => 'regola inattiva',
     'bill_edit_rules'                           => 'Firefly III tenterà anche di modificare la regola relativa a questa bolletta. Se hai modificato questa regola da solo, Firefly III non cambierà nulla.|Firefly III tenterà anche di modificare le :count regole relative a questa bolletta. Se hai modificato queste regole, Firefly III non cambierà nulla.',
+    'bill_expected_date'                        => 'Attesa :date',
 
     // accounts:
     'inactive_account_link'                     => 'Hai :count conto inattivo (archiviato), che puoi visualizzare in questa pagina separata.|Hai :count conti inattivi (archiviati), che puoi visualizzare in questa pagina separata.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Resetta il modulo dopo l\'invio',
     'errors_submission'                     => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Importa le transazioni in Firefly III',
-    'import_transactions'                   => 'Importa transazioni',
-    'import_tools_title'                    => 'Strumenti di importazione',
-    'tools_index_intro'                     => 'Esistono diversi strumenti per importare dati in Firefly III. Controlla quelli qui sotto. Per ulteriori informazioni, consulta <a href="https://docs.firefly-iii.org/importing-data/introduction">questa pagina</a>.',
-    'firefly_iii_csv_importer_name'         => 'Importatore CSV di Firefly III',
-    'firefly_iii_bunq_importer_name'        => 'Importatore bunq🌈 di Firefly III',
-    'firefly_iii_ynab_importer_name'        => 'Importatore YNAB di Firefly III',
-    'ludo_revolut_importer_name'            => 'Importatore Revolut di Ludo444',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Questa funzione non è disponibile quando si utilizza Firefly III in un ambiente Sandstorm.io.',
+
+    // object groups
+    'default_group_title_name'              => '(non in un gruppo)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Creiamo un conto attività!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Se lo desideri, è possibile abilitare la telemetria nel file .env o nella configurazione di Docker.',
     'telemetry_collected_info'           => 'Informazioni raccolte',
     'no_telemetry_present'               => 'Firefly III non ha raccolto dati di telemetria.',
-    'records_telemetry_present'          => 'Firefly III ha raccolto :count dati di telemetria.',
+    'records_telemetry_present'          => 'Firefly III ha raccolto :count dato di telemetria.|Firefly III ha raccolto :count dati di telemetria.',
     'telemetry_button_view'              => 'Visualizza telemetria',
     'telemetry_button_delete'            => 'Elimina tutta la telemetria',
     'telemetry_admin_overview'           => 'Panoramica telemetria',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Elimina i dati inviati',
     'telemetry_submission_executed'      => 'I dati sono stati inviati. Controlla i file di log per maggiori informazioni.',
     'telemetry_all_deleted'              => 'Tutti i dati di telemetria sono stati cancellati.',
-    'telemetry_submitted_deleted'        => 'Tutti i dati di telemetria inviati sono stati cancellati.'
+    'telemetry_submitted_deleted'        => 'Tutti i dati di telemetria inviati sono stati cancellati.',
+
+    // debug page
+    'debug_page'                         => 'Pagina di debug',
+    'debug_submit_instructions'          => 'Se incontri problemi, puoi usare le informazioni in questo riquadro come informazioni di debug. Copia-incollale in una nuova o esistente <a href="https://github.com/firefly-iii/firefly-iii/issues">issue di Github</a>. Creerà una bellissima tabella che potrà essere utilizzata per diagnosticare rapidamente il tuo problema.',
+    'debug_pretty_table'                 => 'Copia-incollando il riquadro sottostante in una issue di Github verrà creata una tabella. Non circondare questo testo con accenti gravi o virgolette.',
+    'debug_additional_data'              => 'Puoi anche condividere il contenuto del riquadro sottostante. È anche possibile copiare e incollare questo in una nuova o esistente <a href="https://github.com/firefly-iii/firefly-iii/issues">issue di GitHub</a>. Tuttavia, il contenuto di questo riquadro può contenere informazioni private come i nomi dei conti, i dettagli delle transazioni o indirizzi e-mail.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Gruppi',
+    'object_groups_page_title'           => 'Gruppi',
+    'object_groups_breadcrumb'           => 'Gruppi',
+    'object_groups_index'                => 'Panoramica',
+    'object_groups'                      => 'Gruppi',
+    'object_groups_empty_explain'        => 'Alcune cose in Firefly III possono essere divise in gruppi. I salvadanai, per esempio, dispongono di un campo "Gruppo" nelle schermate di modifica e creazione. Quando si imposta questo campo, è possibile modificare i nomi e l\'ordine dei gruppi in questa pagina. Per ulteriori informazioni, consulta le pagine di aiuto nell\'angolo in alto a destra, con l\'icona (?).',
+    'object_group_title'                 => 'Titolo',
+    'edit_object_group'                  => 'Modifica gruppo ":title"',
+    'delete_object_group'                => 'Modifica gruppo ":title"',
+    'update_object_group'                => 'Aggiorna gruppo',
+    'updated_object_group'               => 'Gruppo ":title" aggiornato con successo',
+    'deleted_object_group'               => 'Gruppo ":title" eliminato con successo',
+    'object_group'                       => 'Gruppo',
+
 ];

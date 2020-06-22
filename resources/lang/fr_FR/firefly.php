@@ -32,7 +32,7 @@ return [
     'clone'                                      => 'Cloner',
     'last_seven_days'                            => '7 Derniers Jours',
     'last_thirty_days'                           => 'Trente derniers jours',
-    'welcome_back'                               => 'Que se passe-t-il ?',
+    'welcome_back'                               => 'Quoi de neuf ?',
     'everything'                                 => 'Tout',
     'today'                                      => 'aujourd\'hui',
     'customRange'                                => 'Intervalle personnalisé',
@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Vous utilisez une version BETA. Méfiez-vous des bogues et des problèmes.',
     'all_destination_accounts'                   => 'Comptes de destination',
     'all_source_accounts'                        => 'Comptes source',
+    'back_to_index'                              => 'Retour à l\'accueil',
 
     // check for updates:
     'update_check_title'                         => 'Vérifier les mises à jour',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'annuel',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'Vous ne pouvez pas exécuter des règles inactives.',
     'rules'                                      => 'Règles',
     'rule_name'                                  => 'Nom de la règle',
     'rule_triggers'                              => 'La règle se déclenchera lorsque',
@@ -436,8 +438,8 @@ return [
     'rule_trigger_tag_is'                        => 'Un tag est ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'La devise de l\'opération est..',
     'rule_trigger_currency_is'                   => 'La devise de l\'opération est ":trigger_value"',
-    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
-    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'La devise étrangère de l\'opération est..',
+    'rule_trigger_foreign_currency_is'           => 'La devise étrangère de l\'opération est ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'A au moins autant de pièces jointes',
     'rule_trigger_has_attachments'               => 'A au moins :count pièce jointe|A au moins :count pièces jointes',
     'rule_trigger_store_journal'                 => 'Lorsqu’une opération est créée',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Dois-je cocher la case ?',
     'secure_pw_long_password'                   => 'Oui. Toujours vérifier que votre mot de passe est sûr.',
     'command_line_token'                        => 'Jeton de ligne de commande',
-    'explain_command_line_token'                => 'Vous avez besoin de ce jeton pour exécuter des opérations optionnelles en ligne de commandes telles qu\'importer et exporter des données. Sans celui-ci, de telles commandes sensibles ne fonctionneront pas. Ne partagez jamais votre jeton. Personne ne vous le demandera, pas même moi. Si vous craignez de le perdre, ou si vous êtes parano, régénérez ce jeton à l\'aide du bouton.',
+    'explain_command_line_token'                => 'Vous avez besoin de ce jeton pour exécuter des lignes de commande telles qu\'exporter des données. Sans celui-ci, une telle commande ne fonctionnera pas. Ne partagez jamais votre jeton. Personne ne vous le demandera, pas même moi. Si vous craignez de le perdre, ou si vous êtes parano, régénérez ce jeton à l\'aide du bouton.',
     'regenerate_command_line_token'             => 'Régénérer le jeton de ligne de commande',
     'token_regenerated'                         => 'Un nouveau jeton en ligne de commande a été généré',
     'change_your_email'                         => 'Changer votre adresse e-mail',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Vous pouvez désormais vous connecter avec votre nouvelle adresse e-mail.',
     'login_with_old_email'                      => 'Vous pouvez à nouveau vous connecter à l\'aide de votre ancienne adresse e-mail.',
     'login_provider_local_only'                 => 'Cette action n’est pas disponible lors de l’authentification par ":login_provider".',
-    'delete_local_info_only'                    => "Comme vous vous authentifiez via \":login_provider\", cela ne supprimera que les informations locales de Firefly III.",
+    'external_user_mgt_disabled'                => 'Cette action n\'est pas disponible lorsque Firefly III n\'est pas responsable de la gestion des utilisateurs ou de l\'authentification.',
+    'delete_local_info_only'                    => "Comme Firefly III n'est pas responsable de la gestion des utilisateurs ou de l'authentification, cette fonction ne supprimera que les informations locales de Firefly III.",
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'Vous n’avez pas encore créé de client OAuth.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Une erreur s’est produite. Merci d’essayer à nouveau.',
 
     // export data:
-    'import_and_export_menu'                    => 'Import et export',
     'export_data_title'                         => 'Exporter des données depuis Firefly III',
     'export_data_menu'                          => 'Exporter des données',
     'export_data_bc'                            => 'Exporter des données depuis Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Vous pouvez en savoir plus sur cette fonctionnalité dans l\'aide. Cliquez sur l\'icône (?) en haut à droite.',
     'auto_budget_reset_icon'                    => 'Ce budget sera défini périodiquement',
     'auto_budget_rollover_icon'                 => 'Le montant du budget augmentera périodiquement',
+    'remove_budgeted_amount'                    => 'Supprimer le montant budgétisé en :currency',
 
     // bills:
+    'not_expected_period'                       => 'Pas attendu cette période',
+    'not_or_not_yet'                            => 'Non (pas encore)',
     'match_between_amounts'                     => 'La facture correspond à des opérations entre :low et :high.',
     'running_again_loss'                        => 'Les opérations précédemment liées à cette facture peuvent perdre leur connexion, s\'ils ne correspondent plus à la ou les règles.',
     'bill_related_rules'                        => 'Règles reliées à cette facture',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Une erreur inattendue s\'est produite lors du stockage de votre nouvelle facture. Veuillez vérifier les fichiers journaux',
     'list_inactive_rule'                        => 'règle inactive',
     'bill_edit_rules'                           => 'Firefly III tentera également de modifier la règle relative à cette facture. Si vous avez modifié cette règle vous-même, Firefly III ne changera rien. Firefly III tentera également de modifier les :count règles relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
+    'bill_expected_date'                        => 'Prévu :date',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',
@@ -970,7 +976,7 @@ return [
     'reconcile_do_nothing'                      => 'Pointer les opérations sélectionnées, mais ne pas les corriger pas.',
     'reconcile_go_back'                         => 'Vous pouvez toujours modifier ou supprimer une correction ultérieurement.',
     'must_be_asset_account'                     => 'Vous pouvez uniquement rapprocher les comptes d\'actifs',
-    'reconciliation_stored'                     => 'Rapprochement stocké',
+    'reconciliation_stored'                     => 'Rapprochement enregistré',
     'reconciliation_error'                      => 'En raison d\'une erreur, les opérations ont été marquées comme rapprochées, mais la correction n\'a pas été enregistrée : :error.',
     'reconciliation_transaction_title'          => 'Régularisation (du :from au :to)',
     'sum_of_reconciliation'                     => 'Total des rapprochements',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Réinitialiser le formulaire après soumission',
     'errors_submission'                     => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Importer des opérations dans Firefly III',
-    'import_transactions'                   => 'Importer des opérations',
-    'import_tools_title'                    => 'Outils d\'importation',
-    'tools_index_intro'                     => 'Plusieurs outils permettent d\'importer des données dans Firefly III. Vous les retrouverez ci-dessous. Pour plus d\'informations, consultez <a href="https://docs.firefly-iii.org/importing-data/introduction">cette page</a> (en anglais).',
-    'firefly_iii_csv_importer_name'         => 'Importation CSV Firefly III',
-    'firefly_iii_bunq_importer_name'        => 'Importation Bunq Firefly III',
-    'firefly_iii_ynab_importer_name'        => 'Importation YNAB Firefly III',
-    'ludo_revolut_importer_name'            => 'Importation Revolut (Ludo444)',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Cette fonction n\'est pas disponible lorsque vous utilisez Firefly III dans un environnement Sandstorm.io.',
+
+    // object groups
+    'default_group_title_name'              => '(Sans groupement)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Nous allons créer un compte d’actif !',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Si vous le souhaitez, vous pouvez activer la télémétrie dans votre fichier .env ou dans votre configuration Docker.',
     'telemetry_collected_info'           => 'Informations recueillies',
     'no_telemetry_present'               => 'Firefly III n\'a recueilli aucune donnée de télémétrie.',
-    'records_telemetry_present'          => 'Firefly III a recueilli :count enregistrement(s) de télémétrie.',
+    'records_telemetry_present'          => 'Firefly III a collecté :count enregistrement de télémétrie.|Firefly III a collecté :count enregistrements de télémétrie.',
     'telemetry_button_view'              => 'Voir la télémétrie',
     'telemetry_button_delete'            => 'Supprimer toutes les télémétries',
     'telemetry_admin_overview'           => 'Aperçu de la télémétrie',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Supprimer les enregistrements envoyés',
     'telemetry_submission_executed'      => 'Les enregistrements ont été soumis. Consultez vos fichiers journaux pour plus d\'informations.',
     'telemetry_all_deleted'              => 'Tous les enregistrements télémétriques ont été supprimés.',
-    'telemetry_submitted_deleted'        => 'Tous les enregistrements télémétriques soumis ont été supprimés.'
+    'telemetry_submitted_deleted'        => 'Tous les enregistrements télémétriques soumis ont été supprimés.',
+
+    // debug page
+    'debug_page'                         => 'Page de débogage',
+    'debug_submit_instructions'          => 'Si vous rencontrez des problèmes, vous pouvez utiliser les informations contenues dans ce cadre comme informations de débogage. Veuillez copier-coller dans une nouvelle "issue" <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> (en anglais). Cela générera une belle table qui peut être utilisée pour diagnostiquer rapidement votre problème.',
+    'debug_pretty_table'                 => 'Si vous copiez/collez le cadre ci-dessous dans une "issue" GitHub, cela générera un tableau. Veuillez ne pas entourer ce texte avec des apostrophes ou des guillemets.',
+    'debug_additional_data'              => 'Vous pouvez également partager le contenu du cadre ci-dessous. Vous pouvez également copier/coller cela dans une <a href="https://github.com/firefly-iii/firefly-iii/issues">"issue" GitHub</a>déjà existante ou nouvellement créée. Cependant, le contenu de ce cadre peut contenir des informations privées telles que les noms de compte, les détails de transaction ou les adresses électroniques.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groupes',
+    'object_groups_page_title'           => 'Groupes',
+    'object_groups_breadcrumb'           => 'Groupes',
+    'object_groups_index'                => 'Vue d\'ensemble',
+    'object_groups'                      => 'Groupes',
+    'object_groups_empty_explain'        => 'Certaines choses dans Firefly III peuvent être divisées en groupes. Les tirelires, par exemple, présentent un champ "Groupe" dans les écrans d\'édition et de création. Lorsque vous définissez ce champ, vous pouvez modifier les noms et l\'ordre des groupes sur cette page. Pour plus d\'informations, consultez les pages d\'aide dans le coin supérieur droit, sous l\'icône (?).',
+    'object_group_title'                 => 'Titre',
+    'edit_object_group'                  => 'Modifier le groupe ":title"',
+    'delete_object_group'                => 'Modifier le groupe ":title"',
+    'update_object_group'                => 'Mettre à jour le groupe',
+    'updated_object_group'               => 'Groupe ":title" mis à jour avec succès',
+    'deleted_object_group'               => 'Groupe ":title" supprimé avec succès',
+    'object_group'                       => 'Groupe',
+
 ];

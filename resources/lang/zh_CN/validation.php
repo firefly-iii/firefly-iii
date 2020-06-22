@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => '总金额不能为零。',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => '存钱罐的名称必须是独一无二的。',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => '这不是一个安全的密码，请重试一次。如需更多讯息，请访问 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => '对定期重复交易是无效的重复类型。',

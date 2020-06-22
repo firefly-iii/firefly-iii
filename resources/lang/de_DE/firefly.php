@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Sie verwenden eine BETA-Version. Seien Sie vorsichtig bei Fehlern und Problemen.',
     'all_destination_accounts'                   => 'Zielkonten',
     'all_source_accounts'                        => 'Quellkonten',
+    'back_to_index'                              => 'Zurück zum Index',
 
     // check for updates:
     'update_check_title'                         => 'Nach Updates suchen',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'jährlich',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'Inaktive Regeln können nicht ausgeführt werden.',
     'rules'                                      => 'Regeln',
     'rule_name'                                  => 'Name der Regel',
     'rule_triggers'                              => 'Regel wird ausgelöst wenn',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Soll ich die Box ankreuzen?',
     'secure_pw_long_password'                   => 'Ja. Damit vergewissern Sie sich immer, dass ihr Passwort sicher ist.',
     'command_line_token'                        => 'Kommandozeilen-Authentifizierungsschlüssel',
-    'explain_command_line_token'                => 'Sie benötigen dieses Token, um Kommandozeilenoptionen auszuführen, wie z. B. den Import oder Export von Daten. Ohne diese werden solche sensiblen Befehle nicht funktionieren. Teilen Sie Ihren Kommandozeilen-Authentifizierungsschlüssel nicht mit anderen. Niemand wird Sie um diesen Schlüssel bitten, nicht einmal ich. Wenn Sie befürchten, dass Sie diesen verloren haben, erneuern Sie den Schlüssel mit der Schaltfläche.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Kommandozeilen-Authentifizierungsschlüssel erneut generieren',
     'token_regenerated'                         => 'Ein neuer Kommandozeilen-Authentifizierungsschlüssel wurde generiert',
     'change_your_email'                         => 'E-Mail Adresse ändern',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Sie können sich jetzt mit Ihrer neuen E-Mail-Adresse anmelden.',
     'login_with_old_email'                      => 'Sie können sich jetzt wieder mit Ihrer alten E-Mail-Adresse anmelden.',
     'login_provider_local_only'                 => 'Diese Aktion ist bei der Authentifizierung durch ":login_provider" nicht verfügbar.',
-    'delete_local_info_only'                    => "Dies wird nur lokale Firefly-III-Informationen löschen, da Sie durch ':login_provider' authentifiziert sind.",
+    'external_user_mgt_disabled'                => 'Diese Aktion ist nicht verfügbar, wenn Firefly III nicht für die Benutzerverwaltung oder die Authentifizierungsbehandlung zuständig ist.',
+    'delete_local_info_only'                    => "Da Firefly III nicht für die Benutzerverwaltung oder die Authentifizierungsbehandlung zuständig ist, löscht diese Funktion nur lokale Firefly III-Informationen.",
     'profile_oauth_clients'                     => 'OAuth-Clients',
     'profile_oauth_no_clients'                  => 'Sie haben noch keine OAuth-Clients erstellt.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Ein Problem ist aufgetreten. Bitte versuchen Sie es erneut.',
 
     // export data:
-    'import_and_export_menu'                    => 'Im- und Export',
     'export_data_title'                         => 'Daten aus Firefly III exportieren',
     'export_data_menu'                          => 'Daten exportieren',
     'export_data_bc'                            => 'Daten aus Firefly III exportieren',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Mehr über diese Funktion können Sie in der Hilfe nachlesen. Klicken Sie oben rechts auf das ❓-Symbol.',
     'auto_budget_reset_icon'                    => 'Dieses Budget wird regelmäßig festgelegt',
     'auto_budget_rollover_icon'                 => 'Der Budgetbetrag wird regelmäßig erhöht',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
     'running_again_loss'                        => 'Zuvor verknüpfte Buchungen mit dieser Rechnung können ihre Verbindung verlieren, wenn sie (nicht mehr) der/den Regel(n) entsprechen.',
     'bill_related_rules'                        => 'Regeln mit Verknüpfung zu dieser Rechnung',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Beim Speichern Ihrer neuen Rechnung ist ein unerwarteter Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien.',
     'list_inactive_rule'                        => 'Inaktive Regeln',
     'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die mit dieser Rechnung zusammenhängende Regel zu ändern. Wenn Sie diese Regel jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.|Firefly III wird versuchen, die :count mit dieser Rechnung zusammenhängenden Regeln ebenfalls zu bearbeiten. Wenn Sie diese Regeln jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
+    'bill_expected_date'                        => 'Voraussichtlich :date',
 
     // accounts:
     'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können. Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Formular nach der Übermittlung zurücksetzen',
     'errors_submission'                     => 'Problem bei der Übermittlung. Bitte überprüfen Sie die nachfolgenden Fehler.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Buchungen in Firefly III importieren',
-    'import_transactions'                   => 'Buchungen importieren',
-    'import_tools_title'                    => 'Werkzeuge importieren',
-    'tools_index_intro'                     => 'Es gibt mehrere Werkzeuge, um Daten in Firefly III zu importieren (Diese werden unten vorgestellt). Weitere Informationen finden Sie unter <a href="https://docs.firefly-iii.org/importing-data/introduction">hier auf dieser Seite</a>.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III • CSV-Import',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III Bunq 🌈 importieren',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III • YNAB-Import',
-    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-Importer',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Lassen Sie uns jetzt ein Bestandskonto anlegen!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Wenn Sie möchten, können Sie die Telemetrie in Ihrer .env-Datei oder in Ihrer Docker-Konfiguration aktivieren.',
     'telemetry_collected_info'           => 'Gesammelte Informationen',
     'no_telemetry_present'               => 'Firefly III hat keinerlei Telemetriedaten aufgezeichnet.',
-    'records_telemetry_present'          => 'Firefly III hat :count Telemetriedaten erfasst.',
+    'records_telemetry_present'          => 'Firefly III hat :count Telemetrie-Aufzeichnungen erfasst.|Firefly III hat :count Telemetrie-Aufzeichnungen erfasst.',
     'telemetry_button_view'              => 'Telemetrie anzeigen',
     'telemetry_button_delete'            => 'Alle Telemetriedaten löschen',
     'telemetry_admin_overview'           => 'Telemetrieübersicht',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Übertragene Datensätze löschen',
     'telemetry_submission_executed'      => 'Datensätze wurden übermittelt. Überprüfen Sie Ihre Protokolldateien für weitere Informationen.',
     'telemetry_all_deleted'              => 'Alle Telemetriedaten wurden gelöscht.',
-    'telemetry_submitted_deleted'        => 'Alle übermittelten Telemetriedaten wurden gelöscht.'
+    'telemetry_submitted_deleted'        => 'Alle übermittelten Telemetriedaten wurden gelöscht.',
+
+    // debug page
+    'debug_page'                         => 'Fehlersuche-Seite',
+    'debug_submit_instructions'          => 'Wenn Sie auf Probleme stoßen, können Sie die Informationen in diesem Feld als Fehlerbehebungsinformationen verwenden. Bitte kopieren Sie die Informationen per Kopieren und Einfügen in ein neues oder bestehendes <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. Dadurch wird eine übersichtliche Tabelle erzeugt, die zur schnellen Diagnose Ihres Problems verwendet werden kann.',
+    'debug_pretty_table'                 => 'Wenn Sie das Feld unten in eine GitHub-Ausgabe kopieren/einfügen, wird eine Tabelle generiert. Bitte diesen Text nicht in Backticks oder Anführungszeichen setzen.',
+    'debug_additional_data'              => 'Sie können auch den Inhalt des Feldes unten freigeben. Sie können ihn auch durch Kopieren und Einfügen in eine neue oder bestehende <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub-Ausgabe</a> einfügen. Der Inhalt dieses Feldes kann jedoch private Informationen wie Kontonamen, Transaktionsdetails oder E-Mail-Adressen enthalten.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Gruppen',
+    'object_groups_page_title'           => 'Gruppen',
+    'object_groups_breadcrumb'           => 'Gruppen',
+    'object_groups_index'                => 'Übersicht',
+    'object_groups'                      => 'Gruppen',
+    'object_groups_empty_explain'        => 'Einige Dinge in Firefly III lassen sich in Gruppen einteilen. Sparschweine zum Beispiel verfügen über ein Feld "Gruppe" in den Bearbeitungs- und Erstellungsmasken. Wenn Sie dieses Feld einstellen, können Sie die Namen und die Reihenfolge der Gruppen auf dieser Seite bearbeiten. Weitere Informationen finden Sie auf den Hilfeseiten oben rechts unter dem ❓-Symbol.',
+    'object_group_title'                 => 'Titel',
+    'edit_object_group'                  => 'Gruppe „:title” bearbeiten',
+    'delete_object_group'                => 'Gruppe „:title” bearbeiten',
+    'update_object_group'                => 'Gruppe aktualisieren',
+    'updated_object_group'               => 'Gruppe „:title” erfolgreich aktualisiert',
+    'deleted_object_group'               => 'Gruppe „:title” erfolgreich entfernt',
+    'object_group'                       => 'Gruppe',
+
 ];

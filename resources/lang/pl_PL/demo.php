@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly obsługuje wiele walut. Chociaż domyślnie jest to euro, można go ustawić na dolara amerykańskiego i wiele innych walut. Jak widać niewielki wybór walut został uwzględniony, ale możesz dodać własne, jeśli chcesz. Zmiana domyślnej waluty nie zmieni waluty istniejących transakcji, jednak: Firefly III obsługuje korzystanie z wielu walut w tym samym czasie.',
     'transactions-index'     => 'Te wydatki, depozyty i transfery nie są szczególnie pomysłowe. Zostały wygenerowane automatycznie.',
     'piggy-banks-index'      => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
-    'import-index'           => 'Każdy plik CSV może być zaimportowany do Firefly III. Wspierany jest również import danych z bunq i Spectre. Inne banki i agregatory finansowe zostaną zaimplementowane w przyszłości. Jako użytkownik demo, możesz zobaczyć tylko "fałszywego" dostawcę w akcji. Wygeneruje on losowe transakcje, aby pokazać jak działa proces.',
     'profile-index'          => 'Pamiętaj, że strona demo resetuje się co cztery godziny. Dostęp może zostać cofnięty w dowolnym momencie. Dzieje się to automatycznie i nie jest to błąd.',
 ];

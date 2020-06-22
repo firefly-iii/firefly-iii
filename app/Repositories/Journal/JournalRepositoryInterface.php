@@ -67,18 +67,6 @@ interface JournalRepositoryInterface
      */
     public function destroyJournal(TransactionJournal $journal): void;
 
-
-    /**
-     * TODO move to import repository.
-     *
-     * Find a journal by its hash.
-     *
-     * @param string $hash
-     *
-     * @return TransactionJournalMeta|null
-     */
-    public function findByHash(string $hash): ?TransactionJournalMeta;
-
     /**
      * TODO Refactor to "find".
      * Find a specific journal.

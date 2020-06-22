@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly III hỗ trợ nhiều loại tiền tệ. Mặc dù nó mặc định là Việt Nam Đồng nhưng có thể được đặt thành Đô la Mỹ và nhiều loại tiền tệ khác. Như bạn có thể thấy một lựa chọn nhỏ các loại tiền tệ đã được đưa vào nhưng bạn có thể thêm loại tiền của mình nếu muốn. Tuy nhiên, việc thay đổi loại tiền tệ mặc định sẽ không thay đổi loại tiền của các giao dịch hiện tại: Firefly III hỗ trợ sử dụng nhiều loại tiền tệ cùng một lúc.',
     'transactions-index'     => 'Những chi phí, tiền gửi và chuyển khoản. Chúng đã được tạo tự động.',
     'piggy-banks-index'      => 'Như bạn có thể thấy, có ba con heo đất. Sử dụng các nút cộng và trừ để tăng, giảm số tiền trong mỗi heo đất. Nhấp vào tên của heo đất để xem quyền quản trị cho mỗi heo đất.',
-    'import-index'           => 'Bất kỳ tệp CSV nào cũng có thể được nhập vào Firefly III. Nó cũng hỗ trợ nhập dữ liệu từ bunq và Spectre. Với tư cách là người dùng demo, bạn chỉ có thể thấy trình cung cấp "giả" đang hoạt động. Nó sẽ tạo ra một số giao dịch ngẫu nhiên để cho bạn thấy quá trình hoạt động như thế nào.',
     'profile-index'          => 'Hãy nhớ rằng trang web demo đặt lại sau mỗi bốn giờ. Quyền truy cập của bạn có thể bị thu hồi bất cứ lúc nào. Điều này xảy ra tự động và không phải là một lỗi.',
 ];

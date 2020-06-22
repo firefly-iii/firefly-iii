@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Haluatko varmasti poistaa tilin ":name"?',
     'bill_areYouSure'             => 'Haluatko varmasti poistaa laskun ":name"?',
     'rule_areYouSure'             => 'Haluatko varmasti poistaa säännön ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Haluatko varmasti poistaa sääntöryhmän ":title"?',
     'budget_areYouSure'           => 'Haluatko varmasti poistaa budjetin ":name"?',
     'category_areYouSure'         => 'Haluatko varmasti poistaa kategorian ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Ainoa tähän linkkityyppiin liitetty tapahtuma menettää tämän yhteyden.|Kaikki :count tähän linkkityyppiin yhdistettyä tapahtumaa menettävät yhteytensä.',
     'also_delete_rules'           => 'Ainoa tähän sääntöryhmään yhdistetty sääntö poistetaan samalla.|Kaikki :count tähän sääntöryhmään linkitettyä sääntöä poistetaan samalla.',
     'also_delete_piggyBanks'      => 'Ainoa tähän tähän tiliin linkitetty säästöporsas poistetaan samalla.|Kaikki :count tähän tiliin yhdistettyä säästöpossua poistetaan samalla.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Ainoaa tähän laskuun linkitettyä tapahtumaa ei poisteta.|Kaikki :count tähän laskuun yhdistetyt tapahtumat säästetään.',
     'budget_keep_transactions'    => 'Ainoaa tähän budjettiin linkitettyä tapahtumaa ei poisteta.|Kaikki :count tähän budjettiin yhdistetyt tapahtumat säästetään.',
     'category_keep_transactions'  => 'Ainoaa tähän kategoriaan linkitettyä tapahtumaa ei poisteta.|Kaikki :count tähän kategoriaan yhdistetyt tapahtumat säästetään.',
     'recurring_keep_transactions' => 'Ainoa tämän toistuvan tapahtuman luoma tapahtuma säästetään.|Kaikki :count tämän toistuvan tapahtuman luomaa tapahtumaa säästetään.',
     'tag_keep_transactions'       => 'Ainoa tähän tägiin linkitetty tapahtuma säästetään.|Kaikki :count tähän tägiin yhdistetyt tapahtumat säästetään.',
     'check_for_updates'           => 'Tarkista päivitykset',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Sähköpostiosoite',
     'password'              => 'Salasana',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Esittelytila käytössä',
 
     // import
-    'import_file'           => 'Tuo tiedosto',
     'configuration_file'    => 'Asetustiedosto',
-    'import_file_type'      => 'Tuonnin tiedostotyyppi',
     'csv_comma'             => 'Pilkku (,)',
     'csv_semicolon'         => 'Puolipiste (;)',
     'csv_tab'               => 'Sarkain (näkymätön)',
     'csv_delimiter'         => 'CSV kentän erotin',
-    'csv_import_account'    => 'Oletus tuontitili',
     'client_id'             => 'Asiakastunnus',
     'app_id'                => 'Sovelluksen ID (App ID)',
     'secret'                => 'Salaisuus',

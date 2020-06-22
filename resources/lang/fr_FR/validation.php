@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
+    'unique_object_group'            => 'Le nom du groupe doit être unique',
 
     'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',

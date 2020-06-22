@@ -33,9 +33,9 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Illuminate\Http\Request;
+use Throwable;
 /**
  * Class Handler
  *
@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
      *
      * @return mixed
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         if ($exception instanceof LaravelValidationException && $request->expectsJson()) {
             // ignore it: controller will handle it.
@@ -119,7 +119,7 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         $doMailError = config('firefly.send_error_message');
         // if the user wants us to mail:
@@ -143,13 +143,13 @@ class Handler extends ExceptionHandler
                 'line'         => $exception->getLine(),
                 'code'         => $exception->getCode(),
                 'version'      => config('firefly.version'),
-                'url'          => Request::fullUrl(),
-                'userAgent'    => Request::userAgent(),
-                'json'         => Request::acceptsJson(),
+                'url'          => request()->fullUrl(),
+                'userAgent'    => request()->userAgent(),
+                'json'         => request()->acceptsJson(),
             ];
 
             // create job that will mail.
-            $ipAddress = Request::ip() ?? '0.0.0.0';
+            $ipAddress = request()->ip() ?? '0.0.0.0';
             $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
             dispatch($job);
         }

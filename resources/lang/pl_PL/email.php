@@ -24,47 +24,47 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hi there,',
+    'greeting'                         => 'Witaj,',
     'closing'                          => 'Beep boop,',
-    'signature'                        => 'The Firefly III Mail Robot',
+    'signature'                        => 'Robot pocztowy Firefly III',
     'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
 
     // admin test
-    'admin_test_subject'               => 'A test message from your Firefly III installation',
+    'admin_test_subject'               => 'Wiadomość testowa z twojej instalacji Firefly III',
     'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
 
     // access token created
-    'access_token_created_subject'     => 'A new access token was created',
+    'access_token_created_subject'     => 'Utworzono nowy token dostępu',
     'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
     'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
 
     // registered
-    'registered_subject'               => 'Welcome to Firefly III!',
+    'registered_subject'               => 'Witaj w Firefly III!',
     'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
     'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
     'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">grand theory</a>.',
     'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
-    'registered_closing'               => 'Enjoy!',
+    'registered_closing'               => 'Dobrej zabawy!',
     'registered_firefly_iii_link'      => 'Firefly III:',
-    'registered_pw_reset_link'         => 'Password reset:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_pw_reset_link'         => 'Resetowanie hasła:',
+    'registered_doc_link'              => 'Dokumentacja:',
 
     // email change
-    'email_change_subject'             => 'Your Firefly III email address has changed',
+    'email_change_subject'             => 'Twój adres e-mail Firefly III został zmieniony',
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
-    'email_change_old'                 => 'The old email address was: :email',
-    'email_change_old_strong'          => 'The old email address was: <strong>:email</strong>',
-    'email_change_new'                 => 'The new email address is: :email',
-    'email_change_new_strong'          => 'The new email address is: <strong>:email</strong>',
+    'email_change_old'                 => 'Stary adres e-mail to: :email',
+    'email_change_old_strong'          => 'Stary adres e-mail to: <strong>:email</strong>',
+    'email_change_new'                 => 'Nowy adres e-mail to: :email',
+    'email_change_new_strong'          => 'Nowy adres e-mail to: <strong>:email</strong>',
     'email_change_instructions'        => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
-    'email_change_undo_link'           => 'To undo the change, follow this link:',
+    'email_change_undo_link'           => 'Aby cofnąć zmianę, kliknij ten link:',
 
     // OAuth token created
-    'oauth_created_subject'            => 'A new OAuth client has been created',
+    'oauth_created_subject'            => 'Nowy klient OAuth został utworzony',
     'oauth_created_body'               => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
     'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
@@ -75,7 +75,7 @@ return [
     'reset_pw_warning'                 => '<strong>PLEASE</strong> verify that the link actually goes to the Firefly III you expect it to go!',
 
     // error
-    'error_subject'                    => 'Caught an error in Firefly III',
+    'error_subject'                    => 'Błąd w Firefly III',
     'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'The error was of type ":class".',
     'error_timestamp'                  => 'The error occurred on/at: :time.',

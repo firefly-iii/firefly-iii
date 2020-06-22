@@ -1,0 +1,14 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Notor att betala",
+        "left_to_spend": "\u00c5terst\u00e5r att spendera",
+        "net_worth": "Nettof\u00f6rm\u00f6genhet",
+        "paid": "Betald",
+        "yourAccounts": "Dina konton",
+        "go_to_asset_accounts": "Visa dina tillg\u00e5ngskonton"
+    },
+    "config": {
+        "html_language": "sv"
+    }
+}

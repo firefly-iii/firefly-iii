@@ -54,6 +54,7 @@ class PiggyBankFormRequest extends Request
             'targetamount' => $this->string('targetamount'),
             'targetdate'   => $this->date('targetdate'),
             'notes'        => $this->nlString('notes'),
+            'object_group' => $this->string('object_group'),
         ];
     }
 

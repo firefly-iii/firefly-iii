@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => '":name" bankszámla biztosan törölhető?',
     'bill_areYouSure'             => '":name" számla biztosan törölhető?',
     'rule_areYouSure'             => '":title" szabály biztosan törölhető?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '":title" szabálycsoportot biztosan törölhető?',
     'budget_areYouSure'           => '":name" költségkeretet biztosan törölhető?',
     'category_areYouSure'         => '":name" kategória biztosan törölhető?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'A csak ezzel a kapcsolattípussal rendelkező tranzakciók elveszítik az összerendelésüket. | Mind a :count tranzakció, amely ezzel a hivatkozástípussal kapcsolódik elveszíti az összrendelését.',
     'also_delete_rules'           => 'A szabálycsoporthoz tartozó egyetlen szabály is törölve lesz. | Az ezen szabálycsoporthoz tartozó :count szabály is törölve lesz.',
     'also_delete_piggyBanks'      => 'A bankszámlához tartozó egyetlen malacpersely is törölve lesz. | Az ehhez a bankszámlához tartozó :count malacpersely is törölve lesz.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'A számlához tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a számlához tartozó :count tranzakció nem lesz törölve.',
     'budget_keep_transactions'    => 'A költségkerethez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a költségkerethez tartozó :count tranzakció nem lesz törölve.',
     'category_keep_transactions'  => 'A kategóriához tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a kategóriához tartozó :count tranzakció nem lesz törölve.',
     'recurring_keep_transactions' => 'Az ismétlődő tranzakció által létrehozott egyetlen tranzakció nem lesz törölve.|Az ismétlődő tranzakció által létrehozott :count tranzakció nem lesz törölve.',
     'tag_keep_transactions'       => 'A címkéhez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a címkéhez tartozó :count tranzakció nem lesz törölve.',
     'check_for_updates'           => 'Frissítések ellenőrzése',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Email cím',
     'password'              => 'Jelszó',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Bemutatóoldal',
 
     // import
-    'import_file'           => 'Import fájl',
     'configuration_file'    => 'Beállítás fájl',
-    'import_file_type'      => 'Import fájl típusa',
     'csv_comma'             => 'Egy vessző (,)',
     'csv_semicolon'         => 'Egy pontosvessző (;)',
     'csv_tab'               => 'Egy fül (láthatatlan)',
     'csv_delimiter'         => 'CSV mezőhatároló',
-    'csv_import_account'    => 'Alapértelmezés szerinti importálási bankszámla',
     'client_id'             => 'Ügyfélazonosító',
     'app_id'                => 'Alkalmazás azonosító',
     'secret'                => 'Titkos kód',

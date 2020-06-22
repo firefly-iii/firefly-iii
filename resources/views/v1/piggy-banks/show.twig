@@ -36,6 +36,12 @@
                             <td style="width:40%;">{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
                         </tr>
+                        {% if piggy.object_group_title %}
+                        <tr>
+                            <td style="width:40%;">{{ 'object_group'|_ }}</td>
+                            <td>{{ piggy.object_group_title }}</a></td>
+                        </tr>
+                        {% endif %}
                         <tr>
                             <td>{{ 'target_amount'|_ }}</td>
                             <td>

@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Executaţi o versiune BETA. Fiţi atenţi la erori şi probleme.',
     'all_destination_accounts'                   => 'Conturi de destinație',
     'all_source_accounts'                        => 'Conturi sursă',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Verifică actualizări',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'anual',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Reguli',
     'rule_name'                                  => 'Denumirea regulii',
     'rule_triggers'                              => 'Regulă se va declanșa când',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Ar trebui să bifez caseta??',
     'secure_pw_long_password'                   => 'Da. Verificați întotdeauna că parola este sigură.',
     'command_line_token'                        => 'Token-ul liniei de comandă',
-    'explain_command_line_token'                => 'Aveți nevoie de acest token pentru a efectua opțiunile din linie de comandă, cum ar fi importul sau exportul de date. Fără el, astfel de comenzi sensibile nu vor funcționa. Nu partajați token-ul. Nimeni nu vă va cere acest token, nici măcar această aplicație. Dacă vă temeți că ați pierdut acest lucru sau când sunteți paranoic, regenerați acest token folosind butonul.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Regenerați token-ul liniei de comandă',
     'token_regenerated'                         => 'A fost generat un nou token de linie de comandă',
     'change_your_email'                         => 'Schimbați adresa dvs. de e-mail',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Acum vă puteți conecta cu noua dvs. adresă de e-mail.',
     'login_with_old_email'                      => 'Acum puteți să vă conectați din nou cu vechea adresă de e-mail.',
     'login_provider_local_only'                 => 'Această acțiune nu este disponibilă când vă autentificați prin ":login_provider".',
-    'delete_local_info_only'                    => "Deoarece vă autentificați prin ':login_provider', acest lucru va șterge doar informațiile locale despre Firefly III.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'Clienți OAuth',
     'profile_oauth_no_clients'                  => 'Nu ați creat niciun client OAuth.',
     'profile_oauth_clients_header'              => 'Clienți',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'A apărut o problemă. Încercați din nou.',
 
     // export data:
-    'import_and_export_menu'                    => 'Import și export',
     'export_data_title'                         => 'Exportă date din Firefly III',
     'export_data_menu'                          => 'Exportă datele',
     'export_data_bc'                            => 'Exportă date din Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Poți citi mai multe despre această caracteristică din ajutor. Apasă pe icoana din dreapta sus (?).',
     'auto_budget_reset_icon'                    => 'Acest buget va fi stabilit periodic',
     'auto_budget_rollover_icon'                 => 'Suma bugetului va crește periodic',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Factura se potrivește tranzacțiilor între :low și :high.',
     'running_again_loss'                        => 'Tranzacțiile legate anterior de această factură își pot pierde conexiunea, dacă acestea nu mai corespund cu regula (regulile).',
     'bill_related_rules'                        => 'Reguli legate de această factură',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'A apărut o eroare neașteptată în timpul stocării facturii noi. Verificați log-urile',
     'list_inactive_rule'                        => 'regulă inactivă',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Resetați formularul după trimitere',
     'errors_submission'                     => 'A fost ceva în neregulă cu transmiterea dvs. Vă rugăm să consultați erorile de mai jos.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Importă tranzacții în Firefly III',
-    'import_transactions'                   => 'Importă tranzacții',
-    'import_tools_title'                    => 'Importă unelte',
-    'tools_index_intro'                     => 'Există mai multe instrumente pentru a importa date în Firefly III. Verificați-le mai jos. Pentru mai multe informații, consultați <a href="https://docs.firefly-iii.org/importing-data/introduction">această pagină</a>.',
-    'firefly_iii_csv_importer_name'         => 'Importator CSV Firefly III',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III importator bunq 🌈',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III importer YNAB',
-    'ludo_revolut_importer_name'            => 'Importer Revolut de la Ludo444',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Această funcție nu este disponibilă când utilizați Firefly III într-un mediu Sandstorm.io.',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Să cream un cont de active!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Dacă vreți, puteți activa telemetria în fișierul dvs. .env sau în configurația Docker.',
     'telemetry_collected_info'           => 'Informații colectate',
     'no_telemetry_present'               => 'Firefly III a colectat zero înregistrări telemetrice.',
-    'records_telemetry_present'          => 'Firefly III a colectat :count înregistrari telemetrice.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'Vizualizare telemetrie',
     'telemetry_button_delete'            => 'Ştergeţi toate telemetria',
     'telemetry_admin_overview'           => 'Prezentare telemetrie',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Ștergeți înregistrările trimise',
     'telemetry_submission_executed'      => 'Înregistrările au fost trimise. Verificaţi fişierele jurnal pentru mai multe informaţii.',
     'telemetry_all_deleted'              => 'Toate înregistrările telemetrice au fost șterse.',
-    'telemetry_submitted_deleted'        => 'Toate înregistrările telemetrice transmise au fost șterse.'
+    'telemetry_submitted_deleted'        => 'Toate înregistrările telemetrice transmise au fost șterse.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];
