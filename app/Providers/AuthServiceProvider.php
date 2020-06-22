@@ -52,8 +52,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Log::debug('Boot() of AuthServiceProvider');
-
         Auth::provider(
             'remote_user_provider', function ($app, array $config) {
             //Log::debug('Creating remote_user_provider in Closure');

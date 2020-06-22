@@ -7,16 +7,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Several alpha and beta releases preceded this release.
 
-- 5.3.0-alpha.1 on 2020-06-xx
+- 5.3.0-alpha.1 on 2020-06-22
 
 ### Added
 - Piggy banks can be divided over groups. Groups can be sorted on a separate page. This may prove to be useful to organize piggy banks. The feature will
  expand to other objects in the future.
 - [Issue 3392](https://github.com/firefly-iii/firefly-iii/issues/3392) Notes will be included in the export.
-- [Issue 3184](https://github.com/firefly-iii/firefly-iii/issues/3184) You can now use the `REMOTE_USER` field to authenticate. Read [the documentation](https://docs.firefly-iii.org/advanced-installation/authentication
-#remote-user) carefully.
+- [Issue 3184](https://github.com/firefly-iii/firefly-iii/issues/3184) You can now use the `REMOTE_USER` field to authenticate. Read [the documentation](https://docs.firefly-iii.org/advanced-installation/authentication#remote-user) carefully.
 - [Issue 3403](https://github.com/firefly-iii/firefly-iii/issues/3403) More triggers have been added that respond to the date of a transaction. Read [the documentation](https://docs.firefly-iii.org/advanced-concepts/rules)
-- You can now add an attachment to recurring transactions.
+- You can now add an attachments to recurring transactions.
 
 ### Changed
 - Firefly III now requires **PHP 7.4**
