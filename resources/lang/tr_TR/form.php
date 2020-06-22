@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => '":name" isimli hesabı silmek istediğinizden emin misiniz?',
     'bill_areYouSure'             => '":name" isimli faturayı silmek istediğinizden emin misiniz?',
     'rule_areYouSure'             => '":title" başlıklı kuralı silmek istediğinizden emin misiniz?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '":title" başlıklı kural grubunu silmek istediğinizden emin misiniz?',
     'budget_areYouSure'           => '":name" isimli bütçeyi silmek istediğinizden emin misiniz?',
     'category_areYouSure'         => '":name" isimli kategoriyi silmek istediğinizden emin misiniz?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Bu bağlantıya bağlı tek işlem bağlantısını kaybedecek.| Bu bağlantı türüne bağlı tüm :count işlemleri bağlantılarını kaybedecek.',
     'also_delete_rules'           => 'Bu hesaba bağlı olan tek kural grubu da silinecektir. |Bu hesaba bağlı tüm :count kuralları da silinecektir.',
     'also_delete_piggyBanks'      => 'Bu hesaba bağlı olan tek kumbara da silinecektir. |Bu hesaba bağlı olan tüm :count kumbaraları da silinecektir.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will be spared deletion.',
     'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will be spared deletion.',
     'category_keep_transactions'  => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will be spared deletion.',
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'E-posta adresi',
     'password'              => 'Şifre',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Demo sitesi var mı',
 
     // import
-    'import_file'           => 'Önemli dosya',
     'configuration_file'    => 'Yapılandırma dosyası',
-    'import_file_type'      => 'Dosya türünü içe aktar',
     'csv_comma'             => 'Bir virgül (,)',
     'csv_semicolon'         => 'Noktalı virgül (;)',
     'csv_tab'               => 'Bir sekme (görünmez)',
     'csv_delimiter'         => 'CSV alan ayırıcısı',
-    'csv_import_account'    => 'Varsayılan ithalat hesabı',
     'client_id'             => 'Müşteri Kimliği',
     'app_id'                => 'App ID',
     'secret'                => 'Secret',

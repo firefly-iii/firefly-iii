@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => 'Odstranit vazbu mezi transakcemi',
     'telemetry_index'        => 'Telemetrie',
     'telemetry_view'         => 'Zobrazit telemetrii',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Сумма не может быть равна нулю.',
     'current_target_amount'          => 'Текущая сумма должна быть меньше целевой суммы.',
     'unique_piggy_bank_for_user'     => 'Название копилки должно быть уникальным.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Недопустимый тип для повторяющихся транзакций.',

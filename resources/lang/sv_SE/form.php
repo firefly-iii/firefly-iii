@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Är du säker du vill ta bort kontot ":name"?',
     'bill_areYouSure'             => 'Är du säker du vill ta bort räkningen ":name"?',
     'rule_areYouSure'             => 'Är du säker du vill ta bort regeln ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Är du säker du vill ta bort regelgruppen ":title"?',
     'budget_areYouSure'           => 'Är du säker du vill ta bort budgeten ":name"?',
     'category_areYouSure'         => 'Är du säker du vill ta bort kategorin ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Den transaktion som är länkad med denna länktyp kommer att mista sin koppling.|Alla :count transaktioner länkade med denna länktyp kommer att mista sin koppling.',
     'also_delete_rules'           => 'Regeln kopplad till denna regelgrupp tas också bort. Alla :count regler kopplade till denna regelgrupp tas också bort.',
     'also_delete_piggyBanks'      => 'Spargrisen kopplad till detta konto tas också bort.|Alla :count spargrisar kopplade till detta konto kommer också att tas bort.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Transaktionen kopplad till räkningen kommer inte att tas bort.|Alla :count transaktioner kopplade till denna räkning tas inte bort.',
     'budget_keep_transactions'    => 'Transaktionen kopplad till budgeten kommer att sparas.|Alla :count transaktioner kopplade till budgeten kommer att sparas.',
     'category_keep_transactions'  => 'Transaktionen kopplad till kategorin kommer att sparas.|Alla :count transaktioner kopplade till kategorin kommer att sparas.',
     'recurring_keep_transactions' => 'Transaktionen skapad av denna återkommande transaktion kommer inte tas bort.|Alla :count transaktioner skapade av denna återkommande transaktion undantas borttagning.',
     'tag_keep_transactions'       => 'Transaktionen kopplad till etiketten kommer inte att tas bort.|Alla :count transaktioner kopplade till etiketten kommer att sparas.',
     'check_for_updates'           => 'Sök efter uppdateringar',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'E-postadress',
     'password'              => 'Lösenord',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'En demo sida',
 
     // import
-    'import_file'           => 'Importera fil',
     'configuration_file'    => 'Konfigurationsfil',
-    'import_file_type'      => 'Filtyp för import',
     'csv_comma'             => 'Ett komma (,)',
     'csv_semicolon'         => 'Ett semikolon (;)',
     'csv_tab'               => 'Ett tabb (osynligt)',
     'csv_delimiter'         => 'CSV fältavgränsare',
-    'csv_import_account'    => 'Standardimportkonto',
     'client_id'             => 'Client ID',
     'app_id'                => 'App-ID',
     'secret'                => 'Hemlig nyckel',

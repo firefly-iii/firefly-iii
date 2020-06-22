@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Tổng số tiền không thể bằng không.',
     'current_target_amount'          => 'Số tiền hiện tại phải nhỏ hơn số tiền mục tiêu.',
     'unique_piggy_bank_for_user'     => 'Tên của con heo đất phải là duy nhất.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',

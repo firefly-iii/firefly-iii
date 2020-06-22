@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'A teljes mennyiség nem lehet nulla.',
     'current_target_amount'          => 'A megadott értéknek kevesebbnek kell lennie, mint a célérték.',
     'unique_piggy_bank_for_user'     => 'A malacpersely nevének egyedinek kell lennie.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Ez nem biztonságos jelszó. Kérlek próbáld meg újra. További információért lásd: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Érvénytelen ismétléstípus az ismétlődő tranzakciókhoz.',

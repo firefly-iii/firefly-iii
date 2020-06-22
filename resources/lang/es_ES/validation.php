@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'La cantidad total no puede ser cero.',
     'current_target_amount'          => 'La cantidad actual debe ser menor que la cantidad de destino.',
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Esta contraseña no es segura. Por favor inténtalo de nuevo. Para más información, visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetición no válido para transacciones recurrentes.',

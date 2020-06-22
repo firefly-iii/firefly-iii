@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Je gebruikt een BETA versie. Let op bugs en fouten.',
     'all_destination_accounts'                   => 'Doelrekeningen',
     'all_source_accounts'                        => 'Bronrekeningen',
+    'back_to_index'                              => 'Terug naar de index',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'elk jaar',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'Inactieve regels doen het niet.',
     'rules'                                      => 'Regels',
     'rule_name'                                  => 'Regelnaam',
     'rule_triggers'                              => 'Regel reageert op',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Vinkje zetten of niet?',
     'secure_pw_long_password'                   => 'Ja. Controleer altijd of je wachtwoord is veilig.',
     'command_line_token'                        => 'Opdrachtprompt-token',
-    'explain_command_line_token'                => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je opdrachtprompt-token niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
+    'explain_command_line_token'                => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het exporteren van data. Zonder dit token werkt die gevoelige opdracht niet. Deel je opdrachtprompt-token niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
     'regenerate_command_line_token'             => 'Nieuw opdrachtprompt-token genereren',
     'token_regenerated'                         => 'Er is een nieuw opdrachtprompt-token gegenereerd',
     'change_your_email'                         => 'Verander je emailadres',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Je kan nu inloggen met je nieuwe emailadres.',
     'login_with_old_email'                      => 'Je kan nu weer inloggen met je oude emailadres.',
     'login_provider_local_only'                 => 'Je kan dit niet doen als je inlogt via ":login_provider".',
-    'delete_local_info_only'                    => "Omdat je inlogt via \":login_provider\" verwijder je alleen lokale Firefly III informatie.",
+    'external_user_mgt_disabled'                => 'Deze actie is niet beschikbaar wanneer Firefly III niet verantwoordelijk is voor gebruikersbeheer of authenticatie.',
+    'delete_local_info_only'                    => "Omdat Firefly III niet verantwoordelijk is voor gebruikersbeheer of authenticatie zal deze functie alleen de lokale Firefly III informatie verwijderen.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Je hebt nog geen OAuth-clients aangemaakt.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Er is iets misgegaan. Probeer het nogmaals.',
 
     // export data:
-    'import_and_export_menu'                    => 'Import en export',
     'export_data_title'                         => 'Gegevens exporteren uit Firefly III',
     'export_data_menu'                          => 'Exporteren',
     'export_data_bc'                            => 'Gegevens exporteren uit Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Je kan meer lezen over deze functie in de hulppagina\'s. Klik op het (?) icoontje rechtsboven.',
     'auto_budget_reset_icon'                    => 'Het budget wordt periodiek ingesteld',
     'auto_budget_rollover_icon'                 => 'Het budget wordt periodiek aangevuld',
+    'remove_budgeted_amount'                    => 'Verwijder gebudgetteerd bedrag in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Niet verwacht deze periode',
+    'not_or_not_yet'                            => '(nog) niet',
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
     'running_again_loss'                        => 'Eerder gekoppelde transacties met dit contract kunnen hun koppeling verliezen, als ze (niet langer) overeenkomen met de regel(s).',
     'bill_related_rules'                        => 'Regels gerelateerd aan dit contract',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
     'list_inactive_rule'                        => 'inactieve regel',
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
+    'bill_expected_date'                        => 'Verwacht op :date',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Reset formulier na opslaan',
     'errors_submission'                     => 'Er ging iets mis. Check de errors.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Transacties importeren in Firefly III',
-    'import_transactions'                   => 'Importeer transacties',
-    'import_tools_title'                    => 'Importtools',
-    'tools_index_intro'                     => 'Er bestaan een paar tools om data te importeren in Firefly III. Zie hieronder voor de lijst. Check ook <a href="https://docs.firefly-iii.org/importing-data/introduction">deze pagina</a> voor meer info.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
-    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-import tool',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
+
+    // object groups
+    'default_group_title_name'              => '(ongegroepeerd)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Je hebt een betaalrekening nodig!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Als je dat wilt, kan je telemetrie aanzetten in je .env bestand of in je Docker-configuratie.',
     'telemetry_collected_info'           => 'Verzamelde informatie',
     'no_telemetry_present'               => 'Firefly III heeft geen telemetrie verzameld.',
-    'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record(s) verzameld.',
+    'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record verzameld.|Firefly III heeft :count telemetrie-records verzameld.',
     'telemetry_button_view'              => 'Bekijk telemetrie',
     'telemetry_button_delete'            => 'Verwijder alle telemetrie',
     'telemetry_admin_overview'           => 'Telemetrie-overzicht',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Verwijder verstuurde records',
     'telemetry_submission_executed'      => 'Records zijn verstuurd. Check je log files voor meer info.',
     'telemetry_all_deleted'              => 'Alle telemetrierecords zijn verwijderd.',
-    'telemetry_submitted_deleted'        => 'Alle verstuurde telemetrierecords zijn verwijderd.'
+    'telemetry_submitted_deleted'        => 'Alle verstuurde telemetrierecords zijn verwijderd.',
+
+    // debug page
+    'debug_page'                         => 'Debugpagina',
+    'debug_submit_instructions'          => 'Gebruik de inhoud van dit vak als je tegen problemen aanloopt. Copy en paste dit in een nieuw of bestaand <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. Er wordt een mooie tabel gegenereerd die handig is voor de diagnose.',
+    'debug_pretty_table'                 => 'Als je de content van dit vak in GitHub copypaste komt er een tabel tevoorschijn. Zet hier dus geen haakjes of quotes omheen.',
+    'debug_additional_data'              => 'Je mag ook de content van deze box delen. Die kan je copy-pasten in een nieuw of bestaand <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. Dikke kans echter dat hier privégegevens instaan zoals rekeningnamen, transactiedetails of e-mailadressen.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groepen',
+    'object_groups_page_title'           => 'Groepen',
+    'object_groups_breadcrumb'           => 'Groepen',
+    'object_groups_index'                => 'Overzicht',
+    'object_groups'                      => 'Groepen',
+    'object_groups_empty_explain'        => 'Sommige dingen in Firefly III kan je groeperen. Spaarpotjes bijvoorbeeld hebben een "Groep"-veld als je ze wijzigt of maakt. Als je dit veld gebruikt kan je hier de namen en volgorde van die groepen wijzigen. Check de helppagina\'s, rechtsboven het (?) icoontje, voor meer info.',
+    'object_group_title'                 => 'Titel',
+    'edit_object_group'                  => 'Wijzig groep ":title"',
+    'delete_object_group'                => 'Wijzig groep ":title"',
+    'update_object_group'                => 'Groep bijwerken',
+    'updated_object_group'               => 'Groep ":title" geüpdatet',
+    'deleted_object_group'               => 'Groep ":title" verwijderd',
+    'object_group'                       => 'Groep',
+
 ];

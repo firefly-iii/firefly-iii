@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Möchten Sie das Konto „:name” wirklich löschen?',
     'bill_areYouSure'             => 'Möchten Sie die Rechnung „:name” wirklich löschen?',
     'rule_areYouSure'             => 'Sind Sie sicher, dass Sie die Regel mit dem Titel ":title" löschen möchten?',
+    'object_group_areYouSure'     => 'Möchten Sie die Gruppe „:title” wirklich löschen?',
     'ruleGroup_areYouSure'        => 'Sind Sie sicher, dass sie die Regelgruppe ":title" löschen möchten?',
     'budget_areYouSure'           => 'Möchten Sie das Budget „:name” wirklich löschen?',
     'category_areYouSure'         => 'Möchten Sie die Kategorie „:name” wirklich löschen?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Die einzige Transaktion, die mit diesem Verknüpfungstyp verknüpft ist, verliert diese Verbindung. • Alle :count Buchungen, die mit diesem Verknüpfungstyp verknüpft sind, verlieren ihre Verbindung.',
     'also_delete_rules'           => 'Die einzige Regel, die mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Regeln, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
     'also_delete_piggyBanks'      => 'Das einzige Sparschwein, das mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Sparschweine, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
+    'not_delete_piggy_banks'      => 'Die mit dieser Gruppe verbundene Spardose wird nicht gelöscht.| Die mit dieser Gruppe verbundenen :count Spardosen werden nicht gelöscht.',
     'bill_keep_transactions'      => 'Die einzige mit dieser Rechnung verbundene Buchung wird nicht gelöscht. | Keine der :count Buchungen, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'budget_keep_transactions'    => 'Die einzige diesem Budget zugeordnete Buchung wird nicht gelöscht. | Keine der :count Buchungen, die diesem Budget zugeordnet sind, wird gelöscht.',
     'category_keep_transactions'  => 'Die einzige Buchung, die mit dieser Kategorie verbunden ist, wird nicht gelöscht. | Keine der :count Buchungen, die mit dieser Kategorie verbunden sind, wird gelöscht.',
     'recurring_keep_transactions' => 'Die einzige Buchung, die durch diesen Dauerauftrag erstellt wurde, wird nicht gelöscht. | Keine der :count Buchungen, die durch diesen Dauerauftrag erstellt wurden, wird gelöscht.',
     'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Keines der :count Schlagwörter, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'check_for_updates'           => 'Nach Updates suchen',
+
+    'delete_object_group' => 'Gruppe „:title” löschen',
 
     'email'                 => 'E-Mail Adresse',
     'password'              => 'Passwort',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Ist eine Demonstrationsseite',
 
     // import
-    'import_file'           => 'Datei importieren',
     'configuration_file'    => 'Konfigurationsdatei',
-    'import_file_type'      => 'Import-Dateityp',
     'csv_comma'             => 'Ein Komma (,)',
     'csv_semicolon'         => 'Ein Semikolon (;)',
     'csv_tab'               => 'Ein Tab (unsichtbar)',
     'csv_delimiter'         => 'CSV-Trennzeichen',
-    'csv_import_account'    => 'Standard Import-Konto',
     'client_id'             => 'Client-ID',
     'app_id'                => 'App-ID',
     'secret'                => 'Geheimnis',

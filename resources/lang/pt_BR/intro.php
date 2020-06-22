@@ -130,7 +130,7 @@ return [
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Selecione um valor mínimo e máximo para esta conta.',
     'bills_create_repeat_freq_holder'                         => 'A maioria das contas são repetidas mensalmente, como no caso de pagamentos fixos mensais. Mas você pode definir outra frequência neste menu aqui.',
-    'bills_create_skip_holder'                                => 'Se uma fatura se repete a cada 2 semanas, o campo "ignorar" deve ser definido como "1" para a repetição quinzenal.',
+    'bills_create_skip_holder'                                => 'Se uma fatura se repete a cada 2 semanas, o campo "pular" deve ser definido como "1" para a repetição quinzenal.',
 
     // rules index
     'rules_index_intro'                                       => 'O Firefly III permite que você gerencie as regras, que serão automaticamente aplicadas a qualquer transação que você crie ou edite.',

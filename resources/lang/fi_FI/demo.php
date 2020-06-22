@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly III tukee useita valuuttoja. Vaikka oletusarvona on euro, se voidaan asettaa Yhdysvaltain dollariin ja moniin muihin valuuttoihin. Kuten näet, mukana on pieni valikoima valuuttoja, mutta voit lisätä omia, jos haluat. Oletusvaluutan vaihtaminen ei kuitenkaan muuta olemassa olevien tapahtumien valuuttaa: Firefly III tukee useiden valuuttojen käyttöä samanaikaisesti.',
     'transactions-index'     => 'Nämä kulut, talletukset ja siirrot eivät ole erityisen omaperäisiä. Ne on luotu automaattisesti.',
     'piggy-banks-index'      => 'Kuten näet, säästöpossuja on kolme. Käytä plus- ja miinuspainikkeita vaikuttaaksesi rahamäärään kussakin säästöpossussa. Napsauttamalla säästöpossun nimeä pääset hallinnoimaan niitä kutakin.',
-    'import-index'           => 'Mikä tahansa CSV-tiedosto voidaan tuoda Firefly III:een. Se tukee myös tietojen tuontia esimerkiksi bunqista ja Specteristä. Muita pankkeja ja taloudellisia toimijoita lisäillään tulevaisuudessa. Demokäyttäjänä voit nähdä kuitenkin vain tekaistun tuontityökalun toiminnassa. Se luo satunnaisia ​​tapahtumia esitelläkseen tuonnin toiminnan.',
     'profile-index'          => 'Muista, että esittelysivusto nollautuu joka neljäs tunti. Käyttöoikeutesi voidaan peruuttaa milloin tahansa. Tämä tapahtuu automaattisesti eikä ole virhe.',
 ];

@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => '删除交易记录之间的连结',
     'telemetry_index'        => '遥测',
     'telemetry_view'         => '查看遥测',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

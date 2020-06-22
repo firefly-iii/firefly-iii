@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     // common items
     'greeting'                         => 'Hello,',
-    'closing'                          => 'Bip Boup',
+    'closing'                          => 'Pøuì Poû Põuì,',
     'signature'                        => 'Le Robot de Firefly III',
     'footer_ps'                        => 'PS : Ce message a été envoyé car une requête de l\'adresse IP :ipAddress l\'a déclenché.',
 
@@ -92,5 +92,5 @@ return [
 
     // report new journals
     'new_journals_subject'             => 'Firefly III a créé une nouvelle opération|Firefly III a créé :count nouvelles opérations',
-    'new_journals_header'              => 'Firefly III a créé une opération pour vous. Vous pouvez la trouver dans votre installation de Firefly III:|Firefly III a créé :count opérations pour vous. Vous pouvez les trouver dans votre installation de Firefly III :',
+    'new_journals_header'              => 'Firefly III a créé une opération pour vous. Vous pouvez la trouver dans votre installation de Firefly III :|Firefly III a créé :count opérations pour vous. Vous pouvez les trouver dans votre installation de Firefly III :',
 ];

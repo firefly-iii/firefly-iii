@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Εκτελείτε μια δοκιμαστική έκδοση BETA. Να είστε έτοιμοι να εντοπίσετε σφάλματα και άλλα ζητήματα.',
     'all_destination_accounts'                   => 'Λογαριασμοί προορισμού',
     'all_source_accounts'                        => 'Λογαριασμοί προέλευσης',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Έλεγχος ενημερώσεων',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'ετησίως',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Κανόνες',
     'rule_name'                                  => 'Όνομα κανόνα',
     'rule_triggers'                              => 'Ο κανόνας ενεργοποιείται όταν',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Θα πρέπει να τσεκάρω αυτό το πλαίσιο;',
     'secure_pw_long_password'                   => 'Ναι. Πάντα να επιβεβαιώνετε ότι ο κωδικός σας είναι ασφαλής.',
     'command_line_token'                        => 'Τεκμήριο γραμμής εντολών',
-    'explain_command_line_token'                => 'Χρειάζεστε αυτό το τεκμήριο για να πραγματοποιήσετε επιλογές γραμμής εντολών, όπως την εισαγωγή ή εξαγωγή δεδομένων. Χωρίς αυτό, τέτοιες ευαίσθητες εντολές δε θα λειτουργήσουν. Μη γνωστοποιείτε σε κανέναν το τεκμήριο γραμμής εντολών. Κανένας δε θα σας στο ζητήσει, ούτε καν εγώ. Εάν φοβάστε ότι το χάσατε, ή είστε παρανοϊκός, αναδημιουργήστε αυτό το τεκμήριο χρησιμοποιώντας αυτό το κουμπί.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Αναδημιουργία τεκμηρίου εντολής γραμμών',
     'token_regenerated'                         => 'Ένα νέο τεκμήριο γραμμής εντολών δημιουργήθηκε',
     'change_your_email'                         => 'Αλλάξτε την διεύθυνση email σας',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Τώρα μπορείτε να συνδεθείτε με τη νέα σας διεύθυνση email.',
     'login_with_old_email'                      => 'Τώρα μπορείτε να συνδεθείτε με το παλιό σας email ξανά.',
     'login_provider_local_only'                 => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν πιστοποιήστε μέσω ":login_provider".',
-    'delete_local_info_only'                    => "Because you authenticate through ':login_provider', this will only delete local Firefly III information.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Something went wrong. Please try again.',
 
     // export data:
-    'import_and_export_menu'                    => 'Εισαγωγή / Εξαγωγή',
     'export_data_title'                         => 'Εξαγωγή δεδομένων από το Firefly III',
     'export_data_menu'                          => 'Εξαγωγή δεδομένων',
     'export_data_bc'                            => 'Εξαγωγή δεδομένων από το Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Μπορείτε να διαβάσετε περισσότερα σχετικά με αυτή τη λειτουργία στη βοήθεια. Κάντε κλικ στο εικονίδιο (?) επάνω δεξιά.',
     'auto_budget_reset_icon'                    => 'Αυτός ο προϋπολογισμός θα οριστεί περιοδικά',
     'auto_budget_rollover_icon'                 => 'Το ποσό του προϋπολογισμού θα αυξηθεί περιοδικά',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Αντιστοιχίες πάγιου έξοδου προς συναλλαγές μεταξύ :low και :high.',
     'running_again_loss'                        => 'Οι συναλλαγές που έχουν συνδεθεί προηγουμένως με αυτό το πάγιο έξοδο ενδέχεται να χάσουν τη σύνδεσή τους, αν δεν συμφωνούν (πλέον) με τον κανόνα(ες).',
     'bill_related_rules'                        => 'Συσχετιζόμενοι κανόνες με αυτό το πάγιο έξοδο',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Παρουσιάστηκε ένα μη αναμενόμενο σφάλμα κατά την αποθήκευση του νέου πάγιου έξοδου. Ελέγξτε τα αρχεία καταγραφής',
     'list_inactive_rule'                        => 'ανενεργός κανόνας',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Επαναφορά φόρμας μετά την υποβολή',
     'errors_submission'                     => 'Υπήρξε κάποιο λάθος με την υποβολή σας. Ελέγξτε τα παρακάτω σφάλματα.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Εισαγωγή συναλλαγών στο Firefly III',
-    'import_transactions'                   => 'Εισαγωγή συναλλαγών',
-    'import_tools_title'                    => 'Εργαλεία εισαγωγής',
-    'tools_index_intro'                     => 'Υπάρχουν διάφορα εργαλεία για την εισαγωγή δεδομένων στο Firefly III. Δείτε τα παρακάτω. Για περισσότερες πληροφορίες, ανατρέξτε σε <a href="https://docs.firefly-iii.org/importing-data/introduction">αυτή τη σελίδα</a>.',
-    'firefly_iii_csv_importer_name'         => 'Εργαλείο εισαγωγής CSV στο Firefly III',
-    'firefly_iii_bunq_importer_name'        => 'Εργαλείο εισαγωγής bunq 🌈 στο Firefly III',
-    'firefly_iii_ynab_importer_name'        => 'Εργαλείο εισαγωγής YNAB στο Firefly III',
-    'ludo_revolut_importer_name'            => 'Εισαγωγέας δεδομένων Revolut του Ludo444',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν χρησιμοποιείτε το Firefly III σε περιβάλλον Sandstorm.io.',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Ας δημιουργήσουμε ένα λογαριασμό κεφαλαίου!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Αν θέλετε, μπορείτε να ενεργοποιήσετε την τηλεμετρία στο αρχείο .env ή στην παραμετροποίηση του Docker.',
     'telemetry_collected_info'           => 'Συγκεντρωμένες πληροφορίες',
     'no_telemetry_present'               => 'Το Firefly III δεν έχει συγκεντρώσει αρχεία τηλεμετρίας.',
-    'records_telemetry_present'          => 'Το Firefly III έχει συγκεντρώσει :count αρχείο(α) τηλεμετρίας.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'Προβολή τηλεμετρίας',
     'telemetry_button_delete'            => 'Διαγραφή όλης της τηλεμετρίας',
     'telemetry_admin_overview'           => 'Επισκόπηση τηλεμετρίας',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Διαγραφή καταχωρισμένων εγγραφών',
     'telemetry_submission_executed'      => 'Έχουν υποβληθεί εγγραφές. Ελέγξτε τα αρχεία καταγραφής για περισσότερες πληροφορίες.',
     'telemetry_all_deleted'              => 'Όλες οι εγγραφές τηλεμετρίας έχουν διαγραφεί.',
-    'telemetry_submitted_deleted'        => 'Όλες οι υποβληθείσες εγγραφές τηλεμετρίας έχουν διαγραφεί.'
+    'telemetry_submitted_deleted'        => 'Όλες οι υποβληθείσες εγγραφές τηλεμετρίας έχουν διαγραφεί.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];

@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Er du sikker på at du vil slette brukeren ved navn ":name"?',
     'bill_areYouSure'             => 'Er du sikker på at du vil slette regningen ved navn ":name"?',
     'rule_areYouSure'             => 'Er du sikker på at du vil slette regelen ved navn ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Er du sikker på at du vil slette regelgruppen ved navn ":title"?',
     'budget_areYouSure'           => 'Er du sikker på at du vil slette budsjettet ved navn ":name"?',
     'category_areYouSure'         => 'Er du sikker på at du vil slette kategorien ved navn ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Den ene transaksjonen som er knyttet til denne koblingstypen, vil miste denne forbindelsen. | Alle :count transaksjoner knyttet til denne koblingstypen vil miste forbindelsen.',
     'also_delete_rules'           => 'Den ene regelen som er knyttet til denne regelgruppen, vil også bli slettet. | Alle de :count reglene som er knyttet til denne regelgruppen slettes også.',
     'also_delete_piggyBanks'      => 'Den ene sparegrisen som er koblet til denne kontoen, vil også bli slettet. | Alle de :count sparegrisene knyttet til denne kontoen slettes også.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Ingen transaksjoner knyttet til denne regningen blir slettet.|Ingen av de :count transaksjonene knyttet til denne regningen vil bli slettet.',
     'budget_keep_transactions'    => 'Ingen transaksjoner knyttet til dette budsjettet blir slettet.|Ingen av de :count transaksjonene knyttet til dette budsjettet vil bli slettet.',
     'category_keep_transactions'  => 'Ingen transaksjoner knyttet til denne kategorien blir slettet.|Ingen av de :count transaksjonene knyttet til denne kategorien vil bli slettet.',
     'recurring_keep_transactions' => 'Ingen transaksjoner knyttet til denne gjentakende transaksjonen blir slettet.|Ingen av de :count transaksjonene knyttet til denne gjentakende transaksjonen vil bli slettet.',
     'tag_keep_transactions'       => 'Ingen transaksjoner knyttet til denne tag blir slettet.|Ingen av de :count transaksjonene knyttet til denne tag vil bli slettet.',
     'check_for_updates'           => 'Se etter oppdateringer',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Epostadresse',
     'password'              => 'Passord',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Er demonettsted',
 
     // import
-    'import_file'           => 'Importer fil',
     'configuration_file'    => 'Konfigurasjonsfil',
-    'import_file_type'      => 'Importer filtype',
     'csv_comma'             => 'Et komma (,)',
     'csv_semicolon'         => 'Et semikolon (;)',
     'csv_tab'               => 'En tabulator (usynlig)',
     'csv_delimiter'         => 'CSV-feltskilletegn',
-    'csv_import_account'    => 'Standard importkonto',
     'client_id'             => 'Klient-ID',
     'app_id'                => 'App ID',
     'secret'                => 'Secret',

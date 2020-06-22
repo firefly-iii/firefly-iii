@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => 'Poista linkki tapahtumien väliltä',
     'telemetry_index'        => 'Käyttötiedot',
     'telemetry_view'         => 'Tarkastele käyttötietoja',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

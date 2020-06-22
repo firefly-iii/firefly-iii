@@ -59,4 +59,6 @@ return [
     'delete_journal_link'    => 'Hapus tautan antar transaksi',
     'telemetry_index'        => 'Pengukur jarak',
     'telemetry_view'         => 'Melihat data',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
 ];

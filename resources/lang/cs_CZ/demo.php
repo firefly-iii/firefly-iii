@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly III podporuje vícero měn. Ačkoli výchozí je Euro, je možné ho nastavit na americký dolar a mnoho dalších měn. Jak můžete vidět, malá sbírka měn je obsažena a je možné si přidat svou vlastní. Změna výchozí měny se nedotkne té u existujících transakcí: Firefly III podporuje použití vícero měn současně.',
     'transactions-index'     => 'Tyto výdaje, vklady a převody nejsou zvlášť nápadité. Byly vytvořeny automaticky.',
     'piggy-banks-index'      => 'Jak je možné vidět, jsou zde tři pokladničky. Pomocí tlačítek plus a mínus ovlivníte částku v každé z pokladniček. Kliknutí na název pokladničky zobrazí správu pro každou z nich.',
-    'import-index'           => 'Do Firefly III lze importovat libovolný CSV soubor. Také podporuje importování dat z bunq a Specter. Ostatní banky a finanční slučovače budou implementovány v budoucnu. Jako demouživatel můžete v akci vidět pouze podstrčeného poskytovatele. Vytvoří nějaké náhodné transakce pro zobrazení toho, jak proces funguje.',
     'profile-index'          => 'Mějte na paměti, že obsah demostránky je každé čtyři hodny smazán. Přístup může být zrušen kdykoli. Toto se děje automaticky a nejedná se o chybu.',
 ];

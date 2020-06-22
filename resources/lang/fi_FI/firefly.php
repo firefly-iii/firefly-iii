@@ -199,7 +199,7 @@ return [
     'forgot_pw_page_title'                       => 'Unohdit salasanasi Firefly III:een',
     'reset_pw_page_title'                        => 'Nollaa salasanasi Firefly III:een',
     'cannot_reset_demo_user'                     => 'Demokäyttäjän salasanaa ei voi nollata.',
-    'no_att_demo_user'                           => 'The demo user can\'t upload attachments.',
+    'no_att_demo_user'                           => 'Demokäyttäjä ei voi lähettää liitteitä.',
     'button_register'                            => 'Rekisteröidy',
     'authorization'                              => 'Valtuutus',
     'active_bills_only'                          => 'vain aktiiviset laskut',
@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Käytät BETA-versiota. Varaudu virheisiin ja ongelmiin.',
     'all_destination_accounts'                   => 'Kohdetilit',
     'all_source_accounts'                        => 'Lähdetilit',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Tarkista päivitykset',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'vuosittain',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Säännöt',
     'rule_name'                                  => 'Säännön nimi',
     'rule_triggers'                              => 'Sääntö toteutuu kun',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Pitäisikö minun valita tämä?',
     'secure_pw_long_password'                   => 'Kyllä. Varmista aina, että salasanasi on turvallinen.',
     'command_line_token'                        => 'Komentorivin tunnus',
-    'explain_command_line_token'                => 'Tarvitset tämän tunnuksen käyttääksesi komentorivikomentoja kuten tietojen tuonti ja vienti. Ilman sitä, nämä komennot eivät toimi. Älä koskaan kerro kenellekään sinun komentorivitunnustasi. Kukaan ei kysy sinulta sitä, en edes minä. Jos pelkäät kadottaneesi tunnuksen tai olet vähän edes epävarma, voit aina luoda uuden tunnuksen tällä napilla.',
+    'explain_command_line_token'                => 'Tarvitset tämän tunnuksen käyttääksesi komentorivikomentoja kuten tietojen vienti. Ilman sitä, nämä komennot eivät toimi. Älä koskaan kerro kenellekään sinun komentorivitunnustasi. Kukaan ei kysy sinulta sitä, en edes minä. Jos pelkäät kadottaneesi tunnuksen tai olet vähän edes epävarma, voit aina luoda uuden tunnuksen tällä napilla.',
     'regenerate_command_line_token'             => 'Luo uusi komentorivitunnus',
     'token_regenerated'                         => 'Uusi komentorivitunnus luotiin',
     'change_your_email'                         => 'Muuta sähköpostiosoitetta',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Voit nyt kirjautua uudella sähköpostiosoitteella.',
     'login_with_old_email'                      => 'Voit kirjautua jälleen vanhalla sähköpostiosoitteellasi.',
     'login_provider_local_only'                 => 'Tämä toiminto ei ole käytettävissä käytettäessä palveluntarjoajaa ":login_provider" tunnistautumiseen.',
-    'delete_local_info_only'                    => "Koska tunnistaudut palveluntarjoajan ':login_provider' avulla, tämä poistaa ainoastaan paikalliset Firefly III:n tiedot.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Something went wrong. Please try again.',
 
     // export data:
-    'import_and_export_menu'                    => 'Tuo / Vie',
     'export_data_title'                         => 'Vie tietoja Firefly III:sta',
     'export_data_menu'                          => 'Vie tietoja',
     'export_data_bc'                            => 'Vie tietoja Firefly III:sta',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Voit lukea lisää tästä ominaisuudesta ohjeesta. Napsauta oikean yläkulman (?)-kuvaketta.',
     'auto_budget_reset_icon'                    => 'Tämä budjetti asetetaan määräajoin',
     'auto_budget_rollover_icon'                 => 'Budjetin summa kasvaa säännöllisesti',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Ei odotettavissa tässä jaksossa',
+    'not_or_not_yet'                            => 'Ei (vielä)',
     'match_between_amounts'                     => 'Lasku täsmää tapahtumiin välillä :low ja :high.',
     'running_again_loss'                        => 'Aikaisemmin tälle laskulle yhdistetyt tapahtumat saattavat menettää yhteytensä, jos ne eivät (enää) täytä säännön ehtoja.',
     'bill_related_rules'                        => 'Tähän laskuun liittyvät säännöt',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Uuden laskusi tallentamisessa tapahtui odottamaton virhe. Virhe kirjattiin lokitiedostoon.',
     'list_inactive_rule'                        => 'käytöstä poistettu sääntö',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
     'errors_submission'                     => 'Lomakkeen tiedoissa oli puutteita - alta löydät listan puutteista.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Tuo tapahtumia Firefly III:een',
-    'import_transactions'                   => 'Tuo tapahtumia',
-    'import_tools_title'                    => 'Tuontityökalut',
-    'tools_index_intro'                     => 'Tietojen tuomiseen Firefly III:een on olemassa useita työkaluja. Löydät ne alta. Lisätietoja on <a href="https://docs.firefly-iii.org/importing-data/introduction"> tällä sivulla </a>.',
-    'firefly_iii_csv_importer_name'         => 'Firefly III CSV tuoja',
-    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 tuoja',
-    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB tuoja',
-    'ludo_revolut_importer_name'            => 'Ludo444:n Revolut-tuontityökalu',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Tätä toimintoa ei ole kun Firefly III on asennettu Sandstorm.io ympäristöön.',
+
+    // object groups
+    'default_group_title_name'              => '(ryhmittelemättömät)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Luodaan käyttötili!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Jos haluat, voit ottaa käyttötietojen keräyksen käyttöön .env-tiedostossa tai Docker-konfiguraatiossa.',
     'telemetry_collected_info'           => 'Kerätyt tiedot',
     'no_telemetry_present'               => 'Firefly III ei ole kerännyt käyttötietoja.',
-    'records_telemetry_present'          => 'Firefly III on kerännyt :count tietuetta käyttötietoja.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'Tarkastele käyttötietoja',
     'telemetry_button_delete'            => 'Poista kaikki käyttötiedot',
     'telemetry_admin_overview'           => 'Käyttötietojen yleisnäkymä',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Poista lähetetyt tiedot',
     'telemetry_submission_executed'      => 'Tiedot on lähetetty. Lokitiedostoistasi löydät lisätietoja.',
     'telemetry_all_deleted'              => 'Kaikki käyttötiedot poistettu.',
-    'telemetry_submitted_deleted'        => 'Kaikki lähetetyt käyttötiedot poistettu.'
+    'telemetry_submitted_deleted'        => 'Kaikki lähetetyt käyttötiedot poistettu.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];

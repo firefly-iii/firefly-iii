@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Totalbeløpet kan ikke være null.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'Navnet på sparegris må være unik.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Ugyldig repetisjons type for gjentakende transaksjoner.',

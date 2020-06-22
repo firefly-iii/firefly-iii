@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => '¿Seguro que quieres eliminar la cuenta llamada ":name"?',
     'bill_areYouSure'             => '¿Seguro que quieres eliminar la factura llamada ":name"?',
     'rule_areYouSure'             => '¿Seguro que quieres eliminar la regla titulada ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '¿Seguro que quieres eliminar el grupo de reglas titulado ":title"?',
     'budget_areYouSure'           => '¿Seguro que quieres eliminar el presupuesto llamado ":name"?',
     'category_areYouSure'         => '¿Seguro que quieres eliminar la categoría llamada ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'La única transacción vinculada con este tipo de enlace perderá esta conexión. | Todas las :count transacciones vinculadas con este tipo de enlace perderán su conexión.',
     'also_delete_rules'           => 'La única regla conectada a este grupo de reglas también se eliminará. | Todas las :count reglas conectadas a este grupo de reglas también se eliminarán.',
     'also_delete_piggyBanks'      => 'La hucha conectada a esta cuenta también se eliminará.|Las :count huchas conectadas a esta cuenta también se eliminarán.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'La transacción conectada a esta factura no será eliminada.|Las :count transacciones conectadas a esta factura serán eliminadas.',
     'budget_keep_transactions'    => 'La transacción conectada a este presupuesto no se eliminará.|Las :count transacciones conectadas a este presupuesto no serán eliminadas.',
     'category_keep_transactions'  => 'La transacción conectada a esta categoría no se eliminará.|Las :count transacciones conectadas a esta categoría no serán eliminadas.',
     'recurring_keep_transactions' => 'La transacción conectada a esta transacción recurrente no se eliminará.|Las :count transacciones conectadas a esta transacción recurrente no serán eliminadas.',
     'tag_keep_transactions'       => 'La transacción conectada a esta etiqueta no se eliminará.|Las :count transacciones conectadas a esta etiqueta no serán eliminadas.',
     'check_for_updates'           => 'Ver actualizaciones',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Correo electrónico',
     'password'              => 'Contraseña',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Está en modo demostración',
 
     // import
-    'import_file'           => 'Importar archivo',
     'configuration_file'    => 'Archivo de configuración',
-    'import_file_type'      => 'Importar tipo de archivo',
     'csv_comma'             => 'Una coma (,)',
     'csv_semicolon'         => 'Un punto y coma (;)',
     'csv_tab'               => 'Un tabulador (invisible)',
     'csv_delimiter'         => 'Delimitador de campo CSV',
-    'csv_import_account'    => 'Cuenta de importación predeterminada',
     'client_id'             => 'Identificación del cliente',
     'app_id'                => 'ID de la App',
     'secret'                => 'Secreto',

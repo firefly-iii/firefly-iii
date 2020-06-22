@@ -221,6 +221,7 @@ return [
     'is_beta_warning'                            => 'Bạn đang sử dụng phiên bản BETA.',
     'all_destination_accounts'                   => 'Tài khoản nhận',
     'all_source_accounts'                        => 'Tài khoản gửi',
+    'back_to_index'                              => 'Back to the index',
 
     // check for updates:
     'update_check_title'                         => 'Kiểm tra cập nhật',
@@ -297,6 +298,7 @@ return [
     'yearly'                                     => 'hàng năm',
 
     // rules
+    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
     'rules'                                      => 'Quy tắc',
     'rule_name'                                  => 'Tên của quy tắc',
     'rule_triggers'                              => 'Quy tắc kích hoạt khi',
@@ -645,7 +647,7 @@ return [
     'secure_pw_should'                          => 'Tôi có nên check vào hộp không?',
     'secure_pw_long_password'                   => 'Đúng. Luôn xác minh mật khẩu của bạn an toàn.',
     'command_line_token'                        => 'Mã thông báo dòng lệnh',
-    'explain_command_line_token'                => 'Bạn cần mã thông báo này để thực hiện các tùy chọn dòng lệnh, chẳng hạn như nhập hoặc xuất dữ liệu. Không có nó, các lệnh nhạy cảm như vậy sẽ không hoạt động. Không chia sẻ mã thông báo dòng lệnh của bạn. Không ai sẽ yêu cầu bạn cho mã thông báo này, ngay cả tôi. Nếu bạn sợ bạn mất thứ này hoặc khi bạn bị hoang tưởng, hãy tạo lại mã thông báo này bằng nút.',
+    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_command_line_token'             => 'Tạo lại mã thông báo dòng lệnh',
     'token_regenerated'                         => 'Một mã thông báo dòng lệnh mới đã được tạo',
     'change_your_email'                         => 'Thay đổi địa chỉ email của bạn',
@@ -654,7 +656,8 @@ return [
     'login_with_new_email'                      => 'Bây giờ bạn có thể đăng nhập bằng địa chỉ email mới của bạn.',
     'login_with_old_email'                      => 'Bây giờ bạn có thể đăng nhập lại với địa chỉ email cũ của bạn.',
     'login_provider_local_only'                 => 'Hành động này không khả dụng khi xác thực thông qua ": login_provider".',
-    'delete_local_info_only'                    => "Vì bạn xác thực thông qua ':login_provider', điều này sẽ chỉ xóa thông tin Firefly III cục bộ.",
+    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Bạn đã không tạo ra bất kỳ OAuth clients nào.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -684,7 +687,6 @@ return [
     'profile_try_again'                         => 'Xảy ra lỗi. Vui lòng thử lại.',
 
     // export data:
-    'import_and_export_menu'                    => 'Nhập và xuất',
     'export_data_title'                         => 'Xuất dữ liệu từ Firefly III',
     'export_data_menu'                          => 'Xuất dữ liệu',
     'export_data_bc'                            => 'Xuất dữ liệu từ Firefly III',
@@ -855,8 +857,11 @@ return [
     'auto_budget_help'                          => 'Bạn có thể đọc thêm về tính năng này trong trợ giúp. Nhấp vào biểu tượng trên cùng bên phải (?).',
     'auto_budget_reset_icon'                    => 'Ngân sách này sẽ được đặt định kỳ',
     'auto_budget_rollover_icon'                 => 'Số tiền ngân sách sẽ tăng theo định kỳ',
+    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'not_expected_period'                       => 'Not expected this period',
+    'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Hóa đơn khớp với các giao dịch giữa: thấp và: cao.',
     'running_again_loss'                        => 'Các giao dịch được liên kết trước đây với hóa đơn này có thể mất kết nối, nếu chúng (không còn) khớp với (các) quy tắc.',
     'bill_related_rules'                        => 'Các quy tắc liên quan đến dự luật này',
@@ -885,6 +890,7 @@ return [
     'bill_store_error'                          => 'Một lỗi không mong muốn đã xảy ra trong khi lưu trữ hóa đơn mới của bạn. Vui lòng kiểm tra các tệp nhật ký',
     'list_inactive_rule'                        => 'quy tắc không hoạt động',
     'bill_edit_rules'                           => 'Firefly III cũng sẽ cố gắng chỉnh sửa quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì. | Firefly III cũng sẽ cố gắng chỉnh sửa :count các quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa các quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì.',
+    'bill_expected_date'                        => 'Expected :date',
 
     // accounts:
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
@@ -1500,18 +1506,11 @@ return [
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
     'errors_submission'                     => 'Có gì đó sai. Vui lòng kiểm tra các lỗi dưới đây.',
 
-    // Import page (general strings only)
-    'import_index_title'                    => 'Nhập giao dịch vào Firefly III',
-    'import_transactions'                   => 'Nhập giao dịch',
-    'import_tools_title'                    => 'Công cụ nhập',
-    'tools_index_intro'                     => 'Một số công cụ tồn tại để nhập dữ liệu vào Firefly III. Kiểm tra chúng dưới đây. Để biết thêm thông tin, hãy xem <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
-    'firefly_iii_csv_importer_name'         => 'Nhập CSV Firefly III',
-    'firefly_iii_bunq_importer_name'        => 'Nhập Firefly III bunq 🌈',
-    'firefly_iii_ynab_importer_name'        => 'Nhập Firefly III YNAB',
-    'ludo_revolut_importer_name'            => 'Nhập Ludo444\'s Revolut',
-    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Chức năng này không khả dụng khi bạn đang sử dụng Firefly III trong môi trường Sandstorm.io.',
+
+    // object groups
+    'default_group_title_name'              => '(ungrouped)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Hãy tạo một tài khoản!',
@@ -1651,7 +1650,7 @@ return [
     'telemetry_disabled_now_what'        => 'Nếu muốn, bạn có thể bậc chức năng thu thập dữ liệu trong file cấu hình .env.',
     'telemetry_collected_info'           => 'Đã thu thập dữ liệu',
     'no_telemetry_present'               => 'Firefly III đã thu thập 0 bản tin.',
-    'records_telemetry_present'          => 'Firefly III đã thu thập :count telemetry record(s).',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
     'telemetry_button_view'              => 'Xem dữ liệu thu thập',
     'telemetry_button_delete'            => 'Xóa tất cả thu thập',
     'telemetry_admin_overview'           => 'Tổng quan thu thập dữ liệu',
@@ -1664,5 +1663,27 @@ return [
     'telemetry_delete_submitted_records' => 'Xóa hồ sơ đã gửi',
     'telemetry_submission_executed'      => 'Hồ sơ đã được nộp. Kiểm tra tệp nhật ký của bạn để biết thêm.',
     'telemetry_all_deleted'              => 'Tất cả các hồ sơ từ xa đã bị xóa.',
-    'telemetry_submitted_deleted'        => 'Tất cả các hồ sơ từ xa đã được xóa.'
+    'telemetry_submitted_deleted'        => 'Tất cả các hồ sơ từ xa đã được xóa.',
+
+    // debug page
+    'debug_page'                         => 'Debug page',
+    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
+    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+
+    // object groups
+    'object_groups_menu_bar'             => 'Groups',
+    'object_groups_page_title'           => 'Groups',
+    'object_groups_breadcrumb'           => 'Groups',
+    'object_groups_index'                => 'Overview',
+    'object_groups'                      => 'Groups',
+    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
+    'object_group_title'                 => 'Title',
+    'edit_object_group'                  => 'Edit group ":title"',
+    'delete_object_group'                => 'Edit group ":title"',
+    'update_object_group'                => 'Update group',
+    'updated_object_group'               => 'Succesfully updated group ":title"',
+    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'object_group'                       => 'Group',
+
 ];
