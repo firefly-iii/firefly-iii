@@ -8,6 +8,9 @@ import MainCategoryChart from "../components/dashboard/MainCategoryChart";
 import MainCrebitChart from "../components/dashboard/MainCrebitChart";
 import MainDebitChart from "../components/dashboard/MainDebitChart";
 import MainPiggyList from "../components/dashboard/MainPiggyList";
+import TransactionListLarge from "../components/transactions/TransactionListLarge";
+import TransactionListMedium from "../components/transactions/TransactionListMedium";
+import TransactionListSmall from "../components/transactions/TransactionListSmall";
 /**
  * First we will load Axios via bootstrap.js
  * jquery and bootstrap-sass preloaded in app.js
@@ -15,6 +18,10 @@ import MainPiggyList from "../components/dashboard/MainPiggyList";
  */
 
 require('../bootstrap');
+
+Vue.component('transaction-list-large', TransactionListLarge);
+Vue.component('transaction-list-medium', TransactionListMedium);
+Vue.component('transaction-list-small', TransactionListSmall);
 
 // components as an example
 Vue.component('dashboard', Dashboard);
@@ -27,6 +34,8 @@ Vue.component('main-category-chart', MainCategoryChart);
 Vue.component('main-credit-chart', MainCrebitChart);
 Vue.component('main-debit-chart', MainDebitChart);
 Vue.component('main-piggy-list', MainPiggyList);
+
+
 
 // i18n
 let i18n = require('../i18n');

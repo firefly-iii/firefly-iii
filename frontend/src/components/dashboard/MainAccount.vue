@@ -40,7 +40,6 @@
                     this.chartData = DataConverter.methods.convertChart(response.data);
                     this.chartData = DataConverter.methods.colorizeData(this.chartData);
                     this.chartData = DataConverter.methods.convertLabelsToDate(this.chartData);
-                    console.log(this.chartData);
                     this.loaded = true
                 });
         },
