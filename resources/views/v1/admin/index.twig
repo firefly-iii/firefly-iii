@@ -23,32 +23,6 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'send_test_email'|_ }}</h3>
-                </div>
-                <form action="{{ route('admin.test-message') }}" method="post">
-                    <div class="box-body">
-                        <p>
-                            {{ trans('firefly.send_test_email_text', {email:Auth.user.email})|raw }}
-                        </p>
-
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-envelope"></i> {{ ('send_message')|_ }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'user_administration'|_ }}</h3>
@@ -60,5 +34,39 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'send_test_email'|_ }}</h3>
+                </div>
+                <form action="{{ route('admin.test-message') }}" method="post">
+                    <div class="box-body">
+                        <p>
+                            {{ trans('firefly.send_test_email_text', {email:Auth.user.email})|raw }}
+                        </p>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-envelope"></i> {{ ('send_message')|_ }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'admin_maintanance_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'admin_maintanance_expl'|_ }}
+                    </p>
+                    <p>
+                        <a href="{{ route('flush') }}" class="btn btn-warning">{{ 'admin_maintenance_clear_cache'|_ }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+
 {% endblock %}

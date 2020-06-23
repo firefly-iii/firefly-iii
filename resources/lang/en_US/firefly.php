@@ -1423,6 +1423,9 @@ return [
     'send_message'                     => 'Send message',
     'send_test_triggered'              => 'Test was triggered. Check your inbox and the log files.',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
