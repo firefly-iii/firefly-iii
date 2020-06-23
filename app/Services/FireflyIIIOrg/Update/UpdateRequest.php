@@ -179,7 +179,7 @@ class UpdateRequest implements UpdateRequestInterface
             Log::error('Ran into Guzzle error.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            $return['message'] = sprintf('Guzzle: %s', $e->getMessage());
+            $return['message'] = sprintf('Guzzle: %s', strip_tags($e->getMessage()));
 
             return $return;
         }
