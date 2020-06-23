@@ -65,6 +65,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasNotesInformation  = false;
         $this->hasJoinedTagTables   = false;
         $this->hasJoinedAttTables   = false;
+        $this->hasJoinedMetaTables  = false;
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -687,5 +688,4 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
     }
-
 }

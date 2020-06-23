@@ -574,7 +574,8 @@ return [
     'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
     'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
                            'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
-                           'updated_on',],
+                           'updated_on', 'external_id', 'internal_reference',],
+
     // TODO notes has_attachments
 
     'cer_providers'             => [

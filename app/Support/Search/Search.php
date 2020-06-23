@@ -298,6 +298,12 @@ class Search implements SearchInterface
                     $updatedAt = new Carbon($modifier['value']);
                     $collector->setUpdatedAt($updatedAt);
                     break;
+                case 'external_id':
+                    $collector->setExternalId($modifier['value']);
+                    break;
+                case 'internal_reference':
+                    $collector->setInternalReference($modifier['value']);
+                    break;
             }
         }
         $collector->setAccounts($totalAccounts);

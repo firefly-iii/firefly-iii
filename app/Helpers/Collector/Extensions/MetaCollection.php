@@ -310,4 +310,36 @@ trait MetaCollection
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    public function setExternalId(string $externalId): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $this->query->where('journal_meta.name', '=', 'external_id');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInternalReference(string $internalReference): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+
+        $this->query->where('journal_meta.name', '=', 'internal_reference');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
+
+        return $this;
+    }
+
+
 }

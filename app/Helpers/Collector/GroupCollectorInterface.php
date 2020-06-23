@@ -426,4 +426,22 @@ interface GroupCollectorInterface
      */
     public function withoutCategory(): GroupCollectorInterface;
 
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setExternalId(string $externalId): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setInternalReference(string $externalId): GroupCollectorInterface;
+
 }

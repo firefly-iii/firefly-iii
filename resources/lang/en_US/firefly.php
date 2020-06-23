@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Transaction date is after :value',
     'search_modifier_created_on'                 => 'Transaction was created on :value',
     'search_modifier_updated_on'                 => 'Transaction was last updated on :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
     'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Search',
