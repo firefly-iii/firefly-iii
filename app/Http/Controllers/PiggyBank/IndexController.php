@@ -158,7 +158,7 @@ class IndexController extends Controller
         }
         foreach ($piggyBanks as $groupOrder => $group) {
             $groupId                         = $group['object_group_id'];
-            $piggyBanks[$groupOrder]['sums'] = $sums[$groupId];
+            $piggyBanks[$groupOrder]['sums'] = $sums[$groupId] ?? [];
         }
 
         return $piggyBanks;

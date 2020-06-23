@@ -39,7 +39,11 @@ Several alpha and beta releases preceded this release.
 - Expanded API for piggy banks to support object groups.
 
 ### Known issues
-- You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know. 
+- You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know.
+
+### Notes
+
+- From this release on, the Dockerfile and default configuration will install MySQL (using MariaDB) instead of PostgreSQL. 
 
 ## [5.2.8 (API 1.1.0)] - 2020-06-02
 
