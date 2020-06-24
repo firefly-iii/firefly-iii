@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Tapahtumapäivä on :value jälkeen',
     'search_modifier_created_on'                 => 'Tapahtuma luotiin :value',
     'search_modifier_updated_on'                 => 'Tapahtumaa päivitettiin viimeksi :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Seuraavat muokkaukset vaikuttavat myös hakuun:',
     'general_search_error'                       => 'Haussa tapahtui virhe. Virhe tallennettiin lokitiedostoon.',
     'search_box'                                 => 'Hae',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Lähetä viesti',
     'send_test_triggered'              => 'Testiviesti lähetettiin. Tarkista sähköpostisi sekä lokitiedostot.',
     'give_admin_careful'               => 'Käyttäjät, joille on annettu järjestelmänvalvojan oikeudet, voivat poistaa oikeudet sinulta. Ole varovainen.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Jaetun tapahtuman kuvaus',
     'split_transaction_title_help'          => 'Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.',

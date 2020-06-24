@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Дата транзакции после :value',
     'search_modifier_created_on'                 => 'Транзакция была создана :value',
     'search_modifier_updated_on'                 => 'Транзакция была последний раз обновлена :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'В поиске применяются следующие атрибуты:',
     'general_search_error'                       => 'При поиске произошла ошибка. Пожалуйста, проверьте log-файлы для получения дополнительной информации.',
     'search_box'                                 => 'Поиск',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Отправить сообщение',
     'send_test_triggered'              => 'Тест был выполнен. Проверьте ваш почтовый ящик и log-файлы.',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Описание разделённой транзакции',
     'split_transaction_title_help'          => 'Если вы создаёте разделённую транзакцию, то должны указать общее описание для всех её составляющих.',

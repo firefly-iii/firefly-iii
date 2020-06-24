@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Buchungsdatum ist nach :value',
     'search_modifier_created_on'                 => 'Buchung wurde am :value erstellt',
     'search_modifier_updated_on'                 => 'Buchung wurde zuletzt am :value aktualisiert',
+    'search_modifier_external_id'                => 'Externe ID lautet „::value”',
+    'search_modifier_internal_reference'         => 'Interne Referenz lautet „:value”',
     'modifiers_applies_are'                      => 'Die folgenden Einschränkungen werden ebenfalls auf die Suche angewendet:',
     'general_search_error'                       => 'Bei der Suche ist ein Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien für weitere Informationen.',
     'search_box'                                 => 'Suche',
@@ -647,7 +649,7 @@ return [
     'secure_pw_should'                          => 'Soll ich die Box ankreuzen?',
     'secure_pw_long_password'                   => 'Ja. Damit vergewissern Sie sich immer, dass ihr Passwort sicher ist.',
     'command_line_token'                        => 'Kommandozeilen-Authentifizierungsschlüssel',
-    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'explain_command_line_token'                => 'Sie benötigen dieses Token, um Kommandozeilenoptionen auszuführen, wie z. B. den Export von Daten. Ohne diese werden solche sensiblen Befehle nicht funktionieren. Teilen Sie Ihren Kommandozeilen-Authentifizierungsschlüssel nicht mit anderen. Niemand wird Sie um diesen Schlüssel bitten, nicht einmal ich. Wenn Sie befürchten, dass Sie diesen verloren haben, erneuern Sie den Schlüssel mit der Schaltfläche.',
     'regenerate_command_line_token'             => 'Kommandozeilen-Authentifizierungsschlüssel erneut generieren',
     'token_regenerated'                         => 'Ein neuer Kommandozeilen-Authentifizierungsschlüssel wurde generiert',
     'change_your_email'                         => 'E-Mail Adresse ändern',
@@ -857,11 +859,11 @@ return [
     'auto_budget_help'                          => 'Mehr über diese Funktion können Sie in der Hilfe nachlesen. Klicken Sie oben rechts auf das ❓-Symbol.',
     'auto_budget_reset_icon'                    => 'Dieses Budget wird regelmäßig festgelegt',
     'auto_budget_rollover_icon'                 => 'Der Budgetbetrag wird regelmäßig erhöht',
-    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
+    'remove_budgeted_amount'                    => 'Budgetbetrag in :currency entfernen',
 
     // bills:
-    'not_expected_period'                       => 'Not expected this period',
-    'not_or_not_yet'                            => 'Not (yet)',
+    'not_expected_period'                       => 'In diesem Zeitraum nicht erwartet',
+    'not_or_not_yet'                            => '(Noch) nicht',
     'match_between_amounts'                     => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
     'running_again_loss'                        => 'Zuvor verknüpfte Buchungen mit dieser Rechnung können ihre Verbindung verlieren, wenn sie (nicht mehr) der/den Regel(n) entsprechen.',
     'bill_related_rules'                        => 'Regeln mit Verknüpfung zu dieser Rechnung',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Nachricht senden',
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
     'give_admin_careful'               => 'Benutzer mit Admin-Rechten können Ihnen Ihre Rechte entziehen. Seien Sie vorsichtig.',
+    'admin_maintanance_title'          => 'Wartungsarbeiten',
+    'admin_maintanance_expl'           => 'Einige praktische Schaltflächen für die Wartung von Firefly III',
+    'admin_maintenance_clear_cache'    => 'Cache leeren',
 
     'split_transaction_title'               => 'Beschreibung der Splittbuchung',
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
@@ -1510,7 +1515,7 @@ return [
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
 
     // object groups
-    'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name'              => '(ohne Gruppierung)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Lassen Sie uns jetzt ein Bestandskonto anlegen!',

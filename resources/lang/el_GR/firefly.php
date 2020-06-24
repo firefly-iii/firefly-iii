@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Η ημερομηνία συναλλαγής είναι μετά τις :value',
     'search_modifier_created_on'                 => 'Η συναλλαγή δημιουργήθηκε στις :value',
     'search_modifier_updated_on'                 => 'Η συναλλαγή ενημερώθηκε στις :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Οι ακόλουθοι τροποποιητές εφαρμόστηκαν στην αναζήτηση επίσης:',
     'general_search_error'                       => 'Ένα σφάλμα προέκυψε κατά την αναζήτηση. Παρακαλώ ελέγξτε τα αρχεία καταγραφής για περισσότερες πληροφορίες.',
     'search_box'                                 => 'Αναζήτηση',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Αποστολή μηνύματος',
     'send_test_triggered'              => 'Η δοκιμή ενεργοποιήθηκε. Ελέγξτε τα εισερχόμενα μηνύματα στο Email σας και τα αρχεία καταγραφής.',
     'give_admin_careful'               => 'Οι χρήστες στους οποίους έχουν δοθεί δικαιώματα διαχειριστή μπορούν να καθαιρέσουν τη δική σας πρόσβαση. Ενεργήστε με προσοχή.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Περιγραφή της συναλλαγής με διαχωρισμό',
     'split_transaction_title_help'          => 'Εάν δημιουργήσετε μια διαχωρισμένη συναλλαγή, πρέπει να υπάρχει μια καθολική περιγραφή για όλους τους διαχωρισμούς της συναλλαγής.',

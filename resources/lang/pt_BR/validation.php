@@ -128,7 +128,7 @@ return [
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'O montante total não pode ser zero.',
-    'current_target_amount'          => 'The current amount must be less than the target amount.',
+    'current_target_amount'          => 'O valor atual deve ser menor do que o valor pretendido.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
     'unique_object_group'            => 'O nome do grupo deve ser único',
 
@@ -204,6 +204,6 @@ return [
     'gte.array'   => 'The :attribute must have :value items or more.',
 
     'amount_required_for_auto_budget' => 'The amount is required.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_amount_positive'     => 'A quantidade deve ser maior do que zero.',
     'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

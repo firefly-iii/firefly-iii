@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => '交易日期後於 :value',
     'search_modifier_created_on'                 => 'Transaction was created on :value',
     'search_modifier_updated_on'                 => 'Transaction was last updated on :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => '搜尋也套用以下條件：',
     'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => '搜尋',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => '發送消息',
     'send_test_triggered'              => '測試已觸發，請檢視您的收件匣與日誌檔。',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',

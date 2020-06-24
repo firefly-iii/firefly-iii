@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Data transakcji jest po :value',
     'search_modifier_created_on'                 => 'Transakcja stworzona :value',
     'search_modifier_updated_on'                 => 'Transakcja zaktualizowana :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Zastosowano także poniższe modyfikatory:',
     'general_search_error'                       => 'Wystąpił błąd podczas wyszukiwania. Aby uzyskać więcej informacji proszę sprawdzić logi aplikacji.',
     'search_box'                                 => 'Szukaj',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Wyślij wiadomość',
     'send_test_triggered'              => 'Test został uruchomiony. Sprawdź swoją skrzynkę odbiorczą i pliki dziennika.',
     'give_admin_careful'               => 'Użytkownicy, którzy dostaną prawa administratora, mogą zabrać twoje. Zachowaj ostrożność.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Opis podzielonej transakcji',
     'split_transaction_title_help'          => 'Jeśli tworzysz podzieloną transakcję, musi ona posiadać globalny opis dla wszystkich podziałów w transakcji.',

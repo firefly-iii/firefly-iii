@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => '交易日期晚于 :value',
     'search_modifier_created_on'                 => '交易创建于 :value',
     'search_modifier_updated_on'                 => '交易记录最后更新于 :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => '以下修饰也适用于搜索：',
     'general_search_error'                       => '搜索时出错。请检查日志文件以获取更多信息。',
     'search_box'                                 => '搜寻',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => '发送消息',
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
     'give_admin_careful'               => '被授予管理员权限的用户可以收回您的权限。请千万注意这点。',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => '如果您创建了一个分割交易，交易的所有分割项都必须有全局描述。',

@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Data tranzacţiei este după :value',
     'search_modifier_created_on'                 => 'Tranzacția a fost creată în :value',
     'search_modifier_updated_on'                 => 'Tranzacția a actualizată în :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Următorii modificatorii sunt aplicați la căutare:',
     'general_search_error'                       => 'A apărut o eroare în timpul căutării. Verificați log-urile pentru mai multe informații.',
     'search_box'                                 => 'Caută',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Trimite mesaj',
     'send_test_triggered'              => 'Testul a fost declanșat. Verificați mesajele primite și log-urile.',
     'give_admin_careful'               => 'Utilizatorii cărora li se acordă drepturi de administrator pot lua drepturile dvs. Fiți atenți.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Descrierea tranzacției divizate',
     'split_transaction_title_help'          => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',

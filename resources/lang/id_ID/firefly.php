@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Transaction date is after :value',
     'search_modifier_created_on'                 => 'Transaction was created on :value',
     'search_modifier_updated_on'                 => 'Transaction was last updated on :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
     'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Pencarian',
@@ -1421,6 +1423,9 @@ return [
     'send_message'                     => 'Mengirim pesan',
     'send_test_triggered'              => 'Uji dipicu. Periksa kotak masuk dan file log Anda.',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
