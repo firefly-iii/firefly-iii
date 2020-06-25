@@ -313,7 +313,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where(
             static function (EloquentBuilder $q) use ($array) {
                 $q->where(
-                    function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array) {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
