@@ -40,6 +40,15 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
+     * @param Rule      $rule
+     * @param RuleGroup $ruleGroup
+     * @param int       $order
+     *
+     * @return Rule
+     */
+    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
+
+    /**
      * @param Rule $rule
      *
      * @return bool

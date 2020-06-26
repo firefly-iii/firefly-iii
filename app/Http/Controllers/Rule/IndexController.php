@@ -24,15 +24,14 @@ namespace FireflyIII\Http\Controllers\Rule;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -64,20 +63,6 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
-    }
-
-    /**
-     * Move rule down in list.
-     *
-     * @param Rule $rule
-     *
-     * @return RedirectResponse|Redirector
-     */
-    public function down(Rule $rule)
-    {
-        $this->ruleRepos->moveDown($rule);
-
-        return redirect(route('rules.index'));
     }
 
     /**
@@ -135,17 +120,18 @@ class IndexController extends Controller
 
 
     /**
-     * Move rule ip.
+     * @param Request   $request
+     * @param Rule      $rule
+     * @param RuleGroup $ruleGroup
      *
-     * @param Rule $rule
-     *
-     * @return RedirectResponse|Redirector
+     * @return JsonResponse
      */
-    public function up(Rule $rule)
+    public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse
     {
-        $this->ruleRepos->moveUp($rule);
+        $order = (int) $request->get('order');
+        $this->ruleRepos->moveRule($rule, $ruleGroup, (int) $order);
 
-        return redirect(route('rules.index'));
+        return response()->json([]);
     }
 
 }

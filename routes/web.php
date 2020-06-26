@@ -923,8 +923,12 @@ Route::group(
 
         // index controller
         Route::get('', ['uses' => 'Rule\IndexController@index', 'as' => 'index']);
-        Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
-        Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
+
+        //Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
+        //Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
+        Route::post('move-rule/{rule}/{ruleGroup}', ['uses' => 'Rule\IndexController@moveRule', 'as' => 'move-rule']);
+
+
         Route::post('trigger/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
         Route::post('action/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleActions', 'as' => 'reorder-actions']);
 

@@ -31,18 +31,11 @@ var fixHelper = function (e, tr) {
 
 $(function () {
       "use strict";
-      $('.rule-triggers').sortable(
+      $('.group-rules').find('tbody').sortable(
           {
               helper: fixHelper,
               stop: sortStop,
-              cursor: "move"
-          }
-      );
-
-      $('.rule-actions').sortable(
-          {
-              helper: fixHelper,
-              stop: sortStop,
+              handle: '.rule-handle',
               cursor: "move"
 
           }
@@ -102,27 +95,35 @@ function disableRuleSpinners() {
 
 function sortStop(event, ui) {
     "use strict";
-    var current = $(ui.item);
-    var parent = current.parent();
-    var ruleId = current.parent().data('id');
-    var entries = [];
-    // who am i?
 
-    $.each(parent.children(), function (i, v) {
-        var trigger = $(v);
-        var id = trigger.data('id');
-        entries.push(id);
+    // resort / move rule
+    $.each($('.group-rules'), function(i,v) {
+        $.each($('tr.single-rule', $(v)), function (i, v) {
+            var holder = $(v);
+            var position = parseInt(holder.data('position'));
+            var ruleGroupId = holder.data('group-id');
+            var ruleId = holder.data('id');
+            var originalOrder = parseInt(holder.data('order'));
+            var newOrder;
 
+            if (position === i) {
+                // not changed, position is what it should be.
+                return;
+            }
+            if (position < i) {
+                // position is less.
+                console.log('Rule #' + ruleId + ' moved down from position ' + originalOrder + ' to ' + (i + 1));
+            }
+            if (position > i) {
+                console.log('Rule #' + ruleId + ' moved up from position ' + originalOrder + ' to ' + (i + 1));
+            }
+            // update position:
+            holder.data('position', i);
+            newOrder = i+1;
+
+            $.post('rules/move-rule/' + ruleId + '/' + ruleGroupId, {order: newOrder, _token: token});
+        });
     });
-    if (parent.hasClass('rule-triggers')) {
-        $.post('rules/trigger/order/' + ruleId, {triggers: entries, _token: token}).fail(function () {
-            alert('Could not re-order rule triggers. Please refresh the page.');
-        });
-    } else {
-        $.post('rules/action/order/' + ruleId, {actions: entries, _token: token}).fail(function () {
-            alert('Could not re-order rule actions. Please refresh the page.');
-        });
 
-    }
 
 }
