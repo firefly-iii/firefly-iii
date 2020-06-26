@@ -35,7 +35,7 @@ return [
     'error_occurred'          => 'Whoops! An error occurred.',
     'error_not_recoverable'   => 'Unfortunately, this error was not recoverable :(. Firefly III broke. The error is:',
     'error'                   => 'Error',
-    'error_location'          => 'This error occured in file <span style="font-family: monospace;">:file</span> on line :line with code :code.',
+    'error_location'          => 'Esse erro ocorreu no arquivo "<span style="font-family: monospace;">:file</span>", na linha :line com o código :code.',
     'stacktrace'              => 'Stack trace',
     'more_info'               => 'More information',
     'collect_info'            => 'Please collect more information in the <code>storage/logs</code> directory where you will find log files. If you\'re running Docker, use <code>docker logs -f [container]</code>.',

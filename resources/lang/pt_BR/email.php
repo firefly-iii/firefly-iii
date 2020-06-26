@@ -64,7 +64,7 @@ return [
     'email_change_undo_link'           => 'To undo the change, follow this link:',
 
     // OAuth token created
-    'oauth_created_subject'            => 'A new OAuth client has been created',
+    'oauth_created_subject'            => 'Um novo cliente OAuth foi criado',
     'oauth_created_body'               => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
     'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
@@ -79,7 +79,7 @@ return [
     'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'The error was of type ":class".',
     'error_timestamp'                  => 'The error occurred on/at: :time.',
-    'error_location'                   => 'This error occurred in file "<span style="font-family: monospace;">:file</span>" on line :line with code :code.',
+    'error_location'                   => 'Esse erro ocorreu no arquivo "<span style="font-family: monospace;">:file</span>", na linha :line com o código :code.',
     'error_user'                       => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
     'error_no_user'                    => 'There was no user logged in for this error or no user was detected.',
     'error_ip'                         => 'The IP address related to this error is: :ip',

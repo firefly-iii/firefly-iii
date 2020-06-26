@@ -39,7 +39,7 @@ return [
     'strict'                    => 'Modo estrito',
     'repeat_freq'               => 'Repetições',
     'object_group'              => 'Grupo',
-    'location'                  => 'Location',
+    'location'                  => 'Localização',
     'update_channel'            => 'Update channel',
     'currency_id'               => 'Moeda',
     'transaction_currency_id'   => 'Moeda',
