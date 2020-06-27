@@ -143,7 +143,7 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.0-alpha.1',
+    'version'                 => '5.3.0-beta.1',
     'api_version'             => '1.2.0',
     'db_version'              => 14,
     'maxUploadSize'           => 15242880,
@@ -152,7 +152,6 @@ return [
     'send_registration_mail'  => env('SEND_REGISTRATION_MAIL', true),
     'demo_username'           => env('DEMO_USERNAME', ''),
     'demo_password'           => env('DEMO_PASSWORD', ''),
-    'is_sandstorm'            => env('IS_SANDSTORM', 'unknown'),
     'fixer_api_key'           => env('FIXER_API_KEY', ''),
     'mapbox_api_key'          => env('MAPBOX_API_KEY', ''),
     'trusted_proxies'         => env('TRUSTED_PROXIES', ''),
@@ -185,6 +184,7 @@ return [
         Tag::class,
         Transaction::class,
         TransactionJournal::class,
+        Recurrence::class,
     ],
     'allowedMimes'            => [
         /* plain files */

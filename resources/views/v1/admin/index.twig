@@ -17,9 +17,7 @@
                         {% if config('firefly.feature_flags.telemetry') %}
                             <li><a href="{{ route('admin.telemetry.index') }}">{{ 'telemetry_admin_index'|_ }}</a></li>
                         {% endif %}
-                        {% if not sandstorm %}
-                            <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
-                        {% endif %}
+                        <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
                     </ul>
                 </div>
             </div>

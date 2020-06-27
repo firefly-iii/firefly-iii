@@ -1511,9 +1511,6 @@ return [
     'reset_after'                           => 'Reset form after submission',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
 
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
-
     // object groups
     'default_group_title_name'              => '(ungrouped)',
 

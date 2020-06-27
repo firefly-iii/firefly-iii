@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -57,7 +56,6 @@ class UserController extends Controller
             }
         );
         $this->middleware(IsDemoUser::class)->except(['index', 'show']);
-        $this->middleware(IsSandStormUser::class);
     }
 
     /**
