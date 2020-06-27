@@ -670,6 +670,14 @@ try {
         }
     );
 
+    Breadcrumbs::register(
+        'profile.logout-others',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('breadcrumbs.logout_others'), route('profile.logout-others'));
+        }
+    );
+
     // PROFILE
     Breadcrumbs::register(
         'profile.index',

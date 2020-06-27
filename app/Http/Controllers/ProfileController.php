@@ -87,6 +87,38 @@ class ProfileController extends Controller
     }
 
     /**
+     *
+     */
+    public function logoutOtherSessions()
+    {
+        //
+        return view('profile.logout-other-sessions');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|RedirectResponse|Redirector
+     */
+    public function postLogoutOtherSessions(Request $request)
+    {
+        $creds = [
+            'email'    => auth()->user()->email,
+            'password' => $request->get('password'),
+        ];
+        if (Auth::once($creds)) {
+            Auth::logoutOtherDevices($request->get('password'));
+            session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));
+
+            return redirect(route('profile.index'));
+        }
+        session()->flash('error', (string) trans('auth.failed'));
+
+        return redirect(route('profile.index'));
+
+    }
+
+    /**
      * Change your email address.
      *
      * @param Request $request

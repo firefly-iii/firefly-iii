@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'other_sessions_logged_out'                 => 'All other sessions have been invalidated.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',
     'delete_all_categories'                     => 'Delete ALL your categories',
     'delete_all_tags'                           => 'Delete ALL your tags',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Currency',
     'preferences'                               => 'Preferences',
     'logout'                                    => 'Logout',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Toggle navigation',
     'searchPlaceholder'                         => 'Search...',
     'version'                                   => 'Version',

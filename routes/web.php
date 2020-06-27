@@ -716,6 +716,9 @@ Route::group(
         Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
         Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
 
+        Route::get('logout-others', ['uses' => 'ProfileController@logoutOtherSessions', 'as' => 'logout-others']);
+        Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
+
         // new 2FA routes
         Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
         Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
