@@ -70,7 +70,9 @@
         "profile_create_new_token": "Create new token",
         "profile_create_token": "Create token",
         "profile_create": "Luo",
-        "profile_save_changes": "Save changes"
+        "profile_save_changes": "Save changes",
+        "default_group_title_name": "(ryhmittelem\u00e4tt\u00f6m\u00e4t)",
+        "piggy_bank": "S\u00e4\u00e4st\u00f6possu"
     },
     "form": {
         "interest_date": "Korkop\u00e4iv\u00e4",

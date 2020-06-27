@@ -70,7 +70,9 @@
         "profile_create_new_token": "Create new token",
         "profile_create_token": "Create token",
         "profile_create": "Create",
-        "profile_save_changes": "Save changes"
+        "profile_save_changes": "Save changes",
+        "default_group_title_name": "(ungrouped)",
+        "piggy_bank": "Celengan"
     },
     "form": {
         "interest_date": "Tanggal bunga",

@@ -70,7 +70,9 @@
         "profile_create_new_token": "Neuen Schl\u00fcssel erstellen",
         "profile_create_token": "Schl\u00fcssel erstellen",
         "profile_create": "Erstellen",
-        "profile_save_changes": "\u00c4nderungen speichern"
+        "profile_save_changes": "\u00c4nderungen speichern",
+        "default_group_title_name": "(ohne Gruppierung)",
+        "piggy_bank": "Sparschwein"
     },
     "form": {
         "interest_date": "Zinstermin",

@@ -70,7 +70,9 @@
         "profile_create_new_token": "Nieuwe token aanmaken",
         "profile_create_token": "Token aanmaken",
         "profile_create": "Cre\u00ebr",
-        "profile_save_changes": "Aanpassingen opslaan"
+        "profile_save_changes": "Aanpassingen opslaan",
+        "default_group_title_name": "(ongegroepeerd)",
+        "piggy_bank": "Spaarpotje"
     },
     "form": {
         "interest_date": "Rentedatum",

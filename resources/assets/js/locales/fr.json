@@ -70,7 +70,9 @@
         "profile_create_new_token": "Cr\u00e9er un nouveau jeton",
         "profile_create_token": "Cr\u00e9er un jeton",
         "profile_create": "Cr\u00e9er",
-        "profile_save_changes": "Enregistrer les modifications"
+        "profile_save_changes": "Enregistrer les modifications",
+        "default_group_title_name": "(Sans groupement)",
+        "piggy_bank": "Tirelire"
     },
     "form": {
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",

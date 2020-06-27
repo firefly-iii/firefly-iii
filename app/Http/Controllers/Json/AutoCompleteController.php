@@ -391,6 +391,7 @@ class AutoCompleteController extends Controller
         foreach ($piggies as $piggy) {
             $currency                = $accountRepos->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $currentAmount           = $repository->getRepetition($piggy)->currentamount ?? '0';
+            $piggy->objectGroup      = $piggy->objectGroups->first();
             $piggy->name_with_amount = sprintf(
                 '%s (%s / %s)',
                 $piggy->name,
