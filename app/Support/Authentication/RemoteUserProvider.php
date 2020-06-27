@@ -17,16 +17,6 @@ use Str;
  */
 class RemoteUserProvider implements UserProvider
 {
-    /**
-     * RemoteUserProvider constructor.
-     *
-     * @param Application $app
-     * @param array       $config
-     */
-    public function __construct(Application $app, array $config)
-    {
-        //Log::debug('In RemoteUserProvider constructor.');
-    }
 
     /**
      * @inheritDoc

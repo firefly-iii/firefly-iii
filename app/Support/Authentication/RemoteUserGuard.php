@@ -81,7 +81,6 @@ class RemoteUserGuard implements Guard
      */
     public function guest(): bool
     {
-        //Log::debug(sprintf('Now at %s', __METHOD__));
         return !$this->check();
     }
 
@@ -90,7 +89,6 @@ class RemoteUserGuard implements Guard
      */
     public function id(): ?User
     {
-        //Log::debug(sprintf('Now at %s', __METHOD__));
         return $this->user;
     }
 
@@ -99,7 +97,6 @@ class RemoteUserGuard implements Guard
      */
     public function setUser(Authenticatable $user)
     {
-        //Log::debug(sprintf('Now at %s', __METHOD__));
         $this->user = $user;
     }
 
@@ -108,7 +105,6 @@ class RemoteUserGuard implements Guard
      */
     public function user(): ?User
     {
-        //Log::debug(sprintf('Now in user(). Will return NULL: %s', var_export(null === $this->user, true)));
         return $this->user;
     }
 

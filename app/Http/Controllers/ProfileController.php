@@ -237,20 +237,16 @@ class ProfileController extends Controller
         /** @var Collection $set */
         $set  = app('preferences')->findByName('email_change_confirm_token');
         $user = null;
-        //Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
         foreach ($set as $preference) {
             if ($preference->data === $token) {
-                //Log::debug('Found user');
                 $user = $preference->user;
             }
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            //Log::debug('Found no user');
             throw new FireflyException('Invalid token.');
         }
-        //Log::debug('Will unblock user.');
         $repository->unblockUser($user);
 
         // return to login.
@@ -372,7 +368,7 @@ class ProfileController extends Controller
     /**
      * @return Factory|View
      */
-    public function newBackupCodes()
+    public function newBackupCodes(Request $request)
     {
         if ($this->externalIdentity) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

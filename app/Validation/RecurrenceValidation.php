@@ -48,7 +48,6 @@ trait RecurrenceValidation
      */
     public function valUpdateAccountInfo(Validator $validator): void
     {
-        //Log::debug('Now in validateAccountInformation()');
         $data = $validator->getData();
 
         $transactionType = $data['type'] ?? 'invalid';

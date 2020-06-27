@@ -182,8 +182,6 @@ class MassController extends Controller
                 $count++;
             } catch (FireflyException $e) {  // @codeCoverageIgnore
                 // do something with error.
-                //echo $e->getMessage();
-                //exit;
             }
         }
 

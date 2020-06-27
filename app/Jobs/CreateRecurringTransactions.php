@@ -315,9 +315,6 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->created++;
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
-        // link to piggy:
-        //$this->linkGroupToPiggies($recurrence, $group);
-
         // trigger event:
         event(new StoredTransactionGroup($group, $recurrence->apply_rules));
 

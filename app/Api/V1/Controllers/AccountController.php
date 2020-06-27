@@ -50,8 +50,9 @@ use League\Fractal\Resource\Item;
 class AccountController extends Controller
 {
     use AccountFilter, TransactionFilter;
-    /** @var AccountRepositoryInterface The account repository */
-    private $repository;
+
+    private AccountRepositoryInterface $repository;
+    public const RESOURCE_KEY = 'accounts';
 
     /**
      * AccountController constructor.
@@ -150,7 +151,7 @@ class AccountController extends Controller
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($accounts, $transformer, 'accounts');
+        $resource = new FractalCollection($accounts, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -208,7 +209,7 @@ class AccountController extends Controller
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, 'accounts');
+        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -230,7 +231,7 @@ class AccountController extends Controller
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($account, $transformer, 'accounts');
+        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -304,7 +305,7 @@ class AccountController extends Controller
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, 'accounts');
+        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

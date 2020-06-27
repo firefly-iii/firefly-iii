@@ -87,8 +87,6 @@ Route::group(
     static function () {
         Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
         Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-        //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-        //
     }
 );
 
@@ -160,12 +158,6 @@ Route::group(
             'reconcile/{account}/transactions/{start_date?}/{end_date?}',
             ['uses' => 'Json\ReconcileController@transactions', 'as' => 'reconcile.transactions']
         );
-
-        // show reconciliation
-    // TODO improve me
-    //Route::get('reconcile/show/{transactionGroup}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
-    //Route::get('reconcile/edit/{transactionGroup}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
-    //Route::post('reconcile/update/{transactionGroup}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
     }
 );
 
