@@ -47,17 +47,43 @@ class PiggyBankForm
      */
     public function piggyBankList(string $name, $value = null, array $options = null): string
     {
-
         // make repositories
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
-        $array      = [
-            0 => (string)trans('firefly.none_in_select_list'),
+        $title      = (string) trans('firefly.default_group_title_name');
+        $array      = [];
+        $subList    = [
+            0 => [
+                'group'   => [
+                    'title' => $title,
+                ],
+                'piggies' => [
+                    (string) trans('firefly.none_in_select_list'),
+                ],
+            ],
         ];
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
-            $array[$piggy->id] = $piggy->name;
+            $group      = $piggy->objectGroups->first();
+            $groupTitle = null;
+            $groupOrder = 0;
+            if (null !== $group) {
+                $groupTitle = $group->title;
+                $groupOrder = $group->order;
+            }
+            $subList[$groupOrder]                        = $subList[$groupOrder] ?? [
+                    'group'   => [
+                        'title' => $groupTitle,
+                    ],
+                    'piggies' => [],
+                ];
+            $subList[$groupOrder]['piggies'][$piggy->id] = $piggy->name;
+        }
+        ksort($subList);
+        foreach ($subList as $info) {
+            $groupTitle         = $info['group']['title'];
+            $array[$groupTitle] = $info['piggies'];
         }
 
         return $this->select($name, $array, $value, $options);
