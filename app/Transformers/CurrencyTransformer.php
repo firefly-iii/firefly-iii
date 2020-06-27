@@ -55,7 +55,7 @@ class CurrencyTransformer extends AbstractTransformer
         $isDefault       = false;
         $defaultCurrency = $this->parameters->get('defaultCurrency');
         if (null !== $defaultCurrency) {
-            $isDefault = $defaultCurrency->id === $currency->id;
+            $isDefault = (int) $defaultCurrency->id === (int) $currency->id;
         }
         $data = [
             'id'             => (int)$currency->id,
