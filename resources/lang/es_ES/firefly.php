@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Fecha de transacción es posterior a :value',
     'search_modifier_created_on'                 => 'Transacción fue creada en :value',
     'search_modifier_updated_on'                 => 'La transacción fue actualizada por última vez en :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Los siguientes modificadores también se aplican a la búsqueda:',
     'general_search_error'                       => 'Se ha producido un error durante la búsqueda. Por favor, compruebe los archivos de registro para obtener más información.',
     'search_box'                                 => 'Buscar',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Tenga cuidado con estos botones. Eliminar cosas es permanente.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Eliminar todos sus presupuestos',
     'delete_all_categories'                     => 'Eliminar todas sus categorías',
     'delete_all_tags'                           => 'Eliminar todas sus etiquetas',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Moneda',
     'preferences'                               => 'Preferencias',
     'logout'                                    => 'Cerrar sesión',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Activar navegación',
     'searchPlaceholder'                         => 'Buscar...',
     'version'                                   => 'Versión',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Enviar mensaje',
     'send_test_triggered'              => 'La prueba fue disparada. Chequee su bandeja de entrada y archivos de registro.',
     'give_admin_careful'               => 'Los usuarios a los que se les conceden derechos de administrador pueden quitarte el tuyo. Ten cuidado.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Descripción de la transacción dividida',
     'split_transaction_title_help'          => 'Si crea una transacción dividida, debe existir una descripción global para todas las divisiones de la transacción.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Almacenar como una nueva transacción en lugar de actualizar.',
     'reset_after'                           => 'Restablecer formulario después del envío',
     'errors_submission'                     => 'Hubo algo malo con su envío. Por favor, revise los errores de abajo.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Esta función no esta disponible cuando usted esta utilizando Firefly III dentro de un ambiente Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

@@ -84,13 +84,11 @@
                         </span>
                     </li>
 
-                    {% if not SANDSTORM %}
-                        <li class="dropdown user user-menu">
-                        <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
-                            <span class="hidden-xs">{{ Auth.user.email }}</span>
-                        </span>
-                        </li>
-                    {% endif %}
+                    <li class="dropdown user user-menu">
+                    <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
+                        <span class="hidden-xs">{{ Auth.user.email }}</span>
+                    </span>
+                    </li>
                     <li id="sidebar-toggle">
                         <a href="#" data-toggle="control-sidebar"><i class="fa fa-plus-circle"></i></a>
                     </li>

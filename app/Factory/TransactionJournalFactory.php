@@ -367,19 +367,6 @@ class TransactionJournalFactory
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         // TODO this can't be faked so it can't be tested.
-        //        $count = $journal->transactions()->count();
-        //        if (2 !== $count) {
-        //            // @codeCoverageIgnoreStart
-        //            Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
-        //            try {
-        //                $journal->delete();
-        //            } catch (Exception $e) {
-        //                Log::debug(sprintf('Dont care: %s.', $e->getMessage()));
-        //            }
-        //
-        //            return null;
-        //            // @codeCoverageIgnoreEnd
-        //        }
         $journal->completed = true;
         $journal->save();
 

@@ -102,7 +102,7 @@ class Search implements SearchInterface
     {
         $string = implode(' ', $this->words);
         if ('' === $string) {
-            return \is_string($this->originalQuery) ? $this->originalQuery : '';
+            return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
 
         return $string;
@@ -132,6 +132,11 @@ class Search implements SearchInterface
             $filteredQuery = str_replace($match, '', $filteredQuery);
         }
         $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
+
+        // str replace some stuff:
+        $search        = ['%', '=', '/', '<', '>', '(', ')', ';'];
+        $filteredQuery = str_replace($search, ' ', $filteredQuery);
+
         if ('' !== $filteredQuery) {
             $this->words = array_map('trim', explode(' ', $filteredQuery));
         }
@@ -297,6 +302,12 @@ class Search implements SearchInterface
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $updatedAt = new Carbon($modifier['value']);
                     $collector->setUpdatedAt($updatedAt);
+                    break;
+                case 'external_id':
+                    $collector->setExternalId($modifier['value']);
+                    break;
+                case 'internal_reference':
+                    $collector->setInternalReference($modifier['value']);
                     break;
             }
         }

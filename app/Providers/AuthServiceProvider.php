@@ -54,14 +54,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::provider(
             'remote_user_provider', function ($app, array $config) {
-            //Log::debug('Creating remote_user_provider in Closure');
             return new RemoteUserProvider($app, $config);
         }
         );
 
         Auth::extend(
             'remote_user_guard', static function ($app, string $name, array $config) {
-            //Log::debug('Creating remote_user_guard in Closure');
             return new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app);
         }
         );

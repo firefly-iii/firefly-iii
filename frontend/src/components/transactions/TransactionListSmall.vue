@@ -1,5 +1,13 @@
 <template>
     <table class="table table-striped">
+        <caption>A table containing transactions.</caption>
+        <thead>
+        <tr>
+            <th>TODO</th>
+            <th>TODO</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr v-for="transaction in transactions">
             <td>
                 <a href="#">
@@ -18,6 +26,7 @@
                 </span>
             </td>
         </tr>
+        </tbody>
     </table>
 </template>
 

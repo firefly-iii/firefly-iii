@@ -243,24 +243,6 @@ trait RecurringTransactionTrait
         return $result ?? $repository->getCashAccount();
     }
 
-    //    /**
-    //     * Update meta data for recurring transaction.
-    //     *
-    //     * @param Recurrence $recurrence
-    //     * @param array $data
-    //     */
-    //    protected function updateMetaData(Recurrence $recurrence, array $data): void
-    //    {
-    //        // only two special meta fields right now. Let's just hard code them.
-    //        $piggyId   = (int)($data['meta']['piggy_bank_id'] ?? 0.0);
-    //        $piggyName = $data['meta']['piggy_bank_name'] ?? '';
-    //        $this->updatePiggyBank($recurrence, $piggyId, $piggyName);
-    //
-    //        $tags = $data['meta']['tags'] ?? [];
-    //        $this->updateTags($recurrence, $tags);
-    //
-    //    }
-
     /**
      * @param RecurrenceTransaction $transaction
      * @param int                   $piggyId

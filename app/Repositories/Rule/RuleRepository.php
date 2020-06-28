@@ -483,4 +483,18 @@ class RuleRepository implements RuleRepositoryInterface
 
         return $newRule;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
+    {
+        $rule->order = $order;
+        if ($rule->rule_group_id !== $ruleGroup->id) {
+            $rule->rule_group_id = $ruleGroup->id;
+        }
+        $rule->save();
+
+        return $rule;
+    }
 }

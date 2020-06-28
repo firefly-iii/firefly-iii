@@ -58,7 +58,7 @@
                     <div class="panel-body">
                         <!-- Introduction -->
                         <p>
-                            {{ trans('firefly.authorization_request_intro', {client: client.name})|raw }}
+                            {{ trans('firefly.authorization_request_intro', {client: client.name|escape})|raw }}
                         </p>
                         <!-- Scope List -->
                         {% if scopes|length > 0 %}

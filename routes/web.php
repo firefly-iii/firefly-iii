@@ -87,8 +87,6 @@ Route::group(
     static function () {
         Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
         Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
-        //    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-        //
     }
 );
 
@@ -160,12 +158,6 @@ Route::group(
             'reconcile/{account}/transactions/{start_date?}/{end_date?}',
             ['uses' => 'Json\ReconcileController@transactions', 'as' => 'reconcile.transactions']
         );
-
-        // show reconciliation
-    // TODO improve me
-    //Route::get('reconcile/show/{transactionGroup}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
-    //Route::get('reconcile/edit/{transactionGroup}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
-    //Route::post('reconcile/update/{transactionGroup}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
     }
 );
 
@@ -716,6 +708,9 @@ Route::group(
         Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
         Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
 
+        Route::get('logout-others', ['uses' => 'ProfileController@logoutOtherSessions', 'as' => 'logout-others']);
+        Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
+
         // new 2FA routes
         Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
         Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
@@ -923,8 +918,12 @@ Route::group(
 
         // index controller
         Route::get('', ['uses' => 'Rule\IndexController@index', 'as' => 'index']);
-        Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
-        Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
+
+        //Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
+        //Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
+        Route::post('move-rule/{rule}/{ruleGroup}', ['uses' => 'Rule\IndexController@moveRule', 'as' => 'move-rule']);
+
+
         Route::post('trigger/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
         Route::post('action/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleActions', 'as' => 'reorder-actions']);
 

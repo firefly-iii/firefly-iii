@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Tapahtumapäivä on :value jälkeen',
     'search_modifier_created_on'                 => 'Tapahtuma luotiin :value',
     'search_modifier_updated_on'                 => 'Tapahtumaa päivitettiin viimeksi :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Seuraavat muokkaukset vaikuttavat myös hakuun:',
     'general_search_error'                       => 'Haussa tapahtui virhe. Virhe tallennettiin lokitiedostoon.',
     'search_box'                                 => 'Hae',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Ole varovainen näiden valintojen kanssa, poistaminen on lopullista.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Poista KAIKKI budjettisi',
     'delete_all_categories'                     => 'Poista KAIKKI kategoriasi',
     'delete_all_tags'                           => 'Poista KAIKKI tägit',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Valuutta',
     'preferences'                               => 'Asetukset',
     'logout'                                    => 'Kirjaudu ulos',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Vaihda navigointia',
     'searchPlaceholder'                         => 'Hae ...',
     'version'                                   => 'Versio',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Lähetä viesti',
     'send_test_triggered'              => 'Testiviesti lähetettiin. Tarkista sähköpostisi sekä lokitiedostot.',
     'give_admin_careful'               => 'Käyttäjät, joille on annettu järjestelmänvalvojan oikeudet, voivat poistaa oikeudet sinulta. Ole varovainen.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Jaetun tapahtuman kuvaus',
     'split_transaction_title_help'          => 'Jos luot jaetun tapahtuman, kokonaisuudelle tarvitaan nimi.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
     'errors_submission'                     => 'Lomakkeen tiedoissa oli puutteita - alta löydät listan puutteista.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Tätä toimintoa ei ole kun Firefly III on asennettu Sandstorm.io ympäristöön.',
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',

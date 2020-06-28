@@ -70,7 +70,9 @@
         "profile_create_new_token": "T\u1ea1o m\u00e3 m\u1edbi",
         "profile_create_token": "T\u1ea1o m\u00e3",
         "profile_create": "T\u1ea1o",
-        "profile_save_changes": "L\u01b0u thay \u0111\u1ed5i"
+        "profile_save_changes": "L\u01b0u thay \u0111\u1ed5i",
+        "default_group_title_name": "(ch\u01b0a nh\u00f3m)",
+        "piggy_bank": "Heo \u0111\u1ea5t"
     },
     "form": {
         "interest_date": "Ng\u00e0y l\u00e3i",

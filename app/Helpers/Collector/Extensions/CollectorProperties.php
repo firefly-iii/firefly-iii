@@ -58,4 +58,6 @@ trait CollectorProperties
     private $total;
     /** @var User The user object. */
     private $user;
+
+    private bool $hasJoinedMetaTables;
 }

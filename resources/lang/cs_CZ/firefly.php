@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Datum transakce je po :value',
     'search_modifier_created_on'                 => 'Transaction was created on :value',
     'search_modifier_updated_on'                 => 'Transaction was last updated on :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
     'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Hledat',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',
     'delete_all_categories'                     => 'Smazat VŠECHNY vaše kategorie',
     'delete_all_tags'                           => 'Smazat VŠECHNY vaše štítky',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Měna',
     'preferences'                               => 'Předvolby',
     'logout'                                    => 'Odhlásit se',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Vyp/zap. navigaci',
     'searchPlaceholder'                         => 'Hledat…',
     'version'                                   => 'Verze',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Poslat zprávu',
     'send_test_triggered'              => 'Test was triggered. Check your inbox and the log files.',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Popis rozúčtování',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Tato funkce není k dispozici, když používáte Firefly III v prostředí Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

@@ -170,14 +170,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             return 'current_default';
         }
 
-        //        // is the default currency for the system
-        //        $defaultSystemCode = config('firefly.default_currency', 'EUR');
-        //        $result            = $currency->code === $defaultSystemCode;
-        //        if (true === $result) {
-        //            Log::info('Is the default currency of the SYSTEM, return true.');
-        //
-        //            return 'system_fallback';
-        //        }
         Log::debug('Currency is not used, return false.');
 
         return null;

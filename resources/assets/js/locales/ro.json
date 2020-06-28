@@ -70,7 +70,9 @@
         "profile_create_new_token": "Creaz\u0103 un nou token",
         "profile_create_token": "Creaz\u0103 token",
         "profile_create": "Creaz\u0103",
-        "profile_save_changes": "Salveaz\u0103 modific\u0103rile"
+        "profile_save_changes": "Salveaz\u0103 modific\u0103rile",
+        "default_group_title_name": "(ungrouped)",
+        "piggy_bank": "Pu\u0219culi\u021b\u0103"
     },
     "form": {
         "interest_date": "Data de interes",

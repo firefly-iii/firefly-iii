@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Data tranzacţiei este după :value',
     'search_modifier_created_on'                 => 'Tranzacția a fost creată în :value',
     'search_modifier_updated_on'                 => 'Tranzacția a actualizată în :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Următorii modificatorii sunt aplicați la căutare:',
     'general_search_error'                       => 'A apărut o eroare în timpul căutării. Verificați log-urile pentru mai multe informații.',
     'search_box'                                 => 'Caută',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Fii atent cu aceste butoane. Ștergerea lucrurilor este permanentă.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Șterge toate bugetele',
     'delete_all_categories'                     => 'Șterge toate categoriile',
     'delete_all_tags'                           => 'Șterge toate tag-urile',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Monedă',
     'preferences'                               => 'Preferințe',
     'logout'                                    => 'Ieșire',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Navigare',
     'searchPlaceholder'                         => 'Cautare...',
     'version'                                   => 'Versiunea',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Trimite mesaj',
     'send_test_triggered'              => 'Testul a fost declanșat. Verificați mesajele primite și log-urile.',
     'give_admin_careful'               => 'Utilizatorii cărora li se acordă drepturi de administrator pot lua drepturile dvs. Fiți atenți.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Descrierea tranzacției divizate',
     'split_transaction_title_help'          => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                           => 'Resetați formularul după trimitere',
     'errors_submission'                     => 'A fost ceva în neregulă cu transmiterea dvs. Vă rugăm să consultați erorile de mai jos.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Această funcție nu este disponibilă când utilizați Firefly III într-un mediu Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

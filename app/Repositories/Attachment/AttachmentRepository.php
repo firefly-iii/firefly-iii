@@ -121,8 +121,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             try {
                 $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                //Log::debug(sprintf('Could not decrypt: %e', $e->getMessage()));
-                $unencryptedContent = $encryptedContent;
+                    $unencryptedContent = $encryptedContent;
             }
         }
 

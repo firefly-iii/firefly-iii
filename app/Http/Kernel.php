@@ -31,7 +31,6 @@ use FireflyIII\Http\Middleware\InterestingMessage;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
-use FireflyIII\Http\Middleware\Sandstorm;
 use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\TrimStrings;
@@ -45,6 +44,7 @@ use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
@@ -85,13 +85,13 @@ class Kernel extends HttpKernel
             // does not check 2fa
             // does not check activation
             'web'                   => [
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 CreateFreshApiToken::class,
+                AuthenticateSession::class,
             ],
 
             // only the basic variable binders.
@@ -105,7 +105,6 @@ class Kernel extends HttpKernel
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
             'user-not-logged-in'    => [
                 Installer::class,
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,
@@ -119,7 +118,6 @@ class Kernel extends HttpKernel
             // don't care about confirmation:
             'user-logged-in-no-2fa' => [
                 Installer::class,
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,
@@ -134,7 +132,6 @@ class Kernel extends HttpKernel
             // don't care about 2fa
             // don't care about confirmation.
             'user-simple-auth'      => [
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,
@@ -149,7 +146,6 @@ class Kernel extends HttpKernel
             // MUST be confirmed.
             // (this group includes the other Firefly middleware)
             'user-full-auth'        => [
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,
@@ -168,7 +164,6 @@ class Kernel extends HttpKernel
             // MUST have owner role
             // (this group includes the other Firefly middleware)
             'admin'                 => [
-                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartFireflySession::class,

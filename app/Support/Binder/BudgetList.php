@@ -66,7 +66,6 @@ class BudgetList implements BinderInterface
                                 ->where('active', 1)
                                 ->whereIn('id', $list)
                                 ->get();
-            //Log::debug(sprintf('Found %d active budgets', $collection->count()), $list);
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {
@@ -75,11 +74,9 @@ class BudgetList implements BinderInterface
             }
 
             if ($collection->count() > 0) {
-                //Log::debug(sprintf('List length is > 0 (%d), so return it.', $collection->count()));
 
                 return $collection;
             }
-            //Log::debug('List length is zero, fall back to 404.');
         }
         Log::warning('BudgetList fallback to 404.');
         throw new NotFoundHttpException;

@@ -121,10 +121,6 @@ class IndexController extends Controller
                 }
             }
 
-            //if (0 !== $recurrence->recurrenceRepetitions->count()) {
-            //$array['ocurrences'] = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
-            //}
-
             $recurring[] = $array;
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);

@@ -277,6 +277,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ->get(['piggy_bank_events.*']);
         /** @var PiggyBankEvent $row */
         foreach ($data as $row) {
+            if(null === $row->piggyBank) {
+                continue;
+            }
             // get currency preference.
             $currencyPreference = AccountMeta
                 ::where('account_id', $row->piggyBank->account_id)

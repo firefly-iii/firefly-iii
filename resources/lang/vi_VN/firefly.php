@@ -221,7 +221,7 @@ return [
     'is_beta_warning'                            => 'Bạn đang sử dụng phiên bản BETA.',
     'all_destination_accounts'                   => 'Tài khoản nhận',
     'all_source_accounts'                        => 'Tài khoản gửi',
-    'back_to_index'                              => 'Back to the index',
+    'back_to_index'                              => 'Quay lại chỉ mục',
 
     // check for updates:
     'update_check_title'                         => 'Kiểm tra cập nhật',
@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Ngày giao dịch là sau :value',
     'search_modifier_created_on'                 => 'Giao dịch được tạo trên :value',
     'search_modifier_updated_on'                 => 'Giao dịch được cập nhật lần cuối vào :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'Các sửa đổi sau đây cũng được áp dụng cho tìm kiếm:',
     'general_search_error'                       => 'Đã xảy ra lỗi trong khi tìm kiếm. Vui lòng kiểm tra các tệp nhật ký để biết thêm thông tin.',
     'search_box'                                 => 'Tìm kiếm',
@@ -298,7 +300,7 @@ return [
     'yearly'                                     => 'hàng năm',
 
     // rules
-    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
+    'cannot_fire_inactive_rules'                 => 'Bạn không thể thực thi các quy tắc không hoạt động.',
     'rules'                                      => 'Quy tắc',
     'rule_name'                                  => 'Tên của quy tắc',
     'rule_triggers'                              => 'Quy tắc kích hoạt khi',
@@ -438,8 +440,8 @@ return [
     'rule_trigger_tag_is'                        => 'Nhãn là ":trigger_value"',
     'rule_trigger_currency_is_choice'            => 'Tiền tệ giao dịch là..',
     'rule_trigger_currency_is'                   => 'Tiền tệ giao dịch là ":trigger_value"',
-    'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
-    'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
+    'rule_trigger_foreign_currency_is_choice'    => 'Giao dịch ngoại tệ là..',
+    'rule_trigger_foreign_currency_is'           => 'Giao dịch ngoại tệ là ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Có ít nhất nhiều tệp đính kèm này',
     'rule_trigger_has_attachments'               => 'Có ít nhất: :count tệp đính kèm | Có ít nhất: :count tệp đính kèm',
     'rule_trigger_store_journal'                 => 'Khi một giao dịch được tạo',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Hãy cẩn thận với các nút này. Xóa nội dung là vĩnh viễn.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Xóa TẤT CẢ ngân sách của bạn',
     'delete_all_categories'                     => 'Xóa TẤT CẢ danh mục của bạn',
     'delete_all_tags'                           => 'Xóa TẤT CẢ các nhãn của bạn',
@@ -647,7 +650,7 @@ return [
     'secure_pw_should'                          => 'Tôi có nên check vào hộp không?',
     'secure_pw_long_password'                   => 'Đúng. Luôn xác minh mật khẩu của bạn an toàn.',
     'command_line_token'                        => 'Mã thông báo dòng lệnh',
-    'explain_command_line_token'                => 'You need this token to perform command line options, such as exporting data. Without it, that sensitive command will not work. Do not share your command line token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'explain_command_line_token'                => 'Bạn cần token này để thực hiện các tùy chọn dòng lệnh, chẳng hạn như xuất dữ liệu. Không có nó, lệnh nhạy cảm đó sẽ không hoạt động. Không chia sẻ mã thông báo dòng lệnh của bạn. Không ai sẽ yêu cầu bạn cho mã thông báo này, ngay cả tôi. Nếu bạn sợ bạn mất thứ này, hãy tạo lại mã thông báo này bằng nút.',
     'regenerate_command_line_token'             => 'Tạo lại mã thông báo dòng lệnh',
     'token_regenerated'                         => 'Một mã thông báo dòng lệnh mới đã được tạo',
     'change_your_email'                         => 'Thay đổi địa chỉ email của bạn',
@@ -656,8 +659,8 @@ return [
     'login_with_new_email'                      => 'Bây giờ bạn có thể đăng nhập bằng địa chỉ email mới của bạn.',
     'login_with_old_email'                      => 'Bây giờ bạn có thể đăng nhập lại với địa chỉ email cũ của bạn.',
     'login_provider_local_only'                 => 'Hành động này không khả dụng khi xác thực thông qua ": login_provider".',
-    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
-    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'external_user_mgt_disabled'                => 'Hành động này không khả dụng khi Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực.',
+    'delete_local_info_only'                    => "Vì Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực, nên chức năng này sẽ chỉ xóa thông tin Firefly III cục bộ.",
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Bạn đã không tạo ra bất kỳ OAuth clients nào.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -819,7 +822,7 @@ return [
     'ab_basic_modal_explain'                    => 'Sử dụng biểu mẫu này để cho biết số tiền bạn mong đợi có thể dự trù ngân sách (tổng cộng, bằng :currency) trong khoảng thời gian được chỉ định.',
     'createBudget'                              => 'Ngân sách mới',
     'invalid_currency'                          => 'Đây là một loại tiền tệ không hợp lệ',
-    'invalid_amount'                            => 'Please enter an amount',
+    'invalid_amount'                            => 'Xin hãy nhập một số tiền',
     'set_ab'                                    => 'Số tiền ngân sách có sẵn đã được đặt',
     'updated_ab'                                => 'Số tiền ngân sách có sẵn đã được cập nhật',
     'deleted_ab'                                => 'Số tiền ngân sách có sẵn đã bị xóa',
@@ -857,11 +860,11 @@ return [
     'auto_budget_help'                          => 'Bạn có thể đọc thêm về tính năng này trong trợ giúp. Nhấp vào biểu tượng trên cùng bên phải (?).',
     'auto_budget_reset_icon'                    => 'Ngân sách này sẽ được đặt định kỳ',
     'auto_budget_rollover_icon'                 => 'Số tiền ngân sách sẽ tăng theo định kỳ',
-    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
+    'remove_budgeted_amount'                    => 'Xóa số tiền ngân sách trong :currency',
 
     // bills:
-    'not_expected_period'                       => 'Not expected this period',
-    'not_or_not_yet'                            => 'Not (yet)',
+    'not_expected_period'                       => 'Không mong đợi ở giai đoạn này',
+    'not_or_not_yet'                            => 'Không (chưa)',
     'match_between_amounts'                     => 'Hóa đơn khớp với các giao dịch giữa: thấp và: cao.',
     'running_again_loss'                        => 'Các giao dịch được liên kết trước đây với hóa đơn này có thể mất kết nối, nếu chúng (không còn) khớp với (các) quy tắc.',
     'bill_related_rules'                        => 'Các quy tắc liên quan đến dự luật này',
@@ -890,7 +893,7 @@ return [
     'bill_store_error'                          => 'Một lỗi không mong muốn đã xảy ra trong khi lưu trữ hóa đơn mới của bạn. Vui lòng kiểm tra các tệp nhật ký',
     'list_inactive_rule'                        => 'quy tắc không hoạt động',
     'bill_edit_rules'                           => 'Firefly III cũng sẽ cố gắng chỉnh sửa quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì. | Firefly III cũng sẽ cố gắng chỉnh sửa :count các quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa các quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì.',
-    'bill_expected_date'                        => 'Expected :date',
+    'bill_expected_date'                        => 'Ngày đáo hạn :date',
 
     // accounts:
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Tiền tệ',
     'preferences'                               => 'Cá nhân',
     'logout'                                    => 'Đăng xuất',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Chuyển đổi đổigle navigation',
     'searchPlaceholder'                         => 'Tìm kiếm...',
     'version'                                   => 'Phiên bản',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Gửi tin nhắn',
     'send_test_triggered'              => 'Kiểm tra đã được kích hoạt. Kiểm tra hộp thư đến của bạn và các tệp nhật ký.',
     'give_admin_careful'               => 'Người dùng được trao quyền quản trị có thể lấy đi của bạn. Hãy cẩn thận.',
+    'admin_maintanance_title'          => 'Bảo trì',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Xóa bộ nhớ đệm',
 
     'split_transaction_title'               => 'Mô tả giao dịch tách',
     'split_transaction_title_help'          => 'Nếu bạn tạo một giao dịch phân tách, phải có một mô tả toàn cầu cho tất cả các phân chia của giao dịch.',
@@ -1506,11 +1513,8 @@ return [
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
     'errors_submission'                     => 'Có gì đó sai. Vui lòng kiểm tra các lỗi dưới đây.',
 
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Chức năng này không khả dụng khi bạn đang sử dụng Firefly III trong môi trường Sandstorm.io.',
-
     // object groups
-    'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name'              => '(chưa nhóm)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Hãy tạo một tài khoản!',
@@ -1650,7 +1654,7 @@ return [
     'telemetry_disabled_now_what'        => 'Nếu muốn, bạn có thể bậc chức năng thu thập dữ liệu trong file cấu hình .env.',
     'telemetry_collected_info'           => 'Đã thu thập dữ liệu',
     'no_telemetry_present'               => 'Firefly III đã thu thập 0 bản tin.',
-    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
+    'records_telemetry_present'          => 'Firefly III đã thu thập :count.',
     'telemetry_button_view'              => 'Xem dữ liệu thu thập',
     'telemetry_button_delete'            => 'Xóa tất cả thu thập',
     'telemetry_admin_overview'           => 'Tổng quan thu thập dữ liệu',
@@ -1666,24 +1670,24 @@ return [
     'telemetry_submitted_deleted'        => 'Tất cả các hồ sơ từ xa đã được xóa.',
 
     // debug page
-    'debug_page'                         => 'Debug page',
-    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
-    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
-    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+    'debug_page'                         => 'Trang debug',
+    'debug_submit_instructions'          => 'Nếu bạn đang gặp vấn đề, bạn có thể sử dụng thông tin trong hộp này làm thông tin gỡ lỗi. Vui lòng sao chép và dán vào một <a href="https://github.com/firefly-iii/firefly-iii/issues"> vấn đề GitHub mới hoặc hiện có </a>. Nó sẽ tạo ra một bảng có thể được sử dụng để chẩn đoán nhanh vấn đề của bạn.',
+    'debug_pretty_table'                 => 'Nếu bạn sao chép / dán hộp bên dưới vào GitHub, nó sẽ tạo ra một bảng. Xin vui lòng không bao quanh văn bản này với backticks hoặc dấu ngoặc kép.',
+    'debug_additional_data'              => 'Bạn cũng có thể chia sẻ nội dung của hộp bên dưới. Bạn cũng có thể sao chép và dán phần này vào một <a href="https://github.com/firefly-iii/firefly-iii/issues"> vấn đề GitHub mới hoặc hiện có </a>. Tuy nhiên, nội dung của hộp này có thể chứa thông tin cá nhân như tên tài khoản, chi tiết giao dịch hoặc địa chỉ email.',
 
     // object groups
-    'object_groups_menu_bar'             => 'Groups',
-    'object_groups_page_title'           => 'Groups',
-    'object_groups_breadcrumb'           => 'Groups',
-    'object_groups_index'                => 'Overview',
-    'object_groups'                      => 'Groups',
-    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
-    'object_group_title'                 => 'Title',
-    'edit_object_group'                  => 'Edit group ":title"',
-    'delete_object_group'                => 'Edit group ":title"',
-    'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
-    'object_group'                       => 'Group',
+    'object_groups_menu_bar'             => 'Các Nhóm',
+    'object_groups_page_title'           => 'Các Nhóm',
+    'object_groups_breadcrumb'           => 'Các Nhóm',
+    'object_groups_index'                => 'Tổng quan',
+    'object_groups'                      => 'Các Nhóm',
+    'object_groups_empty_explain'        => 'Một số điều trong Firefly III có thể được chia thành các nhóm. Ví dụ, các ống heo, có trường "Nhóm" trong chỉnh sửa và tạo. Khi bạn đặt trường này, bạn có thể chỉnh sửa tên và thứ tự của các nhóm trên trang này. Để biết thêm thông tin, hãy xem các trang trợ giúp ở góc trên bên phải, dưới biểu tượng (?) -.',
+    'object_group_title'                 => 'Tiêu đề',
+    'edit_object_group'                  => 'Chỉnh sửa nhóm ":title"',
+    'delete_object_group'                => 'Chỉnh sửa nhóm ":title"',
+    'update_object_group'                => 'Cập nhật nhóm',
+    'updated_object_group'               => 'Nhóm được cập nhật thành công ":title"',
+    'deleted_object_group'               => 'Đã xóa nhóm thành công ":title"',
+    'object_group'                       => 'Nhóm',
 
 ];

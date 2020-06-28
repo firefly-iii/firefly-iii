@@ -111,7 +111,6 @@ class BudgetController extends Controller
         $loopStart      = app('navigation')->startOfPeriod($loopStart, $step);
         $currencies     = [];
         $defaultEntries = [];
-        //        echo '<hr>';
         while ($end >= $loopStart) {
             /** @var Carbon $currentEnd */
             $loopEnd = app('navigation')->endOfPeriod($loopStart, $step);

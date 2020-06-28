@@ -3,26 +3,36 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [5.3.0 (API 1.2.0) - 2020-08-01
+## [5.3.0 (API 1.2.0) - 2020-xx-xx
 
 Several alpha and beta releases preceded this release.
 
 - 5.3.0-alpha.1 on 2020-06-22
+- 5.3.0-beta.1 on 2020-06-28
 
 ### Added
 - Piggy banks can be divided over groups. Groups can be sorted on a separate page. This may prove to be useful to organize piggy banks. The feature will
- expand to other objects in the future.
+ expand to other objects in the future. Empty groups will be automatically deleted; you can only create groups by editing piggy banks.
 - [Issue 3392](https://github.com/firefly-iii/firefly-iii/issues/3392) Notes will be included in the export.
 - [Issue 3184](https://github.com/firefly-iii/firefly-iii/issues/3184) You can now use the `REMOTE_USER` field to authenticate. Read [the documentation](https://docs.firefly-iii.org/advanced-installation/authentication#remote-user) carefully.
 - [Issue 3403](https://github.com/firefly-iii/firefly-iii/issues/3403) More triggers have been added that respond to the date of a transaction. Read [the documentation](https://docs.firefly-iii.org/advanced-concepts/rules)
-- You can now add an attachments to recurring transactions.
+- You can now add attachments to recurring transactions.
+- You can invalidate other logins, check out the button on the `/profile` page.
+- It is now possible to search for `internal_reference:abc` and / or `external_id:123`.
+- [Issue 3398](https://github.com/firefly-iii/firefly-iii/issues/3398) You can clear the cache directly from the admin.
 
 ### Changed
-- Firefly III now requires **PHP 7.4**
-- The Docker image is running on **port 8080**
+- Firefly III now requires **PHP 7.4**. PHP7.4 specific features have been introduced to make sure you upgrade.
+- The Docker image is running on **port 8080**. Update your configuration.
 - Firefly III has been upgraded to Laravel 7.
 - [Issue 3455](https://github.com/firefly-iii/firefly-iii/issues/3455) Translations for the debug page.
 - [Issue 3461](https://github.com/firefly-iii/firefly-iii/issues/3461) Inactive rules are no longer applied.
+- From this release on, the Dockerfile and default configuration will install MySQL (using MariaDB) instead of PostgreSQL. This doesn't influence existing
+ installations.
+ - Example environment file has several fixes to make it more clear what features are for.
+ - Sandstorm support is now entirely decrepated.
+ - [Issue 3440](https://github.com/firefly-iii/firefly-iii/issues/3440) You can now sort rules more easily.
+ - [Issue 3493](https://github.com/firefly-iii/firefly-iii/issues/3493) Fix API issue when handling default currencies.
 
 ### Removed
 - All import routines have been removed. Use the separate importers. Read [the documentation](https://docs.firefly-iii.org/importing-data/introduction).
@@ -33,13 +43,17 @@ Several alpha and beta releases preceded this release.
 - [Issue 3437](https://github.com/firefly-iii/firefly-iii/issues/3437) Better "days left" counter.
 - Fixed bad UUID generation.
 - Fixed a null pointer in session date.
+- [Issue 3427](https://github.com/firefly-iii/firefly-iii/issues/3427) HTML included in error codes
+- [Issue 3489](https://github.com/firefly-iii/firefly-iii/issues/3489) Several unescaped strings.
+- [Issue 3490](https://github.com/firefly-iii/firefly-iii/issues/3490) Fix search issues when using special characters.
+- [Issue 3488](https://github.com/firefly-iii/firefly-iii/issues/3488) Fix token text box.
 
 ### API
 - New API for object groups.
 - Expanded API for piggy banks to support object groups.
 
 ### Known issues
-- You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know. 
+- You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know.
 
 ## [5.2.8 (API 1.1.0)] - 2020-06-02
 

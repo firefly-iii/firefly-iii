@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Transactiedatum is na :value',
     'search_modifier_created_on'                 => 'Transactie werd gemaakt op :value',
     'search_modifier_updated_on'                 => 'Transactie werd laatst gewijzigd op :value',
+    'search_modifier_external_id'                => 'Extern ID is ":value"',
+    'search_modifier_internal_reference'         => 'Interne referentie is ":value"',
     'modifiers_applies_are'                      => 'De volgende wijzigingen worden ook toegepast op de zoekopdracht:',
     'general_search_error'                       => 'Er is een fout opgetreden tijdens het zoeken. Controleer de log-bestanden voor meer informatie.',
     'search_box'                                 => 'Zoeken',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Wees voorzichtig met deze knoppen. Het verwijderen van dingen is permanent.',
+    'other_sessions_logged_out'                 => 'Al je andere sessies zijn uitgelogd.',
     'delete_all_budgets'                        => 'Verwijder ALLE budgetten',
     'delete_all_categories'                     => 'Verwijder ALLE categorieën',
     'delete_all_tags'                           => 'Verwijder ALLE tags',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Voorkeuren',
     'logout'                                    => 'Uitloggen',
+    'logout_other_sessions'                     => 'Alle andere sessies afmelden',
     'toggleNavigation'                          => 'Navigatie aan of uit',
     'searchPlaceholder'                         => 'Zoeken...',
     'version'                                   => 'Versie',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Verstuur bericht',
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
     'give_admin_careful'               => 'Gebruikers die je beheerdersrechten geeft kunnen die van jou afpakken. Wees voorzichtig.',
+    'admin_maintanance_title'          => 'Onderhoud',
+    'admin_maintanance_expl'           => 'Handige knopjes voor Firefly III onderhoud',
+    'admin_maintenance_clear_cache'    => 'Cache leegmaken',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
     'split_transaction_title_help'          => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Opslaan als nieuwe transactie ipv de huidige bij te werken.',
     'reset_after'                           => 'Reset formulier na opslaan',
     'errors_submission'                     => 'Er ging iets mis. Check de errors.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
     // object groups
     'default_group_title_name'              => '(ongegroepeerd)',

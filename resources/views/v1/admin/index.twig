@@ -17,9 +17,17 @@
                         {% if config('firefly.feature_flags.telemetry') %}
                             <li><a href="{{ route('admin.telemetry.index') }}">{{ 'telemetry_admin_index'|_ }}</a></li>
                         {% endif %}
-                        {% if not sandstorm %}
-                            <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
-                        {% endif %}
+                        <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'user_administration'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <ul>
+                        <li><a href="{{ route('admin.users') }}">{{ 'list_all_users'|_ }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +42,6 @@
                         <p>
                             {{ trans('firefly.send_test_email_text', {email:Auth.user.email})|raw }}
                         </p>
-
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     </div>
                     <div class="box-footer">
@@ -44,21 +51,20 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'user_administration'|_ }}</h3>
+                    <h3 class="box-title">{{ 'admin_maintanance_title'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <ul>
-                        <li><a href="{{ route('admin.users') }}">{{ 'list_all_users'|_ }}</a></li>
-                    </ul>
+                    <p>
+                        {{ 'admin_maintanance_expl'|_ }}
+                    </p>
+                    <p>
+                        <a href="{{ route('flush') }}" class="btn btn-warning">{{ 'admin_maintenance_clear_cache'|_ }}</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}

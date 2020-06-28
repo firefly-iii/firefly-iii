@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Tranzakció dátuma :value után van',
     'search_modifier_created_on'                 => 'A tranzakció létrejötte: :value',
     'search_modifier_updated_on'                 => 'A tranzakció frissült: :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'A következő módosítókat a keresésre is alkalmaztuk:',
     'general_search_error'                       => 'Hiba történt keresés közben. További információ a naplófájlokban található.',
     'search_box'                                 => 'Keresés',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Óvatosan ezekkel a gombokkal! A dolgok törlése végleges.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'MINDEN költségkeret törlése',
     'delete_all_categories'                     => 'MINDEN kategória törlése',
     'delete_all_tags'                           => 'MINDEN címke törlése',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Pénznem',
     'preferences'                               => 'Beállítások',
     'logout'                                    => 'Kijelentkezés',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Navigációs mód átkapcsolása',
     'searchPlaceholder'                         => 'Keresés...',
     'version'                                   => 'Verizó',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Üzenet küldése',
     'send_test_triggered'              => 'Teszt elindítva. Ellenőrizd a bejövő üzeneteidet és a naplófájlokat.',
     'give_admin_careful'               => 'Adminisztrátornak kinevezett felhasználók visszavonhatják akár a te adminisztrátori felhatalmazásodat. Légy óvatos.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Felosztott tranzakció leírása',
     'split_transaction_title_help'          => 'Felosztott tranzakció létrehozásakor meg kell adni egy globális leírást a tranzakció összes felosztása részére.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Tárolás új tranzakcióként frissítés helyett.',
     'reset_after'                           => 'Űrlap törlése a beküldés után',
     'errors_submission'                     => 'Hiba történt a beküldés során. Kérem, javítsa az alábbi hibákat.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Ez a funkció nem elérhető ha a Firefly III Sandstorm.io környezetben van használva.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

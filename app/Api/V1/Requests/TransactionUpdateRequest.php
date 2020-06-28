@@ -263,17 +263,13 @@ class TransactionUpdateRequest extends Request
                 // TODO if the transaction_journal_id is empty, some fields are mandatory, like the amount!
 
                 // all journals must have a description
-                //$this->validateDescriptions($validator);
 
                 //                // validate foreign currency info
-                //                $this->validateForeignCurrencyInformation($validator);
                 //
 
                 //
                 //                // make sure all splits have valid source + dest info
-                //                $this->validateSplitAccounts($validator);
                 //                 the group must have a description if > 1 journal.
-                //                $this->validateGroupDescription($validator);
             }
         );
     }

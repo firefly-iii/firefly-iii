@@ -65,6 +65,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasNotesInformation  = false;
         $this->hasJoinedTagTables   = false;
         $this->hasJoinedAttTables   = false;
+        $this->hasJoinedMetaTables  = false;
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -167,13 +168,8 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        //$start = microtime(true);
         /** @var Collection $result */
         $result = $this->query->get($this->fields);
-        //$end    = round(microtime(true) - $start, 5);
-        // log info about query time.
-        //Log::info(sprintf('Query took Firefly III %s seconds', $end));
-        //Log::info($this->query->toSql(), $this->query->getBindings());
 
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
@@ -312,7 +308,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where(
             static function (EloquentBuilder $q) use ($array) {
                 $q->where(
-                    function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array) {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
@@ -687,5 +683,4 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
     }
-
 }

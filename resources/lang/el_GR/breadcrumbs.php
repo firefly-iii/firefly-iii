@@ -61,4 +61,5 @@ return [
     'telemetry_view'         => 'Προβολή τηλεμετρίας',
     'edit_object_group'      => 'Edit group ":title"',
     'delete_object_group'    => 'Delete group ":title"',
+    'logout_others'          => 'Logout other sessions'
 ];

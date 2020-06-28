@@ -831,11 +831,11 @@
             selectedSourceAccount: function (index, model) {
                 console.log('Now in selectedSourceAccount()');
                 if (typeof model === 'string') {
-                    console.log('model is string.')
+                    //console.log('model is string.')
                     // cant change types, only name.
                     this.transactions[index].source_account.name = model;
                 } else {
-                    console.log('model is NOT string.')
+                    //console.log('model is NOT string.')
                     this.transactions[index].source_account = {
                         id: model.id,
                         name: model.name,

@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'La date de l\'opération est après :value',
     'search_modifier_created_on'                 => 'L\'opération a été créée le :value',
     'search_modifier_updated_on'                 => 'L\'opération a été mise à jour pour la dernière fois le :value',
+    'search_modifier_external_id'                => 'L\'ID externe est ":value"',
+    'search_modifier_internal_reference'         => 'La référence interne est ":value"',
     'modifiers_applies_are'                      => 'Les modificateurs suivants sont aussi appliqués à la recherche :',
     'general_search_error'                       => 'Une erreur s\'est produite lors de la recherche. Veuillez vérifier les fichiers journaux pour plus d\'informations.',
     'search_box'                                 => 'Rechercher',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Attention à ces boutons. Ce que vous supprimez l\'est de façon définitive.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Supprimer TOUS vos budgets',
     'delete_all_categories'                     => 'Supprimer toutes vos catégories',
     'delete_all_tags'                           => 'Supprimer tous vos tags',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Devise',
     'preferences'                               => 'Préférences',
     'logout'                                    => 'Se déconnecter',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Activer navigation',
     'searchPlaceholder'                         => 'Rechercher...',
     'version'                                   => 'Version',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Envoyer le message',
     'send_test_triggered'              => 'Le test a été initié. Vérifiez votre boîte de réception (et les logs si nécessaire).',
     'give_admin_careful'               => 'Les utilisateurs disposant de droits d\'administration peuvent révoquer les vôtres. Soyez prudent.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Quelques boutons intéressants pour la maintenance de Firefly III',
+    'admin_maintenance_clear_cache'    => 'Vider le cache',
 
     'split_transaction_title'               => 'Description de l\'opération ventilée',
     'split_transaction_title_help'          => 'Si vous créez une opération ventilée, il doit y avoir une description globale pour chaque fraction de l\'opération.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                           => 'Réinitialiser le formulaire après soumission',
     'errors_submission'                     => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Cette fonction n\'est pas disponible lorsque vous utilisez Firefly III dans un environnement Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(Sans groupement)',
@@ -1669,7 +1673,7 @@ return [
     'debug_page'                         => 'Page de débogage',
     'debug_submit_instructions'          => 'Si vous rencontrez des problèmes, vous pouvez utiliser les informations contenues dans ce cadre comme informations de débogage. Veuillez copier-coller dans une nouvelle "issue" <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> (en anglais). Cela générera une belle table qui peut être utilisée pour diagnostiquer rapidement votre problème.',
     'debug_pretty_table'                 => 'Si vous copiez/collez le cadre ci-dessous dans une "issue" GitHub, cela générera un tableau. Veuillez ne pas entourer ce texte avec des apostrophes ou des guillemets.',
-    'debug_additional_data'              => 'Vous pouvez également partager le contenu du cadre ci-dessous. Vous pouvez également copier/coller cela dans une <a href="https://github.com/firefly-iii/firefly-iii/issues">"issue" GitHub</a>déjà existante ou nouvellement créée. Cependant, le contenu de ce cadre peut contenir des informations privées telles que les noms de compte, les détails de transaction ou les adresses électroniques.',
+    'debug_additional_data'              => 'Vous pouvez également partager le contenu du cadre ci-dessous. Vous pouvez également copier/coller cela dans une <a href="https://github.com/firefly-iii/firefly-iii/issues">"issue" GitHub</a> déjà existante ou nouvellement créée. Cependant, le contenu de ce cadre peut contenir des informations privées telles que les noms de compte, les détails de transaction ou les adresses électroniques.',
 
     // object groups
     'object_groups_menu_bar'             => 'Groupes',

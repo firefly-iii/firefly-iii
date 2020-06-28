@@ -28,7 +28,6 @@ use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\EmailFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
@@ -85,7 +84,38 @@ class ProfileController extends Controller
         $this->externalIdentity = 'eloquent' === $loginProvider || 'remote_user_guard' === $authGuard;
 
         $this->middleware(IsDemoUser::class)->except(['index']);
-        $this->middleware(IsSandStormUser::class)->except('index');
+    }
+
+    /**
+     *
+     */
+    public function logoutOtherSessions()
+    {
+        //
+        return view('profile.logout-other-sessions');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|RedirectResponse|Redirector
+     */
+    public function postLogoutOtherSessions(Request $request)
+    {
+        $creds = [
+            'email'    => auth()->user()->email,
+            'password' => $request->get('password'),
+        ];
+        if (Auth::once($creds)) {
+            Auth::logoutOtherDevices($request->get('password'));
+            session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));
+
+            return redirect(route('profile.index'));
+        }
+        session()->flash('error', (string) trans('auth.failed'));
+
+        return redirect(route('profile.index'));
+
     }
 
     /**
@@ -207,20 +237,16 @@ class ProfileController extends Controller
         /** @var Collection $set */
         $set  = app('preferences')->findByName('email_change_confirm_token');
         $user = null;
-        //Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
         foreach ($set as $preference) {
             if ($preference->data === $token) {
-                //Log::debug('Found user');
                 $user = $preference->user;
             }
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            //Log::debug('Found no user');
             throw new FireflyException('Invalid token.');
         }
-        //Log::debug('Will unblock user.');
         $repository->unblockUser($user);
 
         // return to login.
@@ -342,7 +368,7 @@ class ProfileController extends Controller
     /**
      * @return Factory|View
      */
-    public function newBackupCodes()
+    public function newBackupCodes(Request $request)
     {
         if ($this->externalIdentity) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

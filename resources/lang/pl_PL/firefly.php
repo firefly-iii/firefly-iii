@@ -221,7 +221,7 @@ return [
     'is_beta_warning'                            => 'Używasz wersji BETA. Uważaj na błędy i problemy.',
     'all_destination_accounts'                   => 'Konta docelowe',
     'all_source_accounts'                        => 'Konta źródłowe',
-    'back_to_index'                              => 'Back to the index',
+    'back_to_index'                              => 'Wróć do indeksu',
 
     // check for updates:
     'update_check_title'                         => 'Sprawdź aktualizacje',
@@ -252,7 +252,7 @@ return [
     // search
     'search'                                     => 'Szukaj',
     'search_query'                               => 'Zapytanie',
-    'search_found_transactions'                  => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
+    'search_found_transactions'                  => 'Firefly III znalazł :count transakcję w :time sekund.|Firefly III znalazł :count transakcji w :time sekund.',
     'search_found_more_transactions'             => 'Firefly III znalazł więcej niż :count transakcji w :time sekund.',
     'search_for_query'                           => 'Firefly III szuka transakcji zawierających wszystkie słowa: <span class="text-info">:query</span>',
     'search_modifier_amount_is'                  => 'Kwota to dokładnie :value',
@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Data transakcji jest po :value',
     'search_modifier_created_on'                 => 'Transakcja stworzona :value',
     'search_modifier_updated_on'                 => 'Transakcja zaktualizowana :value',
+    'search_modifier_external_id'                => 'Zewnętrzne ID to ":value"',
+    'search_modifier_internal_reference'         => 'Wewnętrzne odwołanie to ":value"',
     'modifiers_applies_are'                      => 'Zastosowano także poniższe modyfikatory:',
     'general_search_error'                       => 'Wystąpił błąd podczas wyszukiwania. Aby uzyskać więcej informacji proszę sprawdzić logi aplikacji.',
     'search_box'                                 => 'Szukaj',
@@ -298,7 +300,7 @@ return [
     'yearly'                                     => 'rocznie',
 
     // rules
-    'cannot_fire_inactive_rules'                 => 'You cannot execute inactive rules.',
+    'cannot_fire_inactive_rules'                 => 'Nie możesz wykonać nieaktywnych reguł.',
     'rules'                                      => 'Reguły',
     'rule_name'                                  => 'Nazwa reguły',
     'rule_triggers'                              => 'Reguły są wyzwalane gdy',
@@ -321,7 +323,7 @@ return [
     'no_rules_in_group'                          => 'Nie ma żadnych reguł w tej grupie',
     'move_rule_group_up'                         => 'Przenieś grupę reguł w górę',
     'move_rule_group_down'                       => 'Przenieś grupę reguł w dół',
-    'save_rules_by_moving'                       => 'Save this rule by moving it to another rule group:|Save these rules by moving them to another rule group:',
+    'save_rules_by_moving'                       => 'Zapisz tę regułę, przenosząc ją do innej grupy reguł:|Zapisz te reguły, przenosząc je do innej grupy reguł:',
     'make_new_rule'                              => 'Utwórz nową regułę w grupie reguł ":title"',
     'make_new_rule_no_group'                     => 'Stwórz nową regułę',
     'instructions_rule_from_bill'                => 'Aby dopasować transakcje do nowego rachunku ":name", Firefly III może utworzyć regułę, która będzie automatycznie sprawdzana względem wszelkich transakcji, które zapisujesz. Sprawdź poniższe szczegóły i zapisz regułę, aby Firefly III automatycznie dopasowywało transakcje do Twojego nowego rachunku.',
@@ -384,7 +386,7 @@ return [
     'rule_trigger_from_account_nr_ends_choice'      => 'Numer/IBAN konta kończy się od..',
     'rule_trigger_from_account_nr_ends'             => 'Konto źródłowe / IBAN się kończy na ":trigger_value"',
     'rule_trigger_from_account_nr_is_choice'        => 'Numer konta źródłowego / IBAN to..',
-    'rule_trigger_from_account_nr_is'               => 'Source account number / IBAN is ":trigger_value"',
+    'rule_trigger_from_account_nr_is'               => 'Numer konta źródłowego / IBAN to ":trigger_value"',
     'rule_trigger_from_account_nr_contains_choice'  => 'Numer konta źródłowego / IBAN zawiera..',
     'rule_trigger_from_account_nr_contains'         => 'Numer konta źródłowego / IBAN zawiera ":trigger_value"',
 
@@ -441,7 +443,7 @@ return [
     'rule_trigger_foreign_currency_is_choice'    => 'Waluta obca transakcji to..',
     'rule_trigger_foreign_currency_is'           => 'Waluta obca transakcji to ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ma co najmniej podaną liczbę załączników',
-    'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
+    'rule_trigger_has_attachments'               => 'Ma co najmniej :count załącznik|Ma co najmniej :count załączników',
     'rule_trigger_store_journal'                 => 'Po utworzeniu transakcji',
     'rule_trigger_update_journal'                => 'Po zmodyfikowaniu transakcji',
     'rule_trigger_has_no_category_choice'        => 'Brak kategorii',
@@ -525,7 +527,7 @@ return [
     'new_rule_for_bill_description'   => 'Ta reguła oznacza transakcje jako powiązane z rachunkiem ":name".',
 
     'new_rule_for_journal_title'         => 'Reguła oparta na transakcji ":description"',
-    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+    'new_rule_for_journal_description'   => 'Ta reguła jest oparta na transakcji ":description". Będzie zgodna z transakcjami, które są dokładnie takie same.',
 
     // tags
     'store_new_tag'                   => 'Zachowaj nowy tag',
@@ -541,7 +543,7 @@ return [
     'clear_location'                  => 'Wyczyść lokalizację',
     'delete_all_selected_tags'        => 'Usuń wszystkie zaznaczone tagi',
     'select_tags_to_delete'           => 'Nie zapomnij wybrać tagów.',
-    'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
+    'deleted_x_tags'                  => 'Usunięto :count tag.|Usunięto :count tagów.',
     'create_rule_from_transaction'    => 'Utwórz regułę na podstawie transakcji',
 
 
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Uważaj z tymi przyciskami. Usuwanie rzeczy jest trwałe.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Skasuj WSZYSTKIE budżety',
     'delete_all_categories'                     => 'Skasuj WSZYSTKIE kategorie',
     'delete_all_tags'                           => 'Skasuj WSZYSTKIE tagi',
@@ -656,8 +659,8 @@ return [
     'login_with_new_email'                      => 'Teraz możesz logować się nowym adresem e-mail.',
     'login_with_old_email'                      => 'Teraz ponownie możesz logować się starym adresem e-mail.',
     'login_provider_local_only'                 => 'Ta akcja nie jest dostępna gdy uwierzytelniasz się poprzez ":login_provider".',
-    'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
-    'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'external_user_mgt_disabled'                => 'Ta akcja nie jest dostępna, gdy Firefly III nie jest odpowiedzialny za zarządzanie użytkownikiem lub obsługę uwierzytelniania.',
+    'delete_local_info_only'                    => "Ponieważ Firefly III nie jest odpowiedzialny za zarządzanie użytkownikami lub obsługę uwierzytelniania, ta funkcja usunie tylko lokalne informacje Firefly III.",
     'profile_oauth_clients'                     => 'Klienci OAuth',
     'profile_oauth_no_clients'                  => 'Nie utworzyłeś żadnych klientów OAuth.',
     'profile_oauth_clients_header'              => 'Klienci',
@@ -667,9 +670,9 @@ return [
     'profile_oauth_create_new_client'           => 'Utwórz nowego klienta',
     'profile_oauth_create_client'               => 'Utwórz klienta',
     'profile_oauth_edit_client'                 => 'Edytuj klienta',
-    'profile_oauth_name_help'                   => 'Something your users will recognize and trust.',
+    'profile_oauth_name_help'                   => 'Coś, co Twoi użytkownicy będą rozpoznawać i ufać.',
     'profile_oauth_redirect_url'                => 'Przekierowanie URL',
-    'profile_oauth_redirect_url_help'           => 'Your application\'s authorization callback URL.',
+    'profile_oauth_redirect_url_help'           => 'Adres URL wywołania zwrotnego autoryzacji aplikacji.',
     'profile_authorized_apps'                   => 'Autoryzowane aplikacje',
     'profile_authorized_clients'                => 'Autoryzowani klienci',
     'profile_scopes'                            => 'Zakresy',
@@ -677,14 +680,14 @@ return [
     'profile_personal_access_tokens'            => 'Osobiste tokeny dostępu',
     'profile_personal_access_token'             => 'Osobisty token dostępu',
     'profile_personal_access_token_explanation' => 'Oto twój nowy osobisty token dostępu. Jest to jedyny raz, gdy zostanie wyświetlony, więc nie zgub go! Możesz teraz użyć tego tokenu, aby wykonać zapytania API.',
-    'profile_no_personal_access_token'          => 'You have not created any personal access tokens.',
-    'profile_create_new_token'                  => 'Create new token',
-    'profile_create_token'                      => 'Create token',
-    'profile_create'                            => 'Create',
-    'profile_save_changes'                      => 'Save changes',
-    'profile_whoops'                            => 'Whoops!',
-    'profile_something_wrong'                   => 'Something went wrong!',
-    'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'profile_no_personal_access_token'          => 'Nie utworzyłeś żadnych osobistych tokenów.',
+    'profile_create_new_token'                  => 'Utwórz nowy token',
+    'profile_create_token'                      => 'Utwórz token',
+    'profile_create'                            => 'Utwórz',
+    'profile_save_changes'                      => 'Zapisz zmiany',
+    'profile_whoops'                            => 'Uuuups!',
+    'profile_something_wrong'                   => 'Coś poszło nie tak!',
+    'profile_try_again'                         => 'Coś poszło nie tak. Spróbuj ponownie.',
 
     // export data:
     'export_data_title'                         => 'Eksportuj dane z Firefly III',
@@ -857,7 +860,7 @@ return [
     'auto_budget_help'                          => 'Możesz przeczytać więcej o tej funkcji w pomocy. Kliknij ikonę (?) u góry prawej strony.',
     'auto_budget_reset_icon'                    => 'Ten budżet będzie okresowo ustalany',
     'auto_budget_rollover_icon'                 => 'Kwota budżetu będzie okresowo rosła',
-    'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
+    'remove_budgeted_amount'                    => 'Usuń zabudżetowaną kwotę w :currency',
 
     // bills:
     'not_expected_period'                       => 'Nie oczekiwany w tym okresie',
@@ -890,7 +893,7 @@ return [
     'bill_store_error'                          => 'Wystąpił nieoczekiwany błąd podczas zapisywania nowego rachunku. Sprawdź pliki dziennika',
     'list_inactive_rule'                        => 'nieaktywna reguła',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
-    'bill_expected_date'                        => 'Expected :date',
+    'bill_expected_date'                        => 'Oczekiwane :date',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Waluta',
     'preferences'                               => 'Preferencje',
     'logout'                                    => 'Wyloguj',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Przełącz nawigację',
     'searchPlaceholder'                         => 'Szukaj...',
     'version'                                   => 'Wersja',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Wyślij wiadomość',
     'send_test_triggered'              => 'Test został uruchomiony. Sprawdź swoją skrzynkę odbiorczą i pliki dziennika.',
     'give_admin_careful'               => 'Użytkownicy, którzy dostaną prawa administratora, mogą zabrać twoje. Zachowaj ostrożność.',
+    'admin_maintanance_title'          => 'Konserwacja',
+    'admin_maintanance_expl'           => 'Kilka pięknych przycisków do konserwacji Firefly III',
+    'admin_maintenance_clear_cache'    => 'Wyczyść pamięć podręczną',
 
     'split_transaction_title'               => 'Opis podzielonej transakcji',
     'split_transaction_title_help'          => 'Jeśli tworzysz podzieloną transakcję, musi ona posiadać globalny opis dla wszystkich podziałów w transakcji.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                           => 'Wyczyść formularz po zapisaniu',
     'errors_submission'                     => 'Coś poszło nie tak w czasie zapisu. Proszę sprawdź błędy poniżej.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(bez grupy)',
@@ -1650,7 +1654,7 @@ return [
     'telemetry_disabled_now_what'        => 'Jeśli chcesz, możesz włączyć telemetrię w pliku .env lub w konfiguracji Docker.',
     'telemetry_collected_info'           => 'Zebrane informacje',
     'no_telemetry_present'               => 'Firefly III nie zebrał żadnych wpisów telemetrycznych.',
-    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record.|Firefly III has collected :count telemetry records.',
+    'records_telemetry_present'          => 'Firefly III zebrał :count rekord telemetrii.|Firefly III zebrał :count rekordów telemetrii.',
     'telemetry_button_view'              => 'Zobacz telemetrię',
     'telemetry_button_delete'            => 'Usuń całą telemetrię',
     'telemetry_admin_overview'           => 'Podgląd telemetrii',
@@ -1666,24 +1670,24 @@ return [
     'telemetry_submitted_deleted'        => 'Wszystkie przesłane rekordy telemetryczne zostały usunięte.',
 
     // debug page
-    'debug_page'                         => 'Debug page',
-    'debug_submit_instructions'          => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
-    'debug_pretty_table'                 => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
-    'debug_additional_data'              => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
+    'debug_page'                         => 'Strona debugowania',
+    'debug_submit_instructions'          => 'Jeśli masz problemy możesz użyć informacji w tym polu jako informacji debugowania. Skopiuj i wklej do nowego lub istniejącego <a href="https://github.com/firefly-iii/firefly-iii/issues">problemu z GitHub</a>. Wygeneruje to piękną tabelę, która może być wykorzystana do szybkiego rozpoznania twojego problemu.',
+    'debug_pretty_table'                 => 'Jeśli skopiujesz/wkleisz poniższe pole do problemu na GitHub, zostanie wygenerowana tabela. Proszę nie używaj cudzysłowów.',
+    'debug_additional_data'              => 'Możesz również udostępnić zawartość poniższego pola. Możesz również skopiować i wkleić to do nowego lub istniejącego <a href="https://github.com/firefly-iii/firefly-iii/issues">problemu GitHub</a>. Jednakże zawartość tego pola może zawierać informacje prywatne, takie jak nazwy konta, szczegóły transakcji lub adresy e-mail.',
 
     // object groups
-    'object_groups_menu_bar'             => 'Groups',
-    'object_groups_page_title'           => 'Groups',
-    'object_groups_breadcrumb'           => 'Groups',
-    'object_groups_index'                => 'Overview',
-    'object_groups'                      => 'Groups',
-    'object_groups_empty_explain'        => 'Some things in Firefly III can be divided into groups. Piggy banks for example, feature a "Group" field in the edit and create screens. When you set this field, you can edit the names and the order of the groups on this page. For more information, check out the help-pages in the top right corner, under the (?)-icon.',
-    'object_group_title'                 => 'Title',
-    'edit_object_group'                  => 'Edit group ":title"',
-    'delete_object_group'                => 'Edit group ":title"',
-    'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
-    'object_group'                       => 'Group',
+    'object_groups_menu_bar'             => 'Grupy',
+    'object_groups_page_title'           => 'Grupy',
+    'object_groups_breadcrumb'           => 'Grupy',
+    'object_groups_index'                => 'Przegląd',
+    'object_groups'                      => 'Grupy',
+    'object_groups_empty_explain'        => 'Niektóre rzeczy w Firefly III można podzielić na grupy. Na przykład skarbonki zawierają pole "Grupa" w ekranach edycji i tworzenia. Gdy ustawisz to pole, możesz edytować nazwy i kolejność grup na tej stronie. Aby uzyskać więcej informacji, sprawdź strony pomocy w prawym górnym rogu, pod ikoną (?).',
+    'object_group_title'                 => 'Tytuł',
+    'edit_object_group'                  => 'Modyfikuj grupę ":title"',
+    'delete_object_group'                => 'Modyfikuj grupę ":title"',
+    'update_object_group'                => 'Aktualizuj grupę',
+    'updated_object_group'               => 'Pomyślnie zmodyfikowano grupę ":title"',
+    'deleted_object_group'               => 'Pomyślnie usunięto grupę ":title"',
+    'object_group'                       => 'Grupa',
 
 ];

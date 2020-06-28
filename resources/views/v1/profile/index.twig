@@ -17,12 +17,13 @@
                     <p>
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
-                    {% if not SANDSTORM %}
                         <div class="row">
                             <div class="col-lg-6">
                                 <ul>
                                     <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
                                     <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
+                                    <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
+                                    <li><a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a></li>
                                     <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
                                 </ul>
                             </div>
@@ -37,34 +38,11 @@
                                 </ul>
                             </div>
                         </div>
-
-                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    {% if SANDSTORM %}
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Offer template</h3>
-                    </div>
-                    <div class="box-body">
-                        <p>
-                            Block for sandstorm thing
-                        </p>
-                        <div>
-                            <iframe style="width: 100%; height: 55px; margin: 0; border: 0;" id="offer-iframe">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-    {% if not SANDSTORM %}
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
                 <div class="box box-primary">
@@ -89,9 +67,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    {% if not SANDSTORM %}
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
                 <div class="box box-primary">
@@ -128,7 +104,6 @@
                 </div>
             </div>
         </div>
-    {% endif %}
     <div id="passport_clients"></div>
 {% endblock %}
 {% block scripts %}

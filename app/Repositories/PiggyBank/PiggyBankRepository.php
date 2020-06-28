@@ -281,6 +281,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $currency = app('amount')->getDefaultCurrency();
 
         $set = $this->getPiggyBanks();
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';

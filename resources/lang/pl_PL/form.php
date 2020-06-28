@@ -137,7 +137,7 @@ return [
     'account_areYouSure'          => 'Czy na pewno chcesz usunąć konto o nazwie ":name"?',
     'bill_areYouSure'             => 'Czy na pewno chcesz usunąć rachunek o nazwie ":name"?',
     'rule_areYouSure'             => 'Czy na pewno chcesz usunąć regułę o nazwie ":name"?',
-    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
+    'object_group_areYouSure'     => 'Czy na pewno chcesz usunąć grupę o nazwie ":title"?',
     'ruleGroup_areYouSure'        => 'Czy na pewno chcesz usunąć grupę reguł o nazwie ":name"?',
     'budget_areYouSure'           => 'Czy na pewno chcesz usunąć budżet o nazwie ":name"?',
     'category_areYouSure'         => 'Czy na pewno chcesz usunąć kategorię o nazwie ":name"?',
@@ -157,7 +157,7 @@ return [
     'also_delete_connections'     => 'Jedyna transakcja połączona z tym typem łącza utraci to połączenie.|Wszystkie transakcje (:count) połączone tym typem łącza utracą swoje połączenie.',
     'also_delete_rules'           => 'Jedyna reguła połączona z tą grupą reguł zostanie również usunięta.|Wszystkie reguły (:count) połączone tą grupą reguł zostaną również usunięte.',
     'also_delete_piggyBanks'      => 'Jedyna skarbonka połączona z tym kontem zostanie również usunięta.|Wszystkie skarbonki (:count) połączone z tym kontem zostaną również usunięte.',
-    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
+    'not_delete_piggy_banks'      => 'Skarbonka połączona z tą grupą nie zostanie usunięta.|:count skarbonek połączonych z tą grupą nie zostanie usunięte.',
     'bill_keep_transactions'      => 'Jedyna transakcja związana z tym rachunkiem nie zostanie usunięta.|Wszystkie transakcje (:count) związane z tym rachunkiem zostaną oszczędzone.',
     'budget_keep_transactions'    => 'Jedyna transakcja związana z tym budżetem nie zostanie usunięta.|Wszystkie transakcje (:count) związane z tym budżetem zostaną oszczędzone.',
     'category_keep_transactions'  => 'Jedyna transakcja związana z tą kategorią nie zostanie usunięta.|Wszystkie transakcje (:count) związane z tą kategorią zostaną oszczędzone.',
@@ -165,7 +165,7 @@ return [
     'tag_keep_transactions'       => 'Jedyna transakcja związana z tym tagiem nie zostanie usunięta.|Wszystkie transakcje (:count) związane z tym tagiem nie zostaną skasowane.',
     'check_for_updates'           => 'Sprawdź aktualizacje',
 
-    'delete_object_group' => 'Delete group ":title"',
+    'delete_object_group' => 'Usuń grupę ":title"',
 
     'email'                 => 'Adres email',
     'password'              => 'Hasło',

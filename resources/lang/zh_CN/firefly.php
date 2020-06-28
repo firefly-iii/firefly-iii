@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => '交易日期晚于 :value',
     'search_modifier_created_on'                 => '交易创建于 :value',
     'search_modifier_updated_on'                 => '交易记录最后更新于 :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => '以下修饰也适用于搜索：',
     'general_search_error'                       => '搜索时出错。请检查日志文件以获取更多信息。',
     'search_box'                                 => '搜寻',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => '小心使用这些按钮。删除内容是永久性的。',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => '删除所有您的预算',
     'delete_all_categories'                     => '删除您的所有类别',
     'delete_all_tags'                           => '删除您的所有标签',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => '货币',
     'preferences'                               => '偏好设定',
     'logout'                                    => '登出',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => '切换导览',
     'searchPlaceholder'                         => '搜寻中…',
     'version'                                   => '版本',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => '发送消息',
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
     'give_admin_careful'               => '被授予管理员权限的用户可以收回您的权限。请千万注意这点。',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => '如果您创建了一个分割交易，交易的所有分割项都必须有全局描述。',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => '保存为新交易而不是更新此交易。',
     'reset_after'                           => '提交后重置表单',
     'errors_submission'                     => '您的提交有误，请查看下面输出的错误信息。',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => '当您在 Sandstorm.io 环境使用 Firefly III 时，此功能不可用。',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

@@ -143,7 +143,7 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.0-alpha.1',
+    'version'                 => '5.3.0-beta.1',
     'api_version'             => '1.2.0',
     'db_version'              => 14,
     'maxUploadSize'           => 15242880,
@@ -152,7 +152,6 @@ return [
     'send_registration_mail'  => env('SEND_REGISTRATION_MAIL', true),
     'demo_username'           => env('DEMO_USERNAME', ''),
     'demo_password'           => env('DEMO_PASSWORD', ''),
-    'is_sandstorm'            => env('IS_SANDSTORM', 'unknown'),
     'fixer_api_key'           => env('FIXER_API_KEY', ''),
     'mapbox_api_key'          => env('MAPBOX_API_KEY', ''),
     'trusted_proxies'         => env('TRUSTED_PROXIES', ''),
@@ -185,6 +184,7 @@ return [
         Tag::class,
         Transaction::class,
         TransactionJournal::class,
+        Recurrence::class,
     ],
     'allowedMimes'            => [
         /* plain files */
@@ -574,7 +574,8 @@ return [
     'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
     'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
                            'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
-                           'updated_on',],
+                           'updated_on', 'external_id', 'internal_reference',],
+
     // TODO notes has_attachments
 
     'cer_providers'             => [

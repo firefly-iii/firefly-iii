@@ -278,6 +278,8 @@ return [
     'search_modifier_after'                      => 'Transaksjons er etter :value',
     'search_modifier_created_on'                 => 'Transaction was created on :value',
     'search_modifier_updated_on'                 => 'Transaction was last updated on :value',
+    'search_modifier_external_id'                => 'External ID is ":value"',
+    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
     'modifiers_applies_are'                      => 'De følgende modifikatorer er lagt til søket i tillegg:',
     'general_search_error'                       => 'An error occurred while searching. Please check the log files for more information.',
     'search_box'                                 => 'Søk',
@@ -616,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',
     'delete_all_categories'                     => 'Delete ALL your categories',
     'delete_all_tags'                           => 'Delete ALL your tags',
@@ -1136,6 +1139,7 @@ return [
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Innstillinger',
     'logout'                                    => 'Logg ut',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Vis/Skjul navigation',
     'searchPlaceholder'                         => 'Søk...',
     'version'                                   => 'Versjon',
@@ -1421,6 +1425,9 @@ return [
     'send_message'                     => 'Send melding',
     'send_test_triggered'              => 'Test ble utløst. Sjekk innboksen din og loggfilene.',
     'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
+    'admin_maintanance_title'          => 'Maintenance',
+    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
+    'admin_maintenance_clear_cache'    => 'Clear cache',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
@@ -1505,9 +1512,6 @@ return [
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Denne funksjonen er ikke tilgjengelig når du bruker Firefly III i et Sandstorm.io miljø.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
