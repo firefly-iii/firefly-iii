@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Προσοχή με αυτά τα κουμπιά. Η διαγραφή είναι μόνιμη.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Διαγραφή ΟΛΩΝ των προϋπολογισμών σας',
     'delete_all_categories'                     => 'Διαγραφή ΟΛΩΝ των κατηγοριών',
     'delete_all_tags'                           => 'Διαγραφή ΟΛΩΝ των ετικετών',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Νόμισμα',
     'preferences'                               => 'Προτιμήσεις',
     'logout'                                    => 'Αποσύνδεση',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Εναλλαγή περιήγησης',
     'searchPlaceholder'                         => 'Αναζήτηση...',
     'version'                                   => 'Έκδοση',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Αποθήκευση ως νέα συναλλαγή αντί για ενημέρωση.',
     'reset_after'                           => 'Επαναφορά φόρμας μετά την υποβολή',
     'errors_submission'                     => 'Υπήρξε κάποιο λάθος με την υποβολή σας. Ελέγξτε τα παρακάτω σφάλματα.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν χρησιμοποιείτε το Firefly III σε περιβάλλον Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

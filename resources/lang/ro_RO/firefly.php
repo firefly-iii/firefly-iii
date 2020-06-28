@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Fii atent cu aceste butoane. Ștergerea lucrurilor este permanentă.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Șterge toate bugetele',
     'delete_all_categories'                     => 'Șterge toate categoriile',
     'delete_all_tags'                           => 'Șterge toate tag-urile',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Monedă',
     'preferences'                               => 'Preferințe',
     'logout'                                    => 'Ieșire',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Navigare',
     'searchPlaceholder'                         => 'Cautare...',
     'version'                                   => 'Versiunea',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                           => 'Resetați formularul după trimitere',
     'errors_submission'                     => 'A fost ceva în neregulă cu transmiterea dvs. Vă rugăm să consultați erorile de mai jos.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Această funcție nu este disponibilă când utilizați Firefly III într-un mediu Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

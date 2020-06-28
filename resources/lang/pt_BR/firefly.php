@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Tenha cuidado com estes botões. A exclusão de coisas é permanente.',
+    'other_sessions_logged_out'                 => 'Todas as outras sessões foram invalidadas.',
     'delete_all_budgets'                        => 'Excluir TODOS os seus orçamentos',
     'delete_all_categories'                     => 'Excluir TODAS as suas categorias',
     'delete_all_tags'                           => 'Excluir TODAS as suas tags',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Moeda',
     'preferences'                               => 'Preferências',
     'logout'                                    => 'Desconectar',
+    'logout_other_sessions'                     => 'Sair de todas as outras sessões',
     'toggleNavigation'                          => 'Alternar navegação',
     'searchPlaceholder'                         => 'Pesquisar...',
     'version'                                   => 'Versão',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Resetar o formulário após o envio',
     'errors_submission'                     => 'Tem alguma coisa de errada com o seu envio. Por favor, cheque os erros abaixo.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Esta função não está disponível quando você está usando o Firefly III dentro de um ambiente Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(não agrupado)',

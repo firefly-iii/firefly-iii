@@ -61,4 +61,5 @@ return [
     'telemetry_view'         => 'Xem dữ liệu thu thập',
     'edit_object_group'      => 'Chỉnh sửa nhóm ":title"',
     'delete_object_group'    => 'Xóa nhóm ":title"',
+    'logout_others'          => 'Logout other sessions'
 ];

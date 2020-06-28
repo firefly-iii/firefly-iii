@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Hãy cẩn thận với các nút này. Xóa nội dung là vĩnh viễn.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Xóa TẤT CẢ ngân sách của bạn',
     'delete_all_categories'                     => 'Xóa TẤT CẢ danh mục của bạn',
     'delete_all_tags'                           => 'Xóa TẤT CẢ các nhãn của bạn',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Tiền tệ',
     'preferences'                               => 'Cá nhân',
     'logout'                                    => 'Đăng xuất',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Chuyển đổi đổigle navigation',
     'searchPlaceholder'                         => 'Tìm kiếm...',
     'version'                                   => 'Phiên bản',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Lưu trữ như một giao dịch mới thay vì cập nhật.',
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
     'errors_submission'                     => 'Có gì đó sai. Vui lòng kiểm tra các lỗi dưới đây.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Chức năng này không khả dụng khi bạn đang sử dụng Firefly III trong môi trường Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',

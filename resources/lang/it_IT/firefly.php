@@ -278,8 +278,8 @@ return [
     'search_modifier_after'                      => 'La data della transazione è successiva a :value',
     'search_modifier_created_on'                 => 'La transazione è stata creata il :value',
     'search_modifier_updated_on'                 => 'La transazione è stata aggiornata l\'ultima volta il :value',
-    'search_modifier_external_id'                => 'External ID is ":value"',
-    'search_modifier_internal_reference'         => 'Internal reference is ":value"',
+    'search_modifier_external_id'                => 'L\'ID esterno è ":value"',
+    'search_modifier_internal_reference'         => 'Il riferimento interno è ":value"',
     'modifiers_applies_are'                      => 'Alla ricerca vengono applicati anche questi modificatori:',
     'general_search_error'                       => 'Si è verificato un errore durante la ricerca. Si prega di controllare i file di registro per ulteriori informazioni.',
     'search_box'                                 => 'Ricerca',
@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Fai attenzione con questi pulsanti. L\'eliminazione è permanente.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Elimina TUTTI i budget',
     'delete_all_categories'                     => 'Elimina TUTTE le categorie',
     'delete_all_tags'                           => 'Elimina TUTTE le etichette',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Preferenze',
     'logout'                                    => 'Esci',
+    'logout_other_sessions'                     => 'Esci da tutte le altre sessioni',
     'toggleNavigation'                          => 'Attiva / disattiva la navigazione',
     'searchPlaceholder'                         => 'Cerca...',
     'version'                                   => 'Versione',
@@ -1423,9 +1425,9 @@ return [
     'send_message'                     => 'Invia messaggio',
     'send_test_triggered'              => 'Il test è stato attivato. Controlla la tua casella di posta e i file di log.',
     'give_admin_careful'               => 'Gli utenti con privilegi di amministratore posso rimuovere i tuoi privilegi. Fai attenzione.',
-    'admin_maintanance_title'          => 'Maintenance',
-    'admin_maintanance_expl'           => 'Some nifty buttons for Firefly III maintenance',
-    'admin_maintenance_clear_cache'    => 'Clear cache',
+    'admin_maintanance_title'          => 'Manutenzione',
+    'admin_maintanance_expl'           => 'Qualche pulsante per la manutenzione di Firefly III',
+    'admin_maintenance_clear_cache'    => 'Svuota cache',
 
     'split_transaction_title'               => 'Descrizione della transazione suddivisa',
     'split_transaction_title_help'          => 'Se crei una transazione suddivisa, è necessario che ci sia una descrizione globale per tutte le suddivisioni della transazione.',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                           => 'Resetta il modulo dopo l\'invio',
     'errors_submission'                     => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Questa funzione non è disponibile quando si utilizza Firefly III in un ambiente Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(non in un gruppo)',

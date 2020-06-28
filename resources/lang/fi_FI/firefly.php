@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Ole varovainen näiden valintojen kanssa, poistaminen on lopullista.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Poista KAIKKI budjettisi',
     'delete_all_categories'                     => 'Poista KAIKKI kategoriasi',
     'delete_all_tags'                           => 'Poista KAIKKI tägit',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Valuutta',
     'preferences'                               => 'Asetukset',
     'logout'                                    => 'Kirjaudu ulos',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Vaihda navigointia',
     'searchPlaceholder'                         => 'Hae ...',
     'version'                                   => 'Versio',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
     'errors_submission'                     => 'Lomakkeen tiedoissa oli puutteita - alta löydät listan puutteista.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Tätä toimintoa ei ole kun Firefly III on asennettu Sandstorm.io ympäristöön.',
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',

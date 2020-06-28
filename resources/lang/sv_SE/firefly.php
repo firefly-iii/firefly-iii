@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Var försikt med dessa knappar. Ta bort saker är permanent.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Ta bort ALLA dina budgetar',
     'delete_all_categories'                     => 'Ta bort ALLA dina kategorier',
     'delete_all_tags'                           => 'Ta bort ALLA etiketter',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Inställningar',
     'logout'                                    => 'Logga ut',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Växla navigering',
     'searchPlaceholder'                         => 'Sök...',
     'version'                                   => 'Version',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                           => 'Återställ formulär efter inskickat',
     'errors_submission'                     => 'Något fel uppstod med inskickningen. Vänligen kontrollera felen nedan.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Denna funktion är inte tillgänglig om Firefly III används i en Sandstorm.io miljö.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

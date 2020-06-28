@@ -252,7 +252,7 @@ return [
     // search
     'search'                                     => 'Szukaj',
     'search_query'                               => 'Zapytanie',
-    'search_found_transactions'                  => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
+    'search_found_transactions'                  => 'Firefly III znalazł :count transakcję w :time sekund.|Firefly III znalazł :count transakcji w :time sekund.',
     'search_found_more_transactions'             => 'Firefly III znalazł więcej niż :count transakcji w :time sekund.',
     'search_for_query'                           => 'Firefly III szuka transakcji zawierających wszystkie słowa: <span class="text-info">:query</span>',
     'search_modifier_amount_is'                  => 'Kwota to dokładnie :value',
@@ -323,7 +323,7 @@ return [
     'no_rules_in_group'                          => 'Nie ma żadnych reguł w tej grupie',
     'move_rule_group_up'                         => 'Przenieś grupę reguł w górę',
     'move_rule_group_down'                       => 'Przenieś grupę reguł w dół',
-    'save_rules_by_moving'                       => 'Save this rule by moving it to another rule group:|Save these rules by moving them to another rule group:',
+    'save_rules_by_moving'                       => 'Zapisz tę regułę, przenosząc ją do innej grupy reguł:|Zapisz te reguły, przenosząc je do innej grupy reguł:',
     'make_new_rule'                              => 'Utwórz nową regułę w grupie reguł ":title"',
     'make_new_rule_no_group'                     => 'Stwórz nową regułę',
     'instructions_rule_from_bill'                => 'Aby dopasować transakcje do nowego rachunku ":name", Firefly III może utworzyć regułę, która będzie automatycznie sprawdzana względem wszelkich transakcji, które zapisujesz. Sprawdź poniższe szczegóły i zapisz regułę, aby Firefly III automatycznie dopasowywało transakcje do Twojego nowego rachunku.',
@@ -386,7 +386,7 @@ return [
     'rule_trigger_from_account_nr_ends_choice'      => 'Numer/IBAN konta kończy się od..',
     'rule_trigger_from_account_nr_ends'             => 'Konto źródłowe / IBAN się kończy na ":trigger_value"',
     'rule_trigger_from_account_nr_is_choice'        => 'Numer konta źródłowego / IBAN to..',
-    'rule_trigger_from_account_nr_is'               => 'Source account number / IBAN is ":trigger_value"',
+    'rule_trigger_from_account_nr_is'               => 'Numer konta źródłowego / IBAN to ":trigger_value"',
     'rule_trigger_from_account_nr_contains_choice'  => 'Numer konta źródłowego / IBAN zawiera..',
     'rule_trigger_from_account_nr_contains'         => 'Numer konta źródłowego / IBAN zawiera ":trigger_value"',
 
@@ -443,7 +443,7 @@ return [
     'rule_trigger_foreign_currency_is_choice'    => 'Waluta obca transakcji to..',
     'rule_trigger_foreign_currency_is'           => 'Waluta obca transakcji to ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ma co najmniej podaną liczbę załączników',
-    'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
+    'rule_trigger_has_attachments'               => 'Ma co najmniej :count załącznik|Ma co najmniej :count załączników',
     'rule_trigger_store_journal'                 => 'Po utworzeniu transakcji',
     'rule_trigger_update_journal'                => 'Po zmodyfikowaniu transakcji',
     'rule_trigger_has_no_category_choice'        => 'Brak kategorii',
@@ -527,7 +527,7 @@ return [
     'new_rule_for_bill_description'   => 'Ta reguła oznacza transakcje jako powiązane z rachunkiem ":name".',
 
     'new_rule_for_journal_title'         => 'Reguła oparta na transakcji ":description"',
-    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+    'new_rule_for_journal_description'   => 'Ta reguła jest oparta na transakcji ":description". Będzie zgodna z transakcjami, które są dokładnie takie same.',
 
     // tags
     'store_new_tag'                   => 'Zachowaj nowy tag',
@@ -543,7 +543,7 @@ return [
     'clear_location'                  => 'Wyczyść lokalizację',
     'delete_all_selected_tags'        => 'Usuń wszystkie zaznaczone tagi',
     'select_tags_to_delete'           => 'Nie zapomnij wybrać tagów.',
-    'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
+    'deleted_x_tags'                  => 'Usunięto :count tag.|Usunięto :count tagów.',
     'create_rule_from_transaction'    => 'Utwórz regułę na podstawie transakcji',
 
 
@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Uważaj z tymi przyciskami. Usuwanie rzeczy jest trwałe.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Skasuj WSZYSTKIE budżety',
     'delete_all_categories'                     => 'Skasuj WSZYSTKIE kategorie',
     'delete_all_tags'                           => 'Skasuj WSZYSTKIE tagi',
@@ -669,9 +670,9 @@ return [
     'profile_oauth_create_new_client'           => 'Utwórz nowego klienta',
     'profile_oauth_create_client'               => 'Utwórz klienta',
     'profile_oauth_edit_client'                 => 'Edytuj klienta',
-    'profile_oauth_name_help'                   => 'Something your users will recognize and trust.',
+    'profile_oauth_name_help'                   => 'Coś, co Twoi użytkownicy będą rozpoznawać i ufać.',
     'profile_oauth_redirect_url'                => 'Przekierowanie URL',
-    'profile_oauth_redirect_url_help'           => 'Your application\'s authorization callback URL.',
+    'profile_oauth_redirect_url_help'           => 'Adres URL wywołania zwrotnego autoryzacji aplikacji.',
     'profile_authorized_apps'                   => 'Autoryzowane aplikacje',
     'profile_authorized_clients'                => 'Autoryzowani klienci',
     'profile_scopes'                            => 'Zakresy',
@@ -679,14 +680,14 @@ return [
     'profile_personal_access_tokens'            => 'Osobiste tokeny dostępu',
     'profile_personal_access_token'             => 'Osobisty token dostępu',
     'profile_personal_access_token_explanation' => 'Oto twój nowy osobisty token dostępu. Jest to jedyny raz, gdy zostanie wyświetlony, więc nie zgub go! Możesz teraz użyć tego tokenu, aby wykonać zapytania API.',
-    'profile_no_personal_access_token'          => 'You have not created any personal access tokens.',
-    'profile_create_new_token'                  => 'Create new token',
-    'profile_create_token'                      => 'Create token',
-    'profile_create'                            => 'Create',
-    'profile_save_changes'                      => 'Save changes',
-    'profile_whoops'                            => 'Whoops!',
-    'profile_something_wrong'                   => 'Something went wrong!',
-    'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'profile_no_personal_access_token'          => 'Nie utworzyłeś żadnych osobistych tokenów.',
+    'profile_create_new_token'                  => 'Utwórz nowy token',
+    'profile_create_token'                      => 'Utwórz token',
+    'profile_create'                            => 'Utwórz',
+    'profile_save_changes'                      => 'Zapisz zmiany',
+    'profile_whoops'                            => 'Uuuups!',
+    'profile_something_wrong'                   => 'Coś poszło nie tak!',
+    'profile_try_again'                         => 'Coś poszło nie tak. Spróbuj ponownie.',
 
     // export data:
     'export_data_title'                         => 'Eksportuj dane z Firefly III',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Waluta',
     'preferences'                               => 'Preferencje',
     'logout'                                    => 'Wyloguj',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Przełącz nawigację',
     'searchPlaceholder'                         => 'Szukaj...',
     'version'                                   => 'Wersja',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                           => 'Wyczyść formularz po zapisaniu',
     'errors_submission'                     => 'Coś poszło nie tak w czasie zapisu. Proszę sprawdź błędy poniżej.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(bez grupy)',

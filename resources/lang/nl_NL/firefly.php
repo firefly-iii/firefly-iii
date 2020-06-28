@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Wees voorzichtig met deze knoppen. Het verwijderen van dingen is permanent.',
+    'other_sessions_logged_out'                 => 'Al je andere sessies zijn uitgelogd.',
     'delete_all_budgets'                        => 'Verwijder ALLE budgetten',
     'delete_all_categories'                     => 'Verwijder ALLE categorieën',
     'delete_all_tags'                           => 'Verwijder ALLE tags',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Valuta',
     'preferences'                               => 'Voorkeuren',
     'logout'                                    => 'Uitloggen',
+    'logout_other_sessions'                     => 'Alle andere sessies afmelden',
     'toggleNavigation'                          => 'Navigatie aan of uit',
     'searchPlaceholder'                         => 'Zoeken...',
     'version'                                   => 'Versie',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Opslaan als nieuwe transactie ipv de huidige bij te werken.',
     'reset_after'                           => 'Reset formulier na opslaan',
     'errors_submission'                     => 'Er ging iets mis. Check de errors.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
     // object groups
     'default_group_title_name'              => '(ongegroepeerd)',

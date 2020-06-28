@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Будьте осторожны с этими кнопками. Удаление нельзя будет отменить.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Удалить ВСЕ ваши бюджеты',
     'delete_all_categories'                     => 'Удалить ВСЕ ваши категории',
     'delete_all_tags'                           => 'Удалить ВСЕ ваши метки',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Валюта',
     'preferences'                               => 'Настройки',
     'logout'                                    => 'Выход',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Переключить навигацию',
     'searchPlaceholder'                         => 'Поиск...',
     'version'                                   => 'Версия',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                           => 'Сбросить форму после отправки',
     'errors_submission'                     => 'При отправке произошла ошибка. Пожалуйста, проверьте ошибки ниже.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Эта функция недоступна, если вы используете Firefly III в среде Sandstorm.io.',
 
     // object groups
     'default_group_title_name'              => '(без группировки)',

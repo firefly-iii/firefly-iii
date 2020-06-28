@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => '小心使用这些按钮。删除内容是永久性的。',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => '删除所有您的预算',
     'delete_all_categories'                     => '删除您的所有类别',
     'delete_all_tags'                           => '删除您的所有标签',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => '货币',
     'preferences'                               => '偏好设定',
     'logout'                                    => '登出',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => '切换导览',
     'searchPlaceholder'                         => '搜寻中…',
     'version'                                   => '版本',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => '保存为新交易而不是更新此交易。',
     'reset_after'                           => '提交后重置表单',
     'errors_submission'                     => '您的提交有误，请查看下面输出的错误信息。',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => '当您在 Sandstorm.io 环境使用 Firefly III 时，此功能不可用。',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

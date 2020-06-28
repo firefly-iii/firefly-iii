@@ -618,6 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Óvatosan ezekkel a gombokkal! A dolgok törlése végleges.',
+    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'MINDEN költségkeret törlése',
     'delete_all_categories'                     => 'MINDEN kategória törlése',
     'delete_all_tags'                           => 'MINDEN címke törlése',
@@ -1138,6 +1139,7 @@ return [
     'currency'                                  => 'Pénznem',
     'preferences'                               => 'Beállítások',
     'logout'                                    => 'Kijelentkezés',
+    'logout_other_sessions'                     => 'Logout all other sessions',
     'toggleNavigation'                          => 'Navigációs mód átkapcsolása',
     'searchPlaceholder'                         => 'Keresés...',
     'version'                                   => 'Verizó',
@@ -1510,9 +1512,6 @@ return [
     'store_as_new'                          => 'Tárolás új tranzakcióként frissítés helyett.',
     'reset_after'                           => 'Űrlap törlése a beküldés után',
     'errors_submission'                     => 'Hiba történt a beküldés során. Kérem, javítsa az alábbi hibákat.',
-
-    // sandstorm.io errors and messages:
-    'sandstorm_not_available'               => 'Ez a funkció nem elérhető ha a Firefly III Sandstorm.io környezetben van használva.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
