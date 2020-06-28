@@ -146,7 +146,7 @@ return [
     'version'                 => '5.3.0-beta.1',
     'api_version'             => '1.2.0',
     'db_version'              => 14,
-    'maxUploadSize'           => 15242880,
+    'maxUploadSize'           => 1073741824, // 1 GB
     'send_error_message'      => env('SEND_ERROR_MESSAGE', true),
     'site_owner'              => env('SITE_OWNER', ''),
     'send_registration_mail'  => env('SEND_REGISTRATION_MAIL', true),
