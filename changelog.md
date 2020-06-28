@@ -3,11 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [5.3.0 (API 1.2.0) - 2020-08-01
+## [5.3.0 (API 1.2.0) - 2020-xx-xx
 
 Several alpha and beta releases preceded this release.
 
 - 5.3.0-alpha.1 on 2020-06-22
+- 5.3.0-beta.1 on 2020-06-28
 
 ### Added
 - Piggy banks can be divided over groups. Groups can be sorted on a separate page. This may prove to be useful to organize piggy banks. The feature will
