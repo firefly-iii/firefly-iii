@@ -47,7 +47,7 @@
                     <div class="input-group mb-3">
                         {% if config('firefly.login_provider') == 'eloquent' %}
                             <input type="email" required autocomplete="email" name="email" value="{{ email }}" class="form-control"
-                                   placeholder="{{ trans('form.email') }}"/>
+                                   id="emailInput" placeholder="{{ trans('form.email') }}"/>
                         {% else %}
                             <input type="text" required autocomplete="username" name="email" value="{{ email }}" class="form-control"
                                    placeholder="{{ trans('form.login_name') }}"/>
@@ -102,5 +102,8 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+            document.getElementById("emailInput").focus();
+    </script>
     <!-- /.login-box -->
 {% endblock %}

@@ -10,6 +10,7 @@ rm -rf ../public/v2/js
 rm -rf ../public/v2/css
 
 # build new stuff
+npm upgrade
 npm run prod
 
 # move to right directory
