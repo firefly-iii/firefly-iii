@@ -131,7 +131,7 @@ There are many ways to run Firefly III
 
 Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III).
 
-Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/master/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/.github/code_of_conduct.md), which I invite you to check out.
+Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 
 I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
 
@@ -147,7 +147,7 @@ Thank you for considering donating to Firefly III!
 
 ## License
 
-This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.html).
+This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/main/LICENSE) under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
 ## Contact
 
