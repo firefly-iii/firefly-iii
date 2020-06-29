@@ -155,8 +155,7 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-
-        $amount = (string) round($request->get('amount'), 12);
+        $amount = number_format((float) $request->get('amount'), 12, '.', '');
 
         session()->flash(
             'error',
