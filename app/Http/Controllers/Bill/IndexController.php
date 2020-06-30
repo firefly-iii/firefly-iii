@@ -30,6 +30,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,6 +39,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class IndexController extends Controller
 {
+    use OrganisesObjectGroups;
     private BillRepositoryInterface $repository;
 
     /**
@@ -65,6 +67,10 @@ class IndexController extends Controller
      */
     public function index()
     {
+        $this->cleanupObjectGroups();
+        $this->repository->correctOrder();
+
+
         $start      = session('start');
         $end        = session('end');
         $collection = $this->repository->getBills();

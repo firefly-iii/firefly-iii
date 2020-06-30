@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 
 use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
@@ -34,6 +35,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
+use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Log;
 
@@ -351,6 +353,14 @@ trait ModifiesPiggyBanks
 
         $this->updateNote($piggyBank, $data['notes'] ?? '');
 
+        // update the order of the piggy bank:
+        $oldOrder = (int) $piggyBank->order;
+        $newOrder = (int) ($data['order'] ?? $oldOrder);
+        if ($oldOrder !== $newOrder) {
+            $this->updateOrder($piggyBank, $oldOrder, $newOrder);
+        }
+
+
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
@@ -413,6 +423,40 @@ trait ModifiesPiggyBanks
         $dbNote->save();
 
         return true;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param int       $oldOrder
+     * @param int       $newOrder
+     */
+    private function updateOrder(PiggyBank $piggyBank, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            // Iedereen [7 en lager] [hoger dan 3] behalve piggy zelf, puntje er af:
+            //piggy zelf naar 7
+            /** @var User $user */
+            $user = $this->user;
+            $user->piggyBanks()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                 ->where('piggy_banks.id', '!=', $piggyBank->id)
+                 ->update(['order' => DB::raw('piggy_banks.order-1')]);
+            $piggyBank->order = $newOrder;
+            $piggyBank->save();
+        }
+        if ($newOrder < $oldOrder) {
+            //
+            //Van 8 naar 2
+            // iedereen [2 of hoger] en [kleiner dan 8] puntje er bij.
+            //       8 naar 2
+            /** @var User $user */
+            $user = $this->user;
+            $user->piggyBanks()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                 ->where('piggy_banks.id', '!=', $piggyBank->id)
+                 ->update(['order' => DB::raw('piggy_banks.order+1')]);
+            $piggyBank->order = $newOrder;
+            $piggyBank->save();
+        }
+
     }
 
 }

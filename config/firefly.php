@@ -143,9 +143,9 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.0-beta.1',
+    'version'                 => '5.3.0-beta.2',
     'api_version'             => '1.2.0',
-    'db_version'              => 14,
+    'db_version'              => 15,
     'maxUploadSize'           => 1073741824, // 1 GB
     'send_error_message'      => env('SEND_ERROR_MESSAGE', true),
     'site_owner'              => env('SITE_OWNER', ''),

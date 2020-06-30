@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2020_06_07_063612_changes_for_v530.php
+ * 2020_06_30_202620_changes_for_v530a.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,11 +24,12 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
- * Class ChangesForV530
+ * Class ChangesForV530a
  */
-class ChangesForV530 extends Migration
+class ChangesForV530a extends Migration
 {
     /**
      * Reverse the migrations.
@@ -37,8 +38,11 @@ class ChangesForV530 extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('object_groupables');
-        Schema::dropIfExists('object_groups');
+        Schema::table(
+            'bills', static function (Blueprint $table) {
+            $table->dropColumn('order');
+        }
+        );
     }
 
     /**
@@ -48,29 +52,10 @@ class ChangesForV530 extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('object_groups')) {
-            Schema::create(
-                'object_groups', static function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('user_id', false, true);
-                $table->timestamps();
-                $table->softDeletes();
-                $table->string('title', 255);
-                $table->mediumInteger('order', false, true)->default(0);
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
-            );
+        Schema::table(
+            'bills', static function (Blueprint $table) {
+            $table->integer('order', false, true)->default(0);
         }
-
-
-        if (!Schema::hasTable('object_groupables')) {
-            Schema::create(
-                'object_groupables', static function (Blueprint $table) {
-                $table->integer('object_group_id');
-                $table->integer('object_groupable_id', false, true);
-                $table->string('object_groupable_type', 255);
-            }
-            );
-        }
+        );
     }
 }

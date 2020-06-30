@@ -41,6 +41,11 @@ interface BillRepositoryInterface
     public function unlinkAll(Bill $bill): void;
 
     /**
+     * Add correct order to bills.
+     */
+    public function correctOrder(): void;
+
+    /**
      * @param Bill $bill
      *
      * @return bool

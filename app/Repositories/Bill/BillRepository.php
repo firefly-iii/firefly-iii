@@ -190,7 +190,10 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         /** @var Collection $set */
-        return $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->get();
+        return $this->user->bills()
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -710,5 +713,21 @@ class BillRepository implements BillRepositoryInterface
     public function unlinkAll(Bill $bill): void
     {
         $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
+    }
+
+    /**
+     * Correct order of piggies in case of issues.
+     */
+    public function correctOrder(): void
+    {
+        $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
+        $current = 1;
+        foreach ($set as $bill) {
+            if ((int) $bill->order !== $current) {
+                $bill->order = $current;
+                $bill->save();
+            }
+            $current++;
+        }
     }
 }
