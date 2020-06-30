@@ -49,6 +49,7 @@
                                     </div>
 
                                     {# locale #}
+                                    {% if not isDocker %}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_locale'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
@@ -75,6 +76,9 @@
                                             <li>{{ 'pref_locale_no_docker'|_ }}</li>
                                         </ul>
                                     </div>
+                                    {% else %}
+                                    <input type="hidden" name="locale" value="equal" />
+                                    {% endif %}
 
                                     {# fiscal year #}
                                     <div class="preferences-box">
