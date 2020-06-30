@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * ModifiesPiggyBanks.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -19,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
@@ -360,9 +362,19 @@ trait ModifiesPiggyBanks
             $repetition->save();
         }
 
+        // update using name:
         $objectGroupTitle = $data['object_group'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                $piggyBank->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();
