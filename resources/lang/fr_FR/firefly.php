@@ -618,7 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Attention à ces boutons. Ce que vous supprimez l\'est de façon définitive.',
-    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'other_sessions_logged_out'                 => 'Toutes vos autres sessions ont été déconnectées.',
     'delete_all_budgets'                        => 'Supprimer TOUS vos budgets',
     'delete_all_categories'                     => 'Supprimer toutes vos catégories',
     'delete_all_tags'                           => 'Supprimer tous vos tags',
@@ -1139,7 +1139,7 @@ return [
     'currency'                                  => 'Devise',
     'preferences'                               => 'Préférences',
     'logout'                                    => 'Se déconnecter',
-    'logout_other_sessions'                     => 'Logout all other sessions',
+    'logout_other_sessions'                     => 'Déconnecter toutes les autres sessions',
     'toggleNavigation'                          => 'Activer navigation',
     'searchPlaceholder'                         => 'Rechercher...',
     'version'                                   => 'Version',

@@ -618,7 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Fai attenzione con questi pulsanti. L\'eliminazione è permanente.',
-    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'other_sessions_logged_out'                 => 'Sei stato disconnesso da tutte le altre sessioni.',
     'delete_all_budgets'                        => 'Elimina TUTTI i budget',
     'delete_all_categories'                     => 'Elimina TUTTE le categorie',
     'delete_all_tags'                           => 'Elimina TUTTE le etichette',

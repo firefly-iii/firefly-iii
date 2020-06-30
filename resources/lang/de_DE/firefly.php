@@ -618,7 +618,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
-    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'other_sessions_logged_out'                 => 'Alle Ihre anderen Sitzungen wurden abgemeldet.',
     'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
     'delete_all_categories'                     => 'Alle Ihre Kategorien löschen',
     'delete_all_tags'                           => 'Alle Ihre Stichwörter löschen',
