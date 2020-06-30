@@ -29,6 +29,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use Illuminate\Support\Collection;
 use Log;
@@ -39,7 +40,9 @@ use Log;
  */
 class BillUpdateService
 {
-    use BillServiceTrait;
+    use BillServiceTrait, CreatesObjectGroups;
+
+    protected $user;
 
     /**
      * Constructor.
@@ -59,6 +62,7 @@ class BillUpdateService
      */
     public function update(Bill $bill, array $data): Bill
     {
+        $this->user = $bill->user;
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
@@ -102,6 +106,25 @@ class BillUpdateService
         // update rule actions.
         $this->updateBillActions($bill, $oldData['name'], $data['name']);
         $this->updateBillTriggers($bill, $oldData, $data);
+
+        // update using name:
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
+        }
 
         return $bill;
     }

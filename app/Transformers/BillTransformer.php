@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -67,6 +68,18 @@ class BillTransformer extends AbstractTransformer
         $notes    = $this->repository->getNoteText($bill);
         $notes    = '' === $notes ? null : $notes;
         $this->repository->setUser($bill->user);
+
+        $objectGroupId    = null;
+        $objectGroupOrder = null;
+        $objectGroupTitle = null;
+        /** @var ObjectGroup $objectGroup */
+        $objectGroup = $bill->objectGroups->first();
+        if (null !== $objectGroup) {
+            $objectGroupId    = (int) $objectGroup->id;
+            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupTitle = $objectGroup->title;
+        }
+
         $data = [
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
@@ -86,6 +99,9 @@ class BillTransformer extends AbstractTransformer
             'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
             'paid_dates'              => $paidData['paid_dates'],
+            'object_group_id'         => $objectGroupId,
+            'object_group_order'      => $objectGroupOrder,
+            'object_group_title'      => $objectGroupTitle,
             'links'                   => [
                 [
                     'rel' => 'self',

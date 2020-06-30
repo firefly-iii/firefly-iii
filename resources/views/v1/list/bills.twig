@@ -1,138 +1,152 @@
 <div style="padding-left:8px;">
     {{ paginator.render|raw }}
 </div>
-<table class="table table-hover sortable">
+<table class="table table-hover">
     <thead>
     <tr>
-        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th data-defaultsign="az">{{ trans('list.name') }}</th>
-        <th data-defaultsort="disabled" class="hidden-sm hidden-md hidden-xs">{{ trans('list.linked_to_rules') }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ trans('list.matchingAmount') }}</th>
-        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
-        <th data-defaultsign="month" data-dateformat="{{ madMomentJS }}" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
+        <th class="hidden-sm hidden-xs">&nbsp;</th>
+        <th class="hidden-sm hidden-xs">&nbsp;</th>
+        <th>{{ trans('list.name') }}</th>
+        <th class="hidden-sm hidden-md hidden-xs">{{ trans('list.linked_to_rules') }}</th>
+        <th style="text-align: right;">{{ trans('list.matchingAmount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr>
     </thead>
-    <tbody>
-    {% for entry in bills %}
-        <tr{% if not entry.active %} data-disablesort="true"{% endif %}>
-            <td class="hidden-sm hidden-xs">
-                <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i
-                                class="fa fa-fw fa-pencil"></i></a><a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i
-                                class="fa fa-fw fa-trash-o"></i></a></div>
-            </td>
-            <td data-value="{{ entry.name }}">
-                {% if not entry.active %}
-                    <i class="fa fa-fw fa-ban"></i>
-                {% endif %}
-                <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
-                {# count attachments #}
-                {% if entry.attachments.count > 0 %}
-                    <i class="fa fa-paperclip"></i>
-                {% endif %}
+    {% for objectGroupOrder, objectGroup in bills %}
+        {% if objectGroup.bills|length > 0 %}
+            <tbody class="bill-connected-list" {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}" {% else %}data-title=""{% endif %}>
+            <tr>
+                <td class="hidden-sm hidden-xs">&nbsp;</td>
+                <td class="hidden-sm hidden-xs">&nbsp;</td>
+                <td colspan="6"><small>{{ objectGroup.object_group_title }}</small></td>
+            </tr>
+            {% for entry in objectGroup.bills %}
+                <tr{% if not entry.active %} data-disablesort="true"{% endif %}>
+                    <td class="hidden-sm hidden-xs">
+                        <i class="fa fa-fw fa-bars bill-handle"></i>
+                    </td>
+                    <td class="hidden-sm hidden-xs">
+                        <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i
+                                        class="fa fa-fw fa-pencil"></i></a><a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i
+                                        class="fa fa-fw fa-trash-o"></i></a></div>
+                    </td>
+                    <td>
+                        {% if not entry.active %}
+                            <i class="fa fa-fw fa-ban"></i>
+                        {% endif %}
+                        <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
+                        {# count attachments #}
+                        {% if entry.attachments.count > 0 %}
+                            <i class="fa fa-paperclip"></i>
+                        {% endif %}
 
-            </td>
-            <td class="hidden-sm hidden-md hidden-xs rules">
-                {% if entry.rules|length > 0 %}
-                    <ul class="list-unstyled">
-                    {% for rule in entry.rules %}
-                        <li>
-                            <a href="{{ route('rules.edit', [rule.id]) }}">
-                                {{ rule.title }}
-                            </a>
-                            {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
-                        </li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            </td>
-            <td data-value="{{ entry.amount_min }}" style="text-align: right;">
+                    </td>
+                    <td class="hidden-sm hidden-md hidden-xs rules">
+                        {% if entry.rules|length > 0 %}
+                            <ul class="list-unstyled">
+                                {% for rule in entry.rules %}
+                                    <li>
+                                        <a href="{{ route('rules.edit', [rule.id]) }}">
+                                            {{ rule.title }}
+                                        </a>
+                                        {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
                 <span style="margin-right:5px;"
-                title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}"
+                      title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}"
                 >
                     ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
                 </span>
-            </td>
+                    </td>
 
-            {#
-            paidDates = 0 (bill not paid in period)
-            pay_dates  = 0 (bill not expected to be paid in this period)
-            bill is active.
-            #}
-            {% if entry.paid_dates|length == 0 and entry.pay_dates|length == 0 and entry.active %}
-                <td class="paid_in_period text-muted" data-value="0001-01-01">
-                    {{ trans('firefly.not_expected_period') }}
-                </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
-                </td>
-            {% endif %}
+                    {#
+                    paidDates = 0 (bill not paid in period)
+                    pay_dates  = 0 (bill not expected to be paid in this period)
+                    bill is active.
+                    #}
+                    {% if entry.paid_dates|length == 0 and entry.pay_dates|length == 0 and entry.active %}
+                        <td class="paid_in_period text-muted">
+                            {{ trans('firefly.not_expected_period') }}
+                        </td>
+                        <td class="expected_in_period hidden-sm hidden-xs">
+                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                        </td>
+                    {% endif %}
 
-            {#
-            paid_dates = 0 (bill not paid in period)
-            pay_dates  > 0 (bill IS expected to be paid in this period)
-            bill is active
-            #}
-            {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
-                <td class="paid_in_period text-danger" data-value="0002-00-00">
-                    {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }}
-                </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                    {% for date in entry.pay_dates %}
-                        {{ formatDate(date, monthAndDayFormat) }}<br>
-                    {% endfor %}
+                    {#
+                    paid_dates = 0 (bill not paid in period)
+                    pay_dates  > 0 (bill IS expected to be paid in this period)
+                    bill is active
+                    #}
+                    {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
+                        <td class="paid_in_period text-danger">
+                            {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }}
+                        </td>
+                        <td class="expected_in_period hidden-sm hidden-xs">
+                            {% for date in entry.pay_dates %}
+                                {{ formatDate(date, monthAndDayFormat) }}<br>
+                            {% endfor %}
 
-                </td>
-            {% endif %}
+                        </td>
+                    {% endif %}
 
-            {#
-            paid_dates >= 0 (bill is paid X times).
-            Don't care about pay_dates.
-            #}
-            {% if entry.paid_dates|length > 0 and entry.active %}
-                <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0].date }}">
-                    {% for currentPaid in entry.paid_dates %}
-                        <a href="{{ route('transactions.show',currentPaid.transaction_group_id) }}">
-                            {{ formatDate(currentPaid.date, monthAndDayFormat) }}
-                        </a>
-                        <br/>
-                    {% endfor %}
+                    {#
+                    paid_dates >= 0 (bill is paid X times).
+                    Don't care about pay_dates.
+                    #}
+                    {% if entry.paid_dates|length > 0 and entry.active %}
+                        <td class="paid_in_period text-success">
+                            {% for currentPaid in entry.paid_dates %}
+                                <a href="{{ route('transactions.show',currentPaid.transaction_group_id) }}">
+                                    {{ formatDate(currentPaid.date, monthAndDayFormat) }}
+                                </a>
+                                <br/>
+                            {% endfor %}
+                        </td>
+                        <td class="expected_in_period hidden-sm hidden-xs">
+                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                        </td>
+                    {% endif %}
+                    {# bill is not active #}
+                    {% if not entry.active %}
+                        <td class="paid_in_period text-muted">
+                            ~
+                        </td>
+                        <td class="expected_in_period text-muted hidden-sm hidden-xs">~</td>
+                    {% endif %}
+                    <td class="hidden-sm hidden-xs">
+                        {{ ('repeat_freq_'~entry.repeat_freq)|_ }}
+                        {% if entry.skip > 0 %}
+                            {{ 'skips_over'|_ }} {{ entry.skip }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for sum in sums[objectGroupOrder] %}
+            <tr>
+                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                <td colspan="2" style="text-align: right;"> <!-- title -->
+                    <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})</small>
                 </td>
-                <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">
-                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                <td style="text-align: right;"> <!-- amount -->
+                        {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
                 </td>
-            {% endif %}
-            {# bill is not active #}
-            {% if not entry.active %}
-                <td class="paid_in_period text-muted" data-value="3000-01-01">
-                    ~
-                </td>
-                <td class="expected_in_period text-muted hidden-sm hidden-xs" data-value="3001-01-01">~</td>
-            {% endif %}
-            <td class="hidden-sm hidden-xs" data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
-                {{ ('repeat_freq_'~entry.repeat_freq)|_ }}
-                {% if entry.skip > 0 %}
-                    {{ 'skips_over'|_ }} {{ entry.skip }}
-                {% endif %}
-            </td>
-        </tr>
+                <td>&nbsp;</td> <!-- paid in period -->
+                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+            </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
     {% endfor %}
-    </tbody>
-    <tfoot>
-    {% for sum in sums %}
-        <tr>
-            <td style="text-align:right;" colspan="3">
-                {{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})<br />
-            </td>
-            <td style="text-align:right;" colspan="1">
-            <span style="margin-right:5px;">
-                {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
-            </span>
-            </td>
-            <td colspan="6">&nbsp;</td>
-        </tr>
-    {% endfor %}
-    </tfoot>
+
 </table>
 <div style="padding-left:8px;">
     {{ paginator.render|raw }}

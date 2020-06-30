@@ -162,6 +162,14 @@ class Bill extends Model
     }
 
     /**
+     * Get all of the tags for the post.
+     */
+    public function objectGroups()
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
+    }
+
+    /**
      * @codeCoverageIgnore
      *
      * @param $value
