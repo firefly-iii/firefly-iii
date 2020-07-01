@@ -51,12 +51,15 @@ Several alpha and beta releases preceded this release.
 - [Issue 3489](https://github.com/firefly-iii/firefly-iii/issues/3489) Several unescaped strings.
 - [Issue 3490](https://github.com/firefly-iii/firefly-iii/issues/3490) Fix search issues when using special characters.
 - [Issue 3488](https://github.com/firefly-iii/firefly-iii/issues/3488) Fix token text box.
+- [Issue 3509](https://github.com/firefly-iii/firefly-iii/issues/3509) Tag view now handles future transactions better.
+- [Issue 3513](https://github.com/firefly-iii/firefly-iii/issues/3513) Fix issue with charts on budget page.
 - Internal consistency checks for transaction groups.
 
 ### API
 - New API for object groups.
 - Expanded API for piggy banks to support object groups.
 - Expanded API for bills to support object groups.
+- [Issue 3506](https://github.com/firefly-iii/firefly-iii/issues/3506) Search transactions end point
 
 ### Known issues
 - You may run into date conversion problems if you're living on the right side of GMT. If transactions appear a day early, let me know.

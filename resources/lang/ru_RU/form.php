@@ -38,12 +38,12 @@ return [
     'match'                     => 'Ключи для связи',
     'strict'                    => 'Строгий режим',
     'repeat_freq'               => 'Повторы',
-    'object_group'              => 'Group',
-    'location'                  => 'Location',
+    'object_group'              => 'Группа',
+    'location'                  => 'Местоположение',
     'update_channel'            => 'Канал обновлений',
     'currency_id'               => 'Валюта',
     'transaction_currency_id'   => 'Валюта',
-    'auto_budget_currency_id'   => 'Currency',
+    'auto_budget_currency_id'   => 'Валюта',
     'external_ip'               => 'Внешний IP-адрес вашего сервера',
     'attachments'               => 'Вложения',
     'BIC'                       => 'BIC',
@@ -137,7 +137,7 @@ return [
     'account_areYouSure'          => 'Вы действительно хотите удалить счёт с именем ":name"?',
     'bill_areYouSure'             => 'Вы действительно хотите удалить счёт на оплату с именем ":name"?',
     'rule_areYouSure'             => 'Вы действительно хотите удалить правило с названием ":title"?',
-    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
+    'object_group_areYouSure'     => 'Вы действительно хотите удалить группу с названием ":title"?',
     'ruleGroup_areYouSure'        => 'Вы действительно хотите удалить группу правил с названием ":title"?',
     'budget_areYouSure'           => 'Вы действительно хотите удалить бюджет с именем ":name"?',
     'category_areYouSure'         => 'Вы действительно хотите удалить категорию с именем ":name"?',
@@ -157,7 +157,7 @@ return [
     'also_delete_connections'     => 'Единственная транзакция, связанная с данным типом ссылки, потеряет это соединение. |Все :count транзакций, связанные с данным типом ссылки, потеряют свои соединения.',
     'also_delete_rules'           => 'Единственное правило, связанное с данной группой правил, будет удалено. |Все :count правила, связанные с данной группой правил, будут удалены.',
     'also_delete_piggyBanks'      => 'Единственная копилка, связанная с данным счётом, будет удалена.|Все :count копилки, связанные с данным счётом, будут удалены.',
-    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
+    'not_delete_piggy_banks'      => 'Копилка, подключенная к этой группе, не будет удалена.|Копилки (:count), подключенные к этой группе, не будет удалены.',
     'bill_keep_transactions'      => 'Единственная транзакция, связанная с данным счётом, не будет удалена. |Все :count транзакции, связанные с данным счётом, будут сохранены.',
     'budget_keep_transactions'    => 'Единственная транзакция, связанная с данным бюджетом, не будет удалена.|Все :count транзакции, связанные с этим бюджетом, будут сохранены.',
     'category_keep_transactions'  => 'Единственная транзакция, связанная с данной категорией, не будет удалена.|Все :count транзакции, связанные с этой категорией, будут сохранены.',
@@ -165,7 +165,7 @@ return [
     'tag_keep_transactions'       => 'Только транзакция, связанная с этой меткой, будет удалена.|Все :count транзакций, связанные с этой меткой, будут сохранены.',
     'check_for_updates'           => 'Проверить обновления',
 
-    'delete_object_group' => 'Delete group ":title"',
+    'delete_object_group' => 'Удалить группу ":title"',
 
     'email'                 => 'Адрес электронной почты',
     'password'              => 'Пароль',
@@ -173,7 +173,7 @@ return [
     'blocked'               => 'Заблокирован?',
     'blocked_code'          => 'Причина блокировки',
     'login_name'            => 'Логин',
-    'is_owner'              => 'Is admin?',
+    'is_owner'              => 'Администратор?',
 
     // import
     'apply_rules'           => 'Применить правила',
@@ -235,14 +235,14 @@ return [
     'expected_on'               => 'Ожидаем',
     'paid'                      => 'Оплачено',
 
-    'auto_budget_type'            => 'Auto-budget',
-    'auto_budget_amount'            => 'Auto-budget amount',
-    'auto_budget_period'            => 'Auto-budget period',
+    'auto_budget_type'            => 'Авто-бюджет',
+    'auto_budget_amount'            => 'Сумма авто-бюджета',
+    'auto_budget_period'            => 'Период авто-бюджета',
 
-    'collected' => 'Collected',
-    'submitted' => 'Submitted',
-    'key' => 'Key',
-    'value' => 'Content of record'
+    'collected' => 'Получено',
+    'submitted' => 'Отправлено',
+    'key' => 'Ключ',
+    'value' => 'Содержание записи'
 
 
 ];

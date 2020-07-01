@@ -37,32 +37,11 @@ use League\Fractal\Resource\Collection;
  */
 class TransactionController extends Controller
 {
-    /** @var string */
-    public const SEARCH_ALL = 'all';
-    /** @var string */
-    public const SEARCH_DESCRIPTION = 'description';
-    /** @var string */
-    public const SEARCH_NOTES = 'notes';
-    /** @var string */
-    public const SEARCH_ACCOUNTS = 'accounts';
-    /** @var array */
-    private $validFields;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->validFields = [
-            self::SEARCH_ALL,
-            self::SEARCH_DESCRIPTION,
-            self::SEARCH_NOTES,
-            self::SEARCH_ACCOUNTS,
-        ];
-    }
-
     /**
-     * @param Request $request
+     * @param Request         $request
+     * @param SearchInterface $searcher
      *
-     * @return void
+     * @return JsonResponse
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
