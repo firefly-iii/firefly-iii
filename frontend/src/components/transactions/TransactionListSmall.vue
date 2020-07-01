@@ -1,16 +1,16 @@
 <template>
     <table class="table table-striped">
-        <caption>A table containing transactions.</caption>
+        <caption style="display:none;">A table containing transactions.</caption>
         <thead>
         <tr>
-            <th>TODO</th>
-            <th>TODO</th>
+            <th class="text-left">Description</th>
+            <th class="text-right">Amount</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="transaction in transactions">
+        <tr v-for="transaction in this.transactions">
             <td>
-                <a href="#">
+                <a :href="'transactions/show/' + transaction.id " :title="transaction.date">
                     <span v-if="transaction.attributes.transactions.length > 1">{{ transaction.attributes.group_title }}</span>
                     <span v-if="1===transaction.attributes.transactions.length">{{ transaction.attributes.transactions[0].description }}</span>
                 </a>
@@ -23,6 +23,12 @@
                     <span v-if="'deposit' === tr.type" class="text-success">
                         {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount)}}<br>
                      </span>
+                    <span v-if="'transfer' === tr.type && tr.source_id === account_id" class="text-info">
+                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1)}}<br>
+                    </span>
+                    <span v-if="'transfer' === tr.type && tr.destination_id === account_id" class="text-info">
+                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount)}}<br>
+                    </span>
                 </span>
             </td>
         </tr>
@@ -38,6 +44,12 @@
                 type: Array,
                 default: function () {
                     return [];
+                }
+            },
+            account_id: {
+                type: Number,
+                default: function() {
+                    return 0;
                 }
             },
         }

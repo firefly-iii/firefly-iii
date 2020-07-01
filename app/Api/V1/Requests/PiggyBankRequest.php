@@ -63,6 +63,7 @@ class PiggyBankRequest extends Request
             'startdate'      => $this->date('start_date'),
             'targetdate'     => $this->date('target_date'),
             'notes'          => $this->nlString('notes'),
+            'order'          => $this->integer('order'),
         ];
     }
 

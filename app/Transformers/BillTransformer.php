@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -67,6 +68,18 @@ class BillTransformer extends AbstractTransformer
         $notes    = $this->repository->getNoteText($bill);
         $notes    = '' === $notes ? null : $notes;
         $this->repository->setUser($bill->user);
+
+        $objectGroupId    = null;
+        $objectGroupOrder = null;
+        $objectGroupTitle = null;
+        /** @var ObjectGroup $objectGroup */
+        $objectGroup = $bill->objectGroups->first();
+        if (null !== $objectGroup) {
+            $objectGroupId    = (int) $objectGroup->id;
+            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupTitle = $objectGroup->title;
+        }
+
         $data = [
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
@@ -76,16 +89,20 @@ class BillTransformer extends AbstractTransformer
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
             'name'                    => $bill->name,
-            'amount_min'              => round((float)$bill->amount_min, $currency->decimal_places),
-            'amount_max'              => round((float)$bill->amount_max, $currency->decimal_places),
+            'amount_min'              => round((float) $bill->amount_min, $currency->decimal_places),
+            'amount_max'              => round((float) $bill->amount_max, $currency->decimal_places),
             'date'                    => $bill->date->format('Y-m-d'),
             'repeat_freq'             => $bill->repeat_freq,
-            'skip'                    => (int)$bill->skip,
+            'skip'                    => (int) $bill->skip,
             'active'                  => $bill->active,
+            'order'                   => (int) $bill->order,
             'notes'                   => $notes,
             'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
             'paid_dates'              => $paidData['paid_dates'],
+            'object_group_id'         => $objectGroupId,
+            'object_group_order'      => $objectGroupOrder,
+            'object_group_title'      => $objectGroupTitle,
             'links'                   => [
                 [
                     'rel' => 'self',

@@ -16,7 +16,7 @@
         "laravel-mix-bundle-analyzer": "^1.0.5",
         "lodash": "^4.17.13",
         "resolve-url-loader": "^3.1.0",
-        "sass": "^1.15.2",
+        "sass": "^1.26.9",
         "sass-loader": "^8.0.0",
         "vue": "^2.6",
         "vue-i18n": "^8.15",
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
-        "@popperjs/core": "^2.4.2",
+        "@popperjs/core": "^2.4.3",
         "bootstrap": "^4.5.0",
         "chart.js": "^2.9.3",
         "icheck-bootstrap": "^3.0.1",

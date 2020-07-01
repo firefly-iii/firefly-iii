@@ -84,8 +84,6 @@ class ShowController extends Controller
      */
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
-
-
         /** @var Carbon $start */
         $start = $start ?? session('start');
         /** @var Carbon $end */
@@ -211,7 +209,7 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)
+        $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->withAccountInformation()
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));

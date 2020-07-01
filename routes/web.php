@@ -184,16 +184,18 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'bills', 'as' => 'bills.'],
     static function () {
-        Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
-        Route::get('rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'rescan']);
-        Route::get('create', ['uses' => 'BillController@create', 'as' => 'create']);
-        Route::get('edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'edit']);
-        Route::get('delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
-        Route::get('show/{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+        Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
+        Route::get('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
+        Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
+        Route::get('edit/{bill}', ['uses' => 'Bill\EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
+        Route::get('show/{bill}', ['uses' => 'Bill\ShowController@show', 'as' => 'show']);
 
-        Route::post('store', ['uses' => 'BillController@store', 'as' => 'store']);
-        Route::post('update/{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
-        Route::post('destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'destroy']);
+        Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
+        Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
+        Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
+
+        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
 

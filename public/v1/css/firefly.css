@@ -93,6 +93,9 @@ p.tagcloud .label {
 .rule-handle {
     cursor: move;
 }
+.bill-handle {
+    cursor: move;
+}
 
 body.waiting * {
     cursor: progress;

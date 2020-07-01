@@ -67,7 +67,8 @@ class PreferencesController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-
+        $isDocker = env('IS_DOCKER', false);
+        
         // group accounts
         $groupedAccounts = [];
         /** @var Account $account */
@@ -122,6 +123,7 @@ class PreferencesController extends Controller
             compact(
                 'language',
                 'groupedAccounts',
+                'isDocker',
                 'frontPageAccounts',
                 'languages',
                 'locales',

@@ -1,6 +1,6 @@
 <?php
 /**
- * PiggyBankFormRequest.php
+ * PiggyBankStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Models\PiggyBank;
-
 /**
- * Class PiggyBankFormRequest.
+ * Class PiggyBankStoreRequest.
  */
-class PiggyBankFormRequest extends Request
+class PiggyBankStoreRequest extends Request
 {
     /**
      * Verify the request.
@@ -65,24 +63,14 @@ class PiggyBankFormRequest extends Request
      */
     public function rules(): array
     {
-        $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
-
-        /** @var PiggyBank $piggy */
-        $piggy = $this->route()->parameter('piggyBank');
-
-        if (null !== $piggy) {
-            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . $piggy->id;
-        }
-
-        $rules = [
-            'name'         => $nameRule,
+        return [
+            'name'         => 'required|between:1,255|uniquePiggyBankForUser',
             'account_id'   => 'required|belongsToUser:accounts',
             'targetamount' => 'required|numeric|gte:0.01|max:1000000000',
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',
+            'object_group' => 'min:0|max:255',
         ];
-
-        return $rules;
     }
 }

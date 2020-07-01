@@ -216,7 +216,6 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
-        $collector->setRange(session()->get('start'), session()->get('end'));
         $start = session()->get('start');
         $end   = session()->get('end');
         if (null !== $budgetLimit) {
@@ -230,6 +229,7 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        $collector->setRange($start, $end);
         $collector->setBudget($budget);
         $journals  = $collector->getExtractedJournals();
         $result    = [];
@@ -282,13 +282,12 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
-        $collector->setRange(session()->get('start'), session()->get('end'));
         $start = session()->get('start');
         $end   = session()->get('end');
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
             $end   = $budgetLimit->end_date;
-            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->setCurrency($budgetLimit->transactionCurrency);
+            $collector->setCurrency($budgetLimit->transactionCurrency);
         }
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -296,6 +295,7 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        $collector->setRange($start, $end);
         $collector->setBudget($budget)->withCategoryInformation();
         $journals  = $collector->getExtractedJournals();
         $result    = [];
@@ -345,7 +345,6 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
-        $collector->setRange(session()->get('start'), session()->get('end'));
         $start = session()->get('start');
         $end   = session()->get('end');
         if (null !== $budgetLimit) {
@@ -359,7 +358,7 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
+        $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
         $journals  = $collector->getExtractedJournals();
         $result    = [];

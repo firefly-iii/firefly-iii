@@ -204,6 +204,12 @@ return [
     'authorization'                              => 'Autorizzazione',
     'active_bills_only'                          => 'solo bollette attive',
     'active_exp_bills_only'                      => 'solo bollette attive e previste',
+    'per_period_sum_1D'                          => 'Expected daily costs',
+    'per_period_sum_1W'                          => 'Expected weekly costs',
+    'per_period_sum_1M'                          => 'Expected monthly costs',
+    'per_period_sum_3M'                          => 'Expected quarterly costs',
+    'per_period_sum_6M'                          => 'Expected half-yearly costs',
+    'per_period_sum_1Y'                          => 'Expected yearly costs',
     'average_per_bill'                           => 'media per bolletta',
     'expected_total'                             => 'totale previsto',
     'reconciliation_account_name'                => ':name riconciliazione (:currency)',
@@ -618,7 +624,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Fai attenzione con questi pulsanti. L\'eliminazione è permanente.',
-    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'other_sessions_logged_out'                 => 'Sei stato disconnesso da tutte le altre sessioni.',
     'delete_all_budgets'                        => 'Elimina TUTTI i budget',
     'delete_all_categories'                     => 'Elimina TUTTE le categorie',
     'delete_all_tags'                           => 'Elimina TUTTE le etichette',

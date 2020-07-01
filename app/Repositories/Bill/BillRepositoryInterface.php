@@ -36,9 +36,37 @@ interface BillRepositoryInterface
 {
 
     /**
+     * @param Bill   $bill
+     * @param string $objectGroupTitle
+     *
+     * @return Bill
+     */
+    public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill;
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Bill
+     */
+    public function removeObjectGroup(Bill $bill): Bill;
+
+    /**
      * @param Bill $bill
      */
     public function unlinkAll(Bill $bill): void;
+
+    /**
+     * Add correct order to bills.
+     */
+    public function correctOrder(): void;
+
+    /**
+     * Set specific piggy bank to specific order.
+     *
+     * @param Bill $bill
+     * @param int  $order
+     */
+    public function setOrder(Bill $bill, int $order): void;
 
     /**
      * @param Bill $bill

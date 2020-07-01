@@ -101,7 +101,7 @@ class IndexController extends Controller
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
-                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interest          = number_format((float) $this->repository->getMetaValue($account, 'interest'), 6, '.', '');
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
             }
@@ -155,7 +155,7 @@ class IndexController extends Controller
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
-                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interest          = number_format((float) $this->repository->getMetaValue($account, 'interest'), 6, '.', '');
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->location          = $this->repository->getLocation($account);

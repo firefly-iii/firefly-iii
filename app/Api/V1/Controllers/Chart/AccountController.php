@@ -42,10 +42,8 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use ApiSupport;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var AccountRepositoryInterface */
-    private $repository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.

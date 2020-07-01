@@ -241,7 +241,6 @@ class PiggyBankController extends Controller
             $this->repository->setCurrentAmount($piggyBank, $data['current_amount']);
         }
 
-
         $manager = $this->getManager();
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);

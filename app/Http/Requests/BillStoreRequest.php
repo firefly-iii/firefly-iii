@@ -1,6 +1,6 @@
 <?php
 /**
- * BillFormRequest.php
+ * BillStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Models\Bill;
-
 /**
- * Class BillFormRequest.
+ * Class BillStoreRequest.
  */
-class BillFormRequest extends Request
+class BillStoreRequest extends Request
 {
     /**
      * Verify the request.
@@ -58,6 +56,7 @@ class BillFormRequest extends Request
             'skip'          => $this->integer('skip'),
             'notes'         => $this->nlString('notes'),
             'active'        => $this->boolean('active'),
+            'object_group'  => $this->string('object_group'),
         ];
     }
 
@@ -68,15 +67,8 @@ class BillFormRequest extends Request
      */
     public function rules(): array
     {
-        $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
-        /** @var Bill $bill */
-        $bill = $this->route()->parameter('bill');
-        if (null !== $bill) {
-            $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name,' . $bill->id;
-        }
-        // is OK
-        $rules = [
-            'name'                    => $nameRule,
+        return [
+            'name'                    => 'required|between:1,255|uniqueObjectForUser:bills,name',
             'amount_min'              => 'required|numeric|more:0|max:1000000000',
             'amount_max'              => 'required|numeric|more:0|max:1000000000',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
@@ -85,7 +77,5 @@ class BillFormRequest extends Request
             'skip'                    => 'required|between:0,31',
             'active'                  => 'boolean',
         ];
-
-        return $rules;
     }
 }

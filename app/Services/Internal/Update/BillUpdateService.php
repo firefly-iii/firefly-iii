@@ -23,13 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use DB;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -39,7 +42,9 @@ use Log;
  */
 class BillUpdateService
 {
-    use BillServiceTrait;
+    use BillServiceTrait, CreatesObjectGroups;
+
+    protected $user;
 
     /**
      * Constructor.
@@ -59,6 +64,7 @@ class BillUpdateService
      */
     public function update(Bill $bill, array $data): Bill
     {
+        $this->user = $bill->user;
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
@@ -82,16 +88,33 @@ class BillUpdateService
         ];
         // new values
         $data['transaction_currency_name'] = $currency->name;
-        $bill->name                        = $data['name'];
-        $bill->match                       = $data['match'] ?? $bill->match;
-        $bill->amount_min                  = $data['amount_min'];
-        $bill->amount_max                  = $data['amount_max'];
-        $bill->date                        = $data['date'];
-        $bill->transaction_currency_id     = $currency->id;
-        $bill->repeat_freq                 = $data['repeat_freq'];
-        $bill->skip                        = $data['skip'];
-        $bill->automatch                   = true;
-        $bill->active                      = $data['active'] ?? true;
+
+        if (isset($data['name']) && '' !== (string) $data['name']) {
+            $bill->name = $data['name'];
+        }
+
+        if (isset($data['amount_min']) && '' !== (string) $data['amount_min']) {
+            $bill->amount_min = $data['amount_min'];
+        }
+        if (isset($data['amount_max']) && '' !== (string) $data['amount_max']) {
+            $bill->amount_max = $data['amount_max'];
+        }
+        if (isset($data['date']) && '' !== (string) $data['date']) {
+            $bill->date = $data['date'];
+        }
+        if (isset($data['repeat_freq']) && '' !== (string) $data['repeat_freq']) {
+            $bill->repeat_freq = $data['repeat_freq'];
+        }
+        if (isset($data['skip']) && '' !== (string) $data['skip']) {
+            $bill->skip = $data['skip'];
+        }
+        if (isset($data['active']) && '' !== (string) $data['active']) {
+            $bill->active = $data['active'];
+        }
+
+        $bill->transaction_currency_id = $currency->id;
+        $bill->match                   = 'EMPTY';
+        $bill->automatch               = true;
         $bill->save();
 
         // update note:
@@ -99,9 +122,36 @@ class BillUpdateService
             $this->updateNote($bill, (string) $data['notes']);
         }
 
+        // update order.
+        // update the order of the piggy bank:
+        $oldOrder = (int) $bill->order;
+        $newOrder = (int) ($data['order'] ?? $oldOrder);
+        if ($oldOrder !== $newOrder) {
+            $this->updateOrder($bill, $oldOrder, $newOrder);
+        }
+
         // update rule actions.
         $this->updateBillActions($bill, $oldData['name'], $data['name']);
         $this->updateBillTriggers($bill, $oldData, $data);
+
+        // update using name:
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
+        }
 
         return $bill;
     }
@@ -176,5 +226,33 @@ class BillUpdateService
     private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
     {
         return $rule->ruleTriggers()->where('trigger_type', $key)->first();
+    }
+
+    /**
+     * @param Bill $bill
+     * @param int  $oldOrder
+     * @param int  $newOrder
+     */
+    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            /** @var User $user */
+            $user = $this->user;
+            $user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                 ->where('bills.id', '!=', $bill->id)
+                 ->update(['order' => DB::raw('bills.order-1')]);
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+        if ($newOrder < $oldOrder) {
+            /** @var User $user */
+            $user = $this->user;
+            $user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                 ->where('bills.id', '!=', $bill->id)
+                 ->update(['order' => DB::raw('bills.order+1')]);
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+
     }
 }

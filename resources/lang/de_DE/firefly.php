@@ -204,6 +204,12 @@ return [
     'authorization'                              => 'Autorisierung',
     'active_bills_only'                          => 'Nur aktive Rechnungen',
     'active_exp_bills_only'                      => 'nur aktive und erwartete Rechnungen',
+    'per_period_sum_1D'                          => 'Erwartete tägliche Kosten',
+    'per_period_sum_1W'                          => 'Erwartete wöchentliche Kosten',
+    'per_period_sum_1M'                          => 'Erwartete monatliche Kosten',
+    'per_period_sum_3M'                          => 'Erwartete vierteljährliche Kosten',
+    'per_period_sum_6M'                          => 'Erwartete halbjährliche Kosten',
+    'per_period_sum_1Y'                          => 'Erwartete jährliche Kosten',
     'average_per_bill'                           => 'Durchschnitt je Rechnung',
     'expected_total'                             => 'Voraussichtliche Summe',
     'reconciliation_account_name'                => ':name Kontenabgleich (:currency)',
@@ -618,7 +624,7 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
-    'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'other_sessions_logged_out'                 => 'Alle Ihre anderen Sitzungen wurden abgemeldet.',
     'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
     'delete_all_categories'                     => 'Alle Ihre Kategorien löschen',
     'delete_all_tags'                           => 'Alle Ihre Stichwörter löschen',

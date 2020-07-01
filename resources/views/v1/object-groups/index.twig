@@ -45,6 +45,9 @@
                                         {% for piggyBank in objectGroup.piggyBanks %}
                                             - {{ 'piggy_bank'|_ }}: <a href="{{ route('piggy-banks.show', [piggyBank.id]) }}">{{ piggyBank.name }}</a><br>
                                         {% endfor %}
+                                        {% for bill in objectGroup.bills %}
+                                            - {{ 'bill'|_ }}: <a href="{{ route('bills.show', [bill.id]) }}">{{ bill.name }}</a><br>
+                                        {% endfor %}
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">

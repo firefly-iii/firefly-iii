@@ -204,6 +204,12 @@ return [
     'authorization'                              => 'Toestemming',
     'active_bills_only'                          => 'alleen actieve contracten',
     'active_exp_bills_only'                      => 'alleen actieve en verwachte contracten',
+    'per_period_sum_1D'                          => 'Verwachte dagelijkse kosten',
+    'per_period_sum_1W'                          => 'Verwachte wekelijkse kosten',
+    'per_period_sum_1M'                          => 'Verwachte maandelijkse kosten',
+    'per_period_sum_3M'                          => 'Verwachte kwartaalkosten',
+    'per_period_sum_6M'                          => 'Verwachte half-jaarlijkse kosten',
+    'per_period_sum_1Y'                          => 'Verwachte jaarlijkse kosten',
     'average_per_bill'                           => 'gemiddeld per contract',
     'expected_total'                             => 'verwacht totaal',
     'reconciliation_account_name'                => ':name afstemming (:currency)',
@@ -893,7 +899,7 @@ return [
     'bill_store_error'                          => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
     'list_inactive_rule'                        => 'inactieve regel',
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
-    'bill_expected_date'                        => 'Verwacht op :date',
+    'bill_expected_date'                        => 'Verwacht :date',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
