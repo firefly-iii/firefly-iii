@@ -94,6 +94,7 @@ class EventServiceProvider extends ServiceProvider
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionGroup::class   => [
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
             ],
             // API related events:

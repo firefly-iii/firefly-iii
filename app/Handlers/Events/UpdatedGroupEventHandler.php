@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 
 /**
@@ -31,6 +34,45 @@ use FireflyIII\TransactionRules\Engine\RuleEngine;
  */
 class UpdatedGroupEventHandler
 {
+    /**
+     * This method will make sure all source / destination accounts are the same.
+     *
+     * @param UpdatedTransactionGroup $updatedGroupEvent
+     */
+    public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
+    {
+        $group = $updatedGroupEvent->transactionGroup;
+        if (1 === $group->transactionJournals->count()) {
+            return;
+        }
+        // first journal:
+        /** @var TransactionJournal $first */
+        $first = $group->transactionJournals()
+                       ->orderBy('transaction_journals.date', 'DESC')
+                       ->orderBy('transaction_journals.order', 'ASC')
+                       ->orderBy('transaction_journals.id', 'DESC')
+                       ->orderBy('transaction_journals.description', 'DESC')
+                       ->first();
+        $all   = $group->transactionJournals()->get()->pluck('id')->toArray();
+        /** @var Account $sourceAccount */
+        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
+        /** @var Account $destAccount */
+        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
+
+        $type = $first->transactionType->type;
+        if (TransactionType::TRANSFER === $type || TransactionType::WITHDRAWAL === $type) {
+            // set all source transactions to source account:
+            Transaction::whereIn('transaction_journal_id', $all)
+                       ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
+        }
+        if (TransactionType::TRANSFER === $type || TransactionType::DEPOSIT === $type) {
+            // set all destination transactions to destination account:
+            Transaction::whereIn('transaction_journal_id', $all)
+                       ->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
+        }
+
+    }
+
     /**
      * This method will check all the rules when a journal is updated.
      *
