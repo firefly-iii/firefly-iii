@@ -129,19 +129,36 @@
                 </tr>
             {% endfor %}
             {% for sum in sums[objectGroupOrder] %}
-            <tr>
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
-                <td colspan="2" style="text-align: right;"> <!-- title -->
-                    <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})</small>
-                </td>
-                <td style="text-align: right;"> <!-- amount -->
-                        {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
-                </td>
-                <td>&nbsp;</td> <!-- paid in period -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
-            </tr>
+                {% if '0' != sum.avg %}
+                    <tr>
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                        <td colspan="2" style="text-align: right;"> <!-- title -->
+                            <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})</small>
+                        </td>
+                        <td style="text-align: right;"> <!-- amount -->
+                            {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                        </td>
+                        <td>&nbsp;</td> <!-- paid in period -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+                    </tr>
+                {% endif %}
+                {% if '0' != sum.per_period %}
+                    <tr>
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                        <td colspan="2" style="text-align: right;"> <!-- title -->
+                            <small>{{ ('per_period_sum_'~sum.period)|_ }} ({{ sum.currency_name }}) ({{ 'active_bills_only'|_ }})</small>
+                        </td>
+                        <td style="text-align: right;"> <!-- amount -->
+                            {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                        </td>
+                        <td>&nbsp;</td> <!-- paid in period -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         {% endif %}

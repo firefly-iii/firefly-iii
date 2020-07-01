@@ -34,6 +34,7 @@ use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -145,7 +146,8 @@ class IndexController extends Controller
      */
     private function getSums(array $bills): array
     {
-        $sums = [];
+        $sums  = [];
+        $range = app('preferences')->get('viewRange', '1M')->data;
 
         /** @var array $group */
         foreach ($bills as $groupOrder => $group) {
@@ -154,9 +156,7 @@ class IndexController extends Controller
                 if (false === $bill['active']) {
                     continue;
                 }
-                if (0 === count($bill['pay_dates'])) {
-                    continue;
-                }
+
                 /** @var TransactionCurrency $currency */
                 $currencyId                     = $bill['currency_id'];
                 $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
@@ -166,11 +166,17 @@ class IndexController extends Controller
                         'currency_symbol'         => $bill['currency_symbol'],
                         'currency_decimal_places' => $bill['currency_decimal_places'],
                         'avg'                     => '0',
+                        'period'                  => $range,
+                        'per_period'              => '0',
                     ];
-
-                $avg                                   = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
-                $avg                                   = bcmul($avg, (string) count($bill['pay_dates']));
-                $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
+                // only fill in avg when bill is active.
+                if (count($bill['pay_dates']) > 0) {
+                    $avg                                   = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                    $avg                                   = bcmul($avg, (string) count($bill['pay_dates']));
+                    $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
+                }
+                // fill in per period regardless:
+                $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $this->amountPerPeriod($bill, $range));
             }
         }
 
@@ -178,10 +184,49 @@ class IndexController extends Controller
     }
 
     /**
+     * @param array  $bill
+     * @param string $range
+     *
+     * @return string
+     */
+    private function amountPerPeriod(array $bill, string $range): string
+    {
+        $avg = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+
+        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
+        Log::debug(sprintf(sprintf('Average is %s', $avg)));
+        // calculate amount per year:
+        $multiplies = [
+            'yearly'    => '1',
+            'half-year' => '2',
+            'quarterly' => '4',
+            'monthly'   => '12',
+            'weekly'    => '52.17',
+        ];
+        $yearAmount = bcmul($avg, $multiplies[$bill['repeat_freq']]);
+        Log::debug(sprintf('Amount per year is %s (%s * %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']]));
+
+        // per period:
+        $division  = [
+            '1Y' => '1',
+            '6M' => '2',
+            '3M' => '4',
+            '1M' => '12',
+            '1W' => '52.16',
+            '1D' => '365.24',
+        ];
+        $perPeriod = bcdiv($yearAmount, $division[$range]);
+
+        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
+
+        return $perPeriod;
+    }
+
+    /**
      * Set the order of a bill.
      *
-     * @param Request   $request
-     * @param Bill $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return JsonResponse
      */
