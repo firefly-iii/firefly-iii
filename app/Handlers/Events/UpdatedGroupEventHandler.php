@@ -28,6 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use Log;
 
 /**
  * Class UpdatedGroupEventHandler
@@ -45,6 +46,7 @@ class UpdatedGroupEventHandler
         if (1 === $group->transactionJournals->count()) {
             return;
         }
+        Log::debug(sprintf('Correct inconsistent accounts in group #%d', $group->id));
         // first journal:
         /** @var TransactionJournal $first */
         $first = $group->transactionJournals()

@@ -31,9 +31,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Passport;
 use Log;
@@ -106,6 +104,7 @@ class InstallController extends Controller
             'firefly-iii:fix-ob-currencies'            => [],
             'firefly-iii:fix-long-descriptions'        => [],
             'firefly-iii:fix-recurring-transactions'   => [],
+            'firefly-iii:unify-group-accounts'         => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
