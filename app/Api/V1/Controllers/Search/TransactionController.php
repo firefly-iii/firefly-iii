@@ -25,7 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Search;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Support\Search\SearchInterface;
+use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection;
 
 /**
  * Class TransactionController
@@ -59,8 +64,28 @@ class TransactionController extends Controller
      *
      * @return void
      */
-    public function search(Request $request): void
+    public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        die('the route is present but nobody\'s home.');
+        $manager = $this->getManager();
+        $fullQuery = (string) $request->get('query');
+        $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+
+        $searcher->parseQuery($fullQuery);
+        $searcher->setPage($page);
+        $searcher->setLimit((int) config('firefly.search_result_limit'));
+        $groups     = $searcher->searchTransactions();
+        $parameters = ['search' => $fullQuery];
+        $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
+        $groups->setPath($url);
+        $transactions = $groups->getCollection();
+
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Collection($transactions, $transformer, 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 }
