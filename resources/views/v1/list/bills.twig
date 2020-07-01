@@ -1,7 +1,7 @@
 <div style="padding-left:8px;">
     {{ paginator.render|raw }}
 </div>
-<table class="table table-hover">
+<table class="table table-hover" id="bill-sortable">
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
@@ -23,7 +23,7 @@
                 <td colspan="6"><small>{{ objectGroup.object_group_title }}</small></td>
             </tr>
             {% for entry in objectGroup.bills %}
-                <tr{% if not entry.active %} data-disablesort="true"{% endif %}>
+                <tr class="bill-sortable" data-id="{{ entry.id }}" data-name="{{ entry.name }}" data-order="{{ entry.order }}" data-position="{{ loop.index0 }}">
                     <td class="hidden-sm hidden-xs">
                         <i class="fa fa-fw fa-bars bill-handle"></i>
                     </td>

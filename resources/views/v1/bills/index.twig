@@ -41,8 +41,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var start = '2018-01-01';
-        var end = '2018-01-31';
-    </script>
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/bills/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

@@ -194,6 +194,8 @@ Route::group(
         Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
         Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
         Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
+
+        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
 
