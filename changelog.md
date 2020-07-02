@@ -9,6 +9,7 @@ Several alpha and beta releases preceded this release.
 
 - 5.3.0-alpha.1 on 2020-06-22
 - 5.3.0-beta.1 on 2020-06-28
+- 5.3.0-beta.1 on 2020-07-01
 
 ### Added
 - Piggy banks and bills can be divided over groups. Groups can be sorted on a separate page. This may prove to be useful to organize these objects. The feature

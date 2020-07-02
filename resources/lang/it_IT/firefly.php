@@ -204,12 +204,12 @@ return [
     'authorization'                              => 'Autorizzazione',
     'active_bills_only'                          => 'solo bollette attive',
     'active_exp_bills_only'                      => 'solo bollette attive e previste',
-    'per_period_sum_1D'                          => 'Expected daily costs',
-    'per_period_sum_1W'                          => 'Expected weekly costs',
-    'per_period_sum_1M'                          => 'Expected monthly costs',
-    'per_period_sum_3M'                          => 'Expected quarterly costs',
-    'per_period_sum_6M'                          => 'Expected half-yearly costs',
-    'per_period_sum_1Y'                          => 'Expected yearly costs',
+    'per_period_sum_1D'                          => 'Costi giornalieri previsti',
+    'per_period_sum_1W'                          => 'Costi settimanali previsti',
+    'per_period_sum_1M'                          => 'Costi mensili previsti',
+    'per_period_sum_3M'                          => 'Costi trimestrali previsti',
+    'per_period_sum_6M'                          => 'Costi semestrali previsti',
+    'per_period_sum_1Y'                          => 'Costi annui previsti',
     'average_per_bill'                           => 'media per bolletta',
     'expected_total'                             => 'totale previsto',
     'reconciliation_account_name'                => ':name riconciliazione (:currency)',
@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Se la valuta che usi normalmente non è elencata, non preoccuparti. Puoi creare le tue valute in Opzioni > Valute.',
 
     // home page:
+    'transaction_table_description'             => 'Una tabella contenente le tue transazioni',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'I tuoi conti',
     'your_accounts'                             => 'Panoramica del tuo account',
     'category_overview'                         => 'Panoramica della categoria',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Gruppo ":title" aggiornato con successo',
     'deleted_object_group'               => 'Gruppo ":title" eliminato con successo',
     'object_group'                       => 'Gruppo',
+
+
+    //
 
 ];

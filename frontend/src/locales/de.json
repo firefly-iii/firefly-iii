@@ -6,7 +6,14 @@
         "net_worth": "Eigenkapital",
         "paid": "Bezahlt",
         "yourAccounts": "Deine Konten",
-        "go_to_asset_accounts": "Bestandskonten anzeigen"
+        "go_to_asset_accounts": "Bestandskonten anzeigen",
+        "transaction_table_description": "Eine Tabelle mit Ihren Buchungen",
+        "account": "Konto",
+        "description": "Beschreibung",
+        "amount": "Betrag",
+        "budget": "Budget",
+        "category": "Kategorie",
+        "opposing_account": "Gegenkonto"
     },
     "config": {
         "html_language": "de"

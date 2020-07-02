@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Ne aggódj ha az általad normál esetben használt pénznem nincs a listában. Létrehozhatod a saját pénznemedet a Beállítások -> Pénznemek alatt.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Bankszámlák',
     'your_accounts'                             => 'Számla áttekintése',
     'category_overview'                         => 'Kategória áttekintés',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

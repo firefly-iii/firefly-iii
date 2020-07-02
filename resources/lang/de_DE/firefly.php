@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Wenn die Währung, die Sie normalerweise verwenden, nicht aufgeführt ist, machen Sie sich keine Sorgen. Unter Optionen ➜ Währungen können Sie eigene Währungen anlegen.',
 
     // home page:
+    'transaction_table_description'             => 'Eine Tabelle mit Ihren Buchungen',
+    'opposing_account'                          => 'Gegenkonto',
     'yourAccounts'                              => 'Deine Konten',
     'your_accounts'                             => 'Kontenübersicht',
     'category_overview'                         => 'Kategorieübersicht',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Gruppe „:title” erfolgreich aktualisiert',
     'deleted_object_group'               => 'Gruppe „:title” erfolgreich entfernt',
     'object_group'                       => 'Gruppe',
+
+
+    //
 
 ];

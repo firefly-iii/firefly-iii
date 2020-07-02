@@ -6,7 +6,14 @@
         "net_worth": "Varallisuus",
         "paid": "Maksettu",
         "yourAccounts": "Omat tilisi",
-        "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si"
+        "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Tili",
+        "description": "Kuvaus",
+        "amount": "Summa",
+        "budget": "Budjetti",
+        "category": "Kategoria",
+        "opposing_account": "Vastatili"
     },
     "config": {
         "html_language": "fi"

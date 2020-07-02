@@ -1126,6 +1126,8 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'currency_not_present'                      => 'Normalde kullandığınız para birimi listelenmiyorsa endişelenmeyin. Seçenekler> Para Birimleri altında kendi para birimlerini oluşturabilirsiniz.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Hesaplarınız',
     'your_accounts'                             => 'Your account overview',
     'category_overview'                         => 'Category overview',
@@ -1697,5 +1699,8 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

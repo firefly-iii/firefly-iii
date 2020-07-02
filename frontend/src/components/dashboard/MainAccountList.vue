@@ -7,12 +7,9 @@
                     <h3 class="card-title"><a :href="account.uri">{{ account.title }}</a></h3>
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <transaction-list-small :transactions="account.transactions" :account_id="account.id" />
-                    <!--
-                    <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" />
-                    <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" />
-                    <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" />
-                    -->
+                    <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id" />
+                    <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id" />
+                    <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id" />
                 </div>
             </div>
         </div>

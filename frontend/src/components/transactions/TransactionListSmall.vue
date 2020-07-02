@@ -1,10 +1,10 @@
 <template>
     <table class="table table-striped">
-        <caption style="display:none;">A table containing transactions.</caption>
+        <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
         <thead>
         <tr>
-            <th class="text-left">Description</th>
-            <th class="text-right">Amount</th>
+            <th class="text-left">{{ $t('firefly.description') }}</th>
+            <th class="text-right">{{ $t('firefly.amount') }}</th>
         </tr>
         </thead>
         <tbody>

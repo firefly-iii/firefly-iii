@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => '若您日常使用的貨幣未在表上，請別擔心，您可在 選項 > 貨幣 建立自己的貨幣',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => '您的帳戶',
     'your_accounts'                             => '您的帳戶概覽',
     'category_overview'                         => '分類概覽',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

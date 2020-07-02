@@ -6,7 +6,14 @@
         "net_worth": "Avoir net",
         "paid": "Pay\u00e9",
         "yourAccounts": "Vos comptes",
-        "go_to_asset_accounts": "Afficher vos comptes d'actifs"
+        "go_to_asset_accounts": "Afficher vos comptes d'actifs",
+        "transaction_table_description": "Une table contenant vos op\u00e9rations",
+        "account": "Compte",
+        "description": "Description",
+        "amount": "Montant",
+        "budget": "Budget",
+        "category": "Cat\u00e9gorie",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "fr"

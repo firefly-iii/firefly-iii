@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Nếu loại tiền bạn thường sử dụng không được liệt kê, đừng lo lắng. Bạn có thể tạo tiền tệ của riêng bạn trong Tùy chọn > Tiền tệ.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Tài khoản của bạn',
     'your_accounts'                             => 'Tổng quan về tài khoản của bạn',
     'category_overview'                         => 'Tổng quan về danh mục',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Nhóm được cập nhật thành công ":title"',
     'deleted_object_group'               => 'Đã xóa nhóm thành công ":title"',
     'object_group'                       => 'Nhóm',
+
+
+    //
 
 ];

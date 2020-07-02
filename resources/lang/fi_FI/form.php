@@ -38,7 +38,7 @@ return [
     'match'                     => 'Täsmää',
     'strict'                    => 'Tarkka vertailu',
     'repeat_freq'               => 'Toistot',
-    'object_group'              => 'Group',
+    'object_group'              => 'Ryhmä',
     'location'                  => 'Sijainti',
     'update_channel'            => 'Päivityskanava',
     'currency_id'               => 'Valuutta',
@@ -165,7 +165,7 @@ return [
     'tag_keep_transactions'       => 'Ainoa tähän tägiin linkitetty tapahtuma säästetään.|Kaikki :count tähän tägiin yhdistetyt tapahtumat säästetään.',
     'check_for_updates'           => 'Tarkista päivitykset',
 
-    'delete_object_group' => 'Delete group ":title"',
+    'delete_object_group' => 'Poista ryhmä ":title"',
 
     'email'                 => 'Sähköpostiosoite',
     'password'              => 'Salasana',

@@ -130,7 +130,7 @@ return [
     'amount_zero'                    => 'Summa yhteensä ei voi olla nolla.',
     'current_target_amount'          => 'Nykyisen summan täytyy olla tavoitesummaa pienempi.',
     'unique_piggy_bank_for_user'     => 'Säästöpossu tarvitsee yksilöllisen nimen.',
-    'unique_object_group'            => 'The group name must be unique',
+    'unique_object_group'            => 'Ryhmän nimen täytyy olla yksilöllinen',
 
     'secure_password'                => 'Tämä ei ole turvallinen salasana. Yritäpä uudestaan. Lisätietoja löydät osoitteesta https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Virheellinen toiston tyyppi toistuville tapahtumille.',
