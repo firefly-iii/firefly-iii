@@ -108,7 +108,7 @@ class BillUpdateService
         if (isset($data['skip']) && '' !== (string) $data['skip']) {
             $bill->skip = $data['skip'];
         }
-        if (isset($data['active']) && '' !== (string) $data['active']) {
+        if (isset($data['active']) && is_bool($data['active'])) {
             $bill->active = $data['active'];
         }
 

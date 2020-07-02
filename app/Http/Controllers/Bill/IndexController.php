@@ -112,21 +112,27 @@ class IndexController extends Controller
                     'bills'              => [],
                 ];
 
+            // expected today? default:
+            $array['next_expected_match_diff'] = trans('firefly.not_expected_period');
             $nextExpectedMatch                 = new Carbon($array['next_expected_match']);
-            $array['next_expected_match_diff'] = $nextExpectedMatch->isToday()
-                ? trans('firefly.today')
-                : $nextExpectedMatch->diffForHumans(
-                    today(), Carbon::DIFF_RELATIVE_TO_NOW
-                );
-            $currency                          = $bill->transactionCurrency ?? $defaultCurrency;
-            $array['currency_id']              = $currency->id;
-            $array['currency_name']            = $currency->name;
-            $array['currency_symbol']          = $currency->symbol;
-            $array['currency_code']            = $currency->code;
-            $array['currency_decimal_places']  = $currency->decimal_places;
-            $array['attachments']              = $this->repository->getAttachments($bill);
-            $array['rules']                    = $rules[$bill['id']] ?? [];
-            $bills[$groupOrder]['bills'][]     = $array;
+            if ($nextExpectedMatch->isToday()) {
+                $array['next_expected_match_diff'] = trans('firefly.today');
+            }
+            $current = $array['pay_dates'][0] ?? null;
+            if (null !== $current && !$nextExpectedMatch->isToday()) {
+                $currentExpectedMatch              = Carbon::createFromFormat('!Y-m-d', $current);
+                $array['next_expected_match_diff'] = $currentExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
+            }
+
+            $currency                         = $bill->transactionCurrency ?? $defaultCurrency;
+            $array['currency_id']             = $currency->id;
+            $array['currency_name']           = $currency->name;
+            $array['currency_symbol']         = $currency->symbol;
+            $array['currency_code']           = $currency->code;
+            $array['currency_decimal_places'] = $currency->decimal_places;
+            $array['attachments']             = $this->repository->getAttachments($bill);
+            $array['rules']                   = $rules[$bill['id']] ?? [];
+            $bills[$groupOrder]['bills'][]    = $array;
         }
 
         // order by key
