@@ -1108,7 +1108,7 @@ return [
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
-    'welcome'                                   => 'Tervetuloa Firefly III!',
+    'welcome'                                   => 'Tervetuloa Firefly III:een!',
     'submit'                                    => 'Vahvista',
     'submission'                                => 'Vahvistus',
     'submit_yes_really'                         => 'Vahvista (Tiedän mitä olen tekemässä)',

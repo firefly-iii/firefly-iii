@@ -1124,8 +1124,8 @@ return [
     'currency_not_present'                      => 'Jeśli waluty, której zwykle używasz, nie ma na liście, nie martw się. Możesz tworzyć swoje własne waluty w Opcje > Waluty.',
 
     // home page:
-    'transaction_table_description'             => 'A table containing your transactions',
-    'opposing_account'                          => 'Opposing account',
+    'transaction_table_description'             => 'Tabela zawierająca Twoje transakcje',
+    'opposing_account'                          => 'Konto przeciwstawne',
     'yourAccounts'                              => 'Twoje konta',
     'your_accounts'                             => 'Przegląd Twoich kont',
     'category_overview'                         => 'Przegląd kategorii',

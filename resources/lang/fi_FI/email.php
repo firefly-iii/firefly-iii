@@ -27,15 +27,15 @@ return [
     'greeting'                         => 'Hei siellä,',
     'closing'                          => 'Beep boop,',
     'signature'                        => 'Firefly III Postirobotti',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'footer_ps'                        => 'P.S. Tämä viesti lähetettiin, koska sitä pyydettiin osoitteesta :ipAddress.',
 
     // admin test
     'admin_test_subject'               => 'Testiviesti Firefly III applikaatioltasi',
-    'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_body'                  => 'Tämä on testiviesti Firefly III instanssiltasi. Se lähetettiin osoitteeseen :email.',
 
     // access token created
-    'access_token_created_subject'     => 'A new access token was created',
-    'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
+    'access_token_created_subject'     => 'Uusi käyttöoikeustunnus luotiin',
+    'access_token_created_body'        => 'Joku (toivottavasti sinä) loi juuri uuden Firefly III käyttöoikeustunnuksen käyttäjätilillesi.',
     'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
 
@@ -49,10 +49,10 @@ return [
     'registered_closing'               => 'Nauti!',
     'registered_firefly_iii_link'      => 'Firefly III:',
     'registered_pw_reset_link'         => 'Salasanan nollaus:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_doc_link'              => 'Dokumentaatio:',
 
     // email change
-    'email_change_subject'             => 'Your Firefly III email address has changed',
+    'email_change_subject'             => 'Firefly III sähköpostiosoitteesi on muuttunut',
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',

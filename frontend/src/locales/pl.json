@@ -7,13 +7,13 @@
         "paid": "Zap\u0142acone",
         "yourAccounts": "Twoje konta",
         "go_to_asset_accounts": "Zobacz swoje konta aktyw\u00f3w",
-        "transaction_table_description": "A table containing your transactions",
+        "transaction_table_description": "Tabela zawieraj\u0105ca Twoje transakcje",
         "account": "Konto",
         "description": "Opis",
         "amount": "Kwota",
         "budget": "Bud\u017cet",
         "category": "Kategoria",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Konto przeciwstawne"
     },
     "config": {
         "html_language": "pl"

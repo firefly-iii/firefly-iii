@@ -1125,7 +1125,7 @@ return [
 
     // home page:
     'transaction_table_description'             => 'Une table contenant vos opérations',
-    'opposing_account'                          => 'Opposing account',
+    'opposing_account'                          => 'Compte opposé',
     'yourAccounts'                              => 'Vos comptes',
     'your_accounts'                             => 'Aperçu de votre compte',
     'category_overview'                         => 'Aperçu des catégories',

@@ -1777,9 +1777,9 @@ code-point-at@^1.0.0:
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
 collect.js@^4.12.8:
-  version "4.27.3"
-  resolved "https://registry.yarnpkg.com/collect.js/-/collect.js-4.27.3.tgz#e81efff5c4c92a713f83ecef6648cdaded03ed34"
-  integrity sha512-2nmoyhUJbhjVVE0W9W0cSBeg8/PL3ObGe1ijj9WDlLG3RrpvePsBZd6p3uTm1dTAUKJVd3qT8mnH6iXCdENEHQ==
+  version "4.27.4"
+  resolved "https://registry.yarnpkg.com/collect.js/-/collect.js-4.27.4.tgz#210c70010c49350fd8b91bbff80a7194407d2c29"
+  integrity sha512-+umY6X+mb1qWrAsu9S2c2jyIK7nlKf1vM7E7CH6E1cm4SeBWxCGsGd1vZZ2YHP9uBfAbgHWrsvEs3g3yUodxbA==
 
 collection-visit@^1.0.0:
   version "1.0.0"

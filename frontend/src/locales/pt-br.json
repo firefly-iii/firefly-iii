@@ -13,7 +13,7 @@
         "amount": "Valor",
         "budget": "Or\u00e7amento",
         "category": "Categoria",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Conta oposta"
     },
     "config": {
         "html_language": "pt-br"
