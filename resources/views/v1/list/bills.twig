@@ -83,9 +83,10 @@
                     paid_dates = 0 (bill not paid in period)
                     pay_dates  > 0 (bill IS expected to be paid in this period)
                     bill is active
+                    first pay date is in the past.
                     #}
                     {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
-                        <td class="paid_in_period text-danger">
+                        <td class="paid_in_period text-warning">
                             {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }}
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">

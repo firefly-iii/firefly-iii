@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Si la devise que vous utilisez habituellement n\'est pas répertoriée, ne vous inquiétez pas. Vous pouvez créer vos propres devises dans Options > Devises.',
 
     // home page:
+    'transaction_table_description'             => 'Une table contenant vos opérations',
+    'opposing_account'                          => 'Compte opposé',
     'yourAccounts'                              => 'Vos comptes',
     'your_accounts'                             => 'Aperçu de votre compte',
     'category_overview'                         => 'Aperçu des catégories',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Groupe ":title" mis à jour avec succès',
     'deleted_object_group'               => 'Groupe ":title" supprimé avec succès',
     'object_group'                       => 'Groupe',
+
+
+    //
 
 ];

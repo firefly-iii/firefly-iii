@@ -6,7 +6,14 @@
         "net_worth": "Patrimonio",
         "paid": "Pagati",
         "yourAccounts": "I tuoi conti",
-        "go_to_asset_accounts": "Visualizza i tuoi conti attivit\u00e0"
+        "go_to_asset_accounts": "Visualizza i tuoi conti attivit\u00e0",
+        "transaction_table_description": "Una tabella contenente le tue transazioni",
+        "account": "Conto",
+        "description": "Descrizione",
+        "amount": "Importo",
+        "budget": "Budget",
+        "category": "Categoria",
+        "opposing_account": "Conto beneficiario"
     },
     "config": {
         "html_language": "it"

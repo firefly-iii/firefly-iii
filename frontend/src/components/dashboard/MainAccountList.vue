@@ -1,3 +1,23 @@
+<!--
+  - MainAccountList.vue
+  - Copyright (c) 2020 james@firefly-iii.org
+  -
+  - This file is part of Firefly III (https://github.com/firefly-iii).
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <template>
     <div class="row">
         <div v-bind:class="{ 'col-lg-12': 1 === accounts.length, 'col-lg-6': 2 === accounts.length, 'col-lg-4': accounts.length > 2 }"
@@ -7,12 +27,9 @@
                     <h3 class="card-title"><a :href="account.uri">{{ account.title }}</a></h3>
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <transaction-list-small :transactions="account.transactions" :account_id="account.id" />
-                    <!--
-                    <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" />
-                    <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" />
-                    <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" />
-                    -->
+                    <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id" />
+                    <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id" />
+                    <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id" />
                 </div>
             </div>
         </div>

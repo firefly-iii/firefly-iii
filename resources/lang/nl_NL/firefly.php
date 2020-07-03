@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Geen zorgen als de valuta die je gewend bent er niet tussen staat. Je kan je eigen valuta maken onder Opties > Valuta.',
 
     // home page:
+    'transaction_table_description'             => 'Een tabel met je transacties',
+    'opposing_account'                          => 'Tegenrekening',
     'yourAccounts'                              => 'Je betaalrekeningen',
     'your_accounts'                             => 'Je rekeningoverzicht',
     'category_overview'                         => 'Categorieoverzicht',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Groep ":title" geüpdatet',
     'deleted_object_group'               => 'Groep ":title" verwijderd',
     'object_group'                       => 'Groep',
+
+
+    //
 
 ];

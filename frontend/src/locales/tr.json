@@ -6,7 +6,14 @@
         "net_worth": "Net de\u011fer",
         "paid": "\u00d6dendi",
         "yourAccounts": "Hesaplar\u0131n\u0131z",
-        "go_to_asset_accounts": "Varl\u0131k hesaplar\u0131n\u0131z\u0131 g\u00f6r\u00fcnt\u00fcleyin"
+        "go_to_asset_accounts": "Varl\u0131k hesaplar\u0131n\u0131z\u0131 g\u00f6r\u00fcnt\u00fcleyin",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Hesap",
+        "description": "A\u00e7\u0131klama",
+        "amount": "Miktar",
+        "budget": "B\u00fct\u00e7e",
+        "category": "Kategori",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "tr"

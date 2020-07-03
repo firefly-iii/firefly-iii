@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Dacă moneda pe care o utilizați în mod normal nu este listată, nu vă faceți griji. Puteți crea propriile valute în Opțiuni> Monede.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Conturile dvs.',
     'your_accounts'                             => 'Prezentarea generală a contului',
     'category_overview'                         => 'Categorie - prezentare generală',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

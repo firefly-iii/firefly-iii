@@ -6,7 +6,14 @@
         "net_worth": "Nettof\u00f6rm\u00f6genhet",
         "paid": "Betald",
         "yourAccounts": "Dina konton",
-        "go_to_asset_accounts": "Visa dina tillg\u00e5ngskonton"
+        "go_to_asset_accounts": "Visa dina tillg\u00e5ngskonton",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Konto",
+        "description": "Beskrivning",
+        "amount": "Belopp",
+        "budget": "Budget",
+        "category": "Kategori",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "sv"

@@ -6,7 +6,14 @@
         "net_worth": "\u6de8\u503c",
         "paid": "\u5df2\u4ed8\u6b3e",
         "yourAccounts": "\u60a8\u7684\u5e33\u6236",
-        "go_to_asset_accounts": "\u6aa2\u8996\u60a8\u7684\u8cc7\u7522\u5e33\u6236"
+        "go_to_asset_accounts": "\u6aa2\u8996\u60a8\u7684\u8cc7\u7522\u5e33\u6236",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "\u5e33\u6236",
+        "description": "\u63cf\u8ff0",
+        "amount": "\u91d1\u984d",
+        "budget": "\u9810\u7b97",
+        "category": "\u5206\u985e",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "zh-tw"

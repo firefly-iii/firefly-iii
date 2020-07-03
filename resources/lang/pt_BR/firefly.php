@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Não se preocupe se a moeda que você usa normalmente não está listada. Você pode criar suas próprias moedas em "Opções > Moedas".',
 
     // home page:
+    'transaction_table_description'             => 'Uma tabela contendo suas transações',
+    'opposing_account'                          => 'Conta oposta',
     'yourAccounts'                              => 'Suas contas',
     'your_accounts'                             => 'Visão geral da sua conta',
     'category_overview'                         => 'Visão geral da categoria',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'O grupo ":title" foi atualizado com sucesso',
     'deleted_object_group'               => 'O grupo ":title" foi deletado com sucesso',
     'object_group'                       => 'Grupo',
+
+
+    //
 
 ];

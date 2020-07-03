@@ -204,12 +204,12 @@ return [
     'authorization'                              => 'Autoryzacja',
     'active_bills_only'                          => 'tylko aktywne rachunki',
     'active_exp_bills_only'                      => 'tylko aktywne i oczekiwane rachunki',
-    'per_period_sum_1D'                          => 'Expected daily costs',
-    'per_period_sum_1W'                          => 'Expected weekly costs',
-    'per_period_sum_1M'                          => 'Expected monthly costs',
-    'per_period_sum_3M'                          => 'Expected quarterly costs',
-    'per_period_sum_6M'                          => 'Expected half-yearly costs',
-    'per_period_sum_1Y'                          => 'Expected yearly costs',
+    'per_period_sum_1D'                          => 'Oczekiwane koszty dzienne',
+    'per_period_sum_1W'                          => 'Oczekiwane koszty tygodniowe',
+    'per_period_sum_1M'                          => 'Przewidywane koszty miesięczne',
+    'per_period_sum_3M'                          => 'Oczekiwane koszty kwartalne',
+    'per_period_sum_6M'                          => 'Oczekiwane koszty półroczne',
+    'per_period_sum_1Y'                          => 'Oczekiwane koszty roczne',
     'average_per_bill'                           => 'średnia za rachunek',
     'expected_total'                             => 'oczekiwana suma',
     'reconciliation_account_name'                => 'Uzgadnianie :name (:currency)',
@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Jeśli waluty, której zwykle używasz, nie ma na liście, nie martw się. Możesz tworzyć swoje własne waluty w Opcje > Waluty.',
 
     // home page:
+    'transaction_table_description'             => 'Tabela zawierająca Twoje transakcje',
+    'opposing_account'                          => 'Konto przeciwstawne',
     'yourAccounts'                              => 'Twoje konta',
     'your_accounts'                             => 'Przegląd Twoich kont',
     'category_overview'                         => 'Przegląd kategorii',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Pomyślnie zmodyfikowano grupę ":title"',
     'deleted_object_group'               => 'Pomyślnie usunięto grupę ":title"',
     'object_group'                       => 'Grupa',
+
+
+    //
 
 ];

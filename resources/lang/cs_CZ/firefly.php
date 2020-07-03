@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'If the currency you normally use is not listed do not worry. You can create your own currencies under Options > Currencies.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Vaše účty',
     'your_accounts'                             => 'Přehled vašeho účtu',
     'category_overview'                         => 'Přehled kategorie',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

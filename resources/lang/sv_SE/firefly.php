@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Om valutan du normalt använder inte finns med, oroa dig inte. Du kan skapa nya valutor under Alternativ > Valutor.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Dina konton',
     'your_accounts'                             => 'Din kontoöversikt',
     'category_overview'                         => 'Kategori översikt',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

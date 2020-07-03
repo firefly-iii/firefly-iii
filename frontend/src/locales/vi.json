@@ -6,7 +6,14 @@
         "net_worth": "T\u00e0i s\u1ea3n th\u1ef1c",
         "paid": "\u0110\u00e3 thanh to\u00e1n",
         "yourAccounts": "T\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n",
-        "go_to_asset_accounts": "Xem t\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n"
+        "go_to_asset_accounts": "Xem t\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "T\u00e0i kho\u1ea3n",
+        "description": "S\u1ef1 mi\u00eau t\u1ea3",
+        "amount": "S\u1ed1 ti\u1ec1n",
+        "budget": "Ng\u00e2n s\u00e1ch",
+        "category": "Danh m\u1ee5c",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "vi"

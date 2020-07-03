@@ -6,7 +6,14 @@
         "net_worth": "Valoarea net\u0103",
         "paid": "Pl\u0103tit",
         "yourAccounts": "Conturile dvs.",
-        "go_to_asset_accounts": "Vizualiza\u021bi conturile de active"
+        "go_to_asset_accounts": "Vizualiza\u021bi conturile de active",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Cont",
+        "description": "Descriere",
+        "amount": "Sum\u0103",
+        "budget": "Buget",
+        "category": "Categorie",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "ro"

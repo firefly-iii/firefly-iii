@@ -6,7 +6,14 @@
         "net_worth": "Nett\u00f3 \u00e9rt\u00e9k",
         "paid": "Kifizetve",
         "yourAccounts": "Banksz\u00e1ml\u00e1k",
-        "go_to_asset_accounts": "Eszk\u00f6zsz\u00e1ml\u00e1k megtekint\u00e9se"
+        "go_to_asset_accounts": "Eszk\u00f6zsz\u00e1ml\u00e1k megtekint\u00e9se",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Banksz\u00e1mla",
+        "description": "Le\u00edr\u00e1s",
+        "amount": "\u00d6sszeg",
+        "budget": "K\u00f6lts\u00e9gkeret",
+        "category": "Kateg\u00f3ria",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "hu"

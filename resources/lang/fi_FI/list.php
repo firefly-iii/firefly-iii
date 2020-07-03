@@ -60,7 +60,7 @@ return [
     'due_date'                => 'Eräpäivä',
     'payment_date'            => 'Maksupäivä',
     'invoice_date'            => 'Laskun päivämäärä',
-    'internal_reference'      => 'Internal reference',
+    'internal_reference'      => 'Sisäinen viite',
     'notes'                   => 'Muistiinpanot',
     'from'                    => 'Lähettäjä',
     'piggy_bank'              => 'Säästöpossu',

@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hi there,',
+    'greeting'                         => 'Hei siellä,',
     'closing'                          => 'Beep boop,',
-    'signature'                        => 'The Firefly III Mail Robot',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'signature'                        => 'Firefly III Postirobotti',
+    'footer_ps'                        => 'P.S. Tämä viesti lähetettiin, koska sitä pyydettiin osoitteesta :ipAddress.',
 
     // admin test
-    'admin_test_subject'               => 'A test message from your Firefly III installation',
-    'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_subject'               => 'Testiviesti Firefly III applikaatioltasi',
+    'admin_test_body'                  => 'Tämä on testiviesti Firefly III instanssiltasi. Se lähetettiin osoitteeseen :email.',
 
     // access token created
-    'access_token_created_subject'     => 'A new access token was created',
-    'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
+    'access_token_created_subject'     => 'Uusi käyttöoikeustunnus luotiin',
+    'access_token_created_body'        => 'Joku (toivottavasti sinä) loi juuri uuden Firefly III käyttöoikeustunnuksen käyttäjätilillesi.',
     'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
 
@@ -48,18 +48,18 @@ return [
     'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
     'registered_closing'               => 'Nauti!',
     'registered_firefly_iii_link'      => 'Firefly III:',
-    'registered_pw_reset_link'         => 'Password reset:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_pw_reset_link'         => 'Salasanan nollaus:',
+    'registered_doc_link'              => 'Dokumentaatio:',
 
     // email change
-    'email_change_subject'             => 'Your Firefly III email address has changed',
+    'email_change_subject'             => 'Firefly III sähköpostiosoitteesi on muuttunut',
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
-    'email_change_old'                 => 'The old email address was: :email',
-    'email_change_old_strong'          => 'The old email address was: <strong>:email</strong>',
-    'email_change_new'                 => 'The new email address is: :email',
-    'email_change_new_strong'          => 'The new email address is: <strong>:email</strong>',
+    'email_change_old'                 => 'Vanha sähköpostiosoite oli: :email',
+    'email_change_old_strong'          => 'Vanha sähköpostiosoite oli: <strong>:email</strong>',
+    'email_change_new'                 => 'Uusi sähköpostiosoite on: :email',
+    'email_change_new_strong'          => 'Uusi sähköpostiosoite on: <strong>:email</strong>',
     'email_change_instructions'        => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
     'email_change_undo_link'           => 'To undo the change, follow this link:',
 
@@ -78,12 +78,12 @@ return [
     'error_subject'                    => 'Caught an error in Firefly III',
     'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'The error was of type ":class".',
-    'error_timestamp'                  => 'The error occurred on/at: :time.',
+    'error_timestamp'                  => 'Virhe tapahtui kello: :time.',
     'error_location'                   => 'This error occurred in file "<span style="font-family: monospace;">:file</span>" on line :line with code :code.',
     'error_user'                       => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
     'error_no_user'                    => 'There was no user logged in for this error or no user was detected.',
     'error_ip'                         => 'The IP address related to this error is: :ip',
-    'error_url'                        => 'URL is: :url',
+    'error_url'                        => 'URL on: :url',
     'error_user_agent'                 => 'User agent: :userAgent',
     'error_stacktrace'                 => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',

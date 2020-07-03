@@ -6,7 +6,14 @@
         "net_worth": "\u010cist\u00e9 jm\u011bn\u00ed",
         "paid": "Zaplaceno",
         "yourAccounts": "Va\u0161e \u00fa\u010dty",
-        "go_to_asset_accounts": "Zobrazit \u00fa\u010dty s aktivy"
+        "go_to_asset_accounts": "Zobrazit \u00fa\u010dty s aktivy",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "\u00da\u010det",
+        "description": "Popis",
+        "amount": "\u010c\u00e1stka",
+        "budget": "Rozpo\u010det",
+        "category": "Kategorie",
+        "opposing_account": "Opposing account"
     },
     "config": {
         "html_language": "cs"

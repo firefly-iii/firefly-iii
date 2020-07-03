@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Hvis valutaen du vanligvis bruker ikke vises, ikke fortvil. Du kan opprette din egen valuta under Alternativer > valuta.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Dine kontoer',
     'your_accounts'                             => 'Din konto oversikt',
     'category_overview'                         => 'Kategori oversikt',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
+
+    //
 
 ];

@@ -1124,6 +1124,8 @@ return [
     'currency_not_present'                      => 'Если ваша основная валюта ещё не указана, не волнуйтесь. Вы можете создать собственные валюты в разделе Параметры > Валюты.',
 
     // home page:
+    'transaction_table_description'             => 'A table containing your transactions',
+    'opposing_account'                          => 'Opposing account',
     'yourAccounts'                              => 'Ваши счета',
     'your_accounts'                             => 'Обзор вашего счёта',
     'category_overview'                         => 'Обзор категории',
@@ -1695,5 +1697,8 @@ return [
     'updated_object_group'               => 'Группа ":title" успешно обновлена',
     'deleted_object_group'               => 'Группа ":title" успешно удалена',
     'object_group'                       => 'Группа',
+
+
+    //
 
 ];
