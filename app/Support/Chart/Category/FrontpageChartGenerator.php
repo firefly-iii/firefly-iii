@@ -89,12 +89,12 @@ class FrontpageChartGenerator
         foreach ($categories as $category) {
             // get expenses
             $collection[] = $this->collectExpenses($category, $accounts);
-            $collection[] = $this->collectIncome($category, $accounts);
+            //$collection[] = $this->collectIncome($category, $accounts);
         }
 
         // collect for no-category:
         $collection[] = $this->collectNoCatExpenses($accounts);
-        $collection[] = $this->collectNoCatIncome($accounts);
+        //$collection[] = $this->collectNoCatIncome($accounts);
 
         $tempData = array_merge(...$collection);
 
@@ -231,14 +231,14 @@ class FrontpageChartGenerator
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,
             ];
-            $key          = sprintf('earned-%d', $currencyId);
-            $return[$key] = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currency['currency_name']),
-                'type'            => 'bar',
-                'currency_symbol' => $currency['currency_symbol'],
-                'data_type'       => 'earned',
-                'entries'         => $names,
-            ];
+            //            $key          = sprintf('earned-%d', $currencyId);
+            //            $return[$key] = [
+            //                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currency['currency_name']),
+            //                'type'            => 'bar',
+            //                'currency_symbol' => $currency['currency_symbol'],
+            //                'data_type'       => 'earned',
+            //                'entries'         => $names,
+            //            ];
         }
 
         return $return;
