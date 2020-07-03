@@ -143,7 +143,7 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.0-beta.2',
+    'version'                 => '5.3.0',
     'api_version'             => '1.2.0',
     'db_version'              => 15,
     'maxUploadSize'           => 1073741824, // 1 GB
